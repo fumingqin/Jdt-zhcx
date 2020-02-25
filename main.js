@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import App from './App'
-import Ctky from './Ctky.js' //传统客运-测试用数据
-import Czc from './Czc.js'   //出租车-测试用数据
-import Dd from './Dd.js' 	 //订单-测试用数据
-import Gjcx from './Gjcx.js' //公交查询-测试用数据
-import Grzx from './Grzx.js' //个人中心-测试用数据
-import Lyfw from './Lyfw.js' //旅游服务-测试用数据
+import Ctky from './common/Ctky.js' //传统客运-测试用数据
+import Czc from './common/Czc.js'   //出租车-测试用数据
+import Dd from './common/Dd.js' 	 //订单-测试用数据
+import Gjcx from './common/Gjcx.js' //公交查询-测试用数据
+import Grzx from './common/Grzx.js' //个人中心-测试用数据
+import Lyfw from './common/Lyfw.js' //旅游服务-测试用数据
 
 
 Vue.config.productionTip = false

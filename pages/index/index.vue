@@ -20,7 +20,7 @@
 		},
 		methods: {
 			async testData() {
-				let userInfo = await this.$api.lyfw('userInfo');
+				let userInfo = await this.$api.ctky('userInfo');
 				this.test = userInfo;
 				console.log(this.test.data.autograph);
 				}
