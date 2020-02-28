@@ -10,6 +10,8 @@
 	"libVersion": "2.9.2",
 	"appid": "touristappid",
 	"projectname": "Jdt-zhcx",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -36,8 +38,8 @@
 			"list": [
 				{
 					"id": -1,
-					"name": "pages/LYFW/scenicSpotTickets/ticketsList",
-					"pathName": "pages/LYFW/scenicSpotTickets/ticketsList",
+					"name": "pages/LYFW/scenicSpotTickets/ticketsDetails",
+					"pathName": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 					"scene": null
 				}
 			]

@@ -17,6 +17,10 @@
             "path" : "pages/LYFW/scenicSpotTickets/ticketsList",
             "style" : {}
         }
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/ticketsDetails",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
