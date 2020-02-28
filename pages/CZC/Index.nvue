@@ -1,0 +1,125 @@
+<template>
+	<view style="width: 750rpx;height: 1500rpx;">
+		<map id='map' scale="16" style="width: 750rpx;height: 1500rpx;" :longitude="longitude" :latitude="latitude" :markers="markers"
+		  :show-location="true" :polyline="polyline">
+			<view style="position: absoult;top: 1100rpx;left: 0;right: 0;width: 100%;align-items: center;">
+				<button @click="click" style="width: 375rpx;" type="primary">点击</button>
+			</view>
+		</map>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				longitude: 0, //精度
+				latitude: 0, //纬度
+				markers: [], //标记点
+				mapContext: {},
+				polyline: [
+					{
+						points: [{
+						        longitude: 116.275177,
+								latitude: 39.938698,
+						    },
+						    {
+						        longitude: 116.289253,
+								latitude: 39.966069,
+						    },
+						    {
+						        longitude: 116.306076,
+								latitude: 39.944226,
+						    },
+						    {
+						        longitude: 116.322899,
+								latitude: 39.966069,
+						    },
+						    {
+						        longitude: 116.336975,
+								latitude: 39.938698,
+						    },
+							{
+								longitude:116.481028 ,
+								latitude:39.989643,
+							},
+							{
+								longitude:116.434446,
+								latitude:39.90816,
+							},
+						],
+						color: '#79ff84',
+						width: 5,
+						arrowLine: true,
+						borderColor: '#CC0000',
+						borderWidth: 3
+					}
+				],
+			}
+		},
+		onLoad() {
+			var that = this;
+			that.getMyLocation();
+
+		},
+		methods: {
+			getMyLocation() {
+				var that = this;
+				var ojb = {
+					type: 'gcj02',
+					geocode:true,
+					success: function(res) {
+						that.longitude = res.longitude;
+						that.latitude = res.latitude;
+						var marker = {
+							id: 0,
+							latitude: res.latitude,
+							longitude: res.longitude,
+							title: '在这上车',
+							zIndex: '1',
+							iconPath:'../../static/CZC/position.png',
+							rotate: 0,
+							width: 20,
+							height: 20,
+							anchor: {
+								x: 0.5,
+								y: 1
+							},
+							callout: {
+								content: '在这上车',
+								color: '#000000',
+								fontSize: 10,
+								borderRadius: 4,
+								borderWidth: 1,
+								borderColor: '#333300',
+								bgColor: '#FFFFFF',
+								padding: '5',
+								display: 'ALWAYS'
+							}
+						};
+						that.markers = [];
+						that.markers.push(marker);
+					},
+					fail: function() {
+
+					},
+				}
+				uni.getLocation(ojb);
+			},
+			click: function() {
+				uni.chooseLocation({
+					success: (res) => {
+						this.hasLocation = true,
+							this.location = formatLocation(res.longitude, res.latitude),
+							this.locationAddress = res.address
+					}
+				})
+			},
+
+		}
+	}
+</script>
+
+<style>
+
+</style>
