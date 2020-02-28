@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/CZC/Index",
     "pages/index/index"
   ],
   "subPackages": [],
@@ -9,6 +10,5 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap38.json"
+  "usingComponents": {}
 }
