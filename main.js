@@ -6,7 +6,7 @@ import Dd from './common/Dd.js' 	 //订单-测试用数据
 import Gjcx from './common/Gjcx.js' //公交查询-测试用数据
 import Grzx from './common/Grzx.js' //个人中心-测试用数据
 import Lyfw from './common/Lyfw.js' //旅游服务-测试用数据
-
+import Sceniclist from 'common/scenicSpotDistribution.js' //旅游服务-景区目录-测试用数据
 
 Vue.config.productionTip = false
 
@@ -70,5 +70,14 @@ const lyfw = type=>{
 	})
 }
 
-Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfw};
+//模拟异步请求数据 - 旅游服务
+const sceniclist = type=>{
+	return new Promise(resolve=>{
+		setTimeout(()=>{
+			resolve(Sceniclist[type]);
+		}, 500)
+	})
+}
+
+Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfw,sceniclist};
 app.$mount()

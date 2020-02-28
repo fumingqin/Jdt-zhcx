@@ -1,7 +1,8 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/CZC/Index",
-    "pages/index/index"
+    "pages/LYFW/scenicSpotTickets/ticketsList"
   ],
   "subPackages": [],
   "window": {

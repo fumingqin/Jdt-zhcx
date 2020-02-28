@@ -395,8 +395,25 @@ var previewImage = {
   } };
 
 
+function addSafeAreaInsets(result) {
+  if (result.safeArea) {
+    var safeArea = result.safeArea;
+    result.safeAreaInsets = {
+      top: safeArea.top,
+      left: safeArea.left,
+      right: result.windowWidth - safeArea.right,
+      bottom: result.windowHeight - safeArea.bottom };
+
+  }
+}
 var protocols = {
-  previewImage: previewImage };
+  previewImage: previewImage,
+  getSystemInfo: {
+    returnValue: addSafeAreaInsets },
+
+  getSystemInfoSync: {
+    returnValue: addSafeAreaInsets } };
+
 
 var todos = [
 'vibrate'];
@@ -1364,7 +1381,7 @@ function parseBaseComponent(vueComponentOptions)
         }
       },
       detached: function detached() {
-        this.$vm.$destroy();
+        this.$vm && this.$vm.$destroy();
       } },
 
     pageLifetimes: {
@@ -7594,9 +7611,9 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/*!***********************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/pages.json ***!
-  \***********************************************/
+/*!**********************************!*\
+  !*** D:/UAD/Jdt-zhcx/pages.json ***!
+  \**********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8497,24 +8514,24 @@ main();
 /*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = {"_from":"@dcloudio/uni-stat@alpha","_id":"@dcloudio/uni-stat@2.0.0-alpha-25120200103005","_inBundle":false,"_integrity":"sha512-nYoIrRV2e5o/vzr6foSdWi3Rl2p0GuO+LPY3JctyY6uTKgPnuH99d7aL/QQdJ1SacQjBWO+QGK1qankN7oyrWw==","_location":"/@dcloudio/uni-stat","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"@dcloudio/uni-stat@alpha","name":"@dcloudio/uni-stat","escapedName":"@dcloudio%2funi-stat","scope":"@dcloudio","rawSpec":"alpha","saveSpec":null,"fetchSpec":"alpha"},"_requiredBy":["#USER","/","/@dcloudio/vue-cli-plugin-uni"],"_resolved":"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-alpha-25120200103005.tgz","_shasum":"a77a63481f36474f3e86686868051219d1bb12df","_spec":"@dcloudio/uni-stat@alpha","_where":"/Users/guoshengqiang/Documents/dcloud-plugins/alpha/uniapp-cli","author":"","bugs":{"url":"https://github.com/dcloudio/uni-app/issues"},"bundleDependencies":false,"deprecated":false,"description":"","devDependencies":{"@babel/core":"^7.5.5","@babel/preset-env":"^7.5.5","eslint":"^6.1.0","rollup":"^1.19.3","rollup-plugin-babel":"^4.3.3","rollup-plugin-clear":"^2.0.7","rollup-plugin-commonjs":"^10.0.2","rollup-plugin-copy":"^3.1.0","rollup-plugin-eslint":"^7.0.0","rollup-plugin-json":"^4.0.0","rollup-plugin-node-resolve":"^5.2.0","rollup-plugin-replace":"^2.2.0","rollup-plugin-uglify":"^6.0.2"},"files":["dist","package.json","LICENSE"],"gitHead":"6be187a3dfe15f95dd6146d9fec08e1f81100987","homepage":"https://github.com/dcloudio/uni-app#readme","license":"Apache-2.0","main":"dist/index.js","name":"@dcloudio/uni-stat","repository":{"type":"git","url":"git+https://github.com/dcloudio/uni-app.git","directory":"packages/uni-stat"},"scripts":{"build":"NODE_ENV=production rollup -c rollup.config.js","dev":"NODE_ENV=development rollup -w -c rollup.config.js"},"version":"2.0.0-alpha-25120200103005"};
+module.exports = {"_from":"@dcloudio/uni-stat@alpha","_id":"@dcloudio/uni-stat@2.0.0-alpha-25720200116005","_inBundle":false,"_integrity":"sha512-RZFw3WAaS/CZTzzv9JPaWvmoNitojD/06vPdHSzlqZi8GbuE222lFuyochEjrGkG8rPPrWHAnwfoPBuQVtkfdg==","_location":"/@dcloudio/uni-stat","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"@dcloudio/uni-stat@alpha","name":"@dcloudio/uni-stat","escapedName":"@dcloudio%2funi-stat","scope":"@dcloudio","rawSpec":"alpha","saveSpec":null,"fetchSpec":"alpha"},"_requiredBy":["#USER","/","/@dcloudio/vue-cli-plugin-uni"],"_resolved":"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-alpha-25720200116005.tgz","_shasum":"08bb17aba91c84a981f33d74153aa3dd07b578ad","_spec":"@dcloudio/uni-stat@alpha","_where":"/Users/guoshengqiang/Documents/dcloud-plugins/alpha/uniapp-cli","author":"","bugs":{"url":"https://github.com/dcloudio/uni-app/issues"},"bundleDependencies":false,"deprecated":false,"description":"","devDependencies":{"@babel/core":"^7.5.5","@babel/preset-env":"^7.5.5","eslint":"^6.1.0","rollup":"^1.19.3","rollup-plugin-babel":"^4.3.3","rollup-plugin-clear":"^2.0.7","rollup-plugin-commonjs":"^10.0.2","rollup-plugin-copy":"^3.1.0","rollup-plugin-eslint":"^7.0.0","rollup-plugin-json":"^4.0.0","rollup-plugin-node-resolve":"^5.2.0","rollup-plugin-replace":"^2.2.0","rollup-plugin-uglify":"^6.0.2"},"files":["dist","package.json","LICENSE"],"gitHead":"a129bde60de35f7ef497f43d5a45b4556231995c","homepage":"https://github.com/dcloudio/uni-app#readme","license":"Apache-2.0","main":"dist/index.js","name":"@dcloudio/uni-stat","repository":{"type":"git","url":"git+https://github.com/dcloudio/uni-app.git","directory":"packages/uni-stat"},"scripts":{"build":"NODE_ENV=production rollup -c rollup.config.js","dev":"NODE_ENV=development rollup -w -c rollup.config.js"},"version":"2.0.0-alpha-25720200116005"};
 
 /***/ }),
 /* 7 */
-/*!****************************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/pages.json?{"type":"style"} ***!
-  \****************************************************************/
+/*!***************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/pages.json?{"type":"style"} ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/CZC/Index": { "navigationStyle": "custom" }, "pages/index/index": { "navigationBarTitleText": "uni-app" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/CZC/Index": { "navigationStyle": "custom", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/index/index": { "navigationBarTitleText": "uni-app", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/LYFW/scenicSpotTickets/ticketsList": { "usingComponents": {}, "usingAutoImportComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
-/*!***************************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/pages.json?{"type":"stat"} ***!
-  \***************************************************************/
+/*!**************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/pages.json?{"type":"stat"} ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8648,9 +8665,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 15 */
-/*!***************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/common/Ctky.js ***!
-  \***************************************************/
+/*!**************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/Ctky.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8681,9 +8698,9 @@ var userInfo = {
 
 /***/ }),
 /* 16 */
-/*!**************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/common/Czc.js ***!
-  \**************************************************/
+/*!*************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/Czc.js ***!
+  \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8714,9 +8731,9 @@ var userInfo = {
 
 /***/ }),
 /* 17 */
-/*!*************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/common/Dd.js ***!
-  \*************************************************/
+/*!************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/Dd.js ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8747,9 +8764,9 @@ var userInfo = {
 
 /***/ }),
 /* 18 */
-/*!***************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/common/Gjcx.js ***!
-  \***************************************************/
+/*!**************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/Gjcx.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8780,9 +8797,9 @@ var userInfo = {
 
 /***/ }),
 /* 19 */
-/*!***************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/common/Grzx.js ***!
-  \***************************************************/
+/*!**************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/Grzx.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8813,9 +8830,9 @@ var userInfo = {
 
 /***/ }),
 /* 20 */
-/*!***************************************************!*\
-  !*** D:/HBuilderProjects/Jdt-zhcx/common/Lyfw.js ***!
-  \***************************************************/
+/*!**************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/Lyfw.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8838,11 +8855,126 @@ var userInfo = {
   msg: '提示'
 
 
+  /* 六宫格-景区列表 */ };
+var sixPalaceList = [
+{
+  scenicId: 0,
+  name: '武夷山',
+  englishName: 'Wuyi Mount',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg' },
+
+{
+  scenicId: 1,
+  name: '溪源峡谷',
+  englishName: 'Creek Gorge',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg' },
+
+{
+  scenicId: 2,
+  name: '芒荡山',
+  englishName: 'Mount Mandang',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg' },
+
+{
+  scenicId: 3,
+  name: '和平古镇',
+  englishName: 'Peace Towns',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg' },
+
+{
+  scenicId: 4,
+  name: '天成奇侠',
+  englishName: 'Natural Gorge',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/tianchengqixia.jpg' },
+
+{
+  scenicId: 5,
+  name: '青龙大瀑布',
+  englishName: 'Qinglong Waterfa',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/qinglongdapubu.jpg' },
+
+{
+  scenicId: 6,
+  name: '茶博园',
+  englishName: 'Tea Expo',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/chaboyuan.jpg' }];
 
 
-  // 接口声明区
-};var _default = {
-  userInfo: userInfo };exports.default = _default;
+
+/* 景区列表 */
+var scenicList = [
+{
+  scenicId: 0,
+  scenicName: '南平武夷山',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+  price: 320,
+  sales: 20188 },
+
+{
+  scenicId: 1,
+  scenicName: '南平溪源峡谷',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg',
+  price: 60,
+  sales: 18687 },
+
+{
+  scenicId: 2,
+  scenicName: '南平芒荡山',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg',
+  price: 10,
+  sales: 19245 },
+
+{
+  scenicId: 3,
+  scenicName: '邵武和平古镇',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg',
+  price: 0,
+  sales: 12815 },
+
+{
+  scenicId: 4,
+  scenicName: '邵武天成奇峡',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/tianchengqixia.jpg',
+  price: 130,
+  sales: 21048 },
+
+{
+  scenicId: 5,
+  scenicName: '武夷山青龙大瀑布',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/qinglongdapubu.jpg',
+  price: 60,
+  sales: 23074 },
+
+
+{
+  scenicId: 6,
+  scenicName: '中华武夷茶博园',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/chaboyuan.jpg',
+  price: 218,
+  sales: 23078 },
+
+
+{
+  scenicId: 7,
+  scenicName: '建阳卧龙湾花花世界',
+  comment: '一码通 | 可订明日票 | 非即时退',
+  image: '../../../static/LYFW/scenicSpotTickets/ticketsList/huahuashijie.jpg',
+  price: 10,
+  sales: 110871 }];
+
+
+// 接口声明区
+var _default = {
+  userInfo: userInfo,
+  sixPalaceList: sixPalaceList,
+  scenicList: scenicList };exports.default = _default;
 
 /***/ }),
 /* 21 */,
@@ -9646,6 +9778,367 @@ if (hadRuntime) {
   })() || Function("return this")()
 );
 
+
+/***/ }),
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */
+/*!********************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/scenicSpotDistribution.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //景区分类
+var cateList = [
+//一级分类
+{
+  id: 1,
+  name: '武夷山市' },
+
+{
+  id: 2,
+  name: '延平区' },
+
+{
+  id: 3,
+  name: '顺昌县' },
+
+{
+  id: 4,
+  name: '浦城县' },
+
+{
+  id: 5,
+  name: '光泽县' },
+
+{
+  id: 6,
+  name: '松溪县' },
+
+{
+  id: 7,
+  name: '政和县' },
+
+{
+  id: 8,
+  name: '邵武市' },
+
+{
+  id: 9,
+  name: '建瓯市' },
+
+{
+  id: 10,
+  name: '建阳区' },
+
+//二级分类
+//武夷山市
+{
+  id: 5,
+  pid: 1,
+  name: '武夷山' },
+
+{
+  id: 6,
+  pid: 1,
+  name: '大安源' },
+
+{
+  id: 8,
+  pid: 1,
+  name: '茶博园' },
+
+{
+  id: 9,
+  pid: 1,
+  name: '自遊小镇' },
+
+{
+  id: 10,
+  pid: 1,
+  name: '香江茗苑' },
+
+{
+  id: 11,
+  pid: 1,
+  name: '青龙大瀑布' },
+
+{
+  id: 12,
+  pid: 1,
+  name: '天上宫' },
+
+{
+  id: 14,
+  pid: 1,
+  name: '武夷精舍' },
+
+{
+  id: 15,
+  pid: 1,
+  name: '武夷源' },
+
+{
+  id: 16,
+  pid: 1,
+  name: '五夫古镇' },
+
+{
+  id: 17,
+  pid: 1,
+  name: '柳永纪念馆' },
+
+{
+  id: 18,
+  pid: 1,
+  name: '列宁公园' },
+
+{
+  id: 19,
+  pid: 1,
+  name: '龙川大峡谷' },
+
+{
+  id: 20,
+  pid: 1,
+  name: '慧苑禅寺' },
+
+{
+  id: 21,
+  pid: 1,
+  name: '山下梅村' },
+
+//延平区
+{
+  id: 22,
+  pid: 2,
+  name: '溪源峡谷' },
+
+{
+  id: 23,
+  pid: 2,
+  name: '三千八百坎' },
+
+{
+  id: 24,
+  pid: 2,
+  name: '杉湖岛度假区' },
+
+{
+  id: 25,
+  pid: 2,
+  name: '九峰山公园' },
+
+{
+  id: 26,
+  pid: 2,
+  name: '峡阳古镇' },
+
+{
+  id: 27,
+  pid: 2,
+  name: '茫荡山' },
+
+{
+  id: 28,
+  pid: 2,
+  name: '明翠阁' },
+
+//顺昌县
+{
+  id: 29,
+  pid: 3,
+  name: '华阳山' },
+
+{
+  id: 30,
+  pid: 3,
+  name: '宝山' },
+
+{
+  id: 31,
+  pid: 3,
+  name: '张墩乡村' },
+
+{
+  id: 32,
+  pid: 3,
+  name: '高老庄摄影基地' },
+
+{
+  id: 33,
+  pid: 3,
+  name: '元坑古镇' },
+
+//浦城县
+{
+  id: 34,
+  pid: 4,
+  name: '中国包酒文化博览园' },
+
+//光泽县
+{
+  id: 35,
+  pid: 5,
+  name: '乌君山' },
+
+//松溪县
+{
+  id: 39,
+  pid: 6,
+  name: '湛卢山' },
+
+//政和县
+{
+  id: 36,
+  pid: 7,
+  name: '佛子山' },
+
+{
+  id: 37,
+  pid: 7,
+  name: '凤头楠木林' },
+
+{
+  id: 39,
+  pid: 7,
+  name: '石圳村' },
+
+{
+  id: 42,
+  pid: 7,
+  name: '洋后厝桥' },
+
+{
+  id: 43,
+  pid: 7,
+  name: '后山廊桥' },
+
+{
+  id: 44,
+  pid: 7,
+  name: '云根书院' },
+
+{
+  id: 45,
+  pid: 7,
+  name: '洞宫山' },
+
+//邵武市 
+{
+  id: 46,
+  pid: 8,
+  name: '和平古镇' },
+
+{
+  id: 47,
+  pid: 8,
+  name: '天成奇峡' },
+
+{
+  id: 48,
+  pid: 8,
+  name: '瀑布林生态' },
+{
+  id: 49,
+  pid: 8,
+  name: '云灵山' },
+
+{
+  id: 50,
+  pid: 8,
+  name: '温泉度假区' },
+
+{
+  id: 51,
+  pid: 8,
+  name: '熙春园' },
+
+{
+  id: 52,
+  pid: 8,
+  name: '小隐竹源' },
+
+{
+  id: 53,
+  pid: 8,
+  name: '中央苏区纪念馆' },
+
+{
+  id: 54,
+  pid: 8,
+  name: '李忠定公祠' },
+
+{
+  id: 55,
+  pid: 8,
+  name: '宝严寺' },
+
+{
+  id: 56,
+  pid: 8,
+  name: '民俗馆' },
+
+{
+  id: 57,
+  pid: 8,
+  name: '华严寺' },
+
+{
+  id: 58,
+  pid: 8,
+  name: '清真寺' },
+
+//建瓯市
+{
+  id: 59,
+  pid: 9,
+  name: '鼓楼' },
+
+{
+  id: 60,
+  pid: 9,
+  name: '归宗岩' },
+
+{
+  id: 61,
+  pid: 9,
+  name: '东岳庙' },
+
+//建阳区
+{
+  id: 62,
+  pid: 10,
+  name: '花花世界' },
+
+{
+  id: 63,
+  pid: 10,
+  name: '黄坑' },
+
+{
+  id: 64,
+  pid: 10,
+  name: '考亭书院' }];var _default =
+
+
+
+{
+  cateList: cateList };exports.default = _default;
 
 /***/ })
 ]]);

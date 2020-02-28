@@ -4,6 +4,10 @@
 		<view class="text-area">
 			<text class="title">{{title}}</text>
 		</view>
+		<view>
+			<button class="buttonClass" @click="godetail('/pages/CZC/Index')">出租车地图</button>
+			<button class="buttonClass" @click="godetail('/pages/LYFW/scenicSpotTickets/ticketsList')">景区门票</button>
+		</view>
 	</view>
 </template>
 
@@ -19,11 +23,19 @@
 			this.testData();
 		},
 		methods: {
+			//调用模拟接口数据的方式
 			async testData() {
 				let userInfo = await this.$api.ctky('userInfo');
 				this.test = userInfo;
 				console.log(this.test.data.autograph);
-				}
+				} ,
+			
+			//路由统一事件
+			godetail : function(url){
+				uni.navigateTo({
+					url
+				})
+			}
 				
 		}
 	}
