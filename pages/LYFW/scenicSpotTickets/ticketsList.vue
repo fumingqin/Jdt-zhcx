@@ -141,7 +141,7 @@
 				});
 				setTimeout(function(){
 					uni.navigateTo({
-						url 
+						url : 'pages/LYFW/scenicSpotTickets/ticketsDetails'
 					})
 				},500);
 			},

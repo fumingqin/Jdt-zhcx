@@ -25,7 +25,7 @@
 		methods: {
 			//调用模拟接口数据的方式
 			async testData() {
-				let userInfo = await this.$api.ctky('userInfo');
+				let userInfo = await this.$api.lyfwcwd('userInfo');
 				this.test = userInfo;
 				console.log(this.test.data.autograph);
 				} ,
@@ -66,5 +66,9 @@
 	.title {
 		font-size: 36rpx;
 		color: #8f8f94;
+	}
+	.buttonClass{
+		margin: 32upx 0;
+		width: 272upx;
 	}
 </style>
