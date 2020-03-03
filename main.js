@@ -5,7 +5,10 @@ import Czc from './common/Czc.js'   //出租车-测试用数据
 import Dd from './common/Dd.js' 	 //订单-测试用数据
 import Gjcx from './common/Gjcx.js' //公交查询-测试用数据
 import Grzx from './common/Grzx.js' //个人中心-测试用数据
-import Lyfw from './common/Lyfw.js' //旅游服务-测试用数据
+import Lyfwfmq from './common/LYFW/LyfwFmq.js' //旅游服务-测试用数据-傅洺钦
+import Lyfwcwd from './common/LYFW/LyfwCwd.js' //旅游服务-测试用数据-蔡伟达
+import Lyfwlql from './common/LYFW/LyfwLql.js' //旅游服务-测试用数据-林奇隆
+
 import Sceniclist from 'common/scenicSpotDistribution.js' //旅游服务-景区目录-测试用数据
 
 Vue.config.productionTip = false
@@ -62,10 +65,28 @@ const grzx = type=>{
 }
 
 //模拟异步请求数据 - 旅游服务
-const lyfw = type=>{
+const lyfwfmq = type=>{
 	return new Promise(resolve=>{
 		setTimeout(()=>{
-			resolve(Lyfw[type]);
+			resolve(Lyfwfmq[type]);
+		}, 500)
+	})
+}
+
+//模拟异步请求数据 - 旅游服务
+const lyfwcwd = type=>{
+	return new Promise(resolve=>{
+		setTimeout(()=>{
+			resolve(Lyfwcwd[type]);
+		}, 500)
+	})
+}
+
+//模拟异步请求数据 - 旅游服务
+const lyfwlql = type=>{
+	return new Promise(resolve=>{
+		setTimeout(()=>{
+			resolve(Lyfwlql[type]);
 		}, 500)
 	})
 }
@@ -79,5 +100,7 @@ const sceniclist = type=>{
 	})
 }
 
-Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfw,sceniclist};
+
+
+Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfwfmq,lyfwcwd,lyfwlql,sceniclist};
 app.$mount()

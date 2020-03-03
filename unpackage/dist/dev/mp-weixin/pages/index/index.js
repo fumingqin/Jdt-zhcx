@@ -160,7 +160,7 @@ var _default =
   methods: {
     //调用模拟接口数据的方式
     testData: function () {var _testData = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var userInfo;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
-                  this.$api.ctky('userInfo'));case 2:userInfo = _context.sent;
+                  this.$api.lyfwcwd('userInfo'));case 2:userInfo = _context.sent;
                 this.test = userInfo;
                 console.log(this.test.data.autograph);case 5:case "end":return _context.stop();}}}, _callee, this);}));function testData() {return _testData.apply(this, arguments);}return testData;}(),
 

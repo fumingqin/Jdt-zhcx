@@ -15,7 +15,10 @@ var _Czc = _interopRequireDefault(__webpack_require__(/*! ./common/Czc.js */ 16)
 var _Dd = _interopRequireDefault(__webpack_require__(/*! ./common/Dd.js */ 17));
 var _Gjcx = _interopRequireDefault(__webpack_require__(/*! ./common/Gjcx.js */ 18));
 var _Grzx = _interopRequireDefault(__webpack_require__(/*! ./common/Grzx.js */ 19));
-var _Lyfw = _interopRequireDefault(__webpack_require__(/*! ./common/Lyfw.js */ 20));
+var _LyfwFmq = _interopRequireDefault(__webpack_require__(/*! ./common/LYFW/LyfwFmq.js */ 20));
+var _LyfwCwd = _interopRequireDefault(__webpack_require__(/*! ./common/LYFW/LyfwCwd.js */ 131));
+var _LyfwLql = _interopRequireDefault(__webpack_require__(/*! ./common/LYFW/LyfwLql.js */ 132));
+
 var _scenicSpotDistribution = _interopRequireDefault(__webpack_require__(/*! common/scenicSpotDistribution.js */ 21));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;} //旅游服务-景区目录-测试用数据
 
 _vue.default.config.productionTip = false;
@@ -72,10 +75,28 @@ var grzx = function grzx(type) {
 };
 
 //模拟异步请求数据 - 旅游服务
-var lyfw = function lyfw(type) {
+var lyfwfmq = function lyfwfmq(type) {
   return new Promise(function (resolve) {
     setTimeout(function () {
-      resolve(_Lyfw.default[type]);
+      resolve(_LyfwFmq.default[type]);
+    }, 500);
+  });
+};
+
+//模拟异步请求数据 - 旅游服务
+var lyfwcwd = function lyfwcwd(type) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve(_LyfwCwd.default[type]);
+    }, 500);
+  });
+};
+
+//模拟异步请求数据 - 旅游服务
+var lyfwlql = function lyfwlql(type) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve(_LyfwLql.default[type]);
     }, 500);
   });
 };
@@ -89,7 +110,9 @@ var sceniclist = function sceniclist(type) {
   });
 };
 
-_vue.default.prototype.$api = { ctky: ctky, czc: czc, dd: dd, gjcx: gjcx, grzx: grzx, lyfw: lyfw, sceniclist: sceniclist };
+
+
+_vue.default.prototype.$api = { ctky: ctky, czc: czc, dd: dd, gjcx: gjcx, grzx: grzx, lyfwfmq: lyfwfmq, lyfwcwd: lyfwcwd, lyfwlql: lyfwlql, sceniclist: sceniclist };
 createApp(app).$mount();
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createApp"]))
 
