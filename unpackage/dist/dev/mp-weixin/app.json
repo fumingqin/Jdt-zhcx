@@ -6,7 +6,9 @@
     "pages/LYFW/scenicSpotTickets/ticketsDetails",
     "pages/LYFW/currency/imglist",
     "pages/LYFW/currency/imgPreview",
-    "pages/LYFW/scenicSpotTickets/addOrder"
+    "pages/LYFW/scenicSpotTickets/addOrder",
+    "pages/LYFW/peripheralTourism/peripheralTourism",
+    "pages/LYFW/peripheralTourism/travelArticles"
   ],
   "subPackages": [],
   "window": {
@@ -16,5 +18,5 @@
     "backgroundColor": "#F8F8F8"
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap66.json"
+  "sitemapLocation": "sitemap28.json"
 }

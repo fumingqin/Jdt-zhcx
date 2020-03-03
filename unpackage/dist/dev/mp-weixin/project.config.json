@@ -38,8 +38,8 @@
 			"list": [
 				{
 					"id": -1,
-					"name": "pages/LYFW/scenicSpotTickets/addOrder",
-					"pathName": "pages/LYFW/scenicSpotTickets/addOrder",
+					"name": "pages/LYFW/peripheralTourism/peripheralTourism",
+					"pathName": "pages/LYFW/peripheralTourism/peripheralTourism",
 					"scene": null
 				}
 			]
