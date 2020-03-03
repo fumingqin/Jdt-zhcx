@@ -1,6 +1,6 @@
 /* 接口参数区 */
 // 示例
-const userInfo = {
+/* const userInfo = {
 	status: 1,  //成功/失败提示返回值
 	data: {
 		unid : 183252546,        //唯一ID标示
@@ -14,11 +14,14 @@ const userInfo = {
 		bg:'/static/index/banner2.jpg'			//背景图
 	},
 	msg: '提示'		
-}
+} */
 
-
+const GaoDeWebKey = [
+	"55b0f5270e1e9419a8e84d5df369ff04",
+	"1111"
+]
 
 // 接口声明区
 export default {
-	userInfo,  
+	GaoDeWebKey,
 }

@@ -1,0 +1,92 @@
+<template>
+	<view>
+		<map id="map1" ref="map1" class="map" :scale="scale" :longitude="longitude" :latitude="latitude" :show-location="true">
+			
+		</map>
+	</view>
+</template>
+
+<script>
+	import taxi from '../../common/Czc.js'
+	
+	export default {
+		data() {
+			return {
+				scale:15,
+				longitude:"",//地图中心点经度
+				latitude:"",//地图中心点纬度
+				lon:0,//当前位置经度
+				lat:0,//当前位置纬度
+				startLon:"",//开始
+				startLat:"",
+				endLon:"",//结束
+				endLat:"",
+				key:[],
+			}
+		},
+		onLoad() {
+			var that = this;
+			that.getGaoDeKey();
+			that.getMyLocaton();
+			setTimeout(function(){
+				that.setMapCenter();
+			},500);
+			that.getDirectionDriving(); 
+		},
+		onReady() {
+			
+		},
+		methods: {
+			getGaoDeKey: function() {
+				//获取高德key
+				var that = this;
+				that.key = taxi.GaoDeWebKey;
+			},
+			getMyLocaton:function(){
+				var that = this;
+				uni.getLocation({
+					type: 'gcj02',
+					geocode: true,
+					success: function(res) {
+						that.lon = res.longitude;
+						that.lat = res.latitude;
+					}
+				});
+			},
+			setMapCenter:function(){
+				var that = this;
+				that.longitude = that.lon;
+				that.latitude = that.lat;
+			},
+			getDirectionDriving:function(){
+				var that = this;
+				uni.request({
+					url:'https://restapi.amap.com/v3/direction/driving',
+					data:{
+						key:that.key[0],
+						origin:'118.600608,24.889217',
+						destination:'118.613688,24.912702', 
+						strategy:0,
+						output:'JSON',
+						extensions:'all', 
+						callback:function(res){
+							console.log(res); 
+						}
+					},
+					method:"GET",
+					success:function(res){
+						console.log(res);
+					}
+				});
+			}
+			
+		}
+	}
+</script>
+
+<style>
+	.map {
+		width: 750rpx;
+		height: 1500rpx;
+	}
+</style>

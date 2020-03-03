@@ -1,0 +1,316 @@
+<template>
+	<view>
+		<map id='map' ref="map" class="map" :scale="scale" :longitude="longitude" :latitude="latitude" :show-location="true"
+		 :controls="controls" @controltap="controltap">
+			<view style="width: 100%;position: fixed;top: 120rpx;left: 20rpx;right: 20rpx;">
+				<view class="SearchBar" style="">
+					<image class="topContent-image" src="../../static/Home/Search.png"></image>
+					<text @click="chooseSite" style="width: 500rpx;line-height: 45rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:400; color:rgba(153,153,153,1);">{{Address}}</text>
+					<image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image>
+					<image @click="message" class="topContent-image" src="../../static/Home/Message.png" style="margin-right: 10rpx;"></image>
+				</view>
+			</view>
+
+			<view class="bottomContent" style="width: 100%;">
+				<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
+				</view> -->
+				<view style="flex-direction: row;width: 750rpx;text-align: center;margin-top:50rpx;margin-bottom: 50rpx ;">
+					<view class="tabItem" @click="CPDG">
+						<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
+						<text class="tabItem-font">车票订购</text>
+					</view>
+					<view class="tabItem" @click="WLYC">
+						<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
+						<text class="tabItem-font">网络约车</text>
+					</view>
+					<view class="tabItem" @click="GJCX">
+						<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
+						<text class="tabItem-font">公交查询</text>
+					</view>
+					<view class="tabItem" @click="BCFW">
+						<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
+						<text class="tabItem-font">包车服务</text>
+					</view>
+					<view class="tabItem" @click="LVFW">
+						<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
+						<text class="tabItem-font">旅游服务</text>
+					</view>
+				</view>
+			</view>
+		</map>
+	</view>
+</template>
+
+<script>
+	import taxi from '../../common/Czc.js'
+
+	export default {
+		data() {
+			return {
+				longitude: "", //精度
+				latitude: "", //纬度
+				Address: '搜索您要去的地方',
+				mapContext: '',
+				key:[],
+				scale: 17,
+				controls: [{
+						id: 'back',
+						position: {
+							left: 10,
+							top: 445,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Position.png',
+						clickable: true,
+					},
+					{
+						id: 'CallPollice',
+						position: {
+							left: 300,
+							top: 290,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/CallPollice.png',
+						clickable: true,
+					},
+					{
+						id: 'Service',
+						position: {
+							left: 300,
+							top: 345,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Service.png',
+						clickable: true,
+					},
+					{
+						id: 'Big',
+						position: {
+							left: 300,
+							top: 405,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Big.png',
+						clickable: true,
+					},
+					{
+						id: 'Small',
+						position: {
+							left: 300,
+							top: 440,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Small.png',
+						clickable: true,
+					}
+				],
+			}
+		},
+		onLoad() {
+			var that = this;
+			that.getGaoDeKey();
+			that.getMyLocation();
+		},
+		onReady() {
+			var that = this;
+			that.mapContext = uni.createMapContext("map", this);
+
+		},
+		methods: {
+			getGaoDeKey: function() {
+				//获取高德key
+				var that = this;
+				that.key = taxi.GaoDeWebKey;
+			},
+			getMyLocation: function() {
+				//获取我的位置，将地图中心点移动至此
+				var that = this;
+				var ojb = {
+					type: 'gcj02',
+					geocode: true,
+					success: function(res) {
+						that.longitude = res.longitude;
+						that.latitude = res.latitude;
+					},
+					fail: function() {
+
+					},
+				}
+				uni.getLocation(ojb);
+			},
+			//地图控件调用方法
+			controltap: function(e) {
+				var that = this;
+				if (e.detail.controlId == 'back') {
+					//回到我的位置
+					that.mapContext.moveToLocation();
+				} else if (e.detail.controlId == 'Service') {
+					//客服
+					uni.showToast({
+						title: '客服',
+						icon: 'none',
+					});
+				} else if (e.detail.controlId == 'CallPollice') {
+					//一键报警
+					uni.showToast({
+						title: '报警',
+						icon: 'none',
+					});
+				} else if (e.detail.controlId == 'Big') {
+					//放大
+					if (this.scale < 18) {
+						this.scale = this.scale + 1;
+					}
+				} else if (e.detail.controlId == 'Small') {
+					//缩小
+					if (this.scale > 5) {
+						this.scale = this.scale - 1;
+					}
+				}
+			},
+
+
+
+			chooseSite: function() {
+				uni.chooseLocation({
+					success: function(res) {
+						uni.setStorage({
+							key: 'Address',
+							data: res
+						});
+					},
+				});
+			},
+			message: function() {
+				uni.showToast({
+					title: "暂未开放",
+					mask: true,
+					icon: 'none',
+				});
+			},
+			camera: function() {
+				uni.showToast({
+					title: "暂未开放",
+					mask: true,
+					icon: 'none',
+				});
+				uni.chooseImage({
+					success: function(res) {
+						console.log(res);
+					}
+				})
+
+
+			},
+			CPDG: function() {
+				//车票订购
+				uni.showToast({
+					title: "暂未开放",
+					mask: true,
+					icon: 'none',
+				});
+				/* 	uni.navigateTo({
+						url: '../CZC/CallAndDrive',
+					}); */
+			},
+			WLYC: function() {
+				//网络约车
+				uni.redirectTo({
+					url: '../CZC/CallAndDrive',
+				});
+			},
+			GJCX: function() {
+				//公交查询
+				uni.showToast({
+					title: "暂未开放",
+					mask: true,
+					icon: 'none',
+				});
+				/* 		uni.navigateTo({
+							url: '../CZC/Index',
+						}); */
+			},
+			BCFW: function() {
+				//公交查询
+				uni.showToast({
+					title: "暂未开放",
+					mask: true,
+					icon: 'none',
+				});
+				/* 		uni.navigateTo({
+							url: '../CZC/Index',
+						}); */
+			},
+			LVFW: function() {
+				//旅游服务
+				uni.showToast({
+					title: "暂未开放",
+					mask: true,
+					icon: 'none',
+				});
+				/* 	uni.navigateTo({
+						url: '../CZC/Index',
+					}); */
+			},
+		}
+	}
+</script>
+
+<style>
+	.topContent-image {
+		width: 35rpx;
+		height: 35rpx;
+	}
+
+	.bottomContent {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: #FFFFFF;
+		align-items: center;
+		box-shadow: 0px 6px 20px 0px rgba(189, 189, 189, 0.53);
+		border-top-left-radius: 28rpx;
+		border-top-right-radius: 28rpx;
+	}
+
+	.SearchBar {
+		background-color: #FFFFFF;
+		width: 700rpx;
+		box-shadow: 0px 4px 9px 1px rgba(204, 204, 204, 1);
+		flex-direction: row;
+		border-radius: 9px;
+		padding: 20rpx;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.map {
+		width: 750rpx;
+		height: 1390rpx;
+	}
+
+	.tabItem {
+		width: 150rpx;
+		text-align: center;
+		align-items: center;
+	}
+
+	.tabItem-image {
+		width: 60rpx;
+		height: 60rpx;
+	}
+
+	.tabItem-font {
+		margin-top: 10rpx;
+		font-size: 24rpx;
+		font-family: Source Han Sans SC;
+		font-weight: 400;
+		color: #333333;
+	}
+</style>
