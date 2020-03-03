@@ -31,7 +31,15 @@
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/addOrder",
             "style" : {}
-        }
+        },
+		{
+		    "path" : "pages/LYFW/peripheralTourism/peripheralTourism",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/LYFW/peripheralTourism/travelArticles",
+		    "style" : {}
+		}
 		// ,
 		// {
 		//     "path" : "pages/LYFW/peripheralTourism/peripheralTourism",
