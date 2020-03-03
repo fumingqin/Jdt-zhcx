@@ -51,7 +51,7 @@
 			// if(id){
 			// 	this.$api.msg(`点击了${id}`);
 			// }
-			this.tweetsInit();
+			this.lyfwData();
 			
 		},
 		onNavigationBarButtonTap : function() {
@@ -80,7 +80,7 @@
 		},
 		methods: {
 			//读取静态数据json.js 
-			async tweetsInit(){
+			async lyfwData(){
 				let scSpotDetails = await this.$api.lyfw('scSpotDetails');
 				this.scSpotContent = scSpotDetails;
 				this.piclist = scSpotDetails.image;
@@ -91,7 +91,7 @@
 			goImgList(){
 				uni.setStorageSync('imagePiclist',this.piclist);
 				uni.navigateTo({
-					url:'/pages/sy_touristroute/imglist'
+					url:'/pages/LYFW/currency/imglist'
 				})
 			},
 			//路由整合

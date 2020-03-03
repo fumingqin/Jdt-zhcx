@@ -138,9 +138,9 @@ const scSpotDetails = {
 	image :[{
 		src : '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner1.jpg'
 	},{
-		src : '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner1.jpg'
+		src : '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner2.jpg'
 	},{
-		src : '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner1.jpg'
+		src : '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner3.jpg'
 	}],
 	imageNumber : 3,
 	scenicName : '南平武夷山',

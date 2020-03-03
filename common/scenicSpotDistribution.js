@@ -4,7 +4,7 @@ const cateList = [
 	{
 		id: 1,
 		name: '武夷山市'
-	},
+	}, 
 	{
 		id: 2,
 		name: '延平区'

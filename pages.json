@@ -10,7 +10,6 @@
 			"path": "pages/CZC/Index",
 			"style": {
 				"navigationStyle": "custom"
-
 			}
 		}
 	    ,{
@@ -19,6 +18,18 @@
         }
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/ticketsDetails",
+            "style" : {}
+        },
+		{
+		    "path" : "pages/LYFW/currency/imglist",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/LYFW/currency/imgPreview",
+		    "style" : {}
+		}
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/addOrder",
             "style" : {}
         }
     ],

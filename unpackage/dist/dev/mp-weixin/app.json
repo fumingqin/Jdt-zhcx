@@ -3,7 +3,10 @@
     "pages/index/index",
     "pages/CZC/Index",
     "pages/LYFW/scenicSpotTickets/ticketsList",
-    "pages/LYFW/scenicSpotTickets/ticketsDetails"
+    "pages/LYFW/scenicSpotTickets/ticketsDetails",
+    "pages/LYFW/currency/imglist",
+    "pages/LYFW/currency/imgPreview",
+    "pages/LYFW/scenicSpotTickets/addOrder"
   ],
   "subPackages": [],
   "window": {
@@ -13,5 +16,5 @@
     "backgroundColor": "#F8F8F8"
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap30.json"
+  "sitemapLocation": "sitemap66.json"
 }

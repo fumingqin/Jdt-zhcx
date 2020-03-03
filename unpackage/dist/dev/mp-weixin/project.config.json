@@ -38,8 +38,8 @@
 			"list": [
 				{
 					"id": -1,
-					"name": "pages/LYFW/scenicSpotTickets/ticketsDetails",
-					"pathName": "pages/LYFW/scenicSpotTickets/ticketsDetails",
+					"name": "pages/LYFW/scenicSpotTickets/addOrder",
+					"pathName": "pages/LYFW/scenicSpotTickets/addOrder",
 					"scene": null
 				}
 			]

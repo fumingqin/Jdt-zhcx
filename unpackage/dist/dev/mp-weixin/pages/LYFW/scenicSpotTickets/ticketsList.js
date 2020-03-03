@@ -276,7 +276,7 @@ var _default =
 
       setTimeout(function () {
         uni.navigateTo({
-          url: '/pages/LYFW/scenicSpotTickets/ticketsDetails' });
+          url: 'pages/LYFW/scenicSpotTickets/ticketsDetails' });
 
       }, 500);
     },
