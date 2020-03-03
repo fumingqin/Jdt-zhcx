@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    "city-select": "/components/uni-location/linzq-citySelect/linzq-citySelect",
-    "popup-layer": "/components/uni-location/popup-layer/popup-layer",
-    "q-s-tabs": "/components/uni-location/QS-tabs/QS-tabs"
-  }
-}
