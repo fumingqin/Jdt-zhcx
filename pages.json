@@ -52,12 +52,13 @@
 				"navigationStyle":"custom"
 			}
 		}
-		
-			
-		
-		
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/selectivePayment",
+            "style" : {}
+        }
+        
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/successfulPayment",
             "style" : {}
         }
     ],
