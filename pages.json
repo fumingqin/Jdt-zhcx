@@ -56,6 +56,10 @@
 			
 		
 		
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/selectivePayment",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
