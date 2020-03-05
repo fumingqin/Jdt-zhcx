@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "填写订单",
-  "usingComponents": {
-    "uni-popup": "/components/uni-popup/uni-popup",
-    "uni-calendar": "/components/uni-calendar/uni-calendar"
-  }
-}

@@ -1,1 +1,0 @@
-<view><map class="map vue-ref" id="map1" scale="{{scale}}" longitude="{{longitude}}" latitude="{{latitude}}" show-location="{{true}}" data-ref="map1"></map></view>
