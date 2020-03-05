@@ -25,9 +25,6 @@
 		{
 			"path": "pages/LYFW/currency/imgPreview",
 			"style": {}
-		}, {
-			"path": "pages/LYFW/scenicSpotTickets/addOrder",
-			"style": {}
 		},
 		{
 			"path": "pages/LYFW/peripheralTourism/peripheralTourism",
@@ -45,17 +42,31 @@
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
+			"style": {}
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
+			"style": {}
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
+			"style": {
+				"navigationBarTitleText": "填写订单"
+			}
+		},
+		{
+			"path": "pages/LYFW/ouristRoute/SceneryTable",
+			"style": {
+				"navigationBarTitleText": "旅游路线"
+			}
+		}, {
+			"path": "pages/Home/ChooseSite",
 			"style": {}
 		}
-
-
-
-
-	    ,{
-            "path" : "pages/Home/ChooseSite",
-            "style" : {}
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

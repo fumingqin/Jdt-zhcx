@@ -7,6 +7,7 @@
 		<view>
 			<button class="buttonClass" @click="godetail('/pages/Home/Index')">出租车地图</button>
 			<button class="buttonClass" @click="godetail('/pages/LYFW/scenicSpotTickets/ticketsList')">景区门票</button>
+			<button class="buttonClass" @click="godetail('/pages/LYFW/ouristRoute/SceneryTable')">旅游路线</button>
 		</view>
 	</view>
 </template>

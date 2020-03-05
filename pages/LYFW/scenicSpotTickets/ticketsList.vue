@@ -47,7 +47,7 @@
 				<view class="Tk_bacg">
 					<text class="Tk_text1">{{item.scenicName}}</text>
 					<text class="Tk_text2">{{item.comment}}</text>
-					<text class="Tk_text3">¥{{item.price}}元起</text>
+					<text class="Tk_text3">¥{{item.adultPrice}}元起</text>
 				</view>
 			</view>
 			</view>
@@ -100,7 +100,7 @@
 		methods: {
 			//请求模拟接口数据
 			async lyfwData(){
-				let sixPalaceList = await this.$api.lyfw('sixPalaceList');
+				let sixPalaceList = await this.$api.lyfwfmq('sixPalaceList');
 				this.sixPalaceList = sixPalaceList;
 				// console.log(this.sixPalaceList)
 			},
@@ -141,7 +141,7 @@
 				});
 				setTimeout(function(){
 					uni.navigateTo({
-						url : 'pages/LYFW/scenicSpotTickets/ticketsDetails'
+						url : '/pages/LYFW/scenicSpotTickets/ticketsDetails'
 					})
 				},500);
 			},
@@ -202,7 +202,7 @@
 					this.loadingType = 'more'
 				}
 				
-				let scenicList = await this.$api.lyfw('scenicList');
+				let scenicList = await this.$api.lyfwfmq('scenicList');
 				if(type === 'refresh'){
 					this.scenicList = [];
 				}
@@ -217,9 +217,9 @@
 				if(this.screenIndex === 2){
 					scenicList.sort((a,b)=>{
 						if(this.priceOrder == 1){
-							return a.price - b.price;
+							return a.adultPrice - b.adultPrice;
 						}
-						return b.price - a.price;
+						return b.adultPrice - a.adultPrice;
 					})
 				}
 				

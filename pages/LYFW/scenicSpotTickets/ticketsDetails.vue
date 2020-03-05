@@ -11,7 +11,6 @@
 				<!-- 标题、发布时间、点击量、分享 -->
 				<view class="clicks">
 				<text class="title">{{scSpotContent.scenicName}}</text>
-				
 				<text class="time">开放时间：{{scSpotContent.openup}} </text>
 				</view>
 			</view>
@@ -19,10 +18,10 @@
 			<!-- 模块命名：Tk -->
 			<scroll-view class="Tk_scrollview">
 			<view class="tweetsTitle2">门票</view>
-			<view class="Tk_item" v-for="(item,index) in scSpotContent.ticket" v-if="index<3" :key="index" @click="godetail('/pages/order/ticketOrder')">
+			<view class="Tk_item" v-for="(item,index) in scSpotContent.ticket" v-if="index<3" :key="index" @click="godetail('/pages/LYFW/scenicSpotTickets/orderAdd')">
 				<view class="Tk_bacg">
 					<text class="Tk_text1">{{item.title}}</text>
-					<text class="Tk_text3">¥{{item.price}}元</text>
+					<text class="Tk_text3">¥{{item.adultPrice}}元</text>
 					<text class="Tk_text2">{{item.comment}}</text>
 					<view class="Tk_butter">立即预订</view>
 				</view>
@@ -81,7 +80,7 @@
 		methods: {
 			//读取静态数据json.js 
 			async lyfwData(){
-				let scSpotDetails = await this.$api.lyfw('scSpotDetails');
+				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
 				this.scSpotContent = scSpotDetails;
 				this.piclist = scSpotDetails.image;
 				this.imgnumber = scSpotDetails.imageNumber;
