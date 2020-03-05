@@ -167,7 +167,7 @@
 			})
 			return {
 				index: 0, //门票信息的数组值
-				number: 1, //门票数量的值
+				number: 4, //门票数量的值
 				actualPayment: '', //实际付款
 				selectedValue: 0, //同意须知的选中值
 				dateReminder: '明天', //日期提醒
