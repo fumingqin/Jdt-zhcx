@@ -9,7 +9,6 @@
     "app-plus" : {
         "usingComponents" : true,
         "nvueCompiler" : "uni-app",
-        "compilerVersion" : 3,
         "splashscreen" : {
             "alwaysShowBeforeRender" : true,
             "waiting" : true,
@@ -62,7 +61,8 @@
                     }
                 }
             }
-        }
+        },
+        "compilerVersion" : 3
     },
     /* 快应用特有相关 */
     "quickapp" : {},

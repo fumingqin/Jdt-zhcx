@@ -1,22 +1,24 @@
 <template>
-	<view>
+	<view> 
 
 		<!-- 顶部背景 -->
 		<view class="ob_background">
 			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
 		</view>
 
+
+		<text class="jdticon icon-s"></text>
 		<!-- 门票信息/数量 -->
 		<!-- 命名：MP -->
 		<view class="cover-container">
-			<view class="MP_information">
-				<text class="MP_text1">{{scSpotDetails.ticket.title}}</text>
-				<text class="MP_text2" @click="open2(1)">{{scSpotDetails.ticket.comment}} &nbsp; > </text>
+			<view class="MP_information"> 
+				<view class="MP_text1">{{scSpotDetails.title}}</view>
+				<text class="MP_text2" @click="open2(1)">{{scSpotDetails.comment}} &nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<scroll-view class="noticeBox" scroll-y="ture">
 						<text class="Nb_text1">预订须知</text>
-						<text class="Nb_text4 yticon icon-fork " @click="close(1)"></text>
+						<text class="Nb_text4 jdticon icon-fork " @click="close(1)"></text>
 						<text class="Nb_text2">预订说明</text>
 						<text class="Nb_text3">
 							预订时间：最晚需在出行当天18:00前购票
@@ -50,10 +52,6 @@
 					<text class="MP_text3" @click="open">{{date}}&nbsp;> </text>
 					<text class="MP_text4">{{dateReminder}}</text>
 				</view>
-				<view class="MP_selector2">
-					<text>门票数量</text>
-					<uni-number-box class="step" :min="1" :max="100" :index="number" @eventChange="numberChange"></uni-number-box>
-				</view>
 			</view>
 
 			<view class="MP_information">
@@ -86,7 +84,7 @@
 			
 			<!-- 呼出优惠券面板 -->
 			<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
-				<view class="mask-content" @click.stop.prevent="stopPrevent">
+				<view class="mask-content" >
 					<!-- 优惠券页面，仿mt -->
 					<view class="couponTitle">
 						<text class="Co_text1">文中提及的地点</text>
@@ -123,7 +121,7 @@
 					<uni-popup  ref="popup2" type="bottom">
 							<scroll-view class="noticeBox" scroll-y="ture" >
 							<text class="Nb_text1">游客须知</text>
-							<text class="Nb_text4 yticon icon-fork " @click="close(2)"></text>
+							<text class="Nb_text4 jdticon icon-fork " @click="close(2)"></text>
 							<text class="Nb_text3">
 								1.本票仅为乘坐使用，不作为报销凭证
 								2.本票仅供一人使用、当趟有效，逾期作废
@@ -162,24 +160,24 @@
 <script>
 	import uniPopup from "../../../components/uni-popup/uni-popup.vue"
 	import uniCalendar from '../../../components/uni-calendar/uni-calendar.vue'
-	import uniNumberBox from '../../../components/uni-number-box.vue'
 	export default {
 		data() {
-			const currentDate = this.getDate({
+			const currentDate = this.getDate({ 
 				format: true
 			})
 			return {
 				index: 0, //门票信息的数组值
-				number: 0, //门票数量的值
+				number: 1, //门票数量的值
 				actualPayment: '', //实际付款
 				selectedValue: 0, //同意须知的选中值
 				dateReminder: '明天', //日期提醒
 				date: currentDate, //默认时间
 				maskState: 0, //优惠券面板显示状态
 				payType: 1, //1微信 2支付宝
-				scSpotDetails: {}, //景区内容
+				scSpotDetails: [], //景区内容
 				couponIndex: '请选择优惠券', //优惠券默认内容
-				couponColor: '', //优惠券默认数值，大于等于0触发价格判断事件
+				couponColor: '', //优惠券couponID，大于等于0触发价格判断事件
+				couponCondition: '',//优惠券的满足条件值
 				couponList: [{
 						couponID: '0',
 						title: '新用户专享优惠券',
@@ -189,9 +187,9 @@
 					{
 						couponID: '1',
 						title: '春节限时限量优惠券',
-						price: 10,
-						condition: 100,
-					},
+						price: 50,
+						condition: 400,
+					}, 
 					{
 						couponID: '2',
 						title: '大型团购优惠券-今点通限量版',
@@ -213,7 +211,6 @@
 
 		onLoad(option) {
 			this.lyfwData();
-			this.daysAddSub();
 		},
 
 		components: {
@@ -221,14 +218,12 @@
 			uniPopup,
 			//加载日期组件 
 			uniCalendar,
-			//加载增减数量组件
-			uniNumberBox,
 		},
-		methods: {
+		methods: { 
 			//读取静态数据
 			async lyfwData() {
-				let scSpotDetails = await this.$api.lyfw('scSpotDetails');
-				this.scSpotContent = scSpotDetails;
+				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
+				this.scSpotDetails = scSpotDetails.ticket;
 				console.log(this.scSpotDetails)
 			},
 
@@ -247,6 +242,7 @@
 				if (this.actualPayment >= this.couponList[index].condition) {
 					this.couponIndex = '-' + this.couponList[index].price;
 					this.couponColor = this.couponList[index].couponID;
+					this.couponCondition = this.couponList[index].condition;
 					this.calcTotal();
 					this.toggleMask();
 				} else {
@@ -276,7 +272,7 @@
 			submit: function() {
 				if (this.selectedValue == 1) {
 					uni.redirectTo({
-						url: '/pages/money/pay'
+						url
 					})
 				} else {
 					uni.showToast({
@@ -285,8 +281,6 @@
 					})
 				}
 			},
-
-			stopPrevent() {},
 
 			//打开选择器
 			open() {
@@ -317,7 +311,7 @@
 				const date = new Date();
 				let year = date.getFullYear();
 				let month = date.getMonth() + 1;
-				let day = date.getDate();
+				let day = date.getDate() + 1;
 				if (type === 'start') {
 					year = year - 60;
 				} else if (type === 'end') {
@@ -325,7 +319,7 @@
 				}
 				month = month > 9 ? month : '0' + month;;
 				day = day > 9 ? day : '0' + day;
-				return `${year}-${month}-${day+1}`;
+				return `${year}-${month}-${day}`;
 			},
 
 
@@ -360,6 +354,52 @@
 					this.date = e.fulldate;
 				}
 			},
+			
+			//同意购买-点击事件
+			Selection : function(){
+				if(this.selectedValue==0){
+					this.selectedValue=1;
+				}else{
+					this.selectedValue=0;
+				}
+			},
+				
+				
+			// 数量
+			numberChange(data){
+				var that = this;
+				const a = that.scSpotDetails.ticket[that.index].price * data;
+				if(this.couponColor ==''){
+					this.number = data;
+					this.calcTotal();
+				}else if(a >= this.couponCondition){
+					this.number = data;
+					this.calcTotal();
+				}else if(a < this.couponCondition){
+					uni.showToast({
+						title:'您的金额不满足优惠券条件，已取消优惠券',
+						icon:'none',
+						duration:2000
+					})
+					this.couponIndex = '请选择优惠券';
+					this.couponColor = '';
+					this.couponCondition = 0;
+					this.number = data;
+					this.calcTotal();
+				}
+			},
+			
+			// 计算总价
+			async calcTotal(e){ 
+				var total;
+				const a = this.scSpotDetails.ticket[this.index].price * this.number;
+				if(this.couponColor ==''){
+					this.actualPayment = a;
+				}else if(a >= this.couponCondition){
+					total = a - this.couponList[this.couponColor].price;
+					this.actualPayment = total;
+				}
+			},
 
 		}
 	}
@@ -392,7 +432,6 @@
 
 	//公共样式
 	.MP_information {
-		// width: 100%;
 		border-radius: 16upx;
 		background: #FFFFFF;
 		padding: 32upx 32upx;
@@ -415,10 +454,11 @@
 
 	//须知弹框
 	.noticeBox {
-		width: 100%;
+		width: 90%;
+		// overflow:hidden;
 		height: 880upx;
 		padding: 40upx;
-		padding-bottom: 120upx;
+		padding-bottom: 92upx;
 		background: #FFFFFF;
 
 		.Nb_text1 {
@@ -483,8 +523,8 @@
 
 		.step {
 			position: relative;
-			left: 240upx;
-			bottom: 20upx;
+			left: 330upx;
+			top: 40upx;
 		}
 	}
 
@@ -655,7 +695,7 @@
 		}
 		.title{
 			font-size: 32upx;
-			color: #999999;
+			color: #f85e52;
 			margin-bottom: 10upx;
 		}
 		.time{
@@ -668,7 +708,7 @@
 			justify-content: center;
 			align-items: center;
 			font-size: 26upx;
-			color: #f85e52;
+			color: #999999;
 			height: 100upx;
 		}
 		.price{
@@ -715,18 +755,18 @@
 		font-size: 30upx;
 		background: #fff;
 		z-index: 998;
-		color: #999999;
+		color: #f85e52;
 		box-shadow: 0 -1px 5px rgba(0,0,0,.1);
 		.price-content{
 			padding-left: 30upx;
 		}
 		.price-tip{
-			color: #999999;
+			color: #f85e52;
 			margin-left: 8upx;
 		}
 		.price{
 			font-size: 36upx;
-			color: #999999;
+			color: #f85e52;
 		}
 		.submitChange{
 			display:flex;

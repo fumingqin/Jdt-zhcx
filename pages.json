@@ -27,11 +27,7 @@
 		{
 		    "path" : "pages/LYFW/currency/imgPreview",
 		    "style" : {}
-		}
-        ,{
-            "path" : "pages/LYFW/scenicSpotTickets/addOrder",
-            "style" : {}
-        },
+		},
 		{
 		    "path" : "pages/LYFW/peripheralTourism/peripheralTourism",
 		    "style" : {}
@@ -60,6 +56,12 @@
             "path" : "pages/LYFW/scenicSpotTickets/successfulPayment",
             "style" : {}
         }
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/orderAdd",
+            "style" : {
+				"navigationBarTitleText": "填写订单"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -72,7 +74,7 @@
 		"list": [
 			{
 				"name": "", //模式名称
-				"path": "", //启动页面，必选
+				"path": "pages/LYFW/scenicSpotTickets/orderAdd", //启动页面，必选
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]
