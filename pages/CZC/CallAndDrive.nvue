@@ -1,48 +1,109 @@
 <template>
 	<view>
-		<map id="map1" ref="map1" class="map" :scale="scale" :longitude="longitude" :latitude="latitude" :show-location="true">
-			
+		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
+		 :polyline="polyline" :markers="markers" :show-location="true" @controltap="controltap" :controls="controls">
+			<view v-if="waitIf" style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+				<view class="waitContent">
+					<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
+					<view style="margin-top: 50rpx;">
+						<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">正在等待司机接单...</text>
+					</view>
+				</view>
+			</view>
 		</map>
 	</view>
 </template>
 
 <script>
 	import taxi from '../../common/Czc.js'
-	
+
 	export default {
 		data() {
 			return {
-				scale:15,
-				longitude:"",//地图中心点经度
-				latitude:"",//地图中心点纬度
-				lon:0,//当前位置经度
-				lat:0,//当前位置纬度
-				startLon:"",//开始
-				startLat:"",
-				endLon:"",//结束
-				endLat:"",
-				key:[],
+				scale: 15,
+				longitude: "", //地图中心点经度
+				latitude: "", //地图中心点纬度
+				lon: 0, //当前位置经度
+				lat: 0, //当前位置纬度
+				startLon: "", //开始
+				startLat: "",
+				endLon: "118.613688", //结束
+				endLat: "24.912702",
+				points: [],
+				polyline: [], //线
+				interval: 0, //定时器值
+				markers: [], //标记点
+				mapHeight: '', //地图高度
+				waitIf:true,
+				controls: [{ //地图控制组件
+					id: 'back',
+					position: {
+						left: 10,
+						top: 50,
+						width: 60,
+						height: 60
+					},
+					iconPath: '../../static/CZC/back.png',
+					clickable: true,
+				}],
+				mapContext: '', //mapContext对象
+				index: 0,
 			}
 		},
 		onLoad() {
 			var that = this;
-			that.getGaoDeKey();
+			uni.getSystemInfo({
+				//设置地图高度为可使用的高度
+				success: function(res) {
+					that.mapHeight = res.windowHeight + 'px';
+				}
+			});
+			/* that.getGaoDeKey(); */
 			that.getMyLocaton();
-			setTimeout(function(){
-				that.setMapCenter();
-			},500);
-			that.getDirectionDriving(); 
+			setTimeout(function() {
+				//第一次路线规划
+				that.getDirectionDriving(that.lon + ',' + that.lat, that.endLon + ',' + that.endLat);
+				//开启时时规划
+				/* 	that.openRealDirection(); */
+			}, 1000);
+			//描绘终点标记
+			that.setEndMarker(1, that.endLon, that.endLat, ''); //绘制终点经纬度
+			that.selectCarAroung();
 		},
 		onReady() {
-			
+			var that = this;
+			that.mapContext = uni.createMapContext("map", this);
+			uni.setKeepScreenOn({
+				keepScreenOn: true,
+			});
+		},
+		onHide() {
+			uni.setKeepScreenOn({
+				keepScreenOn: false,
+			});
 		},
 		methods: {
-			getGaoDeKey: function() {
+			back: function() {
+				uni.navigateBack({
+
+				});
+			},
+			controltap: function() {
+				var that = this;
+				if (e.detail.controlId == 'back') {
+					//返回上一页 -- 同时取消订单
+					uni.navigateBack({
+
+					});
+				}
+			},
+			//-------------------------
+			/* getGaoDeKey: function() {
 				//获取高德key
 				var that = this;
 				that.key = taxi.GaoDeWebKey;
-			},
-			getMyLocaton:function(){
+			}, */
+			getMyLocaton: function() {
 				var that = this;
 				uni.getLocation({
 					type: 'gcj02',
@@ -50,36 +111,120 @@
 					success: function(res) {
 						that.lon = res.longitude;
 						that.lat = res.latitude;
+						if (that.longitude == "" && that.latitude == "") {
+							that.longitude = that.lon;
+							that.latitude = that.lat;
+						}
 					}
 				});
 			},
-			setMapCenter:function(){
+			setMapCenter: function() {
+				//设置地图中心点
 				var that = this;
 				that.longitude = that.lon;
 				that.latitude = that.lat;
 			},
-			getDirectionDriving:function(){
+			openRealDirection: function() {
+				//开启时时路线规划，目前设置10秒一次。
+				var that = this;
+				that.interval = setInterval(function() {
+					uni.getLocation({
+						type: 'gcj02',
+						geocode: true,
+						success: function(res) {
+							that.lon = res.longitude;
+							that.lat = res.latitude;
+							that.getDirectionDriving(that.lon + ',' + that.lat, that.endLon + ',' + that.endLat);
+						}
+					})
+				}, 10000);
+			},
+			closeRealDirection: function() {
+				//关闭当前时时路径规划
+				clearInterval(that.interval);
+			},
+			getDirectionDriving: function(startLonLat, endLonLat) {
+				//调用高德api取得路径规划并绘制线路
 				var that = this;
 				uni.request({
-					url:'https://restapi.amap.com/v3/direction/driving',
-					data:{
-						key:that.key[0],
-						origin:'118.600608,24.889217',
-						destination:'118.613688,24.912702', 
-						strategy:0,
-						output:'JSON',
-						extensions:'all', 
-						callback:function(res){
-							console.log(res); 
-						}
+					url: taxi.InterfaceAddress[0],
+					data: {
+						startLonLat: startLonLat,
+						endLonLat: endLonLat,
 					},
-					method:"GET",
-					success:function(res){
+					method: "GET",
+					success: function(res) {
+						//日后会加入定时，此处需清空
+						that.points = [];
+						that.polyline = [];
+
+						var polylineArr = [];
+						var points = [];
+
+						polylineArr = res.data.Polyline;
+
+						for (var i = 0; i < polylineArr.length; i++) {
+							var arr = polylineArr[i].split(';');
+							for (var j = 0; j < arr.length; j++) {
+								points.push(arr[j]);
+							}
+						}
+						//根据文件建设对象经纬度数组
+						for (var i = 0; i < points.length; i++) {
+							var arr = points[i].split(',');
+							var obj = {
+								longitude: arr[0],
+								latitude: arr[1]
+							}
+							that.points.push(obj);
+						}
+						var obj = {
+							points: that.points,
+							color: "#0000AA",
+							arrowLine: true,
+							width: 6
+						};
+						that.polyline.push(obj);
+					},
+					fail: function(res) {
 						console.log(res);
 					}
 				});
-			}
-			
+			},
+			setEndMarker: function(id, lon, lat, iconPath) {
+				//描绘点的方法
+				var that = this;
+				var marker = new Object();
+				//画终点经纬度
+				marker = {
+					id: id,
+					latitude: lat,
+					longitude: lon,
+					iconPath: iconPath
+				};
+				that.markers.push(marker);
+			},
+			selectCarAroung: function() {
+				var that = this;
+				uni.request({
+					url: taxi.InterfaceAddress[1],
+					method: 'GET',
+					success: function(res) {
+						var carArr = res.data;
+						for (var i = 0; i < carArr.length; i++) {
+							var marker = new Object();
+							marker.Longitude = carArr[i].Longitude;
+							marker.latitude = carArr[i].latitude;
+							marker.id = i + 2;
+							marker.iconPath = '';
+							that.markers.push(marker);
+						}
+						console.log(that.markers);
+					}
+				})
+			},
+
+
 		}
 	}
 </script>
@@ -87,6 +232,16 @@
 <style>
 	.map {
 		width: 750rpx;
-		height: 1500rpx;
+	}
+
+	.waitContent {
+		width: 650rpx;
+		background-color: #FFFFFF;
+		border-radius: 9px;
+		align-items: center;
+		padding-top: 50rpx;
+		padding-left: 50rpx;
+		padding-bottom: 50rpx;
+		padding-right: 50rpx;
 	}
 </style>

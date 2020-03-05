@@ -1,9 +1,9 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
+			"path": "pages/Home/Index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -11,83 +11,99 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}
-	    ,{
-            "path" : "pages/LYFW/scenicSpotTickets/ticketsList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/LYFW/scenicSpotTickets/ticketsDetails",
-            "style" : {}
-        },
-		{
-		    "path" : "pages/LYFW/currency/imglist",
-		    "style" : {}
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
+			"style": {}
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
+			"style": {}
 		},
 		{
-		    "path" : "pages/LYFW/currency/imgPreview",
-		    "style" : {}
+			"path": "pages/LYFW/currency/imglist",
+			"style": {}
 		},
 		{
-		    "path" : "pages/LYFW/peripheralTourism/peripheralTourism",
-		    "style" : {}
+			"path": "pages/LYFW/currency/imgPreview",
+			"style": {}
 		},
 		{
-		    "path" : "pages/LYFW/peripheralTourism/travelArticles",
-		    "style" : {}
+			"path": "pages/LYFW/peripheralTourism/peripheralTourism",
+			"style": {}
 		},
 		{
-		    "path" : "pages/Home/Index",
-		    "style" : {
-				"navigationStyle":"custom"
+			"path": "pages/LYFW/peripheralTourism/travelArticles", 
+			"style": {}
+		},
+		{
+			"path": "pages/CZC/CallAndDrive",
+			"style": {
+				"navigationStyle": "custom"
 			}
-		},
-		{
-		    "path" : "pages/CZC/CallAndDrive",
-		    "style" : {
-				"navigationStyle":"custom"
-			}
-		}
-        ,{
-            "path" : "pages/LYFW/scenicSpotTickets/selectivePayment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/LYFW/scenicSpotTickets/successfulPayment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/LYFW/scenicSpotTickets/orderAdd",
-            "style" : {
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
+			"style": {}
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
+			"style": {}
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
+			"style": {
 				"navigationBarTitleText": "填写订单"
 			}
-        },
+		},
 		{
-		    "path" : "pages/LYFW/ouristRoute/SceneryTable",
-		    "style" : {
+			"path": "pages/LYFW/ouristRoute/SceneryTable",
+			"style": {
 				"navigationBarTitleText": "旅游路线"
 			}
+		}, {
+			"path": "pages/Home/ChooseSite",
+			"style": {
+				"navigationStyle":"custom"
 		}
-        ,{
-            "path" : "pages/LYFW/ouristRoute/sceneryDetails",
-            "style" : {}
-        }
-    ],
+		}
+	],
+	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"condition" : { //模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [
+	"tabBar": {
+		"color": "#333333",
+		"selectedColor": "#FC4646",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		// #ifdef APP-PLUS
+		"fontSize": "16px",
+		// #endif
+		"list": [{
+				"pagePath": "pages/Home/Index",
+				"text": "首页"
+			},
 			{
-				"name": "", //模式名称
-				"path": "pages/LYFW/scenicSpotTickets/orderAdd", //启动页面，必选
-				"query": "" //启动参数，在页面的onLoad函数里面得到
+				"pagePath": "pages/Home/Index",
+				"text": "商城"
+			},
+			{
+				"pagePath": "pages/Home/Index",
+				"text": "购物车"
+			},
+			{
+				"pagePath": "pages/Home/Index",
+				"text": "我的"
 			}
 		]
+	},
+	
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "pages/Home/Index", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
 	}
+	
 }
-
