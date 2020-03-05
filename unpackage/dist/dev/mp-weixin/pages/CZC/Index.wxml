@@ -1,0 +1,1 @@
+<view><map class="map" id="map" scale="13" longitude="{{longitude}}" latitude="{{latitude}}" show-location="{{true}}" polyline="{{polyline}}"></map></view>

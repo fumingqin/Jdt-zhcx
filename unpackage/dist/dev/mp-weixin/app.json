@@ -1,0 +1,27 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/CZC/Index",
+    "pages/LYFW/scenicSpotTickets/ticketsList",
+    "pages/LYFW/scenicSpotTickets/ticketsDetails",
+    "pages/LYFW/currency/imglist",
+    "pages/LYFW/currency/imgPreview",
+    "pages/LYFW/peripheralTourism/peripheralTourism",
+    "pages/LYFW/peripheralTourism/travelArticles",
+    "pages/Home/Index",
+    "pages/CZC/CallAndDrive",
+    "pages/LYFW/scenicSpotTickets/selectivePayment",
+    "pages/LYFW/scenicSpotTickets/successfulPayment",
+    "pages/LYFW/scenicSpotTickets/orderAdd",
+    "pages/LYFW/ouristRoute/SceneryTable"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}

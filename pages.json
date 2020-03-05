@@ -61,7 +61,13 @@
             "style" : {
 				"navigationBarTitleText": "填写订单"
 			}
-        }
+        },
+		{
+		    "path" : "pages/LYFW/ouristRoute/SceneryTable",
+		    "style" : {
+				"navigationBarTitleText": "旅游路线"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

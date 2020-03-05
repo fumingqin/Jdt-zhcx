@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "旅游路线",
+  "usingComponents": {
+    "q-stabs": "/components/QS-tabs/QS-tabs"
+  }
+}
