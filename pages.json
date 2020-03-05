@@ -68,6 +68,10 @@
 				"navigationBarTitleText": "旅游路线"
 			}
 		}
+        ,{
+            "path" : "pages/LYFW/ouristRoute/sceneryDetails",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
