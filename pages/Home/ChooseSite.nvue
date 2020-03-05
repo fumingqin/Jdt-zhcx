@@ -89,7 +89,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="history">
+				<view class="history"> 
 					<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
 						<view style="flex-direction: row;align-items: center;justify-content: space-between;">
 							<view style="flex-direction: row;align-items: center;">
