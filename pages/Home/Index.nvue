@@ -1,17 +1,17 @@
 <template>
 	<view>
-		<map id='map' ref="map" class="map" :scale="scale" :longitude="longitude" :latitude="latitude" :show-location="true"
+		<map id='map' ref="map" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude" :show-location="true"
 		 :controls="controls" @controltap="controltap">
 			<view style="width: 100%;position: fixed;top: 120rpx;left: 20rpx;right: 20rpx;">
-				<view class="SearchBar" style="">
+				<view class="SearchBar" elevation='5px' style="">
 					<image class="topContent-image" src="../../static/Home/Search.png"></image>
 					<text @click="chooseSite" style="width: 500rpx;line-height: 45rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:400; color:rgba(153,153,153,1);">{{Address}}</text>
 					<image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image>
-					<image @click="message" class="topContent-image" src="../../static/Home/Message.png" style="margin-right: 10rpx;"></image>
-				</view>
+					<image @click="message" class="topContent-image2" src="../../static/Home/Message.png" style="margin-right: 10rpx;"></image>
+				</view> 
 			</view>
 
-			<view class="bottomContent" style="width: 100%;">
+			<view class="bottomContent" elevation='5px' style="width: 100%;">
 				<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
 				</view> -->
 				<view style="flex-direction: row;width: 750rpx;text-align: center;margin-top:50rpx;margin-bottom: 50rpx ;">
@@ -51,8 +51,9 @@
 				latitude: "", //纬度
 				Address: '搜索您要去的地方',
 				mapContext: '',
-				key:[],
+				key: [],
 				scale: 17,
+				mapHeight:'',
 				controls: [{
 						id: 'back',
 						position: {
@@ -119,7 +120,12 @@
 		onReady() {
 			var that = this;
 			that.mapContext = uni.createMapContext("map", this);
-
+			uni.getSystemInfo({
+				//设置地图高度为可使用的高度
+				success: function(res) {
+					that.mapHeight = res.windowHeight + 'px'; 
+				}
+			});
 		},
 		methods: {
 			getGaoDeKey: function() {
@@ -177,13 +183,16 @@
 
 
 			chooseSite: function() {
-				uni.chooseLocation({
+				/* uni.chooseLocation({
 					success: function(res) {
 						uni.setStorage({
 							key: 'Address',
 							data: res
 						});
 					},
+				}); */
+				uni.navigateTo({
+					url:'../Home/ChooseSite'
 				});
 			},
 			message: function() {
@@ -266,6 +275,10 @@
 		width: 35rpx;
 		height: 35rpx;
 	}
+	.topContent-image2 {
+		width: 40rpx;
+		height: 35rpx;
+	}
 
 	.bottomContent {
 		position: fixed;
@@ -292,7 +305,6 @@
 
 	.map {
 		width: 750rpx;
-		height: 1390rpx;
 	}
 
 	.tabItem {

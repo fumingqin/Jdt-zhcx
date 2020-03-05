@@ -5,7 +5,7 @@
 			<text class="title">{{title}}</text>
 		</view>
 		<view>
-			<button class="buttonClass" @click="godetail('/pages/CZC/Index')">出租车地图</button>
+			<button class="buttonClass" @click="godetail('/pages/Home/Index')">出租车地图</button>
 			<button class="buttonClass" @click="godetail('/pages/LYFW/scenicSpotTickets/ticketsList')">景区门票</button>
 		</view>
 	</view>
