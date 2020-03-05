@@ -10,8 +10,8 @@ const userInfo = {
 		birthday:'1994-01-19',  //生日
 		permanent:'福建省南平市武夷山市',  //地址
 		autograph:'喜欢可以点关注哦~',	  //签名
-		portrait: '/static/user/touxiang2.jpg',  //头像
-		bg:'/static/index/banner2.jpg'			//背景图
+		portrait: '/static/user/touxiang.jpg',  //头像
+		bg:'../../../static/LYFW/peripheralTourism/user/touxiang.jpg'			//背景图
 	},
 	msg: '提示'		
 }
@@ -344,6 +344,57 @@ const scenicSpot = [{
 						comment : 78,
 					}]
 					}
+					
+					/* 旅游路线-回复内容 */
+					const reply = [{
+							unid : 185677868,
+							scennicName : '李大刚',
+							portrait: '../../../static/LYFW/peripheralTourism/user/t1.jpg',
+							content : '小姐姐的笔记写的很好啊！照片也拍的很美，给你点个赞，想来武夷山游玩的朋友们可以加我微信15359031110为您提供游玩攻略、民宿、帐篷预订及门票船票预订等旅游服务。我们整合了山上所有的旅游资源，花2分钟咨询，换一次完美旅行。赶紧动动手指联系我们把！',
+							date : '2019-12-16',
+							fabulous : 18,
+							fabulous_state : false,
+						},{
+							unid : 185271851,
+							scennicName : 'NDNPSOSWANGT',
+							portrait: '../../../static/LYFW/peripheralTourism/user/t2.jpg',
+							content : '不错,很赞的小姐姐,感谢分享',
+							date : '2019-12-16',
+							fabulous : 15,
+							fabulous_state : true,
+						},{
+							unid : 153218884,
+							scennicName : '小郑哥',
+							portrait: '../../../static/LYFW/peripheralTourism/user/t3.jpg',
+							content : '专门说武夷山的笔记在哪里？',
+							date : '2019-12-16',
+							fabulous : 12,
+							fabulous_state : false,
+						},{
+							unid : 415546455,
+							scennicName : 'Mickin',
+							portrait: '../../../static/LYFW/peripheralTourism/user/t1.jpg',
+							content : '小姐姐的笔记写的很好啊',
+							date : '2019-12-16',
+							fabulous : 8,
+							fabulous_state : true,
+						},{
+							unid : 653235635,
+							scennicName : '王老五',
+							portrait: '../../../static/LYFW/peripheralTourism/user/t2.jpg',
+							content : '不错,很赞的小姐姐,感谢分享',
+							date : '2019-12-16',
+							fabulous : 5,
+							fabulous_state : false,
+						},{
+							unid : 215851875,
+							scennicName : '富士康代工007',
+							portrait: '../../../static/LYFW/peripheralTourism/user/t3.jpg',
+							content : '小姐姐真好看？Emm?',
+							date : '2019-12-16',
+							fabulous : 0,
+							fabulous_state : false,
+						}]
 				
 // 接口声明区
 export default {
@@ -353,5 +404,5 @@ export default {
 	sixPeripheral,
 	scenicSpot,
 	tweets,
-	
+	reply,
 }
