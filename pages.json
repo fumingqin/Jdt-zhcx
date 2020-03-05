@@ -64,7 +64,9 @@
 			}
 		}, {
 			"path": "pages/Home/ChooseSite",
-			"style": {}
+			"style": {
+				"navigationStyle":"custom"
+			}
 		}
 	],
 	"globalStyle": {
