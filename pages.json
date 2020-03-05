@@ -41,9 +41,9 @@
 			}
 		},
 		{
-			"path": "pages/CZC/CallAndDrive",
+			"path": "pages/CZC/CallAndDrive",  
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle":"custom"
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
