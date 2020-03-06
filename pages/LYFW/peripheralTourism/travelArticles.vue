@@ -3,7 +3,7 @@
 			<!-- 顶部轮播图（可点击进入相册并放大） -->
 			<swiper class="swi" circular autoplay >
 				<swiper-item class="swi-item" v-for="(item,index) in piclist" :key="index">
-				<image :src="item.src"  />
+				<image :src="item.src"  @click="goImgList"/>
 				<view class="view">{{imgnumber}}张图片</view>
 				</swiper-item>
 			</swiper>
@@ -62,7 +62,7 @@
 	                </view>
                 </view>
             </view>
-			<view class="Hf_viewreply" >
+			<view class="Hf_viewreply" @click="navTo('/pages/peripheralTourism/toreply')">
 				<text> 查看{{replyContent.length}}条回复 ></text>
 			</view><!-- jiewei4 -->
 			
@@ -78,7 +78,7 @@
 					<text>{{tweets.like}}</text>
 				</view>
 				<!-- 评论 -->
-				<view  class="p-b-btn" :class="{active: tweets.comment_state}" >
+				<view  class="p-b-btn" :class="{active: tweets.comment_state}" @click="navTo('/pages/peripheralTourism/toreply')">
 					<text class="yticon jdticon icon-pinglun-copy"></text>
 					<text>{{replyContent.length}}</text>
 				</view>
@@ -168,6 +168,13 @@
 			// this.replyInput.portrait = this.userInfo.portrait;
 			// console.log(this.favorite)
 		},
+		//保存图片至本地并打开新页面
+		goImgList(){
+			uni.setStorageSync('imagePiclist',this.piclist);
+			uni.navigateTo({
+				url:'/pages/LYFW/peripheralTourism/imgList'
+			})
+		},
 		//路由整合
 		godetail : function (value){
 			// console.log(id)
@@ -181,6 +188,12 @@
 		// 根据文章ID,网络请求文章内容
 		getArticleInfo :function(id){
 			
+		},
+		// 统一跳转接口
+		navTo(url){
+			uni.navigateTo({
+				url :'/pages/LYFW/peripheralTourism/toreply'
+			})  
 		},
 		// 点赞事件
 		tofabulous :function(index){

@@ -62,7 +62,19 @@
 				"navigationStyle":"custom"
 		}
 		}
-	],
+        ,{
+            "path" : "pages/LYFW/peripheralTourism/imgList",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/LYFW/peripheralTourism/imgPreview",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/LYFW/peripheralTourism/toreply",
+            "style" : {}
+        }
+    ],
 	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
