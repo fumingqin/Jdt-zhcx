@@ -31,7 +31,7 @@
 			"style": {}
 		},
 		{
-			"path": "pages/LYFW/peripheralTourism/travelArticles", 
+			"path": "pages/LYFW/peripheralTourism/travelArticles",
 			"style": {}
 		},
 		{
@@ -60,7 +60,42 @@
 			"path": "pages/Home/ChooseSite",
 			"style": {
 				"navigationStyle":"custom"
-		}
+		}},{
+			"path": "pages/GRZX/user",
+			"style": {}
+		},{
+			"path": "pages/GRZX/personal",
+			"style": {}
+		},{
+			"path": "pages/GRZX/address",
+			"style": {}
+		},{
+			"path": "pages/GRZX/addressManage",
+			"style": {}
+		},{
+			"path": "pages/GRZX/notice",
+			"style": {}
+		},{
+			"path": "pages/GRZX/product",
+			"style": {}
+		},{
+			"path": "pages/GRZX/set",
+			"style": {}
+		},{
+			"path": "pages/GRZX/order",
+			"style": {}
+		},{
+			"path": "pages/GRZX/passengerInfo",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},{
+			"path": "pages/GRZX/addPassenger",    //添加乘客信息
+			"style": {
+				"navigationBarTitleText": "添加乘客信息",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"backgroundColor": "#55ffff"
+			}
 		}
 	    ,{
             "path" : "pages/LYFW/ouristRoute/travelDetails",
@@ -95,7 +130,7 @@
 				"text": "购物车"
 			},
 			{
-				"pagePath": "pages/Home/Index",
+				"pagePath": "pages/GRZX/user",
 				"text": "我的"
 			}
 		]
