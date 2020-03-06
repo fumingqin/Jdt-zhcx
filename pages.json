@@ -58,7 +58,8 @@
 			}
 		}, {
 			"path": "pages/Home/ChooseSite",
-			"style": {}
+			"style": {
+				"navigationStyle":"custom"
 		},{
 			"path": "pages/GRZX/user",
 			"style": {}
@@ -97,7 +98,9 @@
 				"fontSize": "100px"
 			}
 		}
+		}
 	],
+	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

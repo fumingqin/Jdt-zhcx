@@ -1,22 +1,386 @@
 <template>
-	<view>
-		
+	<view style="background-color: #F5F7F9;" :style="{height:pageheight}">
+		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px; ">
+			<view class="status_bar"></view>
+			<view style="background-color: #FFF; ">
+				<view style="padding-bottom: 30rpx;">
+					<view style="flex-direction: row;justify-content: center;">
+						<view style="width: 10%;">
+							<uni-icons type="arrowleft" size="24"></uni-icons>
+						</view>
+						<view style="width: 674rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
+							<view style="flex-grow:1">
+								<view>
+									<view style="flex-direction: row; align-items: center;padding-top: 15rpx;">
+										<view style="width: 60rpx;flex-direction: row;justify-content: center;align-items: center;">
+											<view class="bluering"></view>
+										</view>
+										<view>
+											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="true" @click="selectInitial"
+											 v-model="initialPoint" />
+										</view>
+									</view>
+								</view>
+								<view style="border-bottom-width: 2rpx;border-color: #EAEAEA;border-style: solid;margin-top: 10rpx;margin-bottom: 10rpx;margin-left: 60rpx;margin-right: 30rpx;"></view>
+								<view style="flex-direction: row;align-items: center;padding-bottom: 10rpx;">
+									<view style="width: 60rpx;flex-direction: row;justify-content: center;align-items: center;">
+										<view class="redring"></view>
+									</view>
+									<view>
+										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="true" @click="selectDestination"
+										 v-model="destination" />
+									</view>
+								</view>
+							</view>
+							<view style="flex-direction: row;align-items: center;padding-right: 20rpx;">
+								<image src="../../static/Home/exchange.png" style="height: 40rpx;width: 40rpx;" @click="exchange"></image>
+							</view>
+							<view style="flex-direction: row;align-items: center;padding-right: 20rpx;">
+								<image src="../../static/Home/Search.png" style="height: 40rpx;width: 40rpx;" @click="search"></image>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="tab">
+					<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#FC4646"></uni-segmented-control>
+				</view>
+			</view>
+		</view>
+		<view :style="{height:winheight}"></view>
+		<view v-if="current === 0" style="margin-top: 20rpx;">
+			<view>
+				<image src="../../static/Home/advertise.png" style="width: 750rpx;height: 150rpx;"></image>
+			</view>
+			<view style="background-color: #F5F7F9;" v-if="!IsSearch">
+				<scroll-view class="history" :scroll-y="true" :style="{height:historyheight}">
+					<view style="margin-left: 30rpx;margin-right: 30rpx;">
+						<view style="border-style: solid;border-bottom-width: 1px;border-color: #EAEAEA;padding: 30rpx;">
+							<text style="text-align: center;font-size: 30rpx;">历史记录</text>
+						</view>
+						<view style="flex-direction: row;align-items: center;padding-top: 20rpx;padding-bottom: 20rpx; border-bottom-width: 1px;border-color:#EAEAEA;;"
+						 v-for="(item,index) in address" :key="index">
+							<uniIcons type="location-filled"></uniIcons>
+							<view style="padding-left: 20rpx;width: 560rpx;">
+								<view><text style="font-size: 30rpx;">{{item.name}}</text></view>
+								<view><text style="color: #999999;font-size: 30rpx;">{{item.detail}}</text></view>
+							</view>
+							<uni-icons type="arrowright"  size="26"></uni-icons>
+						</view>
+						<view>
+							<text style="padding: 20rpx;color: #999999;font-size: 24rpx;text-align: center;">清除历史记录</text>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+			<view v-if="IsSearch">
+				<view class="history">
+					<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
+						<view style="flex-direction: row;align-items: center;justify-content: space-between;">
+							<view style="flex-direction: row;align-items: center;">
+								<view><text style="font-size: 36rpx; font-weight: bold;">客运&nbsp;</text></view>
+								<view style="border-width: 1px;border-color: #FF5A00;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; "><text
+									 style="font-size: 18rpx;color: #FF5A00;">最快</text></view>
+							</view>
+							<view><text style="font-size: 28rpx;"> 约34元</text></view>
+							<view><text style="font-size: 28rpx;"> 1小时34分钟</text></view>
+						</view>
+						<view>
+							<text style="font-size: 28rpx;color: #666666;"> 2公里&nbsp;等待接驾4分钟&nbsp;步行30分钟</text>
+						</view>
+					</view>
+				</view>
+				<view class="history"> 
+					<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
+						<view style="flex-direction: row;align-items: center;justify-content: space-between;">
+							<view style="flex-direction: row;align-items: center;">
+								<view><text style="font-size: 36rpx; font-weight: bold;">出租车&nbsp;</text></view>
+								<view style="border-width: 1px;border-color: #007AFF;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; "><text
+									 style="font-size: 18rpx;color: #007AFF;">最快</text></view>
+							</view>
+							<view><text style="font-size: 28rpx;"> 约34元</text></view>
+							<view><text style="font-size: 28rpx;"> 1小时34分钟</text></view>
+						</view>
+						<view>
+							<text style="font-size: 28rpx;color: #666666;"> 2公里&nbsp;等待接驾4分钟&nbsp;步行30分钟</text>
+						</view>
+					</view>
+				</view>
+				<view class="history">
+					<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;border-bottom-width: 1px;border-color:#EAEAEA;padding-top: 30rpx;padding-bottom: 20rpx;">
+						<view style="flex-direction: row;align-items: center;justify-content: space-between;">
+							<view style="flex-direction: row;align-items: center;">
+								<view><text style="font-size: 36rpx; font-weight: bold;">公交&nbsp;</text></view>
+								<view style="border-width: 1px;border-color: #007AFF;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; ">
+									<text style="font-size: 18rpx;color: #007AFF;">k602</text></view>
+							</view>
+							<view><text style="font-size: 28rpx;"> 1小时34分钟</text></view>
+						</view>
+						<view>
+							<text style="font-size: 28rpx;color: #666666;"> 2公里&nbsp;等待接驾4分钟&nbsp;步行30分钟</text>
+						</view>
+					</view>
+					<view style="margin-left: 30rpx;margin-right: 30rpx;flex-direction: row;height: 70rpx;align-items: center;">
+						<view style="height: 30rpx;width: 30rpx;border-width: 1px;border-color: #007AFF;border-radius: 100px;"><text
+							 style="color: #007AFF;font-size: 24rpx;text-align: center;line-height: 24rpx;">!</text></view>
+						<view><text style="font-size: 28rpx;">&nbsp;k602路约8分钟/趟</text></view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view v-if="current === 1">我是客运</view>
+		<view v-if="current === 2">
+			<map :style="{height:mapheight}" :longitude="118.600608" :latitude="24.889217"></map>
+			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;">
+				<view style="margin:20rpx;">
+					<view style="height: 80rpx;flex-direction: row;border-bottom-width: 1px;border-color: #EAEAEA;">
+						<button style="width: 329rpx;height: 60rpx;border-width: 0;background-color: #FFF;border-right-width: 1px;border-color: #EAEAEA;border-radius: 0;">现在</button>
+						<button style="width: 329rpx;height: 60rpx;\;border-width: 0;background-color: #FFF;">预约</button>
+					</view>
+					<view style="flex-direction: row;justify-content: space-between;height: 171.8rpx;align-items:center;">
+						<view style="align-items: center;justify-content: center;">
+							<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
+							<text style="padding-top: 20rpx;font-size: 28rpx;font-weight: 300;">商务车</text>
+						</view>
+						<view style="height: 118rpx;width: 1px;background-color:#EAEAEA ;"> </view>
+						<view style="align-items: center;justify-content: center;">
+							<image src="../../static/Home/car3.png" style="width: 190rpx;height: 70rpx;"></image>
+							<text style="padding-top: 20rpx;font-size: 28rpx;font-weight: 300;">菱悦优享</text>
+						</view>
+						<view style="height: 118rpx;width: 1px;background-color:#EAEAEA ;"> </view>
+						<view style="align-items: center;justify-content: center;">
+							<image src="../../static/Home/car2.png" style="width: 190rpx;height: 70rpx;"></image>
+							<text style="padding-top: 20rpx;font-size: 28rpx;font-weight: 300;">豪华轿车</text>
+						</view>
+					</view>
+					<view style="height: 97rpx;border-top-width: 1px;border-bottom-width: 1px;border-color:#EAEAEA;flex-direction: row;justify-content: space-between;">
+						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;">
+							<text style="font-size: 28rpx;">预约时间</text>
+							<uni-icons type="arrowright" size="19"></uni-icons>
+						</view>
+						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;border-left-width: 1px;border-color: #EAEAEA;">
+							<text style="font-size: 28rpx;">选择乘车人</text>
+							<uni-icons type="arrowright" size="19"></uni-icons>
+						</view>
+					</view>
+					<view style="margin-top: 40rpx;align-items: center;"><button style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;"><text style="color: #FFFFFF;font-size: 34rpx;">立即呼叫</text></button></view>
+				</view>
+			</view>
+		</view>
+		<view v-if="current === 3">我是公交</view>
 	</view>
 </template>
 
 <script>
+	import uniIcons from "@/components/uni-icons/uni-icons.vue";
+	import uniSegmentedControl from "@/components/uni-segmented-control/uni-segmented-control.vue"
 	export default {
+		components: {
+			uniIcons,
+			uniSegmentedControl
+		},
 		data() {
 			return {
-				
+				polyline: [],
+				tabIndex: 0,
+				index: 1,
+				initialPoint: "",
+				destination: "",
+				startlocation: "",
+				endlocation: "",
+				items: ['智能', '客运', '出租车', '公交'],
+				points: [],
+				IsSearch: false,
+				address: [{
+						name: "茶叶大厦",
+						detail: "泉州市-丰泽区-泉秀路777号"
+					},
+					{
+						name: "现代美居广场",
+						detail: "泉州市-丰泽区-温秀路/雅园路(路口)"
+					},
+					{
+						name: "伍氏面包店(泉秀店)",
+						detail: "泉州市-丰泽区-泉秀路523号"
+					},
+					{
+						name: "丰泽区人民法院",
+						detail: "泉州市-丰泽区-泉秀路765号"
+					},
+					{
+						name: "泉州汽车站",
+						detail: "泉州市-丰泽区-泉秀路222号"
+					},
+					{
+						name: "现代美居广场",
+						detail: "泉州市-丰泽区-温秀路/雅园路(路口)"
+					},
+					{
+						name: "现代美居广场",
+						detail: "泉州市-丰泽区-温秀路/雅园路(路口)"
+					},
+					{
+						name: "现代美居广场",
+						detail: "泉州市-丰泽区-温秀路/雅园路(路口)"
+					},
+					{
+						name: "现代美居广场",
+						detail: "泉州市-丰泽区-温秀路/雅园路(路口)"
+					},
+					{
+						name: "现代美居广场",
+						detail: "泉州市-丰泽区-温秀路/雅园路(路口)"
+					},
+					{
+						name: "现代美居广场",
+						detail: "泉州市-丰泽区-温秀路/雅园路(路口)"
+					},
+				],
+				query: '',
+				winheight: "",
+				current: 0,
+				mapheight: "",
+				historyheight: "",
+				pageheight: "",
 			}
 		},
+		onLoad() {
+
+		},
+		onReady: function() {
+			//动态设置高度
+			var that = this;
+			that.query = uni.createSelectorQuery().in(that).select("#ceshi");
+			that.query.fields({
+				size: true,
+				scrollOffset: true
+			}, data => {
+				that.winheight = data.height + 'px';
+				uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
+					success: function(res) {
+						that.historyheight = (res.windowHeight - data.height - 140) + "px";
+						that.pageheight = res.screenHeight + "px";
+						that.mapheight = res.windowHeight + "px";
+					}
+				})
+			}).exec();
+
+		},
+
 		methods: {
-			
+			onClickItem(e) { //tab点击事件
+				if (this.current !== e.currentIndex) {
+					this.current = e.currentIndex
+				}
+			},
+			selectInitial: function() {
+				var that = this;
+				uni.chooseLocation({
+					success: function(res) {
+						uni.setStorage({
+							key: 'startlocation',
+							data: res,
+							success: function() {
+								that.initialPoint = res.name;
+								that.startlocation = res;
+							}
+						});
+					}
+				});
+			},
+			selectDestination: function() { //选择
+				var that = this;
+				uni.chooseLocation({
+					success: function(res) {
+						uni.setStorage({
+							key: 'endlocation',
+							data: res,
+							success: function() {
+								that.destination = res.name;
+								that.endlocation = res;
+							}
+						});
+					}
+				});
+			},
+			exchange: function() { //始末位置交换
+				var that = this;
+				var newinitialPoint = that.initialPoint;
+				var newstartlocation = that.startlocation;
+				uni.setStorage({
+					key: 'startlocation',
+					data: that.endlocation,
+					success: function() {
+						that.initialPoint = that.destination
+						that.startlocation = that.endlocation;
+					}
+				});
+				uni.setStorage({
+					key: 'endlocation',
+					data: newstartlocation,
+					success: function() {
+						that.destination = newinitialPoint;
+						that.endlocation = newstartlocation;
+					}
+				});
+			},
+			search: function() {
+				var that = this;
+				if (that.initialPoint == '' || that.destination == '') {
+					uni.showToast({
+						title: "请输入起点或终点",
+						icon: 'none',
+						duration: 2000,
+					})
+
+				} else {
+					this.IsSearch = true;
+				}
+			},
 		}
 	}
 </script>
 
 <style>
+	/* 	.status_bar {
+		height: var(--status-bar-height);
+		width: 100%;
+		box-sizing: content-box;
+		background-color: #FFF;
+	} */
 
+	.bluering {
+		width: 20rpx;
+		height: 20rpx;
+		border-width: 4rpx;
+		border-color: #309FF7;
+		border-style: solid;
+		background-color: #fff;
+		border-radius: 100px;
+	}
+
+	.redring {
+		width: 20rpx;
+		height: 20rpx;
+		border-width: 4rpx;
+		border-color: #E3424B;
+		border-style: solid;
+		background-color: #fff;
+		border-radius: 100px;
+	}
+
+	.history {
+		width: 690rpx;
+		background-color: #FFFFFF;
+		margin: 20rpx 30rpx;
+		border-radius: 12rpx;
+		/* box-shadow: 0px 6rpx 20rpx 0px rgba(231, 231, 231, 0.53); */
+	}
+
+	.tabs {
+		background-color: #ffffff;
+		margin-top: 40rpx;
+		/* #ifdef MP-ALIPAY || MP-BAIDU */
+		height: 100vh;
+		/* #endif */
+	}
 </style>

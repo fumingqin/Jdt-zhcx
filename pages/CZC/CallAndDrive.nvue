@@ -1,8 +1,15 @@
 <template>
 	<view>
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
-		 :polyline="polyline" :markers="markers" :show-location="true">
-
+		 :polyline="polyline" :markers="markers" :show-location="true" @controltap="controltap" :controls="controls">
+			<view v-if="waitIf" style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+				<view class="waitContent">
+					<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
+					<view style="margin-top: 50rpx;">
+						<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">正在等待司机接单...</text>
+					</view>
+				</view>
+			</view>
 		</map>
 	</view>
 </template>
@@ -23,10 +30,23 @@
 				endLon: "118.613688", //结束
 				endLat: "24.912702",
 				points: [],
-				polyline: [],
-				interval: 0,
-				markers: [],
-				mapHeight: '',
+				polyline: [], //线
+				interval: 0, //定时器值
+				markers: [], //标记点
+				mapHeight: '', //地图高度
+				waitIf:true,
+				controls: [{ //地图控制组件
+					id: 'back',
+					position: {
+						left: 10,
+						top: 50,
+						width: 60,
+						height: 60
+					},
+					iconPath: '../../static/CZC/back.png',
+					clickable: true,
+				}],
+				mapContext: '', //mapContext对象
 				index: 0,
 			}
 		},
@@ -38,20 +58,21 @@
 					that.mapHeight = res.windowHeight + 'px';
 				}
 			});
-			
-			that.getGaoDeKey();
+			/* that.getGaoDeKey(); */
 			that.getMyLocaton();
 			setTimeout(function() {
 				//第一次路线规划
 				that.getDirectionDriving(that.lon + ',' + that.lat, that.endLon + ',' + that.endLat);
 				//开启时时规划
-				that.openRealDirection();
+				/* 	that.openRealDirection(); */
 			}, 1000);
 			//描绘终点标记
-			that.setEndMarker(1,that.endLon,that.endLat,'');//绘制终点经纬度
+			that.setEndMarker(1, that.endLon, that.endLat, ''); //绘制终点经纬度
 			that.selectCarAroung();
 		},
 		onReady() {
+			var that = this;
+			that.mapContext = uni.createMapContext("map", this);
 			uni.setKeepScreenOn({
 				keepScreenOn: true,
 			});
@@ -62,11 +83,26 @@
 			});
 		},
 		methods: {
-			getGaoDeKey: function() {
+			back: function() {
+				uni.navigateBack({
+
+				});
+			},
+			controltap: function() {
+				var that = this;
+				if (e.detail.controlId == 'back') {
+					//返回上一页 -- 同时取消订单
+					uni.navigateBack({
+
+					});
+				}
+			},
+			//-------------------------
+			/* getGaoDeKey: function() {
 				//获取高德key
 				var that = this;
 				that.key = taxi.GaoDeWebKey;
-			},
+			}, */
 			getMyLocaton: function() {
 				var that = this;
 				uni.getLocation({
@@ -155,7 +191,7 @@
 					}
 				});
 			},
-			setEndMarker: function(id, lon, lat,iconPath) {
+			setEndMarker: function(id, lon, lat, iconPath) {
 				//描绘点的方法
 				var that = this;
 				var marker = new Object();
@@ -164,18 +200,18 @@
 					id: id,
 					latitude: lat,
 					longitude: lon,
-					iconPath:iconPath
+					iconPath: iconPath
 				};
 				that.markers.push(marker);
 			},
-			selectCarAroung:function(){
+			selectCarAroung: function() {
 				var that = this;
 				uni.request({
-					url:taxi.InterfaceAddress[1],
-					method:'GET',
-					success:function(res){
+					url: taxi.InterfaceAddress[1],
+					method: 'GET',
+					success: function(res) {
 						var carArr = res.data;
-						for (var i = 0 ; i < carArr.length;i++) {
+						for (var i = 0; i < carArr.length; i++) {
 							var marker = new Object();
 							marker.Longitude = carArr[i].Longitude;
 							marker.latitude = carArr[i].latitude;
@@ -196,5 +232,16 @@
 <style>
 	.map {
 		width: 750rpx;
+	}
+
+	.waitContent {
+		width: 650rpx;
+		background-color: #FFFFFF;
+		border-radius: 9px;
+		align-items: center;
+		padding-top: 50rpx;
+		padding-left: 50rpx;
+		padding-bottom: 50rpx;
+		padding-right: 50rpx;
 	}
 </style>
