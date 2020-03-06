@@ -117,9 +117,9 @@
 			//读取静态页面json.js
 			async lunBoInit(){
 				let lunBo = await this.$api.lyfwcwd('lunBo');
-				this.piclist = lunBo.image;
+				this.piclist = lunBo.data.image;
 				let tourist_route = await this.$api.lyfwcwd('touristRoute');
-				this.touristRoute = tourist_route;
+				this.touristRoute = tourist_route.data;
 			},
 			
 			//搜索事件
@@ -168,13 +168,13 @@
 				
 				//筛选，测试数据直接前端筛选了
 					if(this.filterIndex === 0){
-						touristRoute.sort((a,b)=>b.like - a.like)
+						touristRoute.data.sort((a,b)=>b.like - a.like)
 					}
 					if(this.filterIndex === 1){
-						touristRoute.sort((a,b)=>a.routeId - b.routeId)
+						touristRoute.data.sort((a,b)=>a.routeId - b.routeId)
 					}
 					if(this.filterIndex === 2){
-						touristRoute.sort((a,b)=>a.date < b.date ? 1:-1)
+						touristRoute.data.sort((a,b)=>a.date < b.date ? 1:-1)
 					} 
 					// this.scenicSpot = this.scenicSpot.concat(scenicSpot);
 					
