@@ -94,8 +94,7 @@
 			"style": {
 				"navigationBarTitleText": "添加乘客信息",
 				"navigationBarBackgroundColor": "#FFFFFF",
-				"backgroundColor": "#55ffff",
-				"fontSize": "100px"
+				"backgroundColor": "#55ffff"
 			}
 		}
 	],
