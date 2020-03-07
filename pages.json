@@ -96,6 +96,11 @@
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"backgroundColor": "#55ffff"
 			}
+		},{
+			"path": "pages/GRZX/addAddress",  //添加地址信息
+			"style": {
+				/* "navigationStyle": "custom" */
+			}
 		}
 	],
 	
