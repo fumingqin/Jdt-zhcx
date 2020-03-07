@@ -100,7 +100,7 @@
 		}, {
 			"path": "pages/GRZX/passengerInfo",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom" 
 			}
 		}, {
 			"path": "pages/GRZX/addPassenger", //添加乘客信息
