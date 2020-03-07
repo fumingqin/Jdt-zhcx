@@ -13,6 +13,7 @@
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
+
 			"style": {
 				"navigationBarTitleText": "景区列表"
 			}
@@ -28,12 +29,14 @@
 		},
 		{
 			"path": "pages/LYFW/currency/imglist",
+
 			"style": {
 				"navigationBarTitleText": "全部图片"
 			}
 		},
 		{
 			"path": "pages/LYFW/currency/imgPreview",
+	
 			"style": {
 				"navigationBarTitleText": "查看图片"
 			}
@@ -43,6 +46,7 @@
 			"style": {}
 		},
 		{
+	
 			"path": "pages/LYFW/peripheralTourism/travelArticles",
 			"style": {}
 		},
@@ -71,6 +75,7 @@
 		}, {
 			"path": "pages/Home/ChooseSite",
 			"style": {
+
 				"navigationStyle": "custom"
 			}
 		}, {
@@ -116,7 +121,19 @@
 			"path": "pages/LYFW/currency/index",
 			"style": {}
 		}
-	],
+        ,{
+            "path" : "pages/LYFW/peripheralTourism/imgList",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/LYFW/peripheralTourism/imgPreview",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/LYFW/peripheralTourism/toreply",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -131,7 +148,7 @@
 		// #ifdef APP-PLUS
 		"fontSize": "16px",
 		// #endif
-		"list": [{
+		"list": [{ 
 				"pagePath": "pages/Home/Index",
 				"text": "首页"
 			},
