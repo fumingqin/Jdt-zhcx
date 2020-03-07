@@ -132,7 +132,21 @@
         ,{
             "path" : "pages/LYFW/peripheralTourism/toreply",
             "style" : {}
-        }
+        },
+		{
+			"path": "pages/CTKY/scheduleDetails",
+			"style": {
+				"navigationBarTitleText": "班次详情",
+				"backgroundColor":"#F1F1F1"
+				
+			}
+		},
+		{
+			"path": "pages/CTKY/selectTickets",
+			"style": {
+				"navigationBarTitleText": "班次列表"
+			}
+		},
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

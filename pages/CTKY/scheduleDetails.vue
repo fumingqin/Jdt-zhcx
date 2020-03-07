@@ -133,7 +133,8 @@
 		},
 		methods: {
 			Add() {
-
+ 
+ 
 			},
 			deleteInfo(e) {
 				console.log(e)
