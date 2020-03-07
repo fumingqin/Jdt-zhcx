@@ -88,6 +88,7 @@
 		onLoad() {
 			this.tweetsInit();
 			this.loadData();
+			this.Getpostion();
 		}, 
 		methods: {
 			//读取静态数据lyfw.js
@@ -97,7 +98,16 @@
 				let scenic_Spot = await this.$api.lyfwlql('scenicSpot');
 				this.scenicSpot = scenic_Spot;
 				},
-			
+			Getpostion(){
+				try {
+				    this.region = uni.getStorageSync('Key_position');
+				    if (value) {
+				        console.log(value);
+				    }
+				} catch (e) {
+				    // error
+				}
+			},
 			oncity() {
 				var that = this
 				this.$refs.popupRef.show();

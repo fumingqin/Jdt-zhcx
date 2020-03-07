@@ -31,7 +31,7 @@
 						<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 						<text class="tabItem-font">包车服务</text>
 					</view>
-					<view class="tabItem" @click="godetail('')">
+					<view class="tabItem" @click="godetail('/pages/LYFW/currency/index')">
 						<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
 						<text class="tabItem-font">旅游服务</text>
 					</view>
