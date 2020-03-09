@@ -13,7 +13,7 @@
 </script>
 
 <style>
-   /* #ifdef APP-VUE */
+   /* #ifndef APP-NVUE */
    @font-face {
    	font-family: jdticon;
    	font-weight: normal;
@@ -305,7 +305,7 @@
    	content: "\e712";
    }
    
-   .icon-yishouhuo:before {
+   .icon-yishouhuo:before { 
    	content: "\e71a";
    }
    
@@ -313,4 +313,5 @@
    	content: "\e617";
    }
    /* #endif */
+   
 </style>
