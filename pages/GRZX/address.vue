@@ -1,148 +1,191 @@
 <template>
-	<view class="content b-t">
-		<view class="list b-b" v-for="(item, index) in addressList" :key="index" @click="checkAddress(item)">
-			<view class="wrapper">
-				<view class="address-box">
-					<text v-if="item.default" class="tag">默认</text>
-					<text class="address">{{item.addressName}} {{item.area}}</text>
-				</view>
-				<view class="u-box">
-					<text class="name">{{item.name}}</text>
-					<text class="mobile">{{item.mobile}}</text>
+	<view class="content">	
+		<view class="addressList">
+			<view class="boxClass" v-for="(item, index) in addressList" :key="index" @click="editAddress(item)">  <!--非个人中心页面进入 -->
+				<view class="nameClass">{{item.name}}</view>
+				<view class="postalCodeClass">{{item.postalCode}}</view>
+				<view class="fontStyle" style="top:101upx;">手机号码：{{item.phoneNum}}</view>
+				<view class="fontStyle" style="top:158upx;">所在地区：{{item.district}}</view>
+				<view class="fontStyle" style="top:216upx;">详细地址：{{item.detailAddress}}</view>
+				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
+				<view v-if="item.defaultAddress==1">
+					<image src="../../static/GRZX/defaultAddress.png" class="defaultClass"></image>
 				</view>
 			</view>
-			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item)"></text>
+		</view>	
+		<view class="btnBox"> 
+			<button type="warn" @click="addAddress" class="btnAdd">+添加邮寄地址</button>
+		</view>	
+		<view class="returnBox" @click="returnPages">
+			<image class="returnClass" src="../../static/GRZX/btnReturn.png"></image>
+			<view class="titleClass">返回</view>
 		</view>
-		<text style="display:block;padding: 16upx 30upx 10upx;lihe-height: 1.6;color: #fa436a;font-size: 24upx;">
-			重要：添加和修改地址回调仅增加了一条数据做演示，实际开发中将回调改为请求后端接口刷新一下列表即可
-		</text>
-		
-		<button class="add-btn" @click="addAddress('add')">新增地址</button>
 	</view>
 </template>
 
 <script>
 	export default {
-		data() {
-			return {
-				source: 0,
-				addressList: [
-					{
-						name: '刘晓晓',
-						mobile: '18666666666',
-						addressName: '贵族皇仕牛排(东城店)',
-						address: '北京市东城区',
-						area: 'B区',
-						default: true
-					},{
-						name: '刘大大',
-						mobile: '18667766666',
-						addressName: '龙回1区12号楼',
-						address: '山东省济南市历城区',
-						area: '西单元302',
-						default: false,
-					}
-				]
+		data(){
+			return{
+				addressList:[{
+					name:'张小娴',
+					postalCode:'366300',
+					phoneNum:'136*****645',
+					district:'福建省泉州市丰泽区',
+					detailAddress:'泉秀路茶叶大厦7楼',
+					defaultAddress:1
+				},{
+					name:'黄小新1',
+					postalCode:'366300',
+					phoneNum:'136*****645',
+					district:'福建省泉州市丰泽区',
+					detailAddress:'泉秀路茶叶大厦7楼',
+					defaultAddress:0
+				},{
+					name:'黄小新2',
+					postalCode:'366300',
+					phoneNum:'136*****645',
+					district:'福建省泉州市丰泽区',
+					detailAddress:'泉秀路茶叶大厦7楼',
+					defaultAddress:0
+				},{
+					name:'黄小新3',
+					postalCode:'366300',
+					phoneNum:'136*****645',
+					district:'福建省泉州市丰泽区',
+					detailAddress:'泉秀路茶叶大厦7楼',
+					defaultAddress:0
+				},{
+					name:'黄小新4',
+					postalCode:'366300',
+					phoneNum:'136*****645',
+					district:'福建省泉州市丰泽区',
+					detailAddress:'泉秀路茶叶大厦7楼'
+				},{
+					name:'黄小新5',
+					postalCode:'366300',
+					phoneNum:'136*****645',
+					district:'福建省泉州市丰泽区',
+					detailAddress:'泉秀路茶叶大厦7楼',
+					defaultAddress:0
+				}
+			],
 			}
 		},
-		onLoad(option){
-			console.log(option.source);
-			this.source = option.source;
+		onLoad(){
+			
 		},
-		methods: {
-			//选择地址
-			checkAddress(item){
-				if(this.source == 1){
-					//this.$api.prePage()获取上一页实例，在App.vue定义
-					this.$api.prePage().addressData = item;
-					uni.navigateBack()
-				}
-			},
-			addAddress(type, item){
+		methods:{
+			addAddress(){
 				uni.navigateTo({
-					url: `/pages/GRZX/addressManage?type=${type}&data=${JSON.stringify(item)}`
+					url:'/pages/GRZX/addAddress'
 				})
+				console.log("/88888")
 			},
-			//添加或修改成功之后回调
-			refreshList(data, type){
-				//添加或修改后事件，这里直接在最前面添加了一条数据，实际应用中直接刷新地址列表即可
-				this.addressList.unshift(data);
+			returnPages(){
+				uni.navigateBack();
+			},
+			editAddress(){   //编辑乘车人信息
 				
-				console.log(data, type);
 			}
 		}
 	}
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 	page{
-		padding-bottom: 120upx;
+		background-color: #F6F8FC;
 	}
-	.content{
+	.content {
+		width: 100%;
+	}
+	.returnClass{ //返回按钮
+		width: 18upx;
+		height: 40upx;
+		margin-top: 103upx;
+		margin-left: 3.47%;
+	}
+	.btnRight{ //进入编辑的箭头
+		width:60upx;
+		height: 60upx; 
+		position: absolute;
+		left: 90%;
+		top:116upx;
+	}
+	.titleClass{
+		margin-left: 20upx;
+		font-size: 38upx;
+		/* font-weight: bold; */
+		margin-top: 97upx;
+	}
+	.addressList{ //列表样式
+		width: 100%;
+		margin-top: 180upx;
+		margin-bottom: 160upx;
+	}
+	.btnAdd{ //添加按钮
+		width: 92%;
+		height: 90upx;
+		border-radius: 12upx;
+		background-color: #FC4646;
+		margin-top: 30upx;
+	}
+	.boxClass{
+		background-color: #FFFFFF;
+		width: 94%;
+		margin-top: 20upx;
+		margin-left: 3%;
+		height: 282upx;
+		font-size:28upx;
+		color: #666666;
 		position: relative;
+		border-radius:20upx ;
 	}
-	.list{
-		display: flex;
-		align-items: center;
-		padding: 20upx 30upx;;
-		background: #fff;
-		position: relative;
+	.nameClass{
+		font-size: 34upx;
+		color: #424242;
+		position: absolute;
+		left: 5.56%;
+		top:30upx;
+		font-weight: bold;
 	}
-	.wrapper{
-		display: flex;
-		flex-direction: column;
-		flex: 1;
+	.fontStyle{
+		position: absolute;
+		left: 5.56%;
+		font-size:26upx;
+		color: #888888;
 	}
-	.address-box{
-		display: flex;
-		align-items: center;
-		.tag{
-			font-size: 24upx;
-			color: $base-color;
-			margin-right: 10upx;
-			background: #fffafb;
-			border: 1px solid #ffb4c7;
-			border-radius: 4upx;
-			padding: 4upx 10upx;
-			line-height: 1;
-		}
-		.address{
-			font-size: 30upx;
-			color: $font-color-dark;
-		}
+	.postalCodeClass{
+		position: absolute;
+		left: 24.93%;
+		top:40upx;
+		color: #888888;
+		font-size: 26upx;
 	}
-	.u-box{
-		font-size: 28upx;
-		color: $font-color-light;
-		margin-top: 16upx;
-		.name{
-			margin-right: 30upx;
-		}
-	}
-	.icon-bianji{
-		display: flex;
-		align-items: center;
-		height: 80upx;
-		font-size: 40upx;
-		color: $font-color-light;
-		padding-left: 30upx;
-	}
-	
-	.add-btn{
+	.returnBox{
+		width: 100%;
+		height: 160upx;
 		position: fixed;
-		left: 30upx;
-		right: 30upx;
-		bottom: 16upx;
-		z-index: 95;
+		top: 0upx;
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 690upx;
-		height: 80upx;
-		font-size: 32upx;
-		color: #fff;
-		background-color: $base-color;
-		border-radius: 10upx;
-		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);		
+		flex-direction: row;
+		background-color: #F6F8FC;
+		z-index: 9999;
+	}
+	.btnBox{ //按钮位置样式
+		position: fixed;
+		display: flex;
+		flex-direction: row;
+		bottom: 0upx;
+		width: 100%;
+		height: 158upx;
+		background-color: #F6F8FC;
+	}
+	.defaultClass{
+		position: absolute;
+		right: 0upx;
+		top:0upx;
+		width: 90upx;
+		height: 90upx;
 	}
 </style>

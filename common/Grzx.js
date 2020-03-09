@@ -6,12 +6,13 @@ const user = {
 		chineseName:'张三',  		//中文姓名
 		englishSurname:'zhang', 	//英文姓
 		englishName:'san', 			//英文名
+		sex:0,						//性别，0代表男，1代表女
 		codeNum:'3333333', 			//身份证号
 		date:'1998-04-29', 			//有效期
 		person:0,					//是否设置为本人，0代表否，1代表是
 		phoneNum:'15260769766'		//电话号码
 	},
-	msg: '提示'		
+	msg: '乘车人信息'		
 }
 
 const addressInfo = {
@@ -19,10 +20,10 @@ const addressInfo = {
 	data:{
 		receiver:'张三',							//收件人
 		phoneNum:'15260769766',					//手机号码
-		district:['福建省','丰泽区','泉秀路'],	//所在地区
+		district:'福建省 丰泽区 泉秀路',	//所在地区
 		detailAddress:'丰泽区',					//详细地址
 		postalCode:'366300',					//邮政编码
-		defaultAddress:true   			//是否设置为默认地址，0代表否，1代表是
+		defaultAddress:0						//是否设置为默认地址，0代表否，1代表是
 	},
 	msg:'地址详情'
 }
@@ -41,7 +42,7 @@ const userInfo = {
 		portrait: '/static/user/touxiang2.jpg',
 		bg:'/static/index/banner2.jpg'
 	},
-	msg: '提示'
+	msg: '用户信息'
 }
 
 // 接口声明区

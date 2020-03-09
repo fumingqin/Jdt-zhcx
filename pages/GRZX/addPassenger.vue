@@ -18,6 +18,15 @@
 				<input placeholder="如王小明填写为'XIAOMING'" class="inputClass" :value="user.englishName" name="englishName" />
 			</view>
 			
+			<view class="sexClass">
+				<view class="fontStyle">性别</view>
+				<radio-group class="inputClass" name="sex">
+					<label v-for="(item, index) in sexMode" :key="index" @click="radioClick(index)" > 
+						<radio style="transform: scale(0.7)" :value="user.sex" :checked="index===user.sex" />{{item.title}}
+					</label>  
+				</radio-group>
+			</view>
+			
 			<view class="phoneClass">
 				<view class="fontStyle">手机号码</view>
 				<input
@@ -27,9 +36,9 @@
 					class="inputClass"
 					:value="user.phoneNum"
 					name="phoneNum"
-				/> 
-				
+				/> 				
 			</view>
+			
 			<view class="codeClass">证件</view>
 			<view class="codeType">
 				<view class="fontStyle" style="font">身份证</view>
@@ -75,11 +84,15 @@
 	export default {
 		data(){
 			return{
-				
+				sexMode :[
+					{title:'男'},
+					{title:'女'}
+				],
 				user:{
 					chineseName:'',	
 					englishSurname:'',
 					englishName:'',
+					sex:0,
 					phoneNum:'',
 					codeNum:'',
 					date:'',
@@ -92,12 +105,13 @@
 			this.loadData();
 		},
 		methods:{
-			async loadData(){
+			/* async loadData(){
 				let userInfo = await this.$api.grzx('user');
 				console.log(userInfo)
 				this.user.chineseName=userInfo.data.chineseName;
 				this.user.englishSurname=userInfo.data.englishSurname;
 				this.user.englishName=userInfo.data.englishName;
+				this.user.sex=userInfo.data.sex;
 				this.user.codeNum=userInfo.data.codeNum;
 				this.user.date=userInfo.data.date;
 				if(userInfo.data.person==0){
@@ -106,6 +120,9 @@
 					this.user.person=true;
 				}
 				this.user.phoneNum=userInfo.data.phoneNum;
+			}, */
+			radioClick:function(e){
+				this.user.sex = e;
 			},
 			formSubmit:function(e){
 				var data=e.target.value;
@@ -115,6 +132,7 @@
 					data.person=1;
 				}
 				data.date=this.user.date;
+				data.sex=this.user.sex;
 				console.log(data)
 			},
 			bindDateChange:function(e){
@@ -153,7 +171,7 @@
 	.codeClass{
 		position: absolute;
 		left: 6%;
-		top: 536upx;
+		top: 644upx;
 		font-size:28upx;
 		font-family:Source Han Sans SC;
 		font-weight:400;
@@ -182,12 +200,20 @@
 		top:296upx;
 		border-top: 1upx solid #F5F5F5;
 	}
-	.phoneClass{
+	.sexClass{
 		width: 100%;
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
 		top:404upx;
+		border-top: 1upx solid #F5F5F5;
+	}
+	.phoneClass{
+		width: 100%;
+		height: 108upx;
+		background-color: #FFFFFF;
+		position: absolute;
+		top:512upx;
 		border-top: 1upx solid #F5F5F5;
 	}
 	.fontStyle{   //文字样式
@@ -202,14 +228,14 @@
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:595upx;
+		top:703upx;
 	}
 	.codeNumClass{
 		width: 100%;
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:703upx;
+		top:811upx;
 		border-top: 1upx solid #DDDDDD;
 	}
 	.termClass{
@@ -217,7 +243,7 @@
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:811upx;
+		top:919upx;
 		border-top: 1upx solid #F5F5F5;
 	}
 	.personClass{
@@ -225,7 +251,8 @@
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:960upx;
+		top:1068upx;
+		margin-bottom: 150upx;
 	}
 	.btndelete{
 		width: 40%;

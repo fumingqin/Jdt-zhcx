@@ -11,7 +11,7 @@
 		<!-- 命名：six -->
 		<view class="currencyTitle">热门景点</view>
 		<view class="sixBackground">
-			<view v-for="(item,index) in sixPalaceList" v-if="index < 6" :key="index" @click="godetail(item.scName)">
+			<view v-for="(item,index) in sixPalaceList" v-if="index < 6" :key="index" @click="godetail">
 				<view class="darkCurtain"></view>
 				<image :src="item.image"></image>
 				<view class="sixView">
@@ -41,7 +41,7 @@
 		
 		<!-- 筛选的景区列表 -->
 		<view>
-			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" @click="godetail(item.scenicName)">
+			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" @click="godetail">
 			<view class="Tk_item" >
 				<image class="Tk_image" :src="item.image"/>
 				<view class="Tk_bacg">
@@ -101,7 +101,7 @@
 			//请求模拟接口数据
 			async lyfwData(){
 				let sixPalaceList = await this.$api.lyfwfmq('sixPalaceList');
-				this.sixPalaceList = sixPalaceList;
+				this.sixPalaceList = sixPalaceList.data;
 				// console.log(this.sixPalaceList)
 			},
 			
@@ -134,16 +134,10 @@
 			},
 			
 			//路由整合
-			godetail : function (value){
-				uni.showToast({
-					title: '点击了'+value,
-					icon: 'none',
-				});
-				setTimeout(function(){
+			godetail : function (){
 					uni.navigateTo({
 						url : '/pages/LYFW/scenicSpotTickets/ticketsDetails'
 					})
-				},500);
 			},
 			
 			//筛选点击
@@ -203,19 +197,20 @@
 				}
 				
 				let scenicList = await this.$api.lyfwfmq('scenicList');
+				var sc = scenicList.data;
 				if(type === 'refresh'){
 					this.scenicList = [];
 				}
 				
 				//筛选，测试数据直接前端筛选了
 				if(this.screenIndex === 0){
-					scenicList.sort((a,b)=>a.scenicId - b.scenicId)
+					sc.sort((a,b)=>a.scenicId - b.scenicId)
 				}
 				if(this.screenIndex === 1){
-					scenicList.sort((a,b)=>b.sales - a.sales)
+					sc.sort((a,b)=>b.sales - a.sales)
 				}
 				if(this.screenIndex === 2){
-					scenicList.sort((a,b)=>{
+					sc.sort((a,b)=>{
 						if(this.priceOrder == 1){
 							return a.adultPrice - b.adultPrice;
 						}
@@ -223,7 +218,7 @@
 					})
 				}
 				
-				this.scenicList = this.scenicList.concat(scenicList); 
+				this.scenicList = this.scenicList.concat(sc); 
 				
 				// 判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
 				// this.loadingType  = this.scenicList.length > 20 ? 'nomore' : 'more';
@@ -451,7 +446,6 @@
 	
 	//Y轴滚动视图
 	.Tk_scrollview{
-		width: 100%;
 		padding: 16upx 32upx;
 		margin: 0 auto;
 		.Tk_item{

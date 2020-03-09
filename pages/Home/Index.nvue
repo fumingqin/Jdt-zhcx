@@ -10,34 +10,33 @@
 					<image @click="message" class="topContent-image2" src="../../static/Home/Message.png" style="margin-right: 10rpx;"></image>
 				</view> 
 			</view>
-
-			<view class="bottomContent" elevation='5px' style="width: 100%;">
-				<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
-				</view> -->
-				<view style="flex-direction: row;width: 750rpx;text-align: center;margin-top:50rpx;margin-bottom: 50rpx ;">
-					<view class="tabItem" @click="godetail('')">
-						<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
-						<text class="tabItem-font">车票订购</text>
-					</view>
-					<view class="tabItem" @click="godetail('/pages/CZC/CallAndDrive')">
-						<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
-						<text class="tabItem-font">网络约车</text>
-					</view>
-					<view class="tabItem" @click="godetail('')">
-						<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
-						<text class="tabItem-font">公交查询</text>
-					</view>
-					<view class="tabItem" @click="godetail('')">
-						<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
-						<text class="tabItem-font">包车服务</text>
-					</view>
-					<view class="tabItem" @click="godetail('')">
-						<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
-						<text class="tabItem-font">旅游服务</text>
-					</view>
+		</map>
+		<view class="bottomContent" elevation='5px' style="width: 100%;">
+			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
+			</view> -->
+			<view style="flex-direction: row;width: 750rpx;text-align: center;margin-top:50rpx;margin-bottom: 50rpx ;">
+				<view class="tabItem" @click="godetail('')">
+					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
+					<text class="tabItem-font">车票订购</text>
+				</view>
+				<view class="tabItem" @click="godetail('/pages/CZC/CallAndDrive')">
+					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
+					<text class="tabItem-font">网络约车</text>
+				</view>
+				<view class="tabItem" @click="godetail('')">
+					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
+					<text class="tabItem-font">公交查询</text>
+				</view>
+				<view class="tabItem" @click="godetail('')">
+					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
+					<text class="tabItem-font">包车服务</text>
+				</view>
+				<view class="tabItem" @click="godetail('/pages/LYFW/currency/index')">
+					<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
+					<text class="tabItem-font">旅游服务</text>
 				</view>
 			</view>
-		</map>
+		</view>
 	</view>
 </template>
 
