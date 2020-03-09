@@ -146,7 +146,7 @@
 			"style": {
 				"navigationBarTitleText": "班次列表"
 			}
-		},
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
