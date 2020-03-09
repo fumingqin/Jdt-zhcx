@@ -220,11 +220,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-<<<<<<< HEAD
-			"path": "pages/Home/Index", //启动页面，必选			
-=======
-			"path": "", //启动页面，必选			
->>>>>>> dc9637ebf5f72bf95aa340f3dc6b6c7f3da2a3c7
+			"path": "pages/Home/Index", //启动页面，必选	
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

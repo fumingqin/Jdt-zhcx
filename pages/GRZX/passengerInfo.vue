@@ -138,7 +138,6 @@
 						array.push(data[i]);
 					}
 				}
-<<<<<<< HEAD
 				if (array.length > 4) {
 					uni.showToast({
 						title: '乘客最多只能添加4名',
@@ -151,7 +150,6 @@
 					})
 					uni.navigateBack();
 				}
-=======
 				if(array.length>4&&this.submitType==1){
 					uni.showToast({
 					    title: '乘客最多只能添加4名',
@@ -165,8 +163,6 @@
 					})
 					uni.navigateBack();	
 				}
-					
->>>>>>> dc9637ebf5f72bf95aa340f3dc6b6c7f3da2a3c7
 			}
 		}
 	}
