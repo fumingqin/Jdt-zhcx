@@ -113,6 +113,19 @@
 				}else{
 					e.hiddenIndex=0;
 				}
+				var list=this.passengerList;
+				var count=0;
+				for(var i=0;i<list.length;i++){
+					if(list[i].hiddenIndex==1){
+						count++;
+					}
+				}
+				if(count>4 && this.submitType==1){
+					uni.showToast({
+					    title: '乘客最多只能添加4名',
+					    icon:"none"
+					});
+				}
 			},
 			definite(){ //提交array
 				var data=this.passengerList;
@@ -122,11 +135,20 @@
 						array.push(data[i]);
 					}
 				}
-				uni.setStorage({
-					key:"passengerList",
-					data:array
-				})
-				uni.navigateBack();
+				if(array.length>4&&this.submitType==1){
+					uni.showToast({
+					    title: '乘客最多只能添加4名',
+					    icon:"none"
+					});
+				}
+				else{
+					uni.setStorage({
+						key:"passengerList",
+						data:array
+					})
+					uni.navigateBack();	
+				}
+					
 			}
 		}
 	}
@@ -162,7 +184,7 @@
 	.titleClass{
 		margin-left: 20upx;
 		font-size: 38upx;
-		font-weight: bold;
+		/*font-weight: bold; */
 		margin-top: 97upx;
 	}
 	.passengerList{ //列表样式
