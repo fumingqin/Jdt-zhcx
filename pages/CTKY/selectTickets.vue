@@ -20,7 +20,7 @@
 		</view>
 		<view class="ticketClass" v-for="(index,i) in 7" :key="index"  @click="ticketDetail">
 			<image src="../../static/index/ordinaryShuttle.png" class="ticketSortImage"></image>
-			<view class="ticketTimeCLass">
+			<view class="ticketTimeCLass">  
 				<text class="timeClass">15:05</text>
 				<text class="estimatedTimeClass">约1-2小时</text>
 			</view>
