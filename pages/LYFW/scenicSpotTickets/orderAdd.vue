@@ -5,77 +5,75 @@
 		<view class="ob_background">
 			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
 		</view>
-
-
-		<text class="jdticon icon-s"></text>
+		
 		<!-- 门票信息/数量 -->
 		<!-- 命名：MP -->
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_text1">{{scSpotDetails.title}}</view>
-				<text class="MP_text2" @click="open2(1)">{{scSpotDetails.comment}} &nbsp; > </text>
+				<view class="MP_title">{{scSpotDetails.title}}</view>
+				<text class="MP_text" @click="open2(1)">{{scSpotDetails.comment}} &nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<view class="boxVlew">
 						<view class="titleView">
 							<text class="Nb_text1">预订须知</text>
-							<text class="Nb_text4 jdticon icon-fork " @click="close(1)"></text>
+							<text class="Nb_text2 jdticon icon-fork " @click="close(1)"></text>
 						</view>
 						<scroll-view class="noticeBox" scroll-y="ture">
-							<text class="Nb_text2">费用包含</text>
-							<text class="Nb_text3">
+							<text class="Nb_text3">费用包含</text>
+							<text class="Nb_text4">
 								{{scSpotDetails.contain}}
 							</text>
-							<text class="Nb_text2">预订说明</text>
-							<text class="Nb_text3">{{notice.explain}}</text>
-							<text class="Nb_text2">使用方法</text>
-							<text class="Nb_text3">{{notice.way}}</text>
-							<text class="Nb_text2">使用时间</text>
-							<text class="Nb_text3">{{notice.date}}</text>
-							<text class="Nb_text2">免票政策</text>
-							<text class="Nb_text3">{{notice.policy}}</text>
-							<text class="Nb_text2">退改规则</text>
-							<text class="Nb_text3">{{notice.rule}}</text>
+							<text class="Nb_text3">预订说明</text>
+							<text class="Nb_text4">{{notice.explain}}</text>
+							<text class="Nb_text3">使用方法</text>
+							<text class="Nb_text4">{{notice.way}}</text>
+							<text class="Nb_text3">使用时间</text>
+							<text class="Nb_text4">{{notice.date}}</text>
+							<text class="Nb_text3">免票政策</text>
+							<text class="Nb_text4">{{notice.policy}}</text>
+							<text class="Nb_text3">退改规则</text>
+							<text class="Nb_text4">{{notice.rule}}</text>
 						</scroll-view>
 					</view>
 				</uni-popup>
 
 
-				<view class="MP_selector">
+				<view class="MP_selectionDate">
 					<text>使用日期</text>
-					<text class="MP_text3" @click="open">{{date}}&nbsp;> </text>
-					<text class="MP_text4">{{dateReminder}}</text>
+					<text class="MP_textDate" @click="open">{{date}}&nbsp;> </text>
+					<text class="MP_textReminder">{{dateReminder}}</text>
 				</view>
 			</view>
 
 			<!-- 购票人信息 -->
 			<view class="MP_information2">
-				<text class="MP_text1">购票人信息</text>
-				<text class="MP_text2" style="color: #aaa;">请选择预订人，票价会根据人数自动变更</text>
+				<text class="MP_title">购票人信息</text>
+				<text class="MP_text" style="color: #aaa;">请选择预订人，票价会根据人数自动变更</text>
 
-				<view class="MP_selector3" v-for="(item,index) in addressData" :key="index">
+				<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
 					<text>{{item.name}}</text>
-					<text class="Mp_text5">{{item.sex}}</text>
-					<text class="Mp_icon">{{item.mold}}</text>
-					<text class="Mp_icon" v-if="item.default == true">本人</text>
-					<text class="Mp_icon2  jdticon icon-fork" @click="deleteUser(index)"></text>
-					<text class="Mp_text6">身份证：{{item.idCard}}</text>
-					<text class="Mp_text6">手机号：{{item.mobile}}</text>
+					<text class="Mp_sex">{{item.sex}}</text>
+					<text class="Mp_square">{{item.mold}}</text>
+					<text class="Mp_square" v-if="item.default == true">本人</text>
+					<text class="Mp_delete  jdticon icon-fork" @click="deleteUser(index)"></text>
+					<text class="Mp_text">身份证：{{item.idCard}}</text>
+					<text class="Mp_text">手机号：{{item.mobile}}</text>
 				</view>
 
-				<view class="MP_selector3">
-					<button class="Mp_button1" type="default" plain="true">添加</button>
-					<button class="Mp_button2" type="primary" plain="true" @click="choiceUser">选择</button>
+				<view class="MP_userInformation">
+					<button class="Mp_addTo" type="default" plain="true">添加</button>
+					<button class="Mp_Selection" type="primary" plain="true" @click="choiceUser">选择</button>
 				</view>
 
 			</view>
 
 			<!-- 优惠券 -->
 			<view class="MP_information2" @click="toggleMask('show')">
-				<view class="MP_selector4">
-					<text class="Mp_text7">优惠券</text>
-					<text class="Mp_text11"> > </text>
-					<text class="Mp_text8">{{couponIndex}}</text>
+				<view class="MP_optionBar">
+					<text class="Mp_title">优惠券</text>
+					<text class="Mp_arrow"> > </text>
+					<text class="Mp_text">{{couponIndex}}</text>
 				</view>
 			</view>
 
@@ -109,20 +107,21 @@
 			</view>
 
 			<view class="MP_information2">
-				<view class="MP_selector4">
-					<text class="Mp_text7">同意游客须知</text>
-					<text class="Mp_text9" @click="open2(2)">(点击查看须知)</text>
-					<radio class="Mp_text10" value="1" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
+				<view class="MP_optionBar">
+					<text class="Mp_title">同意游客须知</text>
+					<text class="Mp_textBlue" @click="open2(2)">(点击查看须知)</text>
+					<radio class="Mp_box" value="1" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 				</view>
+				
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup2" type="bottom">
 					<view class="boxVlew">
 					<view class="titleView">
 						<text class="Nb_text1">游客须知</text>
-						<text class="Nb_text4 jdticon icon-fork " @click="close(2)"></text>
+						<text class="Nb_text2 jdticon icon-fork " @click="close(2)"></text>
 					</view>
 					<scroll-view class="noticeBox" scroll-y="ture">
-						<text class="Nb_text3">
+						<text class="Nb_text4">
 							{{notice.security}}
 						</text>
 					</scroll-view>
@@ -484,39 +483,41 @@
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
 		margin-top: 24upx;
+		.MP_title {
+			font-size: 34upx;
+			display: flex;
+			font-weight: bold;
+			margin-top: 20upx;
+		}
+		.MP_text {
+			color: #3EABFC;
+			font-size: 28upx;
+			margin-top: 20upx;
+			display: block; // 让字体换行
+		}
 	}
 
 	//公共样式2 - 适用单选框
 	.MP_information2 {
 		border-radius: 16upx;
 		background: #FFFFFF;
-		padding: 40upx 32upx;
+		padding: 36upx 32upx;
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
 		margin-top: 24upx;
+		.kj{
+			font-size: 34upx;
+			display: flex;
+			font-weight: bold;
+			margin-top: 8upx;
+		}
+		.MP_text {
+			font-size: 26upx;
+			margin-top: 20upx;
+			display: block; // 让字体换行
+		}
 	}
 
-
-	//标题和子内容
-	.MP_text1 {
-		font-size: 34upx;
-		display: flex;
-		font-weight: bold;
-		margin-top: 24upx;
-	}
-
-	.MP_text2 {
-		font-size: 26upx;
-		margin-top: 20upx;
-		display: block; // 让字体换行
-	}
-	//子标题-蓝色
-	.MP_text2 {
-		color: #3EABFC;
-		font-size: 28upx;
-		margin-top: 20upx;
-		display: block; // 让字体换行
-	}
 
 	//须知弹框
 	.boxVlew {
@@ -535,7 +536,7 @@
 				margin-bottom: 16upx;
 			}
 			//弹框关闭按钮
-			.Nb_text4 {
+			.Nb_text2 {
 				margin-top: 8upx;
 				float: right;
 				color: #333;
@@ -545,14 +546,14 @@
 		.noticeBox {
 			height: 800upx; 
 			line-height: 32upx;
-			.Nb_text2 {
+			.Nb_text3 {
 				display: block;
 				margin-top: 32upx;
 				font-size: 34upx;
 				font-weight: bold;
 			}
 
-			.Nb_text3 {
+			.Nb_text4 {
 				display: block;
 				line-height: 64upx;
 				margin: 32upx 0;
@@ -561,18 +562,19 @@
 		}
 	}
 
+
 	//使用日期
-	.MP_selector {
+	.MP_selectionDate {
 		width: 100%;
 		line-height: 120upx;
 		margin-top: 46upx;
 		border-top: 1px #F5F5F5 dashed;
 
-		.MP_text3 {
+		.MP_textDate{
 			float: right;
 		}
 
-		.MP_text4 {
+		.MP_textReminder{
 			font-size: 26upx;
 			color: #aaa;
 			float: right;
@@ -580,44 +582,25 @@
 		}
 	}
 
-
-	//门票数量
-	.MP_selector2 {
-		width: 100%;
-		line-height: 120upx;
-		border-top: 1px #F5F5F5 dashed;
-		display: flex;
-
-		.MP_text3 {
-			float: right;
-		}
-
-		.step {
-			position: relative;
-			left: 330upx;
-			top: 40upx;
-		}
-	}
-
-	// 购票人信息
-	.MP_selector3 {
+	// 用户信息
+	.MP_userInformation {
 		width: 100%;
 		margin-top: 32upx;
 		border-top: 1px #F5F5F5 dashed;
 		padding-top: 32upx;
 
-		.Mp_text5 {
+		.Mp_sex {
 			margin-left: 24upx;
 		}
 
-		.Mp_text6 {
+		.Mp_text {
 			font-size: 28upx;
 			display: block;
 			color: #888;
 			margin-top: 20upx;
 		}
 
-		.Mp_icon {
+		.Mp_square {
 			margin-left: 24upx;
 			padding: 2upx 20upx;
 			background: #3DABFC;
@@ -627,54 +610,53 @@
 			border-radius: 8upx;
 		}
 
-		.Mp_icon2 {
+		.Mp_delete {
 			float: right;
 			color: #f85e52;
 			font-size: 34upx;
-
 		}
 
-		.Mp_button1 {
+		.Mp_addTo {
 			float: left;
 			font-size: 30upx;
 			margin-left: 64upx;
 			width: 200upx;
 		}
 
-		.Mp_button2 {
+		.Mp_Selection{
 			font-size: 30upx;
 			margin-right: 64upx;
 			width: 200upx;
 		}
 	}
 
-	//优惠券
-	.MP_selector4 {
-		.Mp_text7 {
+	//选项框样式
+	.MP_optionBar {
+		.Mp_title {
 			font-size: 32upx;
 		}
 
-		.Mp_text8 {
+		.Mp_text {
 			margin-top: 6upx;
 			float: right;
 			font-size: 28upx;
 			color: #f85e52;
 		}
 
-		.Mp_text9 {
+		.Mp_textBlue {
 			margin-left: 16upx;
 			font-size: 26upx;
 			color: #3EABFC;
 		}
 
-		.Mp_text10 {
+		.Mp_box {
 			float: right;
 			position: relative;
 			bottom: 6upx;
 			right: -12upx;
 		}
 
-		.Mp_text11 {
+		.Mp_arrow {
 			margin-top: 6upx;
 			margin-left: 24upx;
 			float: right;
