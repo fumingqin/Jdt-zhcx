@@ -1,10 +1,10 @@
 <template>  
     <view class="container">  
 		
-		<view class="user-section">
+		<!-- <view class="user-section">
 			<image class="bg" src="/static/GRZX/beijing.png" ></image>
 			<view class="user-info-box" >
-				<!-- @click="longin_navTo('/pages/GRZX/personal')" -->
+				@click="longin_navTo('/pages/GRZX/personal')"
 				<view class="portrait-box">
 					<image class="portrait" :src=" userInfo.portrait || '/static/GRZX/missing-face.png'"></image>
 				</view>
@@ -12,8 +12,10 @@
 					<text class="username">{{userInfo.nickname || '游客'}}</text>
 				</view>
 			</view>
+		</view> -->
+		<view class="user-section">
+			<image class="bg" src="/static/GRZX/beijing.png" ></image>
 		</view>
-		
 		<view 
 			class="cover-container"
 			:style="[{
@@ -100,7 +102,7 @@
 				moving: false,
 			}
 		},
-		onLoad(){		
+		onLoad(){
 		},
 		// #ifndef MP
 
