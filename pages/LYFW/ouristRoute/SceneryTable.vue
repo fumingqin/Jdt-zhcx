@@ -1,9 +1,22 @@
 <template>
 	<view>
-		<!-- 搜索条 -->
-		<view class="searchTopBox">
-			<view class="searchBoxRadius" >
-				<input class="searchBoxIpt" type="search" v-model="ipt" @confirm="searchNow"  placeholder="搜索景区/线路名称" ></input>
+		<view>
+			<!-- 顶部搜索栏 -->
+			<view class="searchTopBox">
+				<view class="searchBoxRadius">
+					<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
+					<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
+				</view>
+			</view>
+			<!-- 选择地址 -->
+			<view class="selectAddress">
+				<text  class="locationTxt" @click="oncity">{{region}}</text>
+				<text class="jdticon icon-xia" @click="oncity"></text>
+				<popup-layer ref="popupRef" :direction="'right'">
+				<view style="width:750upx;height: 100%;">
+					<citySelect  @back_city="back_city"></citySelect>
+				</view>
+				</popup-layer>
 			</view>
 		</view>
 		
@@ -49,13 +62,24 @@
 </template>
 
 <script>
-	import QStabs from '../../../components/QS-tabs/QS-tabs.vue';
+	import QStabs from '../../../components/QS-tabs/QS-tabs.vue'
+	import citySelect from '../../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/uni-location/popup-layer/popup-layer.vue'
 	export default {
 		components:{
-			QStabs
+			QStabs,
+			citySelect,
+			popupLayer,
 		},
+		
+		mounted() {  
+			this.$refs.popupRef.close();
+		},
+		
 		data() {
 			return {
+				statusBarHeight: this.statusBarHeight, //状态栏高度，在main.js里
+				region: '请选择', //地区 
 				ipt: '',	//搜索默认值
 				// autograph:'', //用户签名
 				nickName : '', //用户姓名
@@ -76,12 +100,26 @@
 		},
 		
 		methods: {
+			//地址点击事件
+			oncity() {
+			    var that = this
+			    this.$refs.popupRef.show();
+			   },
+			   back_city(e) { 
+			    if (e !== 'no') {
+			     this.region = e.cityName
+			     this.$refs.popupRef.close();
+			    } else {
+			     this.$refs.popupRef.close();
+			    }
+			   },
+			
 			//读取静态页面json.js
 			async lunBoInit(){
 				let lunBo = await this.$api.lyfwcwd('lunBo');
-				this.piclist = lunBo.image;
+				this.piclist = lunBo.data.image;
 				let tourist_route = await this.$api.lyfwcwd('touristRoute');
-				this.touristRoute = tourist_route;
+				this.touristRoute = tourist_route.data;
 			},
 			
 			//搜索事件
@@ -130,13 +168,13 @@
 				
 				//筛选，测试数据直接前端筛选了
 					if(this.filterIndex === 0){
-						touristRoute.sort((a,b)=>a.like - b.like)
+						touristRoute.data.sort((a,b)=>b.like - a.like)
 					}
 					if(this.filterIndex === 1){
-						touristRoute.sort((a,b)=>a.routeId - b.routeId)
+						touristRoute.data.sort((a,b)=>a.routeId - b.routeId)
 					}
 					if(this.filterIndex === 2){
-						touristRoute.sort((a,b)=>a.date < b.date ? 1:-1)
+						touristRoute.data.sort((a,b)=>a.date < b.date ? 1:-1)
 					} 
 					// this.scenicSpot = this.scenicSpot.concat(scenicSpot);
 					
@@ -168,28 +206,120 @@
 </script>
 
 <style lang="scss">
-	//搜索栏
+	//搜索栏区域样式
 	.searchTopBox {
-		width: 76%;
-		height: 120upx;
-		padding-top: 15upx;
+		display: flex;
+		margin-top: 28upx;
 		.searchBoxRadius {
-			width: 92%;
-			height: 80upx;
+			position: relative;
+			right: -157upx;
+			width: 76%;
+			height: 74upx;
 			background-color: #fff;
-			margin-left: 34%;
 			overflow: hidden;
 			border-radius: 46upx;
-			margin-top: 8upx;
 			background: #f5f5f5;
-			.searchBoxIpt {
+			.searchImage {
+				position: absolute;
+				padding-left: 16upx;
+				padding-top: 15upx;
+				width: 48upx;
+				height: 48upx;
+			}
+			.inputIocale {
+				position: absolute;
 				height: 70upx;
-				text-align: center;
-				margin-top : 4upx;
+				padding-top : 4upx;
+				padding-left: 64upx;
 				font-size: 30upx;
 			}
+			
 		}
 	}
+	//选择地址
+	.selectAddress{
+		display: flex;
+		position: relative;
+		margin-top: -56upx;
+		.locationTxt{
+				position: absolute;
+		 		color: #808080; 
+		 		padding-left: 11px;
+		 		width: 44px;
+		 		font-size: 29upx;
+				padding-top: 0upx;
+				overflow: hidden;    
+				text-overflow:ellipsis;    
+				white-space: nowrap;   
+		 }
+		 .jdticon{
+			 position: relative;
+			 padding-top: 11upx;
+			 padding-left: 111upx;
+		 }
+		//定位
+		.height {
+		        height: var(--status-bar-height);
+		}
+		 
+	}
+	
+	
+	
+		 // /* 左上角所在城市文本 */
+		 // .locationTxt{
+		 // 		color: #808080; 
+		 // 		padding-top: 7px;
+		 // 		padding-left: 8px;
+		 // 		width: 55px;
+		 // 		font-size: 31upx;
+			// 	padding-top: 40upx;
+			// 	text-overflow:ellipsis;//文本溢出：省略号
+		 // }
+		 
+		 //  //定位
+		 //  .height {
+		 //  		height: var(--status-bar-height);
+		 //  	}
+	
+	// /* 景点搜索框 */
+	//  .inputIocale{
+	//   text-align: left;
+	//   background-color: #F5F5F5;
+	//   width: 192px;
+	//   background-image: url(../../../static/LYFW/peripheralTourism/peripheralTourism/search.png);
+	//   background-size: 48upx 50upx;
+	//   background-position: 16upx 12upx;/*小图标在input的位置*/
+	//   background-repeat: no-repeat;
+	//   padding: 2px 14px 6px 40px;/*设置input内边距*/
+	//   padding-left: 70upx;
+	//   padding-top: 11upx;
+	//   margin-left: 5px;
+	//   margin-top: 24upx;
+	//   border-radius:46upx;
+	//   font-size: 29rpx;
+	//  },
+	//  //定位
+	//  .height {
+	//  		height: var(--status-bar-height);
+	//  	}
+	//  /* 搜索栏区域样式 */
+	//  .searchArea{
+	//  		display: flex;
+	//  		padding-left: 10upx;
+	//  		text-align: center;	
+	//  }
+	//  /* 左上角所在城市文本 */
+	//  .locationTxt{
+	//  		color: #808080; 
+	//  		padding-top: 7px;
+	//  		padding-left: 8px;
+	//  		width: 55px;
+	//  		font-size: 31upx;
+	// 		padding-top: 40upx;
+	// 		text-overflow:ellipsis;//文本溢出：省略号
+	//  }
+		
 	
 	//标题样式
 	.recommendTitle{
@@ -197,7 +327,7 @@
 		font-weight: bold;
 		color: #333333; 
 		padding-left: 32upx;
-		margin-top: 3upx;
+		margin-top: 29upx;
 	}
 	
 	//顶部轮播图样式
@@ -329,6 +459,8 @@
 					// overflow:hidden;//溢出隐藏
 					// width:160px;
 					// bottom: 40upx;
+				}
+				.icon{
 				}
 			}
 			

@@ -1,108 +1,103 @@
 <template>
-	<view> 
+	<view>
 
 		<!-- 顶部背景 -->
 		<view class="ob_background">
 			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
 		</view>
-
-
-		<text class="jdticon icon-s"></text>
+		
 		<!-- 门票信息/数量 -->
 		<!-- 命名：MP -->
 		<view class="cover-container">
-			<view class="MP_information"> 
-				<view class="MP_text1">{{scSpotDetails.title}}</view>
-				<text class="MP_text2" @click="open2(1)">{{scSpotDetails.comment}} &nbsp; > </text>
+			<view class="MP_information1">
+				<view class="MP_title">{{scSpotDetails.title}}</view>
+				<text class="MP_text" @click="open2(1)">{{scSpotDetails.comment}} &nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
-					<scroll-view class="noticeBox" scroll-y="ture">
-						<text class="Nb_text1">预订须知</text>
-						<text class="Nb_text4 jdticon icon-fork " @click="close(1)"></text>
-						<text class="Nb_text2">预订说明</text>
-						<text class="Nb_text3">
-							预订时间：最晚需在出行当天18:00前购票
-							有效时间：指定购买日期起，1日有效
-						</text>
-						<text class="Nb_text2">使用方法</text>
-						<text class="Nb_text3">
-							1、本产品每个账号每天限购一张，购买 后持智慧旅游APP订单中的二维码检票入园即可
-							2、费用包含：成人票一张、竹筏票一张
-							3、本产品不支持代购或转售，仅限购票人本人使用。因代购或转售无法入园申请 退改，不退不改。
-						</text>
-						<text class="Nb_text2">使用时间</text>
-						<text class="Nb_text3">
-							周一至周日 09:00~18:00
-						</text>
-						<text class="Nb_text2">免票政策</text>
-						<text class="Nb_text3">
-							1、70岁以上老年人凭老年证免费；
-							2、身高80厘米以下免票；身高80-120厘米儿童票价160元；身高120以上儿童全票
-						</text>
-						<text class="Nb_text2">退改规则</text>
-						<text class="Nb_text3">
-							该产品未使用且在有效期内支持随时退， 过期不退不改，敬请谅解！如需取消，请 登录智慧旅游APP账号申请取消，经核实 未使用且在有效期内，可免费取消。如需 改期，请申请取消后重新预订。
-						</text>
-					</scroll-view>
+					<view class="boxVlew">
+						<view class="titleView">
+							<text class="Nb_text1">预订须知</text>
+							<text class="Nb_text2 jdticon icon-fork " @click="close(1)"></text>
+						</view>
+						<scroll-view class="noticeBox" scroll-y="ture">
+							<text class="Nb_text3">费用包含</text>
+							<text class="Nb_text4">
+								{{scSpotDetails.contain}}
+							</text>
+							<text class="Nb_text3">预订说明</text>
+							<text class="Nb_text4">{{notice.explain}}</text>
+							<text class="Nb_text3">使用方法</text>
+							<text class="Nb_text4">{{notice.way}}</text>
+							<text class="Nb_text3">使用时间</text>
+							<text class="Nb_text4">{{notice.date}}</text>
+							<text class="Nb_text3">免票政策</text>
+							<text class="Nb_text4">{{notice.policy}}</text>
+							<text class="Nb_text3">退改规则</text>
+							<text class="Nb_text4">{{notice.rule}}</text>
+						</scroll-view>
+					</view>
 				</uni-popup>
 
 
-				<view class="MP_selector">
+				<view class="MP_selectionDate">
 					<text>使用日期</text>
-					<text class="MP_text3" @click="open">{{date}}&nbsp;> </text>
-					<text class="MP_text4">{{dateReminder}}</text>
+					<text class="MP_textDate" @click="open">{{date}}&nbsp;> </text>
+					<text class="MP_textReminder">{{dateReminder}}</text>
 				</view>
 			</view>
 
-			<view class="MP_information">
-				<text class="MP_text1">购票人信息</text>
-				<text class="MP_text2" style="color: #aaa;">请选择预订人，票价会根据人数自动变更</text>
+			<!-- 购票人信息 -->
+			<view class="MP_information2">
+				<text class="MP_title">购票人信息</text>
+				<text class="MP_text" style="color: #aaa;">请选择预订人，票价会根据人数自动变更</text>
 
-				<view class="MP_selector3">
-					<text>{{addressData.name}}</text>
-					<text class="Mp_text5">女</text>
-					<text class="Mp_icon">成人</text>
-					<text class="Mp_icon2  yticon icon-fork"></text>
-					<text class="Mp_text6">{{addressData.idCard}}</text>
+				<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
+					<text>{{item.name}}</text>
+					<text class="Mp_sex">{{item.sex}}</text>
+					<text class="Mp_square">{{item.mold}}</text>
+					<text class="Mp_square" v-if="item.default == true">本人</text>
+					<text class="Mp_delete  jdticon icon-fork" @click="deleteUser(index)"></text>
+					<text class="Mp_text">身份证：{{item.idCard}}</text>
+					<text class="Mp_text">手机号：{{item.mobile}}</text>
 				</view>
 
-				<view class="MP_selector3">
-					<button class="Mp_button1" type="default" plain="true">删除</button>
-					<button class="Mp_button2" type="primary" plain="true">添加</button>
+				<view class="MP_userInformation">
+					<button class="Mp_addTo" type="default" plain="true">添加</button>
+					<button class="Mp_Selection" type="primary" plain="true" @click="choiceUser">选择</button>
 				</view>
 
 			</view>
 
 			<!-- 优惠券 -->
-			<view class="MP_information" @click="toggleMask('show')">
-				<view class="MP_selector4">
-					<text class="Mp_text7">优惠券</text>
-					<text class="Mp_text11"> > </text>
-					<text class="Mp_text8">{{couponIndex}}</text>
+			<view class="MP_information2" @click="toggleMask('show')">
+				<view class="MP_optionBar">
+					<text class="Mp_title">优惠券</text>
+					<text class="Mp_arrow"> > </text>
+					<text class="Mp_text">{{couponIndex}}</text>
 				</view>
 			</view>
-			
+
 			<!-- 呼出优惠券面板 -->
 			<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
-				<view class="mask-content" >
+				<view class="mask-content" @click.stop.prevent="stopPrevent">
 					<!-- 优惠券页面，仿mt -->
 					<view class="couponTitle">
-						<text class="Co_text1">文中提及的地点</text>
+						<text class="Co_text1">优惠券</text>
 						<text class="Co_text2" @click="couponReset">不使用优惠券</text>
 					</view>
-					
+
 					<view class="coupon-item" v-for="(item,index) in couponList" :key="index" @click="couponEvent(index)">
 						<view class="con">
 							<view class="left">
 								<text class="title">{{item.title}}</text>
 								<text class="time">有效期至2019-06-30</text>
-							</view> 
-							
+							</view>
+
 							<view class="right">
 								<text class="price">{{item.price}}</text>
 								<text>满{{couponList[index].condition}}可用</text>
 							</view>
-							
+
 							<view class="circle l"></view>
 							<view class="circle r"></view>
 						</view>
@@ -110,47 +105,43 @@
 					</view>
 				</view>
 			</view>
-			
-			<view class="MP_information" >
-					<view class="MP_selector4">
-						<text class="Mp_text7">同意游客须知</text>
-						<text class="Mp_text9" @click="open2(2)" >(点击查看须知)</text>
-						<radio class="Mp_text10" value="1" :checked="selectedValue===1 ? true : false" @click="Selection" ></radio>
-					</view>
-					<!-- 嵌套弹框组件popup -->
-					<uni-popup  ref="popup2" type="bottom">
-							<scroll-view class="noticeBox" scroll-y="ture" >
-							<text class="Nb_text1">游客须知</text>
-							<text class="Nb_text4 jdticon icon-fork " @click="close(2)"></text>
-							<text class="Nb_text3">
-								1.本票仅为乘坐使用，不作为报销凭证
-								2.本票仅供一人使用、当趟有效，逾期作废
-								3.请勿携带贵重物品乘坐竹筏
-								4.在行筏过程中严禁站立或行走拍照
-								5.在雷雨、大风、能见度差等条件下停筏
-								6.竹筏在行驶中或未停稳时，严禁强行登、下筏
-								7.严禁下河游泳，戏水
-								8.严禁携带戏水工具（水枪、水瓢等）乘坐竹筏
-								9.严禁未穿救生衣承筏，乘筏过程中严禁解脱救生衣
-								10.严禁携带易燃、易爆、腐蚀、毒害、放射性等危险品和管制刀具及国家禁止运输的其它危险化学品乘坐竹筏
-								11.严禁超载（原则上正常水位每张拼排乘坐体重75公斤以下游客10人），如遇超标准体重者，由现场管理人员统一调整
-								12.咨询电话：0599-8030999     投诉电话：0599-8030995
-							</text>
-						</scroll-view>
-					</uni-popup>
+
+			<view class="MP_information2">
+				<view class="MP_optionBar">
+					<text class="Mp_title">同意游客须知</text>
+					<text class="Mp_textBlue" @click="open2(2)">(点击查看须知)</text>
+					<radio class="Mp_box" value="1" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 				</view>
-			
-				<!-- 底部 -->
-				<view class="footer"   >
-					<view class="price-content" >
-						<text>实付款</text>
-						<text class="price-tip">￥</text>
-						<text class="price">{{actualPayment}}</text>
+				
+				<!-- 嵌套弹框组件popup -->
+				<uni-popup ref="popup2" type="bottom">
+					<view class="boxVlew">
+					<view class="titleView">
+						<text class="Nb_text1">游客须知</text>
+						<text class="Nb_text2 jdticon icon-fork " @click="close(2)"></text>
 					</view>
-					<view class="submitChange" :class="{submitColor: selectedValue===1}">
-						<text class="submit"  @click="submit">立即预订</text>
+					<scroll-view class="noticeBox" scroll-y="ture">
+						<text class="Nb_text4">
+							{{notice.security}}
+						</text>
+					</scroll-view>
 					</view>
+				</uni-popup>
+			</view>
+
+			<!-- 底部 -->
+			<view class="footer">
+				<view class="price-content">
+					<text>实付款</text>
+					<text class="price-tip">￥</text>
+					<text class="price">{{actualPayment}}</text>
+					<text class="people">共{{addressData.length}}人</text>
 				</view>
+
+				<view class="submitChange" :class="{submitColor: selectedValue===1}" @click="submit">
+					<text class="submit">立即预订</text>
+				</view>
+			</view>
 
 		</view>
 		<uni-calendar ref="calendar" :insert="false" :lunar="true" @confirm="confirm"></uni-calendar>
@@ -162,22 +153,21 @@
 	import uniCalendar from '../../../components/uni-calendar/uni-calendar.vue'
 	export default {
 		data() {
-			const currentDate = this.getDate({ 
+			const currentDate = this.getDate({
 				format: true
 			})
 			return {
 				index: 0, //门票信息的数组值
-				number: 4, //门票数量的值
 				actualPayment: '', //实际付款
 				selectedValue: 0, //同意须知的选中值
 				dateReminder: '明天', //日期提醒
 				date: currentDate, //默认时间
 				maskState: 0, //优惠券面板显示状态
-				payType: 1, //1微信 2支付宝
-				scSpotDetails: [], //景区内容
+				scSpotDetails: '', //景区内容
 				couponIndex: '请选择优惠券', //优惠券默认内容
 				couponColor: '', //优惠券couponID，大于等于0触发价格判断事件
-				couponCondition: '',//优惠券的满足条件值
+				couponCondition: '', //优惠券的满足条件值
+				notice : '', // 预订须知
 				couponList: [{
 						couponID: '0',
 						title: '新用户专享优惠券',
@@ -189,42 +179,94 @@
 						title: '春节限时限量优惠券',
 						price: 50,
 						condition: 400,
-					}, 
+					},
 					{
 						couponID: '2',
 						title: '大型团购优惠券-今点通限量版',
-						price: 300,
+						price: 100,
+						condition: 800,
+					},
+					{
+						couponID: '3',
+						title: '大型团购优惠券-今点通限量版',
+						price: 200,
 						condition: 1000,
 					}
 				],
-				addressData: {
+				addressData: '', //购票人信息
+				adultIndex: '', //成人数量
+				childrenIndex: '', //儿童数量
+				textUser: [{
+					userID: 0,
+					mold: '成人',
 					name: '许小星',
+					sex: '女',
 					idCard: '35058199503692367',
 					mobile: '13853989563',
-					addressName: '金九大道',
-					address: '山东省济南市历城区',
+					area: '149号',
+					default: true,
+				}, {
+					userID: 1,
+					mold: '儿童',
+					name: '张晓雪',
+					sex: '女',
+					idCard: '35058200803692367',
+					mobile: '13853989563',
 					area: '149号',
 					default: false,
-				},
+				}],
 			}
 		},
 
 		onLoad(option) {
 			this.lyfwData();
 		},
-
 		components: {
 			//加载多方弹框组件
 			uniPopup,
 			//加载日期组件 
 			uniCalendar,
 		},
-		methods: { 
+		methods: {
 			//读取静态数据
 			async lyfwData() {
 				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
-				this.scSpotDetails = scSpotDetails.ticket;
-				console.log(this.scSpotDetails)
+				this.scSpotDetails = scSpotDetails.data.ticket[this.index];
+				let notice = await this.$api.lyfwfmq('notice');
+				this.notice = notice.data;
+				// console.log(this.scSpotDetails)
+			},
+
+			//删除出行人
+			deleteUser: function(e) {
+				var a = this.addressData;
+				if (e < 0) {
+					return false;
+				} else {
+					var b = a.slice(0, e).concat(a.slice(e + 1, a.length));
+					this.addressData = b;
+					this.screenUser();
+				}
+			},
+
+			//选择用户
+			choiceUser: function() {
+				var user = this.textUser;
+				this.addressData = user;
+				this.screenUser();
+			},
+
+			//数组提取
+			screenUser: function() {
+				let adult = this.addressData.filter(item => {
+					return item.mold == '成人';
+				})
+				let children = this.addressData.filter(item => {
+					return item.mold == '儿童';
+				})
+				this.adultIndex = adult.length;
+				this.childrenIndex = children.length;
+				this.numberChange();
 			},
 
 			//显示优惠券面板
@@ -243,7 +285,7 @@
 					this.couponIndex = '-' + this.couponList[index].price;
 					this.couponColor = this.couponList[index].couponID;
 					this.couponCondition = this.couponList[index].condition;
-					this.calcTotal();
+					this.numberChange();
 					this.toggleMask();
 				} else {
 					uni.showToast({
@@ -258,22 +300,59 @@
 			couponReset: function(index) {
 				this.couponIndex = '请选择优惠券';
 				this.couponColor = '';
-				this.calcTotal();
+				this.numberChange();
 				this.toggleMask();
 			},
 
-			changePayType(type) {
-				this.payType = type;
+			//仿穿透事件
+			stopPrevent() {},
+
+			// 数量
+			numberChange() {
+				const a = (this.scSpotDetails.adultPrice * this.adultIndex) + (this.scSpotDetails.childPrice * this.childrenIndex);
+				if (this.couponColor == '') {
+					this.calcTotal();
+				} else if (a >= this.couponCondition) {
+					this.calcTotal();
+				} else if (a < this.couponCondition) {
+					uni.showToast({
+						title: '您的金额不满足优惠券条件，已取消优惠券',
+						icon: 'none',
+						duration: 2000
+					})
+					this.couponIndex = '请选择优惠券';
+					this.couponColor = '';
+					this.couponCondition = 0;
+					this.calcTotal();
+				}
 			},
 
-
+			// 计算总价
+			async calcTotal() {
+				var total;
+				const a = this.scSpotDetails.adultPrice * this.adultIndex;
+				const b = this.scSpotDetails.childPrice * this.childrenIndex;
+				const c = a + b;
+				if (this.couponColor == '') {
+					this.actualPayment = c;
+				} else if (c >= this.couponCondition) {
+					total = c - this.couponList[this.couponColor].price;
+					this.actualPayment = total;
+				}
+			},
 
 			//提交表单
 			submit: function() {
 				if (this.selectedValue == 1) {
 					uni.redirectTo({
-						url
+						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?ticket=' + encodeURIComponent(JSON.stringify(this.scSpotDetails)) 
+						+ '&addressData=' + encodeURIComponent(JSON.stringify(this.addressData))
+						+ '&actualPayment=' + JSON.stringify(this.actualPayment)
+						+ '&dateReminder=' + JSON.stringify(this.dateReminder)
+						+ '&date=' + JSON.stringify(this.date)
+						+ '&coupon=' + encodeURIComponent(JSON.stringify(this.couponList[this.couponColor]))
 					})
+
 				} else {
 					uni.showToast({
 						title: '请同意购买须知',
@@ -354,52 +433,18 @@
 					this.date = e.fulldate;
 				}
 			},
-			
+
 			//同意购买-点击事件
-			Selection : function(){
-				if(this.selectedValue==0){
-					this.selectedValue=1;
-				}else{
-					this.selectedValue=0;
+			Selection: function() {
+				if (this.selectedValue == 0) {
+					this.selectedValue = 1;
+				} else {
+					this.selectedValue = 0;
 				}
 			},
-				
-				
-			// 数量
-			numberChange(data){
-				var that = this;
-				const a = that.scSpotDetails.ticket[that.index].price * data;
-				if(this.couponColor ==''){
-					this.number = data;
-					this.calcTotal();
-				}else if(a >= this.couponCondition){
-					this.number = data;
-					this.calcTotal();
-				}else if(a < this.couponCondition){
-					uni.showToast({
-						title:'您的金额不满足优惠券条件，已取消优惠券',
-						icon:'none',
-						duration:2000
-					})
-					this.couponIndex = '请选择优惠券';
-					this.couponColor = '';
-					this.couponCondition = 0;
-					this.number = data;
-					this.calcTotal();
-				}
-			},
-			
-			// 计算总价
-			async calcTotal(e){ 
-				var total;
-				const a = this.scSpotDetails.ticket[this.index].price * this.number;
-				if(this.couponColor ==''){
-					this.actualPayment = a;
-				}else if(a >= this.couponCondition){
-					total = a - this.couponList[this.couponColor].price;
-					this.actualPayment = total;
-				}
-			},
+
+
+
 
 		}
 	}
@@ -430,78 +475,106 @@
 		padding-bottom: 32upx;
 	}
 
-	//公共样式
-	.MP_information {
+	//公共样式 - 适用多个数据框
+	.MP_information1 {
 		border-radius: 16upx;
 		background: #FFFFFF;
-		padding: 32upx 32upx;
+		padding: 24upx 32upx;
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
 		margin-top: 24upx;
-
-		.MP_text1 {
+		.MP_title {
 			font-size: 34upx;
 			display: flex;
 			font-weight: bold;
+			margin-top: 20upx;
 		}
+		.MP_text {
+			color: #3EABFC;
+			font-size: 28upx;
+			margin-top: 20upx;
+			display: block; // 让字体换行
+		}
+	}
 
-		.MP_text2 {
+	//公共样式2 - 适用单选框
+	.MP_information2 {
+		border-radius: 16upx;
+		background: #FFFFFF;
+		padding: 36upx 32upx;
+		font-size: 32upx;
+		box-shadow: 0px 0.2px 0px #aaa;
+		margin-top: 24upx;
+		.kj{
+			font-size: 34upx;
+			display: flex;
+			font-weight: bold;
+			margin-top: 8upx;
+		}
+		.MP_text {
 			font-size: 26upx;
 			margin-top: 20upx;
 			display: block; // 让字体换行
 		}
 	}
 
+
 	//须知弹框
-	.noticeBox {
+	.boxVlew {
 		width: 90%;
-		// overflow:hidden;
-		height: 880upx;
-		padding: 40upx;
+		padding: 16upx 40upx;
 		padding-bottom: 92upx;
 		background: #FFFFFF;
-
-		.Nb_text1 {
-			font-size: 38upx;
-			font-weight: bold;
+		.titleView{
+			margin: 24upx 0;
+			//弹框标题
+			.Nb_text1 {
+				position: relative;
+				font-size: 38upx;
+				font-weight: bold;
+				top: 8upx;
+				margin-bottom: 16upx;
+			}
+			//弹框关闭按钮
+			.Nb_text2 {
+				margin-top: 8upx;
+				float: right;
+				color: #333;
+				font-size: 32upx;
+			}
 		}
+		.noticeBox {
+			height: 800upx; 
+			line-height: 32upx;
+			.Nb_text3 {
+				display: block;
+				margin-top: 32upx;
+				font-size: 34upx;
+				font-weight: bold;
+			}
 
-		.Nb_text2 {
-			display: block;
-			margin-top: 32upx;
-			font-size: 34upx;
-			font-weight: bold;
-		}
-
-		.Nb_text3 {
-			display: block;
-			line-height: 64upx;
-			margin: 32upx 0;
-			font-size: 30upx;
-		}
-
-		.Nb_text4 {
-			margin-top: 8upx;
-			float: right;
-			color: #333;
-			font-size: 32upx;
+			.Nb_text4 {
+				display: block;
+				line-height: 64upx;
+				margin: 32upx 0;
+				font-size: 30upx;
+			}
 		}
 	}
 
 
-
 	//使用日期
-	.MP_selector {
+	.MP_selectionDate {
 		width: 100%;
 		line-height: 120upx;
 		margin-top: 46upx;
 		border-top: 1px #F5F5F5 dashed;
 
-		.MP_text3 {
+		.MP_textDate{
 			float: right;
 		}
 
-		.MP_text4 {
+		.MP_textReminder{
 			font-size: 26upx;
 			color: #aaa;
 			float: right;
@@ -509,44 +582,25 @@
 		}
 	}
 
-
-	//门票数量
-	.MP_selector2 {
-		width: 100%;
-		line-height: 120upx;
-		border-top: 1px #F5F5F5 dashed;
-		display: flex;
-
-		.MP_text3 {
-			float: right;
-		}
-
-		.step {
-			position: relative;
-			left: 330upx;
-			top: 40upx;
-		}
-	}
-
-	// 购票人信息
-	.MP_selector3 {
+	// 用户信息
+	.MP_userInformation {
 		width: 100%;
 		margin-top: 32upx;
 		border-top: 1px #F5F5F5 dashed;
 		padding-top: 32upx;
 
-		.Mp_text5 {
+		.Mp_sex {
 			margin-left: 24upx;
 		}
 
-		.Mp_text6 {
-			font-size: 30upx;
+		.Mp_text {
+			font-size: 28upx;
 			display: block;
-			color: #aaa;
-			margin-top: 24upx;
+			color: #888;
+			margin-top: 20upx;
 		}
 
-		.Mp_icon {
+		.Mp_square {
 			margin-left: 24upx;
 			padding: 2upx 20upx;
 			background: #3DABFC;
@@ -556,51 +610,53 @@
 			border-radius: 8upx;
 		}
 
-		.Mp_icon2 {
+		.Mp_delete {
 			float: right;
 			color: #f85e52;
 			font-size: 34upx;
-
 		}
 
-		.Mp_button1 {
+		.Mp_addTo {
 			float: left;
-			margin-left: 32upx;
-			width: 240upx;
+			font-size: 30upx;
+			margin-left: 64upx;
+			width: 200upx;
 		}
 
-		.Mp_button2 {
-			margin-right: 32upx;
-			width: 240upx;
+		.Mp_Selection{
+			font-size: 30upx;
+			margin-right: 64upx;
+			width: 200upx;
 		}
 	}
 
-	//优惠券
-	.MP_selector4 {
-		.Mp_text7 {
+	//选项框样式
+	.MP_optionBar {
+		.Mp_title {
 			font-size: 32upx;
 		}
 
-		.Mp_text8 {
+		.Mp_text {
 			margin-top: 6upx;
 			float: right;
 			font-size: 28upx;
 			color: #f85e52;
 		}
 
-		.Mp_text9 {
+		.Mp_textBlue {
 			margin-left: 16upx;
 			font-size: 26upx;
 			color: #3EABFC;
 		}
 
-		.Mp_text10 {
+		.Mp_box {
 			float: right;
 			position: relative;
 			bottom: 6upx;
+			right: -12upx;
 		}
 
-		.Mp_text11 {
+		.Mp_arrow {
 			margin-top: 6upx;
 			margin-left: 24upx;
 			float: right;
@@ -608,9 +664,9 @@
 			color: #aaa;
 		}
 	}
-	
+
 	/* 优惠券面板 */
-	.mask{
+	.mask {
 		display: flex;
 		align-items: flex-end;
 		position: fixed;
@@ -618,62 +674,68 @@
 		top: var(--window-top);
 		bottom: 0;
 		width: 100%;
-		background: rgba(0,0,0,0);
+		background: rgba(0, 0, 0, 0);
 		z-index: 9995;
 		transition: .3s;
-		
-		.mask-content{
+
+		.mask-content {
 			width: 100%;
 			min-height: 30vh;
 			max-height: 70vh;
 			background: #f3f3f3;
 			transform: translateY(100%);
 			transition: .3s;
-			overflow-y:scroll;
+			overflow-y: scroll;
 		}
-		&.none{
+
+		&.none {
 			display: none;
 		}
-		&.show{
-			background: rgba(0,0,0,.4);
-			
-			.mask-content{
+
+		&.show {
+			background: rgba(0, 0, 0, .4);
+
+			.mask-content {
 				transform: translateY(0);
 			}
 		}
 	}
-	
-	
+
+
 	/* 优惠券列表 */
-	
+
 	//下弹框标题
-	.couponTitle{
+	.couponTitle {
 		padding: 40upx;
 		padding-bottom: 16upx;
-		.Co_text1{
+
+		.Co_text1 {
 			font-size: 38upx;
 			font-weight: bold;
 		}
-		.Co_text2{
+
+		.Co_text2 {
 			margin-top: 8upx;
 			float: right;
 			color: #f85e52;
 			font-size: 28upx;
 		}
 	}
-	
-	.coupon-item{
+
+	.coupon-item {
 		display: flex;
 		flex-direction: column;
 		margin: 20upx 24upx;
 		background: #fff;
-		.con{
+
+		.con {
 			display: flex;
 			align-items: center;
 			position: relative;
 			height: 120upx;
 			padding: 0 30upx;
-			&:after{
+
+			&:after {
 				position: absolute;
 				left: 0;
 				bottom: 0;
@@ -684,8 +746,8 @@
 				transform: scaleY(50%);
 			}
 		}
-		
-		.left{
+
+		.left {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -693,16 +755,19 @@
 			overflow: hidden;
 			height: 100upx;
 		}
-		.title{
+
+		.title {
 			font-size: 32upx;
 			color: #f85e52;
 			margin-bottom: 10upx;
 		}
-		.time{
+
+		.time {
 			font-size: 24upx;
 			color: #999999;
 		}
-		.right{
+
+		.right {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -711,21 +776,25 @@
 			color: #999999;
 			height: 100upx;
 		}
-		.price{
+
+		.price {
 			font-size: 44upx;
 			color: #f85e52;
-			&:before{
+
+			&:before {
 				content: '￥';
 				font-size: 34upx;
 			}
 		}
-		.tips{
+
+		.tips {
 			font-size: 24upx;
 			color: #999999;
 			line-height: 60upx;
 			padding-left: 30upx;
 		}
-		.circle{
+
+		.circle {
 			position: absolute;
 			left: -6upx;
 			bottom: -10upx;
@@ -734,15 +803,16 @@
 			height: 20upx;
 			background: #f3f3f3;
 			border-radius: 100px;
-			&.r{
+
+			&.r {
 				left: auto;
 				right: -6upx;
 			}
 		}
 	}
-	
+
 	//底部
-	.footer{
+	.footer {
 		position: fixed;
 		left: 0;
 		bottom: 0;
@@ -756,34 +826,44 @@
 		background: #fff;
 		z-index: 998;
 		color: #f85e52;
-		box-shadow: 0 -1px 5px rgba(0,0,0,.1);
-		.price-content{
+		box-shadow: 0 -1px 5px rgba(0, 0, 0, .1);
+
+		.price-content {
 			padding-left: 30upx;
 		}
-		.price-tip{
+
+		.price-tip {
 			color: #f85e52;
 			margin-left: 8upx;
 		}
-		.price{
+
+		.price {
 			font-size: 36upx;
 			color: #f85e52;
 		}
-		.submitChange{
-			display:flex;
-			align-items:center;
+
+		.people {
+			font-size: 28upx;
+			margin-left: 24upx;
+			color: #999999;
+		}
+
+		.submitChange {
+			display: flex;
+			align-items: center;
 			justify-content: center;
 			width: 280upx;
 			height: 100%;
 			background: #aaa;
-			.submit{
+
+			.submit {
 				color: #fff;
 				font-size: 32upx;
 			}
-			&.submitColor{
+
+			&.submitColor {
 				background: #06B4FD;
 			}
 		}
 	}
-	
-	
 </style>

@@ -235,7 +235,11 @@
 							
 							that.longitude = res.longitude
 							that.latitude = res.latitude
-							
+							that.position ='福建'//res.address.city
+							uni.setStorage({
+								key: 'Key_position',
+								data:that.position
+							})
 						}
 					});
 					if (that.seconds <= 0) {
