@@ -20,10 +20,10 @@ const addressInfo = {
 	data:{
 		receiver:'张三',							//收件人
 		phoneNum:'15260769766',					//手机号码
-		district:['福建省','丰泽区','泉秀路'],	//所在地区
+		district:'福建省 丰泽区 泉秀路',	//所在地区
 		detailAddress:'丰泽区',					//详细地址
 		postalCode:'366300',					//邮政编码
-		defaultAddress:true   			//是否设置为默认地址，0代表否，1代表是
+		defaultAddress:0						//是否设置为默认地址，0代表否，1代表是
 	},
 	msg:'地址详情'
 }

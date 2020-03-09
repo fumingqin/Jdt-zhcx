@@ -47,7 +47,7 @@
 </template>
 
 <script>
-	import pickerAddress from '../../components/wangding-pickerAddress/wangding-pickerAddress.vue' 
+	import pickerAddress from '../../components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue' 
 	export default {
 		components:{
 			pickerAddress
@@ -86,19 +86,21 @@
 			},
 			formSubmit:function(e){
 				var data=e.target.value;
+				data.district=this.address.district;
 				if(data.defaultAddress.length==0){
 					data.defaultAddress=0;
 				}else{
 					data.defaultAddress=1;
 				}
-				data.defaultAddress=this.user.defaultAddress;
+				
+				console.log(data)
 			},
 			formReset:function(e){
 				this.address.district="请选择 省/市/区 >";
 				console.log(1)
 			},
 			districtChange:function(e){
-				this.address.district=e.data.join('');
+				this.address.district=e.data.join(' ');
 			}
 		}	
 	}
