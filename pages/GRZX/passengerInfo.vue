@@ -1,7 +1,7 @@
 <template>
 	<view class="content">	
 		<view class="passengerList">
-			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
+			<view class="boxClass" v-if="submitType == 1" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
 				<view class="nameClass">{{item.name}}</view>
 				<view class="sexClass" name="sex">{{item.sex}}</view>
 				<view class="typeClass">{{item.ticketType}}</view>
@@ -13,7 +13,7 @@
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
 				</view>
 			</view>
-			<view class="boxClass" v-if="submitType == 1" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
+			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
 				<view class="nameClass">{{item.name}}</view>
 				<view class="sexClass">{{item.sex}}</view>
 				<view class="typeClass">{{item.ticketType}}</view>
@@ -24,11 +24,11 @@
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 			</view>
 		</view>	
-		<view v-if="submitType == 0" class="btnBox">  <!--非个人中心页面进入 -->
+		<view v-if="submitType == 1" class="btnBox">  <!--非个人中心页面进入 -->
 			<button type="warn" @click="addPassenger" class="btnAdd1">+添加乘客</button>
 			<button type="primary" @click="definite" class="btnDefinite">确定</button>
 		</view>
-		<view v-if="submitType == 1" class="btnBox">  <!--个人中心页面进入-->
+		<view v-if="submitType == 0" class="btnBox">  <!--个人中心页面进入-->
 			<button type="warn" @click="addPassenger" class="btnAdd2">+添加乘客</button>
 		</view>	
 		<view class="returnBox" @click="returnPages">
@@ -122,7 +122,11 @@
 						array.push(data[i]);
 					}
 				}
-				uni.navigateBack(array);
+				uni.setStorage({
+					key:"passengerList",
+					data:array
+				})
+				uni.navigateBack();
 			}
 		}
 	}

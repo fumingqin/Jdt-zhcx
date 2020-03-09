@@ -33,8 +33,8 @@
 					<text class="num">128.8</text>
 					<text>余额</text>
 				</view>
-				<view class="tj-item">
-					<text class="num">0</text>
+				<view class="tj-item" @click="navTo('coupon')">
+					<text class="num">2</text>
 					<text>优惠券</text>
 				</view>
 				<view class="tj-item">
@@ -77,6 +77,7 @@
 				<list-cell icon="jdticon icon-iconfontweixin" iconColor="#e07472" title="我的钱包" tips="您的会员还有3天过期"></list-cell>
 				<list-cell icon="jdticon icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/GRZX/address')"></list-cell>
 				<list-cell icon="jdticon icon-pinglun-copy" iconColor="#ee883b" title="乘客人信息" @eventClick="navTo('/pages/GRZX/passengerInfo?submitType=0')"></list-cell>
+				<list-cell icon="jdticon icon-xiaoxi" iconColor="#ee883b" title="我的消息" @eventClick="navTo('/pages/GRZX/myNews')"></list-cell>
 				<list-cell icon="jdticon icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell>				
 				<list-cell icon="jdticon icon-shezhi1" iconColor="#e07472" title="设置" border="" @eventClick="navTo('/pages/GRZX/set')"></list-cell>
 			</view>

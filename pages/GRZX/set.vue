@@ -1,33 +1,20 @@
 <template>
 	<view class="container">
-		<view class="list-cell b-b m-t" @click="navTo('/pages/user/personal')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">个人资料</text>
-			<text class="cell-more jdticon icon-you"></text>
-		</view>
-		<view class="list-cell b-b" @click="navTo('收货地址')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">收货地址</text>
-			<text class="cell-more jdticon icon-you"></text>
-		</view>
-		<view class="list-cell" @click="navTo('实名认证')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">实名认证</text>
-			<text class="cell-more jdticon icon-you"></text>
-		</view>
 		
 		<view class="list-cell m-t">
-			<text class="cell-tit">消息推送</text>
+			<text class="cell-tit">推送设置</text>
 			<switch checked color="#fa436a" @change="switchChange" />
 		</view>
-		<view class="list-cell m-t b-b" @click="navTo('清除缓存')" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell m-t">
+			<text class="cell-tit">视频自动播放</text>
+			<switch checked color="#fa436a" @change="playChange" />
+		</view>
+		<view class="list-cell m-t b-b" @click="navTo('aboutApp')" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
 			<text class="cell-more jdticon icon-you"></text>
 		</view>
-		<view class="list-cell b-b" @click="navTo('关于Dcloud')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">关于Dcloud</text>
-			<text class="cell-more jdticon icon-you"></text>
-		</view>
-		<view class="list-cell">
-			<text class="cell-tit">检查更新</text>
-			<text class="cell-tip">当前版本 1.0.3</text>
+		<view class="list-cell b-b" @click="navTo('aboutApp')">
+			<text class="cell-tit">关于APP</text>
 			<text class="cell-more jdticon icon-you"></text>
 		</view>
 		<view class="list-cell log-out-btn" @click="toLogout">
@@ -37,9 +24,9 @@
 </template>
 
 <script>
-	import {  
+	/* import {  
 	    mapMutations  
-	} from 'vuex';
+	} from 'vuex'; */
 	export default {
 		data() {
 			return {
@@ -47,17 +34,16 @@
 			};
 		},
 		methods:{
-			...mapMutations(['logout']),
+			/* ...mapMutations(['logout']), */
 
 			navTo(url){
 				uni.navigateTo({
-					url
+					url:url
 				})
-				
 			},
 			//退出登录
 			toLogout(){
-				uni.showModal({
+				/* uni.showModal({
 				    content: '确定要退出登录么',
 				    success: (e)=>{
 				    	if(e.confirm){
@@ -67,12 +53,16 @@
 				    		}, 200)
 				    	}
 				    }
-				});
+				}); */
 			},
 			//switch
 			switchChange(e){
 				let statusTip = e.detail.value ? '打开': '关闭';
-				this.$api.msg(`${statusTip}消息推送`);
+				//this.$api.msg(`${statusTip}消息推送`);
+			},
+			playChange(e){
+				let statusTip = e.detail.value ? '打开': '关闭';
+				//this.$api.msg(`${statusTip}消息推送`);
 			},
 
 		}

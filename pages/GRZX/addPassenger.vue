@@ -20,7 +20,7 @@
 			
 			<view class="sexClass">
 				<view class="fontStyle">性别</view>
-				<radio-group class="inputClass" name="trip">
+				<radio-group class="inputClass" name="sex">
 					<label v-for="(item, index) in sexMode" :key="index" @click="radioClick(index)" > 
 						<radio style="transform: scale(0.7)" :value="user.sex" :checked="index===user.sex" />{{item.title}}
 					</label>  
@@ -92,7 +92,7 @@
 					chineseName:'',	
 					englishSurname:'',
 					englishName:'',
-					sex:1,
+					sex:0,
 					phoneNum:'',
 					codeNum:'',
 					date:'',
@@ -105,7 +105,7 @@
 			this.loadData();
 		},
 		methods:{
-			async loadData(){
+			/* async loadData(){
 				let userInfo = await this.$api.grzx('user');
 				console.log(userInfo)
 				this.user.chineseName=userInfo.data.chineseName;
@@ -120,7 +120,7 @@
 					this.user.person=true;
 				}
 				this.user.phoneNum=userInfo.data.phoneNum;
-			},
+			}, */
 			radioClick:function(e){
 				this.user.sex = e;
 			},
