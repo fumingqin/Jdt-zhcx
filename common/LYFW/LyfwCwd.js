@@ -353,8 +353,8 @@ const routeComment = {
 			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner3.jpg',
 		}],
 		title: '武夷山 | 全方位详尽三日',
-		time:'2019-11-05',
-		clicks:'2000',
+		time: '2019-11-05',
+		clicks: '2000',
 		scenicName: '南平武夷山',
 		openup: '09:00 - 18:00',
 		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
@@ -368,6 +368,64 @@ const routeComment = {
 	msg: '提示'
 }
 
+// 蔡伟达-旅游服务-用户路线
+const userRoute = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+			scenicId: 0,
+			day: 1,
+			address: '南平',
+			scenicName: '武夷山风景名胜区',
+			playtime: '游玩建议6小时',
+			Start: '国内原生森林',
+			scenicContent: ' 武夷山西部是全球生物多样性保护的关键地区，是中...',
+			icon: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/icon1.png',
+			image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/routewuyishan1.png',
+		},
+		{
+			scenicId: 1,
+			day: 1,
+			address: '南平',
+			scenicName: '武夷山市 - 建阳区',
+			playtime: '1小时',
+			Start: '武夷山汽车站',
+			scenicContent: ' 武夷山西部是全球生物多样性保护的关键地区，是中...',
+			icon: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/icon2.png',
+			image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/routewuyishan2.png',
+		}
+	],
+	msg: '提示'
+}
+
+
+
+const test = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+		day: 1,
+		address: '南平',
+
+	}, {
+		day: 1,
+		address: '南平',
+	}, {
+		day: 2,
+		address: '福建',
+
+	}, {
+		day: 2,
+		address: '福建',
+	}, {
+		day: 3,
+		address: '泉州',
+
+	}, {
+		day: 3,
+		address: '泉州',
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	userInfo,
@@ -377,4 +435,6 @@ export default {
 	lunBo,
 	touristRoute,
 	routeComment,
+	userRoute,
+	test
 }
