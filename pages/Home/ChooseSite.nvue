@@ -1,5 +1,5 @@
 <template>
-	<view style="background-color: #F5F7F9;" :style="{height:pageheight}">
+	<view style="background-color: #F5F7F9;" >
 		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px; ">
 			<view class="status_bar"></view>
 			<view style="background-color: #FFF; ">
@@ -135,10 +135,37 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="current === 1">我是客运</view>
+		<view v-if="current === 1" style="margin-top: 10upx;">
+			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
+				<view class="ctky_View_Left">
+					<view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view>
+					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
+						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">泉州客运中心站</view>
+					</view>
+					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
+						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">安溪</view>
+					</view>
+					<view style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
+					font-size: 28upx;color: #666666;">共10趟
+						10:00发车</view>
+				</view>
+				<view class="ctky_View_Right">
+					<view>
+						<view style="margin-right: 28upx;font-size: 36upx;font-style:
+                       SourceHanSansSC-Regular; color: #FC4646;">￥28</view>
+						<view style="margin-right: 28upx;font-size: 24upx;font-style:
+                       SourceHanSansSC-Light; color: #666666;">余18张</view>
+					</view>
+				</view>
+			</view>
+		</view>
 		<view v-if="current === 2">
-			<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="118.600608" :latitude="24.889217" :polyline="polyline" :show-location="showlocation"
-			 :markers="markers"></map>
+			<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="118.600608" :latitude="24.889217" :polyline="polyline"
+			 :show-location="showlocation" :markers="markers"></map>
 			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
 			 v-if="IsSearch">
 				<view style="margin:20rpx;">
@@ -271,9 +298,9 @@
 				that.winheight = data.height + 'px';
 				uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
 					success: function(res) {
-						that.historyheight = (res.windowHeight - data.height - 140) + "px";
+						that.historyheight = (res.windowHeight - data.height - 108) + "px";
 						that.pageheight = res.screenHeight + "px";
-						that.mapheight = res.windowHeight + "px";
+						that.mapheight = (res.windowHeight - data.height) + "px";
 					}
 				})
 			}).exec();
@@ -591,6 +618,11 @@
 					}
 				});
 			},
+			queryTickets: function() {
+				uni.navigateTo({
+					url: "../CTKY/selectTickets",
+				})
+			}
 		}
 	}
 </script>
@@ -605,7 +637,7 @@
 	.bt_now {
 		width: 329rpx;
 		height: 60rpx;
-		border-width:0;
+		border-width: 0;
 		background-color: #FFF;
 		border-right-width: 1px;
 		border-color: #EAEAEA;
@@ -657,5 +689,24 @@
 		/* #ifdef MP-ALIPAY || MP-BAIDU */
 		height: 100vh;
 		/* #endif */
+	}
+
+	.ctky_View {
+		width: 698upx;
+		background: #FFFFFF;
+		margin: 10upx 26upx;
+		border-radius: 20upx;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.ctky_View_Left {
+		text-align: left;
+	}
+
+	.ctky_View_Right {
+		flex-direction: row;
+		text-align: right;
+		align-items: center;
 	}
 </style>
