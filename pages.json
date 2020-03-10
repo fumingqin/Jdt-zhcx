@@ -62,7 +62,13 @@
 				"navigationStyle":"custom"
 			}
 		}
-	],
+        ,{
+            "path" : "pages/CZC/PriceDetail",
+            "style" : {
+				"navigationBarTitleText": "费用详情"
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
