@@ -37,9 +37,13 @@
 			<!-- 文章内容 -->
 			<view class="Zj_background">
 				<view class="tweetsTitle">介绍</view>
-				<view class="tweetscontent">{{tweets.titlecontent}}</view>
+				<!-- <view class="tweetscontent">{{tweets.titlecontent}}</view> -->
 			</view> <!-- jiewei3 -->
-			
+			<!-- 富文本 -->
+			<view class="content">
+				<jyf-parser :html="articleTitle" ref="article"></jyf-parser>
+				<jyf-parser :html="html" ref="article"></jyf-parser>
+			</view>
 			<!-- 回复区 -->
 			<!-- 模块命名：Hf -->
 			<view>
@@ -118,14 +122,20 @@
 </template>
 
 <script> 
+    var _self;
     import uniPopup from '../../../components/uni-popup/uni-popup.vue'
+	import parser from '../../../components/uni-parser/jyf-parser.vue'
 	export default{
 		components : {
 			//加载多方弹框组件
 			uniPopup,
+			"jyf-parser":parser,
 		},
 	data(){
 		return{
+			articleId:'2020-03-09 12:56' ,//文章虚拟ID，测试用
+			html:'<em>abc123</em>',//文章内容
+			articleTitle:'',//文章标题
 			replyInput : {
 				unid : '',     //用户id号
 				nickname : '', //用户姓名
@@ -145,7 +155,9 @@
 		}
 	},
 	onLoad() {
+		_self=this;
 		this.tweetsInit();
+		this.getArticleInfo();
 	},
 	methods:{
 		async tweetsInit(){
@@ -186,8 +198,16 @@
 			// })
 		},
 		// 根据文章ID,网络请求文章内容
-		getArticleInfo :function(id){
-			
+		getArticleInfo :function(){
+			uni.request({
+				url : 'https://api.gugudata.com/news/wxarticle/demo',
+				success : function(res){
+					
+					console.log(res)
+					_self.html=res.data.Data[1].ArticleContentWithTags;
+					_self.articleTitle=res.data.Data[1].ArticleTitle;
+					}
+			})
 		},
 		// 统一跳转接口
 		navTo(url){
@@ -414,6 +434,18 @@
 		color: #333333; 
 		// bottom : 72upx;
 		padding: 32upx 32upx;
+	}
+	//推文内容
+	.content{
+		font-size: 34upx;
+		display: flex;
+		position : relative;
+		flex-direction: column;
+		padding: 32upx 32upx;
+		.articleTxt{
+			text-align: center;
+			font-weight: bold;
+		}
 	}
 //回复区
 		.Hf_box{
