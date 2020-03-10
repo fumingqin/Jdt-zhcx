@@ -201,6 +201,9 @@
 		"selectedColor": "#FC4646",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
+		//#ifdef APP-PLUS
+		"fontSize":"16px",
+		//#endif 
 		"list": [{ 
 				"pagePath": "pages/Home/Index",
 				"text": "首页"
