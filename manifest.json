@@ -17,8 +17,7 @@
         },
         /* 模块配置 */
         "modules" : {
-            "Maps" : {},
-            "Payment" : {}
+            "Maps" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -58,16 +57,10 @@
                 "maps" : {
                     "amap" : {
                         "appkey_ios" : "eda98f0100fe5652f2baf1b0b5709a46",
-                        "appkey_android" : "b9f3820d5141e3acb313abcf166747d5"
+                        "appkey_android" : "eda98f0100fe5652f2baf1b0b5709a46"
                     }
                 },
-                "payment" : {
-                    "weixin" : {
-                        "appid" : "wx0411fa6a39d61297",
-                        "UniversalLinks" : ""
-                    },
-                    "appleiap" : {}
-                }
+                "ad" : {}
             }
         },
         "compilerVersion" : 3

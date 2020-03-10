@@ -13,25 +13,41 @@
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
-			"style": {}
+
+			"style": {
+				"navigationBarTitleText": "景区列表"
+			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "景区详情",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
 		},
 		{
 			"path": "pages/LYFW/currency/imglist",
-			"style": {}
+
+			"style": {
+				"navigationBarTitleText": "全部图片"
+			}
 		},
 		{
 			"path": "pages/LYFW/currency/imgPreview",
-			"style": {}
+	
+			"style": {
+				"navigationBarTitleText": "查看图片"
+			}
 		},
 		{
 			"path": "pages/LYFW/peripheralTourism/peripheralTourism",
 			"style": {}
 		},
 		{
-			"path": "pages/LYFW/peripheralTourism/travelArticles", 
+	
+			"path": "pages/LYFW/peripheralTourism/travelArticles",
 			"style": {}
 		},
 		{
@@ -56,19 +72,124 @@
 			"style": {
 				"navigationBarTitleText": "旅游路线"
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
-				"navigationStyle":"custom"
+
+				"navigationStyle": "custom"
 			}
-		}
-        ,{
+		}, 
+		{		//个人中心模块开始
+			"path": "pages/GRZX/user",  
+			"style": {}
+		}, 
+		{
+			"path": "pages/GRZX/personal",
+			"style": {}
+		}, {
+			"path": "pages/GRZX/address",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},  
+		{
+			"path": "pages/GRZX/notice",
+			"style": {}
+		}, 
+		{
+			"path": "pages/GRZX/product",
+			"style": {}
+		}, 
+		{
+			"path": "pages/GRZX/set",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}
+		}, 
+		{
+			"path": "pages/GRZX/order",
+			"style": {}
+		}, 
+		{
+			"path": "pages/GRZX/passengerInfo",
+			"style": {
+				"navigationStyle": "custom" 
+			}
+		}, 
+		{
+			"path": "pages/GRZX/addPassenger", //添加乘客信息
+			"style": {
+				"navigationBarTitleText": "添加乘客信息",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"backgroundColor": "#55ffff"
+			}
+		},
+		{
+			"path": "pages/GRZX/addAddress",    //添加邮寄地址
+			"style": {
+				"navigationBarTitleText": "添加邮寄地址",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		}, 
+		{
+			"path": "pages/GRZX/aboutApp",    //关于App
+			"style": {
+				"navigationBarTitleText": "关于App"
+			}
+		}, 
+		{
+			"path": "pages/GRZX/coupon",    //卡券红包
+			"style": {
+				"navigationBarTitleText": "卡券红包"
+			}
+		},
+		{
+			"path": "pages/GRZX/myNews",    //我的消息
+			"style": {
+				"navigationBarTitleText": "我的消息"
+			}
+		},
+		//个人中心模块结束
+		{
+			"path": "pages/LYFW/ouristRoute/travelDetails",
+			"style": {}
+		}, {
+			"path": "pages/LYFW/currency/index",
+			"style": {}
+		},
+        {
+            "path" : "pages/LYFW/peripheralTourism/imgList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/LYFW/peripheralTourism/imgPreview",
+            "style" : {}
+        },
+        {
+            "path" : "pages/LYFW/peripheralTourism/toreply",
+            "style" : {}
+        },
+		{
+			"path": "pages/CTKY/scheduleDetails",
+			"style": {
+				"navigationBarTitleText": "班次详情",
+				"backgroundColor":"#F1F1F1"
+				
+			}
+		},
+		{
+			"path": "pages/CTKY/selectTickets",
+			"style": {
+				"navigationBarTitleText": "班次列表"
+			}
+		},{
             "path" : "pages/CZC/PriceDetail",
             "style" : {
 				"navigationBarTitleText": "费用详情"
 			}
         }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -80,10 +201,7 @@
 		"selectedColor": "#FC4646",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
-		// #ifdef APP-PLUS
-		"fontSize": "16px",
-		// #endif
-		"list": [{
+		"list": [{ 
 				"pagePath": "pages/Home/Index",
 				"text": "首页"
 			},
@@ -96,19 +214,19 @@
 				"text": "购物车"
 			},
 			{
-				"pagePath": "pages/Home/Index",
+				"pagePath": "pages/GRZX/user",
 				"text": "我的"
 			}
 		]
 	},
-	
+
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/Home/Index", //启动页面，必选
+			"path": "pages/Home/ChooseSite", //启动页面，必选			
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
-	
+
 }
