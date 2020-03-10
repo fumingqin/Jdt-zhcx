@@ -151,6 +151,14 @@
 				"navigationBarBackgroundColor": "#FFFFFF"
 			}
 		},
+		{
+			"path": "pages/GRZX/userLogin",
+			"style": {}
+		}, 
+		{
+			"path": "pages/GRZX/wxLogin",
+			"style": {}
+		}, 
 		//个人中心模块结束
 		{
 			"path": "pages/LYFW/ouristRoute/travelDetails",

@@ -1,7 +1,7 @@
 <template>
 	<view class="content">	
 		<view class="passengerList">
-			<view class="boxClass" v-if="submitType == 1" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
+			<view class="boxClass" v-if="submitType == 1 || submitType == 2" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
 				<view class="nameClass">{{item.name}}</view>
 				<view class="sexClass" name="sex">{{item.sex}}</view>
 				<view class="typeClass">{{item.ticketType}}</view>
@@ -24,7 +24,7 @@
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 			</view>
 		</view>	
-		<view v-if="submitType == 1" class="btnBox">  <!--非个人中心页面进入 -->
+		<view v-if="submitType == 1 || submitType == 2" class="btnBox">  <!--非个人中心页面进入 -->
 			<button type="warn" @click="addPassenger" class="btnAdd1">+添加乘客</button>
 			<button type="primary" @click="definite" class="btnDefinite">确定</button>
 		</view>
@@ -107,12 +107,7 @@
 			editPassenger(){   //编辑乘车人信息
 				
 			},
-			choosePassenger(e){  //选择乘车人
-				if(e.hiddenIndex==0){
-					e.hiddenIndex=1;
-				}else{
-					e.hiddenIndex=0;
-				}
+			choosePassenger(e){  //选择乘车人				
 				var list=this.passengerList;
 				var count=0;
 				for(var i=0;i<list.length;i++){
@@ -120,11 +115,15 @@
 						count++;
 					}
 				}
-				if(count>4 && this.submitType==1){
+				 if(e.hiddenIndex==1){
+					e.hiddenIndex=0;
+				}else if(count>3 && this.submitType==1){
 					uni.showToast({
 					    title: '乘客最多只能添加4名',
 					    icon:"none"
 					});
+				}else{
+					e.hiddenIndex=1;
 				}
 			},
 			definite(){ //提交array
@@ -135,20 +134,15 @@
 						array.push(data[i]);
 					}
 				}
-				if(array.length>4&&this.submitType==1){
+				if(array.length==0){
 					uni.showToast({
-					    title: '乘客最多只能添加4名',
+					    title: '请选择乘客',
 					    icon:"none"
 					});
-				}
-				else{
-					uni.setStorage({
-						key:"passengerList",
-						data:array
-					})
+				}else{
 					uni.navigateBack();	
 				}
-					
+				
 			}
 		}
 	}
