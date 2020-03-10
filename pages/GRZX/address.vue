@@ -115,7 +115,7 @@
 	.titleClass{
 		margin-left: 20upx;
 		font-size: 38upx;
-		font-weight: bold;
+		/* font-weight: bold; */
 		margin-top: 97upx;
 	}
 	.addressList{ //列表样式
