@@ -1,10 +1,9 @@
 <template>  
     <view class="container">  
 		
-		<!-- <view class="user-section">
+		<view class="user-section">
 			<image class="bg" src="/static/GRZX/beijing.png" ></image>
-			<view class="user-info-box" >
-				@click="longin_navTo('/pages/GRZX/personal')"
+			<view class="user-info-box" @click="checkLogin">
 				<view class="portrait-box">
 					<image class="portrait" :src=" userInfo.portrait || '/static/GRZX/missing-face.png'"></image>
 				</view>
@@ -12,10 +11,12 @@
 					<text class="username">{{userInfo.nickname || '游客'}}</text>
 				</view>
 			</view>
-		</view> -->
-		<view class="user-section">
-			<image class="bg" src="/static/GRZX/beijing.png" ></image>
 		</view>
+		<!-- <view class="user-section">
+			<image class="bg" src="/static/GRZX/beijing.png" >
+				@click="longin_navTo('/pages/GRZX/personal')"
+			</image>
+		</view> -->
 		<view 
 			class="cover-container"
 			:style="[{
@@ -114,6 +115,9 @@
 				uni.navigateTo({
 					url
 				})  
+			},
+			checkLogin(){
+				console.log()
 			},
 			/**
 			 *  会员卡下拉和回弹
