@@ -137,7 +137,7 @@
 		</view>
 		<view v-if="current === 1">我是客运</view>
 		<view v-if="current === 2">
-			<map :style="{height:mapheight}" :longitude="118.600608" :latitude="24.889217" :polyline="polyline" :show-location="showlocation"
+			<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="118.600608" :latitude="24.889217" :polyline="polyline" :show-location="showlocation"
 			 :markers="markers"></map>
 			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
 			 v-if="IsSearch">
@@ -156,14 +156,14 @@
 							</hTimePicker>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
-						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;">
-							<text style="font-size: 28rpx;">选择乘车人</text>
+						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;" @click="selectPassenger">
+							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.name}}</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
-					<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick">
-						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;">
-							<text style="font-size: 28rpx;">选择乘车人</text>
+					<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
+						<view style="flex-direction: row;justify-content: center;align-items: center;">
+							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.name}}</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
@@ -194,9 +194,9 @@
 
 <script>
 	import taxi from "../../common/Czc.js";
-	import uniIcons from "@/components/uni-icons/uni-icons.vue";
-	import uniSegmentedControl from "@/components/uni-segmented-control/uni-segmented-control.vue";
-	import hTimePicker from "@/components/h-timePicker/h-timePicker.vue";
+	import uniIcons from "../../components/uni-icons/uni-icons.vue";
+	import uniSegmentedControl from "../../components/uni-segmented-control/uni-segmented-control.vue";
+	import hTimePicker from "../../components/h-timePicker/h-timePicker.vue";
 	export default {
 		components: {
 			uniIcons,
@@ -206,13 +206,16 @@
 		data() {
 			return {
 				selecttime: "点击选择时间",
+				Passenger: [{
+					name: "选择乘车人"
+				}],
 				polyline: [],
 				tabIndex: 0,
 				index: 1,
 				initialPoint: "",
 				destination: "",
-				startlocation: "",
-				endlocation: "",
+				startlocation: {},
+				endlocation: {},
 				IsClick: true,
 				items: ['智能', '客运', '出租车', '公交', '专线车'],
 				points: [],
@@ -222,7 +225,7 @@
 				Distance: '',
 				Duration: '',
 				historyAddress: [],
-				query: '',
+				// query: '',
 				winheight: "",
 				current: 0,
 				mapheight: "",
@@ -248,11 +251,20 @@
 				}
 			})
 		},
+		onShow() {
+			var that = this;
+			uni.getStorage({ //获取乘车人
+				key: "passengerList",
+				success: function(res) {
+					that.Passenger = res.data;
+				}
+			})
+		},
 		onReady: function() {
 			//动态设置高度
 			var that = this;
-			that.query = uni.createSelectorQuery().in(that).select("#ceshi");
-			that.query.fields({
+			let query = uni.createSelectorQuery().in(that).select("#ceshi");
+			query.fields({
 				size: true,
 				scrollOffset: true
 			}, data => {
@@ -269,8 +281,9 @@
 
 		methods: {
 			onClickItem(e) { //tab点击事件
-				if (this.current !== e.currentIndex) {
-					this.current = e.currentIndex
+				var that = this;
+				if (that.current !== e.currentIndex) {
+					that.current = e.currentIndex
 				}
 			},
 			clearHistpry: function() { //清除历史记录
@@ -279,7 +292,6 @@
 			},
 			getHistory: function(index) { //获取历史信息
 				var that = this;
-				console.log(that.historyAddress[index])
 				uni.setStorage({
 					key: 'endlocation',
 					data: that.historyAddress[index],
@@ -288,7 +300,6 @@
 						that.endLonLat = that.historyAddress[index].longitude + "," + that.historyAddress[index].latitude;
 						that.endlongitude = that.historyAddress[index].longitude;
 						that.endtlatitude = that.historyAddress[index].latitude;
-						console.log(that.endLonLat)
 						that.endlocation = that.historyAddress[index];
 					}
 				});
@@ -297,15 +308,19 @@
 				uni.navigateTo({
 					url: '../CZC/CallAndDrive?orderNo=1',
 					animationType: 'pop-in',
-					animationDuration: 200
+					animationDuration: 200,
+					success: function() {
+						uni.clearStorage("passengerList");
+					}
 				});
+				n
 			},
 			changeTime: function(e) { //选择预约时间
 				this.selecttime = e;
 			},
-			selectPassenger:function(){//选择乘车人
+			selectPassenger: function() { //选择乘车人
 				uni.navigateTo({
-					url: '../CZC/CallAndDrive?orderNo=1',
+					url: '../GRZX/passengerInfo?submitType=1',
 					animationType: 'pop-in',
 					animationDuration: 200
 				});
@@ -563,16 +578,15 @@
 							color: "#4BDC27",
 							borderColor: "#8c918b",
 						};
-						4
 						that.polyline.push(obj);
 						uni.hideLoading();
 					},
 					fail: function(res) {
 						uni.hideLoading();
 						uni.showToast({
-							title:"查询失败"
+							title: "查询失败"
 						})
-						that.markers=[];
+						that.markers = [];
 						console.log(res);
 					}
 				});
@@ -591,7 +605,7 @@
 	.bt_now {
 		width: 329rpx;
 		height: 60rpx;
-		border-width: 0;
+		border-width:0;
 		background-color: #FFF;
 		border-right-width: 1px;
 		border-color: #EAEAEA;
