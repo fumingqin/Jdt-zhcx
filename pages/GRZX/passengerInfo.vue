@@ -140,6 +140,10 @@
 					    icon:"none"
 					});
 				}else{
+					uni.setStorage({
+						key:"passengerList",
+						data:array
+					})
 					uni.navigateBack();	
 				}
 				
