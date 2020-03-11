@@ -35,6 +35,10 @@
 </template>
 
 <script>
+	import {
+		mapState,
+	    mapMutations  
+	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -44,15 +48,15 @@
 			}
 		},
 		onLoad() {
-
+			
 		},
 		methods: {
+			...mapMutations(['login']),
 			inputChange(e){
 				const key = e.currentTarget.dataset.key;
 				this[key] = e.detail.value;
 			},
-			loginClick(){
-				
+			loginClick(){			
 				const {phoneNumber, captchaCode} = this;
 				console.log(this.phoneNumber)
 				console.log(this.captchaCode);
@@ -155,7 +159,7 @@
 		top:880upx;
 		/* border:1px solid red ; */
 		width: 15%;
-		height: 100upx;
+		height: 110upx;
 		text-align: center;
 		
 	}
@@ -165,7 +169,7 @@
 		top:880upx;
 		/* border:1px solid red ; */
 		width: 15%;
-		height: 100upx;
+		height: 110upx;
 		text-align: center;
 		
 	}

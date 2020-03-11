@@ -106,10 +106,9 @@
 		},
 		onLoad(){
 		},
-		// #ifndef MP
-
-		// #endif
-
+		computed: {
+			...mapState(['hasLogin','userInfo'])
+		},
         methods: {
 			navTo(url){
 				uni.navigateTo({
@@ -117,7 +116,21 @@
 				})  
 			},
 			checkLogin(){
-				console.log()
+			if(!this.hasLogin){
+					uni.showToast({
+						title : '请先登录',
+						icon : 'none',
+					})
+					setTimeout(function(){
+						uni.navigateTo({
+							url  : '/pages/GRZX/userLogin'
+						})  
+					},1500);
+				}else{
+					uni.navigateTo({
+						url :'/pages/GRZX/personal'
+					})  
+				}
 			},
 			/**
 			 *  会员卡下拉和回弹

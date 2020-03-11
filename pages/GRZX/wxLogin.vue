@@ -1,30 +1,59 @@
 <template>
     <view class="content">
-        <image src="" class="headPortrait"></image>
+        <image :src="avatarUrl" class="headPortrait"></image>
 		<button type="primary" @click="wxLogin">授权登录</button>
     </view>
 </template>
 
 <script>
-	
+	import {
+		mapState,
+	    mapMutations  
+	} from 'vuex';
 	export default {
 	    data() {
 	        return {
-	            title: 'Hello'
+	            title: 'Hello',
+				avatarUrl:''
 	        }
 	    },
-	    onLoad() {
-			uni.getUserInfo({
-				success:function(res){
-					console.log(res,"res")
-					/* this.url=""; */
-				}
-			})
+	    onLoad() {	
+			this.loadAvatar();
 	    },
 	    methods: {
-			/* async */
+			...mapMutations(['login']),
+			async loadAvatar(){
+				var theSelf=this;
+				uni.getUserInfo({
+					success:function(res){
+						console.log(res.userInfo.avatarUrl,"res")
+						 theSelf.avatarUrl=res.userInfo.avatarUrl;
+					}
+				})
+			},
 			wxLogin(){
-				
+				uni.getUserInfo({
+					success:function(res){
+						uni.setStorage({
+							key:"userInfo",
+							data:res.userInfo
+						});
+						uni.showToast({
+						    title: '授权成功',
+						    icon:"none"
+						});
+						if(res!=null||res!=""){
+							
+							
+						}
+						uni.navigateBack({
+							delta: 2
+						});
+						/* uni.navigateTo({
+							url:'/pages/GRZX/user'
+						}) */
+					}
+				})
 			}
 	    }
 	}
