@@ -1,53 +1,201 @@
 <template>
 	<view>
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
-		 :polyline="polyline" :markers="markers" :show-location="true" @controltap="controltap" :controls="controls">
-			<view v-if="waitIf" style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
-				<view class="waitContent">
-					<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
-					<view style="margin-top: 50rpx;">
-						<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">正在等待司机接单...</text>
+		 :polyline="polyline" :markers="markers" :show-location="true">
+
+		</map>
+		<image v-if='orderType == 0' @click="back" src="../../static/CZC/Back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
+		<view v-if='orderType == 0' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+			<!-- 司机未接单 -->
+			<view class="waitContent" elevation='5px'>
+				<image src="../../static/CZC/Radar.png" style="width: 100rpx;height: 100rpx;"></image>
+				<view style="margin-top: 50rpx;">
+					<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">正在等待司机接单...</text>
+				</view>
+			</view>
+		</view>
+		<view v-if='orderType == 5 || orderType == 10' style="width: 100%;position: fixed;top: 60px;left: 0px;right: 0px;align-items: center;">
+			<!-- 司机前往乘客地 -->
+			<view elevation='5px' class="comeTopContent">
+				<view style="flex-direction: row; ">
+					<image src="../../static/CZC/HeadPhoto.png" style="width: 100rpx;height: 100rpx;">
+					</image>
+					<view style="width: 470rpx;margin-left: 30rpx;">
+						<view style="width: 470rpx;">
+							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">张师傅</text>
+						</view>
+						<view style="width: 470rpx;flex-direction:row;margin-top: 20rpx;">
+							<view style="width: 200rpx;">
+								<text style="font-size:30rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">闽C1063</text>
+							</view>
+							<view style="width: 200rpx;">
+								<text style="font-size:30rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text>
+							</view>
+						</view>
+					</view>
+					<image @click="call" src="../../static/CZC/Call.png" style="width: 40rpx;height: 40rpx;"></image>
+				</view>
+				<view v-if="orderType == 5" style="margin-top: 30rpx;border-top:1px solid #EAEAEA;padding-top: 30rpx;">
+					<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">司机距离您的位置0.6公里，预计3分钟到达目的地。</text>
+				</view>
+			</view>
+		</view>
+		<view v-if='orderType == 5' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+			<!-- 司机前往乘客地 -->
+			<view elevation='5px' class="comeBottomContent">
+				<view @click="callPolice" style="width: 300rpx;align-items: center;border-right:1px solid #2C2D2D;">
+					<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#FC4646;">一键报警</text>
+				</view>
+				<view @click="cancleOrder" style="width: 300rpx;align-items: center;">
+					<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">取消订单</text>
+				</view>
+			</view>
+		</view>
+		<view v-if='orderType == 10' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+			<view elevation='5px' class="orderBottomContent">
+				<view style="flex-direction: row;justify-content: space-between;margin-bottom: 30rpx;padding-bottom: 30rpx;border-bottom:1px solid #EAEAEA;">
+					<view>
+						<text class="orderTitleFont">车费合计{{totalPrice}}元</text>
+					</view>
+					<view>
+						<text @click="problem" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用疑问</text>
+					</view>
+				</view>
+				<view v-for="item in priceArr" :key='item.key' style="flex-direction: row;justify-content: space-between;padding-bottom: 30rpx;">
+					<view>
+						<text class="orderTitleFont">{{item.key}}</text>
+					</view>
+					<view>
+						<text class="orderTitleFont">{{item.value}}元</text>
 					</view>
 				</view>
 			</view>
-		</map>
+		</view>
+		<uni-popup ref="bottomPopup" :maskClick='false' type="bottom">
+			<form @submit="payment">
+				<view style="background-color: #FFFFFF;padding: 20px;box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);border-top-left-radius: 9px;border-top-right-radius: 9px;">
+					<!--<view style="flex-direction: row;justify-content: flex-end;	">
+						</view> -->
+					<view style="flex-direction: row;justify-content: space-between;">
+						<view>
+							<!-- 勿删 -->
+						</view>
+						<view>
+							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">支付张师傅车费</text>
+						</view>
+						<view>
+							<uni-icons @click="close" type="closeempty" size="19"></uni-icons>
+						</view>
+					</view>
+					<view style="margin-top: 30px;flex-direction: row;justify-content: center;align-items: center;">
+						<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">32.5</text><text
+						 style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:Light;color:#2C2D2D;">元</text>
+					</view>
+					<view style="flex-direction: row;justify-content: center;align-items: center;">
+						<text @click="payDetail" style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#727272;">费用明细</text>
+						<uni-icons @click="payDetail" type="arrowright" size="15" color="#727272"></uni-icons>
+					</view>
+					<view style="flex-direction: row;justify-content: space-between;margin-top: 20px;">
+						<view>
+							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000">优惠券</text>
+						</view>
+						<view style="flex-direction: row;align-items: center;" @click="choosEcoupon">
+							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#666666;">请选择优惠券</text>
+							<uni-icons type="arrowright" size="15" color="#666666"></uni-icons>
+						</view>
+					</view>
+					<view style="border-top-width: 1px;border-color: #EAEAEA;margin-top: 20px;padding-top: 20px;">
+						<radio-group name='chooseType'>
+							<view v-for='item in payType' :key='item.typeName' style="flex-direction: row;justify-content: space-between;padding-bottom: 20px;">
+								<view style="flex-direction: row;justify-content: center;align-items: center;">
+									<image :src='item.iconPath' style="height: 42rpx;width: 42rpx;"></image>
+									<text style="margin-left: 5rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000;">{{item.typeName}}</text>
+								</view>
+								<view>
+									<radio :value="item.value" :checked="item.checked" :color="item.typeColor" />
+								</view>
+							</view>
+						</radio-group>
+					</view>
+					<view>
+						<button form-type="submit" style="width: 100%;height: 100rpx;background-color: #FE4644;color: #FFFFFF;">
+							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">确定支付{{totalPrice}}元</text>
+						</button>
+					</view>
+				</view>
+			</form>
+		</uni-popup>
+
 	</view>
 </template>
 
 <script>
-	import taxi from '../../common/Czc.js'
+	import taxi from '../../common/Czc.js';
+	import uniPopup from "@/components/uni-popup/uni-popup.vue";
+	import uniIcons from "@/components/uni-icons/uni-icons.vue";
+
 
 	export default {
+		components: {
+			uniPopup,
+			uniIcons
+		},
+
 		data() {
+			var that = this;
 			return {
 				scale: 15,
 				longitude: "", //地图中心点经度
 				latitude: "", //地图中心点纬度
-				lon: 0, //当前位置经度
-				lat: 0, //当前位置纬度
+				lon: "", //用户位置经度
+				lat: "", //用户位置纬度
 				startLon: "", //开始
 				startLat: "",
-				endLon: "118.613688", //结束
-				endLat: "24.912702",
+				endLon: "", //结束
+				endLat: "",
+				driverLon: "", //司机位置经度
+				driverLat: "", //司机位置纬度
 				points: [],
 				polyline: [], //线
-				interval: 0, //定时器值
+				directionInterval: 0, //规划用定时器。
+				orderInterval: 0, //获取司机是否接单用定时器。
+				comingInterval: 0, //司机到达乘客出发地用定时器。
 				markers: [], //标记点
 				mapHeight: '', //地图高度
-				waitIf:true,
-				controls: [{ //地图控制组件
-					id: 'back',
-					position: {
-						left: 10,
-						top: 50,
-						width: 60,
-						height: 60
-					},
-					iconPath: '../../static/CZC/back.png',
-					clickable: true,
-				}],
+				isHaveDrive: [],
+				phoneNumber: '0', //司机电话号码
+				orderType: 0,
 				mapContext: '', //mapContext对象
-				index: 0,
+				isShow: false,
+				totalPrice: 32.5,
+				priceArr: [{
+						key: '起步价',
+						value: '10.0'
+					},
+					{
+						key: '里程',
+						value: '21.0'
+					},
+					{
+						key: '等候',
+						value: '0.5'
+					}
+				],
+				payType: [{
+						typeName: '微信',
+						typeColor: '#00C805',
+						iconPath: '../../static/CZC/Wechatpay.png',
+						value: 'wxpay',
+						checked: true,
+					},
+					{
+						typeName: '支付宝',
+						typeColor: '#0EBDFF',
+						iconPath: '../../static/CZC/Alipay.png',
+						value: 'alipay',
+						checked: false
+					}
+				]
 			}
 		},
 		onLoad() {
@@ -58,17 +206,10 @@
 					that.mapHeight = res.windowHeight + 'px';
 				}
 			});
-			/* that.getGaoDeKey(); */
 			that.getMyLocaton();
-			setTimeout(function() {
-				//第一次路线规划
-				that.getDirectionDriving(that.lon + ',' + that.lat, that.endLon + ',' + that.endLat);
-				//开启时时规划
-				/* 	that.openRealDirection(); */
-			}, 1000);
-			//描绘终点标记
-			that.setEndMarker(1, that.endLon, that.endLat, ''); //绘制终点经纬度
-			that.selectCarAroung();
+			that.getOrder();
+			that.getRealOrder();
+			that.test();
 		},
 		onReady() {
 			var that = this;
@@ -83,31 +224,222 @@
 			});
 		},
 		methods: {
-			back: function() {
-				uni.navigateBack({
-
+			openBottomPopup: function() {
+				this.$nextTick(function() {
+					this.$refs['bottomPopup'].open();
 				});
 			},
-			controltap: function() {
+			closeBottomPopup: function() {
+				this.$nextTick(function() {
+					this.$refs['bottomPopup'].close();
+				});
+			},
+			back: function() {
 				var that = this;
-				if (e.detail.controlId == 'back') {
-					//返回上一页 -- 同时取消订单
-					uni.navigateBack({
+				uni.navigateBack({});
+			},
+			getOrder: function() {
+				//上级页面统一返回订单编号。此处根据订单编号获取上下车点。
+				var that = this;
 
-					});
+				//赋值开始点经纬度
+				that.startLon = '';
+				that.startLat = '';
+				//赋值结束点经纬度
+				that.endLon = '118.613688';
+				that.endLat = '24.912702';
+				that.driverLon = "118.613688";
+				that.driverLat = "24.912702";
+				that.phoneNumber = '114';
+				that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png')
+				//描绘终点标记
+				if (that.orderType == 0) {
+					//如果没有司机接单
+					that.selectCarAroung();
+					
+					var startLonLat = that.startLon + ',' + that.startLat;
+					var endLonLat = that.endLon + ',' + that.endLat;
+					that.getDirectionDriving(startLonLat, endLonLat);
+				} else if (that.orderType == 5) {
+					//如果司机接单，在接旅客的路上
+
+					//绘制司机标记点
+					that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
+
+					//第一次路线规划
+					that.getDirectionDriving(that.driverLon + '-' + that.driverLat, that.startLon + ',' + that.startLat);
+					//开启时时规划
+					that.openRealComing();
+				} else if (that.orderType == 10) {
+					//如果订单开始
+					//第一次路线规划
+
+					//绘制司机标记点
+					that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
+
+					uni.getLocation({
+						type: 'gcj02',
+						success: function(res) {
+							that.lon = res.longitude;
+							that.lat = res.latitude;
+							that.getDirectionDriving(that.lon + ',' + that.lat, that.endLon + ',' + that.endLat);
+						}
+					})
+					//开启时时规划
+					that.openRealDirection();
+				} else if (that.orderType == 15) {
+					uni.showToast({
+						title: '请支付订单',
+						icon: 'none',
+						success: function() {
+						/* 	uni.navigateBack({
+
+							}); */
+						},
+						fail: function() {
+						/* 	uni.navigateBack({
+
+							}); */
+						}
+					})
+
 				}
 			},
-			//-------------------------
-			/* getGaoDeKey: function() {
-				//获取高德key
+			getRealOrder: function() {
+				//时时获取订单状态
 				var that = this;
-				that.key = taxi.GaoDeWebKey;
-			}, */
+				that.orderInterval = setInterval(function() {
+					that.driverLon = "118.613688";
+					that.driverLat = "24.912702";
+					if (that.orderType == 0) {
+						//等待司机接单中
+						that.selectCarAroung();
+					} else if (that.orderType == 5) {
+						//司机到达乘客地
+
+						for (var i = 0; i < that.markers.length; i++) {
+							if (that.markers[i].id == 'taxi') {
+								that.markers.splice(i, 1);
+							}
+						}
+						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
+
+						that.getDirectionDriving(that.driverLon + '-' + that.driverLat, that.startLon + ',' + that.startLat);
+						if (that.comingInterval == 0) {
+							that.openRealComing();
+						}
+					} else if (that.orderType == 10) {
+						//订单开始
+						//清除司机到达出发地的路径规划定时器
+						
+						for (var i = 0; i < that.markers.length; i++) {
+							if (that.markers[i].id == 'taxi') {
+								that.markers.splice(i, 1);
+							}
+						}
+						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
+
+						clearInterval(that.comingInterval);
+
+						uni.getLocation({
+							type: 'gcj02',
+							success: function(res) {
+								that.lon = res.longitude;
+								that.lat = res.latitude;
+								that.getDirectionDriving(that.lon + ',' + that.lat, that.endLon + ',' + that.endLat);
+							}
+						})
+						if (that.directionInterval == 0) {
+							//开启到达目的地定时器。
+							that.openRealDirection();
+						}
+					} else if (that.orderType == 15) {
+						//到达目的地，但未支付
+						//清除定时器
+						clearInterval(that.directionInterval);
+						that.directionInterval = 0;
+						clearInterval(that.orderInterval);
+						that.orderInterval = 0;
+						that.polyline = [];
+						if (!that.isShow) {
+							that.openBottomPopup();
+						}
+						that.isShow = true;
+					}
+				}, 3000);
+			},
+
+			//--------等待司机到达
+			call: function() {
+				//呼叫司机
+				var that = this;
+				uni.makePhoneCall({
+					phoneNumber: that.phoneNumber
+				});
+			},
+			callPolice: function() {
+				//一键报警
+				var that = this;
+				uni.showToast({
+					title: 'callPolice'
+				});
+			},
+			cancleOrder: function() {
+				//取消订单
+				uni.showToast({
+					title: 'cancleOrder'
+				});
+			},
+			//--------前往终点
+			problem: function() {
+				//费用疑问
+				var that = this;
+				uni.showToast({
+					title: 'problem'
+				});
+			},
+			//------支付页面
+			payDetail: function() {
+				//支付详情
+				uni.showToast({
+					title: 'payDetail'
+				});
+				uni.navigateTo({
+					url: '../CZC/PriceDetail'
+				})
+			},
+			close: function() {
+				//关闭
+				var that = this;
+				that.closeBottomPopup();
+			},
+			payment: function(e) {
+				//支付
+				var that = this;
+				uni.showToast({
+					title: 'payment'
+				});
+				uni.requestPayment({
+					provider: e.detail.chooseType,
+					orderInfo: '111',
+					timeStamp: '',
+					nonceStr: '',
+					package: '',
+					paySign: '',
+					service:3/4
+				}); 
+			},
+			choosEcoupon: function() { 
+				//选择优惠券
+				uni.showToast({
+					title: 'choosEcoupon'
+				})
+			},
+			//-------------------------
 			getMyLocaton: function() {
 				var that = this;
 				uni.getLocation({
 					type: 'gcj02',
-					geocode: true,
 					success: function(res) {
 						that.lon = res.longitude;
 						that.lat = res.latitude;
@@ -125,12 +457,11 @@
 				that.latitude = that.lat;
 			},
 			openRealDirection: function() {
-				//开启时时路线规划，目前设置10秒一次。
+				//开启到达目的地时时路线规划，目前设置10秒一次。
 				var that = this;
-				that.interval = setInterval(function() {
+				that.directionInterval = setInterval(function() {
 					uni.getLocation({
 						type: 'gcj02',
-						geocode: true,
 						success: function(res) {
 							that.lon = res.longitude;
 							that.lat = res.latitude;
@@ -139,10 +470,14 @@
 					})
 				}, 10000);
 			},
-			closeRealDirection: function() {
-				//关闭当前时时路径规划
-				clearInterval(that.interval);
+			openRealComing: function() {
+				var that = this;
+				that.comingInterval = setInterval(function() {
+					that.getDirectionDriving(that.driverLon + '-' + that.driverLat, that.startLon + ',' + that.startLat);
+				}, 10000);
 			},
+
+
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
 				var that = this;
@@ -180,7 +515,7 @@
 						}
 						var obj = {
 							points: that.points,
-							color: "#0000AA",
+							color: "#4BDC27",
 							arrowLine: true,
 							width: 6
 						};
@@ -191,7 +526,13 @@
 					}
 				});
 			},
-			setEndMarker: function(id, lon, lat, iconPath) {
+			setMarker: function(id, lon, lat, iconPath) {
+				var width = 20;
+				var height = 20;
+				if (id == 'taxi' || id == 'car') {
+					width = 40;
+					height = 40;
+				}
 				//描绘点的方法
 				var that = this;
 				var marker = new Object();
@@ -200,31 +541,46 @@
 					id: id,
 					latitude: lat,
 					longitude: lon,
-					iconPath: iconPath
+					iconPath: iconPath,
+					width: width,
+					height: height
 				};
 				that.markers.push(marker);
 			},
 			selectCarAroung: function() {
 				var that = this;
+				for(var i = 0 ; i < that.markers.length;i++){
+					if(that.markers[i].id == 'car'){
+						that.markers.splice(i,1);
+					}
+				}
 				uni.request({
 					url: taxi.InterfaceAddress[1],
 					method: 'GET',
 					success: function(res) {
 						var carArr = res.data;
 						for (var i = 0; i < carArr.length; i++) {
-							var marker = new Object();
-							marker.Longitude = carArr[i].Longitude;
-							marker.latitude = carArr[i].latitude;
-							marker.id = i + 2;
-							marker.iconPath = '';
-							that.markers.push(marker);
+							that.setMarker('car', parseFloat(carArr[i].Longitude).toFixed(6), parseFloat(carArr[i].Latitude).toFixed(6),
+								'../../static/CZC/Car.png');
 						}
-						console.log(that.markers);
-					}
-				})
+					},
+				});
 			},
-
-
+			test: function() {
+				var that = this;
+				setTimeout(function() {
+					that.orderType = 5;
+				}, 15000);
+				setTimeout(function() {
+					that.orderType = 10;
+				}, 30000);
+				setTimeout(function() {
+					that.orderType = 15;
+				}, 45000);
+				setInterval(function() {
+					console.log(1);
+				}, 1000);
+			},
 		}
 	}
 </script>
@@ -235,7 +591,7 @@
 	}
 
 	.waitContent {
-		width: 650rpx;
+		width: 700rpx;
 		background-color: #FFFFFF;
 		border-radius: 9px;
 		align-items: center;
@@ -243,5 +599,40 @@
 		padding-left: 50rpx;
 		padding-bottom: 50rpx;
 		padding-right: 50rpx;
+	}
+
+	.comeTopContent {
+		width: 700rpx;
+		background-color: #FFFFFF;
+		padding: 30rpx;
+		border-radius: 9px;
+		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+	}
+
+	.comeBottomContent {
+		width: 600rpx;
+		padding-top: 30rpx;
+		padding-bottom: 30rpx;
+		background-color: #FFFFFF;
+		border-radius: 9px;
+		flex-direction: row;
+		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+	}
+
+	.orderBottomContent {
+		width: 700rpx;
+		background-color: #FFFFFF;
+		padding-top: 30rpx;
+		padding-left: 30rpx;
+		padding-right: 30rpx;
+		border-radius: 9px;
+		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+	}
+
+	.orderTitleFont {
+		font-size: 28rpx;
+		font-family: Source Han Sans SC;
+		font-weight: 400;
+		color: rgba(44, 45, 45, 1);
 	}
 </style>
