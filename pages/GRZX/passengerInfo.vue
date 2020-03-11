@@ -150,19 +150,6 @@
 					})
 					uni.navigateBack();
 				}
-				if(array.length>4&&this.submitType==1){
-					uni.showToast({
-					    title: '乘客最多只能添加4名',
-					    icon:"none"
-					});
-				}
-				else{
-					uni.setStorage({
-						key:"passengerList",
-						data:array
-					})
-					uni.navigateBack();	
-				}
 			}
 		}
 	}
