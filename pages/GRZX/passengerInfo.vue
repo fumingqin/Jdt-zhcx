@@ -153,7 +153,16 @@
 				}
 				if(array.length==0){
 					uni.showToast({
-				
+						title: '请选择乘客',
+						icon:"none"
+					})
+				}else{
+					uni.setStorage({
+						key:"passengerList",
+						data:array
+					})
+					uni.navigateBack();	
+				}			
 			}
 		}
 	}
