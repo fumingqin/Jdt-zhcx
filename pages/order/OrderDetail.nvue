@@ -1,0 +1,166 @@
+<template>
+	<view>
+		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
+		 :polyline="polyline" :markers="markers" :show-location="true">
+		</map>
+		<image @click="back" src="../../static/CZC/Back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
+		<scroll-view style="position: fixed;bottom:0;left: 0;right: 0;align-items: center;" class="map" :style="{height:viewHeight}"
+		 scroll-y='true'>
+			<view style="width: 700rpx;margin-left: 25rpx;margin-right: 25rpx;">  
+				<view style="flex-direction: row;background-color: #FFFFFF;width: 380rpx;border-radius: 48px;padding: 10rpx;align-items: center;">
+					<view>
+						<image src="../../static/CZC/HeadPhoto.png" style="width: 84rpx;height: 84rpx;"></image>
+					</view>
+					<view style="margin-left: 10rpx;">
+						<view>
+							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">张师傅</text>
+						</view>
+						<view style="flex-direction: row;margin-top: 10rpx;">
+							<view>
+								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">闽C1063</text>
+							</view>
+							<view style="margin-left: 30rpx;">
+								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text>
+							</view>
+						</view>
+					</view>
+				</view>
+
+				<view style="flex-direction: row;background-color: #FFFFFF;justify-content: space-between;align-items: center;padding: 20rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
+					<view style="flex-direction: row;align-items: center;">
+						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">32.5</text>
+						<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">元（已优惠9.45元）</text>
+					</view>
+					<view> 
+						<text @click="payDetail" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用明细></text>
+					</view>
+				</view>
+
+				<view style="background-color: #FFFFFF;padding: 40rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
+					<view style="align-items: center;">
+						<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">请对本次路程进行评价！</text>
+					</view>
+					<view style="flex-direction: row;margin-left: 30px;margin-right: 30px;justify-content: space-between;margin-top: 20rpx;">
+						<image src="../../static/Order/Satisfy.png" style="width: 180rpx;height: 70rpx;"></image>
+						<image src="../../static/Order/Unsatisfy.png" style="width: 215rpx;height: 70rpx;"></image>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
+	</view>  
+</template>
+
+<script>
+	import taxi from '../../common/Czc.js';
+	export default {
+		data() {
+			return {
+				scale: 14,
+				longitude: "118.600608", //地图中心点经度
+				latitude: "24.889217", //地图中心点纬度
+				points: [],
+				polyline: [],
+				markers: [],
+				mapHeight: '',
+				viewHeight: ''
+			}
+		},
+		onLoad() {
+			var that = this;
+			that.setMarker(1, 118.600608, 24.889217, '../../static/CZC/Start.png');
+			that.setMarker(2, 118.613688, 24.912702, '../../static/CZC/End.png');
+			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
+			uni.getSystemInfo({ 
+				//设置地图高度为可使用的高度
+				success: function(res) {
+					that.mapHeight = res.windowHeight + 'px';
+					that.viewHeight = (res.windowHeight * 0.4) + 'px'
+				}
+			});
+		},
+		methods: {
+			back: function() {
+				var that = this;
+				uni.navigateBack({});
+			},
+			payDetail: function() {
+				//支付详情
+				uni.navigateTo({
+					url:'../CZC/PriceDetail'
+				});
+			},
+			setMarker: function(id, lon, lat, iconPath) {
+				var width = 20;
+				var height = 20;
+				//描绘点的方法
+				var that = this;
+				var marker = new Object();
+				//画终点经纬度
+				marker = {
+					id: id,
+					latitude: lat,
+					longitude: lon,
+					iconPath: iconPath,
+					width: width,
+					height: height
+				};
+				that.markers.push(marker);
+			},
+			getDirectionDriving: function(startLonLat, endLonLat) {
+				//调用高德api取得路径规划并绘制线路 
+				var that = this;
+				uni.request({
+					url: taxi.InterfaceAddress[0],
+					data: {
+						startLonLat: startLonLat,
+						endLonLat: endLonLat,
+					},
+					method: "GET",
+					success: function(res) {
+						//日后会加入定时，此处需清空
+						that.points = [];
+						that.polyline = [];
+
+						var polylineArr = [];
+						var points = [];
+
+						polylineArr = res.data.Polyline;
+
+						for (var i = 0; i < polylineArr.length; i++) {
+							var arr = polylineArr[i].split(';');
+							for (var j = 0; j < arr.length; j++) {
+								points.push(arr[j]);
+							}
+						}
+						//根据文件建设对象经纬度数组
+						for (var i = 0; i < points.length; i++) {
+							var arr = points[i].split(',');
+							var obj = {
+								longitude: arr[0],
+								latitude: arr[1]
+							}
+							that.points.push(obj);
+						}
+						var obj = {
+							points: that.points,
+							color: "#4BDD25",
+							arrowLine: true,
+							width: 5
+						};
+						that.polyline.push(obj);
+					},
+					fail: function(res) {
+						console.log(res);
+					}
+				});
+			},
+			
+		}
+	}
+</script>
+
+<style>
+	.map {
+		width: 750rpx;
+	}
+</style>
