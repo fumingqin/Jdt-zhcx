@@ -1,7 +1,7 @@
 <template>
 	<view class="content">	
 		<view class="passengerList">
-			<view class="boxClass" v-if="submitType == 1" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
+			<view class="boxClass" v-if="submitType == 1 || submitType == 2" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
 				<view class="nameClass">{{item.name}}</view>
 				<view class="sexClass" name="sex">{{item.sex}}</view>
 				<view class="typeClass">{{item.ticketType}}</view>
@@ -24,7 +24,7 @@
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 			</view>
 		</view>	
-		<view v-if="submitType == 1" class="btnBox">  <!--非个人中心页面进入 -->
+		<view v-if="submitType == 1 || submitType == 2" class="btnBox">  <!--非个人中心页面进入 -->
 			<button type="warn" @click="addPassenger" class="btnAdd1">+添加乘客</button>
 			<button type="primary" @click="definite" class="btnDefinite">确定</button>
 		</view>
@@ -43,54 +43,71 @@
 		data(){
 			return{
 				passengerList:[{
+					userID:0,
 					name:'张小娴',
 					sex:'女',
-					ticketType:'成人票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'成人',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:true,
+					emergencyContact:false,
 				},{
-					name:'黄小新1',
+					userID:1,
+					name:'黄小新',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'成人',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:true,
 				},{
-					name:'黄小新2',
+					userID:2,
+					name:'张新',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:false,
 				},{
-					name:'黄小新3',
+					userID:3,
+					name:'张旺',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:false,
 				},{
-					name:'黄小新4',
-					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					userID:4,
+					name:'张小芸',
+					sex:'女',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:false,
 				},{
-					name:'黄小新5',
+					userID:5,
+					name:'许小芸',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
-				}
-				],
+					default:false,
+					emergencyContact:false,
+				}],
 				submitType:'',
 			}
 		},
 		onLoad(options){
-			this.getType(options.submitType);
+			this.getType(options.submitType); //传参，参数为1,为出租车进入,其他界面设为2
 		},
 		methods:{
 			async getType(e){
@@ -107,11 +124,23 @@
 			editPassenger(){   //编辑乘车人信息
 				
 			},
-			choosePassenger(e){  //选择乘车人
-				if(e.hiddenIndex==0){
-					e.hiddenIndex=1;
-				}else{
+			choosePassenger(e){  //选择乘车人				
+				var list=this.passengerList;
+				var count=0;
+				for(var i=0;i<list.length;i++){
+					if(list[i].hiddenIndex==1){
+						count++;
+					}
+				}
+				 if(e.hiddenIndex==1){
 					e.hiddenIndex=0;
+				}else if(count>3 && this.submitType==1){
+					uni.showToast({
+					    title: '乘客最多只能添加4名',
+					    icon:"none"
+					});
+				}else{
+					e.hiddenIndex=1;
 				}
 			},
 			definite(){ //提交array
@@ -122,11 +151,18 @@
 						array.push(data[i]);
 					}
 				}
-				uni.setStorage({
-					key:"passengerList",
-					data:array
-				})
-				uni.navigateBack();
+				if(array.length==0){
+					uni.showToast({
+						title: '请选择乘客',
+						icon:"none"
+					})
+				}else{
+					uni.setStorage({
+						key:"passengerList",
+						data:array
+					})
+					uni.navigateBack();	
+				}			
 			}
 		}
 	}
@@ -162,7 +198,7 @@
 	.titleClass{
 		margin-left: 20upx;
 		font-size: 38upx;
-		font-weight: bold;
+		/*font-weight: bold; */
 		margin-top: 97upx;
 	}
 	.passengerList{ //列表样式

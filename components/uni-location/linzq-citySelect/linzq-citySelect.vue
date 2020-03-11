@@ -67,6 +67,7 @@
 
 <script>
 	import Citys from '../city.js';
+	import amapFile from '../amap/amap-wx.js'
 	export default {
 		components: {},
 		props: {},
@@ -100,6 +101,12 @@
 				latitude: '', //纬度
 				seconds: 3,
 				po_tips: '重新定位',
+				markersData:{
+				        latitude: '',//纬度
+				        longitude: '',//经度
+				        key: "eda98f0100fe5652f2baf1b0b5709a46"//申请的高德地图key（申请的web key）
+				      },
+				      gpsCode:'',
 			}
 		},
 
@@ -136,9 +143,22 @@
 			}
 		},
 		methods: {
+			//定位授权
 			getId(index) {
 				return this.letter[index];
 			},
+			getAuthorizeInfo(a="scope.userLocation"){  //1. uniapp弹窗弹出获取授权（地理，个人微信信息等授权信息）弹窗
+					var _this=this;
+					uni.authorize({
+						scope: a,
+						success() { //1.1 允许授权
+							_this.getLocationInfo();
+						},
+						fail(){    //1.2 拒绝授权
+							console.log("你拒绝了授权，无法获得周边信息")
+						}
+					})
+				},
 
 			scrollTo(letter) {
 				this.showMask = true
@@ -225,21 +245,20 @@
 				let countdown = setInterval(() => {
 					that.seconds--;
 					uni.getLocation({
-						type: 'wgs84',
-						geocode:'true',
+						type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+						
 						success: function(res) {
 							// console.log('当前位置的经度：' + res.longitude);
 							// console.log('当前位置的纬度：' + res.latitude);
 						    // this.position = res.address.city
 							// if(this.position =='')
 							
-							that.longitude = res.longitude
-							that.latitude = res.latitude
-							that.position ='福建'//res.address.city
-							uni.setStorage({
-								key: 'Key_position',
-								data:that.position
-							})
+							var Longitude = res.longitude
+							var Latitude = res.latitude
+							
+							that.loadCity(Latitude,Longitude);//调用高德
+							// that.position ='福建'//res.address.city
+							
 						}
 					});
 					if (that.seconds <= 0) {
@@ -248,7 +267,32 @@
 						clearInterval(countdown);
 					}
 				}, 1000);
-			}
+			},
+			//把当前位置的经纬度传给高德地图，调用高德API获取当前地理位置，天气情况等信
+			    loadCity(latitude, longitude){
+			      var that=this;
+			      var myAmapFun = new amapFile.AMapWX({ key: that.markersData.key });
+			      
+			      myAmapFun.getRegeo({
+			        location: '' + longitude + ',' + latitude + '',//location的格式为'经度,纬度'
+			        success: function (res) {
+			          console.log(res);
+			          var cityCode=res[0].regeocodeData.addressComponent.adcode.substring(0, 2)+"0000";
+			          that.gpsCode=cityCode
+			          that.position=res[0].regeocodeData.addressComponent.province
+					  console.log(that.gpsCode);
+					  console.log(that.city_name);
+			          uni.setStorage({
+			          	key: 'Key_position',
+			          	data:that.position
+			          })
+			          
+			          
+			        },
+			        fail: function (info) {}
+			      });
+			 
+			    },
 		}
 	};
 </script>

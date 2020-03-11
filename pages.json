@@ -55,7 +55,15 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
+		},
+		{
+			"path": "pages/CZC/PrivateTaxi",
+			"style": {
+		
+				"navigationStyle": "custom"
+			}
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
 				"navigationBarTitleText": "选择支付 "
@@ -163,11 +171,11 @@
 			"style": {}
 		},
         {
-            "path" : "pages/LYFW/peripheralTourism/imgList",
+            "path" : "pages/LYFW/peripheralTourism/imgListlql",
             "style" : {}
         },
         {
-            "path" : "pages/LYFW/peripheralTourism/imgPreview",
+            "path" : "pages/LYFW/peripheralTourism/imgPreviewlql",
             "style" : {}
         },
         {
@@ -177,8 +185,10 @@
 		{
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
-				"navigationBarTitleText": "班次详情",
-				"backgroundColor":"#F1F1F1"
+				"navigationBarTitleText": "填写订单",
+				"backgroundColor":"#F1F1F1",
+				"navigationBarBackgroundColor":"#FC4646",
+				"navigationBarTextStyle":"white"
 				
 			}
 		},
