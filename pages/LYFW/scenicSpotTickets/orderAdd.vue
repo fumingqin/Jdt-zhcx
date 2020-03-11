@@ -54,11 +54,12 @@
 				<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
 					<text>{{item.name}}</text>
 					<text class="Mp_sex">{{item.sex}}</text>
-					<text class="Mp_square">{{item.mold}}</text>
+					<text class="Mp_square">{{item.ticketType}}</text>
 					<text class="Mp_square" v-if="item.default == true">本人</text>
+					<text class="Mp_square" v-if="item.emergencyContact == true">紧急联系人</text>
 					<text class="Mp_delete  jdticon icon-fork" @click="deleteUser(index)"></text>
-					<text class="Mp_text">身份证：{{item.idCard}}</text>
-					<text class="Mp_text">手机号：{{item.mobile}}</text>
+					<text class="Mp_text">身份证：{{item.codeNum}}</text>
+					<text class="Mp_text">手机号：{{item.phoneNum}}</text>
 				</view>
 
 				<view class="MP_userInformation">
@@ -196,32 +197,14 @@
 				addressData: '', //购票人信息
 				adultIndex: '', //成人数量
 				childrenIndex: '', //儿童数量
-				textUser: [{
-					userID: 0,
-					mold: '成人',
-					name: '许小星',
-					sex: '女',
-					idCard: '35058199503692367',
-					mobile: '13853989563',
-					default: true,
-				}, {
-					userID: 1,
-					mold: '儿童',
-					name: '张晓雪',
-					sex: '女',
-					idCard: '35058200803692367',
-					mobile: '13853989563',
-					default: false,
-				}],
 			}
 		},
 
 		onLoad(option) {
 			this.lyfwData();
-			
-		},
-		onShow() {
-			this.userData();
+			setInterval(() => {
+				this.userData();
+			}, 500)
 		},
 		components: {
 			//加载多方弹框组件
@@ -236,7 +219,6 @@
 				this.scSpotDetails = scSpotDetails.data.ticket[this.index];
 				let notice = await this.$api.lyfwfmq('notice');
 				this.notice = notice.data;
-				// console.log(this.scSpotDetails)
 			},
 
 			//删除出行人
@@ -247,6 +229,10 @@
 				} else {
 					var b = a.slice(0, e).concat(a.slice(e + 1, a.length));
 					this.addressData = b;
+					uni.setStorage({
+						key:"passengerList",
+						data: b
+					})
 					this.screenUser();
 				}
 			},
@@ -260,24 +246,22 @@
 			
 			//用户数据读取
 			userData(){ 
-				// uni.getStorage({
-				//     key: 'passengerList',
-				//     success: (res) => {
-				//         this.addressData = res.data;
-				// 		// console.log(res)
-				//     }
-				// });
-			 this.addressData = this.textUser;
-				this.screenUser();
+				uni.getStorage({
+				    key: 'passengerList',
+				    success: (res) => {
+				        this.addressData = res.data;
+						this.screenUser();
+				    }
+				});
 			},
 
 			//数组提取
-			screenUser: function() {
+			screenUser:function(){
 				let adult = this.addressData.filter(item => {
-					return item.mold == '成人';
+					return item.ticketType == '成人';
 				})
 				let children = this.addressData.filter(item => {
-					return item.mold == '儿童';
+					return item.ticketType == '儿童';
 				})
 				this.adultIndex = adult.length;
 				this.childrenIndex = children.length;

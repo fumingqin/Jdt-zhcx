@@ -197,20 +197,22 @@ const orderInfo = {
 		}, //门票信息
 		addressData: [{
 			userID: 0,
-			mold: '成人',
+			ticketType: '成人',
 			name: '许小星',
 			sex: '女',
-			idCard: '35058199503692367',
-			mobile: '13853989563',
+			codeNum: '35058199503692367',
+			phoneNum: '13853989563',
 			default: true,
+			emergencyContact:false,
 		}, {
 			userID: 1,
-			mold: '儿童',
+			ticketType: '儿童',
 			name: '张晓雪',
 			sex: '女',
-			idCard: '35058200803692367',
-			mobile: '13853989563',
+			codeNum: '35058200803692367',
+			phoneNum: '13853989563',
 			default: false,
+			emergencyContact:true,
 		}],
 		coupon: {
 			couponID: '1',

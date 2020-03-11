@@ -21,10 +21,11 @@
 					<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
 						<text>{{item.name}}</text>
 						<text class="Mp_sex">{{item.sex}}</text>
-						<text class="Mp_square">{{item.mold}}</text>
+						<text class="Mp_square">{{item.ticketType}}</text>
 						<text class="Mp_square" v-if="item.default == true">本人</text>
-						<text class="Mp_text">身份证：{{item.idCard}}</text>
-						<text class="Mp_text">手机号：{{item.mobile}}</text>
+						<text class="Mp_square" v-if="item.emergencyContact == true">紧急联系人</text>
+						<text class="Mp_text">身份证：{{item.codeNum}}</text>
+						<text class="Mp_text">手机号：{{item.phoneNum}}</text>
 					</view>
 				</view>
 
@@ -146,10 +147,10 @@
 			//数组提取
 			screenUser: function() {
 				let adult = this.addressData.filter(item => {
-					return item.mold == '成人';
+					return item.ticketType == '成人';
 				})
 				let children = this.addressData.filter(item => {
-					return item.mold == '儿童';
+					return item.ticketType == '儿童';
 				})
 				
 				this.adultIndex = adult.length;

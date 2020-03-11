@@ -10,8 +10,8 @@
 			<text class="title">购票成功</text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
-				<view class="orderButton" @click="godetail('')">查看订单</view>
-				<view class="homeButton" @click="godetail('pages/Home/Index')">返回首页</view>
+				<view class="orderButton" @click="godetail(0)">查看订单</view>
+				<view class="homeButton" @click="godetail(1)">返回首页</view>
 			</view>
 		</view>
 	</view>
@@ -27,10 +27,16 @@
 		},
 		methods: {
 			//路由统一事件
-			godetail: function(url) {
-				uni.navigateTo({
-					url
-				}) 
+			godetail: function(e) {
+				if(e==0){
+					uni.switchTab({
+						url: ''
+					});
+				}else if(e==1){
+					uni.switchTab({
+						url: '/pages/Home/Index'
+					});
+				}
 			},
 			backHome : function() {
 				setInterval(() => {
