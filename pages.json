@@ -55,7 +55,15 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
+		},
+		{
+			"path": "pages/CZC/PrivateTaxi",
+			"style": {
+		
+				"navigationStyle": "custom"
+			}
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {}
 		}, {
