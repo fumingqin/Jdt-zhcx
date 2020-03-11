@@ -57,10 +57,14 @@
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "选择支付 "
+			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "购票成功"
+			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 			"style": {
@@ -183,7 +187,29 @@
 			"style": {
 				"navigationBarTitleText": "班次列表"
 			}
+		},
+		{
+			"path": "pages/CTKY/oederList",
+			"style": {
+				"navigationBarTitleText": "班次列表"
+			}
+		},
+		{
+			"path": "pages/CTKY/orderDetail",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/CTKY/issueView",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -204,7 +230,7 @@
 				"pagePath": "pages/Home/Index",
 				"text": "商城"
 			},
-			{
+			{ 
 				"pagePath": "pages/Home/Index",
 				"text": "购物车"
 			},
@@ -219,7 +245,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/LYFW/scenicSpotTickets/selectivePayment", //启动页面，必选			
+			"path": "", //启动页面，必选			
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

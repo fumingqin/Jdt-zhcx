@@ -110,7 +110,7 @@
 				<view class="MP_optionBar">
 					<text class="Mp_title">同意游客须知</text>
 					<text class="Mp_textBlue" @click="open2(2)">(点击查看须知)</text>
-					<radio class="Mp_box" value="1" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
+					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 				</view>
 				
 				<!-- 嵌套弹框组件popup -->
@@ -203,7 +203,6 @@
 					sex: '女',
 					idCard: '35058199503692367',
 					mobile: '13853989563',
-					area: '149号',
 					default: true,
 				}, {
 					userID: 1,
@@ -212,7 +211,6 @@
 					sex: '女',
 					idCard: '35058200803692367',
 					mobile: '13853989563',
-					area: '149号',
 					default: false,
 				}],
 			}
@@ -220,6 +218,10 @@
 
 		onLoad(option) {
 			this.lyfwData();
+			
+		},
+		onShow() {
+			this.userData();
 		},
 		components: {
 			//加载多方弹框组件
@@ -251,8 +253,21 @@
 
 			//选择用户
 			choiceUser: function() {
-				var user = this.textUser;
-				this.addressData = user;
+				uni.navigateTo({
+					url: '/pages/GRZX/passengerInfo?submitType=1',
+				})
+			},
+			
+			//用户数据读取
+			userData(){ 
+				// uni.getStorage({
+				//     key: 'passengerList',
+				//     success: (res) => {
+				//         this.addressData = res.data;
+				// 		// console.log(res)
+				//     }
+				// });
+			 this.addressData = this.textUser;
 				this.screenUser();
 			},
 
@@ -344,13 +359,24 @@
 			//提交表单
 			submit: function() {
 				if (this.selectedValue == 1) {
+					// uni.request({
+					// 	url : '',
+					// 	data:{
+					// 		ticket : this.scSpotDetails,
+					// 		addressData : this.addressData,
+					// 		actualPayment : this.actualPayment,
+					// 		dateReminder : this.dateReminder,
+					// 		date : this.date,
+					// 		coupon : this.couponColor,
+					// 	},
+					// 	//向服务器发送订单数据，返回订单编号
+					// 	success:(res)=>{
+					// 		console.log(res)
+					// 	}
+					// })
+					var a = '11126778833';
 					uni.redirectTo({
-						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?ticket=' + encodeURIComponent(JSON.stringify(this.scSpotDetails)) 
-						+ '&addressData=' + encodeURIComponent(JSON.stringify(this.addressData))
-						+ '&actualPayment=' + JSON.stringify(this.actualPayment)
-						+ '&dateReminder=' + JSON.stringify(this.dateReminder)
-						+ '&date=' + JSON.stringify(this.date)
-						+ '&coupon=' + encodeURIComponent(JSON.stringify(this.couponList[this.couponColor]))
+						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
 					})
 
 				} else {
