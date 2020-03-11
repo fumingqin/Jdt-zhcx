@@ -219,7 +219,19 @@
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
             "style" : {}
-        }
+        },{
+			// 出租车订单列表
+            "path" : "pages/order/OrderList",            
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        },{
+			// 出租车订单详情
+	    "path" : "pages/order/OrderDetail",
+	    "style" : {
+			"navigationStyle":"custom"
+		}
+	}	
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
