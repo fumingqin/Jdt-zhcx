@@ -23,13 +23,14 @@
 				"navigationBarTitleText": "景区详情",
 				"navigationStyle": "custom",
 				"app-plus": {
-					"titleNView": false
+					"titleNView": {
+						"type": "transparent"
+					}
 				}
 			}
 		},
 		{
 			"path": "pages/LYFW/currency/imglist",
-
 			"style": {
 				"navigationBarTitleText": "全部图片"
 			}
@@ -243,7 +244,7 @@
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
         }
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
