@@ -731,6 +731,7 @@
 			text-align: center;
 			margin-bottom: 200upx;
 			background: #FFFFFF;
+			top: 301upx;
 		}
 	}
 	

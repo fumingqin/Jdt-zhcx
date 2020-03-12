@@ -66,9 +66,19 @@
 			<view class="personClass">
 				<view class="fontStyle">设置为本人</view>
 				<view class="checkBox">
-					<checkbox-group name="person">
+					<checkbox-group name="default" @change="checkChange">
 						<label>
-							<checkbox :checked="user.person" :value="user.person"/>
+							<checkbox :checked="user.default" :value="user.default" />
+						</label>
+					</checkbox-group>
+				</view>
+			</view>
+			<view v-if="user.show" class="emergencyClass">
+				<view class="fontStyle">紧急联系人</view>
+				<view class="checkBox">
+					<checkbox-group name="emergencyContact">
+						<label>
+							<checkbox :checked="user.emergencyContact" :value="user.emergencyContact"/>
 						</label>
 					</checkbox-group>
 				</view>
@@ -96,7 +106,9 @@
 					phoneNum:'',
 					codeNum:'',
 					date:'',
-					person:true,
+					default:false,
+					show:true,
+					emergencyContact:false,
 					date:'请选择 >',
 				}
 			}
@@ -126,13 +138,22 @@
 			},
 			formSubmit:function(e){
 				var data=e.target.value;
-				if(data.person.length==0){
-					data.person=0;
-				}else{
-					data.person=1;
-				}
 				data.date=this.user.date;
 				data.sex=this.user.sex;
+				if(data.default==null||data.default==""){
+					data.default=false;
+				}else{
+					data.default=true;
+				}
+				if(this.user.show){
+					if(data.emergencyContact==null||data.emergencyContact==""){
+						data.emergencyContact=false;
+					}else{
+						data.emergencyContact=true;
+					}
+				}else{
+					data.emergencyContact=false;
+				}				
 				console.log(data)
 			},
 			bindDateChange:function(e){
@@ -141,11 +162,12 @@
 			resetClick:function(e){
 				this.user.date="请选择 >";
 			},
-			personClick:function(e){
-				
-			},
-			changePerson:function(e){
-				
+			checkChange:function(e){
+				if(e.detail.value=="false"){ //选中
+					this.user.show=false;
+				}else{	//未选中
+					this.user.show=true;
+				}
 			}
 		}
 	}
@@ -252,6 +274,15 @@
 		background-color: #FFFFFF;
 		position: absolute;
 		top:1068upx;
+		margin-bottom: 150upx;
+	}
+	.emergencyClass{
+		width: 100%;
+		height: 108upx;
+		background-color: #FFFFFF;
+		position: absolute;
+		top:1176upx;
+		border-top: 1upx solid #DDDDDD;
 		margin-bottom: 150upx;
 	}
 	.btndelete{

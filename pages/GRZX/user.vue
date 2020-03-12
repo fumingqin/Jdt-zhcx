@@ -5,10 +5,10 @@
 			<image class="bg" src="/static/GRZX/beijing.png" ></image>
 			<view class="user-info-box" @click="checkLogin">
 				<view class="portrait-box">
-					<image class="portrait" :src=" userInfo.portrait || '/static/GRZX/missing-face.png'"></image>
+					<image class="portrait" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
 				</view>
 				<view class="info-box">
-					<text class="username">{{userInfo.nickname || '游客'}}</text>
+					<text class="username">{{userInfo.nickName || '游客'}}</text>
 				</view>
 			</view>
 		</view>
@@ -105,11 +105,11 @@
 			}
 		},
 		onLoad(){
+			
 		},
-		// #ifndef MP
-
-		// #endif
-
+		computed: {
+			...mapState(['hasLogin','userInfo'])
+		},
         methods: {
 			navTo(url){
 				uni.navigateTo({
@@ -117,7 +117,21 @@
 				})  
 			},
 			checkLogin(){
-				console.log()
+				if(!this.hasLogin){
+					uni.showToast({
+						title : '请先登录',
+						icon : 'none',
+					})
+					setTimeout(function(){
+						uni.navigateTo({
+							url  : '/pages/GRZX/userLogin'
+						}) 
+					},1500);
+				}else{
+					uni.navigateTo({
+						url :'/pages/GRZX/personal'
+					})  
+				}
 			},
 			/**
 			 *  会员卡下拉和回弹
