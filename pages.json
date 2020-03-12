@@ -173,7 +173,6 @@
 		{
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
-				"navigationBarTitleText": "填写订单",
 				"backgroundColor":"#F1F1F1",
 				"navigationBarBackgroundColor":"#FC4646",
 				"navigationBarTextStyle":"white"

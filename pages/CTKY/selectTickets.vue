@@ -2,7 +2,8 @@
 	<view class="myView">
 		<view class="headerClass">
 			<scroll-view class="scrollClass" scroll-x>
-				<view class="blockClass" :class="selectIndex == index ? 'viewPress': '' " v-for="(item,index) in dateArray" :key="index"  @click="viewClick(index)">
+				<view class="blockClass" :class="selectIndex == index ? 'viewPress': '' " v-for="(item,index) in dateArray" :key="index"
+				 @click="viewClick(index)">
 					<view class="textCLass">
 						<view class="weekClass">{{item.week}}</view>
 						<view class="dateClass">{{item.date}}</view>
@@ -14,13 +15,14 @@
 			</view>
 			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'"
 			 :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
+			 
 		</view>
 		<view class="ctky_View" v-for="(item,index) in 2" :key="index" @click="ticketDetail">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
 					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#1EA2FF  solid 1px;text-align: center;align-items: center;color:#1EA2FF 
 					;font-size: 24upx;font-family: SourceHanSansSC-Light;">传统</view>
-				    <view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">15:05</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">15:05</view>
 				</view>
 				<!-- <view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view> -->
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
@@ -50,7 +52,7 @@
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
 					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#FF5A00  solid 1px;text-align: center;align-items: center;color:#FF5A00 
 					;font-size: 24upx;font-family: SourceHanSansSC-Light;">定制</view>
-				    <view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">15:05</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">15:05</view>
 				</view>
 				<!-- <view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view> -->
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
@@ -86,7 +88,8 @@
 		},
 		data() {
 			return {
-				dateArray: [{
+				dateArray: [
+					{
 						week: '今日',
 						date: '2/28'
 					},
@@ -115,51 +118,68 @@
 						date: '3/5'
 					}
 				],
-                selectIndex:0,
+				selectIndex: 0,
 				date: '2019/01/01',
-				showPicker:false,
+				showPicker: false,
 				type: 'rangetime',
 				value: '',
+				//测试数据传输
+				ticketInfo: [{
+					ticketDate: '12月1日',
+					ticketSettime: '14:30',
+					ticketPrice: '37',
+					ticketCount: '25',
+					ticketStart: '厦门',
+					ticketEnd: '拉萨',
+					carType: '大型高一',
+					ticketType: '儿童半票'
+				}]
 			}
 		},
-		onLoad(params) {
-			//加载时获取上个页面传过来的参数
-			uni.setNavigationBarTitle({
-				title: params.lineName,
+		onLoad() {
+		},
+		onReady() {
 
-			});
 		},
 		methods: {
-			viewClick:function(e){
-			this.selectIndex = e;
+			viewClick: function(e) {
+				this.selectIndex = e;
 			},
 			onShowDatePicker(type) { //显示
 				this.type = type;
 				this.showPicker = true;
 				this.value = this[type];
-			
 			},
 			onSelected(e) { //选择
 				this.showPicker = false;
 				if (e) {
 					this[this.type] = e.value;
-			
 					// this[this.type] = e.value.split('/')[1] + "月" + e.value.split('/')[2] + "日";
 					// this.datestring = this[this.type];
 					// this.queryWeek(e.date.toString().substring(0,3));
 					console.log(this[this.type]);
-					console.log(e.date.toString().substring(0,3));
+					console.log(e.date.toString().substring(0, 3));
 					//console.log(this.Week);
 					//选择的值
 					console.log('value => ' + e.value);
 					//原始的Date对象
 					console.log('date => ' + e.date);
-			
+
 				}
 			},
-			ticketDetail(){
+			ticketDetail() {
+				uni.setStorage({
+					key: 'ticketinfo',
+					data: this.ticketInfo,
+					success() {
+						console.log('成功了')
+					},
+					fail() {
+						console.log('缓存失败了')
+					}
+				});
 				uni.navigateTo({
-					url:"scheduleDetails"
+					url: "scheduleDetails"
 				})
 			},
 		}
@@ -186,8 +206,8 @@
 	.scrollClass {
 		height: 109upx;
 		width: 640upx;
-		white-space: nowrap;//外层写这俩
-		flex-wrap:nowrap ;
+		white-space: nowrap; //外层写这俩
+		flex-wrap: nowrap;
 	}
 
 	.blockClass {
@@ -196,7 +216,7 @@
 		width: 87upx;
 		height: 84upx;
 		border-radius: 8upx;
-		display: inline-block;//里层写这个
+		display: inline-block; //里层写这个
 	}
 
 	.textCLass {
@@ -220,12 +240,20 @@
 		color: #333333;
 		text-align: center;
 	}
-	.viewPress{
+
+	.viewPress {
 		background: #DD524D;
-		.weekClass{ color: #FFFFFF;}
-		.dateClass { color: #FFFFFF; }
+
+		.weekClass {
+			color: #FFFFFF;
+		}
+
+		.dateClass {
+			color: #FFFFFF;
+		}
 	}
-	.calendarImage{
+
+	.calendarImage {
 		width: 35upx;
 		height: 37upx;
 		margin-left: 34upx;
@@ -233,7 +261,7 @@
 		margin-top: 33upx;
 		margin-bottom: 33upx;
 	}
-	
+
 	.ctky_View {
 		width: 706upx;
 		background: #FFFFFF;
@@ -242,14 +270,14 @@
 		display: flex;
 		justify-content: space-between;
 	}
-	
+
 	.ctky_View_Left {
 		text-align: left;
 		display: flex;
 		flex-direction: column;
 		padding: 0;
 	}
-	
+
 	.ctky_View_Right {
 		display: flex;
 		text-align: right;
