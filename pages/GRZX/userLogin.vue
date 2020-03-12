@@ -29,8 +29,8 @@
 		<!-- <view class="wxClass" @click="wxClick"></view>
 		<view class="qqClass" @click="qqClick"></view> -->
 		<view class="loginMode">第三方登录</view>
-		<image src="../../static/GRZX/qq.png" class="qqClass" @click="qqClick"></image>
-		<image src="../../static/GRZX/wx.png" class="wxClass" @click="wxClick"></image>
+		<image src="../../static/GRZX/qq.png" class="qqClass" @click="qqLogin"></image>
+		<image src="../../static/GRZX/wx.png" class="wxClass" @click="wxLogin"></image>
 	</view>
 </template>
 
@@ -61,12 +61,45 @@
 				console.log(this.phoneNumber)
 				console.log(this.captchaCode);
 			},
-			wxClick(){
-				uni.navigateTo({
-					url:'/pages/GRZX/wxLogin'
+			wxLogin(){
+				this.logining=true;
+				var theSelf=this;
+				var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
+				var address;
+				uni.login({
+					provider:'weixin',
+					success:function(loginRes){
+						uni.getUserInfo({	
+							provider: 'weixin',
+							success:function(res){			
+								address=getChina.pinyin(res.userInfo.province)+" "+getChina.pinyin(res.userInfo.city);
+								res.userInfo.address=address;
+								uni.setStorage({
+									key:"userInfo",
+									data:res.userInfo
+								});
+								uni.showToast({
+									title: '授权成功',
+									icon:"none"
+								});
+								if(res!=null||res!=""){
+									theSelf.login(res.userInfo);						
+								}
+								setTimeout(function(){
+									uni.navigateBack({
+										delta: 2
+									})
+								},1000);	
+							},
+							fail:function(){
+								theSelf.logining=false;
+							}
 				})
+					}
+				})
+				
 			},
-			qqClick(){
+			qqLogin(){
 				uni.navigateTo({
 					url:'/pages/GRZX/wxLogin'
 				})

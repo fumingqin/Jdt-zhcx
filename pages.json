@@ -93,9 +93,18 @@
 			"style": {}
 		}, 
 		{
+			"path": "pages/GRZX/userLogin",
+			"style": {}
+		},
+		{
+			"path": "pages/GRZX/wxLogin",
+			"style": {}
+		},
+		{
 			"path": "pages/GRZX/personal",
 			"style": {}
-		}, {
+		},
+		{
 			"path": "pages/GRZX/address",
 			"style": {
 				"navigationStyle": "custom"
