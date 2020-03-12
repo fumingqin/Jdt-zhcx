@@ -60,7 +60,8 @@
                         "appkey_android" : "eda98f0100fe5652f2baf1b0b5709a46"
                     }
                 },
-                "ad" : {}
+                "ad" : {},
+                "payment" : {}
             }
         },
         "compilerVersion" : 3

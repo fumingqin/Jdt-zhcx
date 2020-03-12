@@ -55,12 +55,24 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
+		},
+		{
+			"path": "pages/CZC/PrivateTaxi",
+			"style": {
+		
+				"navigationStyle": "custom"
+			}
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "选择支付 "
+			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "购票成功"
+			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 			"style": {
@@ -85,9 +97,18 @@
 			"style": {}
 		}, 
 		{
+			"path": "pages/GRZX/userLogin",
+			"style": {}
+		},
+		{
+			"path": "pages/GRZX/wxLogin",
+			"style": {}
+		},
+		{
 			"path": "pages/GRZX/personal",
 			"style": {}
-		}, {
+		},
+		{
 			"path": "pages/GRZX/address",
 			"style": {
 				"navigationStyle": "custom"
@@ -184,7 +205,41 @@
 			"style": {
 				"navigationBarTitleText": "班次列表"
 			}
+		},
+		{
+			"path": "pages/CTKY/oederList",
+			"style": {
+				"navigationBarTitleText": "班次列表"
+			}
+		},
+		{
+			"path": "pages/CTKY/orderDetail",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/CTKY/issueView",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
+            "style" : {}
+        },{
+			// 出租车订单列表
+            "path" : "pages/order/OrderList",            
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        },{
+			// 出租车订单详情
+	    "path" : "pages/order/OrderDetail",
+	    "style" : {
+			"navigationStyle":"custom"
+		}
+	}	
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -205,7 +260,7 @@
 				"pagePath": "pages/Home/Index",
 				"text": "商城"
 			},
-			{
+			{ 
 				"pagePath": "pages/Home/Index",
 				"text": "购物车"
 			},

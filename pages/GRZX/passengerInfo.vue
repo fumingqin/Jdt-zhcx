@@ -11,6 +11,8 @@
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<view>
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
+					<text v-if="item.default" class="fontClass">本人</text>
+					<text v-if="item.emergencyContact" class="fontClass">联系人</text>
 				</view>
 			</view>
 			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
@@ -22,6 +24,8 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
+				<text v-if="item.default" class="fontClass">本人</text>
+				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
 			</view>
 		</view>	
 		<view v-if="submitType == 1 || submitType == 2" class="btnBox">  <!--非个人中心页面进入 -->
@@ -43,54 +47,71 @@
 		data(){
 			return{
 				passengerList:[{
+					userID:0,
 					name:'张小娴',
 					sex:'女',
-					ticketType:'成人票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'成人',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:true,
+					emergencyContact:false,
 				},{
-					name:'黄小新1',
+					userID:1,
+					name:'黄小新',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'成人',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:true,
 				},{
-					name:'黄小新2',
+					userID:2,
+					name:'张新',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:false,
 				},{
-					name:'黄小新3',
+					userID:3,
+					name:'张旺',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:false,
 				},{
-					name:'黄小新4',
-					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					userID:4,
+					name:'张小芸',
+					sex:'女',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
+					default:false,
+					emergencyContact:false,
 				},{
-					name:'黄小新5',
+					userID:5,
+					name:'许小芸',
 					sex:'男',
-					ticketType:'儿童票',
-					codeNum:'3505***********645',
-					phoneNum:'136*****645',
+					ticketType:'儿童',
+					codeNum:'35058199503692645',
+					phoneNum:'13653989645',
 					hiddenIndex:0,
-				}
-				],
+					default:false,
+					emergencyContact:false,
+				}],
 				submitType:'',
 			}
 		},
 		onLoad(options){
-			this.getType(options.submitType);
+			this.getType(options.submitType); //传参，参数为1,为出租车进入,其他界面设为2
 		},
 		methods:{
 			async getType(e){
@@ -136,17 +157,16 @@
 				}
 				if(array.length==0){
 					uni.showToast({
-					    title: '请选择乘客',
-					    icon:"none"
-					});
+						title: '请选择乘客',
+						icon:"none"
+					})
 				}else{
 					uni.setStorage({
 						key:"passengerList",
 						data:array
 					})
 					uni.navigateBack();	
-				}
-				
+				}			
 			}
 		}
 	}
@@ -225,13 +245,13 @@
 		color: #2C2D2D;
 		position: absolute;
 		left: 4%;
-		top:20upx;
+		top:30upx;
 		font-weight: bold;
 	}
 	.sexClass{
 		position: absolute;
 		left: 25%;
-		top:37upx;
+		top:47upx;
 		font-size: 24upx;
 		color: #2C2D2D;
 	}
@@ -244,7 +264,7 @@
 		color: #2C2D2D;
 		position: absolute;
 		left: 33%;
-		top:37upx;
+		top:47upx;
 	}
 	.codeClass{
 		position: absolute;
@@ -285,5 +305,17 @@
 		height: 158upx;
 		background-color: #F6F8FC;
 		/* border: 1px solid #4CD964; */
+	}
+	.fontClass{ //本人，紧急联系人
+		height: 66upx;
+		line-height: 66upx;
+		font-size: 28upx;
+		color: #ff0000;
+		position: absolute;
+		left:45% ;
+		top: 25upx;
+		border: 1upx solid #ff0000;
+		text-align: center;
+		width: 20%;
 	}
 </style>
