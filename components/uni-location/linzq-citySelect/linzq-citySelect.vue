@@ -14,7 +14,7 @@
 						当前定位
 					</view>
 					<view class="dingwei_city">
-						<view class="dingwei_city_one">
+						<view class="dingwei_city_one" @click="back_city()">
 							{{position}}
 						</view>
 						<view class="dingweis_div" @click="getWarpweft">
@@ -104,7 +104,7 @@
 				markersData:{
 				        latitude: '',//纬度
 				        longitude: '',//经度
-				        key: "eda98f0100fe5652f2baf1b0b5709a46"//申请的高德地图key（申请的web key）
+				        key: "134acca8871d797b16a9a6a0a873bab5"//申请的高德地图key（申请的web key）
 				      },
 				      gpsCode:'',
 			}
@@ -189,7 +189,7 @@
 					});
 					return isHave;
 				});
-				console.log(JSON.stringify(res));
+				
 				return res;
 			},
 
@@ -199,7 +199,7 @@
 
 			onInput(e) {
 				const value = e.target.value;
-				console.log(value);
+				
 				if (value !== '' && this.citys && this.citys.length > 0) {
 					const queryData = this.query(this.citys, String(value).trim());
 					this.searchList = queryData;
@@ -209,7 +209,7 @@
 					this.disdingwei = true
 				}
 			},
-
+            
 			back_city(item) {
 				if (item) {
 					this.$emit('back_city', item);
@@ -229,7 +229,7 @@
 						return newArr
 					}
 					this.Visit = distinct(arr)
-					console.log(this.Visit, "---最近访问")
+					// console.log(this.Visit, "---最近访问")
 					uni.setStorage({
 						key: 'Visit_key',
 						data: this.Visit
@@ -245,7 +245,7 @@
 				let countdown = setInterval(() => {
 					that.seconds--;
 					uni.getLocation({
-						type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+						
 						
 						success: function(res) {
 							// console.log('当前位置的经度：' + res.longitude);
@@ -253,10 +253,10 @@
 						    // this.position = res.address.city
 							// if(this.position =='')
 							
-							var Longitude = res.longitude
-							var Latitude = res.latitude
+							var longitude = res.longitude
+							var latitude = res.latitude
 							
-							that.loadCity(Latitude,Longitude);//调用高德
+							that.loadCity(latitude,longitude);//调用高德
 							// that.position ='福建'//res.address.city
 							
 						}
@@ -268,20 +268,17 @@
 					}
 				}, 1000);
 			},
-			//把当前位置的经纬度传给高德地图，调用高德API获取当前地理位置，天气情况等信
+			//把当前位置的经纬度传给高德地图，调用高德API获取当前地理位置
 			    loadCity(latitude, longitude){
 			      var that=this;
 			      var myAmapFun = new amapFile.AMapWX({ key: that.markersData.key });
-			      
+			      // console.log(myAmapFun);
 			      myAmapFun.getRegeo({
-			        location: '' + longitude + ',' + latitude + '',//location的格式为'经度,纬度'
-			        success: function (res) {
-			          console.log(res);
-			          var cityCode=res[0].regeocodeData.addressComponent.adcode.substring(0, 2)+"0000";
-			          that.gpsCode=cityCode
-			          that.position=res[0].regeocodeData.addressComponent.province
-					  console.log(that.gpsCode);
-					  console.log(that.city_name);
+			        // location: '' + longitude + ',' + latitude + '',//location的格式为'经度,纬度'
+			        success: function (data) {
+			          console.log(data);
+					  // console.log(data[0].regeocodeData.addressComponent.city);
+			          that.position =data[0].regeocodeData.addressComponent.city
 			          uni.setStorage({
 			          	key: 'Key_position',
 			          	data:that.position
@@ -289,7 +286,9 @@
 			          
 			          
 			        },
-			        fail: function (info) {}
+			        fail: function (info) {
+						console.log(info)
+					}
 			      });
 			 
 			    },

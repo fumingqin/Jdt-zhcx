@@ -41,8 +41,8 @@
 			</view> <!-- jiewei3 -->
 			<!-- 富文本 -->
 			<view class="content">
-				<jyf-parser :html="articleTitle" ref="article"></jyf-parser>
-				<jyf-parser :html="html" ref="article"></jyf-parser>
+				<jyf-parser :html="articleTitle" style="text-align: center;font-size: 38upx;font-weight: bold;" ref="article"></jyf-parser>
+				<jyf-parser :html="html" style="font-size: 32upx;" ref="article"></jyf-parser><!-- transform: scale(0.9); 字体大小可以缩放-->
 			</view>
 			<!-- 回复区 -->
 			<!-- 模块命名：Hf -->
@@ -184,7 +184,7 @@
 		goImgList(){
 			uni.setStorageSync('imagePiclist',this.piclist);
 			uni.navigateTo({
-				url:'/pages/LYFW/peripheralTourism/imgList'
+				url:'/pages/LYFW/peripheralTourism/imgListlql'
 			})
 		},
 		//路由整合
@@ -204,7 +204,7 @@
 				success : function(res){
 					
 					console.log(res)
-					_self.html=res.data.Data[1].ArticleContentWithTags;
+					_self.html=res.data.Data[uni.getStorageSync('_detailId')].ArticleContentWithTags;
 					_self.articleTitle=res.data.Data[1].ArticleTitle;
 					}
 			})
