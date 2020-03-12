@@ -11,6 +11,8 @@
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<view>
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
+					<text v-if="item.default" class="fontClass">本人</text>
+					<text v-if="item.emergencyContact" class="fontClass">联系人</text>
 				</view>
 			</view>
 			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
@@ -22,6 +24,8 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
+				<text v-if="item.default" class="fontClass">本人</text>
+				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
 			</view>
 		</view>	
 		<view v-if="submitType == 1 || submitType == 2" class="btnBox">  <!--非个人中心页面进入 -->
@@ -241,13 +245,13 @@
 		color: #2C2D2D;
 		position: absolute;
 		left: 4%;
-		top:20upx;
+		top:30upx;
 		font-weight: bold;
 	}
 	.sexClass{
 		position: absolute;
 		left: 25%;
-		top:37upx;
+		top:47upx;
 		font-size: 24upx;
 		color: #2C2D2D;
 	}
@@ -260,7 +264,7 @@
 		color: #2C2D2D;
 		position: absolute;
 		left: 33%;
-		top:37upx;
+		top:47upx;
 	}
 	.codeClass{
 		position: absolute;
@@ -301,5 +305,17 @@
 		height: 158upx;
 		background-color: #F6F8FC;
 		/* border: 1px solid #4CD964; */
+	}
+	.fontClass{ //本人，紧急联系人
+		height: 66upx;
+		line-height: 66upx;
+		font-size: 28upx;
+		color: #ff0000;
+		position: absolute;
+		left:45% ;
+		top: 25upx;
+		border: 1upx solid #ff0000;
+		text-align: center;
+		width: 20%;
 	}
 </style>

@@ -135,37 +135,37 @@ const scenicList = [
 // 六宫格—周边旅游
 const sixPeripheral =[
 	    {
-	       peripheralId: 1,
+	       peripheralId: 0,
 		   name : '武夷山',
 		   englishName : 'Wuyi Mount',
 		   image: '../../../static/LYFW/peripheralTourism/peripheralTourism/npjc1.png',
         },
 		{
-		   peripheralId: 2,
+		   peripheralId: 0,
 		   name : '溪源峡谷',
 		   englishName : 'Creek Gorge',
 		   image: '../../../static/LYFW/peripheralTourism/peripheralTourism/npjc2.png',
 		},
 		{
-		   peripheralId: 3,
+		   peripheralId: 0,
 		   name : '和平古镇',
 		   englishName : 'Peace Towns',
 		   image: '../../../static/LYFW/peripheralTourism/peripheralTourism/npjc3.png',
 		},
 		{
-		   peripheralId: 4,
+		   peripheralId: 0,
 		   name : '天成奇峡',
 		   englishName : 'Natural Gorge',
 		   image: '../../../static/LYFW/peripheralTourism/peripheralTourism/npjc4.png',
 		},
 		{
-		   peripheralId: 5,
+		   peripheralId: 0,
 		   name : '青龙大瀑布',
 		   englishName : 'Qinglong Waterfa',
 		   image: '../../../static/LYFW/peripheralTourism/peripheralTourism/npjc5.png',
 		},
 		{
-		   peripheralId: 6,
+		   peripheralId: 0,
 		   name : '自游小镇',
 		   englishName : 'Self Travel Town',
 		   image: '../../../static/LYFW/peripheralTourism/peripheralTourism/npjc6.png',

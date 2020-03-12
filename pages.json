@@ -4,7 +4,7 @@
 			"path": "pages/Home/Index",
 			"style": {
 				"navigationStyle": "custom"
-			}
+			} 
 		},
 		{
 			"path": "pages/CZC/Index",
@@ -98,9 +98,18 @@
 			"style": {}
 		}, 
 		{
+			"path": "pages/GRZX/userLogin",
+			"style": {}
+		},
+		{
+			"path": "pages/GRZX/wxLogin",
+			"style": {}
+		},
+		{
 			"path": "pages/GRZX/personal",
 			"style": {}
-		}, {
+		},
+		{
 			"path": "pages/GRZX/address",
 			"style": {
 				"navigationStyle": "custom"
@@ -186,7 +195,6 @@
 		{
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
-				"navigationBarTitleText": "填写订单",
 				"backgroundColor":"#F1F1F1",
 				"navigationBarBackgroundColor":"#FC4646",
 				"navigationBarTextStyle":"white"
@@ -232,7 +240,10 @@
 	    "style" : {
 			"navigationStyle":"custom"
 		}
-	}	
+	},{
+            "path" : "pages/LYFW/ouristRoute/toreply",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -272,5 +283,4 @@
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
-
 }
