@@ -189,7 +189,7 @@
 				"navigationBarTitleText": "费用详情"
 			}
         }
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

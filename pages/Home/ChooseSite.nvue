@@ -313,7 +313,6 @@
 						uni.clearStorage("passengerList");
 					}
 				});
-				n
 			},
 			changeTime: function(e) { //选择预约时间
 				this.selecttime = e;
