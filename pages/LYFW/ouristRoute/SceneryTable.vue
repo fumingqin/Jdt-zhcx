@@ -197,7 +197,7 @@
 					})
 					setTimeout(function(){
 						uni.navigateTo({
-							url:'touristroute'
+							url:'travelDetails'
 						})
 					},500);
 				},
