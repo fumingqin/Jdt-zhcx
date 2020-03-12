@@ -102,7 +102,7 @@
 				<view class="replyRight">
 					<text class="replyName">{{item.scennicName}}</text>
 					<text class="replyDate">{{item.date}}</text>
-					<view class="replyBtn" :class="{active: item.fabulous_state}">
+					<view class="replyBtn" :class="{active: item.fabulousState}" @click="tofabulous(index)" >
 						<text class="jdticon icon-dianzan-ash"></text>
 						<text style="color: #aaa;">{{item.fabulous}}</text>
 					</view>
@@ -119,7 +119,15 @@
 </template>
 
 <script>
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import {
+	    mapState 
+	} from 'vuex'; 
 	export default {
+		components : {
+			//加载多方弹框组件
+			uniPopup,
+		},
 		data() {
 			return {
 				picList: [], //相册图片数组
@@ -208,7 +216,18 @@
 					url: '/pages/LYFW/currency/imglist'
 				})
 			},
-
+			// 点赞事件
+			tofabulous : function(index){
+				if(this.replyContent[index].fabulousState==false){
+					this.replyContent[index].fabulousState = true;
+					var num = this.replyContent[index].fabulous;
+					this.replyContent[index].fabulous = num+1;
+				}else {
+					this.replyContent[index].fabulousState = false;
+					var num = this.replyContent[index].fabulous;
+					this.replyContent[index].fabulous = num-1;
+				};
+			},
 			//景点内容点击
 			godetail: function(value) {
 				uni.showToast({
@@ -221,6 +240,13 @@
 					})
 				}, 500);
 
+			},
+			
+			// 统一跳转接口
+			navTo(url){
+				uni.navigateTo({
+					url
+				})  
 			},
 		}
 	}
@@ -667,11 +693,11 @@
 				color: #333;
 				padding-left: 46upx;
 				background: #f5f5f5;
-				left: 126upx;
+				left: 134upx;
 				width: 72%;
 				height: 80upx;
 				border-radius: 56rpx;
-				top: 151upx;
+				top: 148upx;
 			}
 		}
 		// 评论区

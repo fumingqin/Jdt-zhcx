@@ -457,7 +457,7 @@ const reply = {
 		content: '小姐姐的笔记写的很好啊！照片也拍的很美，给你点个赞，想来武夷山游玩的朋友们可以加我微信15359031110为您提供游玩攻略、民宿、帐篷预订及门票船票预订等旅游服务。我们整合了山上所有的旅游资源，花2分钟咨询，换一次完美旅行。赶紧动动手指联系我们把！',
 		date: '2019-12-16',
 		fabulous: 18,
-		fabulous_state: false,
+		fabulousState: false,
 	}, {
 		unid: 185271851,
 		scennicName: 'NDNPSOSWANGT',
@@ -465,7 +465,7 @@ const reply = {
 		content: '不错,很赞的小姐姐,感谢分享',
 		date: '2019-12-16',
 		fabulous: 15,
-		fabulous_state: true,
+		fabulousState: true,
 	}, {
 		unid: 153218884,
 		scennicName: '小郑哥',
@@ -473,7 +473,7 @@ const reply = {
 		content: '专门说武夷山的笔记在哪里？',
 		date: '2019-12-16',
 		fabulous: 12,
-		fabulous_state: false,
+		fabulousState: false,
 	}, {
 		unid: 415546455,
 		scennicName: 'Mickin',
@@ -481,7 +481,7 @@ const reply = {
 		content: '小姐姐的笔记写的很好啊',
 		date: '2019-12-16',
 		fabulous: 8,
-		fabulous_state: true,
+		fabulousState: true,
 	}, {
 		unid: 653235635,
 		scennicName: '王老五',
@@ -489,7 +489,7 @@ const reply = {
 		content: '不错,很赞的小姐姐,感谢分享',
 		date: '2019-12-16',
 		fabulous: 5,
-		fabulous_state: false,
+		fabulousState: false,
 	}, {
 		unid: 215851875,
 		scennicName: '富士康代工007',
@@ -497,7 +497,7 @@ const reply = {
 		content: '小姐姐真好看？Emm?',
 		date: '2019-12-16',
 		fabulous: 0,
-		fabulous_state: false,
+		fabulousState: false,
 	}],
 	msg: '提示'
 }
