@@ -4,7 +4,7 @@
 			"path": "pages/Home/Index",
 			"style": {
 				"navigationStyle": "custom"
-			}
+			} 
 		},
 		{
 			"path": "pages/CZC/Index",
@@ -23,13 +23,14 @@
 				"navigationBarTitleText": "景区详情",
 				"navigationStyle": "custom",
 				"app-plus": {
-					"titleNView": false
+					"titleNView": {
+						"type": "transparent"
+					}
 				}
 			}
 		},
 		{
 			"path": "pages/LYFW/currency/imglist",
-
 			"style": {
 				"navigationBarTitleText": "全部图片"
 			}
@@ -239,7 +240,10 @@
 	    "style" : {
 			"navigationStyle":"custom"
 		}
-	}	
+	},{
+            "path" : "pages/LYFW/ouristRoute/toreply",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -279,5 +283,4 @@
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
-
 }
