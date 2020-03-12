@@ -89,8 +89,35 @@
 			this.tweetsInit();
 			this.loadData();
 			this.Getpostion();
+			this.isGetLocation();
 		}, 
 		methods: {
+			getAuthorizeInfo(a="scope.userLocation"){  //1. uniapp弹窗弹出获取授权（地理，个人微信信息等授权信息）弹窗
+					var _this=this;
+					uni.authorize({
+						scope: a,
+						success() { //1.1 允许授权
+							_this.getLocationInfo();
+						},
+						fail(){    //1.2 拒绝授权
+							console.log("你拒绝了授权，无法获得周边信息")
+						}
+					})
+				},
+				isGetLocation(a="scope.userLocation"){ // 3. 检查当前是否已经授权访问scope属性，参考下截图
+						var _this=this;
+						uni.getSetting({
+						    success(res) {	
+								console.log(res)
+								if (!res.authSetting[a]) {  //3.1 每次进入程序判断当前是否获得授权，如果没有就去获得授权，如果获得授权，就直接获取当前地理位置
+									_this.getAuthorizeInfo()
+								}else{
+									_this.getLocationInfo()
+								}
+							}
+						});
+						},
+			
 			//读取静态数据lyfw.js
 			async tweetsInit(){
 				let six_peripheral = await this.$api.lyfwlql('sixPeripheral');
@@ -153,6 +180,10 @@
 			}, 
 			// 景点点击链接地址
 			godetail : function (value){
+				uni.setStorage({
+					key:'_detailId',
+					data:1
+				})
 				uni.showToast({
 					title:'你点击了'+value,
 					icon : 'none'
@@ -232,9 +263,10 @@
 		color: #333333; 
 		padding-top: 8px;
 		padding-left: 8px;
-		width: 70px;
 		font-size: 36upx;
 		font-weight: bold;
+		text-overflow: ellipsis;
+		
 	}
 	/* 景点搜索框 */
 	.inputIocale{

@@ -4,7 +4,7 @@
 			"path": "pages/Home/Index",
 			"style": {
 				"navigationStyle": "custom"
-			}
+			} 
 		},
 		{
 			"path": "pages/CZC/Index",
@@ -55,12 +55,24 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
+		},
+		{
+			"path": "pages/CZC/PrivateTaxi",
+			"style": {
+		
+				"navigationStyle": "custom"
+			}
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "选择支付 "
+			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "购票成功"
+			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 			"style": {
@@ -85,9 +97,18 @@
 			"style": {}
 		}, 
 		{
+			"path": "pages/GRZX/userLogin",
+			"style": {}
+		},
+		{
+			"path": "pages/GRZX/wxLogin",
+			"style": {}
+		},
+		{
 			"path": "pages/GRZX/personal",
 			"style": {}
-		}, {
+		},
+		{
 			"path": "pages/GRZX/address",
 			"style": {
 				"navigationStyle": "custom"
@@ -159,11 +180,11 @@
 			"style": {}
 		},
         {
-            "path" : "pages/LYFW/peripheralTourism/imgList",
+            "path" : "pages/LYFW/peripheralTourism/imgListlql",
             "style" : {}
         },
         {
-            "path" : "pages/LYFW/peripheralTourism/imgPreview",
+            "path" : "pages/LYFW/peripheralTourism/imgPreviewlql",
             "style" : {}
         },
         {
@@ -173,8 +194,9 @@
 		{
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
-				"navigationBarTitleText": "班次详情",
-				"backgroundColor":"#F1F1F1"
+				"backgroundColor":"#F1F1F1",
+				"navigationBarBackgroundColor":"#FC4646",
+				"navigationBarTextStyle":"white"
 				
 			}
 		},
@@ -183,11 +205,43 @@
 			"style": {
 				"navigationBarTitleText": "班次列表"
 			}
-		},{
-            "path" : "pages/CZC/PriceDetail",
-            "style" : {
-				"navigationBarTitleText": "费用详情"
+		},
+		{
+			"path": "pages/CTKY/oederList",
+			"style": {
+				"navigationBarTitleText": "班次列表"
 			}
+		},
+		{
+			"path": "pages/CTKY/orderDetail",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/CTKY/issueView",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		}
+        ,{
+            "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
+            "style" : {}
+        },{
+			// 出租车订单列表
+            "path" : "pages/order/OrderList",            
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        },{
+			// 出租车订单详情
+	    "path" : "pages/order/OrderDetail",
+	    "style" : {
+			"navigationStyle":"custom"
+		}
+	},{
+            "path" : "pages/LYFW/ouristRoute/toreply",
+            "style" : {}
         }
     ],
 	"globalStyle": {
@@ -201,9 +255,6 @@
 		"selectedColor": "#FC4646",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
-		//#ifdef APP-PLUS
-		"fontSize":"16px",
-		//#endif 
 		"list": [{ 
 				"pagePath": "pages/Home/Index",
 				"text": "首页"
@@ -212,7 +263,7 @@
 				"pagePath": "pages/Home/Index",
 				"text": "商城"
 			},
-			{
+			{ 
 				"pagePath": "pages/Home/Index",
 				"text": "购物车"
 			},
@@ -227,9 +278,8 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/Home/Index", //启动页面，必选			
+			"path": "", //启动页面，必选			
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
-
 }

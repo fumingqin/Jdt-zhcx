@@ -130,8 +130,10 @@
 				// 分
 				let inter = +this.interval < 60 ? +this.interval : 59;
 				let m = date1.getMinutes() < 0 ? sT : date1.getMinutes();
+				
 				m = Math.ceil(m / inter) * inter;
-				// console.log(m);				
+				// m=m+4;  
+				//  console.log(m);				
 				if (m > 0) {
 					for (let i = m; i < 60; i += inter) {
 						minute.push(i < 10 ? '0' + i + '分' : i + '分');
@@ -227,6 +229,7 @@
 				let date1 = new Date(date);
 				let inter = +this.interval < 60 ? +this.interval : 59;
 				let m = date1.getMinutes() < 0 ? sT : date1.getMinutes();
+				// m=m+30;
 				m = Math.ceil(m / inter) * inter;
 				if (e.detail.column == 0 && e.detail.value == 0 && +this.sDayNum == 0 || e.detail.column == 1 && e.detail.value ==
 					0) {

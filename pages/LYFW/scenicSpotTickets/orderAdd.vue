@@ -54,11 +54,12 @@
 				<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
 					<text>{{item.name}}</text>
 					<text class="Mp_sex">{{item.sex}}</text>
-					<text class="Mp_square">{{item.mold}}</text>
+					<text class="Mp_square">{{item.ticketType}}</text>
 					<text class="Mp_square" v-if="item.default == true">本人</text>
+					<text class="Mp_square" v-if="item.emergencyContact == true">紧急联系人</text>
 					<text class="Mp_delete  jdticon icon-fork" @click="deleteUser(index)"></text>
-					<text class="Mp_text">身份证：{{item.idCard}}</text>
-					<text class="Mp_text">手机号：{{item.mobile}}</text>
+					<text class="Mp_text">身份证：{{item.codeNum}}</text>
+					<text class="Mp_text">手机号：{{item.phoneNum}}</text>
 				</view>
 
 				<view class="MP_userInformation">
@@ -110,7 +111,7 @@
 				<view class="MP_optionBar">
 					<text class="Mp_title">同意游客须知</text>
 					<text class="Mp_textBlue" @click="open2(2)">(点击查看须知)</text>
-					<radio class="Mp_box" value="1" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
+					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 				</view>
 				
 				<!-- 嵌套弹框组件popup -->
@@ -196,30 +197,14 @@
 				addressData: '', //购票人信息
 				adultIndex: '', //成人数量
 				childrenIndex: '', //儿童数量
-				textUser: [{
-					userID: 0,
-					mold: '成人',
-					name: '许小星',
-					sex: '女',
-					idCard: '35058199503692367',
-					mobile: '13853989563',
-					area: '149号',
-					default: true,
-				}, {
-					userID: 1,
-					mold: '儿童',
-					name: '张晓雪',
-					sex: '女',
-					idCard: '35058200803692367',
-					mobile: '13853989563',
-					area: '149号',
-					default: false,
-				}],
 			}
 		},
 
 		onLoad(option) {
 			this.lyfwData();
+			setInterval(() => {
+				this.userData();
+			}, 500)
 		},
 		components: {
 			//加载多方弹框组件
@@ -234,7 +219,6 @@
 				this.scSpotDetails = scSpotDetails.data.ticket[this.index];
 				let notice = await this.$api.lyfwfmq('notice');
 				this.notice = notice.data;
-				// console.log(this.scSpotDetails)
 			},
 
 			//删除出行人
@@ -245,24 +229,39 @@
 				} else {
 					var b = a.slice(0, e).concat(a.slice(e + 1, a.length));
 					this.addressData = b;
+					uni.setStorage({
+						key:"passengerList",
+						data: b
+					})
 					this.screenUser();
 				}
 			},
 
 			//选择用户
 			choiceUser: function() {
-				var user = this.textUser;
-				this.addressData = user;
-				this.screenUser();
+				uni.navigateTo({
+					url: '/pages/GRZX/passengerInfo?submitType=1',
+				})
+			},
+			
+			//用户数据读取
+			userData(){ 
+				uni.getStorage({
+				    key: 'passengerList',
+				    success: (res) => {
+				        this.addressData = res.data;
+						this.screenUser();
+				    }
+				});
 			},
 
 			//数组提取
-			screenUser: function() {
+			screenUser:function(){
 				let adult = this.addressData.filter(item => {
-					return item.mold == '成人';
+					return item.ticketType == '成人';
 				})
 				let children = this.addressData.filter(item => {
-					return item.mold == '儿童';
+					return item.ticketType == '儿童';
 				})
 				this.adultIndex = adult.length;
 				this.childrenIndex = children.length;
@@ -344,13 +343,24 @@
 			//提交表单
 			submit: function() {
 				if (this.selectedValue == 1) {
+					// uni.request({
+					// 	url : '',
+					// 	data:{
+					// 		ticket : this.scSpotDetails,
+					// 		addressData : this.addressData,
+					// 		actualPayment : this.actualPayment,
+					// 		dateReminder : this.dateReminder,
+					// 		date : this.date,
+					// 		coupon : this.couponColor,
+					// 	},
+					// 	//向服务器发送订单数据，返回订单编号
+					// 	success:(res)=>{
+					// 		console.log(res)
+					// 	}
+					// })
+					var a = '11126778833';
 					uni.redirectTo({
-						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?ticket=' + encodeURIComponent(JSON.stringify(this.scSpotDetails)) 
-						+ '&addressData=' + encodeURIComponent(JSON.stringify(this.addressData))
-						+ '&actualPayment=' + JSON.stringify(this.actualPayment)
-						+ '&dateReminder=' + JSON.stringify(this.dateReminder)
-						+ '&date=' + JSON.stringify(this.date)
-						+ '&coupon=' + encodeURIComponent(JSON.stringify(this.couponList[this.couponColor]))
+						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
 					})
 
 				} else {

@@ -1,11 +1,11 @@
 <template>
-	<view style="background-color: #F5F7F9;" :style="{height:pageheight}">
+	<view style="background-color: #F5F7F9;">
 		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px; ">
 			<view class="status_bar"></view>
 			<view style="background-color: #FFF; ">
 				<view style="padding-bottom: 30rpx;">
 					<view style="flex-direction: row;justify-content: center;">
-						<view style="width: 10%;">
+						<view style="width: 10%;" @click="goBack">
 							<uni-icons type="arrowleft" size="24"></uni-icons>
 						</view>
 						<view style="width: 674rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
@@ -135,10 +135,38 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="current === 1">我是客运</view>
+		<view v-if="current === 1" style="margin-top: 10upx;">
+			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
+				<view class="ctky_View_Left">
+					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
+						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</text>
+					</view>
+					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
+						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">泉州客运中心站</text>
+					</view>
+					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
+						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">安溪</text>
+					</view>
+					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
+					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
+				</view>
+				<view class="ctky_View_Right">
+					<view style="text-align: right;">
+						<text style="margin-right: 28upx;font-size: 36upx;font-style:
+                       SourceHanSansSC-Regular; color: #FC4646;">￥28</text>
+						<text style="margin-right: 28upx;font-size: 24upx;font-style:
+                       SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余18张</text>
+					</view>
+				</view>
+			</view>
+		</view>
 		<view v-if="current === 2">
-			<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="118.600608" :latitude="24.889217" :polyline="polyline" :show-location="showlocation"
-			 :markers="markers"></map>
+			<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
+			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
 			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
 			 v-if="IsSearch">
 				<view style="margin:20rpx;">
@@ -157,13 +185,13 @@
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;" @click="selectPassenger">
-							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.name}}</text>
+							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
 					<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
 						<view style="flex-direction: row;justify-content: center;align-items: center;">
-							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.name}}</text>
+							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
@@ -176,7 +204,7 @@
 						</view>
 						<view style="align-items: center;justify-content: center;flex-direction: row;">
 							<text style="font-size: 30rpx;font-weight: 300;">预估&nbsp;&nbsp;</text>
-							<text style="font-size: 36rpx;padding-right: 20rpx;font-weight: 300;">{{TaxiCost}}元</text>
+							<text style="font-size: 36rpx;padding-right: 20rpx;font-weight: 300;">{{TaxiCost}}&nbsp;元</text>
 						</view>
 					</view>
 					<view style="margin-top: 40rpx;align-items: center;">
@@ -188,7 +216,29 @@
 			</view>
 		</view>
 		<view v-if="current === 3">我是公交</view>
-		<view v-if="current === 4">我是专线车</view>
+		<view v-if="current === 4" style="margin-top: 10rpx;">
+			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick">
+				<text style="font-size: 36rpx;font-weight: bold;">专线出租</text>
+				<view style="justify-content: space-between;padding-top: 20rpx;">
+					<view style="flex-direction: row;justify-content: space-between;">
+						<view style="flex-direction: row;align-items: center;">
+							<view style="border-radius: 100px;background-color: #309FF7;width: 10rpx;height: 10rpx;"></view>
+							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.startpoint}}</text>
+						</view>
+						<text style="font-size: 36rpx;color: #FC4646;">￥{{item.cost}}</text>
+					</view>
+					<view style="flex-direction: row;justify-content: space-between;padding-top: 10rpx;">
+						<view style=" flex-direction: row;align-items:center;">
+							<view style="border-radius: 100px;background-color: #E3424B;width: 10rpx;height: 10rpx;"></view>
+							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.endpoint}}</text>
+						</view>
+					</view>
+				</view>
+				<view style="padding-top: 20rpx;">
+					<text style="font-size: 28rpx;color: #666666;">约{{item.distance}}公里，预计{{item.time}}</text>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -209,6 +259,56 @@
 				Passenger: [{
 					name: "选择乘车人"
 				}],
+				privateTaxi: [{
+						startpoint: '泉金客运码头',
+						endpoint: '晋江机场',
+						cost: 100,
+						distance: 50.6,
+						time: '50分钟'
+					},
+					{
+						startpoint: '泉金客运码头',
+						endpoint: '石狮服装城',
+						cost: 90,
+						distance: 50.6,
+						time: '3小时50分钟'
+					},
+					{
+						startpoint: '泉金客运码头',
+						endpoint: '泉州动车站',
+						cost: 120,
+						distance: 50.6,
+						time: '2小时50分钟'
+					},
+					{
+						startpoint: '泉金客运码头',
+						endpoint: '内坑晋江动车站',
+						cost: 80,
+						distance: 50.6,
+						time: '1小时50分钟'
+					},
+					{
+						startpoint: '泉金客运码头',
+						endpoint: '安溪',
+						cost: 50,
+						distance: 50.6,
+						time: '3小时50分钟'
+					},
+					{
+						startpoint: '泉州客运中心站',
+						endpoint: '安溪',
+						cost: 50,
+						distance: 50.6,
+						time: '3小时50分钟'
+					},
+					{
+						startpoint: '泉州客运中心站',
+						endpoint: '安溪',
+						cost: 50,
+						distance: 50.6,
+						time: '3小时50分钟'
+					}
+				],
 				polyline: [],
 				tabIndex: 0,
 				index: 1,
@@ -249,7 +349,14 @@
 				success: function(res) {
 					that.historyAddress = res.data;
 				}
-			})
+			});
+			uni.getLocation({ //获取当前定位
+				type: 'wgs84',
+				success: function(res) {
+					that.startlongitude = res.longitude;
+					that.startlatitude = res.latitude;
+				}
+			});
 		},
 		onShow() {
 			var that = this;
@@ -258,7 +365,7 @@
 				success: function(res) {
 					that.Passenger = res.data;
 				}
-			})
+			});
 		},
 		onReady: function() {
 			//动态设置高度
@@ -271,20 +378,22 @@
 				that.winheight = data.height + 'px';
 				uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
 					success: function(res) {
-						that.historyheight = (res.windowHeight - data.height - 140) + "px";
+						that.historyheight = (res.windowHeight - data.height - 108) + "px";
 						that.pageheight = res.screenHeight + "px";
-						that.mapheight = res.windowHeight + "px";
+						that.mapheight = (res.windowHeight - data.height) + "px";
 					}
 				})
 			}).exec();
 		},
-
 		methods: {
 			onClickItem(e) { //tab点击事件
 				var that = this;
 				if (that.current !== e.currentIndex) {
 					that.current = e.currentIndex
 				}
+			},
+			goBack: function() { //返回上一页
+				uni.navigateBack();
 			},
 			clearHistpry: function() { //清除历史记录
 				uni.clearStorage("historyAddress");
@@ -302,6 +411,13 @@
 						that.endtlatitude = that.historyAddress[index].latitude;
 						that.endlocation = that.historyAddress[index];
 					}
+				});
+			},
+			privateTaxiClick: function() {
+				uni.navigateTo({
+					url: '../CZC/PrivateTaxi',
+					animationType: 'pop-in',
+					animationDuration: 200,
 				});
 			},
 			promptlyCall: function() { //立即呼叫、生成订单
@@ -370,12 +486,16 @@
 				var that = this;
 				var newinitialPoint = that.initialPoint;
 				var newstartlocation = that.startlocation;
+				var newstartlatitude = that.startlatitude;
+				var newstartlongitude = that.startlongitude;
 				uni.setStorage({
 					key: 'startlocation',
 					data: that.endlocation,
 					success: function() {
-						that.initialPoint = that.destination
+						that.initialPoint = that.destination;
 						that.startlocation = that.endlocation;
+						that.startlatitude = that.endtlatitude;
+						that.startlongitude = that.endlongitude;
 					}
 				});
 				uni.setStorage({
@@ -384,6 +504,8 @@
 					success: function() {
 						that.destination = newinitialPoint;
 						that.endlocation = newstartlocation;
+						that.endtlatitude = newstartlatitude;
+						that.endlongitude = newstartlongitude;
 					}
 				});
 			},
@@ -590,6 +712,11 @@
 					}
 				});
 			},
+			queryTickets: function() {
+				uni.navigateTo({
+					url: "../CTKY/selectTickets",
+				})
+			}
 		}
 	}
 </script>
@@ -604,7 +731,7 @@
 	.bt_now {
 		width: 329rpx;
 		height: 60rpx;
-		border-width:0;
+		border-width: 0;
 		background-color: #FFF;
 		border-right-width: 1px;
 		border-color: #EAEAEA;
@@ -656,5 +783,34 @@
 		/* #ifdef MP-ALIPAY || MP-BAIDU */
 		height: 100vh;
 		/* #endif */
+	}
+
+	.privatetaxi {
+		margin: 15rpx;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding: 20rpx;
+		background-color: #FFFFFF;
+		border-radius: 20rpx;
+		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+	}
+
+	.ctky_View {
+		width: 698upx;
+		background-color: #FFFFFF;
+		margin: 10upx 26upx;
+		border-radius: 20upx;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.ctky_View_Left {
+		text-align: left;
+	}
+
+	.ctky_View_Right {
+		flex-direction: row;
+		text-align: right;
+		align-items: center;
 	}
 </style>
