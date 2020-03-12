@@ -10,8 +10,9 @@ const userInfo = {
 		birthday: '1994-01-19', //生日
 		permanent: '福建省南平市武夷山市', //地址
 		autograph: '喜欢可以点关注哦~', //签名
-		portrait: '/static/user/touxiang2.jpg', //头像
-		bg: '/static/index/banner2.jpg' //背景图
+		portrait: '../../../static/LYFW/peripheralTourism/user/touxiang2.jpg', //头像
+		bg: '/static/index/banner2.jpg', //背景图
+		date: '2019-12-21', //回复日期
 	},
 	msg: '提示'
 }
@@ -361,9 +362,14 @@ const routeComment = {
 		nickName: '李茜茜',
 		autograph: '步步寻往迹,有处特依依~',
 		address: '南平市',
-		scenicContent: '武夷山，武夷山位于江西与福建西北部两省交界处，武夷山脉北段东南麓总面积999.75平方公里，是中国著名的风景旅游区和避暑胜地。属典型的丹霞地貌，是首批国家级重点风景名胜区之一。武夷山是三教名山。自秦汉以来，武夷山就为羽流禅家栖息之地，留下了不少宫观、道院和庵堂故址。 \n 武夷山还曾是儒家学者倡道讲学之地。武夷山自然保护区，是地球同纬度地区保护最好、物种最丰富的生态系统，拥有2527种植物物种，近5000种野生动物。 \n 在中生代晚期，武夷山发生了强烈的火山喷发活动，继之为大规模的花岗岩侵入，已发现本区有丰富的火山机构，为典型的亚洲东部环太平洋带的构造特征。白垩纪晚期的红色砂砾岩是形成丹霞地貌的主体。中生代的地壳运动奠定了武夷山地貌的基本骨架。告性对武夷山地貌发育也很明显，西部海拔1500m以上的山峰，基本上由坚硬的凝灰熔岩和流纹岩等构成，东部红色砂页岩地区则往往发育有较宽的谷地和盆地。所以武夷山丰富的地貌类型是地质构造、流水侵蚀、风化剥蚀、重力崩塌等综合作用的结果。',
+		scenicContent: '武夷山，武夷山位于江西与福建西北部两省交界处，武夷山脉北段东南麓总面积999.75平方公里，是中国著名的风景旅游区和避暑胜地。属典型的丹霞地貌，是首批国家级重点风景名胜区之一。武夷山是三教名山。自秦汉以来，武夷山就为羽流禅家栖息之地，留下了不少宫观、道院和庵堂故址。武夷山还曾是儒家学者倡道讲学之地。武夷山自然保护区，是地球同纬度地区保护最好、物种最丰富的生态系统，拥有2527种植物物种，近5000种野生动物。在中生代晚期，武夷山发生了强烈的火山喷发活动，继之为大规模的花岗岩侵入，已发现本区有丰富的火山机构，为典型的亚洲东部环太平洋带的构造特征。白垩纪晚期的红色砂砾岩是形成丹霞地貌的主体。中生代的地壳运动奠定了武夷山地貌的基本骨架。告性对武夷山地貌发育也很明显，西部海拔1500m以上的山峰，基本上由坚硬的凝灰熔岩和流纹岩等构成，东部红色砂页岩地区则往往发育有较宽的谷地和盆地。所以武夷山丰富的地貌类型是地质构造、流水侵蚀、风化剥蚀、重力崩塌等综合作用的结果。',
 		comment: '一码通 | 可订明日票 | 儿童半票',
 		state: true, //false为免费 true为收费
+		collection : 389,
+		collectionState : false,
+		like : 207,
+		likeState : false,
+		commentState : false,
 	},
 	msg: '提示'
 }
@@ -441,25 +447,60 @@ const userRoute = {
 	msg: '提示'
 }
 
-
-
-// const test = {
-// 	status: 1, //1成功/0失败提示返回值
-// 	data: [{
-// 		day: 1,
-// 		address: '南平',
-
-// 	}, {
-// 		day: 1,
-// 		address: '南平',
-// 	}, {
-// 		day: 2,
-// 		address: '福建',
-
-// 	}],
-// 	msg: '提示'
-// }
-
+/*蔡伟达-旅游路线-回复内容 */
+const reply = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+		unid: 185677868,
+		scennicName: '李大刚',
+		portrait: '../../../static/LYFW/peripheralTourism/user/t1.jpg',
+		content: '小姐姐的笔记写的很好啊！照片也拍的很美，给你点个赞，想来武夷山游玩的朋友们可以加我微信15359031110为您提供游玩攻略、民宿、帐篷预订及门票船票预订等旅游服务。我们整合了山上所有的旅游资源，花2分钟咨询，换一次完美旅行。赶紧动动手指联系我们把！',
+		date: '2019-12-16',
+		fabulous: 18,
+		fabulous_state: false,
+	}, {
+		unid: 185271851,
+		scennicName: 'NDNPSOSWANGT',
+		portrait: '../../../static/LYFW/peripheralTourism/user/t2.jpg',
+		content: '不错,很赞的小姐姐,感谢分享',
+		date: '2019-12-16',
+		fabulous: 15,
+		fabulous_state: true,
+	}, {
+		unid: 153218884,
+		scennicName: '小郑哥',
+		portrait: '../../../static/LYFW/peripheralTourism/user/t3.jpg',
+		content: '专门说武夷山的笔记在哪里？',
+		date: '2019-12-16',
+		fabulous: 12,
+		fabulous_state: false,
+	}, {
+		unid: 415546455,
+		scennicName: 'Mickin',
+		portrait: '../../../static/LYFW/peripheralTourism/user/t1.jpg',
+		content: '小姐姐的笔记写的很好啊',
+		date: '2019-12-16',
+		fabulous: 8,
+		fabulous_state: true,
+	}, {
+		unid: 653235635,
+		scennicName: '王老五',
+		portrait: '../../../static/LYFW/peripheralTourism/user/t2.jpg',
+		content: '不错,很赞的小姐姐,感谢分享',
+		date: '2019-12-16',
+		fabulous: 5,
+		fabulous_state: false,
+	}, {
+		unid: 215851875,
+		scennicName: '富士康代工007',
+		portrait: '../../../static/LYFW/peripheralTourism/user/t3.jpg',
+		content: '小姐姐真好看？Emm?',
+		date: '2019-12-16',
+		fabulous: 0,
+		fabulous_state: false,
+	}],
+	msg: '提示'
+}
 // 接口声明区
 export default {
 	userInfo,
@@ -470,5 +511,5 @@ export default {
 	touristRoute,
 	routeComment,
 	userRoute,
-	// test
+	reply,
 }

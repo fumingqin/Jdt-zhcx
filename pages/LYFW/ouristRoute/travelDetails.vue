@@ -82,18 +82,39 @@
 			<!-- 灰线 -->
 			<text class="grayLine3" style="height: 149px;width: 2px;background-color: #DDDDDD;" />
 		</view>
-		
+
 		<!-- 文章内容 -->
 		<view class="articleAontent">
 			<view class="routeTitle">介绍</view>
-			<text class="routeContent" style="text-indent:2em;">
-			{{titleClick.scenicContent}}
-			<p></p>
-			<p></p>
-			<p></p>
-			</text>
+			<text class="routeContent" style="text-indent:2em;">{{titleClick.scenicContent}}</text>
 		</view>
-		
+
+		<!-- 回复 -->
+		<view class="replyComment">
+			<view class="replyTitle">回复</view>
+			<view class="replyBox">
+				<image class="replyImage" :src="'../../../static/LYFW/peripheralTourism/user/missing-face.png'" mode="aspectFill"></image>
+				<input class="reply_input" type="text" placeholder="回复点什么吧" v-model="replyInput.content" />
+			</view>
+			<!-- 评论区 -->
+			<view class="replyClass" v-for="(item,index) in replyContent" v-if="index<3" :key="index">
+				<image class="replyPortrait" :src="item.portrait" mode="aspectFill"></image>
+				<view class="replyRight">
+					<text class="replyName">{{item.scennicName}}</text>
+					<text class="replyDate">{{item.date}}</text>
+					<view class="replyBtn" :class="{active: item.fabulous_state}">
+						<text class="jdticon icon-dianzan-ash"></text>
+						<text style="color: #aaa;">{{item.fabulous}}</text>
+					</view>
+					<text class="replyCon">{{item.content}}</text>
+				</view>
+			</view>
+			<view class="replyViewreply" @click="navTo('/pages/LYFW/ouristRoute/toreply')">
+				<text> 查看{{replyContent.length}}条回复 ></text>
+			</view>
+		</view>
+
+
 	</view>
 </template>
 
@@ -111,6 +132,17 @@
 				day1: [], //第一天
 				day2: [], //第二天
 				day3: [], //第三天
+				replyContent: [], //回复内容
+				//评论内容
+				replyInput: {
+					unid: '', //用户id号
+					nickname: '', //用户姓名
+					portrait: '', //用户头像
+					content: '', //回复内容
+					date: '', //回复日期
+					fabulous: 0, //点赞数
+					fabulouState: false, //点赞状态
+				}
 			}
 		},
 		onLoad() {
@@ -126,9 +158,12 @@
 				this.titleClick = routeComment.data;
 				let userRoute = await this.$api.lyfwcwd('userRoute');
 				this.userRoute = userRoute.data;
-				
-
-				// console.log(test)
+				let userInfo = await this.$api.lyfwcwd('userInfo');
+				this.userInfo = userInfo.data;
+				this.replyInput.portrait = userInfo.data.portrait;
+				let replyContent = await this.$api.lyfwcwd('reply');
+				this.replyContent = replyContent.data;
+				// console.log(this.replyInput.portrait)
 			},
 
 			//过滤循环
@@ -480,12 +515,12 @@
 			left: 40rpx;
 		}
 	}
-	
+
 	//第三天
 	.userRoute3 {
 		position: relative;
 		top: -51upx;
-	
+
 		.days3 {
 			display: block;
 			text-align: center;
@@ -493,7 +528,7 @@
 			font-size: 32upx;
 			margin: 20upx 0upx;
 		}
-	
+
 		.routeAddress3 {
 			display: block;
 			text-align: center;
@@ -501,11 +536,11 @@
 			font-size: 28upx;
 			margin: 20upx 0upx;
 		}
-	
+
 		.routeItem3 {
 			display: flex;
 			margin: 60upx 0upx;
-	
+
 			.routeImage3 {
 				position: relative;
 				z-index: 7;
@@ -513,7 +548,7 @@
 				height: 264upx;
 				left: 441upx;
 			}
-	
+
 			.icon3 {
 				position: relative;
 				z-index: 9;
@@ -521,7 +556,7 @@
 				height: 35upx;
 				left: -252upx;
 			}
-	
+
 			.routeName3 {
 				position: relative;
 				z-index: 8;
@@ -531,7 +566,7 @@
 				top: -5upx;
 				// font-weight: bold;
 			}
-	
+
 			.playTime3 {
 				position: absolute;
 				z-index: 10;
@@ -540,7 +575,7 @@
 				left: 89upx;
 				padding-top: 59upx;
 			}
-	
+
 			.start3 {
 				position: absolute;
 				z-index: 11;
@@ -549,7 +584,7 @@
 				left: 89upx;
 				padding-top: 120upx;
 			}
-	
+
 			.scenicContent3 {
 				position: absolute;
 				z-index: 12;
@@ -561,7 +596,7 @@
 				line-height: 47upx;
 			}
 		}
-	
+
 		.grayLine3 {
 			display: block;
 			position: absolute;
@@ -569,36 +604,137 @@
 			left: 40rpx;
 		}
 	}
-	
-	//推文
-	.articleAontent{
+
+	//推文样式
+	.articleAontent {
 		display: flex;
 		position: relative;
 		top: 32upx;
+
 		//推文标题
-		.routeTitle{
-			position : absolute;
-			flex-direction: column;
+		.routeTitle {
+			position: absolute;
+			// flex-direction: column;
 			font-size: 38upx;
 			font-weight: bold;
-			color: #333333; 
-			text-overflow:ellipsis;
-			white-space:nowrap;
-			overflow:hidden;
+			color: #333333;
+			// text-overflow:ellipsis;
+			// white-space:nowrap;
+			// overflow:hidden;
 			top: -55upx;
 			left: 29upx;
 		}
+
 		//推文内容
-		.routeContent{
+		.routeContent {
 			flex-direction: column;
 			// text-indent:2em;
 			font-size: 34upx;
-			letter-spacing : 2upx;
-			color: #333333; 
+			letter-spacing: 2upx;
+			color: #333333;
 			// bottom : 72upx;
 			padding: 32upx 32upx;
 		}
 	}
+
+	//回复样式
+	.replyComment{
+		position: relative;
+		//标题
+		.replyTitle {
+			position: absolute;
+			font-size: 38upx;
+			font-weight: bold;
+			color: #333333;
+			top: 76upx;
+			left: 29upx;
+		}
+		.replyBox {
+			display: flex;
+			.replyImage {
+				position: absolute;
+				flex-shrink: 0;
+				width: 80upx;
+				height: 80upx;
+				border-radius: 100px;
+				left: 30upx;
+				top: 149upx;
+			}
+		
+			.reply_input {
+				position: absolute;
+				font-size: 32upx;
+				color: #333;
+				padding-left: 46upx;
+				background: #f5f5f5;
+				left: 126upx;
+				width: 72%;
+				height: 80upx;
+				border-radius: 56rpx;
+				top: 151upx;
+			}
+		}
+		// 评论区
+		.replyClass{
+			display: flex;
+			position: relative;
+			top: 284upx;
+			.replyPortrait{
+				position: absolute;
+				flex-shrink: 0;
+				width: 80upx;
+				height: 80upx;
+				border-radius: 100upx;
+				left: 30upx;
+			}
+			.replyRight{
+				position: relative;
+				left: 128upx;
+				.replyName{
+					display: block;
+					font-size: 30upx;
+					color: #aaa;
+				}
+				.replyDate{
+					display: block;
+					font-size: 30upx;
+					color: #aaa;
+				}
+				.replyBtn{
+					display: flex;
+					align-items:base-line;
+					position: absolute;
+					top: 18upx;
+					font-size: 32upx;
+					padding-left: 506upx;
+					.jdticon{
+						font-size: 38upx;
+						margin-left: 8upx; 
+						color: #aaa;
+					}
+				}
+				.replyCon{
+					display: flex;
+					font-size: 30upx;
+					color: #333;
+					padding-top:32upx;
+					padding-right:171upx;
+					padding-bottom: 43upx;
+				}
+			}
+		}
+		// 更多回复消息
+		.replyViewreply{
+			position: relative;
+			height: 56upx;
+			font-size: 30upx;
+			text-align: center;
+			margin-bottom: 200upx;
+			background: #FFFFFF;
+		}
+	}
 	
+	
+
 	
 </style>
