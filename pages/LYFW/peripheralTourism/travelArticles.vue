@@ -18,7 +18,7 @@
 				<image class="portrait" :src="tweets.portrait"/>
 				<view class="nickname">{{tweets.nickname}}</view>
 				<view class="autograph">{{tweets.autograph}}</view>
-				<view class="address">|&nbsp;&nbsp;&nbsp;{{tweets.address}}</view> 
+				<view class="address">|&nbsp;&nbsp;&nbsp;{{tweets.address}}</view>
 			</view> <!-- jiewei1 -->
 			<!-- 景点视图滑块 -->
 			<!-- 模块命名：Hk -->
@@ -33,15 +33,15 @@
 						</view>
 					</block>	
 				</scroll-view>
-			</view> <!-- jiewei2 -->
+			</view><!-- jiewei2 -->
 			<!-- 文章内容 -->
-			<view class="Zj_background">
+			<!-- <view class="Zj_background">
 				<view class="tweetsTitle">介绍</view>
-				<!-- <view class="tweetscontent">{{tweets.titlecontent}}</view> -->
-			</view> <!-- jiewei3 -->
+				<view class="tweetscontent">{{tweets.titlecontent}}</view>
+			</view> --><!-- jiewei3 -->
 			<!-- 富文本 -->
 			<view class="content">
-				<jyf-parser :html="articleTitle" style="text-align: center;font-size: 38upx;font-weight: bold;" ref="article"></jyf-parser>
+				<jyf-parser :html="articleTitle" style="text-align: center;font-size: 38upx;font-weight: bold;margin-bottom: 10upx;" ref="article"></jyf-parser>
 				<jyf-parser :html="html" style="font-size: 32upx;" ref="article"></jyf-parser><!-- transform: scale(0.9); 字体大小可以缩放-->
 			</view>
 			<!-- 回复区 -->
@@ -205,7 +205,7 @@
 					
 					console.log(res)
 					_self.html=res.data.Data[uni.getStorageSync('_detailId')].ArticleContentWithTags;
-					_self.articleTitle=res.data.Data[1].ArticleTitle;
+					_self.articleTitle=res.data.Data[uni.getStorageSync('_detailId')].ArticleTitle;
 					}
 			})
 		},
@@ -356,10 +356,10 @@
 	//X轴滚动视图
 	.Hk_scrollview{
 		white-space: nowrap; // 滚动必须加的属性
-		width: 100%;
 		height: 240upx;
-		padding: 20upx;
+		// padding: 20upx;
 		margin: 0 auto;
+		
 		.Hk_item{
 			 margin-right: 20upx;
 			 display: inline-block;
@@ -437,15 +437,12 @@
 	}
 	//推文内容
 	.content{
+		
 		font-size: 34upx;
-		display: flex;
-		position : relative;
-		flex-direction: column;
+		// position : relative;
+		// flex-direction: column;
 		padding: 32upx 32upx;
-		.articleTxt{
-			text-align: center;
-			font-weight: bold;
-		}
+		
 	}
 //回复区
 		.Hf_box{
@@ -474,7 +471,7 @@
 				padding-left: 32upx;
 				background: #f5f5f5;
 				left: 50upx;
-				width: 77%;
+				width: 70%;
 				height: 80upx;
 				border-radius: 56rpx;
 			}
