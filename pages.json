@@ -120,22 +120,10 @@
 			}
 		},  
 		{
-			"path": "pages/GRZX/notice",
-			"style": {}
-		}, 
-		{
-			"path": "pages/GRZX/product",
-			"style": {}
-		}, 
-		{
 			"path": "pages/GRZX/set",
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
-		}, 
-		{
-			"path": "pages/GRZX/order",
-			"style": {}
 		}, 
 		{
 			"path": "pages/GRZX/passengerInfo",
@@ -231,7 +219,15 @@
 		}
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "订单详情",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
         },{
 			// 出租车订单列表
             "path" : "pages/order/OrderList",            
@@ -247,6 +243,13 @@
 	},{
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
+        }
+        ,{
+            "path" : "pages/GJCX/busIndex",
+            "style" : {
+				"navigationBarTitleText": "公交查询",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
         }
     ],
 	"globalStyle": {
@@ -265,8 +268,8 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/Home/Index",
-				"text": "商城"
+				"pagePath": "pages/order/OrderList",
+				"text": "订单"
 			},
 			{ 
 				"pagePath": "pages/Home/Index",
