@@ -1,35 +1,36 @@
 <template>
 	<view>
-		<view class="tweetsTitle">回复</view> 
-		<view class="Hf_box" v-for="(item,index) in replyContent" :key="index">
-			<image class="Hf_portrait" :src="item.portrait" mode="aspectFill"></image>
-			<view class="Hf_right">
-				<text class="Hf_name">{{item.scennicName}}</text>
-				<text class="Hf_date">{{item.date}}</text>
-				<view class=".Hf_btn" :class="{active: item.fabulous_state}" @click="tofabulous(index)" >
+		<view class="tweetsTitle">回复</view>
+		<!-- 评论区 -->
+		<view class="replyClass" v-for="(item,index) in replyContent" :key="index">
+			<image class="replyPortrait" :src="item.portrait" mode="aspectFill"></image>
+			<view class="replyRight">
+				<text class="replyName">{{item.scennicName}}</text>
+				<text class="replyDate">{{item.date}}</text>
+				<view class="replyBtn" :class="{active: item.fabulousState}" @click="tofabulous(index)">
 					<text class="jdticon icon-dianzan-ash"></text>
 					<text style="color: #aaa;">{{item.fabulous}}</text>
 				</view>
-				<text class="Hf_con">{{item.content}}</text>
-				</view>
-		</view>
-			<view class="tianbai"></view>
-			<view class="Hf_reply" >
-				<image :src="userInfo.portrait || '../../../static/LYFW/peripheralTourism/user/missing-face.png'" mode="aspectFill" ></image>
-				<input type="text" placeholder="回复点什么吧"  v-model="replyInput.content"  @confirm="publish" />
+				<text class="replyCon">{{item.content}}</text>
 			</view>
+		</view>
+		<view class="blank"></view>
+		<view class="replyBox">
+			<image class="replyImage" :src="'../../../static/LYFW/peripheralTourism/user/missing-face.png'" mode="aspectFill"></image>
+			<input class="reply_input" type="text" placeholder="回复点什么吧" v-model="replyInput.content" />
+		</view>
 	</view>
 </template>
 
 <script>
 	import {
-	    mapState 
-	} from 'vuex'; 
+		mapState
+	} from 'vuex';
 	export default {
 		data() {
 			return {
 				replyContent: [], //回复内容
-				routeComment:{},
+				routeComment: {},
 				//评论内容
 				replyInput: {
 					unid: '', //用户id号
@@ -41,6 +42,9 @@
 					fabulouState: false, //点赞状态
 				},
 			}
+		},
+		onLoad() {
+			this.routeInit();
 		},
 		methods: {
 			//读取静态数据json.js
@@ -57,12 +61,12 @@
 			},
 			// 点赞事件
 			tofabulous: function(index) {
-				if (this.replyContent[index].fabulous_state == false) {
-					this.replyContent[index].fabulous_state = true;
+				if (this.replyContent[index].fabulousState == false) {
+					this.replyContent[index].fabulousState = true;
 					var num = this.replyContent[index].fabulous;
 					this.replyContent[index].fabulous = num + 1;
 				} else {
-					this.replyContent[index].fabulous_state = false;
+					this.replyContent[index].fabulousState = false;
 					var num = this.replyContent[index].fabulous;
 					this.replyContent[index].fabulous = num - 1;
 				};
@@ -80,8 +84,8 @@
 						})
 					}, 1500);
 				} else {
-					if (this.tweets.comment_state == false) {
-						this.tweets.comment_state = true;
+					if (this.tweets.commentState == false) {
+						this.tweets.commentState = true;
 						uni.showToast({
 							title: '回复成功',
 						})
@@ -99,20 +103,85 @@
 </script>
 
 <style lang="scss">
-	//推文标题
-	.tweetsTitle{
+	// 回复
+	.tweetsTitle {
 		display: flex;
-		position : relative;
-		flex-direction: column;
+		position: relative;
 		font-size: 38upx;
 		font-weight: bold;
-		color: #333333; 
+		color: #333333;
 		padding: 32upx 32upx;
-		text-overflow:ellipsis;
-		white-space:nowrap;
-		overflow:hidden;
 	}
-	.Hf_reply{
+
+	// 评论区
+	.replyClass {
+		display: flex;
+		position: relative;
+
+		.replyPortrait {
+			position: relative;
+			flex-shrink: 0;
+			width: 80upx;
+			height: 80upx;
+			border-radius: 100upx;
+			left: 30upx;
+		}
+
+		.replyRight {
+			position: relative;
+			padding-left: 51rpx;
+
+			.replyName {
+				display: block;
+				font-size: 30upx;
+				color: #aaa;
+			}
+
+			.replyDate {
+				display: block;
+				font-size: 30upx;
+				color: #aaa;
+			}
+
+			.replyBtn {
+				display: flex;
+				align-items: base-line;
+				position: absolute;
+				top: 18upx;
+				font-size: 32upx;
+				padding-left: 506upx;
+
+				.jdticon {
+					font-size: 38upx;
+					margin-left: 8upx;
+					color: #aaa;
+				}
+
+				&.active,
+				&.active .jdticon {
+					color: #28a4ff;
+				}
+			}
+
+			.replyCon {
+				display: flex;
+				line-height: 20px;
+				font-size: 30upx;
+				color: #333;
+				padding-top: 39upx;
+				padding-right: 36upx;
+				padding-bottom: 52upx;
+
+			}
+		}
+
+	}
+	.blank{
+		width: 100%;
+		height: 112upx;
+		background: #fff;
+	}
+	.replyBox{
 		display: flex;
 		left: 0;
 		position: fixed;
@@ -120,7 +189,7 @@
 		background: #fff;
 		width: 100%;
 		height: 112upx;
-		image{
+		.replyImage{
 			position: relative;
 			flex-shrink: 0;
 			width: 80upx;
@@ -129,69 +198,18 @@
 			left: 30upx;
 			margin-top: 16upx;
 		}
-		input{
+		.reply_input{
 			position: relative;
 			font-size: 32upx;
 			color: #333;
-			padding: 12upx 32upx;
+			padding: 0upx 32upx;
 			padding-left: 32upx;
 			background: #f5f5f5;
 			left: 50upx;
-			width: 77%;
+			width: 70%;
 			height: 80upx;
 			border-radius: 56rpx;
 			margin-top: 16upx;
 		}
-	}
-	//回复区
-	.Hf_box{
-		display: flex;
-		.Hf_portrait{
-			position: relative;
-			flex-shrink: 0;
-			width: 80upx;
-			height: 80upx;
-			border-radius: 100px;
-			left: 30upx;
-		}
-		.Hf_right{
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			position: relative;
-			font-size: 30upx;
-			color: #aaa;
-			padding-top: 8upx;
-			padding-left: 50upx;
-			padding-right: 32upx;
-			margin-bottom: 56upx;
-			.Hf_btn{
-				display:flex;
-				align-items:base-line;
-				position:absolute;
-				top: 18upx;
-				right: 48upx;
-				font-size: 32upx;
-				.yticon{
-					font-size: 38upx;
-					margin-left: 8upx; 
-					color: #aaa;
-				}
-				&.active, &.active .yticon{
-					color: #28a4ff;
-				}
-			}
-			.Hf_con{
-				font-size: 30upx;
-				color: #333;
-				padding-top:32upx;
-				padding-right:14upx;
-			}
-		}
-	}
-	.tianbai{
-		width: 100%;
-		height: 112upx;
-		background: #fff;
 	}
 </style>
