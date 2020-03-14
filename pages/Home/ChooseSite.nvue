@@ -144,12 +144,12 @@
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">泉州客运中心站</text>
+						color: #333333;">{{tcky_selectStartStation}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">安溪</text>
+						color: #333333;">{{tcky_selectEndStation}}</text>
 					</view>
 					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
 					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
@@ -340,6 +340,8 @@
 				endlongitude: "",
 				endtlatitude: "",
 				TaxiCost: "",
+				tcky_selectStartStation:'泉州客运中心站',//选中班次的起点站
+				tcky_selectEndStation:'漳州客运站',//选中班次的终点站
 			}
 		},
 		onLoad() {
@@ -713,8 +715,16 @@
 				});
 			},
 			queryTickets: function() {
+				// uni.setStorage({
+				// 	key: 'startStation',
+				// 	data: this.tcky_selectStartStation, //缓存选择的班次信息
+				// });
+				// uni.setStorage({
+				// 	key: 'endStation',
+				// 	data: this.tcky_selectEndStation, //缓存选择的班次信息
+				// });
 				uni.navigateTo({
-					url: "../CTKY/selectTickets",
+					url: "../CTKY/selectTickets?StartStation="+this.tcky_selectStartStation+"&EndStation="+this.tcky_selectEndStation,
 				})
 			}
 		}
