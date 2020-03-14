@@ -10,7 +10,7 @@
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">性&nbsp;别：</text>
-				<picker class="slk1" name="gender"  mode="selector" @change="genderChange"  v-model="detailInfo.gender"   :range="genderSex" placeholder="请选择" >
+				<picker class="slk1" name="sex"  mode="selector" @change="genderChange"  v-model="detailInfo.sex"   :range="genderSex" placeholder="请选择" >
 					{{selector}}
 				</picker>
 			</view>
@@ -60,7 +60,7 @@
 				selector:'请选择',
 				detailInfo : { 
 					nickName : '',
-					gender : '2',
+					sex : '2',
 					birthday : '请选择',
 					address : '',
 					autograph : '',
@@ -101,10 +101,18 @@
 				uni.getStorage({
 					key: 'userInfo',			
 					success: function (res) {
-						theself.detailInfo.nickName = res.data.nickName;
+						theself.selector =theself.genderSex[res.data.sex];
+						if(res.data.birthday==null||res.data.birthday==""){
+							
+						}else{
+							theself.detailInfo.birthday=res.data.birthday;
+						}			
+						theself.background=res.data.background;
+						theself.detailInfo.autograph=res.data.autograph;
+						theself.detailInfo.nickName = res.data.nickName; 
 						theself.avatarUrl = res.data.avatarUrl;				
 						theself.detailInfo.address= res.data.address;
-						console.log(res,"res")
+						//console.log(res,"res")
 					}
 				});	
 			},
@@ -143,13 +151,22 @@
 					content: '表单数据内容：' + JSON.stringify(this.detailInfo),
 					showCancel: false
 				});		 */	
-				e.target.value.avatarUrl=this.avatarUrl;
-				e.target.value.background=this.background;
+				if(this.avatarUrl==null||this.avatarUrl==undefined){
+					e.target.value.avatarUrl="../../static/GRZX/missing-face.png";
+				}else{
+					e.target.value.avatarUrl=this.avatarUrl;
+				}
+				if(this.background==null||this.background==undefined){
+					e.target.value.background="../../static/GRZX/banner3.jpg";
+				}else{
+					e.target.value.background=this.background;
+				}
 				uni.setStorage({
 					key:"userInfo",
 					data:e.target.value
 				})
 				console.log(e.target.value,"555")
+				uni.navigateBack();
 			},
 			// getPhoto: function () {
 			//         let id = uni.getStorageSync('user').id

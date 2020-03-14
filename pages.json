@@ -44,12 +44,16 @@
 		},
 		{
 			"path": "pages/LYFW/peripheralTourism/peripheralTourism",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "周边旅游"
+			}
 		},
 		{
 	
 			"path": "pages/LYFW/peripheralTourism/travelArticles",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "景点详情"
+			}
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
@@ -116,22 +120,10 @@
 			}
 		},  
 		{
-			"path": "pages/GRZX/notice",
-			"style": {}
-		}, 
-		{
-			"path": "pages/GRZX/product",
-			"style": {}
-		}, 
-		{
 			"path": "pages/GRZX/set",
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
-		}, 
-		{
-			"path": "pages/GRZX/order",
-			"style": {}
 		}, 
 		{
 			"path": "pages/GRZX/passengerInfo",
@@ -252,6 +244,13 @@
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
         }
+        ,{
+            "path" : "pages/GJCX/busIndex",
+            "style" : {
+				"navigationBarTitleText": "公交查询",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -287,7 +286,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选			
+			"path": "", //启动页面，必选	
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

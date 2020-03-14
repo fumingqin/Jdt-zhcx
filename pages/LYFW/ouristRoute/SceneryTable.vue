@@ -97,6 +97,7 @@
 		onLoad() {
 			this.lunBoInit();
 			this.loadData();
+			this.Getpostion();
 		},
 		
 		methods: {
@@ -188,6 +189,18 @@
 						}
 					}
 				},
+				
+				//获取定位数据
+				   Getpostion(){
+				    try {
+				        this.region = uni.getStorageSync('Key_position');
+				        if (value) {
+				            console.log(value);
+				        }
+				    } catch (e) {
+				        // error
+				    }
+				   },
 				
 				//景点内容点击
 				godetail : function (e){
