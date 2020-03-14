@@ -227,7 +227,15 @@
 		}
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "订单详情",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
         },{
 			// 出租车订单列表
             "path" : "pages/order/OrderList",            
@@ -261,8 +269,8 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/Home/Index",
-				"text": "商城"
+				"pagePath": "pages/order/OrderList",
+				"text": "订单"
 			},
 			{ 
 				"pagePath": "pages/Home/Index",
