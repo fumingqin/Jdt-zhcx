@@ -115,22 +115,10 @@
 			}
 		},  
 		{
-			"path": "pages/GRZX/notice",
-			"style": {}
-		}, 
-		{
-			"path": "pages/GRZX/product",
-			"style": {}
-		}, 
-		{
 			"path": "pages/GRZX/set",
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
-		}, 
-		{
-			"path": "pages/GRZX/order",
-			"style": {}
 		}, 
 		{
 			"path": "pages/GRZX/passengerInfo",
@@ -258,8 +246,8 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/Home/Index",
-				"text": "商城"
+				"pagePath": "pages/order/OrderList",
+				"text": "订单"
 			},
 			{ 
 				"pagePath": "pages/Home/Index",
