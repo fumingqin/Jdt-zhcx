@@ -87,9 +87,9 @@
 		},
 		data() {
 			return {
-				dateArray: [],//时间轴的数量的数组
-				selectIndex: '',//选中的下标
-				date: '',//时间轴上选中的日期
+				dateArray: [], //时间轴的数量的数组
+				selectIndex: '', //选中的下标
+				date: '', //时间轴上选中的日期
 				showPicker: false,
 				type: 'rangetime',
 				value: '',
@@ -149,15 +149,15 @@
 					//判断时间轴上是否存在改日期，不存在则重新绘制
 					if (!IsExist) {
 						this.dateArray = [];
-						var dateToday=new Date();//获取今天日期
-						var date = new Date(this.date);//选中的日期
+						var dateToday = new Date(); //获取今天日期
+						var date = new Date(this.date); //选中的日期
 						this.selectIndex = 0;
 						for (var i = 0; i < 8; i++) {
-							var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000);//日期一天加一次
-							var nowdate = this.getTime(3, mydate);//获取该日期的缩写  月/日
-							var week = this.getTime(2, mydate);//获取该日期为周几
-							var longdate = this.getTime(0, mydate);//获取 年/月/日
-							if (this.getTime(0,mydate) == this.getTime(0,dateToday)) {
+							var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000); //日期一天加一次
+							var nowdate = this.getTime(3, mydate); //获取该日期的缩写  月/日
+							var week = this.getTime(2, mydate); //获取该日期为周几
+							var longdate = this.getTime(0, mydate); //获取 年/月/日
+							if (this.getTime(0, mydate) == this.getTime(0, dateToday)) {
 								week = '今天';
 							}
 							this.dateArray.push({
@@ -173,7 +173,7 @@
 			ticketDetail() {
 				uni.setStorage({
 					key: 'ticketinfo',
-					data: this.ticketInfo,//缓存选择的班次信息
+					data: this.ticketInfo, //缓存选择的班次信息
 					success() {
 						console.log('成功了')
 					},
@@ -183,11 +183,10 @@
 				});
 				uni.setStorage({
 					key: 'shiftDate',
-					data: this.date,//缓存所选的班次日期
-					success() {
-					},
+					data: this.date, //缓存所选的班次日期
+					success() {},
 					fail() {
-						
+
 					}
 				});
 				uni.navigateTo({
@@ -269,16 +268,13 @@
 					});
 				}
 			}
-
 		}
 	}
 </script>
 
 <style lang="scss">
-	
-	 
-
-	page,.myView {
+	page,
+	.myView {
 		flex-direction: column;
 		width: 100%;
 		height: 100%;
@@ -347,10 +343,6 @@
 	.calendarImage {
 		width: 35upx;
 		height: 37upx;
-		// margin-left: 34upx;
-		// margin-right: 34upx;
-		// margin-top: 33upx;
-		// margin-bottom: 33upx;
 	}
 
 	.ctky_View {
