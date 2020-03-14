@@ -248,6 +248,13 @@
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
         }
+        ,{
+            "path" : "pages/GJCX/busIndex",
+            "style" : {
+				"navigationBarTitleText": "公交查询",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
