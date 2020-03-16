@@ -281,7 +281,11 @@
         ,{
             "path" : "pages/CZC/PaymentFail",
             "style" : {}
-        }    ],
+        }, {
+			"path": "pages/GRZX/complaint",
+			"style": {}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

@@ -126,18 +126,19 @@
 			//搜索事件
 			searchNow: function(e) {
 				if (this.ipt == '') {
-					uni.showToast({
-						title: '未输入搜索关键字',
-						icon: 'none',
-						duration: 1000
-					});
-					// return false;
+				// 	uni.showToast({
+				// 		title: '未输入搜索关键字',
+				// 		icon: 'none',
+				// 		duration: 1000
+				// 	});
+				// 	return false;
 				}
-				uni.showToast({
-					title:'你搜索了'+this.ipt,
-					icon:'none',
-				})
+				// uni.showToast({
+				// 	title:'你搜索了'+this.ipt,
+				// 	icon:'none',
+				// })
 				this.ipt = ''
+				
 			}, 
 			
 			change(index){
@@ -204,10 +205,10 @@
 				
 				//景点内容点击
 				godetail : function (e){
-					uni.showToast({
-						title:'你点击了'+e,
-						icon:'none'
-					})
+					// uni.showToast({
+					// 	title:'你点击了'+e,
+					// 	icon:'none'
+					// })
 					setTimeout(function(){
 						uni.navigateTo({
 							url:'travelDetails'
@@ -225,8 +226,8 @@
 		margin-top: 28upx;
 		.searchBoxRadius {
 			position: relative;
-			right: -157upx;
-			width: 76%;
+			right: -187upx;
+			width: 71%;
 			height: 74upx;
 			background-color: #fff;
 			overflow: hidden;
@@ -256,10 +257,11 @@
 		margin-top: -56upx;
 		.locationTxt{
 				position: absolute;
-		 		color: #808080; 
+				font-weight: bold;
+		 		color: #333333; 
 		 		padding-left: 11px;
-		 		width: 44px;
-		 		font-size: 29upx;
+		 		width: 45px;
+		 		font-size: 36upx;
 				padding-top: 0upx;
 				overflow: hidden;    
 				text-overflow:ellipsis;    
@@ -268,7 +270,7 @@
 		 .jdticon{
 			 position: relative;
 			 padding-top: 11upx;
-			 padding-left: 111upx;
+			 padding-left: 142upx;
 		 }
 		//定位
 		.height {
