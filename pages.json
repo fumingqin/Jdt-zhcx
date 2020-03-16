@@ -235,10 +235,16 @@
 		{
 			"path": "pages/CTKY/traditionCarMark",
 			"style": {
+				"navigationBarTitleText": "传统地图标识"
+			}
+		},
+		{
+			"path": "pages/CTKY/checkCarLocation",
+			"style": {
 				"navigationBarTitleText": "查看班车位置"
 			}
-		}
-        ,{
+		},
+		{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
             "style" : {
 				"navigationBarTitleText": "订单详情",
@@ -281,11 +287,12 @@
         ,{
             "path" : "pages/CZC/PaymentFail",
             "style" : {}
-        }, {
-			"path": "pages/GRZX/complaint",
-			"style": {}
-		}
-	],
+        }        
+        ,{
+            "path" : "pages/CTKY/specialMark",
+            "style" : {"navigationBarTitleText": "定制标识"}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
