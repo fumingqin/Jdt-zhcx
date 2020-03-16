@@ -228,6 +228,51 @@ const orderInfo = {
 }
 
 
+const orderInfo2 = {
+	status: 1, //1成功/0失败提示返回值
+	data: {
+		orderStatus:'待使用',
+		dateReminder: '2020-03-11', //时间表达（今天，明天，星期X）
+		date: '明天', //数字时间
+		actualPayment: '430', //实际付款金额
+		ticketId: 0,
+		title: '南平武夷山三日游路线',
+		contain: '观光车+成票+竹筏票',
+		adultPrice: 320,
+		childPrice: 160,
+		couponID: '1',
+		title: '春节限时限量优惠券',
+		price: 50,
+		condition: 400,
+	},
+	msg: '提示'
+}
+
+const orderInfo3 = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+			userID: 0,
+			ticketType: '成人',
+			name: '许小星',
+			sex: '女',
+			codeNum: '35058199503692367',
+			phoneNum: '13853989563',
+			default: true,
+			emergencyContact:false,
+		},{
+			userID: 1,
+			ticketType: '儿童',
+			name: '张晓雪',
+			sex: '女',
+			codeNum: '35058200803692367',
+			phoneNum: '13853989563',
+			default: false,
+			emergencyContact:true,
+		}],
+	msg: '提示'
+}
+
+
 // 接口声明区
 export default {
 	userInfo,
@@ -235,5 +280,7 @@ export default {
 	scenicList,
 	scSpotDetails,
 	notice,
-	orderInfo
+	orderInfo,
+	orderInfo2,
+	orderInfo3
 }

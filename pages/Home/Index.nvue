@@ -57,6 +57,7 @@
 				key: [],
 				scale: 16,
 				mapHeight: '',
+				QQ:'450906905',
 				controls: [{
 						id: 'back',
 						position: {
@@ -175,21 +176,20 @@
 				var that = this;
 				var controlId = ''
 				// #ifdef APP-PLUS
-				    controlId = e.detail.controlId;
+				controlId = e.detail.controlId;
 				// #endif
 				// #ifdef MP-WEIXIN
-					controlId = e.controlId; 
+				controlId = e.controlId;
 				// #endif
-				
+
 				if (controlId === 'back') {
 					//回到我的位置
 					that.mapContext.moveToLocation();
 				} else if (controlId === 'Service') {
 					//客服
-					uni.showToast({
-						title: '客服',
-						icon: 'none',
-					});
+					
+					plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + that.QQ + '&version=1&src_type=web ');  
+					
 				} else if (controlId === 'CallPollice') {
 					//一键报警
 					uni.showToast({
@@ -205,7 +205,7 @@
 					//缩小
 					if (this.scale > 5) {
 						this.scale = this.scale - 1;
-					} 
+					}
 				}
 			},
 
@@ -223,14 +223,12 @@
 				});
 			},
 			message: function() {
-				uni.showToast({
-					title: "暂未开放",
-					mask: true,
-					icon: 'none',
-				});
+				uni.navigateTo({
+					url: '../GRZX/notice'
+				})
 			},
-			camera: function() {
-				uni.showToast({
+			camera: function(e) {
+				/* uni.showToast({
 					title: "暂未开放",
 					mask: true,
 					icon: 'none',
@@ -239,18 +237,24 @@
 					success: function(res) {
 						console.log(res);
 					}
+				}) */
+				uni.scanCode({
+					onlyFromCamera: true,
+					success: function(res) {
+						console.log(res);
+						uni.navigateTo({
+							url:res
+						});
+					}
 				})
-
-
 			},
 
 			//路由统一事件
 			godetail: function(url) {
 				uni.navigateTo({
 					url: url
-				})
+				});
 			},
-
 		}
 	}
 </script>

@@ -16,44 +16,47 @@
 			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'"
 			 :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
 		</view>
-		<view class="ctky_View" v-for="(item,index) in 2" :key="index" @click="ticketDetail">
+		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(item)">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
 					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#1EA2FF  solid 1px;text-align: center;align-items: center;color:#1EA2FF 
-					;font-size: 24upx;font-family: SourceHanSansSC-Light;">传统</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">15:05</view>
+					;font-size: 24upx;font-family: SourceHanSansSC-Light;" v-if="item.DepartureType=='传统客运'">传统</view>
+					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#FF5A00  solid 1px;text-align: center;align-items: center;color:#FF5A00
+					;font-size: 24upx;font-family: SourceHanSansSC-Light;" v-if="item.DepartureType=='定制班车'">定制</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.SetTime}}</view>
 				</view>
 				<!-- <view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view> -->
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">泉州客运中心站</view>
+					color: #333333;">{{item.StartStaion}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">安溪</view>
+					color: #333333;">{{item.EndStation}}</view>
 				</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;">大型高一/约1-2小时/儿童半票</view>
+				font-size: 28upx;color: #666666;" v-if="item.DepartureType=='传统客运'">{{item.CarType}}/约{{item.Duration}}分钟/儿童半票</view>
+				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
+				font-size: 28upx;color: #666666;" v-if="item.DepartureType=='定制班车'">{{item.CarType}}/约{{item.Duration}}分钟/儿童半票/站外上车</view>
 			</view>
 			<view class="ctky_View_Right">
 				<view>
 					<view style="margin-right: 28upx;font-size: 36upx;font-style:
-		           SourceHanSansSC-Regular; color: #FC4646;">￥28</view>
+		           SourceHanSansSC-Regular; color: #FC4646;">￥{{item.Price}}</view>
 					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		           SourceHanSansSC-Light; color: #666666;">余18张</view>
+		           SourceHanSansSC-Light; color: #666666;">余{{item.Seat}}张</view>
 				</view>
 			</view>
 		</view>
-		<view class="ctky_View" v-for="(item,index) in 2" :key="index" @click="ticketDetail">
+<!-- 		<view class="ctky_View" v-for="(item,index) in 2" :key="index" @click="ticketDetail">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
 					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#FF5A00  solid 1px;text-align: center;align-items: center;color:#FF5A00 
 					;font-size: 24upx;font-family: SourceHanSansSC-Light;">定制</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">15:05</view>
 				</view>
-				<!-- <view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view> -->
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
@@ -75,7 +78,7 @@
 		           SourceHanSansSC-Light; color: #666666;">余18张</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -87,9 +90,9 @@
 		},
 		data() {
 			return {
-				dateArray: [],//时间轴的数量的数组
-				selectIndex: '',//选中的下标
-				date: '',//时间轴上选中的日期
+				dateArray: [], //时间轴的数量的数组
+				selectIndex: '', //选中的下标
+				date: '', //时间轴上选中的日期
 				showPicker: false,
 				type: 'rangetime',
 				value: '',
@@ -103,12 +106,19 @@
 					ticketEnd: '拉萨',
 					carType: '大型高一',
 					ticketType: '儿童半票'
-				}]
+				}],
+				startStation:'',//出发站
+				endStartion:'',//终点站
+				departureData:[],//班次数据
 			}
 		},
-		onLoad() {
+		onLoad(param) {
 			this.date = this.getTime(0, new Date());
+			this.startStation=param.StartStation;
+			this.endStartion=param.EndStation;
+			console.log(this.date,this.startStation,this.endStartion)
 			this.loadDate();
+            this.getDeparture();
 		},
 		onReady() {
 
@@ -149,15 +159,15 @@
 					//判断时间轴上是否存在改日期，不存在则重新绘制
 					if (!IsExist) {
 						this.dateArray = [];
-						var dateToday=new Date();//获取今天日期
-						var date = new Date(this.date);//选中的日期
+						var dateToday = new Date(); //获取今天日期
+						var date = new Date(this.date); //选中的日期
 						this.selectIndex = 0;
 						for (var i = 0; i < 8; i++) {
-							var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000);//日期一天加一次
-							var nowdate = this.getTime(3, mydate);//获取该日期的缩写  月/日
-							var week = this.getTime(2, mydate);//获取该日期为周几
-							var longdate = this.getTime(0, mydate);//获取 年/月/日
-							if (this.getTime(0,mydate) == this.getTime(0,dateToday)) {
+							var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000); //日期一天加一次
+							var nowdate = this.getTime(3, mydate); //获取该日期的缩写  月/日
+							var week = this.getTime(2, mydate); //获取该日期为周几
+							var longdate = this.getTime(0, mydate); //获取 年/月/日
+							if (this.getTime(0, mydate) == this.getTime(0, dateToday)) {
 								week = '今天';
 							}
 							this.dateArray.push({
@@ -170,36 +180,34 @@
 				}
 			},
 			//点击班次进行缓存，并打开页面
-			ticketDetail() {
-				uni.setStorage({
-					key: 'ticketinfo',
-					data: this.ticketInfo,//缓存选择的班次信息
-					success() {
-						console.log('成功了')
-					},
-					fail() {
-						console.log('缓存失败了')
-					}
-				});
+			ticketDetail(item) {
 				uni.setStorage({
 					key: 'shiftDate',
-					data: this.date,//缓存所选的班次日期
-					success() {
-					},
+					data:this.getTime(4,new Date(this.date)) , //缓存所选的班次日期
+					success() {},
 					fail() {
-						
+
+					}
+				});
+				//将点击的班次存入缓存
+				uni.setStorage({
+					key: 'selectedTicket',
+					data: item, //缓存所选的班次日期
+					success() {},
+					fail() {
 					}
 				});
 				uni.navigateTo({
 					url: "scheduleDetails"
 				})
 			},
-			//日期时间转换函数   type 0 年月日 ，1 时分秒 ， 2 星期 ，3 月/日
+			//日期时间转换函数   type 0 年月日 ，1 时分秒 ， 2 星期 ，3 月/日  4几月几日
 			getTime: function(type, date1) {
 				let date = new Date(date1.getTime()),
 					currentDate,
 					currentTime,
 					sortDate,
+					monthAndDay,
 					seperator = "/", // 如果想要其他格式 只需 修改这里 
 					year = date.getFullYear(),
 					month = date.getMonth() + 1,
@@ -215,6 +223,7 @@
 				//当前 时间
 				currentTime = hour + ":" + minute + ":" + second;
 				sortDate = month + "/" + day;
+				monthAndDay= month + "月" + day+"日";
 				// 输出格式 为 2018-8-27 14:45:33
 				// console.log(currentDate +" "+ currentTime);
 				if (type == 0) {
@@ -245,7 +254,11 @@
 					}
 				} else if (type == 3) {
 					return sortDate;
-				} else {
+				}else if(type==4)
+				{
+					return monthAndDay;
+				}
+				 else {
 					return currentDate + " " + currentTime;
 				}
 			},
@@ -268,17 +281,40 @@
 						longDate: longdate,
 					});
 				}
-			}
+			},
 
+			//调用接口根据起点站、终点站、日期获取 班次数据
+			getDeparture(){
+
+				uni.request({
+						url: "http://111.231.109.113:8000/api/MyTest/GetDeparture",
+						data: {
+							departureDate:this.date,
+							startStation:this.startStation,
+							endStation:this.endStartion
+						},
+						method:"Get",
+						header : {'content-type':'application/json'},
+						success: (res) => {
+							console.log(res.data);
+							this.departureData=res.data;
+							// uni.showToast({
+							// 	title: res.data,
+							// 	icon: 'none',
+							// 	duration: 4000
+							// })
+						}
+					});	
+
+			}
+			
 		}
 	}
 </script>
 
 <style lang="scss">
-	
-	 
-
-	page,.myView {
+	page,
+	.myView {
 		flex-direction: column;
 		width: 100%;
 		height: 100%;
@@ -347,10 +383,6 @@
 	.calendarImage {
 		width: 35upx;
 		height: 37upx;
-		// margin-left: 34upx;
-		// margin-right: 34upx;
-		// margin-top: 33upx;
-		// margin-bottom: 33upx;
 	}
 
 	.ctky_View {
