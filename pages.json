@@ -99,7 +99,9 @@
 		}, 
 		{		//个人中心模块开始
 			"path": "pages/GRZX/user",  
-			"style": {}
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}, 
 		{
 			"path": "pages/GRZX/userLogin",
