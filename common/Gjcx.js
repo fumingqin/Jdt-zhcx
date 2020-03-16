@@ -15,10 +15,46 @@ const userInfo = {
 	},
 	msg: '提示'		
 }
-
-
+const nearBy ={
+	status: 1,  //成功/失败提示返回值
+	data: {
+		stationID:'123',
+		stationName:'信和站',
+		distance:'170米',
+	},
+	msg: '提示'	
+}
+const station ={
+	status: 1,  //成功/失败提示返回值
+	data: [{
+		lineID:'1',
+		lineName:'X2',
+		direction:'新塘·尚好家园',
+		distance:'120米',
+		stationNumber:'即将到站',
+		arriveTime:''
+	},{
+		lineID:'2',
+		lineName:'17路',
+		direction:'福厦高铁泉州站',
+		distance:'400米',
+		stationNumber:'1站',
+		arriveTime:'2分'
+	},
+	{
+		lineID:'3',
+		lineName:'19路',
+		direction:'航空旅游首末站',
+		distance:'1.1公里',
+		stationNumber:'2站',
+		arriveTime:'5分'
+	}],
+	msg: '提示'	
+}
 
 // 接口声明区
 export default {
 	userInfo,  
+	station,
+	nearBy
 }

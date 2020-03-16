@@ -23,14 +23,14 @@
 			return {}
 		},
 		onReady() {
-			this.backHome();
+			// this.backHome();
 		},
 		methods: {
 			//路由统一事件
 			godetail: function(e) {
 				if(e==0){
-					uni.switchTab({
-						url: ''
+					uni.navigateTo({
+						url: '/pages/LYFW/scenicSpotTickets/orderDetails'
 					});
 				}else if(e==1){
 					uni.switchTab({
@@ -38,12 +38,13 @@
 					});
 				}
 			},
-			backHome : function() {
+			backHome(){
 				setInterval(() => {
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});
 				}, 10000)
+				// return false;
 			}
 
 		}

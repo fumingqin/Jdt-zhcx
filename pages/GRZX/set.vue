@@ -47,7 +47,7 @@
 			},
 			//退出登录
 			toLogout(){
-				console.log(this.hasLogin,"00000")
+			/* 	console.log(this.hasLogin,"00000") */
 				if(this.hasLogin){
 					uni.showModal({
 					    content: '确定要退出登录么',
@@ -55,9 +55,9 @@
 					    	if(e.confirm){
 					    		this.logout();
 					    		setTimeout(()=>{
-					    			uni.navigateBack({
-					    				delta: 2
-					    			});
+					    			uni.switchTab({
+					    				url:'/pages/GRZX/user'
+					    			})
 					    		}, 200)
 					    	}
 					    }

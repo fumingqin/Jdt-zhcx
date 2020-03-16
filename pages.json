@@ -11,25 +11,28 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
+		},
+		{
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
 
 			"style": {
 				"navigationBarTitleText": "景区列表"
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 			"style": {
 				"navigationBarTitleText": "景区详情",
 				"navigationStyle": "custom",
 				"app-plus": {
-					"titleNView": false
+					"titleNView": {
+						"type": "transparent"
+					}
 				}
 			}
 		},
 		{
 			"path": "pages/LYFW/currency/imglist",
-
 			"style": {
 				"navigationBarTitleText": "全部图片"
 			}
@@ -43,12 +46,16 @@
 		},
 		{
 			"path": "pages/LYFW/peripheralTourism/peripheralTourism",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "周边旅游"
+			}
 		},
 		{
 	
 			"path": "pages/LYFW/peripheralTourism/travelArticles",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "景点详情"
+			}
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
@@ -64,6 +71,15 @@
 			}
 		}, 
 		{
+			"path": "pages/CZC/WaitTakeOrder",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+	{
+
+
+
 			"path": "pages/CZC/PriceDetail",
 			"style": {}
 		}, 
@@ -92,7 +108,7 @@
 		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
-
+"backgroundColor":"#007AFF",
 				"navigationStyle": "custom"
 			}
 		}, 
@@ -119,22 +135,10 @@
 			}
 		},  
 		{
-			"path": "pages/GRZX/notice",
-			"style": {}
-		}, 
-		{
-			"path": "pages/GRZX/product",
-			"style": {}
-		}, 
-		{
 			"path": "pages/GRZX/set",
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
-		}, 
-		{
-			"path": "pages/GRZX/order",
-			"style": {}
 		}, 
 		{
 			"path": "pages/GRZX/passengerInfo",
@@ -230,7 +234,15 @@
 		}
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "订单详情",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
         },{
 			// 出租车订单列表
             "path" : "pages/order/OrderList",            
@@ -248,6 +260,13 @@
             "style" : {}
         }
         ,{
+            "path" : "pages/GJCX/busIndex",
+            "style" : {
+				"navigationBarTitleText": "公交查询",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
+        ,{
             "path" : "pages/CZC/PaymentSuccess",
             "style" : {
 				"navigationStyle":"custom"
@@ -256,8 +275,7 @@
         ,{
             "path" : "pages/CZC/PaymentFail",
             "style" : {}
-        }
-    ],
+        }    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -277,8 +295,8 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/Home/Index",
-				"text": "商城"
+				"pagePath": "pages/order/OrderList",
+				"text": "订单"
 			},
 			{ 
 				"pagePath": "pages/Home/Index",
@@ -295,7 +313,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选			
+			"path": "", //启动页面，必选	
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

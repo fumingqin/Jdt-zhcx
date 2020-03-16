@@ -8,7 +8,7 @@
 		},
 		onLaunch: function() {
 			let userInfo = uni.getStorageSync('userInfo') || '';
-			if(userInfo.id){
+			if(userInfo.nickName){
 				//更新登陆状态
 				uni.getStorage({
 					key: 'userInfo',

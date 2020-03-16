@@ -46,6 +46,7 @@
 	export default {
 		data(){
 			return{
+				limt:'',
 				passengerList:[{
 					userID:0,
 					name:'张小娴',
@@ -111,24 +112,34 @@
 			}
 		},
 		onLoad(options){
-			this.getType(options.submitType); //传参，参数为1,为出租车进入,其他界面设为2
+			//传参，submitType参数为1,为出租车进入,其他界面设为2 
+			//limitNum参数为你限制添加乘车人的数量（大于等于1）
+			this.getType(options.submitType,options.limitNum); 
 		},
 		methods:{
-			async getType(e){
-				this.submitType=e;
+			async getType(t,l){
+				this.submitType=t;
+				this.limit=l;
 			},
 			addPassenger(){
 				uni.navigateTo({
-					url:'/pages/GRZX/addPassenger'
+					url:'/pages/GRZX/addPassenger?type=add'
 				})
 			},
 			returnPages(){
 				uni.navigateBack();
 			},
-			editPassenger(){   //编辑乘车人信息
-				
+			editPassenger(e){   //编辑乘车人信息
+				uni.setStorage({
+					key:'editPassenger',
+					data:e
+				})
+				uni.navigateTo({
+					url:'/pages/GRZX/addPassenger?type=edit'
+				})
 			},
-			choosePassenger(e){  //选择乘车人				
+			choosePassenger(e){  //选择乘车人
+				console.log(this.limit,"....00000")
 				var list=this.passengerList;
 				var count=0;
 				for(var i=0;i<list.length;i++){
@@ -138,9 +149,9 @@
 				}
 				 if(e.hiddenIndex==1){
 					e.hiddenIndex=0;
-				}else if(count>3 && this.submitType==1){
+				}else if(count>(this.limit-1) && this.submitType==1){
 					uni.showToast({
-					    title: '乘客最多只能添加4名',
+					    title: '乘客最多只能添加'+this.limit+'名',
 					    icon:"none"
 					});
 				}else{
@@ -214,17 +225,20 @@
 		border-radius: 12upx;
 		width: 45%;
 		height: 90upx;
+		line-height: 90upx;
 		margin-top: 30upx;
 	}
 	.btnDefinite{
 		border-radius: 12upx;
 		width: 45%;
 		height: 90upx;
+		line-height: 90upx;
 		margin-top: 30upx;
 	}
 	.btnAdd2{ //添加按钮
 		width: 92%;
 		height: 90upx;
+		line-height: 90upx;
 		border-radius: 12upx;
 		background-color: #FC4646;
 		margin-top: 30upx;
@@ -307,8 +321,8 @@
 		/* border: 1px solid #4CD964; */
 	}
 	.fontClass{ //本人，紧急联系人
-		height: 66upx;
-		line-height: 66upx;
+		height: 55upx;
+		line-height: 55upx;
 		font-size: 28upx;
 		color: #ff0000;
 		position: absolute;
@@ -316,6 +330,6 @@
 		top: 25upx;
 		border: 1upx solid #ff0000;
 		text-align: center;
-		width: 20%;
+		width: 18%;
 	}
 </style>

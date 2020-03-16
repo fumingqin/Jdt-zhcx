@@ -22,7 +22,7 @@ const sixPalaceList = [{
 		scenicId: 0,
 		name: '武夷山',
 		englishName: 'Wuyi Mount',
-		image: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		image: '../../../static/LYFW/Tickets/ticketsList/wuyishan.jpg',
 	},
 	{
 		scenicId: 1,
@@ -340,7 +340,6 @@ const touristRoute = {
 	msg: '提示'
 }
 
-
 // 蔡伟达-旅游服务-路线评论区
 const routeComment = {
 	status: 1, //1成功/0失败提示返回值
@@ -457,7 +456,7 @@ const reply = {
 		content: '小姐姐的笔记写的很好啊！照片也拍的很美，给你点个赞，想来武夷山游玩的朋友们可以加我微信15359031110为您提供游玩攻略、民宿、帐篷预订及门票船票预订等旅游服务。我们整合了山上所有的旅游资源，花2分钟咨询，换一次完美旅行。赶紧动动手指联系我们把！',
 		date: '2019-12-16',
 		fabulous: 18,
-		fabulous_state: false,
+		fabulousState: false,
 	}, {
 		unid: 185271851,
 		scennicName: 'NDNPSOSWANGT',
@@ -465,7 +464,7 @@ const reply = {
 		content: '不错,很赞的小姐姐,感谢分享',
 		date: '2019-12-16',
 		fabulous: 15,
-		fabulous_state: true,
+		fabulousState: true,
 	}, {
 		unid: 153218884,
 		scennicName: '小郑哥',
@@ -473,7 +472,7 @@ const reply = {
 		content: '专门说武夷山的笔记在哪里？',
 		date: '2019-12-16',
 		fabulous: 12,
-		fabulous_state: false,
+		fabulousState: false,
 	}, {
 		unid: 415546455,
 		scennicName: 'Mickin',
@@ -481,7 +480,7 @@ const reply = {
 		content: '小姐姐的笔记写的很好啊',
 		date: '2019-12-16',
 		fabulous: 8,
-		fabulous_state: true,
+		fabulousState: true,
 	}, {
 		unid: 653235635,
 		scennicName: '王老五',
@@ -489,7 +488,7 @@ const reply = {
 		content: '不错,很赞的小姐姐,感谢分享',
 		date: '2019-12-16',
 		fabulous: 5,
-		fabulous_state: false,
+		fabulousState: false,
 	}, {
 		unid: 215851875,
 		scennicName: '富士康代工007',
@@ -497,10 +496,178 @@ const reply = {
 		content: '小姐姐真好看？Emm?',
 		date: '2019-12-16',
 		fabulous: 0,
-		fabulous_state: false,
+		fabulousState: false,
 	}],
 	msg: '提示'
 }
+
+//蔡伟达-旅游路线-景点内容/热门路线
+const touristRoute2 = {
+	status: 1, //1成功,0失败提示返回值
+	data: [{
+		routeId: 1,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '武夷山风景名胜区三日游',
+		scName: '武夷山',
+		scEnglish: 'THREE DAY TOUR OF WUYISHAN SCENIC SPOOT',
+		jungle: '自然风光',
+		cost: 1200,
+		days: 3,
+		related: 108,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+		date: '2019-11-05',
+		like: 1088,
+		comment: 92,
+	}, {
+		routeId: 2,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '溪源峡谷风景名胜区',
+		scName: '溪源峡谷',
+		scEnglish: 'XIYAN CANYON SCENIC SPOT',
+		jungle: '自然风光',
+		cost: 600,
+		days: 2,
+		related: 89,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/xiyuanxiagu.jpg',
+		date: '2019-11-06',
+		like: 682,
+		comment: 78,
+	}],
+	msg: '提示'
+}
+
+//蔡伟达-旅游路线-景点内容/热门路线
+const touristRoute3 = {
+	status: 1, //1成功,0失败提示返回值
+	data: [{
+		routeId: 1,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '芒荡山风景名胜区',
+		scName: '芒荡山',
+		scEnglish: 'MANGDANG MOUNTAIN SCENIC SPOT',
+		jungle: '自然风光',
+		cost: 200,
+		days: 1,
+		related: 68,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/mangdangshan.jpg',
+		date: '2019-11-07',
+		like: 308,
+		comment: 66,
+	}, {
+		routeId: 2,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '和平古镇一日游',
+		scName: '和平古镇',
+		scEnglish: 'ONE DAY TOUR OF HEPING ANCIENT TOWN',
+		jungle: '自然风光',
+		cost: 180,
+		days: 1,
+		related: 64,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/hepingguzhen.jpg',
+		date: '2019-11-08',
+		like: 873,
+		comment: 91,
+	}, {
+		routeId: 3,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '天成奇侠一日游',
+		scName: '天成奇侠',
+		scEnglish: 'ONE DAY TOUR OF TIANCHENG WONDER',
+		jungle: '自然风光',
+		cost: 150,
+		days: 1,
+		related: 82,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/tianchengqixia.jpg',
+		date: '2019-11-09',
+		like: 546,
+		comment: 83,
+	}, {
+		routeId: 4,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '青龙大瀑布一日游',
+		scName: '青龙大瀑布',
+		scEnglish: 'ONE DAY TOUR OF QINGLONG WATERFALL',
+		jungle: '自然风光',
+		cost: 120,
+		days: 1,
+		related: 63,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/qinglongdapubu.jpg',
+		date: '2019-11-10',
+		like: 1251,
+		comment: 35,
+	}, {
+		routeId: 5,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '中华武夷山茶博园一日游',
+		scName: '茶博园',
+		scEnglish: 'ONE DAY TOUR OF WUYISHAN TEA GARDEN IN CHINA',
+		jungle: '自然风光',
+		cost: 125,
+		days: 1,
+		related: 57,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/chaboyuan.jpg',
+		date: '2019-11-11',
+		like: 1098,
+		comment: 51,
+	}, {
+		routeId: 6,
+		routeClicks: '2.1',
+		headImage: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/touxiang.png',
+		nickName: '李茜茜',
+		autograph: '步步寻往迹,有处特依依~',
+		address: '南平市',
+		scennicName: '建阳卧龙湾花花世界一日游',
+		scName: '花花世界',
+		scEnglish: 'ONE DAY TOUR OF FLOWER WORLD IN WOLONG BAY JIANYANG',
+		jungle: '动植物园',
+		cost: 200,
+		days: 1,
+		related: 35,
+		attribute: '旅游度假区',
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/huahuashijie.jpg',
+		date: '2019-11-12',
+		like: 1205,
+		comment: 24,
+	}],
+	msg: '提示'
+}
+
+
 // 接口声明区
 export default {
 	userInfo,
@@ -512,4 +679,7 @@ export default {
 	routeComment,
 	userRoute,
 	reply,
+	touristRoute2,
+	touristRoute3,
+
 }
