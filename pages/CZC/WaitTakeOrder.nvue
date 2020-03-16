@@ -2,7 +2,6 @@
 	<view>
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
 		 :polyline="polyline" :markers="markers" :show-location="true">
-
 		</map>
 		<image v-if='orderType == 0' @click="back" src="../../static/CZC/Back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
 		<view v-if='orderType == 0' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
@@ -36,7 +35,7 @@
 					<image @click="call" src="../../static/CZC/Call.png" style="width: 40rpx;height: 40rpx;"></image>
 				</view>
 				<view v-if="orderType == 5" style="margin-top: 30rpx;border-top:1px solid #EAEAEA;padding-top: 30rpx;">
-					<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">司机距离您的位置{{Distance}}公里，预计{{Duration}}分钟到达目的地。</text>
+					<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">司机已接单，30分钟后出发，请准时到达上车点。</text>
 				</view>
 			</view>
 		</view>
@@ -51,27 +50,23 @@
 				</view>
 			</view>
 		</view>
-		<view v-if='orderType == 10' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;">
-			<view style="padding-left: 10rpx;" elevation='0px'>
-				<image @click="callPolice" src="../../static/Home/CallPollice.png" style="width: 120rpx;height: 120rpx;"></image>
-			</view>
-			<view style="align-items: center;">
-				<view elevation='5px' class="orderBottomContent">
-					<view style="flex-direction: row;justify-content: space-between;margin-bottom: 30rpx;padding-bottom: 30rpx;border-bottom:1px solid #EAEAEA;">
-						<view>
-							<text class="orderTitleFont">车费合计{{totalPrice}}元</text>
-						</view>
-						<view>
-							<text @click="payDetail" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用疑问</text>
-						</view>
+		<view v-if='orderType == 10' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+			<view elevation='5px' class="orderBottomContent">
+				<view style="flex-direction: row;justify-content: space-between;margin-bottom: 30rpx;padding-bottom: 30rpx;border-bottom:1px solid #EAEAEA;">
+					<view>
+						<text class="orderTitleFont">车费合计{{totalPrice}}元</text>
 					</view>
-					<view v-for="item in priceArr" :key='item.key' style="flex-direction: row;justify-content: space-between;padding-bottom: 30rpx;">
-						<view>
-							<text class="orderTitleFont">{{item.key}}</text>
-						</view>
-						<view>
-							<text class="orderTitleFont">{{item.value}}元</text>
-						</view>
+					<view>
+						<text @click="problem" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用疑问</text>
+					</view>
+				</view>
+				<!-- <view v-for="item in priceArr" :key='item.key' style="flex-direction: row;justify-content: space-between;padding-bottom: 30rpx;"> -->
+				<view style="flex-direction: row;justify-content: space-between;padding-bottom: 30rpx;"> 
+					<view>
+						<text class="orderTitleFont">一口价</text>
+					</view>
+					<view>
+						<text class="orderTitleFont">162元</text>
 					</view>
 				</view>
 			</view>
@@ -93,14 +88,14 @@
 						</view>
 					</view>
 					<view style="margin-top: 30px;flex-direction: row;justify-content: center;align-items: center;">
-						<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">32.5</text><text
+						<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">162</text><text
 						 style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:Light;color:#2C2D2D;">元</text>
 					</view>
 					<view style="flex-direction: row;justify-content: center;align-items: center;">
 						<text @click="payDetail" style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#727272;">费用明细</text>
 						<uni-icons @click="payDetail" type="arrowright" size="15" color="#727272"></uni-icons>
 					</view>
-					<view style="flex-direction: row;justify-content: space-between;margin-top: 20px;">
+				<!-- 	<view style="flex-direction: row;justify-content: space-between;margin-top: 20px;">
 						<view>
 							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000">优惠券</text>
 						</view>
@@ -108,7 +103,7 @@
 							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#666666;">请选择优惠券</text>
 							<uni-icons type="arrowright" size="15" color="#666666"></uni-icons>
 						</view>
-					</view>
+					</view> -->
 					<view style="border-top-width: 1px;border-color: #EAEAEA;margin-top: 20px;padding-top: 20px;">
 						<radio-group name='chooseType'>
 							<view v-for='item in payType' :key='item.typeName' style="flex-direction: row;justify-content: space-between;padding-bottom: 20px;">
@@ -165,18 +160,14 @@
 				directionInterval: 0, //规划用定时器。
 				orderInterval: 0, //获取司机是否接单用定时器。
 				comingInterval: 0, //司机到达乘客出发地用定时器。
-				Distance: '', //距离
-				Duration: '', //预计时间
 				markers: [], //标记点
 				mapHeight: '', //地图高度
 				isHaveDrive: [],
 				phoneNumber: '0', //司机电话号码
 				orderType: 0,
-				hintIndex:-1,//提示状态值
 				mapContext: '', //mapContext对象
 				isShow: false,
 				totalPrice: 32.5,
-				index:0,
 				priceArr: [{
 						key: '起步价',
 						value: '10.0'
@@ -208,7 +199,7 @@
 			}
 		},
 		onLoad() {
-			let that = this;
+			var that = this;
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
@@ -218,11 +209,10 @@
 			that.getMyLocaton();
 			that.getOrder();
 			that.getRealOrder();
-			/* that.setRealUpdate(); */
 			that.test();
 		},
 		onReady() {
-			let that = this;
+			var that = this;
 			that.mapContext = uni.createMapContext("map", this);
 			uni.setKeepScreenOn({
 				keepScreenOn: true,
@@ -245,40 +235,41 @@
 				});
 			},
 			back: function() {
-				let that = this;
+				var that = this;
 				uni.navigateBack({});
 			},
 			getOrder: function() {
 				//上级页面统一返回订单编号。此处根据订单编号获取上下车点。
-				let that = this;
+				var that = this;
 
 				//赋值开始点经纬度
-
+				that.startLon = '';
+				that.startLat = '';
 				//赋值结束点经纬度
 				that.endLon = '118.613688';
 				that.endLat = '24.912702';
-				that.driverLon = "118.600455";
-				that.driverLat = "24.917733";
+				that.driverLon = "118.613688";
+				that.driverLat = "24.912702";
 				that.phoneNumber = '114';
-				that.startLon = '118.599705';
-				that.startLat = '24.889993';
-				that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
-				that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
+				that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png')
 				//描绘终点标记
 				if (that.orderType == 0) {
 					//如果没有司机接单
-					/* that.selectCarAroung(); */
-					that.hintIndex = 0;
+					that.selectCarAroung();
+					
+					var startLonLat = that.startLon + ',' + that.startLat;
+					var endLonLat = that.endLon + ',' + that.endLat;
+					that.getDirectionDriving(startLonLat, endLonLat);
 				} else if (that.orderType == 5) {
 					//如果司机接单，在接旅客的路上
 
-					//绘制司机标记点
-					that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
+					// //绘制司机标记点
+					// that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
-					//第一次路线规划
-					that.getDirectionDriving(that.driverLon + ',' + that.driverLat, that.startLon + ',' + that.startLat);
-					//开启时时规划
-					that.openRealComing();
+					// //第一次路线规划
+					// that.getDirectionDriving(that.driverLon + '-' + that.driverLat, that.startLon + ',' + that.startLat);
+					// //开启时时规划
+					// that.openRealComing();
 				} else if (that.orderType == 10) {
 					//如果订单开始
 					//第一次路线规划
@@ -301,14 +292,14 @@
 						title: '请支付订单',
 						icon: 'none',
 						success: function() {
-							/* 	uni.navigateBack({
+						/* 	uni.navigateBack({
 
-								}); */
+							}); */
 						},
 						fail: function() {
-							/* 	uni.navigateBack({
+						/* 	uni.navigateBack({
 
-								}); */
+							}); */
 						}
 					})
 
@@ -316,43 +307,35 @@
 			},
 			getRealOrder: function() {
 				//时时获取订单状态
-				let that = this;
+				var that = this;
 				that.orderInterval = setInterval(function() {
-					that.driverLon = "118.600455";
-					that.driverLat = "24.917733";
+					that.driverLon = "118.613688";
+					that.driverLat = "24.912702";
 					if (that.orderType == 0) {
 						//等待司机接单中
-						/* that.selectCarAroung(); */
-						that.hintIndex = 0;
+						that.selectCarAroung();
 					} else if (that.orderType == 5) {
-						//司机到达乘客地 
-						if(that.hintIndex == 0){
-							uni.showToast({
-								title:'已有司机接单中',
-								icon:'none'
-							});   
-							that.hintIndex = 1;
-						}
-						/* for (var i = 0; i < that.markers.length; i++) {
-							if (that.markers[i].id == 'taxi') {
-								that.markers.splice(i, 1);
-							}
-						} */
-						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
+						//司机到达乘客地
+						// for (var i = 0; i < that.markers.length; i++) {
+						// 	if (that.markers[i].id == 'taxi') {
+						// 		that.markers.splice(i, 1);
+						// 	}
+						// }
+						// that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
-						that.getDirectionDriving(that.driverLon + ',' + that.driverLat, that.startLon + ',' + that.startLat);
-						if (that.comingInterval == 0) {
-							that.openRealComing();
-						}
+						// that.getDirectionDriving(that.driverLon + '-' + that.driverLat, that.startLon + ',' + that.startLat);
+						// if (that.comingInterval == 0) {
+						// 	that.openRealComing();
+						// }
 					} else if (that.orderType == 10) {
 						//订单开始
 						//清除司机到达出发地的路径规划定时器
-
-						/* for (var i = 0; i < that.markers.length; i++) {
+						
+						for (var i = 0; i < that.markers.length; i++) {
 							if (that.markers[i].id == 'taxi') {
 								that.markers.splice(i, 1);
 							}
-						} */
+						}
 						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
 						clearInterval(that.comingInterval);
@@ -388,25 +371,16 @@
 			//--------等待司机到达
 			call: function() {
 				//呼叫司机
-				let that = this;
+				var that = this;
 				uni.makePhoneCall({
 					phoneNumber: that.phoneNumber
 				});
 			},
 			callPolice: function() {
 				//一键报警
-				let that = this;
+				var that = this;
 				uni.showToast({
 					title: 'callPolice'
-				});
-				uni.getLocation({
-					type: 'gcj02',
-					geocode: true,
-					success: function(res) {
-						console.log(res.address);
-						console.log(res.latitude);
-						console.log(res.longitude);
-					}
 				});
 			},
 			cancleOrder: function() {
@@ -414,12 +388,11 @@
 				uni.showToast({
 					title: 'cancleOrder'
 				});
-				uni.navigateBack({});
 			},
 			//--------前往终点
 			problem: function() {
 				//费用疑问
-				let that = this;
+				var that = this;
 				uni.showToast({
 					title: 'problem'
 				});
@@ -427,45 +400,35 @@
 			//------支付页面
 			payDetail: function() {
 				//支付详情
+				uni.showToast({
+					title: 'payDetail'
+				});
 				uni.navigateTo({
 					url: '../CZC/PriceDetail'
-				});
-			
+				})
 			},
 			close: function() {
 				//关闭
-				let that = this;
-				uni.navigateTo({
-					url: '../order/OrderDetail'
-				});
+				var that = this;
+				that.closeBottomPopup();
 			},
 			payment: function(e) {
 				//支付
-				let that = this;
-
-				var timeStamp = new Date().getTime();
+				var that = this;
+				uni.showToast({
+					title: 'payment'
+				});
 				uni.requestPayment({
 					provider: e.detail.chooseType,
 					orderInfo: '111',
-					timeStamp: timeStamp,
+					timeStamp: '',
 					nonceStr: '',
 					package: '',
 					paySign: '',
-					success: function(res) {
-						console.log(res); 
-						uni.navigateTo({
-							url:'./PaymentFail'
-						});
-					},
-					fail: function(res) {
-						console.log(res);
-						uni.navigateTo({
-							url:'./PaymentFail'
-						});
-					}
-				});
+					service:3/4
+				}); 
 			},
-			choosEcoupon: function() {
+			choosEcoupon: function() { 
 				//选择优惠券
 				uni.showToast({
 					title: 'choosEcoupon'
@@ -473,7 +436,7 @@
 			},
 			//-------------------------
 			getMyLocaton: function() {
-				let that = this;
+				var that = this;
 				uni.getLocation({
 					type: 'gcj02',
 					success: function(res) {
@@ -488,13 +451,13 @@
 			},
 			setMapCenter: function() {
 				//设置地图中心点
-				let that = this;
+				var that = this;
 				that.longitude = that.lon;
 				that.latitude = that.lat;
 			},
 			openRealDirection: function() {
 				//开启到达目的地时时路线规划，目前设置10秒一次。
-				let that = this;
+				var that = this;
 				that.directionInterval = setInterval(function() {
 					uni.getLocation({
 						type: 'gcj02',
@@ -507,16 +470,16 @@
 				}, 10000);
 			},
 			openRealComing: function() {
-				let that = this;
+				var that = this;
 				that.comingInterval = setInterval(function() {
-					that.getDirectionDriving(that.driverLon + ',' + that.driverLat, that.startLon + ',' + that.startLat);
+					that.getDirectionDriving(that.driverLon + '-' + that.driverLat, that.startLon + ',' + that.startLat);
 				}, 10000);
 			},
 
 
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
-				let that = this;
+				var that = this;
 				uni.request({
 					url: taxi.InterfaceAddress[0],
 					data: {
@@ -528,8 +491,7 @@
 						//日后会加入定时，此处需清空
 						that.points = [];
 						that.polyline = [];
-						that.Distance = (res.data.Distance / 1000).toFixed(1);
-						that.Duration = (res.data.Duration / 60).toFixed(0);
+
 						var polylineArr = [];
 						var points = [];
 
@@ -548,7 +510,7 @@
 								longitude: arr[0],
 								latitude: arr[1]
 							}
-							that.points.push(obj); 
+							that.points.push(obj);
 						}
 						var obj = {
 							points: that.points,
@@ -564,105 +526,59 @@
 				});
 			},
 			setMarker: function(id, lon, lat, iconPath) {
-				let that = this;
 				var width = 20;
 				var height = 20;
-				if (id == 'taxi') {
+				if (id == 'taxi' || id == 'car') {
 					width = 40;
 					height = 40;
-					that.markers = that.markers.filter(res => res.id == 'start' || res.id == 'end');
-				}else if(id.indexOf('car') > -1){
-					width = 40;
-					height = 40;
-					that.markers = that.markers.filter(function(res){
-						return res.id != id;  
-					});
 				}
 				//描绘点的方法
+				var that = this;
 				var marker = new Object();
+				//画终点经纬度
 				marker = {
 					id: id,
 					latitude: lat,
 					longitude: lon,
 					iconPath: iconPath,
 					width: width,
-					height: height,
+					height: height
 				};
-				var json = JSON.stringify(that.markers);
-				var arr = JSON.parse(json);
-				arr.push(marker);
-				that.markers = arr;
+				that.markers.push(marker);
 			},
 			selectCarAroung: function() {
-				let that = this;
+				var that = this;
+				for(var i = 0 ; i < that.markers.length;i++){
+					if(that.markers[i].id == 'car'){
+						that.markers.splice(i,1);
+					}
+				}
 				uni.request({
-					url: taxi.InterfaceAddress[2], 
-					data:{
-						lon:that.lon,
-						lat:that.lat,
-						DistanceRange:1000
-					},
-					method: 'GET',   
+					url: taxi.InterfaceAddress[1],
+					method: 'GET',
 					success: function(res) {
 						var carArr = res.data;
 						for (var i = 0; i < carArr.length; i++) {
-							that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
+							that.setMarker('car', parseFloat(carArr[i].Longitude).toFixed(6), parseFloat(carArr[i].Latitude).toFixed(6),
 								'../../static/CZC/Car.png');
 						}
-						console.log(carArr.length  +'-'+that.markers.length); 
 					},
 				});
 			},
-			clearCarAroung: function() {
-				let that = this;
-				var arr = that.markers.filter(res => res.id == 'start' || res.id == 'end');
-				that.markers = arr;
-			},
-
-			setRealUpdate: function() {
-				let that = this;
-
-				setInterval(function() {
-					that.updateLocation();
-				}, 10000);
-			},
-
-			updateLocation: function() {
-				let that = this;
-				uni.getLocation({
-					type: 'gcj02',
-					success: function(res) {
-
-						uni.request({
-							url: '',
-							data: {
-								longitude: res.longitude,
-								latitude: res.latitude,
-							},
-							method: 'GET',
-							success: function(res) {
-								console.log(res);
-							}
-						});
-
-					}
-				})
-
-			},
-
 			test: function() {
-				let that = this;
+				var that = this;
 				setTimeout(function() {
 					that.orderType = 5;
 				}, 10000);
 				setTimeout(function() {
 					that.orderType = 10;
-				}, 20000);
+				}, 30000);
 				setTimeout(function() {
 					that.orderType = 15;
-				}, 30000);
+				}, 45000);
 				setInterval(function() {
-					console.log(1);
+					// console.log(1);
+					
 				}, 1000);
 			},
 		}
@@ -710,7 +626,7 @@
 		padding-left: 30rpx;
 		padding-right: 30rpx;
 		border-radius: 9px;
-		/* box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53); */
+		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 	}
 
 	.orderTitleFont {
