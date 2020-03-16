@@ -223,13 +223,19 @@
 		{
 			"path": "pages/CTKY/orderDetail",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "订单详情"
 			}
 		},
 		{
 			"path": "pages/CTKY/issueView",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "订单评价"
+			}
+		},
+		{
+			"path": "pages/CTKY/traditionCarMark",
+			"style": {
+				"navigationBarTitleText": "查看班车位置"
 			}
 		}
         ,{
