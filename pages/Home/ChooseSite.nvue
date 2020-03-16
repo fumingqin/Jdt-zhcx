@@ -138,27 +138,28 @@
 		<view v-if="current === 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
-					<view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view>
+					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
+						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</text>
+					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-						<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">泉州客运中心站</view>
+						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">{{tcky_selectStartStation}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-						<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">安溪</view>
+						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">{{tcky_selectEndStation}}</text>
 					</view>
-					<view style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
-					font-size: 28upx;color: #666666;">共10趟
-						10:00发车</view>
+					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
+					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
 				</view>
 				<view class="ctky_View_Right">
-					<view>
-						<view style="margin-right: 28upx;font-size: 36upx;font-style:
-                       SourceHanSansSC-Regular; color: #FC4646;">￥28</view>
-						<view style="margin-right: 28upx;font-size: 24upx;font-style:
-                       SourceHanSansSC-Light; color: #666666;">余18张</view>
+					<view style="text-align: right;">
+						<text style="margin-right: 28upx;font-size: 36upx;font-style:
+                       SourceHanSansSC-Regular; color: #FC4646;">￥28</text>
+						<text style="margin-right: 28upx;font-size: 24upx;font-style:
+                       SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余18张</text>
 					</view>
 				</view>
 			</view>
@@ -327,6 +328,8 @@
 				endtlatitude: "",
 				TaxiCost: "",
 				// map: '',
+				tcky_selectStartStation:'泉州客运中心站',//选中班次的起点站
+				tcky_selectEndStation:'漳州客运站',//选中班次的终点站
 			}
 		},
 		onLoad() {
@@ -356,7 +359,7 @@
 			});
 		},
 		onReady: function() {
-			//动态设置高度.	
+			//动态设置高度
 			var that = this;
 			// that.map=uni.createMapContext("map555",this);
 			let query = uni.createSelectorQuery().in(that).select("#ceshi");
@@ -714,8 +717,16 @@
 				});
 			},
 			queryTickets: function() {
+				// uni.setStorage({
+				// 	key: 'startStation',
+				// 	data: this.tcky_selectStartStation, //缓存选择的班次信息
+				// });
+				// uni.setStorage({
+				// 	key: 'endStation',
+				// 	data: this.tcky_selectEndStation, //缓存选择的班次信息
+				// });
 				uni.navigateTo({
-					url: "../CTKY/selectTickets",
+					url: "../CTKY/selectTickets?StartStation="+this.tcky_selectStartStation+"&EndStation="+this.tcky_selectEndStation,
 				})
 			}
 		}
@@ -808,7 +819,7 @@
 
 	.ctky_View {
 		width: 698upx;
-		background: #FFFFFF;
+		background-color: #FFFFFF;
 		margin: 10upx 26upx;
 		border-radius: 20upx;
 		flex-direction: row;

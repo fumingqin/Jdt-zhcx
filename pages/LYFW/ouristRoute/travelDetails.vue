@@ -82,25 +82,104 @@
 			<!-- 灰线 -->
 			<text class="grayLine3" style="height: 149px;width: 2px;background-color: #DDDDDD;" />
 		</view>
-		
+
 		<!-- 文章内容 -->
 		<view class="articleAontent">
 			<view class="routeTitle">介绍</view>
-			<text class="routeContent" style="text-indent:2em;">
-			{{titleClick.scenicContent}}
-			<p></p>
-			<p></p>
-			<p></p>
-			</text>
+			<text class="routeContent" style="text-indent:2em;">{{titleClick.scenicContent}}</text>
 		</view>
-		
+
+		<!-- 回复 -->
+		<view class="replyComment">
+			<view class="replyTitle">回复</view>
+			<view class="replyBox">
+				<image class="replyImage" :src="'../../../static/LYFW/peripheralTourism/user/missing-face.png'" mode="aspectFill"></image>
+				<input class="reply_input" type="text" placeholder="回复点什么吧" v-model="replyInput.content" />
+			</view>
+			<!-- 评论区 -->
+			<view class="replyClass" v-for="(item,index) in replyContent" v-if="index<3" :key="index">
+				<image class="replyPortrait" :src="item.portrait" mode="aspectFill"></image>
+				<view class="replyRight">
+					<text class="replyName">{{item.scennicName}}</text>
+					<text class="replyDate">{{item.date}}</text>
+					<view class="replyBtn" :class="{active: item.fabulousState}" @click="tofabulous(index)">
+						<text class="jdticon icon-dianzan-ash"></text>
+						<text style="color: #aaa;">{{item.fabulous}}</text>
+					</view>
+					<text class="replyCon">{{item.content}}</text>
+				</view>
+			</view>
+			<view class="replyViewreply" @click="navTo('/pages/LYFW/ouristRoute/toreply')">
+				<text> 查看{{replyContent.length}}条回复 ></text>
+			</view>
+
+			<!-- 底部操作菜单 -->
+			<view class="pageBottom">
+				<!-- 收藏 -->
+				<view class="CollectionBtn" :class="{active: titleClick.collectionState}" @click="toFavorite1">
+					<text class="jdticon icon-shoucang2"></text>
+					<text>{{titleClick.collection}}</text>
+				</view>
+				<!-- 喜欢 -->
+				<view class="CollectionBtn" :class="{active: titleClick.likeState}" @click="toFavorite2">
+					<text class="jdticon icon-shoucang"></text>
+					<text>{{titleClick.like}}</text>
+				</view>
+				<!-- 评论 -->
+				<view class="CollectionBtn" :class="{active: titleClick.commentState}" @click="navTo('/pages/LYFW/ouristRoute/toreply')">
+					<text class="jdticon icon-pinglun-copy"></text>
+					<text>{{replyContent.length}}</text>
+				</view>
+
+				<view class="action-btn-group">
+					<button type="primary" class="actionBtn" @click="open">查看景点</button>
+					<!-- 嵌套弹框组件popup -->
+					<uni-popup ref="popup" type="bottom">
+						<view>
+							<scroll-view class="popupScrollview" scroll-y="ture">
+								<view class="routeTitle2">文中提及的地点</view>
+								<view class="tkItem" v-for="(item,index) in touristRoute2" :key="index" @click="godetail(item.scennicName)">
+									<image class="tkImage" :src="item.image" mode="" />
+									<view class="tkBacg">
+										<text class="tkText1">{{item.scennicName}}</text>
+										<text class="tkText2">{{item.related}}篇点评</text>
+										<text class="tkText3">位于{{item.attribute}}</text>
+									</view>
+								</view>
+								<view class="routeTitle2">周边景点</view>
+								<view class="tkItem" v-for="(item,index) in touristRoute3" :key="index" @click="godetail(item.scennicName)">
+									<image class="tkImage" :src="item.image" mode="" />
+									<view class="tkBacg">
+										<text class="tkText1">{{item.scennicName}}</text>
+										<text class="tkText2">{{item.related}}篇点评</text>
+										<text class="tkText3">位于{{item.attribute}}</text>
+									</view>
+								</view>
+							</scroll-view>
+						</view>
+					</uni-popup>
+				</view>
+			</view>
+		</view>
+
 	</view>
 </template>
 
 <script>
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import {
+		mapState
+	} from 'vuex';
 	export default {
+		components: {
+			//加载多方弹框组件
+			uniPopup,
+		},
 		data() {
 			return {
+				touristRoute: [],
+				touristRoute2: [],
+				touristRoute3: [],
 				picList: [], //相册图片数组
 				titleClick: '', //标题,点击量
 				headImage: '', //用户头像
@@ -111,13 +190,47 @@
 				day1: [], //第一天
 				day2: [], //第二天
 				day3: [], //第三天
+				replyContent: [], //回复内容
+				//评论内容
+				replyInput: {
+					unid: '', //用户id号
+					nickname: '', //用户姓名
+					portrait: '', //用户头像
+					content: '', //回复内容
+					date: '', //回复日期
+					fabulous: 0, //点赞数
+					fabulouState: false, //点赞状态
+				}
 			}
 		},
 		onLoad() {
 			this.routeInit();
 			this.dayInit();
 		},
-
+		onNavigationBarButtonTap : function() {
+					 this.share();
+		},
+		onShareAppMessage(res){
+			  if (res.from === 'menu') {// 来自页面内分享按钮
+			     return{
+			     	title : '来自'+this.touristRoute.nickName+'的分享',
+					imageUrl : this.touristRoute.image[0].src,
+					success: function () {
+					    uni.showToast({
+					    	title:'分享成功',
+							duration : 3000
+					    })
+					},
+					fail: function () {
+					    uni.showToast({
+					    	title:'分享失败',
+							duration : 3000
+					    })
+					}
+			     }
+			    }
+				
+		},
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
@@ -126,9 +239,18 @@
 				this.titleClick = routeComment.data;
 				let userRoute = await this.$api.lyfwcwd('userRoute');
 				this.userRoute = userRoute.data;
-				
-
-				// console.log(test)
+				let userInfo = await this.$api.lyfwcwd('userInfo');
+				this.userInfo = userInfo.data;
+				this.replyInput.portrait = userInfo.data.portrait;
+				let replyContent = await this.$api.lyfwcwd('reply');
+				this.replyContent = replyContent.data;
+				let tourist_route = await this.$api.lyfwcwd('touristRoute');
+				this.touristRoute = tourist_route.data;
+				let tourist_route2 = await this.$api.lyfwcwd('touristRoute2');
+				this.touristRoute2 = tourist_route2.data;
+				let tourist_route3 = await this.$api.lyfwcwd('touristRoute3');
+				this.touristRoute3 = tourist_route3.data;
+				// console.log(this.replyInput.portrait)
 			},
 
 			//过滤循环
@@ -153,19 +275,7 @@
 				this.day3 = dayIndex3;
 			},
 
-			// async weida (){
-			// 	let test =await this.$api.lyfwcwd('test');
-			// 	var xiaocai = test.data;
-			// 	let a = xiaocai.filter(item => {
-			// 	     return item.day == 1;
-			// 	    })
-			// 	this.day1 = a;
-			// 	let b = xiaocai.filter(item => {
-			// 	     return item.day == 2;
-			// 	    })
-			// 	this.day2 = b;
 
-			// },
 			//保存图片至本地并打开新页面
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.picList);
@@ -173,7 +283,72 @@
 					url: '/pages/LYFW/currency/imglist'
 				})
 			},
+			// 点赞事件
+			tofabulous: function(index) {
+				if (this.replyContent[index].fabulousState == false) {
+					this.replyContent[index].fabulousState = true;
+					var num = this.replyContent[index].fabulous;
+					this.replyContent[index].fabulous = num + 1;
+				} else {
+					this.replyContent[index].fabulousState = false;
+					var num = this.replyContent[index].fabulous;
+					this.replyContent[index].fabulous = num - 1;
+				};
+			},
+			// 底部图标收藏/喜欢/评论事件
+			toFavorite1: function() {
+				if (this.titleClick.collectionState == false) {
+					this.titleClick.collectionState = true;
+					var num = this.titleClick.collection;
+					this.titleClick.collection = num + 1;
+				} else {
+					this.titleClick.collectionState = false;
+					var num = this.titleClick.collection;
+					this.titleClick.collection = num - 1;
+				};
+			},
+			toFavorite2: function() {
+				if (this.titleClick.likeState == false) {
+					this.titleClick.likeState = true;
+					var num = this.titleClick.like;
+					this.titleClick.like = num + 1;
+				} else {
+					this.titleClick.likeState = false;
+					var num = this.titleClick.like;
+					this.titleClick.like = num - 1;
+				};
+			},
+			// 查看景点按钮弹框事件
+			open() {
+				// 需要在 popup 组件，指定 ref 为 popup
+				this.$refs.popup.open()
+			},
 
+			//分享
+			share(){
+				uni.share({
+				    provider: "weixin",
+				    scene: "WXSceneSession",
+				    type: 0,
+				    href: "http://www.baidu.com",
+				    title: "来自"+this.tweets.nickname+"的分享",
+				    summary: this.tweets.title,
+				    imageUrl: this.tweets.image[0].src,
+				    success: function () {
+				        uni.showToast({
+				        	title:'分享成功',
+							duration : 3000
+				        })
+				    },
+				    fail: function () {
+				        uni.showToast({
+				        	title:'分享失败',
+							duration : 3000
+				        })
+				    }
+				}); 
+			},
+			
 			//景点内容点击
 			godetail: function(value) {
 				uni.showToast({
@@ -185,7 +360,13 @@
 						url: 'touristroute'
 					})
 				}, 500);
+			},
 
+			// 统一跳转接口
+			navTo(url) {
+				uni.navigateTo({
+					url
+				})
 			},
 		}
 	}
@@ -480,12 +661,12 @@
 			left: 40rpx;
 		}
 	}
-	
+
 	//第三天
 	.userRoute3 {
 		position: relative;
 		top: -51upx;
-	
+
 		.days3 {
 			display: block;
 			text-align: center;
@@ -493,7 +674,7 @@
 			font-size: 32upx;
 			margin: 20upx 0upx;
 		}
-	
+
 		.routeAddress3 {
 			display: block;
 			text-align: center;
@@ -501,11 +682,11 @@
 			font-size: 28upx;
 			margin: 20upx 0upx;
 		}
-	
+
 		.routeItem3 {
 			display: flex;
 			margin: 60upx 0upx;
-	
+
 			.routeImage3 {
 				position: relative;
 				z-index: 7;
@@ -513,7 +694,7 @@
 				height: 264upx;
 				left: 441upx;
 			}
-	
+
 			.icon3 {
 				position: relative;
 				z-index: 9;
@@ -521,7 +702,7 @@
 				height: 35upx;
 				left: -252upx;
 			}
-	
+
 			.routeName3 {
 				position: relative;
 				z-index: 8;
@@ -531,7 +712,7 @@
 				top: -5upx;
 				// font-weight: bold;
 			}
-	
+
 			.playTime3 {
 				position: absolute;
 				z-index: 10;
@@ -540,7 +721,7 @@
 				left: 89upx;
 				padding-top: 59upx;
 			}
-	
+
 			.start3 {
 				position: absolute;
 				z-index: 11;
@@ -549,7 +730,7 @@
 				left: 89upx;
 				padding-top: 120upx;
 			}
-	
+
 			.scenicContent3 {
 				position: absolute;
 				z-index: 12;
@@ -561,7 +742,7 @@
 				line-height: 47upx;
 			}
 		}
-	
+
 		.grayLine3 {
 			display: block;
 			position: absolute;
@@ -569,36 +750,279 @@
 			left: 40rpx;
 		}
 	}
-	
-	//推文
-	.articleAontent{
+
+	//推文样式
+	.articleAontent {
 		display: flex;
 		position: relative;
 		top: 32upx;
+
 		//推文标题
-		.routeTitle{
-			position : absolute;
-			flex-direction: column;
+		.routeTitle {
+			position: absolute;
+			// flex-direction: column;
 			font-size: 38upx;
 			font-weight: bold;
-			color: #333333; 
-			text-overflow:ellipsis;
-			white-space:nowrap;
-			overflow:hidden;
+			color: #333333;
+			// text-overflow:ellipsis;
+			// white-space:nowrap;
+			// overflow:hidden;
 			top: -55upx;
 			left: 29upx;
 		}
+
 		//推文内容
-		.routeContent{
+		.routeContent {
 			flex-direction: column;
 			// text-indent:2em;
+			line-height:25px;
 			font-size: 34upx;
-			letter-spacing : 2upx;
-			color: #333333; 
+			letter-spacing: 2upx;
+			color: #333333;
 			// bottom : 72upx;
 			padding: 32upx 32upx;
 		}
 	}
-	
-	
+
+	//回复样式
+	.replyComment {
+		position: relative;
+
+		//标题
+		.replyTitle {
+			position: absolute;
+			font-size: 38upx;
+			font-weight: bold;
+			color: #333333;
+			top: 76upx;
+			left: 29upx;
+		}
+
+		.replyBox {
+			display: flex;
+
+			.replyImage {
+				position: absolute;
+				flex-shrink: 0;
+				width: 80upx;
+				height: 80upx;
+				border-radius: 100px;
+				left: 30upx;
+				top: 149upx;
+			}
+
+			.reply_input {
+				position: absolute;
+				font-size: 32upx;
+				color: #333;
+				padding-left: 46upx;
+				background: #f5f5f5;
+				left: 134upx;
+				width: 72%;
+				height: 80upx;
+				border-radius: 56rpx;
+				top: 148upx;
+			}
+		}
+
+		// 评论区
+		.replyClass {
+			display: flex;
+			position: relative;
+			top: 284upx;
+
+			.replyPortrait {
+				position: absolute;
+				flex-shrink: 0;
+				width: 80upx;
+				height: 80upx;
+				border-radius: 100upx;
+				left: 30upx;
+			}
+
+			.replyRight {
+				position: relative;
+				padding-left: 128rpx;
+
+				.replyName {
+					display: block;
+					font-size: 30upx;
+					color: #aaa;
+				}
+
+				.replyDate {
+					display: block;
+					font-size: 30upx;
+					color: #aaa;
+				}
+
+				.replyBtn {
+					display: flex;
+					align-items: base-line;
+					position: absolute;
+					top: 18upx;
+					font-size: 32upx;
+					padding-left: 506upx;
+
+					.jdticon {
+						font-size: 38upx;
+						margin-left: 8upx;
+						color: #aaa;
+					}
+
+					&.active,
+					&.active .jdticon {
+						color: #28a4ff;
+					}
+				}
+
+				.replyCon {
+					display: flex;
+					line-height:20px;
+					font-size: 30upx;
+					color: #333;
+					padding-top: 39upx;
+					padding-right: 36upx;
+					padding-bottom: 52upx;
+
+				}
+			}
+		}
+
+		// 更多回复消息
+		.replyViewreply {
+			position: relative;
+			height: 56upx;
+			font-size: 30upx;
+			text-align: center;
+			margin-bottom: 200upx;
+			background: #FFFFFF;
+			top: 301upx;
+		}
+
+		// 底部点击操作样式
+		.pageBottom {
+			position: absolute;
+			position: fixed;
+			left: 30upx;
+			bottom: 30upx;
+			z-index: 95;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 690upx;
+			height: 112upx;
+			background: rgba(255, 255, 255, .9);
+			box-shadow: 0 0 12upx 0 rgba(0, 0, 0, 0.3);
+			border-radius: 16upx;
+
+			.CollectionBtn {
+				display: flex;
+				position: relative;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				font-size: $font-sm;
+				color: $font-color-base;
+				width: 96upx;
+				height: 80upx;
+				margin: 16upx 16upx;
+
+				.jdticon {
+					font-size: 40upx;
+					line-height: 48upx;
+					color: #333333;
+				}
+
+				&.active,
+				&.active .jdticon {
+					color: #ff4443;
+				}
+
+				.icon-fenxiang2 {
+					font-size: 42upx;
+					transform: translateY(-2upx);
+				}
+
+				.icon-shoucang {
+					font-size: 46upx;
+				}
+			}
+
+			// 查看景点
+			.action-btn-group {
+				display: flex;
+				height: 76upx;
+				border-radius: 100px;
+				overflow: hidden;
+				box-shadow: 1px 2px 5px #65bbf9;
+				background: linear-gradient(to right, #65bbf9, #28a4ff);
+				margin: 20upx 20upx;
+				position: relative;
+
+				.actionBtn {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 224upx;
+					height: 100%;
+					font-size: $font-base;
+					padding: 0;
+					border-radius: 0;
+					background: transparent;
+				}
+
+				.popupScrollview {
+					position: relative;
+					width: 100%;
+					padding-left: 32upx;
+					margin: 0 auto;
+					background: #fff;
+					height: 876upx;
+					.routeTitle2 {
+						z-index: 13;
+						font-size: 38upx;
+						font-weight: bold;
+						color: #333333;
+						padding-top: 32upx;
+					}
+					.tkItem{
+						display: flex;
+						.tkImage{
+							width: 182upx;
+							height: 152upx;
+							border-radius: 12upx;
+							margin: 24rpx 0rpx;
+						}
+						.tkBacg{
+							margin-top: 20upx;
+							margin-left: 24upx;
+							.tkText1{
+								display: flex;
+								text-overflow:ellipsis; //文章超出宽度隐藏并用...表示
+								white-space:nowrap;
+								overflow:hidden;
+								width:480upx;//内容宽度
+							}
+							.tkText2{
+								display: flex;
+								text-overflow:ellipsis; //文章超出宽度隐藏并用...表示
+								font-size: 26upx;
+								margin-top: 20upx;
+								display: block; // 让字体换行
+							}
+							.tkText3{
+								display: flex;
+								text-overflow:ellipsis; //文章超出宽度隐藏并用...表示
+								font-size: 24upx;
+								margin-top: 28upx;
+								color: #AAAAAA;
+								display: block; // 让字体换行
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 </style>

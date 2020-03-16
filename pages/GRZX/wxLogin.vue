@@ -1,29 +1,52 @@
 <template>
     <view class="content">
-        <image src="" class="headPortrait"></image>
-		<button type="primary" @click="wxLogin">授权登录</button>
     </view>
 </template>
 
 <script>
-	
+	import {
+		mapState,
+	    mapMutations  
+	} from 'vuex';
 	export default {
 	    data() {
 	        return {
-	            title: 'Hello'
 	        }
 	    },
-	    onLoad() {
-			uni.getUserInfo({
-				success:function(res){
-					console.log(res,"res")
-					/* this.url=""; */
-				}
-			})
+	    onLoad() {	
+			this.wxLogin();
 	    },
 	    methods: {
-			/* async */
+			...mapMutations(['login']),
 			wxLogin(){
+				this.logining=true;
+				var theSelf=this;
+				uni.login({
+					provider:'weixin',
+					success:function(loginRes){
+						uni.getUserInfo({					
+							success:function(res){
+								uni.setStorage({
+									key:"userInfo",
+									data:res.userInfo
+								});
+								uni.showToast({
+									title: '授权成功',
+									icon:"none"
+								});
+								if(res!=null||res!=""){
+									theSelf.login(res.userInfo);						
+								}
+								/* uni.navigateBack({
+									delta: 2
+								}); */
+							},
+							fail:function(){
+								theSelf.logining=false;
+							}
+				})
+					}
+				})
 				
 			}
 	    }

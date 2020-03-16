@@ -1,21 +1,22 @@
 <template>
-	<view class="myView" style="margin-bottom: 112upx;">
+	<view class="myView">
+		<scroll-view scroll-y="true" style="margin-bottom: 112upx;">
 		<view class="headerClass">
 		</view>
 		<view class="orderCommonClass" style="margin-top: -110upx;">
 			<view class="ticketInfoClass">
 				<view>
-					<view class="textCLass" style="font-size: 28upx;color: #333333;display: block;padding: 0;">08月31日 12:30出发</view>
-					<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">泉州客运中心
-						→ 安溪</view>
-					<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">大型高一
-						儿童半票</view>
+					<view class="textCLass" style="font-size: 28upx;color: #333333;display: block;padding: 0;">{{ticketDate}} {{ticketSettime}}出发</view>
+					<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">{{ticketStart}}
+						→ {{ticketEnd}}</view>
+					<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{carType}}
+						{{ticketType}}</view>
 
 				</view>
 				<view style="display: flex; flex-direction: column;">
-					<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥28</view>
+					<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketPrice}}</view>
 					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		       SourceHanSansSC-Light; color: #666666;">余18张</view>
+		       SourceHanSansSC-Light; color: #666666;">余{{ticketCount}}张</view>
 				</view>
 			</view>
 		</view>
@@ -96,6 +97,7 @@
 				<image src="../../static/CTKY/check.png" style="width: 33upx;height: 33upx;margin-left: 10upx;"></image>
 			</view>
 		</view>
+		</scroll-view>
 		<view class="toPayClass">
 			<view style="display: flex;align-items: center;margin-left: 32upx;">
 				<text style="font-size: 38upx;color: #FC4646;padding: 0;">￥30</text>
@@ -126,16 +128,41 @@
 						id: '22555555555555555555'
 					}
 				],
+			    ticketDate:'',
+			    ticketSettime:'',
+			    ticketPrice:'',
+			    ticketCount:'',
+			    ticketStart:'',
+			    ticketEnd:'',
+			    carType:'',
+			    ticketType:''
 			}
 		},
-		onLoad() {
+		onLoad(e) {
 			uni.setNavigationBarTitle({
 				title: '填写订单'
 			});
+			var that=this;
+			uni.getStorage({
+			                key: 'ticketinfo',
+			                success: function (res) {
+								// this.ticketDate=res.data[0].ticketDate;
+								that.ticketSettime=res.data[0].ticketSettime;
+								that.ticketPrice=res.data[0].ticketPrice;
+								that.ticketCount=res.data[0].ticketCount;
+								that.ticketStart=res.data[0].ticketStart;
+								that.ticketEnd=res.data[0].ticketEnd;
+								that.carType=res.data[0].carType;
+								that.ticketType=res.data[0].ticketType
+			                }
+			            });
+			
+		},
+		onReady() {
+
 		},
 		methods: {
 			Add() {
-
 
 			},
 			deleteInfo(e) {
@@ -178,36 +205,6 @@
 		// padding-bottom: 10upx;
 	}
 
-	.ticketNotice {
-		background: #FFC6C6;
-		width: 705upx;
-		height: 110upx;
-		font-family: MicrosoftYaHei;
-		font-weight: 400;
-		color: #FC4646;
-		display: flex;
-		align-items: center;
-	}
-
-	//乘客信息整块
-	.passengerClass {
-		width: 100%;
-		font-family: MicrosoftYaHei;
-		font-weight: 400;
-		flex-direction: column;
-		margin-bottom: 10upx;
-	}
-
-	//添加的乘客名字样式
-	.addPassengerClass {
-		margin: 0 16upx 18upx;
-		background-size: 100% 100%;
-		width: 130upx;
-		height: 56upx;
-		font-size: 26upx;
-		color: #FC4646;
-		line-height: 56upx;
-	}
 
 	.passengerInfoDetail {
 		border-bottom: 1upx solid #DADADA;

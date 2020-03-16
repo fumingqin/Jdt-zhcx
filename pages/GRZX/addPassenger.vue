@@ -4,11 +4,11 @@
 			
 			<view class="nameClass">姓名</view>
 			<view class="chineseClass">
-				<view class="fontStyle">中文姓名	</view>
+				<view class="fontStyle">姓名	</view>
 				<input placeholder="与证件姓名一致" class="inputClass" :value="user.chineseName" name="chineseName" /> 
 			</view>
 			
-			<view class="englishClass1">
+			<!-- <view class="englishClass1">
 				<view class="fontStyle">英文姓</view>
 				<input placeholder="如王小明填写为'WANG'" class="inputClass" :value="user.englishSurname" name="englishSurname" /> 
 			</view>
@@ -16,7 +16,7 @@
 			<view class="englishClass2">
 				<view class="fontStyle">英文名</view>
 				<input placeholder="如王小明填写为'XIAOMING'" class="inputClass" :value="user.englishName" name="englishName" />
-			</view>
+			</view> -->
 			
 			<view class="sexClass">
 				<view class="fontStyle">性别</view>
@@ -66,9 +66,19 @@
 			<view class="personClass">
 				<view class="fontStyle">设置为本人</view>
 				<view class="checkBox">
-					<checkbox-group name="person">
+					<checkbox-group name="default" @change="checkChange">
 						<label>
-							<checkbox :checked="user.person" :value="user.person"/>
+							<checkbox :checked="user.default" :value="user.default" />
+						</label>
+					</checkbox-group>
+				</view>
+			</view>
+			<view v-if="user.show" class="emergencyClass">
+				<view class="fontStyle">紧急联系人</view>
+				<view class="checkBox">
+					<checkbox-group name="emergencyContact">
+						<label>
+							<checkbox :checked="user.emergencyContact" :value="user.emergencyContact"/>
 						</label>
 					</checkbox-group>
 				</view>
@@ -96,19 +106,43 @@
 					phoneNum:'',
 					codeNum:'',
 					date:'',
-					person:true,
+					default:false,
+					show:true,
+					emergencyContact:false,
 					date:'请选择 >',
 				}
 			}
 		},
-		onLoad (){
-			this.loadData();
+		onLoad (options){
+			if(options.type=="edit"){
+				this.loadData();
+				
+			}
 		},
 		methods:{
-			/* async loadData(){
-				let userInfo = await this.$api.grzx('user');
-				console.log(userInfo)
-				this.user.chineseName=userInfo.data.chineseName;
+			async loadData(){
+				var that=this;
+				uni.getStorage({
+					key:'editPassenger',
+					success:function(res){
+						console.log(res,"res")
+						that.user.chineseName=res.data.name;
+						/* that.user.englishSurname=res.data.englishSurname;
+						that.user.englishName=res.data.englishName; */
+						if(res.data.sex=="男"){
+							that.user.sex=0;
+						}else{
+							that.user.sex=1;
+						}
+						that.user.codeNum=res.data.codeNum;
+						//that.user.date=res.data.date;
+						that.user.default=res.data.default;
+						that.user.show=!res.data.default;
+						that.user.emergencyContact=res.data.emergencyContact;
+						that.user.phoneNum=res.data.phoneNum;
+					}
+				})
+				/* this.user.chineseName=userInfo.data.chineseName;
 				this.user.englishSurname=userInfo.data.englishSurname;
 				this.user.englishName=userInfo.data.englishName;
 				this.user.sex=userInfo.data.sex;
@@ -119,20 +153,29 @@
 				}else{
 					this.user.person=true;
 				}
-				this.user.phoneNum=userInfo.data.phoneNum;
-			}, */
+				this.user.phoneNum=userInfo.data.phoneNum; */
+			}, 
 			radioClick:function(e){
 				this.user.sex = e;
 			},
 			formSubmit:function(e){
 				var data=e.target.value;
-				if(data.person.length==0){
-					data.person=0;
-				}else{
-					data.person=1;
-				}
 				data.date=this.user.date;
 				data.sex=this.user.sex;
+				if(data.default==null||data.default==""){
+					data.default=false;
+				}else{
+					data.default=true;
+				}
+				if(this.user.show){
+					if(data.emergencyContact==null||data.emergencyContact==""){
+						data.emergencyContact=false;
+					}else{
+						data.emergencyContact=true;
+					}
+				}else{
+					data.emergencyContact=false;
+				}				
 				console.log(data)
 			},
 			bindDateChange:function(e){
@@ -141,11 +184,12 @@
 			resetClick:function(e){
 				this.user.date="请选择 >";
 			},
-			personClick:function(e){
-				
-			},
-			changePerson:function(e){
-				
+			checkChange:function(e){
+				if(e.detail.value=="false"){ //选中
+					this.user.show=false;
+				}else{	//未选中
+					this.user.show=true;
+				}
 			}
 		}
 	}
@@ -171,7 +215,8 @@
 	.codeClass{
 		position: absolute;
 		left: 6%;
-		top: 644upx;
+		//top: 644upx;
+		top:428upx;
 		font-size:28upx;
 		font-family:Source Han Sans SC;
 		font-weight:400;
@@ -184,7 +229,7 @@
 		position: absolute;
 		top:80upx;
 	}
-	.englishClass1{
+	/* .englishClass1{
 		width: 100%;
 		height: 108upx;
 		background-color: #FFFFFF;
@@ -199,13 +244,14 @@
 		position: absolute;
 		top:296upx;
 		border-top: 1upx solid #F5F5F5;
-	}
+	} */
 	.sexClass{
 		width: 100%;
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:404upx;
+		//top:404upx;
+		top:188upx;
 		border-top: 1upx solid #F5F5F5;
 	}
 	.phoneClass{
@@ -213,7 +259,8 @@
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:512upx;
+		//top:512upx;
+		top:296upx;
 		border-top: 1upx solid #F5F5F5;
 	}
 	.fontStyle{   //文字样式
@@ -228,14 +275,16 @@
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:703upx;
+		//top:703upx;
+		top:487upx;
 	}
 	.codeNumClass{
 		width: 100%;
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:811upx;
+		//top:811upx;
+		top:595upx;
 		border-top: 1upx solid #DDDDDD;
 	}
 	.termClass{
@@ -243,7 +292,8 @@
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:919upx;
+		//top:919upx;
+		top:703upx;
 		border-top: 1upx solid #F5F5F5;
 	}
 	.personClass{
@@ -251,7 +301,18 @@
 		height: 108upx;
 		background-color: #FFFFFF;
 		position: absolute;
-		top:1068upx;
+		//top:1068upx;
+		top:852upx;
+		margin-bottom: 150upx;
+	}
+	.emergencyClass{
+		width: 100%;
+		height: 108upx;
+		background-color: #FFFFFF;
+		position: absolute;
+		//top:1176upx;
+		top:960upx;
+		border-top: 1upx solid #DDDDDD;
 		margin-bottom: 150upx;
 	}
 	.btndelete{

@@ -1,28 +1,28 @@
 <template>
 	<view class="Cr_background">
 		<form @submit="formSubmit" >
-			<image class="bg" :src=" userInfo.bg || '../../static/index/banner3.jpg'" mode="aspectFill"></image>
-			<image class="tx" :src="src" @click="getPhoto"></image>
-			<button class="xgbg"  plain="">修改背景</button>
+			<image class="bg" :src="background" mode="aspectFill" name="background"></image>
+			<image class="tx" :src="avatarUrl" @click="getPhoto" name="avatarUrl"></image>
+			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
 			<view class="Cr_slk1">
 				<text class="bz">姓&nbsp;名：</text>
-				<input class="slk"  name="xm"  placeholder="请输入" v-model="tjfrom.xm" adjust-position="" />
+				<input class="slk"  name="nickName"  placeholder="请输入" v-model="detailInfo.nickName" adjust-position="" />
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">性&nbsp;别：</text>
-				<picker class="slk1" name="xb"  mode="selector" @change="genderChange"  v-model="tjfrom.xb"   :range="genderSex" placeholder="请选择" >
-					{{genderSex[tjfrom.xb]}}
+				<picker class="slk1" name="sex"  mode="selector" @change="genderChange"  v-model="detailInfo.sex"   :range="genderSex" placeholder="请选择" >
+					{{selector}}
 				</picker>
 			</view>
 			<view class="Cr_slk2"> 
 				<text class="bz">生&nbsp;日：</text>
-				<picker class="slk1" name="sr"  mode="date" @change="dateChange" v-model="tjfrom.sr"  :start="startDate" :end="endDate" placeholder="请选择"  >
-					{{tjfrom.sr}}
+				<picker class="slk1" name="birthday"  mode="date" @change="dateChange" v-model="detailInfo.birthday"  :start="startDate" :end="endDate" placeholder="请选择"  >
+					{{detailInfo.birthday}}
 				</picker>
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">地&nbsp;址：</text>
-				<input class="slk" name="dz"  disabled="disabled" @tap="toggleTab"  placeholder="你的常住地" v-model="tjfrom.dz" />
+				<input class="slk" name="address"  disabled="disabled" @tap="toggleTab"  placeholder="你的常住地" v-model="detailInfo.address" />
 				<w-picker
 					mode="region"
 					:areaCode="['35', '3507', '350782']"
@@ -34,7 +34,7 @@
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">签&nbsp;名：</text>
-				<input class="slk" name="qm"   placeholder="你想要说的话"  v-model="tjfrom.qm" />
+				<input class="slk" name="autograph"   placeholder="你想要说的话"  v-model="detailInfo.autograph" />
 			</view>
 			<!-- #ifdef MP-WEIXIN -->
 			<button class="an" type="primary" form-type="submit">保存</button>
@@ -53,34 +53,34 @@
 	export default {
 		data() {
 			return {
-				src : '/static/user/missing-face.png',
+				avatarUrl : '../../static/GRZX/missing-face.png',
+				background:'../../static/GRZX/banner3.jpg',
 				mode:"region",
 				genderSex:['男','女'], 
-				tjfrom : { 
-					xm : '',
-					xb : '0',
-					sr : '请选择',
-					dz : '',
-					qm : '',
+				selector:'请选择',
+				detailInfo : { 
+					nickName : '',
+					sex : '2',
+					birthday : '请选择',
+					address : '',
+					autograph : '',
+					background:'',
 				}
 			};
 		},
 		onLoad:function(){
-			var that = this;
-			this.tjfrom.xb = that.userInfo.gender;
-			this.tjfrom.sr = that.userInfo.birthday;
-			this.tjfrom.dz = that.userInfo.permanent;
-			this.tjfrom.xm = that.userInfo.nickname;
-			this.tjfrom.qm = that.userInfo.autograph;
-			this.src = that.userInfo.portrait;
+			this.loadUserInfo();
+			
 		},
 		onNavigationBarButtonTap : function() {
-					 uni.showModal({
-					     content: '表单数据内容：' + JSON.stringify(this.tjfrom),
-					     showCancel: false
-					 });
-					// uni.navigateBack({
-					// })
+			 uni.showModal({
+				 content: '表单数据内容：' + JSON.stringify(this.detailInfo),
+				 showCancel: false
+			 });
+			 uni.setStorage({
+			 	key:"userInfo",
+				data:this.detailInfo
+			 })
 		},
 		computed:{
 			...mapState(['userInfo']),
@@ -95,11 +95,32 @@
 		     wPicker
 		},
 		methods:{
+			
+			async loadUserInfo(){
+				var theself=this;
+				uni.getStorage({
+					key: 'userInfo',			
+					success: function (res) {
+						theself.selector =theself.genderSex[res.data.sex];
+						if(res.data.birthday==null||res.data.birthday==""){
+							
+						}else{
+							theself.detailInfo.birthday=res.data.birthday;
+						}			
+						theself.background=res.data.background;
+						theself.detailInfo.autograph=res.data.autograph;
+						theself.detailInfo.nickName = res.data.nickName; 
+						theself.avatarUrl = res.data.avatarUrl;				
+						theself.detailInfo.address= res.data.address;
+						//console.log(res,"res")
+					}
+				});	
+			},
 			genderChange : function(e){
-				this.tjfrom.dz = e.detail.value;
+				this.selector =this.genderSex[e.detail.value]; 
 			},
 			dateChange : function(e){
-				this.tjfrom.sr = e.detail.value;
+				this.detailInfo.birthday = e.detail.value;
 			},
 			getDate(type) {
 						const date = new Date();
@@ -120,20 +141,32 @@
 				this.$refs[this.mode].show(); 
 			},
 			onConfirm(e){
-				//如果页面需要调用多个mode类型，可以根据mode处理结果渲染到哪里;
-				// switch(this.mode){
-				// 	case "date":
-				// 		break;
-				// }
-				this.tjfrom.dz=e.result;
+				this.detailInfo.address=e.result;
+			},
+			reviseBackground(){
+				
 			},
 			formSubmit: function(e) {
-			                uni.showModal({
-			                    content: '表单数据内容：' + JSON.stringify(this.tjfrom),
-			                    showCancel: false
-			                });
-							// uni.navigateBack({
-							// })
+				/* uni.showModal({
+					content: '表单数据内容：' + JSON.stringify(this.detailInfo),
+					showCancel: false
+				});		 */	
+				if(this.avatarUrl==null||this.avatarUrl==undefined){
+					e.target.value.avatarUrl="../../static/GRZX/missing-face.png";
+				}else{
+					e.target.value.avatarUrl=this.avatarUrl;
+				}
+				if(this.background==null||this.background==undefined){
+					e.target.value.background="../../static/GRZX/banner3.jpg";
+				}else{
+					e.target.value.background=this.background;
+				}
+				uni.setStorage({
+					key:"userInfo",
+					data:e.target.value
+				})
+				console.log(e.target.value,"555")
+				uni.navigateBack();
 			},
 			// getPhoto: function () {
 			//         let id = uni.getStorageSync('user').id
@@ -150,7 +183,7 @@
 			//                 method: 'POST',
 			//                 name: 'file',
 			//                 data: {
-			//                   uid: id,jPHL6SiKbiZTi6OiKtFKCCuC5JmmObOt4EwjgSZUGJ9zYUYUUECRSEkUkbjn0AGIrBAMQC7iKoRQqEx0ACFQwAkBiAQDABCGAEgMQAAABrp3WRF6uOyaMYOpJ/J06lXBMI4AG0IKQDYgATGACAAAQDEAgAKAQhgAgAQAIYioAAABgFgAmIbABUIYgAEAAXE0jyZxNFsQd+PfCvwczyPG3TaOjTu8dHLqFuzpz+pWOTV5L+n/cxllnP7pNhJUZtndzZ5eB6V/1kKbtCwvpnZy+T8dOXsxyfStyoz+uL+TjWX6UjTB1Sls067Hm4n269X6fR4vqxpjojTf6SRq0dXNApcFCCsOJWbJmM1UjSL2CNUMhMdhVDsmxgOwsQAVYWSAFWFiABiFY1uA6GojSGQeSAAQAAACGIAAAABiAYAAAAAAAAqGACABgIQwAQDEAC6VLZ8MYcMDxtdo3gz9cVtIWOqruezr8Sy6ZuuDw4/SzNdOa2ExXsDZlomJoYmFODpmpgVGdEHRB0aqSOVTKUwrsUkHUcqyD6wmupSKOaEmdENyyM2rQwSGbc6QDAqEIYAITGDQEiGAEgNiAQDFQCAbEAgGIBAAAAhiAaOuX1YLOQ6sT6sNBHFLmhFZFUmSFIQwAQAAAxDEAgGIAEMQAI
+			//                   uid: id,jPHL6SiKbiZTi6OiKtFKCCuC5JmmObOt4EwjgSZUGJ9zYUYUUECRSEkUkbjn0AGIrBAMQC7iKoRQqEx0ACFQwAkBiAQDABCGAEgMQAAABrp3WRF6uOyaMYOpJ/J06lgenderMI4AG0IKQDYgATGACAAAQDEAgAKAQhgAgAQAIYioAAABgFgAmIbABUIYgAEAAXE0jyZxNFsQd+PfCvwczyPG3TaOjTu8dHLqFuzpz+pWOTV5L+n/cxllnP7pNhJUZtndzZ5eB6V/1kKbtCwvpnZy+T8dOXsxyfStyoz+uL+TjWX6UjTB1Sls067Hm4n269X6fR4vqxpjojTf6SRq0dXNApcFCCsOJWbJmM1UjSL2CNUMhMdhVDsmxgOwsQAVYWSAFWFiABiFY1uA6GojSGQeSAAQAAACGIAAAABiAYAAAAAAAAqGACABgIQwAQDEAC6VLZ8MYcMDxtdo3gz9cVtIWOqruezr8Sy6ZuuDw4/SzNdOa2ExXsDZlomJoYmFODpmpgVGdEHRB0aqSOVTKUwrsUkHUcqyD6wmupSKOaEmdENyyM2rQwSGbc6QDAqEIYAITGDQEiGAEgNiAQDFQCAbEAgGIBAAAAhiAaOuX1YLOQ6sT6sNBHFLmhFZFUmSFIQwAQAAAxDEAgGIAEMQAI
 			//                   image: base64
 			//                 },
 			//                 success: (res) => {

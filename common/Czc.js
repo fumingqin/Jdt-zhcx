@@ -65,7 +65,7 @@ const InterfaceAddress = [
 	//获取所有车辆定位数据
 	'http://111.231.109.113:8002/api/zhcx/getAllVehiclePosition',
 	//根据经纬度获取附近一定范围的经纬度
-	'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition'
+	'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition',
 ]
 
 // 接口声明区

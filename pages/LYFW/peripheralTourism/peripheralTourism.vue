@@ -2,10 +2,17 @@
 	<view>
 		<view :style="{height:statusBarHeight+'px'}" style="width: 100%;"></view>
 		<!-- 顶部搜索栏 -->
-		<view class="searchArea"  >
+		<view class="searchTopBox">
+			<text  class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
+			<view class="searchBoxRadius">
+				<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
+				<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
+			</view>
+		</view>
+		<!-- <view class="searchArea"  >
 			 <text  class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 			 <input class="inputIocale" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
-		</view>
+		</view> -->
 		<popup-layer ref="popupRef" :direction="'right'">
 			<view style="width:750upx;height: 100%;">
 				<citySelect @back_city="back_city"></citySelect>
@@ -107,7 +114,8 @@
 				isGetLocation(a="scope.userLocation"){ // 3. 检查当前是否已经授权访问scope属性，参考下截图
 						var _this=this;
 						uni.getSetting({
-						    success(res) {					
+						    success(res) {	
+								console.log(res)
 								if (!res.authSetting[a]) {  //3.1 每次进入程序判断当前是否获得授权，如果没有就去获得授权，如果获得授权，就直接获取当前地理位置
 									_this.getAuthorizeInfo()
 								}else{
@@ -124,6 +132,7 @@
 				let scenic_Spot = await this.$api.lyfwlql('scenicSpot');
 				this.scenicSpot = scenic_Spot;
 				},
+				//获取定位数据
 			Getpostion(){
 				try {
 				    this.region = uni.getStorageSync('Key_position');
@@ -179,6 +188,10 @@
 			}, 
 			// 景点点击链接地址
 			godetail : function (value){
+				uni.setStorage({
+					key:'_detailId',
+					data:0
+				})
 				uni.showToast({
 					title:'你点击了'+value,
 					icon : 'none'
@@ -248,34 +261,76 @@
 		height: var(--status-bar-height);
 	}
 	/* 搜索栏区域样式 */
-	.searchArea{
+	//搜索栏区域样式
+	.searchTopBox {
 		display: flex;
-		padding-left: 10upx;
-		text-align: center;	
+		margin-top: 28upx;
+		text-overflow:ellipsis;//文本溢出：省略号
+		.locationTxt{
+			color: #333333; 
+			padding-left: 32upx;
+			font-size: 36upx;
+			font-weight: bold;
+			text-overflow: ellipsis;
+			margin-top: 10upx;
+			width: 24%;
+			text-overflow:ellipsis;//文本溢出：省略号
+		}
+		.searchBoxRadius {
+			position: relative;
+			// right: -157upx;
+			width: 76%;
+			height: 74upx;
+			background-color: #fff;
+			overflow: hidden;
+			border-radius: 46upx;
+			background: #f5f5f5;
+			
+			.searchImage {
+				position: absolute;
+				padding-left: 16upx;
+				padding-top: 15upx;
+				width: 48upx;
+				height: 48upx;
+			}
+			.inputIocale {
+				position: absolute;
+				height: 70upx;
+				padding-top : 4upx;
+				padding-left: 64upx;
+				font-size: 30upx;
+			}
+			
+		}
 	}
-	/* 左上角所在城市文本 */
-	.locationTxt{
-		color: #333333; 
-		padding-top: 8px;
-		padding-left: 8px;
-		width: 70px;
-		font-size: 36upx;
-		font-weight: bold;
-	}
-	/* 景点搜索框 */
-	.inputIocale{
-		text-align: left;
-		background-color: #F5F5F5;
-		width: 166px;
-		background-image: url(../../../static/LYFW/peripheralTourism/peripheralTourism/search.png);
-		background-size: 48upx 50upx;
-		background-position: 28upx 23upx;/*小图标在input的位置*/
-		background-repeat: no-repeat;
-		padding: 6px 6px 6px 40px;/*设置input内边距*/
-		margin-left: 5px;
-		border-radius:46upx;
-		font-size: 29rpx;
-	}
+	// .searchArea{
+	// 	display: flex;
+	// 	margin-top: 28upx;
+	// }
+	// /* 左上角所在城市文本 */
+	// .locationTxt{
+	// 	color: #333333; 
+	// 	padding-top: 8px;
+	// 	padding-left: 8px;
+	// 	font-size: 36upx;
+	// 	font-weight: bold;
+	// 	text-overflow: ellipsis;
+		
+	// }
+	// /* 景点搜索框 */
+	// .inputIocale{
+	// 	text-align: left;
+	// 	background-color: #F5F5F5;
+	// 	width: 200upx;
+	// 	background-image: url(../../../static/LYFW/peripheralTourism/peripheralTourism/search.png);
+	// 	background-size: 48upx 50upx;
+	// 	background-position: 28upx 23upx;/*小图标在input的位置*/
+	// 	background-repeat: no-repeat;
+	// 	padding: 6px 6px 6px 40px;/*设置input内边距*/
+	// 	margin-left: 5px;
+	// 	border-radius:46upx;
+	// 	font-size: 29rpx;
+	// }
 	/* 向下小图标 */
 	.icon{
 		font-size: 20upx;
@@ -283,6 +338,8 @@
 		margin-left: 15upx;
 	}
 	.box{
+		z-index: 999;//最外层
+		position: absolute;//绝对位置
 			position: sticky;
 			top: 0;
 			background: #fff;
@@ -290,7 +347,6 @@
 		
 			//Y轴滚动视图
 			.Tk_scrollview{
-				width: 100%;
 				padding: 16upx 32upx;
 				margin: 0 auto;
 				.Tk_item{
@@ -387,7 +443,7 @@
 			color: #fff;
 			max-width: 192upx;
 			margin-left: 24upx;
-			margin-top: -106upx;
+			margin-top: -115upx;
 			.sixText1{
 				font-weight: bold;
 				font-size: 30upx;

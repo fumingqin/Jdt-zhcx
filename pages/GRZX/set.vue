@@ -24,17 +24,21 @@
 </template>
 
 <script>
-	/* import {  
+	import {  
+		mapState,
 	    mapMutations  
-	} from 'vuex'; */
+	} from 'vuex';
 	export default {
 		data() {
 			return {
 				
 			};
 		},
+		computed: {
+			...mapState(['hasLogin','userInfo'])
+		},
 		methods:{
-			/* ...mapMutations(['logout']), */
+			...mapMutations(['logout']),
 
 			navTo(url){
 				uni.navigateTo({
@@ -43,17 +47,33 @@
 			},
 			//退出登录
 			toLogout(){
-				/* uni.showModal({
-				    content: '确定要退出登录么',
-				    success: (e)=>{
-				    	if(e.confirm){
-				    		this.logout();
-				    		setTimeout(()=>{
-				    			uni.navigateBack();
-				    		}, 200)
-				    	}
-				    }
-				}); */
+			/* 	console.log(this.hasLogin,"00000") */
+				if(this.hasLogin){
+					uni.showModal({
+					    content: '确定要退出登录么',
+					    success: (e)=>{
+					    	if(e.confirm){
+					    		this.logout();
+					    		setTimeout(()=>{
+					    			uni.switchTab({
+					    				url:'/pages/GRZX/user'
+					    			})
+					    		}, 200)
+					    	}
+					    }
+					});
+				}else{
+					uni.showToast({
+						title : '请先登录',
+						icon : 'none',
+					})
+					/* setTimeout(function(){
+						uni.navigateTo({
+							url  : '/pages/GRZX/userLogin'
+						}) 
+					},1500); */
+				}
+				
 			},
 			//switch
 			switchChange(e){
