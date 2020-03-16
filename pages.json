@@ -64,6 +64,10 @@
 			}
 		}, 
 		{
+			"path": "pages/CZC/PriceDetail",
+			"style": {}
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
 				"navigationBarTitleText": "选择支付 "
@@ -243,6 +247,16 @@
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
         }
+        ,{
+            "path" : "pages/CZC/PaymentSuccess",
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        }
+        ,{
+            "path" : "pages/CZC/PaymentFail",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -255,6 +269,9 @@
 		"selectedColor": "#FC4646",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
+		//#ifdef APP-PLUS
+		"fontSize":"16px" ,
+		//#endif
 		"list": [{ 
 				"pagePath": "pages/Home/Index",
 				"text": "首页"
