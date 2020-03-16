@@ -214,27 +214,27 @@
 		onNavigationBarButtonTap : function() {
 					 this.share();
 		},
-		onShareAppMessage(res){
-			  if (res.from === 'menu') {// 来自页面内分享按钮
-			     return{
-			     	title : '来自'+this.touristRoute.nickName+'的分享',
-					imageUrl : this.touristRoute.image[0].src,
-					success: function () {
-					    uni.showToast({
-					    	title:'分享成功',
-							duration : 3000
-					    })
-					},
-					fail: function () {
-					    uni.showToast({
-					    	title:'分享失败',
-							duration : 3000
-					    })
-					}
-			     }
-			    }
+		// onShareAppMessage(res){
+		// 	  if (res.from === 'menu') {// 来自页面内分享按钮
+		// 	     return{
+		// 	     	title : '来自'+this.touristRoute.nickName+'的分享',
+		// 			imageUrl : this.touristRoute.image[0].src,
+		// 			success: function () {
+		// 			    uni.showToast({
+		// 			    	title:'分享成功',
+		// 					duration : 3000
+		// 			    })
+		// 			},
+		// 			fail: function () {
+		// 			    uni.showToast({
+		// 			    	title:'分享失败',
+		// 					duration : 3000
+		// 			    })
+		// 			}
+		// 	     }
+		// 	    }
 				
-		},
+		// },
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
@@ -389,15 +389,10 @@
 				// }else{
 					if(this.titleClick.commentState==false){
 						this.titleClick.commentState = true;
-						var num = this.titleClick.unid;
-						this.titleClick.unid = num + 1;
 						uni.showToast({
 							title:'回复成功',
 						})
 						this.replyInput.content = ''; 
-						this.replyInput.unid = '';
-						this.replyInput.nickname = '';
-						this.replyInput.date = '';
 					}else{
 						uni.showToast({
 							title:'回复成功'
@@ -410,10 +405,10 @@
 			
 			//景点内容点击
 			godetail: function(value) {
-				uni.showToast({
-					title: '你点击了' + value,
-					icon: 'none'
-				})
+				// uni.showToast({
+				// 	title: '你点击了' + value,
+				// 	icon: 'none'
+				// })
 				setTimeout(function() {
 					uni.navigateTo({
 						url: 'touristroute'
@@ -559,7 +554,7 @@
 		.routeAddress {
 			display: block;
 			text-align: center;
-			color: #333333;
+			color: #AAAAAA;
 			font-size: 28upx;
 			margin: 20upx 0upx;
 		}
@@ -648,7 +643,7 @@
 		.routeAddress2 {
 			display: block;
 			text-align: center;
-			color: #333333;
+			color: #AAAAAA;
 			font-size: 28upx;
 			margin: 20upx 0upx;
 		}
@@ -737,7 +732,7 @@
 		.routeAddress3 {
 			display: block;
 			text-align: center;
-			color: #333333;
+			color: #AAAAAA;
 			font-size: 28upx;
 			margin: 20upx 0upx;
 		}
