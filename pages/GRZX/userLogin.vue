@@ -91,8 +91,7 @@
 			loginClick(){	
 				this.logining=true;
 				var that=this;
-				const {phoneNumber, captchaCode} = this;
-				
+				const {phoneNumber, captchaCode} = this;		
 				var phone=this.phoneNumber;
 				var captcha=this.captchaCode;
 				if(phone==null||phone==""){

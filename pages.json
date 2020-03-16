@@ -76,13 +76,6 @@
 				"navigationStyle": "custom"
 			}
 		},
-	{
-
-
-
-			"path": "pages/CZC/PriceDetail",
-			"style": {}
-		}, 
 		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
@@ -114,7 +107,9 @@
 		}, 
 		{		//个人中心模块开始
 			"path": "pages/GRZX/user",  
-			"style": {}
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}, 
 		{
 			"path": "pages/GRZX/userLogin",
@@ -267,7 +262,14 @@
 	    "style" : {
 			"navigationStyle":"custom"
 		}
-	},{
+		},{
+			//价格详情
+	    "path" : "pages/CZC/PriceDetail",
+	    "style" : {
+			"navigationBarTitleText": "费用明细"
+		}
+	}	
+	,{
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
         }
@@ -292,6 +294,10 @@
             "path" : "pages/CTKY/specialMark",
             "style" : {"navigationBarTitleText": "定制标识"}
         }
+		, {
+			"path": "pages/GRZX/complaint",
+			"style": {}
+		}	
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -1,102 +1,103 @@
 <template>
 	<view class="myView">
 		<scroll-view scroll-y="true" style="margin-bottom: 112upx;">
-		<view class="headerClass">
-		</view>
-		<view class="orderCommonClass" style="margin-top: -110upx;">
-			<view class="ticketInfoClass">
-				<view>
-					<view class="textCLass" style="font-size: 28upx;color: #333333;display: block;padding: 0;">{{ticketDate}} {{ticketSettime}}出发</view>
-					<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">{{ticketStart}}
-						→ {{ticketEnd}}</view>
-					<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{carType}}
-						{{ticketType}}</view>
-
-				</view>
-				<view style="display: flex; flex-direction: column;">
-					<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketPrice}}</view>
-					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		       SourceHanSansSC-Light; color: #666666;">余{{ticketCount}}张</view>
-				</view>
+			<view class="headerClass">
 			</view>
-		</view>
-		<view class="orderCommonClass">
-			<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
-			<view style="display: flex;margin-right: 41upx;align-items: center;">
-				<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>
-				<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
-			</view>
-		</view>
-		<view style="flex-direction: column;background: #FFFFFF;margin: 0 26upx; 
-		margin-bottom: 20upx;border-radius: 14upx;">
-			<view class="boarding" style="border-bottom:#EAEAEA solid 1px ;">
-				<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
-				<view style="display: flex;align-items: center;">
-					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">请选择上车点</view>
-					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
-				</view>
-			</view>
-			<view class="boarding">
-				<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">下车点</view>
-				<view style="display: flex;align-items: center;">
-					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">请选择下车点</view>
-					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
-				</view>
-			</view>
-		</view>
-		<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
-			<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
-			<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
-				<button style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
-				<button style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
-			</view>
-			<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in info" :key=index v-model="info">
-				<view class="passengerInfoDetail">
-					<view style="display: flex;text-align: center;align-items: center;">
-						<view style="width: 73upx;">
-							<image src="../../static/CTKY/delete.png" style="width: 34upx;height: 34upx;" @click="deleteInfo(index)"></image>
-						</view>
-						<view style="height: 100%;">
-							<view style="display: flex;margin-top: 18upx;margin-bottom: 18upx;">
-								<text style="font-size:32upx ;color: #333333;padding:0;padding-right: 24upx;">{{items.name}}</text>
-								<view style="background:#EBEBEB ; font-size:18upx ;border-radius: 24upx;width: 100upx;height: 37upx;line-height:37upx ;text-align: center;">成人票</view>
-							</view>
-							<view style="display: flex;font-size: 28upx;color:#999999 ;margin-top: 18upx;margin-bottom: 18upx;">
-								<text style="margin-right: 20upx;">身份证</text><text>{{items.id}}</text>
-							</view>
-						</view>
-					</view>
+			<view class="orderCommonClass" style="margin-top: -110upx;">
+				<view class="ticketInfoClass">
 					<view>
-						<image src="../../static/CTKY/right.png" style="width:12upx ;height: 21upx;"></image>
+						<view class="textCLass" style="font-size: 28upx;color: #333333;display: block;padding: 0;">{{ticketDate}}
+							{{ticketDetail.SetTime}}出发</view>
+						<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">{{ticketDetail.StartStaion}}
+							→ {{ticketDetail.EndStation}}</view>
+						<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{ticketDetail.CarType}}
+							 儿童半票</view>
+
+					</view>
+					<view style="display: flex; flex-direction: column;">
+						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketDetail.Price}}</view>
+						<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
+		       SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.Seat}}张</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<view class="orderCommonClass">
-			<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">优惠券</view>
-			<view style="display: flex;margin-right: 41upx;align-items: center;">
-				<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">无可用</view>
-				<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+			<view class="orderCommonClass">
+				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
+				<view style="display: flex;margin-right: 41upx;align-items: center;">
+					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>
+					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+				</view>
 			</view>
-		</view>
-		<view class="orderCommonClass">
-			<view style="display: flex; align-items: center;">
-				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">购买乘车险</view>
-				<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">2元</view>
+			<view style="flex-direction: column;background: #FFFFFF;margin: 0 26upx; 
+		margin-bottom: 20upx;border-radius: 14upx;">
+				<view class="boarding" style="border-bottom:#EAEAEA solid 1px ;">
+					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
+					<view style="display: flex;align-items: center;">
+						<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">请选择上车点</view>
+						<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+					</view>
+				</view>
+				<view class="boarding">
+					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">下车点</view>
+					<view style="display: flex;align-items: center;">
+						<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">请选择下车点</view>
+						<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+					</view>
+				</view>
 			</view>
-			<view style="display: flex;margin-right: 41upx;align-items: center;">
-				<image src="../../static/CTKY/check.png" style="width: 33upx;height: 33upx;margin-left: 10upx;"></image>
+			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
+				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
+				<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
+					<button style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
+					<button style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+				</view>
+				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in info" :key=index v-model="info">
+					<view class="passengerInfoDetail">
+						<view style="display: flex;text-align: center;align-items: center;">
+							<view style="width: 73upx;">
+								<image src="../../static/CTKY/delete.png" style="width: 34upx;height: 34upx;" @click="deleteInfo(index)"></image>
+							</view>
+							<view style="height: 100%;">
+								<view style="display: flex;margin-top: 18upx;margin-bottom: 18upx;">
+									<text style="font-size:32upx ;color: #333333;padding:0;padding-right: 24upx;">{{items.name}}</text>
+									<view style="background:#EBEBEB ; font-size:18upx ;border-radius: 24upx;width: 100upx;height: 37upx;line-height:37upx ;text-align: center;">成人票</view>
+								</view>
+								<view style="display: flex;font-size: 28upx;color:#999999 ;margin-top: 18upx;margin-bottom: 18upx;">
+									<text style="margin-right: 20upx;">身份证</text><text>{{items.id}}</text>
+								</view>
+							</view>
+						</view>
+						<view>
+							<image src="../../static/CTKY/right.png" style="width:12upx ;height: 21upx;"></image>
+						</view>
+					</view>
+				</view>
 			</view>
-		</view>
-		<view class="orderCommonClass">
-			<view style="display: flex; align-items: center;">
-				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">同意购票须知</view>
-				<view style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
+			<view class="orderCommonClass">
+				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">优惠券</view>
+				<view style="display: flex;margin-right: 41upx;align-items: center;">
+					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">无可用</view>
+					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+				</view>
 			</view>
-			<view style="display: flex;margin-right: 41upx;align-items: center;">
-				<image src="../../static/CTKY/check.png" style="width: 33upx;height: 33upx;margin-left: 10upx;"></image>
+			<view class="orderCommonClass">
+				<view style="display: flex; align-items: center;">
+					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">购买乘车险</view>
+					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">2元</view>
+				</view>
+				<view style="display: flex;margin-right: 41upx;align-items: center;">
+					<image src="../../static/CTKY/check.png" style="width: 33upx;height: 33upx;margin-left: 10upx;"></image>
+				</view>
 			</view>
-		</view>
+			<view class="orderCommonClass">
+				<view style="display: flex; align-items: center;">
+					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">同意购票须知</view>
+					<view style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
+				</view>
+				<view style="display: flex;margin-right: 41upx;align-items: center;">
+					<image src="../../static/CTKY/check.png" style="width: 33upx;height: 33upx;margin-left: 10upx;"></image>
+				</view>
+			</view>
 		</scroll-view>
 		<view class="toPayClass">
 			<view style="display: flex;align-items: center;margin-left: 32upx;">
@@ -128,35 +129,42 @@
 						id: '22555555555555555555'
 					}
 				],
-			    ticketDate:'',
-			    ticketSettime:'',
-			    ticketPrice:'',
-			    ticketCount:'',
-			    ticketStart:'',
-			    ticketEnd:'',
-			    carType:'',
-			    ticketType:''
+				 ticketDate:'',
+				// ticketSettime:'',
+				// ticketPrice:'',
+				// ticketCount:'',
+				// ticketStart:'',
+				// ticketEnd:'',
+				// carType:'',
+				// ticketType:'',
+				ticketDetail: []
 			}
 		},
 		onLoad(e) {
 			uni.setNavigationBarTitle({
 				title: '填写订单'
 			});
-			var that=this;
+			var that = this;
 			uni.getStorage({
-			                key: 'ticketinfo',
-			                success: function (res) {
-								// this.ticketDate=res.data[0].ticketDate;
-								that.ticketSettime=res.data[0].ticketSettime;
-								that.ticketPrice=res.data[0].ticketPrice;
-								that.ticketCount=res.data[0].ticketCount;
-								that.ticketStart=res.data[0].ticketStart;
-								that.ticketEnd=res.data[0].ticketEnd;
-								that.carType=res.data[0].carType;
-								that.ticketType=res.data[0].ticketType
-			                }
-			            });
-			
+				key: 'selectedTicket',
+				success: function(res) {
+					// that.ticketSettime=res.data[0].ticketSettime;
+					// that.ticketPrice=res.data[0].ticketPrice;
+					// that.ticketCount=res.data[0].ticketCount;
+					// that.ticketStart=res.data[0].ticketStart;
+					// that.ticketEnd=res.data[0].ticketEnd;
+					// that.carType=res.data[0].carType;
+					// that.ticketType=res.data[0].ticketType
+					that.ticketDetail = res.data;
+				}
+			});
+			uni.getStorage({
+				key: 'shiftDate',
+				success: function(res) {
+                     that.ticketDate=res.data;
+				}
+			});
+
 		},
 		onReady() {
 

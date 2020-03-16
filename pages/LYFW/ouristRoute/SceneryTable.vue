@@ -196,7 +196,7 @@
 				    try {
 				        this.region = uni.getStorageSync('Key_position');
 				        if (value) {
-				            console.log(value);
+				            // console.log(value);
 				        }
 				    } catch (e) {
 				        // error
@@ -260,7 +260,7 @@
 				font-weight: bold;
 		 		color: #333333; 
 		 		padding-left: 11px;
-		 		width: 45px;
+		 		width: 53px;
 		 		font-size: 36upx;
 				padding-top: 0upx;
 				overflow: hidden;    
