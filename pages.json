@@ -11,13 +11,15 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
+		},
+		{
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
 
 			"style": {
 				"navigationBarTitleText": "景区列表"
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 			"style": {
 				"navigationBarTitleText": "景区详情",
@@ -69,6 +71,19 @@
 			}
 		}, 
 		{
+			"path": "pages/CZC/WaitTakeOrder",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+	{
+
+
+
+			"path": "pages/CZC/PriceDetail",
+			"style": {}
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
 				"navigationBarTitleText": "选择支付 "
@@ -93,7 +108,7 @@
 		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
-
+"backgroundColor":"#007AFF",
 				"navigationStyle": "custom"
 			}
 		}, 
@@ -120,22 +135,10 @@
 			}
 		},  
 		{
-			"path": "pages/GRZX/notice",
-			"style": {}
-		}, 
-		{
-			"path": "pages/GRZX/product",
-			"style": {}
-		}, 
-		{
 			"path": "pages/GRZX/set",
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
-		}, 
-		{
-			"path": "pages/GRZX/order",
-			"style": {}
 		}, 
 		{
 			"path": "pages/GRZX/passengerInfo",
@@ -231,7 +234,15 @@
 		}
         ,{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "订单详情",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
         },{
 			// 出租车订单列表
             "path" : "pages/order/OrderList",            
@@ -248,7 +259,23 @@
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
         }
-    ],
+        ,{
+            "path" : "pages/GJCX/busIndex",
+            "style" : {
+				"navigationBarTitleText": "公交查询",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/CZC/PaymentSuccess",
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        }
+        ,{
+            "path" : "pages/CZC/PaymentFail",
+            "style" : {}
+        }    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -260,13 +287,16 @@
 		"selectedColor": "#FC4646",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
+		//#ifdef APP-PLUS
+		"fontSize":"16px" ,
+		//#endif
 		"list": [{ 
 				"pagePath": "pages/Home/Index",
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/Home/Index",
-				"text": "商城"
+				"pagePath": "pages/order/OrderList",
+				"text": "订单"
 			},
 			{ 
 				"pagePath": "pages/Home/Index",
