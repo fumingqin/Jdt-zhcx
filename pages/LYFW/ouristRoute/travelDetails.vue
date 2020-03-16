@@ -94,7 +94,7 @@
 			<view class="replyTitle">回复</view>
 			<view class="replyBox">
 				<image class="replyImage" :src="'../../../static/LYFW/peripheralTourism/user/missing-face.png'" mode="aspectFill"></image>
-				<input class="reply_input" type="text" placeholder="回复点什么吧" v-model="replyInput.content" />
+				<input class="reply_input" type="text" placeholder="回复点什么吧" v-model="replyInput.content" @confirm="publish" />
 			</view>
 			<!-- 评论区 -->
 			<view class="replyClass" v-for="(item,index) in replyContent" v-if="index<3" :key="index">
@@ -177,6 +177,10 @@
 		},
 		data() {
 			return {
+				index: '',
+				comment_index: '',
+				is_reply: false, //回复还是评论
+				showInput: false, //评论输入框
 				touristRoute: [],
 				touristRoute2: [],
 				touristRoute3: [],
@@ -234,8 +238,9 @@
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
+				let routeComment2 = await this.$api.lyfwcwd('routeComment2');
+				this.picList = routeComment2.data.image;
 				let routeComment = await this.$api.lyfwcwd('routeComment');
-				this.picList = routeComment.data.image;
 				this.titleClick = routeComment.data;
 				let userRoute = await this.$api.lyfwcwd('userRoute');
 				this.userRoute = userRoute.data;
@@ -283,6 +288,26 @@
 					url: '/pages/LYFW/currency/imglist'
 				})
 			},
+			
+			// sendSomment: function(index){
+			// 	if(this.replyContent[index].unidState == false){
+			// 		this.replyContent[index].unidState = true;
+			// 		var num = this.replyContent[index].unid;
+			// 		this.replyContent[index].unid = num + 1;
+			// 	}else{
+			// 		this.replyContent[index].unidState = false;
+			// 		var num = this.replyContent[index].unid;
+			// 		this.replyContent[index].unid = num - 1;
+			// 	}
+			// 	this.replyContent[this.index].replyContent.data.push({
+			// 		"unid":this.unid,
+			// 		"nickname":this.scennicName,
+			// 		"content":replyContent
+					
+			// 	})
+			// },
+			
+			
 			// 点赞事件
 			tofabulous: function(index) {
 				if (this.replyContent[index].fabulousState == false) {
@@ -325,29 +350,63 @@
 			},
 
 			//分享
-			share(){
-				uni.share({
-				    provider: "weixin",
-				    scene: "WXSceneSession",
-				    type: 0,
-				    href: "http://www.baidu.com",
-				    title: "来自"+this.tweets.nickname+"的分享",
-				    summary: this.tweets.title,
-				    imageUrl: this.tweets.image[0].src,
-				    success: function () {
-				        uni.showToast({
-				        	title:'分享成功',
-							duration : 3000
-				        })
-				    },
-				    fail: function () {
-				        uni.showToast({
-				        	title:'分享失败',
-							duration : 3000
-				        })
-				    }
-				}); 
+			// share(){
+			// 	uni.share({
+			// 	    provider: "weixin",
+			// 	    scene: "WXSceneSession",
+			// 	    type: 0,
+			// 	    href: "http://www.baidu.com",
+			// 	    title: "来自"+this.tweets.nickname+"的分享",
+			// 	    summary: this.tweets.title,
+			// 	    imageUrl: this.tweets.image[0].src,
+			// 	    success: function () {
+			// 	        uni.showToast({
+			// 	        	title:'分享成功',
+			// 				duration : 3000
+			// 	        })
+			// 	    },
+			// 	    fail: function () {
+			// 	        uni.showToast({
+			// 	        	title:'分享失败',
+			// 				duration : 3000
+			// 	        })
+			// 	    }
+			// 	}); 
+			// },
+			
+			//回复时间，判断是否登录后才能进行回复
+			publish:function(){
+				// if(!this.hasLogin){
+				// 	uni.showToast({
+				// 		title : '请先登录再回复',
+				// 		icon : 'none',
+				// 	})
+				// 	setTimeout(function(){
+				// 		uni.navigateTo({
+				// 			url  : ''
+				// 		})  
+				// 	},1500);
+				// }else{
+					if(this.titleClick.commentState==false){
+						this.titleClick.commentState = true;
+						var num = this.titleClick.unid;
+						this.titleClick.unid = num + 1;
+						uni.showToast({
+							title:'回复成功',
+						})
+						this.replyInput.content = ''; 
+						this.replyInput.unid = '';
+						this.replyInput.nickname = '';
+						this.replyInput.date = '';
+					}else{
+						uni.showToast({
+							title:'回复成功'
+						})
+						this.replyInput.content = '';
+					}
+				// }
 			},
+			
 			
 			//景点内容点击
 			godetail: function(value) {
