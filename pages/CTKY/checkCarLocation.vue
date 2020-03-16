@@ -55,7 +55,7 @@
 						id: 0,
 						latitude:'24.8998255600',
 						longitude:'118.6296674400',
-						iconPath:'../../static/CZC/Start',
+						iconPath:'../../static/CTKY/Start',
 						callout: { //自定义标记点上方的气泡窗口 点击有效
 							content: '丰泽区', //文本
 							color: '#FC4646', //文字颜色
@@ -70,7 +70,7 @@
 						id: 1,
 						latitude:'24.9088735900',
 						longitude:'118.5369914600',
-						iconPath:'../../static/CZC/Start',
+						iconPath:'../../static/CTKY/Start',
 						callout: { //自定义标记点上方的气泡窗口 点击有效
 							content: '鲤城区', //文本
 							color: '#FC4646', //文字颜色
@@ -85,7 +85,7 @@
 						id: 2,
 						latitude:'24.9512072300',
 						longitude:'118.4188855500',
-						iconPath:'../../static/CZC/Start',
+						iconPath:'../../static/CTKY/Start',
 						callout: { //自定义标记点上方的气泡窗口 点击有效
 							content: '南安市', //文本
 							color: '#FC4646', //文字颜色
@@ -100,7 +100,7 @@
 						id: 3,
 						latitude:'25.0395798900',
 						longitude:'118.1991594400',
-						iconPath:'../../static/CZC/end',
+						iconPath:'../../static/CTKY/end',
 						callout: { //自定义标记点上方的气泡窗口 点击有效
 							content: '安溪县', //文本
 							color: '#FC4646', //文字颜色
