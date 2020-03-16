@@ -11,13 +11,15 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
+		},
+		{
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
 
 			"style": {
 				"navigationBarTitleText": "景区列表"
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 			"style": {
 				"navigationBarTitleText": "景区详情",
@@ -64,6 +66,12 @@
 			}
 		}, 
 		{
+			"path": "pages/CZC/WaitTakeOrder",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {}
 		}, {
@@ -84,7 +92,7 @@
 		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
-
+"backgroundColor":"#007AFF",
 				"navigationStyle": "custom"
 			}
 		}, 
