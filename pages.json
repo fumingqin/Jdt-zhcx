@@ -76,13 +76,6 @@
 				"navigationStyle": "custom"
 			}
 		},
-	{
-
-
-
-			"path": "pages/CZC/PriceDetail",
-			"style": {}
-		}, 
 		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
@@ -264,7 +257,9 @@
 		},{
 			//价格详情
 	    "path" : "pages/CZC/PriceDetail",
-	    "style" : {}
+	    "style" : {
+			"navigationBarTitleText": "费用明细"
+		}
 	}	
 	,{
             "path" : "pages/LYFW/ouristRoute/toreply",

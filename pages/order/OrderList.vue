@@ -10,43 +10,42 @@
 		</view>
 
 		<view v-if="current === 0" style="margin-top: 20rpx;">
-			<view style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-				<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:03-05</text>
-			</view>
+			<view v-for="(item,index) in info" :key="index">
+				<view v-if="item.title=='出租车'">
+					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
+						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:03-05</text>
+					</view>
+					<view class="whiteBg">
+						<view style="display: flex; margin-top: -40rpx;">
+							<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+						</view>
 
-			<view class="whiteBg" v-for="(item,index) in info" :key="index">
-				<view style="display: flex; margin-top: -40rpx;">
-					<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-					<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-					<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
-					<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
-				</view>
+						<view style="display: flex; margin-top: -72rpx;">
+							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+						</view>
 
-				<view style="display: flex; margin-top: -72rpx;">
-					<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-					<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-					<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
-				</view>
+						<view style="display: flex; margin-top: -16rpx;">
+							<view class="bluering"></view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+						</view>
 
-				<view style="display: flex; margin-top: -16rpx;">
-					<view class="bluering"></view>
-					<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
-				</view>
+						<view style="display: flex; margin-top: 36rpx;">
+							<view class="redring"></view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+						</view>
 
-				<view style="display: flex; margin-top: 36rpx;">
-					<view class="redring"></view>
-					<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
-				</view>
-
-				<view style="display: flex;">
-					<button @click="detail(item.titleIndex)"  style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;"
-					  >详情</button>
-					<button v-if="item.orderType=='已完成'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;"
-					  >投诉</button>
-			     	 <button v-if="item.orderType=='未完成'" style="width:146rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; align-items: center; left: 80rpx;"
-			     	  >去支付</button>
-					<button v-if="item.orderType=='已取消'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;"
-					  >删除</button>
+						<view style="display: flex;">
+							<button @click="detail(item.titleIndex)" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
+							<button v-if="item.orderType=='已完成'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">投诉</button>
+							<button v-if="item.orderType=='未完成'" style="width:146rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; align-items: center; left: 80rpx;">去支付</button>
+							<button v-if="item.orderType=='已取消'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">删除</button>
+						</view>
+					</view>
 				</view>
 			</view>
 
@@ -64,7 +63,8 @@
 
 				<view style="display: flex; margin-top: -72rpx;">
 					<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-					<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">2020-03-08 20:00发车</view>
+					<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">2020-03-08
+						20:00发车</view>
 					<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥32.5元</view>
 				</view>
 
@@ -242,47 +242,51 @@
 				current: 0,
 				index: 1,
 				info: [{
-					    title:'出租车',
-						titleIndex:1,
-						time:'2020-03-06 8:00',
-						money:'¥32.6元',
+						title: '出租车',
+						titleIndex: 1,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
 						starAddress: "茶叶大厦",
 						endAddress: "泉州市-丰泽区-泉秀路777号",
 						orderType: "已完成",
+						appointment: true,
 					},
 					{
-						title:'出租车',
-						titleIndex:1,
-						time:'2020-03-06 8:00',
-						money:'¥32.6元',
+						title: '出租车',
+						titleIndex: 1,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
 						starAddress: "现代美居广场",
 						endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
 						orderType: "进行中",
+						appointment: false,
 					},
 					{
-						title:'出租车',
-						titleIndex:1,
-						time:'2020-03-06 8:00',
-						money:'¥32.6元',
+						title: '出租车',
+						titleIndex: 1,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
 						starAddress: "丰泽区人民法院",
 						endAddress: "泉州市-丰泽区-泉秀路765号",
 						orderType: "未完成",
+						appointment: false,
 					},
 					{
-						title:'出租车',
-						titleIndex:1,
-						time:'2020-03-06 8:00',
-						money:'¥32.6元',
+						title: '出租车',
+						titleIndex: 1,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
 						starAddress: "泉州汽车站",
 						endAddress: "泉州市-丰泽区-泉秀路222号",
 						orderType: "已取消",
+						appointment: true,
 					},
-					
+
 				],
-				finishArr:[],
-				goingArr:[],
-				unfinishArr:[],
-				cancelArr:[],
+				finishArr: [],
+				goingArr: [],
+				unfinishArr: [],
+				cancelArr: [],
 			}
 		},
 		onLoad() {
@@ -290,47 +294,47 @@
 			that.toFinished();
 		},
 		methods: {
-			
+
 			back: function() {
 				var that = this;
 				uni.switchTab({
-					url:'/pages/Home/Index',
+					url: '/pages/Home/Index',
 				});
 			},
-			
-			detail:function(item){
-				if(item == 1 ){
+
+			detail: function(item) {
+				if (item == 1) {
 					uni.navigateTo({
-						url:'/pages/order/OrderDetail',
+						url: '/pages/order/OrderDetail',
 					})
 				}
 			},
-			
-			
+
+
 			onClickItem(e) { //tab点击事件
 				if (this.current !== e.currentIndex) {
 					this.current = e.currentIndex
 				}
 			},
-			
-			toFinished:function(){
+
+			toFinished: function() {
 				var that = this;
-				for(var i = 0 ; i < that.info.length ; i++){
-					if(that.info[i].orderType == '已完成'){
+				for (var i = 0; i < that.info.length; i++) {
+					if (that.info[i].orderType == '已完成') {
 						that.finishArr.push(that.info[i]);
-					}else if(that.info[i].orderType == '进行中'){
+					} else if (that.info[i].orderType == '进行中') {
 						that.goingArr.push(that.info[i]);
-					}else if(that.info[i].orderType == '未完成'){
+					} else if (that.info[i].orderType == '未完成') {
 						that.unfinishArr.push(that.info[i]);
-					}else if(that.info[i].orderType == '已取消'){
+					} else if (that.info[i].orderType == '已取消') {
 						that.cancelArr.push(that.info[i]);
 					}
 				}
-				
-				
+
+
 			}
-			
-			
+
+
 		}
 	}
 </script>
