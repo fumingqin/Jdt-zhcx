@@ -231,6 +231,10 @@
 	    "style" : {
 			"navigationStyle":"custom"
 		}
+	},{
+			//价格详情
+	    "path" : "pages/CZC/PriceDetail",
+	    "style" : {}
 	}	
     ],
 	"globalStyle": {
@@ -249,8 +253,8 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/Home/Index",
-				"text": "商城"
+				"pagePath": "pages/order/OrderList",
+				"text": "订单"
 			},
 			{ 
 				"pagePath": "pages/Home/Index",
