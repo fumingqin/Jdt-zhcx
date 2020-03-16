@@ -1,7 +1,5 @@
 <template>
     <view class="content">
-        <image :src="avatarUrl" class="headPortrait"></image>
-		<button type="primary" @click="wxLogin">授权登录</button>
     </view>
 </template>
 
@@ -13,47 +11,43 @@
 	export default {
 	    data() {
 	        return {
-	            title: 'Hello',
-				avatarUrl:''
 	        }
 	    },
 	    onLoad() {	
-			this.loadAvatar();
+			this.wxLogin();
 	    },
 	    methods: {
 			...mapMutations(['login']),
-			async loadAvatar(){
-				var theSelf=this;
-				uni.getUserInfo({
-					success:function(res){
-						console.log(res.userInfo.avatarUrl,"res")
-						 theSelf.avatarUrl=res.userInfo.avatarUrl;
-					}
-				})
-			},
 			wxLogin(){
-				uni.getUserInfo({
-					success:function(res){
-						uni.setStorage({
-							key:"userInfo",
-							data:res.userInfo
-						});
-						uni.showToast({
-						    title: '授权成功',
-						    icon:"none"
-						});
-						if(res!=null||res!=""){
-							
-							
-						}
-						uni.navigateBack({
-							delta: 2
-						});
-						/* uni.navigateTo({
-							url:'/pages/GRZX/user'
-						}) */
+				this.logining=true;
+				var theSelf=this;
+				uni.login({
+					provider:'weixin',
+					success:function(loginRes){
+						uni.getUserInfo({					
+							success:function(res){
+								uni.setStorage({
+									key:"userInfo",
+									data:res.userInfo
+								});
+								uni.showToast({
+									title: '授权成功',
+									icon:"none"
+								});
+								if(res!=null||res!=""){
+									theSelf.login(res.userInfo);						
+								}
+								/* uni.navigateBack({
+									delta: 2
+								}); */
+							},
+							fail:function(){
+								theSelf.logining=false;
+							}
+				})
 					}
 				})
+				
 			}
 	    }
 	}

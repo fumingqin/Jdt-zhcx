@@ -1,14 +1,17 @@
 <template>
 	<view class="content">	
 		<view class="addressList">
-			<view class="boxClass" v-for="(item, index) in addressList" :key="index" @click="editAddress(item)">  <!--非个人中心页面进入 -->
-				<view class="nameClass">{{item.name}}</view>
+			<view class="boxClass" v-for="(item, index) in addressList" :key="index" @click="chooseAddress(item)">  <!--非个人中心页面进入 -->
+				<view class="nameClass">{{item.receiver}}</view>
 				<view class="postalCodeClass">{{item.postalCode}}</view>
 				<view class="fontStyle" style="top:101upx;">手机号码：{{item.phoneNum}}</view>
 				<view class="fontStyle" style="top:158upx;">所在地区：{{item.district}}</view>
 				<view class="fontStyle" style="top:216upx;">详细地址：{{item.detailAddress}}</view>
-				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
-				<view v-if="item.defaultAddress==1">
+				<view class="editClass" @click="editAddress(item)">
+					<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
+				</view>
+				
+				<view v-if="item.default">
 					<image src="../../static/GRZX/defaultAddress.png" class="defaultClass"></image>
 				</view>
 			</view>
@@ -28,46 +31,47 @@
 		data(){
 			return{
 				addressList:[{
-					name:'张小娴',
+					receiver:'张小娴',
 					postalCode:'366300',
 					phoneNum:'136*****645',
 					district:'福建省泉州市丰泽区',
 					detailAddress:'泉秀路茶叶大厦7楼',
-					defaultAddress:1
+					default:true
 				},{
-					name:'黄小新1',
+					receiver:'黄小新1',
 					postalCode:'366300',
 					phoneNum:'136*****645',
 					district:'福建省泉州市丰泽区',
 					detailAddress:'泉秀路茶叶大厦7楼',
-					defaultAddress:0
+					default:false
 				},{
-					name:'黄小新2',
+					receiver:'黄小新2',
 					postalCode:'366300',
 					phoneNum:'136*****645',
 					district:'福建省泉州市丰泽区',
 					detailAddress:'泉秀路茶叶大厦7楼',
-					defaultAddress:0
+					default:false
 				},{
-					name:'黄小新3',
+					receiver:'黄小新3',
 					postalCode:'366300',
 					phoneNum:'136*****645',
 					district:'福建省泉州市丰泽区',
 					detailAddress:'泉秀路茶叶大厦7楼',
-					defaultAddress:0
+					default:false
 				},{
-					name:'黄小新4',
+					receiver:'黄小新4',
 					postalCode:'366300',
 					phoneNum:'136*****645',
 					district:'福建省泉州市丰泽区',
-					detailAddress:'泉秀路茶叶大厦7楼'
+					detail:'泉秀路茶叶大厦7楼',
+					default:false
 				},{
-					name:'黄小新5',
+					receiver:'黄小新5',
 					postalCode:'366300',
 					phoneNum:'136*****645',
 					district:'福建省泉州市丰泽区',
 					detailAddress:'泉秀路茶叶大厦7楼',
-					defaultAddress:0
+					default:false
 				}
 			],
 			}
@@ -78,15 +82,26 @@
 		methods:{
 			addAddress(){
 				uni.navigateTo({
-					url:'/pages/GRZX/addAddress'
+					url:'/pages/GRZX/addAddress?type=add'
 				})
-				console.log("/88888")
 			},
 			returnPages(){
 				uni.navigateBack();
 			},
-			editAddress(){   //编辑乘车人信息
-				
+			chooseAddress(e){
+				uni.setStorage({
+					key:'chooseAddress',
+					data:e
+				})
+			},
+			editAddress(e){   //编辑乘车人信息
+				uni.setStorage({
+					key:'editAddress',
+					data:e
+				})
+				uni.navigateTo({
+					url:'/pages/GRZX/addAddress?type=edit'
+				})
 			}
 		}
 	}
@@ -109,7 +124,7 @@
 		width:60upx;
 		height: 60upx; 
 		position: absolute;
-		left: 90%;
+		left: 45%;
 		top:116upx;
 	}
 	.titleClass{
@@ -187,5 +202,12 @@
 		top:0upx;
 		width: 90upx;
 		height: 90upx;
+	}
+	.editClass{
+		position: absolute;
+		left: 80%;
+		height: 282upx;
+		width: 20%;
+		/* background-color: #007AFF; */
 	}
 </style>

@@ -1,12 +1,12 @@
 <template>
-	<view style="background-color: #F5F7F9;">
-		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px; ">
+	<scroll-view style="background-color: #F5F7F9;" :style="{height:pageheight}" :scroll-y="true">
+		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;">
 			<view class="status_bar"></view>
 			<view style="background-color: #FFF; ">
 				<view style="padding-bottom: 30rpx;">
 					<view style="flex-direction: row;justify-content: center;">
-						<view style="width: 10%;" @click="goBack">
-							<uni-icons type="arrowleft" size="24"></uni-icons>
+						<view style="width: 10%;">
+							<uni-icons type="arrowleft" size="24" @click="goBack"></uni-icons>
 						</view>
 						<view style="width: 674rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
 							<view style="flex-grow:1">
@@ -138,33 +138,34 @@
 		<view v-if="current === 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
-					<view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view>
+					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
+						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</text>
+					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-						<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">泉州客运中心站</view>
+						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">{{tcky_selectStartStation}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-						<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">安溪</view>
+						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">{{tcky_selectEndStation}}</text>
 					</view>
-					<view style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
-					font-size: 28upx;color: #666666;">共10趟
-						10:00发车</view>
+					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
+					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
 				</view>
 				<view class="ctky_View_Right">
-					<view>
-						<view style="margin-right: 28upx;font-size: 36upx;font-style:
-                       SourceHanSansSC-Regular; color: #FC4646;">￥28</view>
-						<view style="margin-right: 28upx;font-size: 24upx;font-style:
-                       SourceHanSansSC-Light; color: #666666;">余18张</view>
+					<view style="text-align: right;">
+						<text style="margin-right: 28upx;font-size: 36upx;font-style:
+                       SourceHanSansSC-Regular; color: #FC4646;">￥28</text>
+						<text style="margin-right: 28upx;font-size: 24upx;font-style:
+                       SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余18张</text>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view v-if="current === 2">
-			<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
+			<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
 			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
 			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
 			 v-if="IsSearch">
@@ -207,7 +208,7 @@
 						</view>
 					</view>
 					<view style="margin-top: 40rpx;align-items: center;">
-						<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;">
+						<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;line-height: 84rpx;">
 							<text style="color: #FFFFFF;font-size: 34rpx;">立即呼叫</text>
 						</button>
 					</view>
@@ -238,7 +239,7 @@
 				</view>
 			</view>
 		</view>
-	</view>
+	</scroll-view>
 </template>
 
 <script>
@@ -266,28 +267,15 @@
 						time: '50分钟'
 					},
 					{
-						startpoint: '泉金客运码头',
-						endpoint: '石狮服装城',
-						cost: 90,
+						startpoint: '泉州客运中心站',
+						endpoint: '安溪',
+						cost: 50,
 						distance: 50.6,
 						time: '3小时50分钟'
 					},
+
 					{
-						startpoint: '泉金客运码头',
-						endpoint: '泉州动车站',
-						cost: 120,
-						distance: 50.6,
-						time: '2小时50分钟'
-					},
-					{
-						startpoint: '泉金客运码头',
-						endpoint: '内坑晋江动车站',
-						cost: 80,
-						distance: 50.6,
-						time: '1小时50分钟'
-					},
-					{
-						startpoint: '泉金客运码头',
+						startpoint: '泉州客运中心站',
 						endpoint: '安溪',
 						cost: 50,
 						distance: 50.6,
@@ -339,6 +327,9 @@
 				endlongitude: "",
 				endtlatitude: "",
 				TaxiCost: "",
+				// map: '',
+				tcky_selectStartStation:'泉州客运中心站',//选中班次的起点站
+				tcky_selectEndStation:'漳州客运站',//选中班次的终点站
 			}
 		},
 		onLoad() {
@@ -359,6 +350,7 @@
 		},
 		onShow() {
 			var that = this;
+			// that.map=uni.createMapContext("map555",that);
 			uni.getStorage({ //获取乘车人
 				key: "passengerList",
 				success: function(res) {
@@ -369,6 +361,7 @@
 		onReady: function() {
 			//动态设置高度
 			var that = this;
+			// that.map=uni.createMapContext("map555",this);
 			let query = uni.createSelectorQuery().in(that).select("#ceshi");
 			query.fields({
 				size: true,
@@ -420,14 +413,26 @@
 				});
 			},
 			promptlyCall: function() { //立即呼叫、生成订单
-				uni.navigateTo({
-					url: '../CZC/CallAndDrive?orderNo=1',
-					animationType: 'pop-in',
-					animationDuration: 200,
-					success: function() {
-						uni.clearStorage("passengerList");
+				if (this.selecttime == "点击选择时间" && !this.IsClick) {
+					uni.showToast({
+						title: "请选择时间"
+					})
+				} else {
+					if (this.Passenger[0].name == '选择乘车人') {
+						uni.showToast({
+							title: "请选择乘车人"
+						})
+					} else {
+						uni.navigateTo({
+							url: '../CZC/WaitTakeOrder?orderNo=1',
+							animationType: 'pop-in',
+							animationDuration: 200,
+							success: function() {
+								uni.clearStorage("passengerList");
+							}
+						});
 					}
-				});
+				}
 			},
 			changeTime: function(e) { //选择预约时间
 				this.selecttime = e;
@@ -712,8 +717,16 @@
 				});
 			},
 			queryTickets: function() {
+				// uni.setStorage({
+				// 	key: 'startStation',
+				// 	data: this.tcky_selectStartStation, //缓存选择的班次信息
+				// });
+				// uni.setStorage({
+				// 	key: 'endStation',
+				// 	data: this.tcky_selectEndStation, //缓存选择的班次信息
+				// });
 				uni.navigateTo({
-					url: "../CTKY/selectTickets",
+					url: "../CTKY/selectTickets?StartStation="+this.tcky_selectStartStation+"&EndStation="+this.tcky_selectEndStation,
 				})
 			}
 		}
@@ -721,18 +734,27 @@
 </script>
 
 <style>
-	/* 	.status_bar {
+	/* .status_bar {
 		height: var(--status-bar-height);
 		width: 100%;
 		box-sizing: content-box;
 		background-color: #FFF;
 	} */
+	/* #ifndef APP-PLUS */
+	page {
+		background-color: #F5F7F9;
+	}
+	button::after {
+		border: none;
+	}
+	/* #endif */
 	.bt_now {
 		width: 329rpx;
 		height: 60rpx;
 		border-width: 0;
 		background-color: #FFF;
 		border-right-width: 1px;
+		line-height: 60rpx;
 		border-color: #EAEAEA;
 		border-radius: 0;
 	}
@@ -741,6 +763,7 @@
 		width: 329rpx;
 		height: 60rpx;
 		border-width: 0;
+		line-height: 60rpx;
 		background-color: #FFF;
 	}
 
@@ -796,7 +819,7 @@
 
 	.ctky_View {
 		width: 698upx;
-		background: #FFFFFF;
+		background-color: #FFFFFF;
 		margin: 10upx 26upx;
 		border-radius: 20upx;
 		flex-direction: row;

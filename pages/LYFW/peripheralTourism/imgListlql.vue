@@ -27,7 +27,7 @@ export default {
 		clickPic(index) {
 			uni.setStorageSync("currentImgIndex",index);
 			uni.navigateTo({
-				url: '/pages/LYFW/peripheralTourism/imgPreview'
+				url: '/pages/LYFW/peripheralTourism/imgPreviewlql'
 			});
 		}
 	}

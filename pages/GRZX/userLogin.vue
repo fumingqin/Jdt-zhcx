@@ -10,7 +10,7 @@
 					maxlength="11"
 					class="inputClass"
 					data-key="phoneNumber"
-					@input="inputChange"
+					@input="inputChange1"
 				/> 
 			</view>
 			<view class="inputItem Captcha">
@@ -19,7 +19,8 @@
 					type="number" 
 					placeholder="请输入验证码"
 					class="inputClass"
-					@input="inputChange"
+					maxlength="6"
+					@input="inputChange2"
 					data-key="captchaCode"
 				/>
 				<view class="getCode" @click="getCodeClick" id="Code">{{textCode}}</view>
@@ -29,8 +30,8 @@
 		<!-- <view class="wxClass" @click="wxClick"></view>
 		<view class="qqClass" @click="qqClick"></view> -->
 		<view class="loginMode">第三方登录</view>
-		<image src="../../static/GRZX/qq.png" class="qqClass" @click="qqClick"></image>
-		<image src="../../static/GRZX/wx.png" class="wxClass" @click="wxClick"></image>
+		<image src="../../static/GRZX/qq.png" class="qqClass" @click="qqLogin"></image>
+		<image src="../../static/GRZX/wx.png" class="wxClass" @click="wxLogin"></image>
 	</view>
 </template>
 
@@ -52,41 +53,183 @@
 		},
 		methods: {
 			...mapMutations(['login']),
-			inputChange(e){
+			judgeNum(val){
+				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+				    if(regPos.test(val) || regNeg.test(val)) {
+				        return true;
+				    } else {
+				        return false;
+				    }
+			},
+			inputChange1(e){
+				var num=e.detail.value;
+				if(this.judgeNum(num)){
+					
+				}else{
+					uni.showToast({
+						title : '请输入正确的手机号码',
+						icon : 'none',
+					})
+				}
 				const key = e.currentTarget.dataset.key;
 				this[key] = e.detail.value;
 			},
-			loginClick(){			
+			inputChange2(e){
+				var num=e.detail.value;
+				if(this.judgeNum(num)){
+					
+				}else{
+					uni.showToast({
+						title : '请输入正确的验证码',
+						icon : 'none',
+					})
+				}
+				const key = e.currentTarget.dataset.key;
+				this[key] = e.detail.value;
+			},
+			loginClick(){	
+				this.logining=true;
+				var that=this;
 				const {phoneNumber, captchaCode} = this;
-				console.log(this.phoneNumber)
-				console.log(this.captchaCode);
+				
+				var phone=this.phoneNumber;
+				var captcha=this.captchaCode;
+				if(phone==null||phone==""){
+					uni.showToast({
+						title:"请输入手机号码",
+						icon:"none"
+					})
+				}else{
+					if(captcha==null||captcha==""){
+						uni.showToast({
+							title:"请输入验证码",
+							icon:"none"
+						})
+					}else{
+						uni.getStorage({
+							key:'captchaCode',
+							success(res) {
+								if(captcha==res.data){
+									
+									uni.setStorage({
+										key:'userInfo',
+										data:{
+											phoneNumber:phone,
+											nickName:phone
+										}
+									})
+									uni.getStorage({
+										key:'userInfo',
+										success:function(user){
+											that.login(user.data);
+										}
+									})
+									 uni.switchTab({
+										url:'/pages/Home/Index',
+									}) 
+								}else{
+									uni.showToast({
+										title:"验证码错误",
+										icon:"none"
+									})
+								}
+							}
+						})
+					}
+				}
+				
 			},
-			wxClick(){
-				uni.navigateTo({
-					url:'/pages/GRZX/wxLogin'
+			wxLogin(){
+				this.logining=true;
+				var theSelf=this;
+				var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
+				var address;
+				uni.login({
+					provider:'weixin',
+					success:function(loginRes){
+						uni.getUserInfo({	
+							provider: 'weixin',
+							success:function(res){			
+								address=getChina.pinyin(res.userInfo.province)+" "+getChina.pinyin(res.userInfo.city);
+								res.userInfo.address=address;
+								uni.setStorage({
+									key:"userInfo",
+									data:res.userInfo
+								});
+								uni.showToast({
+									title: '授权成功',
+									icon:"none"
+								});
+								if(res!=null||res!=""){
+									theSelf.login(res.userInfo);						
+								}
+								setTimeout(function(){
+									uni.navigateBack({
+										delta: 2
+									})
+								},1000);	
+							},
+							fail:function(){
+								theSelf.logining=false;
+							}
 				})
+					}
+				})
+				
 			},
-			qqClick(){
+			qqLogin(){
 				uni.navigateTo({
 					url:'/pages/GRZX/wxLogin'
 				})
 			},
 			getCodeClick(e){
 				var self=this;
-				var timer=null,second=60; //倒计时的时间
-				if(self.textCode == "获取验证码"){
-					timer=setInterval(function(){
-					second--;
-					if(second<=0){
-						self.textCode = "获取验证码";
-						clearInterval(timer);
-						second=60;
-						//e.disabled = false;
+				const {phoneNumber, captchaCode} = this;		
+				if(self.judgeNum(self.phoneNumber)){
+					var timer=null,second=60; //倒计时的时间
+					if(self.textCode == "获取验证码"){
+					  //短信接口
+					  var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+					  uni.setStorage({
+							key:'captchaCode',
+							data:randomNum
+					  })
+						uni.request({
+						   url: 'http://111.231.109.113:8000/api/MyTest/SendMessage',
+						   data:{
+							  phoneNumber:self.phoneNumber,
+							  text:'动态验证码：'+randomNum+',如果不是本人请忽略此短信。'
+						   },
+						   method:"GET",
+						   success: function (res) {
+								console.log(res);
+								if(res.data){
+									timer=setInterval(function(){
+									second--;
+									if(second<=0){	
+										self.textCode = "获取验证码";
+										clearInterval(timer);
+										second=60;	
+									}
+									else{			
+										self.disabled = true;
+										self.textCode = second+"秒后重发";
+									}},1000)
+								}else{
+									uni.showToast({
+										title : '手机号码有误',
+										icon : 'none',
+									})
+								}
+						   }
+						})	
 					}
-					else{			//加短信接口
-						self.disabled = true;
-						self.textCode = second+"秒后重发";
-					}},1000)	
+				}else{
+					uni.showToast({
+						title : '请输入正确的手机号码',
+						icon : 'none',
+					})
 				}
 			}
 		}

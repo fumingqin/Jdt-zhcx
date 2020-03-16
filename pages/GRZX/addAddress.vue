@@ -35,7 +35,7 @@
 				<view class="checkBox">
 					<checkbox-group name="defaultAddress">
 						<label>
-							<checkbox :checked="address.defaultAddress" :value="address.defaultAddress"/>
+							<checkbox :checked="address.default" :value="address.default"/>
 						</label>
 					</checkbox-group>
 				</view>
@@ -53,25 +53,40 @@
 			pickerAddress
 		},
 		data(){	
-			return{
-				district:'请选择 省/市/区 >',
+			return{			
 				address:{
 					receiver:'',
 					phoneNum:'',
-					district:'',
+					district:'请选择 省/市/区 >',
+					/* district:'', */
 					detailAddress:'',
 					postalCode:'',
-					defaultAddress:true
+					default:false
 				}
 			}
 				
 		},
-		onLoad (){
-			this.loadData();
+		onLoad (options){
+			if(options.type=="edit"){
+				this.loadData();
+			}
+			
 		},
 		methods:{
 			async loadData(){
-				let addressInfo = await this.$api.grzx('addressInfo');
+				var that=this;
+				uni.getStorage({
+					key:'editAddress',
+					success:function(res) {
+						that.address.receiver=res.data.receiver;
+						that.address.phoneNum=res.data.phoneNum;
+						that.address.district=res.data.district;
+						that.address.detailAddress=res.data.detailAddress;
+						that.address.postalCode=res.data.postalCode;
+						that.address.default=res.data.default;
+					}
+				})
+				/* let addressInfo = await this.$api.grzx('addressInfo');
 				console.log(addressInfo)
 				this.address.receiver=addressInfo.data.receiver;
 				this.address.phoneNum=addressInfo.data.phoneNum;
@@ -82,7 +97,7 @@
 					this.address.defaultAddress=false;
 				}else{
 					this.address.defaultAddress=true;
-				}				
+				}	 */			
 			},
 			formSubmit:function(e){
 				var data=e.target.value;

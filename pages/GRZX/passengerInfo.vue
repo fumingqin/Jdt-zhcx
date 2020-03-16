@@ -11,6 +11,8 @@
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<view>
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
+					<text v-if="item.default" class="fontClass">本人</text>
+					<text v-if="item.emergencyContact" class="fontClass">联系人</text>
 				</view>
 			</view>
 			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
@@ -22,6 +24,8 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
+				<text v-if="item.default" class="fontClass">本人</text>
+				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
 			</view>
 		</view>	
 		<view v-if="submitType == 1 || submitType == 2" class="btnBox">  <!--非个人中心页面进入 -->
@@ -42,6 +46,7 @@
 	export default {
 		data(){
 			return{
+				limt:'',
 				passengerList:[{
 					userID:0,
 					name:'张小娴',
@@ -107,24 +112,34 @@
 			}
 		},
 		onLoad(options){
-			this.getType(options.submitType); //传参，参数为1,为出租车进入,其他界面设为2
+			//传参，submitType参数为1,为出租车进入,其他界面设为2 
+			//limitNum参数为你限制添加乘车人的数量（大于等于1）
+			this.getType(options.submitType,options.limitNum); 
 		},
 		methods:{
-			async getType(e){
-				this.submitType=e;
+			async getType(t,l){
+				this.submitType=t;
+				this.limit=l;
 			},
 			addPassenger(){
 				uni.navigateTo({
-					url:'/pages/GRZX/addPassenger'
+					url:'/pages/GRZX/addPassenger?type=add'
 				})
 			},
 			returnPages(){
 				uni.navigateBack();
 			},
-			editPassenger(){   //编辑乘车人信息
-				
+			editPassenger(e){   //编辑乘车人信息
+				uni.setStorage({
+					key:'editPassenger',
+					data:e
+				})
+				uni.navigateTo({
+					url:'/pages/GRZX/addPassenger?type=edit'
+				})
 			},
-			choosePassenger(e){  //选择乘车人				
+			choosePassenger(e){  //选择乘车人
+				console.log(this.limit,"....00000")
 				var list=this.passengerList;
 				var count=0;
 				for(var i=0;i<list.length;i++){
@@ -134,9 +149,9 @@
 				}
 				 if(e.hiddenIndex==1){
 					e.hiddenIndex=0;
-				}else if(count>3 && this.submitType==1){
+				}else if(count>(this.limit-1) && this.submitType==1){
 					uni.showToast({
-					    title: '乘客最多只能添加4名',
+					    title: '乘客最多只能添加'+this.limit+'名',
 					    icon:"none"
 					});
 				}else{
@@ -210,17 +225,20 @@
 		border-radius: 12upx;
 		width: 45%;
 		height: 90upx;
+		line-height: 90upx;
 		margin-top: 30upx;
 	}
 	.btnDefinite{
 		border-radius: 12upx;
 		width: 45%;
 		height: 90upx;
+		line-height: 90upx;
 		margin-top: 30upx;
 	}
 	.btnAdd2{ //添加按钮
 		width: 92%;
 		height: 90upx;
+		line-height: 90upx;
 		border-radius: 12upx;
 		background-color: #FC4646;
 		margin-top: 30upx;
@@ -241,13 +259,13 @@
 		color: #2C2D2D;
 		position: absolute;
 		left: 4%;
-		top:20upx;
+		top:30upx;
 		font-weight: bold;
 	}
 	.sexClass{
 		position: absolute;
 		left: 25%;
-		top:37upx;
+		top:47upx;
 		font-size: 24upx;
 		color: #2C2D2D;
 	}
@@ -260,7 +278,7 @@
 		color: #2C2D2D;
 		position: absolute;
 		left: 33%;
-		top:37upx;
+		top:47upx;
 	}
 	.codeClass{
 		position: absolute;
@@ -301,5 +319,17 @@
 		height: 158upx;
 		background-color: #F6F8FC;
 		/* border: 1px solid #4CD964; */
+	}
+	.fontClass{ //本人，紧急联系人
+		height: 55upx;
+		line-height: 55upx;
+		font-size: 28upx;
+		color: #ff0000;
+		position: absolute;
+		left:45% ;
+		top: 25upx;
+		border: 1upx solid #ff0000;
+		text-align: center;
+		width: 18%;
 	}
 </style>
