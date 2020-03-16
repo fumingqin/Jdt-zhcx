@@ -1,62 +1,56 @@
 <template>
-	<view class="content">
-		<!-- 顶部订单信息 -->
-		<view class="orderInfo">
-			<!-- 线路/时间 -->
-			<view class="orderInfoHead u-f-ac">
-				<view>路线：南平北站 - 顺昌</view>
-				<view>04月01日</view>
+	<view class="contentView">
+		<!-- 头部视图 -->
+		<view class="head">
+			<!-- 起始站/价格 -->
+			<view class="u-f-jsb">
+				<view>泉州客运中心 — 安溪  x2</view>
+				<view>￥49.5</view>
 			</view>
-			<!-- 上车点/价格 -->
-			<view class="station u-f-jsb">
-				<view>南平北站</view>
-				<view>¥117.00</view>
-			</view>
-			<!-- 下车点/时间 -->
-			<view class="station u-f-jsb">
-				<view>顺昌</view>
-				<view>09:30发车</view>
-			</view>
+			<!-- 发车时间 -->
+			<view> 发车时间：2020-03-08  20:00</view>
 		</view>
-
 		<!-- 乘客信息 -->
-		<view class="passagerInfo">
-			<!-- 标题 -->
-			<view class="titleView">乘客信息</view>
-			<block v-for="(item,index) in passagerList" :key="index" v-model="passagerList">
-				<view class="passegerContent">
-					<!-- 姓名 -->
-					<view class="name u-f-jsb paddingTLR">
-						<view>{{item.name}}</view>
-						<view @tap="deletePassager(index)">删除</view>
+		<scroll-view class="scrollBox" scroll-y="true">
+			<block v-for="(item,index) in passageInfo" :key="index">
+				<view class="infoCotent" style="text-align: center;">
+					<view class="passageInfo u-f-ac">
+						<!-- 标题 -->
+						<view class="title">
+							<!-- 出行人 -->
+							<view>出行人</view>
+							<!-- 身份证 -->
+							<view>身份证</view>
+							<!-- 联系电话 -->
+							<view>联系电话</view>
+							<!-- 退改规则 -->
+							<view>退改规则</view>
+							<!-- 附加保险 -->
+							<view>附加保险</view>
+						</view>
+						<view class="detailInfo">
+							<!-- 出行人 -->
+							<view>{{item.name}}</view>
+							<!-- 身份证 -->
+							<view>{{item.IDCard}}</view>
+							<!-- 联系电话 -->
+							<view>{{item.phoneNum}}</view>
+							<!-- 退改规则 -->
+							<view>{{item.role}}</view>
+							<!-- 附加保险 -->
+							<view>{{item.insurance}}</view>
+						</view>
 					</view>
-					<!-- 手机号码 -->
-					<view class="phoneNumber u-f-jsb paddingTLR">
-						<view>手机号码</view>
-						<view>{{item.phoneNumber}}</view>
+					<view class="QRImage">
+						<image style="width: 300rpx; height: 300rpx;" src="../../static/GRZX/beijing.png" lazy-load mode="aspectFill"></image>
 					</view>
-					<!-- 身份证 -->
-					<view class="phoneNumber u-f-jsb paddingTLR">
-						<view>身份证</view>
-						<view>{{item.IDCardNumber}}</view>
+					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
+						出示二维码，检票上车
 					</view>
+					
 				</view>
 			</block>
-			<!-- 添加乘客/添加携童 -->
-			<view class="AddPassagerView u-f-ajc">
-				<button class="addPassager" @click="addPassager">添加乘客</button>
-				<button class="addPassager" @click="addPassager">添加携童</button>
-			</view>
-		</view>
-
-		<!-- 底部 -->
-		<view class="bottomView u-f-jsb">
-			<!-- 金额 -->
-			<view style="font-size: 28rpx; color: #2C2D2D; padding-left: 32rpx;">总计：</view>
-			<text class="priceText">{{money}}</text>
-			<!-- 去支付 -->
-			<button class="payButton" @click="payClick">去支付</button>
-		</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -64,66 +58,44 @@
 	export default {
 		data() {
 			return {
-				money: '¥117.00',
-				passagerList: [{
-						name: '张三丰',
-						phoneNumber: '1234567890',
-						IDCardNumber: '1234567890123'
+				passageInfo:[
+					{
+						name:'张小娴  成人票',
+						IDCard:'129097475652621',
+						phoneNum:'1234567890',
+						role:'当前时间申请退款  损失为32.5元',
+						insurance:'中国人寿意外保险  经济款 x1'
 					},
 					{
-						name: 'ajhkah',
-						phoneNumber: '1234567890',
-						IDCardNumber: '1234567890123'
+						name:'张小娴  成人票',
+						IDCard:'129097475652621',
+						phoneNum:'1234567890',
+						role:'当前时间申请退款  损失为32.5元',
+						insurance:'中国人寿意外保险  经济款 x1'
 					},
 					{
-						name: '小花',
-						phoneNumber: '1234567890',
-						IDCardNumber: '1234567890123'
+						name:'张小娴  成人票',
+						IDCard:'129097475652621',
+						phoneNum:'1234567890',
+						role:'当前时间申请退款  损失为32.5元',
+						insurance:'中国人寿意外保险  经济款 x1'
 					}
 				]
 			}
 		},
 		methods: {
-			//删除乘客
-			deletePassager(e) {
-				//必须定义一个'指针'指向this才可以在下面调用那个数组
-				var that = this;
-				uni.showModal({
-				    title: '提示',
-				    content: '是否要删除该乘客',
-				    success: function (res) {
-				        if (res.confirm) {
-							that.passagerList.splice(e,1);
-				        } else if (res.cancel) {
-				            console.log('用户点击取消');
-				        }
-				    }
-				});
-			},
-			//添加乘客
-			addPassager() {
-				console.log('点击添加乘客');
-			},
-			// 支付
-			payClick() {
-				console.log('需要支付', this.money);
-			}
+			
 		}
 	}
 </script>
 
 <style>
 	/* flex布局 */
-	.u-f,
-	.u-f-ac,
-	.u-f-jsb,
-	.u-f-ajc {
+	.u-f,.u-f-ac,.u-f-jsb,.u-f-ajc {
 		display: flex;
 	}
 
-	.u-f-ac,
-	.u-f-jsb,
-	.u-f-ajc {
+	.u-f-ac,.u-f-jsb,.u-f-ajc {
 		align-items: center;
 	}
 
@@ -140,114 +112,75 @@
 		padding-left: 20rpx;
 		padding-right: 20rpx;
 	}
-
-	page,
-	.content {
-		height: 100%;
+	
+	/* 内容 */
+	page,.contentView {
 		background: #F5F9FC;
+		display: block;
 	}
-
-	/* 顶部订单信息 */
-	.orderInfo {
+	/* 头部视图 */
+	.head {
 		background: #FFFFFF;
-		border-radius: 12rpx;
+		border-radius: 20rpx;
 		margin: 20rpx;
 	}
-
-	/* 路线/时间 */
-	.orderInfoHead {
-		font-size: 26rpx;
+	/* 起始站/价格 */
+	.head>view:first-child {
+		padding: 20rpx;
+		font-size: 30rpx;
 		color: #2C2D2D;
-		padding: 20rpx;
-		border-bottom: 1rpx solid #ECECEC;
+		font-weight: 500;
 	}
-
-	/* 时间 */
-	.orderInfoHead>view:last-child {
-		padding-left: 60rpx;
-	}
-
-	/* 上车点/价格 */
-	.station {
-		font-size: 28rpx;
+	/* 发车时间 */
+	.head>view:last-child {
+		padding: 10rpx 20rpx;
+		font-size: 25rpx;
+		color: #666666;
 		font-weight: 300;
-		padding: 20rpx;
 	}
-
-	.orderInfo>view:last-child {
-		padding-top: 0rpx;
+	/* 滚动区域 */
+	.scrollBox {
+		height: 100%;
 	}
-
+	.infoCotent {
+		border-radius: 20rpx;
+		background: #FFFFFF;
+		margin: 0 20rpx;
+		margin-bottom: 20rpx;
+	}
 	/* 乘客信息 */
-	.passagerInfo {
-		margin: 20rpx;
-		border-radius: 12rpx;
-		background: #FFFFFF;
+	.passageInfo {
 	}
-
-	.titleView {
-		font-size: 26rpx;
-		color: #2C2D2D;
-		padding: 20rpx;
-		border-bottom: 1rpx solid #ECECEC;
-	}
-
-	/* 姓名 */
-	.name {
-		font-size: 28rpx;
-		color: #2C2D2D;
-	}
-
-	/* 手机号码 */
-	.phoneNumber {
-		font-size: 26rpx;
-		color: #999999;
-		font-weight: 300;
-	}
-
-	/* 添加乘客/携童 */
-	.AddPassagerView {
+	/* 标题 */
+	.title {
+		color: #666666;
+		display: block;
 		padding-top: 20rpx;
 		padding-bottom: 20rpx;
+		font-size: 30rpx;
+		font-weight: 300;
 	}
-
-	.addPassager {
-		width: 39.2%;
-		height: 78rpx;
-		line-height: 78rpx;
-		font-size: 28rpx;
+	.title view {
+		margin-bottom: 20rpx;
+		margin-left: 20rpx;
+	}
+	.detailInfo {
+		text-align: left;
 		color: #2C2D2D;
-		border-radius: 12rpx;
-		border: 1rpx solid #FC4646;
-		background: #FFFFFF;
-		font-weight: 300;
+		display: block;
+		padding-top: 20rpx;
+		padding-bottom: 20rpx;
+		font-size: 30rpx;
+		font-weight: 500;
 	}
-
-	/* 底部view */
-	.bottomView {
+	.detailInfo view {
+		margin-bottom: 20rpx;
+		margin-left: 60rpx;
+	}
+	.QRImage {
+		display: flex;
 		width: 100%;
-		height: 130rpx;
-		background: #FFFFFF;
-		margin-bottom: 0rpx;
-		position: fixed;
-		bottom: 0;
-	}
-
-	/* 价格 */
-	.priceText {
-		font-size: 32rpx;
-		color: #FC4646;
-	}
-
-	/* 支付按钮 */
-	.payButton {
-		color: #FFFFFF;
-		font-size: 32rpx;
-		height: 78rpx;
-		width: 37%;
-		border-radius: 39rpx;
-		background: #FC4646;
-		font-weight: 300;
-		margin-right: 32rpx;
+		justify-content: center;
+		margin-bottom: 20rpx;
 	}
 </style>

@@ -340,6 +340,22 @@ const touristRoute = {
 	msg: '提示'
 }
 
+// 蔡伟达-旅游服务-路线评论区2
+const routeComment2 = {
+	status: 1, //1成功/0失败提示返回值
+	data: {
+		image: [{
+			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+		}, {
+			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner2.jpg',
+		}, {
+			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner3.jpg',
+		}],
+	},
+	msg: '提示'
+}
+
+
 // 蔡伟达-旅游服务-路线评论区
 const routeComment = {
 	status: 1, //1成功/0失败提示返回值
@@ -667,9 +683,28 @@ const touristRoute3 = {
 	msg: '提示'
 }
 
+const complaint ={
+	status: 1, //1成功,0失败提示返回值
+	data:[
+		'请选择内容',
+		'bilibili公司',
+		'日升企业',
+		'腾讯企业',
+		'鹅厂',
+		'777电子竞技俱乐部',
+		'枣子哥电子企业',
+		'666大公司',
+		'无敌风火轮电子商务有限公司',
+		'国科电子培训有限公司',
+		'养猪场',
+		'4396电子有限公司',
+	],
+	msg: '提示'
+}
 
 // 接口声明区
 export default {
+	routeComment2,
 	userInfo,
 	sixPalaceList,
 	scenicList,
@@ -681,5 +716,5 @@ export default {
 	reply,
 	touristRoute2,
 	touristRoute3,
-
+	complaint,
 }
