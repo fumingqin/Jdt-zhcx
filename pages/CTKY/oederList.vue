@@ -6,7 +6,7 @@
 				<swiper-item v-for="(item,index) in QRCodeArray" :key="index">
 					<view class="u-f-ac" style="border-top-right-radius: 20rpx;border-top-left-radius: 20rpx; width: 100%; background: #FFFFFF;display: block; text-align: center;">
 						<!-- 显示二维码 -->
-						<image src="../../static/GRZX/banner3.jpg" 
+						<image src="../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png" 
 							mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image>
 							
 						<!-- 检票口/座位号 -->
@@ -82,8 +82,8 @@
 								<button v-if="items.isContact">联系司机</button>
 								<button v-if="items.isQuXiao">取消</button>
 								<button v-if="items.isXiangQing">详情</button>
-								<button v-if="items.isErWeiMa" id="QRCode" style="border: 0.1 solid #06B4FD; color: #06B4FD;" @click="btnClick">二维码</button>
-								<button v-if="items.isLocation">查看车辆位置</button>
+								<button v-if="items.isErWeiMa" id="QRCode" style="border: 0.1 solid #06B4FD; color: #06B4FD;" @tap="btnClick">二维码</button>
+								<button v-if="items.isLocation" id="carLocation" @tap="btnClick">查看车辆位置</button>
 								<button v-if="items.isChose">在线选座</button>
 								<button v-if="items.isDelete">删除</button>
 								<button v-if="items.isZhiFu">去支付</button>
@@ -328,8 +328,21 @@
 			btnClick(e) {
 				//获取按钮的id
 				var ID = e.target.id;
-				if (ID === 'QRCode') {
-					this.$refs['QRCodePopup'].open();
+				switch(ID){
+					case 'QRCode':{
+						console.log('点击了',ID);
+						this.$refs['QRCodePopup'].open();
+						break;
+					}
+					case 'carLocation':{
+						console.log('点击了',ID);
+						uni.navigateTo({
+							// 跳转到查看班车位置
+							url:'traditionCarMark',
+						})
+						break;
+					}
+					default: break;
 				}
 			}
 		}

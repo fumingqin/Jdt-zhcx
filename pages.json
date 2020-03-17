@@ -76,13 +76,6 @@
 				"navigationStyle": "custom"
 			}
 		},
-	{
-
-
-
-			"path": "pages/CZC/PriceDetail",
-			"style": {}
-		}, 
 		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
@@ -114,7 +107,9 @@
 		}, 
 		{		//个人中心模块开始
 			"path": "pages/GRZX/user",  
-			"style": {}
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}, 
 		{
 			"path": "pages/GRZX/userLogin",
@@ -235,10 +230,16 @@
 		{
 			"path": "pages/CTKY/traditionCarMark",
 			"style": {
+				"navigationBarTitleText": "传统地图标识"
+			}
+		},
+		{
+			"path": "pages/CTKY/checkCarLocation",
+			"style": {
 				"navigationBarTitleText": "查看班车位置"
 			}
-		}
-        ,{
+		},
+		{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
             "style" : {
 				"navigationBarTitleText": "订单详情",
@@ -261,7 +262,14 @@
 	    "style" : {
 			"navigationStyle":"custom"
 		}
-	},{
+		},{
+			//价格详情
+	    "path" : "pages/CZC/PriceDetail",
+	    "style" : {
+			"navigationBarTitleText": "费用明细"
+		}
+	}	
+	,{
             "path" : "pages/LYFW/ouristRoute/toreply",
             "style" : {}
         }
@@ -281,11 +289,16 @@
         ,{
             "path" : "pages/CZC/PaymentFail",
             "style" : {}
-        }, {
+        }        
+        ,{
+            "path" : "pages/CTKY/specialMark",
+            "style" : {"navigationBarTitleText": "定制标识"}
+        }
+		, {
 			"path": "pages/GRZX/complaint",
 			"style": {}
-		}
-	],
+		}	
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
