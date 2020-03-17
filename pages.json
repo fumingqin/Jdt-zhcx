@@ -212,7 +212,11 @@
 		{
 			"path": "pages/CTKY/oederList",
 			"style": {
-				"navigationBarTitleText": "班次列表"
+				"navigationBarTitleText": "班次列表",
+				"app-plus":{
+					//app页面不显示滚动条
+					"scrollIndicator":"none"
+				}
 			}
 		},
 		{

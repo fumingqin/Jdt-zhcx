@@ -15,6 +15,7 @@
 					</view>
 				</view>
 				<view style="font-size:28rpx; margin: 5rpx 30rpx; margin-top: 20rpx;">站点图片</view>
+				
 			</view>
 		</map>
 	</view>
