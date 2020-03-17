@@ -22,36 +22,57 @@
 			<view class="ComplaintYY">
 				<text class="yyText">投诉原因</text>
 				<textarea class="yyTitle"  placeholder-style="#AAAAAA" placeholder="描述详尽助于提升处理速度" maxlength="500" @input="descInput"
-				 v-model='a' style="width: 295px;height: 100px;" />
+				 v-model="a" style="width: 295px;height: 100px;" />
 				<view class="num">{{remnant}}/500字</view>
 			</view>
 			<!-- 原因范本 -->
 			<view class="reasonFB">
 				<text class="fbText">原因范本</text>
 				<text class="tiemBtn" @click="paste">复制</text>
-				<text class="fbTitle" placeholder-style="#AAAAAA" v-model="b" style="width: 295px;height: 71px;"></text>
+				<view class="fbTitle" v-model="b" style="width: 295px;height: 71px;color: #AAAAAA;">{{b}}</view>
 			</view>
 		</view>
-
-
+		
+		<!-- 上传证据 -->
+		<view class="uploadEvidence">
+			<text class="zjText">上传证据</text>
+			<view class="scClass">
+				<robby-image-upload v-model="imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
+			</view>
+		</view>
+		
+		<!-- 联系信息 -->
+		<view class="contactInformation">
+			<text class="lxText">联系人&nbsp;(加密保护)</text>
+		</view>
 	</view>
 </template>
 
 <script>
 	import pickerAddress from '../../components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue'
-	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import robbyImageUpload from '@/components/robby-image-upload/robby-image-upload.vue'
 	import {
 		mapState
 	} from 'vuex';
 	export default {
 		components: {
 			pickerAddress,
-			//加载多方弹框组件
-			uniPopup
+			robbyImageUpload,
 		},
 
 		data() {
 			return {
+				enableDel : true,
+				enableAdd : true,
+				enableDrag : false,
+				show: true,
+				imageData : [],
+				serverUrl: 'http://localhost:2000/work/uploadWorkPicture',
+				serverUrlDeleteImage: 'http://localhost:2000/work/deleteWorkPicture',
+				formData: {
+					userId: 2
+				},
+				imagelist:[],
 				txt: '选择地址',
 				txt2: '请选择内容',
 				complaint: [], //投诉对象
@@ -63,6 +84,8 @@
 				
 			}
 		},
+		
+		
 		onLoad() {
 			this.routeInit();
 		},
@@ -99,9 +122,48 @@
 
 			//复制
 			paste:function(){
-				var that=this;
-				that.b = this.a;
+				let that=this;
+				uni.setClipboardData({
+					data:that.b,
+					success:function(res){
+						uni.showToast({
+							title:'复制成功',
+						});
+					},
+					fail:function(res){
+						data:this.a,
+						uni.showToast({
+							title:'复制成功',
+						});
+					}
+				});
+				// that.b = this.a;
+				// console.log(this.b);
+			},
+			
+			deleteImage: function(e){
+				console.log(e)
+			},
+			addImage: function(e){
+				console.log(e)
 			}
+			
+			//上传图片事件
+			// upload:function(){
+
+			// 	uni.chooseImage({
+			// 		count:3,
+			// 		sizeType:['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+			// 		sourceType: ['album'], //从相册选择
+			// 		success:function(res){
+			// 			let self = this;
+			// 			console.log(JSON.stringify(res.tempFilePaths));
+			// 		}
+					
+					
+					
+			// 	})
+			// },
 		}
 	}
 </script>
@@ -205,11 +267,47 @@
 				font-weight: bold;
 				font-size: 32upx;
 			}
-
+			
 			.fbTitle {
 				padding-top: 40upx;
 				font-size: 30upx;
 			}
+			.tiemBtn{
+				padding-left: 510upx;
+				font-size: 30upx;
+				text-align: right;
+				color: #47A5FC;
+			}
+		}
+	}
+	
+	// 上传证据样式
+	.uploadEvidence{
+		margin: 24upx 0;
+		padding-top: 56upx;
+		padding-left: 32upx;
+		padding-right: 32upx;
+		padding-bottom: 43upx;
+		background-color: #FFFFFF;
+		.zjText{
+			font-weight: bold;
+			font-size: 32upx;
+		}
+		.scClass{
+			padding-top: 40upx;
+		}
+	}
+	
+	//联系信息样式
+	.contactInformation{
+		padding-top: 56upx;
+		padding-left: 32upx;
+		padding-right: 32upx;
+		padding-bottom: 43upx;
+		background-color: #FFFFFF;
+		.lxText{
+			font-weight: bold;
+			font-size: 32upx;
 		}
 	}
 </style>
