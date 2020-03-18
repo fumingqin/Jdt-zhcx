@@ -42,7 +42,7 @@
 						</view>
 					</view>
 					<view class="QRImage">
-						<image style="width: 300rpx; height: 300rpx;" src="../../static/GRZX/beijing.png" lazy-load mode="aspectFill"></image>
+						<image style="width: 300rpx; height: 300rpx;" src="../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png" lazy-load mode="aspectFill"></image>
 					</view>
 					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
 						出示二维码，检票上车

@@ -1,12 +1,12 @@
 <template>
 	<view class="content">
 		<!-- 二维码弹框代码 -->
-		<uni-popup type="bottom" ref="QRCodePopup">
+		<popup type="bottom" ref="popup">
 			<swiper style="width: 100%;height: 500rpx;">
 				<swiper-item v-for="(item,index) in QRCodeArray" :key="index">
 					<view class="u-f-ac" style="border-top-right-radius: 20rpx;border-top-left-radius: 20rpx; width: 100%; background: #FFFFFF;display: block; text-align: center;">
 						<!-- 显示二维码 -->
-						<image src="../../static/GRZX/banner3.jpg" 
+						<image src="../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png" 
 							mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image>
 							
 						<!-- 检票口/座位号 -->
@@ -16,16 +16,17 @@
 						</view>
 						
 						<!-- 发车时间/车牌号 -->
-						<view class="u-f-jsb" style="font-size: 32rpx;color: #2C2D2D; padding: 10rpx 80rpx;padding-bottom: 60rpx;">
+						<view class="u-f-jsb" style="font-size: 32rpx;color: #2C2D2D; padding: 0 80rpx;padding-bottom: 60rpx;">
 							<view>发车时间：{{item.lunchTime}}</view>
 							<view>车牌号：{{item.carNum}}</view>
 						</view>
 					</view>
 				</swiper-item>
 			</swiper>
-		</uni-popup>
+		</popup>
+		
 		<!-- 顶部选项卡 -->
-		<scroll-view id="nav-bar" class="nav-bar" scroll-x="true" scroll-with-animation="true" :scroll-left="scrollLeft">
+		<scroll-view id="nav-bar" class="nav-bar" scroll-x="true" scroll-y="false" scroll-with-animation="true" :scroll-left="scrollLeft">
 			<block v-for="(item,index) in tabBars" :key="item.id">
 				<view class="nav-item" :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @tap="changeTab(index)">{{item.name}}</view>
 			</block>
@@ -82,8 +83,8 @@
 								<button v-if="items.isContact">联系司机</button>
 								<button v-if="items.isQuXiao">取消</button>
 								<button v-if="items.isXiangQing">详情</button>
-								<button v-if="items.isErWeiMa" id="QRCode" style="border: 0.1 solid #06B4FD; color: #06B4FD;" @click="btnClick">二维码</button>
-								<button v-if="items.isLocation">查看车辆位置</button>
+								<button v-if="items.isErWeiMa" style="border: 0.1 solid #06B4FD; color: #06B4FD;" @tap="btnClick('QRCode')">二维码</button>
+								<button v-if="items.isLocation" @tap="btnClick('carLocation')">查看车辆位置</button>
 								<button v-if="items.isChose">在线选座</button>
 								<button v-if="items.isDelete">删除</button>
 								<button v-if="items.isZhiFu">去支付</button>
@@ -97,14 +98,14 @@
 </template>
 
 <script>
-    import uniPopup from '@/components/uni-popup/uni-popup.vue'
+    import popup from '@/components/uni-popup/uni-popup.vue'
 	let windowWidth = 0,
 		scrollTimer = false,
 		tabBar;
 	export default {
 		
 		components:{
-			uniPopup,
+			popup
 			},	
 		data() {
 			return {
@@ -178,6 +179,22 @@
 							isDelete: false,
 							isContact: false
 						}, {
+							iSreserve: false,
+							busType: '客车-传统',
+							state: '已使用',
+							Time: '2020-03-03  11:20',
+							price: '¥38元',
+							startStation: '惠安',
+							endStation: '武夷山',
+							isQuXiao: false,
+							isXiangQing: true,
+							isZhiFu: false,
+							isLocation: false,
+							isErWeiMa: false,
+							isChose: false,
+							isDelete: true,
+							isContact: false
+						},{
 							iSreserve: false,
 							busType: '客车-传统',
 							state: '已使用',
@@ -325,11 +342,22 @@
 				})
 			},
 			// 点击二维码
-			btnClick(e) {
+			btnClick:function(res) {
 				//获取按钮的id
-				var ID = e.target.id;
-				if (ID === 'QRCode') {
-					this.$refs['QRCodePopup'].open();
+				var that = this; 
+				switch(res){
+					case 'QRCode':{
+						that.$refs.popup.open();
+						break;
+					}
+					case 'carLocation':{
+						uni.navigateTo({
+							// 跳转到查看班车位置
+							url:'traditionCarMark',
+						})
+						break;
+					}
+					default: break;
 				}
 			}
 		}
@@ -361,16 +389,24 @@
 		justify-content: space-between;
 		/* 设置左右两边靠边布局 */
 	}
-
 	page,
 	.content {
+		/* padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom); 
+		box-sizing: content-box; */
+		/* bottom: constant(safe-area-inset-bottom);
+		bottom: env(safe-area-inset-bottom); */
 		height: 100%;
-		background: #EDF1F4;
+		background-color: #F4F8FA;
+		/* 禁止页面滚动 */
+		overflow: hidden;
+		/* bottom: var(--window-bottom); */
+		
 	}
 
 	/* 顶部tabbar */
 	.nav-bar {
-		position: relative;
+		position: fixed;
 		z-index: 10;
 		width: 100%;
 		white-space: nowrap;
@@ -420,13 +456,17 @@
 
 	/* 可滚动区域 */
 	.panelScrollBox {
-		height: 100%;
+		
+		margin-top: 100rpx;
+		/* 由于在手机上会有安全区域,所以可滚动高度暂时设置为92% */
+		height: 92%;
+		
 	}
 
 	/* 预定日期 */
 	.reserveDate {
 		padding: 0 10rpx;
-		background: #06B4FD;
+		background-color: #06B4FD;
 		color: #FFFFFF;
 		border-radius: 24rpx;
 		font-size: 24rpx;
@@ -434,7 +474,7 @@
 
 	/* 订单信息 */
 	.orderContent {
-		background: #FFFFFF;
+		background-color: #FFFFFF;
 		/* 设置圆角 */
 		border-radius: 12upx;
 		/* 设置外边距 */
@@ -528,7 +568,7 @@
 		line-height: 54rpx;
 		border: 0.1 solid #999999;
 		color: #666666;
-		background: #FFFFFF;
+		background-color: #FFFFFF;
 		margin-right: 10rpx;
 		margin-left: 10rpx;
 	}
