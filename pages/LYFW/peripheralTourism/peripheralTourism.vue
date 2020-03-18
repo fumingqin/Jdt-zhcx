@@ -107,7 +107,7 @@
 							_this.getLocationInfo();
 						},
 						fail(){    //1.2 拒绝授权
-							console.log("你拒绝了授权，无法获得周边信息")
+							// console.log("你拒绝了授权，无法获得周边信息")
 						}
 					})
 				},
@@ -115,7 +115,7 @@
 						var _this=this;
 						uni.getSetting({
 						    success(res) {	
-								console.log(res)
+								// console.log(res)
 								if (!res.authSetting[a]) {  //3.1 每次进入程序判断当前是否获得授权，如果没有就去获得授权，如果获得授权，就直接获取当前地理位置
 									_this.getAuthorizeInfo()
 								}else{
@@ -137,7 +137,7 @@
 				try {
 				    this.region = uni.getStorageSync('Key_position');
 				    if (value) {
-				        console.log(value);
+				        // console.log(value);
 				    }
 				} catch (e) {
 				    // error
