@@ -49,8 +49,8 @@
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
-				let routeComment = await this.$api.lyfwcwd('routeComment');
-				this.picList = routeComment.data.image;
+				let routeComment2 = await this.$api.lyfwcwd('routeComment2');
+				this.picList = routeComment2.data.image;
 				this.titleClick = routeComment.data;
 				let userInfo = await this.$api.lyfwcwd('userInfo');
 				this.userInfo = userInfo.data;
@@ -72,20 +72,20 @@
 				};
 			},
 			//回复时间，判断是否登录后才能进行回复
-			publish() {
-				if (!this.hasLogin) {
-					uni.showToast({
-						title: '请先登录再回复',
-						icon: 'none',
-					})
-					setTimeout(function() {
-						uni.navigateTo({
-							url: '/pages/public/login'
-						})
-					}, 1500);
-				} else {
-					if (this.tweets.commentState == false) {
-						this.tweets.commentState = true;
+			publish:function() {
+				// if (!this.hasLogin) {
+				// 	uni.showToast({
+				// 		title: '请先登录再回复',
+				// 		icon: 'none',
+				// 	})
+				// 	setTimeout(function() {
+				// 		uni.navigateTo({
+				// 			url: '/pages/public/login'
+				// 		})
+				// 	}, 1500);
+				// } else {
+					if (this.titleClick.commentState == false) {
+						this.titleClick.commentState = true;
 						uni.showToast({
 							title: '回复成功',
 						})
@@ -95,7 +95,7 @@
 							title: '回复成功'
 						})
 						this.replyInput.content = '';
-					}
+					// }
 				}
 			}
 		}

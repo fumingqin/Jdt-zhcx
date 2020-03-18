@@ -2,7 +2,7 @@
 	<view>
 		<view class="pic_list">
 			<view @tap="clickPic(y)" v-for="(x, y) in picList" :key="x">
-				<image :src="x.src"></image>
+				<image :src="x.ticketImage"></image>
 			</view>
 		</view>
 	</view>

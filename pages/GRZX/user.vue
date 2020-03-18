@@ -1,102 +1,124 @@
-<template>  
-    <view class="container">  
-		
-		<view class="user-section">
-			<image class="bg" src="/static/GRZX/beijing.png" ></image>
-			<view class="user-info-box" @click="checkLogin">
-				<view class="portrait-box">
-					<image class="portrait" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
+<template>
+	<view class="content">
+		<view class="backImg">
+			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
+			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
+			<image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
+			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image>
+			<view class="userInfoClass" @click="checkLogin">
+				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/default.png'"></image>
+				<text class="usernameClass">{{userInfo.nickName || '茜茜爱玩'}}</text>
+				<image src="../../static/GRZX/edit.png" class="editClass"></image>
+			</view>
+			
+			<view class="typeBox">
+				<image src="../../static/GRZX/huangguan.png" class="imgTubiao"></image>
+				<text class="fontClass">普通用户</text>
+			</view>
+			
+			<view class="grzyClass" @click="checkLogin">
+				<text>个人主页</text>
+				<image src="../../static/GRZX/btnRight_Home.png" class="rightClass"></image>
+			</view>
+			
+			<view class="myBox">
+				<view class="collection" @click="collectionClick">
+					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1"></image>
+					<text class="myFont">我的收藏</text>
 				</view>
-				<view class="info-box">
-					<text class="username">{{userInfo.nickName || '游客'}}</text>
+				<view class="order" @click="orderClick">
+					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2"></image>
+					<text class="myFont">我的订单</text>
+				</view>
+				<view class="history" @click="historyClick">
+					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3"></image>
+					<text class="myFont">我的历史</text>
 				</view>
 			</view>
 		</view>
-		<!-- <view class="user-section">
-			<image class="bg" src="/static/GRZX/beijing.png" >
-				@click="longin_navTo('/pages/GRZX/personal')"
-			</image>
-		</view> -->
-		<view 
-			class="cover-container"
-			:style="[{
-				transform: coverTransform,
-				transition: coverTransition
-			}]"
-			@touchstart="coverTouchstart"
-			@touchmove="coverTouchmove"
-			@touchend="coverTouchend"
-		>
-			<image class="arc" src="/static/GRZX/arc.png"></image>
-			
-			<!-- <view class="tj-sction">
-				<view class="tj-item">
-					<text class="num">128.8</text>
-					<text>余额</text>
-				</view>
-				<view class="tj-item" @click="navTo('coupon')">
-					<text class="num">2</text>
-					<text>优惠券</text>
-				</view>
-				<view class="tj-item">
-					<text class="num">20</text>
-					<text>积分</text>
-				</view>
-			</view> -->
+		
+		<image src="../../static/GRZX/advert.png" class="advertClass"></image>
+	
+		<view class="serviceBox">
+			<text class="moreClass">更多服务</text>
+			<view class="boxClass marginTop" @click="navTo('电子发票')">
+				<image src="../../static/GRZX/tubiao_fapiao.png" class="iconClass1"></image>
+				<text class="fontStyle">电子发票</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="navTo('在线客服')">
+				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
+				<text class="fontStyle">在线客服</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="navTo('证照信息')">
+				<image src="../../static/GRZX/tubiao_zhengzhao.png" class="iconClass3"></image>
+				<text class="fontStyle">证照信息</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="navTo('我的投诉')">
+				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<text class="fontStyle">我的投诉</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+		</view>
+	</view>
+</template>
 
-			
-			<!-- 功能 -->
-			<!-- <view class="order-section">
-				<view class="order-item"  hover-class="common-hover"  :hover-stay-time="50">
-					<image class="imagGn" src="../../static/GRZX/shoucang.png" mode="aspectFit"></image>
-					<text>我的收藏</text>
-				</view>
-				<view class="order-item" @click="navTo('/pages/GRZX/order')"  hover-class="common-hover" :hover-stay-time="50">
-					<image class="imagGn" src="../../static/GRZX/dingdan.png" mode="aspectFit"></image>
-					<text>我的订单</text>
-				</view>
-				<view class="order-item"  hover-class="common-hover"  :hover-stay-time="50">
-					<image class="imagGn" src="../../static/GRZX/lishi.png" mode="aspectFit"></image>
-					<text>我的历史</text>
-				</view>
-			</view> -->
-			
-			<view class="history-section icon">
-				<list-cell icon="jdticon icon-iconfontweixin" iconColor="#e07472" title="投诉" @eventClick="orderClick"></list-cell>
-				<list-cell icon="jdticon icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/GRZX/address')"></list-cell>
-				<list-cell icon="jdticon icon-pinglun-copy" iconColor="#ee883b" title="乘客人信息" @eventClick="navTo('/pages/GRZX/passengerInfo?submitType=1&&limitNum=1')"></list-cell>
-				<list-cell icon="jdticon icon-xiaoxi" iconColor="#ee883b" title="我的消息" @eventClick="navTo('/pages/GRZX/myNews')"></list-cell>
-				<list-cell icon="jdticon icon-share" iconColor="#9789f7" title="意见" ></list-cell>				
-				<list-cell icon="jdticon icon-shezhi1" iconColor="#e07472" title="设置" border="" @eventClick="navTo('/pages/GRZX/set')"></list-cell>
-			</view>
-		</view>
-			
-		
-    </view>  
-</template>  
-<script>  
+<script>
 	import listCell from '@/components/mix-list-cell';
-    import {  
-        mapState 
-    } from 'vuex';  
-	let startY = 0, moveY = 0, pageAtTop = true;
-    export default {
+	import {  
+	    mapState 
+	} from 'vuex'; 
+	export default{
 		components: {
 			listCell
 		},
 		data(){
-			return {
-				coverTransform: 'translateY(0px)',
-				coverTransition: '0s',
-				moving: false,
+			return{
+				 
 			}
-		},
-		onLoad(){
 		},
 		computed: {
 			...mapState(['hasLogin','userInfo'])
 		},
-        methods: {
+		onLoad(){
+			console.log(this.hasLogin,"6666")
+			if(!this.hasLogin){
+				uni.getStorage({
+					key:'userInfo',
+					success:function(res){
+						if(res.data.phoneNumber==""||res.data.phoneNumber==null){
+							uni.showToast({
+								title : '请绑定手机号',
+								icon : 'none',
+							})
+						}
+					}
+				})
+			}
+		},
+		onShow(){
+			if(!this.hasLogin){
+				uni.getStorage({
+					key:'userInfo',
+					success:function(res){
+						if(res.data.phoneNumber==""||res.data.phoneNumber==null){
+							uni.showToast({
+								title : '请绑定手机号',
+								icon : 'none',
+							})
+							setTimeout(function(){
+								uni.navigateTo({	
+									url  : '/pages/GRZX/wxLogin'
+								}) 
+							},500);
+						}
+					}
+				})
+			}
+		},
+		methods:{
 			orderClick(){
 				uni.switchTab({
 					url:'/pages/order/OrderList'
@@ -106,17 +128,21 @@
 				uni.navigateTo({
 					url
 				})  
+				console.log(url)
 			},
 			checkLogin(){
-				console.log(this.hasLogin,"6666")
+				// console.log(this.hasLogin,"6666")
 				if(!this.hasLogin){
 					uni.showToast({
 						title : '请先登录',
 						icon : 'none',
 					})
 					setTimeout(function(){
-						uni.navigateTo({
-							url  : '/pages/GRZX/userLogin'
+						uni.navigateTo({	
+							//loginType=1,泉运登录界面
+							//loginType=2,今点通登录界面
+							//loginType=3,武夷股份登录界面
+							url  : '/pages/GRZX/userLogin?loginType=1'
 						}) 
 					},1500);
 				}else{
@@ -125,221 +151,267 @@
 					})  
 				}
 			},
-			/**
-			 *  会员卡下拉和回弹
-			 *  1.关闭bounce避免ios端下拉冲突
-			 *  2.由于touchmove事件的缺陷（以前做小程序就遇到，比如20跳到40，h5反而好很多），下拉的时候会有掉帧的感觉
-			 *    transition设置0.1秒延迟，让css来过渡这段空窗期
-			 *  3.回弹效果可修改曲线值来调整效果，推荐一个好用的bezier生成工具 http://cubic-bezier.com/
-			 */
-			coverTouchstart(e){
-				if(pageAtTop === false){
-					return;
-				}
-				this.coverTransition = 'transform .1s linear';
-				startY = e.touches[0].clientY;
+			collectionClick(){
+				uni.showToast({
+					title : '我的收藏',
+					icon : 'none',
+				})
 			},
-			coverTouchmove(e){
-				moveY = e.touches[0].clientY;
-				let moveDistance = moveY - startY;
-				if(moveDistance < 0){
-					this.moving = false;
-					return;
-				}
-				this.moving = true;
-				if(moveDistance >= 80 && moveDistance < 100){
-					moveDistance = 80;
-				}
+			historyClick(){
+				uni.showToast({
+					title : '我的历史',
+					icon : 'none',
+				})
+			},
+			scanClick(){
+				uni.showToast({
+					title : '扫一扫',
+					icon : 'none',
+				})
+			},
+		}
 		
-				if(moveDistance > 0 && moveDistance <= 80){
-					this.coverTransform = `translateY(${moveDistance}px)`;
-				}
-			},
-			coverTouchend(){
-				if(this.moving === false){
-					return;
-				}
-				this.moving = false;
-				this.coverTransition = 'transform 0.3s cubic-bezier(.21,1.93,.53,.64)';
-				this.coverTransform = 'translateY(0px)';
-			}
-        }  
-    }  
-</script>  
-<style lang='scss'>
-	%flex-center {
-		 display:flex;
-		 flex-direction: column;
-		 justify-content: center;
-		 align-items: center;
-		}
-		%section {
-		  display:flex;
-		  justify-content: space-around;
-		  align-content: center;
-		  background: #fff;
-		  border-radius: 10upx;
-		}
-		.user-section{
-			height: 520upx;
-			padding: 100upx 30upx 0;
-			position:relative;
-			.bg{
-				position:absolute;
-				left: 0;
-				top: 0;
-				width: 100%;
-				height: 100%;
-				/* filter: blur(1px); */
-				/* opacity: .7; */
-			}
-		}
-		.user-info-box{
-			height: 180upx;
-			display:flex;
-			align-items:center;
-			position:relative;
-			z-index: 1;
-			.portrait{
-				width: 130upx;
-				height: 130upx;
-				border:5upx solid #fff;
-				border-radius: 50%;
-			}
-			.username{
-				font-size: $font-lg + 6upx;
-				color: $font-color-dark;
-				margin-left: 20upx;
-			}
-		}
-		.vip-card-box{
-			display:flex;
-			flex-direction: column;
-			color: #f7d680;
-			height: 240upx;
-			background: linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.8));
-			border-radius: 16upx 16upx 0 0;
-			overflow: hidden;
-			position: relative;
-			padding: 20upx 24upx;
-			.card-bg{
-				position:absolute;
-				top: 20upx;
-				right: 0;
-				width: 380upx;
-				height: 260upx;
-			}
-			.b-btn{
-				position: absolute;
-				right: 20upx;
-				top: 16upx;
-				width: 132upx;
-				height: 40upx;
-				text-align: center;
-				line-height: 40upx;
-				font-size: 22upx;
-				color: #36343c;
-				border-radius: 20px;
-				background: linear-gradient(left, #f9e6af, #ffd465);
-				z-index: 1;
-			}
-			.tit{
-				font-size: $font-base+2upx;
-				color: #f7d680;
-				margin-bottom: 28upx;
-				.jdticon{
-					margin-right: 16upx;
-					
-				}
-			}
-			.e-b{
-				font-size: $font-sm;
-				color: #d8cba9;
-				margin-top: 10upx;
-			}
-		}
-		.cover-container{
-			background: $page-color-base;
-			margin-top: -150upx;
-			padding: 0 30upx;
-			position:relative;
-			background: #f5f5f5;
-			padding-bottom: 20upx;
-			.arc{
-				position:absolute;
-				left: 0;
-				top: -34upx;
-				width: 100%;
-				height: 36upx;
-			}
-		}
-		.tj-sction{
-			@extend %section;
-			.tj-item{
-				@extend %flex-center;
-				flex-direction: column;
-				height: 140upx;
-				font-size: $font-sm;
-				color: #75787d;
-			}
-			.num{
-				font-size: $font-lg;
-				color: $font-color-dark;
-				margin-bottom: 8upx;
-			}
-		}
-		.order-section{
-			@extend %section;
-			padding: 28upx 0;
-			margin-top: 20upx;
-			.order-item{
-				@extend %flex-center;
-				width: 120upx;
-				height: 120upx;
-				border-radius: 10upx;
-				font-size: $font-sm;
-				color: $font-color-dark;
-			}
-			.imagGn{
-				width: 53upx;
-				height: 53upx;
-				margin-bottom: 18upx;
-			}
-			.icon-shouhoutuikuan{
-				font-size:44upx;
-			}
-		}
-		.history-section{
-			padding: 30upx 0 0;
-			margin-top: 20upx;
-			background: #fff;
-			border-radius:10upx;
-			.sec-header{
-				display:flex;
-				align-items: center;
-				font-size: $font-base;
-				color: $font-color-dark;
-				line-height: 40upx;
-				margin-left: 30upx;
-				.jdticon{
-					font-size: 44upx;
-					color: #5eba8f;
-					margin-right: 16upx;
-					line-height: 40upx;
-				}
-			}
-			.h-list{
-				white-space: nowrap;
-				padding: 30upx 30upx 0;
-				width: 660upx;
-				image{
-					display:inline-block;
-					width: 160upx;
-					height: 160upx;
-					margin-right: 20upx;
-					border-radius: 10upx;
-				}
-			}
-		}
-	
+	}
+</script>
+
+<style lang="scss">
+	page{
+		background-color: #F5F9FA;
+	}
+	.content{
+		
+	}
+	.backImg{ 
+		width: 100%;
+		height: 490upx;
+	}
+	.imgClass{ //背景图片
+		width: 100%;
+		height: 490upx;
+	}
+	.setClass{ //设置按钮
+		width: 6.56%;
+		height: 45upx;
+		position: absolute;
+		left: 4.67%;
+		top: 74upx;
+	}
+	.scanClass{ //扫一扫按钮
+		width: 6.15%;
+		height: 41upx;
+		position: absolute;
+		left: 14.8%;
+		top: 74upx;
+	}
+	.infoClass{ 	//消息按钮
+		width: 6.56%;
+		height: 42upx;
+		position: absolute;
+		left: 87.73%;
+		top: 74upx;
+	}
+	.userInfoClass{ 	//包括头像昵称
+		position: absolute;
+		left: 4.53%;
+		top:161upx;
+		height: 127upx;
+		width: 68.4%;
+		// background-color: #06B4FD;
+		display: flex;
+		flex-direction: row;
+	}
+	.portraitClass{ 	//头像
+		border-radius: 50%;
+		width: 127upx;
+		height: 127upx;
+	}
+	.usernameClass{		//昵称
+		height: 44upx;
+		line-height: 44upx;
+		font-size: 48upx;
+		color: #FFFFFF;
+		margin-top: 20upx;
+		margin-left: 3%;
+	}
+	.grzyClass{  		//个人主页
+		width: 20%;
+		height: 34upx;
+		position: absolute;
+		left:75.47%;
+		top: 200upx;
+		color: #FFFFFF;
+		font-size: 28upx;
+		line-height: 27upx;
+	}
+	.rightClass{
+		width: 10%;
+		height: 29upx;
+		position: absolute;
+		left:82%;
+		top:1upx;
+	}
+	.typeBox{  //普通用户
+		width: 126upx;
+		height: 42upx;
+		background-color: #C25E4E;
+		position: absolute;
+		top: 245upx;
+		left: 24%;
+		border-radius: 8upx;
+	}
+	.imgTubiao{
+		width: 15%;
+		height: 21upx;
+		position: absolute;
+		left: 9upx;
+		top: 10upx;
+	}
+	.fontClass{
+		font-size: 20upx;
+		color: #FFFFFF;
+		line-height: 42upx;
+		height: 42upx;
+		position: absolute;
+		left: 34upx;
+		top: 1upx;
+	}
+	.editClass{		//修改按钮
+		width: 40upx;
+		height: 40upx;
+		margin-left: 17upx;
+		margin-top: 25upx;
+	}
+	.myBox{			//包括我的收藏，我的订单，我的历史
+		width: 91.47%;
+		height: 170upx;
+		position: absolute;
+		left: 4.27%;
+		top:341upx;
+		background-color: #FFFFFF;
+		display: flex;
+		flex-direction: row;
+		border-radius: 12upx;
+	}
+	.collection{		//我的收藏
+		width: 33.33%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+	.imgStyle1{
+		width: 61upx;
+		height: 59upx;
+		margin-top: 31upx;
+		margin-left: 36.68%;
+	}
+	.order{				//我的订单
+		width: 33.33%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+	.imgStyle2{
+		width: 55upx;
+		height: 56upx;
+		margin-top: 32upx;
+		margin-left: 36.68%;
+	}
+	.history{			//我的历史
+		width: 33.34%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+	.imgStyle3{
+		width: 58upx;
+		height: 57upx;
+		margin-top: 31upx;
+		margin-left: 36.68%;
+	}
+	.myFont{		//文字的样式
+		color: #2C2D2D;
+		height: 27upx;
+		line-height: 27upx;
+		font-size:28upx;
+		font-family: SourceHanSansSC-Regular;
+		margin-top: 22upx;
+		text-align: center;
+	}
+	.advertClass{		//广告
+		width: 91.47%;
+		height: 142upx;
+		margin-top: 42upx;
+		margin-left: 4.27%;
+	}
+	.serviceBox{		//更多服务
+		width:91.47%;
+		height: 510upx;
+		background-color: #FFFFFF;
+		border-radius: 12upx;
+		margin-top: 10upx;
+		margin-left: 4.27%;
+		display: flex;
+		flex-direction: column;
+	}
+	.moreClass{		
+		font-size:32upx ;
+		font-weight: bold;
+		color: #000000;
+		margin-top: 34upx;
+		margin-left: 3.55%;
+	}
+	.boxClass{
+		width: 620upx;
+		height: 104upx;
+		margin-top: 0upx;
+		margin-left: 4.27%;
+		position: relative;
+	}
+	.marginTop{
+		margin-top: 18upx;
+	}
+	.iconClass1{  //电子发票图标
+		width: 38upx;
+		height: 37upx;
+		position: absolute;
+		left: 11upx;
+		top:34upx;
+		/* margin-top: 34upx;
+		margin-left: 11upx; */
+	}
+	.iconClass2{  //在线客服图标
+		width: 40upx;
+		height: 38upx;
+		margin-top: 34upx;
+		margin-left: 9upx;
+	}
+	.iconClass3{  //证照信息图标
+		width: 42upx;
+		height: 34upx;
+		margin-top: 34upx;
+		margin-left: 8upx;
+	}
+	.iconClass4{  //我的投诉图标
+		width: 36upx;
+		height: 39upx;
+		margin-top: 29upx;
+		margin-left: 13upx;
+	}
+	.btnClass{
+		width: 11upx;
+		height: 22upx;
+		position: absolute;
+		left: 610upx;
+		top:43upx;
+	}
+	.fontStyle{
+		font-size: 28upx;
+		color: #2C2D2D;
+		position: absolute;
+		left: 80upx;
+		top:33upx;
+	}
+	.borderTop{
+		border-top: 1upx solid #EAEAEA;
+	}
 </style>

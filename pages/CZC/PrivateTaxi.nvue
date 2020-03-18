@@ -1,7 +1,8 @@
 <template>
 	<view>
-		<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude" :polyline="polyline"
-		 :show-location="showlocation" :markers="markers"></map>
+		<view>
+		<map id="map1" ref="map1" :style="{height:mapheight}" style="width: 750rpx;"  :longitude="startlongitude" :latitude="startlatitude"
+		 :polyline="polyline" :show-location="showlocation" :markers="markers"></map></view>
 		<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;">
 			<view style="margin:20rpx;">
 				<!-- <view style="height: 80rpx;flex-direction: row;border-bottom-width: 1px;border-color: #EAEAEA;">
@@ -37,12 +38,12 @@
 						</view>
 					</view>
 					<view style="align-items: center;justify-content: center;flex-direction: row;">
-						<text style="font-size: 30rpx;font-weight: 300;">预估&nbsp;&nbsp;</text>
+						<text style="font-size: 30rpx;font-weight: 300;">一口价&nbsp;&nbsp;</text>
 						<text style="font-size: 36rpx;padding-right: 20rpx;font-weight: 300;">{{TaxiCost}}&nbsp;元</text>
 					</view>
 				</view>
 				<view style="margin-top: 40rpx;align-items: center;">
-					<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;">
+					<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;line-height: 84rpx;">
 						<text style="color: #FFFFFF;font-size: 34rpx;">立即呼叫</text>
 					</button>
 				</view>
@@ -79,13 +80,22 @@
 				endtlatitude: 25.33,
 				endlongitude: 118,
 				polyline: [],
+				map:'',
+				includePoints: [{
+						latitude: 25.1,
+						longitude: 118,
+					},
+					{
+						latitude: 25.33,
+						longitude: 118,
+					}
+				],
 				startLonLat: '118,25.1',
 				endLonLat: '118,25.33',
 			}
 		},
 		onLoad() {
 			//动态设置高度
-
 			var that = this;
 			that.setMarkers();
 			uni.getSystemInfo({
@@ -94,6 +104,15 @@
 					that.mapheight = res.windowHeight + 'px';
 				}
 			});
+			
+		},
+		onReady() {
+			var that=this;
+			this.map = uni.createMapContext('map1',this);
+			// console.log(map.length);
+			
+			// console.log(map[0])
+			// console.log(map);
 		},
 		onShow() {
 			var that = this;
@@ -102,7 +121,7 @@
 				success: function(res) {
 					that.Passenger = res.data;
 				}
-			});
+			});	
 		},
 		methods: {
 			changeTime: function(e) { //选择预约时间
@@ -115,6 +134,7 @@
 					animationDuration: 200
 				});
 			},
+			
 			promptlyCall: function() { //立即呼叫、生成订单
 				if (this.selecttime == "点击选择时间") {
 					uni.showToast({
@@ -127,7 +147,7 @@
 						})
 					} else {
 						uni.navigateTo({
-							url: '../CZC/CallAndDrive?orderNo=1',
+							url: '../CZC/WaitTakeOrder?orderNo=1',
 							animationType: 'pop-in',
 							animationDuration: 200,
 							success: function() {
@@ -299,6 +319,21 @@
 						};
 						that.polyline.push(obj);
 						uni.hideLoading();
+						setTimeout(function(){
+							that.map.includePoints({
+								padding: [700],
+								points: [{
+										latitude: 25.1,
+										longitude: 118,
+									},
+									{
+										latitude: 25.33,
+										longitude: 118,
+									}
+								]
+							});
+							console.log(that.map);
+						},500)
 					},
 					fail: function(res) {
 						uni.hideLoading();

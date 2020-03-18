@@ -1,12 +1,12 @@
 <template>
-	<view style="background-color: #F5F7F9;">
-		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px; ">
+	<scroll-view style="background-color: #F5F7F9;" :style="{height:pageheight}" :scroll-y="true">
+		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;">
 			<view class="status_bar"></view>
 			<view style="background-color: #FFF; ">
 				<view style="padding-bottom: 30rpx;">
 					<view style="flex-direction: row;justify-content: center;">
-						<view style="width: 10%;" @click="goBack">
-							<uni-icons type="arrowleft" size="24"></uni-icons>
+						<view style="width: 10%;">
+							<uni-icons type="arrowleft" size="24" @click="goBack"></uni-icons>
 						</view>
 						<view style="width: 674rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
 							<view style="flex-grow:1">
@@ -135,6 +135,22 @@
 				</view>
 			</view>
 		</view>
+		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999 ;position: fixed;align-items: center;">
+			<view style="align-items: center;text-align: center;">
+				<view style="position:fixed;color: #FFFFFF;margin-top: 309upx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000" >传统与定制班车的差异</view>
+				<view style="position: fixed;margin-top: 391upx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
+					<view style="width: 505upx;color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;padding: 0;">
+						<text>传统：只能在车票的起终点进行上车</text>
+					</view>
+					<view style="width: 505upx;color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;padding: 0;">
+						<text>定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详情可见班次详情对应的地图标识</text>
+					</view>
+				</view>
+				<button style="border-radius: 18upx;margin-top: 645upx;position: fixed;width: 350upx;height: 100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015" @click="noPupop">下次不弹出</button>
+				<image src="../../static/CTKY/tipBackground.png" class="popupClass"></image>
+				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
+			</view>
+		</popup>
 		<view v-if="current === 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
@@ -144,12 +160,12 @@
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">泉州客运中心站</text>
+						color: #333333;">{{tcky_selectStartStation}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">安溪</text>
+						color: #333333;">{{tcky_selectEndStation}}</text>
 					</view>
 					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
 					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
@@ -165,7 +181,7 @@
 			</view>
 		</view>
 		<view v-if="current === 2">
-			<map :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
+			<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
 			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
 			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
 			 v-if="IsSearch">
@@ -208,7 +224,7 @@
 						</view>
 					</view>
 					<view style="margin-top: 40rpx;align-items: center;">
-						<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;">
+						<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;line-height: 84rpx;">
 							<text style="color: #FFFFFF;font-size: 34rpx;">立即呼叫</text>
 						</button>
 					</view>
@@ -239,7 +255,7 @@
 				</view>
 			</view>
 		</view>
-	</view>
+	</scroll-view>
 </template>
 
 <script>
@@ -247,11 +263,13 @@
 	import uniIcons from "../../components/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "../../components/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "../../components/h-timePicker/h-timePicker.vue";
+	import popup from "../../components/uni-popup/uni-popup.vue";
 	export default {
 		components: {
 			uniIcons,
 			uniSegmentedControl,
-			hTimePicker
+			hTimePicker,
+			popup
 		},
 		data() {
 			return {
@@ -267,28 +285,15 @@
 						time: '50分钟'
 					},
 					{
-						startpoint: '泉金客运码头',
-						endpoint: '石狮服装城',
-						cost: 90,
+						startpoint: '泉州客运中心站',
+						endpoint: '安溪',
+						cost: 50,
 						distance: 50.6,
 						time: '3小时50分钟'
 					},
+
 					{
-						startpoint: '泉金客运码头',
-						endpoint: '泉州动车站',
-						cost: 120,
-						distance: 50.6,
-						time: '2小时50分钟'
-					},
-					{
-						startpoint: '泉金客运码头',
-						endpoint: '内坑晋江动车站',
-						cost: 80,
-						distance: 50.6,
-						time: '1小时50分钟'
-					},
-					{
-						startpoint: '泉金客运码头',
+						startpoint: '泉州客运中心站',
 						endpoint: '安溪',
 						cost: 50,
 						distance: 50.6,
@@ -340,6 +345,10 @@
 				endlongitude: "",
 				endtlatitude: "",
 				TaxiCost: "",
+				// map: '',
+				tcky_selectStartStation:'泉州客运中心站',//选中班次的起点站
+				tcky_selectEndStation:'漳州客运站',//选中班次的终点站
+				isPupop:true,//是否弹窗
 			}
 		},
 		onLoad() {
@@ -360,6 +369,7 @@
 		},
 		onShow() {
 			var that = this;
+			// that.map=uni.createMapContext("map555",that);
 			uni.getStorage({ //获取乘车人
 				key: "passengerList",
 				success: function(res) {
@@ -370,6 +380,7 @@
 		onReady: function() {
 			//动态设置高度
 			var that = this;
+			// that.map=uni.createMapContext("map555",this);
 			let query = uni.createSelectorQuery().in(that).select("#ceshi");
 			query.fields({
 				size: true,
@@ -390,6 +401,10 @@
 				var that = this;
 				if (that.current !== e.currentIndex) {
 					that.current = e.currentIndex
+				}
+				if(that.current==1&&this.isPupop)
+				{
+					that.open();
 				}
 			},
 			goBack: function() { //返回上一页
@@ -421,14 +436,26 @@
 				});
 			},
 			promptlyCall: function() { //立即呼叫、生成订单
-				uni.navigateTo({
-					url: '../CZC/CallAndDrive?orderNo=1',
-					animationType: 'pop-in',
-					animationDuration: 200,
-					success: function() {
-						uni.clearStorage("passengerList");
+				if (this.selecttime == "点击选择时间" && !this.IsClick) {
+					uni.showToast({
+						title: "请选择时间"
+					})
+				} else {
+					if (this.Passenger[0].name == '选择乘车人') {
+						uni.showToast({
+							title: "请选择乘车人"
+						})
+					} else {
+						uni.navigateTo({
+							url: '../CZC/WaitTakeOrder?orderNo=1',
+							animationType: 'pop-in',
+							animationDuration: 200,
+							success: function() {
+								uni.clearStorage("passengerList");
+							}
+						});
 					}
-				});
+				}
 			},
 			changeTime: function(e) { //选择预约时间
 				this.selecttime = e;
@@ -714,26 +741,46 @@
 			},
 			queryTickets: function() {
 				uni.navigateTo({
-					url: "../CTKY/selectTickets",
+					url: "../CTKY/selectTickets?StartStation="+this.tcky_selectStartStation+"&EndStation="+this.tcky_selectEndStation,
 				})
+			},
+			//传统客运弹窗
+			open(){
+			         this.$refs.popup.open();
+			      },
+		    close(){
+				    this.$refs.popup.close();
+				},
+            noPupop(){
+				this.isPupop=false;
+				this.close();
 			}
 		}
 	}
 </script>
 
 <style>
-	/* 	.status_bar {
+	/* .status_bar {
 		height: var(--status-bar-height);
 		width: 100%;
 		box-sizing: content-box;
 		background-color: #FFF;
 	} */
+	/* #ifndef APP-PLUS */
+	page {
+		background-color: #F5F7F9;
+	}
+	button::after {
+		border: none;
+	}
+	/* #endif */
 	.bt_now {
 		width: 329rpx;
 		height: 60rpx;
 		border-width: 0;
 		background-color: #FFF;
 		border-right-width: 1px;
+		line-height: 60rpx;
 		border-color: #EAEAEA;
 		border-radius: 0;
 	}
@@ -742,6 +789,7 @@
 		width: 329rpx;
 		height: 60rpx;
 		border-width: 0;
+		line-height: 60rpx;
 		background-color: #FFF;
 	}
 
@@ -812,5 +860,11 @@
 		flex-direction: row;
 		text-align: right;
 		align-items: center;
+	}
+	.popupClass{
+		width:588upx ;
+		height: 830upx;
+		/* z-index:10001; */
+		/* background-image: url(../../static/CTKY/tipBackground.png); */
 	}
 </style>

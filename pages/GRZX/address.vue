@@ -63,7 +63,7 @@
 					postalCode:'366300',
 					phoneNum:'136*****645',
 					district:'福建省泉州市丰泽区',
-					detail:'泉秀路茶叶大厦7楼',
+					detailAddress:'泉秀路茶叶大厦7楼',
 					default:false
 				},{
 					receiver:'黄小新5',

@@ -172,6 +172,7 @@
 				isHaveDrive: [],
 				phoneNumber: '0', //司机电话号码
 				orderType: 0,
+				hintIndex:-1,//提示状态值
 				mapContext: '', //mapContext对象
 				isShow: false,
 				totalPrice: 32.5,
@@ -267,6 +268,7 @@
 				if (that.orderType == 0) {
 					//如果没有司机接单
 					/* that.selectCarAroung(); */
+					that.hintIndex = 0;
 				} else if (that.orderType == 5) {
 					//如果司机接单，在接旅客的路上
 
@@ -321,14 +323,21 @@
 					if (that.orderType == 0) {
 						//等待司机接单中
 						/* that.selectCarAroung(); */
+						that.hintIndex = 0;
 					} else if (that.orderType == 5) {
 						//司机到达乘客地 
-						
-						for (var i = 0; i < that.markers.length; i++) {
+						if(that.hintIndex == 0){
+							uni.showToast({
+								title:'已有司机接单中',
+								icon:'none'
+							});   
+							that.hintIndex = 1;
+						}
+						/* for (var i = 0; i < that.markers.length; i++) {
 							if (that.markers[i].id == 'taxi') {
 								that.markers.splice(i, 1);
 							}
-						}
+						} */
 						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
 						that.getDirectionDriving(that.driverLon + ',' + that.driverLat, that.startLon + ',' + that.startLat);
@@ -339,11 +348,11 @@
 						//订单开始
 						//清除司机到达出发地的路径规划定时器
 
-						for (var i = 0; i < that.markers.length; i++) {
+						/* for (var i = 0; i < that.markers.length; i++) {
 							if (that.markers[i].id == 'taxi') {
 								that.markers.splice(i, 1);
 							}
-						}
+						} */
 						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
 						clearInterval(that.comingInterval);
@@ -421,6 +430,7 @@
 				uni.navigateTo({
 					url: '../CZC/PriceDetail'
 				});
+			
 			},
 			close: function() {
 				//关闭
@@ -434,12 +444,6 @@
 				let that = this;
 
 				var timeStamp = new Date().getTime();
-				console.log(timeStamp);
-
-
-				uni.showToast({
-					title: 'payment'
-				});
 				uni.requestPayment({
 					provider: e.detail.chooseType,
 					orderInfo: '111',
@@ -448,10 +452,16 @@
 					package: '',
 					paySign: '',
 					success: function(res) {
-						console.log(res);
+						console.log(res); 
+						uni.navigateTo({
+							url:'./PaymentFail'
+						});
 					},
 					fail: function(res) {
 						console.log(res);
+						uni.navigateTo({
+							url:'./PaymentFail'
+						});
 					}
 				});
 			},

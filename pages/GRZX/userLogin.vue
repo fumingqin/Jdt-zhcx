@@ -1,37 +1,60 @@
 <template>
-	<view class="content">
-		<view class="headTitle">欢迎回来！</view>
+	<view class="content" v-bind:style="{height:imgHeight+'px'}">
+		<!-- 背景图 -->
+		<view v-if="loginType==1">
+			<image src="../../static/GRZX/login1.png" class="backClass"></image>
+		</view>
+		<view v-if="loginType==2">
+			<image src="../../static/GRZX/login2.png" class="backClass"></image>	
+		</view>
+		<view v-if="loginType==3">
+			<image src="../../static/GRZX/login3.png" class="backClass"></image>			
+		</view>
+		
+		<image src="../../static/GRZX/loginReturn.png" class="returnClass" @click="returnClick"></image>
 		<view class="inputContent">
 			<view class="inputItem phoneNum">
-				<text class="titleCss">手机号码</text>
-				 <input
-					type="number" 
-					placeholder="请输入手机号码"
-					maxlength="11"
-					class="inputClass"
-					data-key="phoneNumber"
-					@input="inputChange1"
-				/> 
+				<image src="../../static/GRZX/shouji.png" class="iconClass1"></image>
+				<input type="number" placeholder="手机号码" maxlength="11" class="inputClass" data-key="phoneNumber" @input="inputChange1" />
 			</view>
 			<view class="inputItem Captcha">
-				<text class="titleCss">验证码</text>
-				<input
-					type="number" 
-					placeholder="请输入验证码"
-					class="inputClass"
-					maxlength="6"
-					@input="inputChange2"
-					data-key="captchaCode"
-				/>
-				<view class="getCode" @click="getCodeClick" id="Code">{{textCode}}</view>
+				<image src="../../static/GRZX/yanzhengma.png" class="iconClass2"></image>
+				<input type="number" placeholder="输入验证码" maxlength="6" class="inputClass" data-key="captchaCode" @input="inputChange2" />
 			</view>
-			<button type="warn" class="btnLogin" @click="loginClick" >登 录</button>
+			
+			<!-- 按钮颜色和发送验证码的样式 -->
+			<view v-if="loginType==1">
+				<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
+				<image src="../../static/GRZX/btnLogin1.png" class="btnLogin" ></image>
+			</view>
+			<view v-if="loginType==2">
+				<view class="getCode style2" @click="getCodeClick" id="Code">{{textCode}}</view>
+				<image src="../../static/GRZX/btnLogin2.png" class="btnLogin"></image>
+			</view>
+			<view v-if="loginType==3">
+				<view class="getCode style3" @click="getCodeClick" id="Code">{{textCode}}</view>
+				<image src="../../static/GRZX/btnLogin3.png" class="btnLogin"></image>
+			</view>
+			
+			<text class="fontStyle" @click="loginClick">确定</text>
 		</view>
-		<!-- <view class="wxClass" @click="wxClick"></view>
-		<view class="qqClass" @click="qqClick"></view> -->
+		
+		<!-- logo -->
+		<view v-if="loginType==1">
+			<image src="../../static/GRZX/logo1.png" class="logoClass"></image>
+		</view>
+		<view v-if="loginType==2">
+			<image src="../../static/GRZX/logo2.png" class="logoClass"></image>
+		</view>
+		<view v-if="loginType==3">
+			<image src="../../static/GRZX/logo3.png" class="logoClass"></image>	
+		</view>
+		
 		<view class="loginMode">第三方登录</view>
-		<image src="../../static/GRZX/qq.png" class="qqClass" @click="qqLogin"></image>
-		<image src="../../static/GRZX/wx.png" class="wxClass" @click="wxLogin"></image>
+		<view class="leftLine"></view>
+		<view class="rightLine"></view>
+		<image src="../../static/GRZX/qqLogo.png" class="qqClass" @click="qqLogin"></image>
+		<image src="../../static/GRZX/wxLogo.png" class="wxClass" @click="wxLogin"></image>
 	</view>
 </template>
 
@@ -45,15 +68,27 @@
 			return {
 				textCode:"获取验证码",
 				phoneNumber:'',
-				captchaCode:''
+				captchaCode:'',
+				imgHeight:'',
+				loginType:'',
 			}
 		},
-		onLoad() {
-			
+		onLoad(options) {
+			this.load(options.loginType);
 		},
 		methods: {
 			...mapMutations(['login']),
-			judgeNum(val){
+			async load(e){
+				var that=this;
+				uni.getSystemInfo({
+				　　success: function(res) { // res - 各种参数
+						that.imgHeight=res.windowHeight;
+				       }
+				});
+				that.loginType=e;
+				console.log(e)
+			},
+			judgeNum(val){  //只能输入数字
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
 				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
 				    if(regPos.test(val) || regNeg.test(val)) {
@@ -88,11 +123,10 @@
 				const key = e.currentTarget.dataset.key;
 				this[key] = e.detail.value;
 			},
-			loginClick(){	
+			loginClick(){	 //登录按钮
 				this.logining=true;
 				var that=this;
-				const {phoneNumber, captchaCode} = this;
-				
+				const {phoneNumber, captchaCode} = this;		
 				var phone=this.phoneNumber;
 				var captcha=this.captchaCode;
 				if(phone==null||phone==""){
@@ -111,12 +145,12 @@
 							key:'captchaCode',
 							success(res) {
 								if(captcha==res.data){
-									
+								var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);	
 									uni.setStorage({
 										key:'userInfo',
 										data:{
 											phoneNumber:phone,
-											nickName:phone
+											nickName:"用户"+randomNum
 										}
 									})
 									uni.getStorage({
@@ -140,7 +174,7 @@
 				}
 				
 			},
-			wxLogin(){
+			wxLogin(){		//微信授权登录
 				this.logining=true;
 				var theSelf=this;
 				var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
@@ -153,6 +187,7 @@
 							success:function(res){			
 								address=getChina.pinyin(res.userInfo.province)+" "+getChina.pinyin(res.userInfo.city);
 								res.userInfo.address=address;
+								res.userInfo.phoneNumber="";
 								uni.setStorage({
 									key:"userInfo",
 									data:res.userInfo
@@ -164,11 +199,27 @@
 								if(res!=null||res!=""){
 									theSelf.login(res.userInfo);						
 								}
-								setTimeout(function(){
+								uni.getStorage({
+									key:'userInfo',
+									success:function(res1){
+										if(res1.data.phoneNumber==""||res1.data.phoneNumber==null){
+											uni.showToast({
+												title : '请绑定手机号',
+												icon : 'none',
+											})
+											setTimeout(function(){
+												uni.navigateTo({	
+													url  : '/pages/GRZX/wxLogin'
+												}) 
+											},500);
+										}
+									}
+								})
+								/* setTimeout(function(){
 									uni.navigateBack({
 										delta: 2
 									})
-								},1000);	
+								},1000); */	
 							},
 							fail:function(){
 								theSelf.logining=false;
@@ -178,19 +229,20 @@
 				})
 				
 			},
-			qqLogin(){
+			qqLogin(){		//QQ授权登录
 				uni.navigateTo({
 					url:'/pages/GRZX/wxLogin'
 				})
 			},
-			getCodeClick(e){
+			getCodeClick(e){	//获取验证码
 				var self=this;
 				const {phoneNumber, captchaCode} = this;		
 				if(self.judgeNum(self.phoneNumber)){
 					var timer=null,second=60; //倒计时的时间
 					if(self.textCode == "获取验证码"){
-					  //短信接口
+					  //获取6位随机数
 					  var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+					  //短信接口
 					  uni.setStorage({
 							key:'captchaCode',
 							data:randomNum
@@ -231,102 +283,169 @@
 						icon : 'none',
 					})
 				}
-			}
+			},
+			returnClick(){		//返回个人中心
+				uni.switchTab({
+					url:'/pages/GRZX/user'
+				})
+			},
 		}
 	}
 </script>
 
 <style lang="scss">
 	//该界面的全局样式
+	page{
+		margin: 0;
+		padding: 0;
+	}
 	.content {
 		width: 100%;
-		height: 1200upx;
 		position: relative;
 	}
-	.headTitle{
-		font-size: 50upx;
-		font-weight: bold;
+	.backClass{  //背景图
 		position: absolute;
-		left: 5%;
-		top:100upx;
-	}
-	.inputContent{
+		bottom:0px; 
 		width: 100%;
-		height: 500upx;
-		position: absolute;
-		top:200upx;
-		background-color: white;
+		height: 100%;
 	}
-	.inputItem{
-		border-radius: 10upx;
-		width: 90%;
-		height: 120upx;
-		background-color: #F8F6FC;
-		
+	.returnClass{  //返回按钮
+		width: 2.53%;
+		height: 35upx;
+		top: 80upx;
+		left: 4.13%;
+		position: absolute;
+	}
+	.logoClass{		//logo的样式
+		width: 32.4%;
+		height: 233upx;
+		top: 147upx;
+		left: 33.87%;
+		position: absolute;
+	}
+	.iconClass1{   //手机图标
+		width: 26upx;
+		height: 36upx;
+		top: 57upx;
+		left:2%;
+		position: absolute;
+	}
+	.iconClass2{	//验证码图标
+		width: 31upx;
+		height: 38upx;
+		top: 54upx;
+		left: 2%;
+		position: absolute;
+	}
+	.inputContent{  //登录区域的样式
+		width: 90.4%;
+		height: 874upx;
+		position: absolute;
+		top:277upx;
+		left: 4.8%;
+		background-color: white;
+		border-radius: 20upx;
+	}
+	.inputItem{		//输入区域的样式
+		width: 87.6%;
+		height: 140upx;
+		border-bottom: 1upx solid #EAEAEA;
 	}
 	.phoneNum{
 		position: absolute;
-		top:60upx;
-		left: 5%;
+		top:130upx;
+		left: 6.19%;
 	}
 	.Captcha{
 		position: absolute;
-		top:230upx;
-		left: 5%;
+		top:272upx;
+		left: 6.19%;
 	}
-	.titleCss{
+	.inputClass{	//输入框的位置
+		position: absolute;
+		left: 12%;
+		top:51upx;
+		font-size: 32upx;
+		height: 30upx;
+		line-height: 30upx;
+		color: #999999;
+	}
+	.btnLogin{ //按钮
+		position: absolute;
+		top:421upx;
+		width: 100%;
+		height: 180upx;
+	}
+	.wxClass{  //微信
+		position: absolute;
+		left: 33%;
+		top:1015upx;
+		width: 67upx;
+		height: 54upx;	
+	}
+	.qqClass{  //QQ
+		position: absolute;
+		left: 60%;
+		top:1015upx;
+		width: 47upx;
 		height: 50upx;
-		line-height: 56upx;
+	}
+	.loginMode{ //第三方登录
+		position: absolute;
+		top:900upx;
+		width: 100%;
+		text-align: center;
 		font-size: 30upx;
-		color: black;
-		position: absolute;
-		left: 4%;
+		color: #999999;
 	}
-	.inputClass{
+	.leftLine{
+		border: 1upx solid #EAEAEA;
+		height: 1upx;
+		width: 22.48%;
 		position: absolute;
-		left: 4%;
-		top:60upx;
+		top:920upx;
+		left: 11.73%;
 	}
-	.btnLogin{
+	.rightLine{
+		border: 1upx solid #EAEAEA;
+		height: 1upx;
+		width: 22.48%;
 		position: absolute;
-		top:400upx;
+		top: 920upx;
+		left: 64.78%;
+	}
+	.getCode{  //获取验证码
+		position: absolute;
+		top:308upx;
+		left: 64%;
+		width:30%;
+		font-size: 28upx;
+		border-radius: 12upx;
+		text-align: center;
+		line-height: 64upx;
+		height: 64upx;
+	}
+	.style1{	
+		border:1px solid #ED1C24;
+		color: #ED1C24;
+	}	
+	.style2{
+		border:1px solid #1D2087;
+		color: #1D2087;
+	}	
+	.style3{
+		border:1px solid #FF971E;
+		color: #FF971E;
+	}	
+	.fontStyle{		//确定字体样式
+		position: absolute;
+		top: 450upx;
 		left: 5%;
+		text-align: center;
+		font-size: 36upx;
+		color: #FFFFFF;
 		width: 90%;
-		height: 80upx;
-		border-radius: 80upx;
-		line-height: 80upx;
-	}
-	.wxClass{
-		position: absolute;
-		left: 28%;
-		top:880upx;
-		/* border:1px solid red ; */
-		width: 15%;
-		height: 110upx;
-		text-align: center;
-		
-	}
-	.qqClass{
-		position: absolute;
-		left: 58%;
-		top:880upx;
-		/* border:1px solid red ; */
-		width: 15%;
-		height: 110upx;
-		text-align: center;
-		
-	}
-	.loginMode{
-		position: absolute;
-		top:760upx;
-		left: 40%;
-	}
-	.getCode{
-		position: absolute;
-		top:58upx;
-		left: 70%;
-		width:40%;
-		font-size: 35upx;
-		/* border:1px solid red ; */
+		height: 100upx;
+		line-height: 100upx;
 	}
 </style>
