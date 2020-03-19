@@ -242,12 +242,7 @@
 				"navigationBarTitleText": "传统地图标识"
 			}
 		},
-		{
-			"path": "pages/CTKY/checkCarLocation",
-			"style": {
-				"navigationBarTitleText": "查看班车位置"
-			}
-		},
+		
 		{
             "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
             "style" : {
@@ -307,6 +302,10 @@
 			"path": "pages/GRZX/complaint",
 			"style": {}
 		}	
+        ,{
+            "path" : "pages/CTKY/checkBusLocation",
+            "style" : {"navigationBarTitleText": "查看班车位置"}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
