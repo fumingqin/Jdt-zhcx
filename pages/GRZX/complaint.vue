@@ -72,28 +72,28 @@
 
 		data() {
 			return {
-				enableDel : true,
-				enableAdd : true,
-				enableDrag : false,
-				show: true,
+				enableDel : true,//是否启动del
+				enableAdd : true,//是否启动删除
+				enableDrag : false,//是否启动拖动
+				show: true,//是否显示
 				
-				serverUrl: 'http://localhost:2000/work/uploadWorkPicture',
-				serverUrlDeleteImage: 'http://localhost:2000/work/deleteWorkPicture',
-				formData: {
+				serverUrl: 'http://localhost:2000/work/uploadWorkPicture',//模拟服务器地址
+				serverUrlDeleteImage: 'http://localhost:2000/work/deleteWorkPicture',//模拟服务器删除
+				formData: {//表格数据
 					userId: 2
 				},
-				imagelist:[],
-				index: 0,
-				remnant: 0,
+				imagelist:[],//图像列表框
+				index: 0,//指数
+				remnant: 0,//字数
 				b:'本人于 #填写时间  在#填写事发地详细地址# 发生 了 #描述投诉原因# ， 本人希望 #填写您的述求， 如退票#',
 				complaint: [], //投诉对象
-				detailInfo : {
-					nickName : '',
-					mobile : '',
-					txt: '请选择',
-					complaintObject : '',
-					a:'',
-					imageData : [],
+				detailInfo : {//详细信息
+					nickName : '',//用户姓名
+					mobile : '',//用户电话
+					txt: '请选择',//事件选择
+					complaintObject : '',//投诉
+					a:'',//投诉原因
+					imageData : [],//图像日期
 				}
 			}
 		},
@@ -109,6 +109,7 @@
 		// 	 })
 		// },
 		
+		// 返回数据
 		onLoad:function() {
 			this.routeInit();
 			this.loadUserInfo();
@@ -120,6 +121,8 @@
 		},
 		
 		methods: {
+			
+			//模拟接口拿值
 			async loadUserInfo(){
 				var theself=this;
 				uni.getStorage({
@@ -160,30 +163,13 @@
 
 			//字数
 			descInput: function(e) {
-				this.remnant = e.detail.value.length
+				// console.log(e)
+				this.remnant = e.detail.cursor;	
 			},
 
 			//复制
 			paste:function(){
 				this.detailInfo.a=this.b;
-				
-				
-				// let that=this;
-				// uni.setClipboardData({
-				// 	data:that.b,
-				// 	success:function(res){
-				// 		uni.showToast({
-				// 			title:'复制成功',
-				// 		});
-				// 	},
-				// 	fail:function(res){
-				// 		uni.showToast({
-				// 			title:'复制成功',
-				// 		});
-				// 	}
-				// });
-				// that.b = this.a;
-				// console.log(this.b);
 			},
 			
 			deleteImage: function(e){
@@ -313,6 +299,7 @@
 
 		// 原因范本
 		.reasonFB {
+			position: relative;
 			padding-top: 28upx;
 
 			.fbText {
@@ -325,7 +312,8 @@
 				font-size: 30upx;
 			}
 			.tiemBtn{
-				padding-left: 510upx;
+				position: absolute;
+				right: 6upx;
 				font-size: 30upx;
 				text-align: right;
 				color: #47A5FC;
