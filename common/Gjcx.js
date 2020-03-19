@@ -24,37 +24,63 @@ const nearBy ={
 	},
 	msg: '提示'	
 }
-const station ={
+const line ={
 	status: 1,  //成功/失败提示返回值
 	data: [{
 		lineID:'1',
-		lineName:'X2',
+		lineName:'X2路',
 		direction:'新塘·尚好家园',
-		distance:'120米',
+		distance:'120',
 		stationNumber:'即将到站',
-		arriveTime:''
+		arriveTime:'1分钟',
+		unit:'千米',                 //距离单位
 	},{
 		lineID:'2',
 		lineName:'17路',
 		direction:'福厦高铁泉州站',
-		distance:'400米',
+		distance:'400',
 		stationNumber:'1站',
-		arriveTime:'2分'
+		arriveTime:'1分钟',
+		unit:'千米',                 //距离单位
 	},
 	{
 		lineID:'3',
 		lineName:'19路',
 		direction:'航空旅游首末站',
-		distance:'1.1公里',
+		distance:'1.1',
 		stationNumber:'2站',
-		arriveTime:'5分'
+		arriveTime:'3分钟',
+		unit:'千米',                 //距离单位
+	},
+	{
+		lineID:'4',
+		lineName:'K508路',
+		direction:'市中医院首末站',
+		distance:'5',
+		stationNumber:'5站',
+		arriveTime:'13分钟',
+		unit:'千米',                 //距离单位
 	}],
 	msg: '提示'	
+}
+const detailLine ={
+	status: 1,  //成功/失败提示返回值
+	data:[{
+		lineID:'3',
+		starStation:'武夷花园',
+		endStation:'五金机电产业园',
+		starTime:'06:00',
+		endTime:'18:00',
+		price:'4元',
+		departureInterval:'15'
+		
+	}]
 }
 
 // 接口声明区
 export default {
 	userInfo,  
-	station,
-	nearBy
+	line,
+	nearBy,
+	detailLine
 }

@@ -155,7 +155,7 @@
 							_this.getLocationInfo();
 						},
 						fail(){    //1.2 拒绝授权
-							console.log("你拒绝了授权，无法获得周边信息")
+							// console.log("你拒绝了授权，无法获得周边信息")
 						}
 					})
 				},
@@ -276,7 +276,6 @@
 			      myAmapFun.getRegeo({
 			        // location: '' + longitude + ',' + latitude + '',//location的格式为'经度,纬度'
 			        success: function (data) {
-			          console.log(data);
 					  // console.log(data[0].regeocodeData.addressComponent.city);
 			          that.position =data[0].regeocodeData.addressComponent.city
 			          uni.setStorage({

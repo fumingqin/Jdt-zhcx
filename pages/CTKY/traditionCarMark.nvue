@@ -123,7 +123,6 @@
 </script>
 
 <style>
-	page,
 	.content {
 		width: 750rpx;
 		height: 100%;
@@ -131,6 +130,7 @@
 	}
 
 	.map {
+		
 		width: 750rpx;
 	}
 
@@ -138,7 +138,6 @@
 		background-color: #FFFFFF;
 		position: fixed;
 		border-radius: 20rpx;
-		display: block;
 		left: 20rpx;
 		right: 20rpx;
 		bottom: 20rpx;

@@ -56,7 +56,7 @@
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="navTo('我的投诉')">
+			<view class="boxClass borderTop" @click="complaintClick">
 				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
 				<text class="fontStyle">我的投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
@@ -139,6 +139,13 @@
 					url
 				})  
 				console.log(url)
+			},
+			
+			// 投诉
+			complaintClick(){
+				uni.navigateTo({
+					url:'/pages/GRZX/complaint'
+				})  
 			},
 			checkLogin(){
 				// console.log(this.hasLogin,"6666")

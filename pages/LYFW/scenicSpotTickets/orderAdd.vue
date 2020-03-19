@@ -63,8 +63,8 @@
 				</view>
 
 				<view class="MP_userInformation">
-					<button class="Mp_addTo" type="default" plain="true">添加</button>
-					<button class="Mp_Selection" type="primary" plain="true" @click="choiceUser">选择</button>
+					<button class="Mp_addTo" type="default" plain="true" @click="choiceUser(0)">添加</button>
+					<button class="Mp_Selection" type="primary" plain="true" @click="choiceUser(1)">选择</button>
 				</view>
 
 			</view>
@@ -238,10 +238,18 @@
 			},
 
 			//选择用户
-			choiceUser: function() {
-				uni.navigateTo({
-					url: '/pages/GRZX/passengerInfo?submitType=1',
-				})
+			choiceUser: function(e) {
+				if(e==0){
+					uni.navigateTo({
+						url: '/pages/GRZX/addPassenger',
+					})
+				}else if(e==1){
+					uni.navigateTo({
+						url: '/pages/GRZX/passengerInfo?submitType=1',
+					})
+				}
+				
+				
 			},
 			
 			//用户数据读取

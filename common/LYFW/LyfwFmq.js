@@ -193,10 +193,10 @@ const orderInfo = {
 		orderActualPayment: 434, //实际付款金额
 		orderDateReminder: '2020-03-11', //时间表达（今天，明天，星期X）
 		orderDate: '明天', //数字时间
-		orderTicketNumber: 'T8718283713',
-		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-		orderInsure : true,
-		orderInsurePrice : 4,
+		orderTicketNumber: 'T8718283713', //取票号
+		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png', //二维码
+		orderInsure : true, //是否购买保险
+		orderInsurePrice : 4,  //保险金额总计
 		
 		ticketId: 0,
 		ticketName: '武夷山',

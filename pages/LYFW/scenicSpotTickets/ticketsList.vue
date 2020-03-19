@@ -117,10 +117,10 @@
 		methods: {
 			//请求模拟接口数据
 			async lyfwData() {
-				let sixPalaceList = await this.$api.lyfwfmq('sixPalaceList');
-				this.sixPalaceList = sixPalaceList.data;
 				let scenicList = await this.$api.lyfwfmq('scenicList');
 				this.searchData = scenicList.data[0];
+				let sixPalaceList = await this.$api.lyfwfmq('sixPalaceList');
+				this.sixPalaceList = sixPalaceList.data;
 				// console.log(this.searchData)
 			},
 
