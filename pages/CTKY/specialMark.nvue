@@ -150,6 +150,8 @@
 				
 				success: (res) => {
 					console.log('请求成功',res);
+					//创建坐标数组保存坐标数据
+					var latLonArray = [];
 					
 				},
 				fail:function(res){
