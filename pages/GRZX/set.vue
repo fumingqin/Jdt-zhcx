@@ -10,15 +10,6 @@
 			<switch :checked="statu.check2"  color="#fa436a" @change="playChange" />
 		</view>
 		
-		<view class="list-cell m-t b-b" @click="navTo('address')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">地址管理</text>
-			<text class="cell-more jdticon icon-you"></text>
-		</view>
-		<view class="list-cell b-b b-l" @click="navTo('passengerInfo')">
-			<text class="cell-tit">乘车人管理</text>
-			<text class="cell-more jdticon icon-you"></text>
-		</view>
-		
 		<view class="list-cell m-t b-b" @click="clearStorage" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
 			<text class="cell-more jdticon icon-you"></text>

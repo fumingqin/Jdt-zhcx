@@ -62,7 +62,7 @@
 					name:'黄小新',
 					sex:'男',
 					ticketType:'成人',
-					codeNum:'35058199503692645',
+					codeNum:'350518199503162645',
 					phoneNum:'13653989645',
 					hiddenIndex:0,
 					default:false,

@@ -1,65 +1,58 @@
 <template>
-	<view>
+	<view class="content">
+		<view class="title" @click="returnClick">
+			<image src="../../static/GRZX/btnReturn.png" class="returnClass"></image>
+			<text class="textClass">常用信息设置</text>
+		</view>
 		<form @submit="formSubmit">
-			
-			<view class="nameClass">姓名</view>
-			<view class="chineseClass">
-				<view class="fontStyle">姓名	</view>
-				<input placeholder="与证件姓名一致" class="inputClass" :value="user.chineseName" name="chineseName" /> 
+			<view class="box1">
+				<view class="itemClass">
+					<view class="fontStyle">姓名	</view>
+					<input placeholder="与证件姓名一致" class="inputClass" :value="user.chineseName" name="chineseName" /> 
+				</view>
+				<view class="itemClass">
+					<view class="fontStyle">性别</view>
+					<radio-group class="inputClass" name="sex">
+						<label v-for="(item, index) in sexMode" :key="index" @click="radioClick(index)" > 
+							<radio style="transform: scale(0.7)" :value="user.sex" :checked="index===user.sex" />{{item.title}}
+						</label>  
+					</radio-group>
+				</view>
+				<view class="itemClass">
+					<view class="fontStyle">手机号码</view>
+					<input
+						type="number"
+						placeholder="请输入手机号码"
+						maxlength="11"
+						class="inputClass"
+						:value="user.phoneNum"
+						name="phoneNum"
+					/>				
+				</view>
 			</view>
-			
-			<!-- <view class="englishClass1">
-				<view class="fontStyle">英文姓</view>
-				<input placeholder="如王小明填写为'WANG'" class="inputClass" :value="user.englishSurname" name="englishSurname" /> 
-			</view>
-			
-			<view class="englishClass2">
-				<view class="fontStyle">英文名</view>
-				<input placeholder="如王小明填写为'XIAOMING'" class="inputClass" :value="user.englishName" name="englishName" />
-			</view> -->
-			
-			<view class="sexClass">
-				<view class="fontStyle">性别</view>
-				<radio-group class="inputClass" name="sex">
-					<label v-for="(item, index) in sexMode" :key="index" @click="radioClick(index)" > 
-						<radio style="transform: scale(0.7)" :value="user.sex" :checked="index===user.sex" />{{item.title}}
-					</label>  
-				</radio-group>
-			</view>
-			
-			<view class="phoneClass">
-				<view class="fontStyle">手机号码</view>
-				<input
-					type="number"
-					placeholder="手机号码"
-					maxlength="11"
-					class="inputClass"
-					:value="user.phoneNum"
-					name="phoneNum"
-				/> 				
-			</view>
-			
 			<view class="codeClass">证件</view>
-			<view class="codeType">
-				<view class="fontStyle" style="font">身份证</view>
-			</view>
-			<view class="codeNumClass">
-				<view class="fontStyle">证件号码</view>
-				<input
-					placeholder="请保持与证件号码一致"
-					class="inputClass"
-					:value="user.codeNum"
-					name="codeNum"
-					type="idcard"
-				/>				
-			</view>
-			
-			<view class="termClass">
-				<view class="fontStyle">有效期至</view>
-				<view class="inputClass">
-					<picker mode="date" :value="user.date" :start="startDate" :end="endDate" @change="bindDateChange" name="date">
-						<view>{{user.date}}</view>
-					</picker>
+			<view class="box2">
+				<view class="itemClass">
+					<view class="fontStyle" style="font">身份证</view>
+				</view>
+				<view class="itemClass">
+					<view class="fontStyle">证件号</view>
+					<input
+						placeholder="请保持与证件号码一致"
+						class="inputClass"
+						:value="user.codeNum"
+						name="codeNum"
+						type="idcard"
+					/>				
+				</view>
+				
+				<view class="itemClass">
+					<view class="fontStyle">有效期至</view>
+					<view class="inputClass">
+						<picker mode="date" :value="user.date" :start="startDate" :end="endDate" @change="bindDateChange" name="date">
+							<view>{{user.date}}</view>
+						</picker>
+					</view>
 				</view>
 			</view>
 			
@@ -83,9 +76,9 @@
 					</checkbox-group>
 				</view>
 			</view>
-			<button form-type="reset" class="btndelete" @click="resetClick">删除</button>
-			<button form-type="submit" class="btnsubmit">保存</button>	
 			
+			<button form-type="reset" class="btndelete" @click="resetClick">删除</button>
+			<button form-type="submit" class="btnsubmit">保存</button>		
 		</form>
 	</view>
 </template>
@@ -175,8 +168,23 @@
 					}
 				}else{
 					data.emergencyContact=false;
-				}				
-				console.log(data)
+				}
+				var codeNum=data.codeNum;
+				var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);			
+				var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
+				var  d=new Date(r[1],r[3]-1,r[4]);     
+				if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
+				{   
+				    var Y=new  Date().getFullYear();   
+				    var age=Y-r[1];
+				} 
+				if(age>=18){
+					data.ticketType="成人";
+				}else{
+					data.ticketType="儿童";
+				}
+				//console.log(age);
+				console.log(data);
 			},
 			bindDateChange:function(e){
 				 this.user.date = e.target.value;
@@ -190,6 +198,9 @@
 				}else{	//未选中
 					this.user.show=true;
 				}
+			},
+			returnClick(){
+				uni.navigateBack();
 			}
 		}
 	}
@@ -197,130 +208,110 @@
 
 <style lang="scss">
 	page{
-		background-color: #F8F8F8;
+		background-color: #F6F8FC;
 	}
 	.content {
-		width: 100%;
 		position: relative;
+		width: 100%;
 	}
-	.nameClass{
+	.title{
+		width: 40%;
+		height: 44upx;
 		position: absolute;
-		left: 6%;
-		top: 20upx;
-		font-size:28upx;
+		left: 3.47%;
+		top: 95upx;
+	}
+	.returnClass{
+		width: 22upx;
+		height: 40upx;
+		position: absolute;
+		top: 5upx;
+	}
+	.textClass{
+		color: #333333;
+		font-size: 38upx;
+		height: 44upx;
+		line-height: 44upx;
+		position: absolute;
+		left: 36upx;
+		top: 1upx;
+	}
+	
+	.box1{
+		display: flex;
+		flex-direction: column;
+		width: 93.07%;
+		height: 330upx;
+		position: absolute;
+		left: 3.47%;
+		top:170upx;
+		background-color: #FFFFFF;
+		border-radius: 25upx;
+	}
+	.box2{
+		display: flex;
+		flex-direction: column;
+		width: 93.07%;
+		height: 330upx;
+		position: absolute;
+		left: 3.47%;
+		top:603upx;
+		background-color: #FFFFFF;
+		border-radius: 25upx;
+	}
+	.itemClass{  //
+		width: 618upx;
+		height: 110upx;
+		margin-left: 40upx;
+		margin-top: 0upx;
+		
+	}
+	.codeClass{  //证件
+		position: absolute;
+		left: 3.33%;
+		top:530upx;
+		font-size:32upx;
 		font-family:Source Han Sans SC;
 		font-weight:400;
-		color:rgba(170,170,170,1);
+		color:#2C2D2D;
+		//font-weight: bold;
 	}
-	.codeClass{
-		position: absolute;
-		left: 6%;
-		//top: 644upx;
-		top:428upx;
-		font-size:28upx;
-		font-family:Source Han Sans SC;
-		font-weight:400;
-		color:rgba(170,170,170,1);
-	}
-	.chineseClass{ //定位
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		top:80upx;
-	}
-	/* .englishClass1{
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		top:188upx;
-		border-top: 1upx solid #F5F5F5;
-	}
-	.englishClass2{
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		top:296upx;
-		border-top: 1upx solid #F5F5F5;
-	} */
-	.sexClass{
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		//top:404upx;
-		top:188upx;
-		border-top: 1upx solid #F5F5F5;
-	}
-	.phoneClass{
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		//top:512upx;
-		top:296upx;
-		border-top: 1upx solid #F5F5F5;
-	}
+	
 	.fontStyle{   //文字样式
-		color: #424242;
-		font-size: 32upx;
+		color: #2C2D2D;
+		font-size: 30upx;
 		position: absolute;
 		left: 6%;
 		line-height: 108upx;
 	}
-	.codeType{
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		//top:703upx;
-		top:487upx;
-	}
-	.codeNumClass{
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		//top:811upx;
-		top:595upx;
-		border-top: 1upx solid #DDDDDD;
-	}
-	.termClass{
-		width: 100%;
-		height: 108upx;
-		background-color: #FFFFFF;
-		position: absolute;
-		//top:919upx;
-		top:703upx;
-		border-top: 1upx solid #F5F5F5;
-	}
+
 	.personClass{
-		width: 100%;
-		height: 108upx;
+		width: 93.07%;
+		height: 110upx;
 		background-color: #FFFFFF;
 		position: absolute;
 		//top:1068upx;
-		top:852upx;
+		top:957upx;
+		left:3.47%;
 		margin-bottom: 150upx;
+		border-radius: 25upx;
 	}
 	.emergencyClass{
-		width: 100%;
-		height: 108upx;
+		width: 93.07%;
+		height: 110upx;
 		background-color: #FFFFFF;
 		position: absolute;
+		left:3.47%;
 		//top:1176upx;
-		top:960upx;
-		border-top: 1upx solid #DDDDDD;
+		top:1090upx;
 		margin-bottom: 150upx;
+		border-radius: 25upx;
 	}
 	.btndelete{
 		width: 40%;
 		height: 108upx;
 		background-color: #FFFFFF;
 		color: #F75674;
-		margin-bottom: 0upx;
 		position: fixed;
 		bottom: 0upx;
 		left: 0%;
@@ -332,7 +323,7 @@
 	.btnsubmit{
 		width: 60%;
 		height: 108upx;
-		background-color: #46A5FE;
+		background-color: #FC4B4B;
 		color: #FFFFFF;
 		position: fixed;
 		bottom: 0upx;
@@ -350,11 +341,6 @@
 		right: 6%;
 		line-height: 108upx;
 		text-align: right;
-	}
-	.imageClass{
-		width: 50%;
-		height: 108upx;
-		border: 1px solid red;
 	}
 	.checkBox{
 		line-height: 108upx;

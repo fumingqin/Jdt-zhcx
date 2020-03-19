@@ -185,7 +185,8 @@
 						uni.getUserInfo({	
 							provider: 'weixin',
 							success:function(res){			
-								address=getChina.pinyin(res.userInfo.province)+" "+getChina.pinyin(res.userInfo.city);
+								//address=getChina.pinyin(res.userInfo.province)+" "+getChina.pinyin(res.userInfo.city);
+								address=res.userInfo.province+" "+res.userInfo.city;
 								res.userInfo.address=address;
 								res.userInfo.phoneNumber="";
 								uni.setStorage({
@@ -230,9 +231,20 @@
 				
 			},
 			qqLogin(){		//QQ授权登录
-				uni.navigateTo({
-					url:'/pages/GRZX/wxLogin'
-				})
+				/* uni.getProvider({
+				    service: 'oauth',
+				    success: function (res) {
+				        console.log(res.provider)
+				        if (~res.provider.indexOf('qq')) {
+				            uni.login({
+				                provider: 'qq',
+				                success: function (loginRes) {
+				                    console.log(JSON.stringify(loginRes));
+				                }
+				            });
+				        }
+				    }
+				}); */
 			},
 			getCodeClick(e){	//获取验证码
 				var self=this;

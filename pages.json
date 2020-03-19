@@ -138,7 +138,39 @@
 		{ //个人中心模块开始
 			"path": "pages/GRZX/user",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue60f",
+								"fontSize": "24",
+								"color": "#303133",
+								"width": "46px",
+								"background": "rgba(0,0,0,0)",
+								"float": "left"
+							},
+							{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue744",
+								"fontSize": "28",
+								"color": "#303133",
+								"background": "rgba(0,0,0,0)",
+								"redDot": true
+							},
+							{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue60d",
+								"fontSize": "26",
+								"color": "#303133",
+								"float": "left",
+								"background": "rgba(0,0,0,0)"
+							}
+						]
+					}
+				}
 			}
 		},
 		{
@@ -178,9 +210,11 @@
 		{
 			"path": "pages/GRZX/addPassenger", //添加乘客信息
 			"style": {
-				"navigationBarTitleText": "添加乘客信息",
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"backgroundColor": "#55ffff"
+				"navigationStyle": "custom",
+				"app-plus": {
+					//app页面不显示滚动条
+					"scrollIndicator": "none"
+				}
 			}
 		},
 		{
