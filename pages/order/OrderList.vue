@@ -11,6 +11,7 @@
 
 		<view v-if="current === 0" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in info" :key="index">
+				<!-- 出租车 -->
 				<view v-if="item.title=='出租车'">
 					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
 						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:03-05</text>
@@ -47,6 +48,62 @@
 						</view>
 					</view>
 				</view>
+				
+				<!-- 景区门票 -->
+				<!-- 标签class命名：pd;全称：Purchase Date -->
+				<!-- 内容class命名：at;全称：Admission ticket -->
+				<view v-if="item.title=='景区门票'">
+					<view class="pd_view">使用时间:&nbsp;03-19</view>
+					<view class="at_view">
+						<view class="at_titleView">
+							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+							<text class="at_title">南平武夷山三日游</text>
+							<text class="at_status">未使用</text>
+						</view>
+						<view class="at_contentView">
+							<view class="at_contentFrame"></view>
+						</view>
+						
+					</view>
+					
+					
+					
+					
+					
+					
+					<!-- <view class="whiteBg">
+						<view style="display: flex; margin-top: -40rpx;">
+							<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+						</view>
+				
+						<view style="display: flex; margin-top: -72rpx;">
+							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+						</view>
+				
+						<view style="display: flex; margin-top: -16rpx;">
+							<view class="bluering"></view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+						</view>
+				
+						<view style="display: flex; margin-top: 36rpx;">
+							<view class="redring"></view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+						</view>
+				
+						<view style="display: flex;">
+							<button @click="detail(item.titleIndex)" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
+							<button v-if="item.orderType=='已完成'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">投诉</button>
+							<button v-if="item.orderType=='未完成'" style="width:146rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; align-items: center; left: 80rpx;">去支付</button>
+							<button v-if="item.orderType=='已取消'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">删除</button>
+						</view>
+					</view> -->
+				</view>
+				
 			</view>
 
 			<view style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
@@ -242,6 +299,15 @@
 				current: 0,
 				index: 1,
 				info: [{
+						title: '景区门票',
+						titleIndex: 1,
+						time: '2020-03-06 9:00',
+						money: '¥32.6元',
+						starAddress: "泉州汽车站",
+						endAddress: "泉州市-丰泽区-泉秀路222号",
+						orderType: "已取消",
+						appointment: true,
+					},{
 						title: '出租车',
 						titleIndex: 1,
 						time: '2020-03-06 8:00',
@@ -280,9 +346,7 @@
 						endAddress: "泉州市-丰泽区-泉秀路222号",
 						orderType: "已取消",
 						appointment: true,
-					},
-
-				],
+					}],
 				finishArr: [],
 				goingArr: [],
 				unfinishArr: [],
@@ -339,11 +403,11 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	page {
 		width: 100%;
 		height: 100%;
-		background-color: #EFF2F7;
+		background-color: #F5F5F5;
 	}
 
 	//白底1
@@ -427,5 +491,65 @@
 	.uni-tab-item-title-active {
 		color: #007AFF;
 		border-bottom: 1rpx solid #007AFF;
+	}
+	
+	// 购买时间
+	.pd_view{
+		width: 232rpx; 
+		margin: 40rpx 28rpx;
+		margin-bottom: 24upx;
+		border-radius: 32rpx; 
+		background: #06B4FD;
+		text-align: center;
+		padding: 16upx 0;
+		font-size: 24upx;
+		color: #FFFFFF;
+	}
+	
+	//门票列表内容
+	.at_view{
+		// position: relative;
+		height: 340rpx;
+		margin: 0rpx 28rpx;
+		background: #FFFFFF;
+		border-radius: 12rpx;
+		padding: 40rpx 32upx;
+		.at_titleView{
+			position: relative;
+			.at_icon{
+				position: relative;
+				top: 4upx;
+				width: 34upx;
+				height: 31upx;
+			}
+			.at_title{
+				margin-left: 24upx;
+			}
+			.at_status{
+				position: absolute;
+				right: 0;
+				font-size: 30upx;
+				top:6upx;
+			}
+		}
+		.at_contentView{
+			position: relative;
+			margin-left: 46upx;
+			.at_contentFrame{
+				width: 108upx;
+				padding: 8upx 0;
+				margin: 20upx 16upx;
+				text-align: center;
+				font-size: 20upx;
+				color: #3AC596;
+				border-radius: 8upx;
+				border: 1upx solid #3AC596;
+				
+			}
+			.at_contentText{
+	
+			}
+		}
+		
 	}
 </style>
