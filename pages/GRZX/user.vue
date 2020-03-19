@@ -76,11 +76,47 @@
 		},
 		data(){
 			return{
-				  
+				 
 			}
 		},
 		computed: {
 			...mapState(['hasLogin','userInfo'])
+		},
+		onLoad(){
+			console.log(this.hasLogin,"6666")
+			if(!this.hasLogin){
+				uni.getStorage({
+					key:'userInfo',
+					success:function(res){
+						if(res.data.phoneNumber==""||res.data.phoneNumber==null){
+							uni.showToast({
+								title : '请绑定手机号',
+								icon : 'none',
+							})
+						}
+					}
+				})
+			}
+		},
+		onShow(){
+			if(!this.hasLogin){
+				uni.getStorage({
+					key:'userInfo',
+					success:function(res){
+						if(res.data.phoneNumber==""||res.data.phoneNumber==null){
+							uni.showToast({
+								title : '请绑定手机号',
+								icon : 'none',
+							})
+							setTimeout(function(){
+								uni.navigateTo({	
+									url  : '/pages/GRZX/wxLogin'
+								}) 
+							},500);
+						}
+					}
+				})
+			}
 		},
 		methods:{
 			orderClick(){
@@ -95,15 +131,18 @@
 				console.log(url)
 			},
 			checkLogin(){
-				console.log(this.hasLogin,"6666")
+				// console.log(this.hasLogin,"6666")
 				if(!this.hasLogin){
 					uni.showToast({
 						title : '请先登录',
 						icon : 'none',
 					})
 					setTimeout(function(){
-						uni.navigateTo({
-							url  : '/pages/GRZX/userLogin'
+						uni.navigateTo({	
+							//loginType=1,泉运登录界面
+							//loginType=2,今点通登录界面
+							//loginType=3,武夷股份登录界面
+							url  : '/pages/GRZX/userLogin?loginType=1'
 						}) 
 					},1500);
 				}else{
@@ -138,8 +177,6 @@
 <style lang="scss">
 	page{
 		background-color: #F5F9FA;
-		margin: 0upx;
-		padding: 0upx;
 	}
 	.content{
 		

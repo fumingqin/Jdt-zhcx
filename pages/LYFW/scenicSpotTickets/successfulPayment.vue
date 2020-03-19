@@ -20,7 +20,15 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				orderNumber : '', //订单编号
+				
+			}
+		},
+		onLoad(options) {
+			this.orderNumber = JSON.parse(options.orderNumber);
+			// console.log(this.orderNumber)
+			
 		},
 		onReady() {
 			// this.backHome();
@@ -29,8 +37,8 @@
 			//路由统一事件
 			godetail: function(e) {
 				if(e==0){
-					uni.navigateTo({
-						url: '/pages/LYFW/scenicSpotTickets/orderDetails'
+					uni.redirectTo({
+						url: '/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(this.orderNumber)
 					});
 				}else if(e==1){
 					uni.switchTab({
@@ -39,7 +47,7 @@
 				}
 			},
 			backHome(){
-				setInterval(() => {
+				setTimeout(() => {
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});
@@ -73,10 +81,10 @@
 	.cover-container {
 		position: absolute;
 		margin: 0 24upx;
-		margin-top: 88upx;
+		margin-top: 180upx;
 		margin-bottom: 52upx;
 		width: 702upx;
-		height: 90%;
+		height: 85%;
 		background: #FFFFFF;
 		box-shadow: 0px 0.2px 0px #aaa;
 		border-radius: 16upx;
