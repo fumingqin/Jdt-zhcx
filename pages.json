@@ -238,6 +238,15 @@
 			}
 		},
 		{
+			"path": "pages/CTKY/seatSelection",
+			"style": {
+				"backgroundColor": "#F1F1F1",
+				"navigationBarBackgroundColor": "#FC4646",
+				"navigationBarTextStyle": "white"
+		
+			}
+		},
+		{
 			"path": "pages/CTKY/selectTickets",
 			"style": {
 				"navigationBarTitleText": "班次列表"

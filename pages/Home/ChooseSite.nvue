@@ -743,6 +743,7 @@
 				uni.navigateTo({
 					url: "../CTKY/selectTickets?StartStation="+this.tcky_selectStartStation+"&EndStation="+this.tcky_selectEndStation,
 				})
+
 			},
 			//传统客运弹窗
 			open(){

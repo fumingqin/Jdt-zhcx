@@ -298,11 +298,6 @@
 						success: (res) => {
 							console.log(res.data);
 							this.departureData=res.data;
-							// uni.showToast({
-							// 	title: res.data,
-							// 	icon: 'none',
-							// 	duration: 4000
-							// })
 						}
 					});	
 
