@@ -165,7 +165,7 @@
 			this.tweets = ts;
 			this.piclist = ts.image;
 			this.imgnumber = ts.imageNumber;
-			console.log(this.piclist)
+
 			
 			let scenicSpot = await this.$api.lyfwlql('scenicSpot');
 			this.scenicSpot = scenicSpot;
@@ -203,7 +203,6 @@
 				url : 'https://api.gugudata.com/news/wxarticle/demo',
 				success : function(res){
 					
-					console.log(res)
 					_self.html=res.data.Data[uni.getStorageSync('_detailId')].ArticleContentWithTags;
 					_self.articleTitle=res.data.Data[uni.getStorageSync('_detailId')].ArticleTitle;
 					}

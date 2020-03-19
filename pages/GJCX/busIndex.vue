@@ -6,7 +6,7 @@
 		<view class="searchTopBox">
 			<text  class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 			<view class="searchBoxRadius">
-				<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
+				<input class="inputIocale" type="search" @confirm="searchNow" placeholder="查线路、站点、地点" />
 				<image class="searchImage" src='../../static/LYFW/peripheralTourism/peripheralTourism/search.png' />
 			</view>
 		</view>
@@ -23,18 +23,18 @@
 	<view v-if="current_2===0">
 		<view  class="box">
 			<view class="searchBoxRadius2">
-				<input class="inputIocale2" type="search" v-model="ipt" placeholder="我的位置" />
 				<image class="searchImage2" src="../../static/GCJX/busIndex/green.png" />
+				<input class="inputIocale2" placeholder="我的位置"  @click="selectInitial" v-model="initialPoint" />
 				</view>
 				<!-- 虚线 -->
 				<view class="xuxian"></view>
 				<!-- 转换 -->
-				<view>
+				<view @click="exchange">
 					<image class="rotate"  src="../../static/GCJX/busIndex/rotate%20.png"></image>
 				</view>
 			<view class="searchBoxRadius2">
-				<input class="inputIocale2" type="search" v-model="ipt" placeholder="输入终点" />
 				<image class="searchImage2" src="../../static/GCJX/busIndex/red.png" />
+				<input class="inputIocale2"   placeholder="输入终点" @click="selectDestination" v-model="destination" />
 			</view>
 			</view>
 			<!-- 附近 -->
@@ -45,16 +45,31 @@
 				<text class="text1">{{nearstaion.data.stationName}}</text>
 				<text class="text2">{{nearstaion.data.distance}}></text>
 			</view>
-			<view class="xuxian"></view>
-			<view class="area1">
-				<image class="image1" src="../../static/GCJX/busIndex/icon.png"></image>
-				<text class="text1">{{nearstaion.data.stationName}}</text>
-				<text class="text2">{{nearstaion.data.distance}}></text>
-			</view>
+			<view class="xuxian2"></view>
+			<view v-for="(item,index) in showdetailList" :key="index">
+			   <view class="area2">
+				   <view style="display: flex; position: relative;">
+			      <text class="text3">{{item.lineName}}</text>
+				  <text class="text4">{{item.stationNumber}}</text>
+				  </view>
+				  <view class="area3">
+				  <text class="text5">方向    {{item.direction}}</text>
+				  <text class="text6">{{item.arriveTime}}/{{item.distance}}{{item.unit}}</text>
+				  </view>
+			   </view>
+			  </view>
+			<view class="more" v-if="linedata.length>3" @click="more">{{btustatu?"展开":"收起"}}</view>
 		</view>
 	</view>
 	<view v-if="current_2===1">
-				   didi
+				   <view  class="box3">
+					   <view v-for="(item,index) in linedata" :key="index">
+						   <view  class="area4">
+						   <image class="image2" src="../../static/GCJX/busIndex/bus.png"></image>
+						   <text class="text7">{{item.lineName}}     方向     {{item.direction}}</text>
+						   </view>
+					   </view>
+				   </view>
 	</view>
 	</view><!-- jiewei -->
 </template>
@@ -69,16 +84,55 @@
 			popupLayer,
 			QSTabs
 		},
-		computed: {},
+		computed: {
+			showdetailList: {
+			      get: function () {
+			         if (this.btustatu) {
+			             if (this.linedata.length < 3) {
+			                return this.linedata
+			             }
+			             let newArr = []
+			             for (var i = 0; i < 3; i++) {
+							 // var that =this
+							 // that.distance=that.linedata[i].distance
+							 // if(that.linedata[i].unit=="千米")
+							 // {
+							 // 	that.distance =that.linedata[i].distance*1000
+							 // 	 console.log(that.distance)
+							 // }
+							 // that.arriveTime = that.distance%400
+			                 let item = this.linedata[i]
+			                 newArr.push(item)
+			              }
+			              return newArr
+						  console.log(this.newArr)
+			           }
+			           return this.linedata
+			        },
+			        set: function (val) {
+			            this.showdetailList = val
+			        }
+			    }
+
+		},
 		data() {
 			return {
+				btustatu:true,    //展开收起状态
 				statusBarHeight: this.statusBarHeight, //状态栏高度，在main.js里
 				region: '请选择...', //地区 
 				tabs_2: ['去哪', '历史'],  //选项标题
 				current_2: 0,	//标题下标
 				filterIndex : 0,	//tabs默认值
 				nearstaion :[],//附近站点
-				stationdata :[]  //站点数据
+				linedata :[]  ,//站点数据
+				startlocation: {},
+				endlocation: {},
+				initialPoint:'',
+				destination:'',
+				endlongitude: "",
+				endtlatitude: "",
+                arriveTime:"",
+				distance:"",
 			}
 		},
 		created() {},  
@@ -105,9 +159,11 @@
 			async busInit(){
 				let nearStation = await this.$api.gjcx('nearBy');
 				this.nearstaion = nearStation;
-				console.log(this.nearstaion);
-				let stationData = await this.$api.gjcx('station');
-				this.stationdata = stationData;
+				let stationData = await this.$api.gjcx('line');
+				this.linedata = stationData.data;
+				
+				// this.arriveTime =stationData.data.distance % 4 ==0?stationData.data.distance/4:Math.ceil(stationData.data.distance/4);
+
 				},
 			//获取定位数据
 			Getpostion(){
@@ -150,6 +206,72 @@
 						scrollTop: 0
 					})
 					
+				},
+				more(){
+					this.btustatu = !this.btustatu;
+				},
+				selectInitial: function() { //选择起点
+					var that = this;
+					uni.chooseLocation({
+						success: function(res) {
+							uni.setStorage({
+								key: 'startlocation',
+								data: res,
+								success: function() {
+									that.initialPoint = res.name;
+									that.startLonLat = res.longitude + "," + res.latitude;
+									that.startlongitude = res.longitude;
+									that.startlatitude = res.latitude;
+									that.startlocation = res;
+								}
+							});
+						}
+					});
+				},
+				selectDestination: function() { //选择终点
+					var that = this;
+					uni.chooseLocation({
+						success: function(res) {
+							uni.setStorage({
+								key: 'endlocation',
+								data: res,
+								success: function() {
+									that.destination = res.name;
+									that.endLonLat = res.longitude + "," + res.latitude;
+									that.endlongitude = res.longitude;
+									that.endtlatitude = res.latitude;
+									that.endlocation = res;
+								}
+							});
+						}
+					});
+				},
+				exchange: function() { //始末位置交换
+					var that = this;
+					var newinitialPoint = that.initialPoint;
+					var newstartlocation = that.startlocation;
+					var newstartlatitude = that.startlatitude;
+					var newstartlongitude = that.startlongitude;
+					uni.setStorage({
+						key: 'startlocation',
+						data: that.endlocation,
+						success: function() {
+							that.initialPoint = that.destination;
+							that.startlocation = that.endlocation;
+							that.startlatitude = that.endtlatitude;
+							that.startlongitude = that.endlongitude;
+						}
+					});
+					uni.setStorage({
+						key: 'endlocation',
+						data: newstartlocation,
+						success: function() {
+							that.destination = newinitialPoint;
+							that.endlocation = newstartlocation;
+							that.endtlatitude = newstartlatitude;
+							that.endlongitude = newstartlongitude;
+						}
+					});
 				},
 		}
 	};
@@ -226,59 +348,7 @@
 		padding-top: 20upx;
 		padding-bottom: 30upx;
 	}
-	.bluering {
-		width: 20rpx;
-		height: 20rpx;
-		border-width: 4rpx;
-		border-color: #309FF7;
-		border-style: solid;
-		background-color: #fff;
-		border-radius: 100px;
-		margin-top: 6upx;
-	}
-	
-	.redring {
-		width: 20rpx;
-		height: 20rpx;
-		border-width: 4rpx;
-		border-color: #E3424B;
-		border-style: solid;
-		background-color: #fff;
-		border-radius: 100px;
-	}
-	//地址栏
-	.box{
-		width: 670rpx;
-		background-color: #ffffff;
-		padding-left: 20upx;
-		margin-left: 32upx;
-		border-radius: 11rpx;
-		.searchBoxRadius2 {
-			position: relative;
-			// right: -157upx;
-			width: 83%;
-			height: 74upx;
-			background-color: #fff;
-			overflow: hidden;
-			background: #ffffff;
-			
-			.searchImage2 {
-				position: absolute;
-				padding-left: 16upx;
-				padding-top: 20upx;
-				width: 48upx;
-				height: 48upx;
-				transform: scale(0.5);
-			}
-			.inputIocale2 {
-				position: absolute;
-				padding-top : 8upx;
-				padding-left: 70upx;
-				font-size: 30upx;
-			}
-			
-		}
-		// 虚线
+// 虚线
 		.xuxian{
 			border-bottom-width: 2rpx;
 			border-color: #F5F5F5;
@@ -288,6 +358,59 @@
 			margin-right: 117upx;
 			margin-left: 20upx;
 		}
+		// 虚线2
+				.xuxian2{
+					border-bottom-width: 2rpx;
+					border-color: #F5F5F5;
+					border-style: solid;
+					margin-top: 10rpx;
+					margin-bottom: 10rpx;
+					margin-right: 29upx;
+					margin-left: 20upx;
+				}
+				// 虚线3
+						.xuxian3{
+							border-bottom-width: 2rpx;
+							border-color: #F5F5F5;
+							border-style: solid;
+							margin-top: 10rpx;
+							margin-bottom: 10rpx;
+							margin-right: 117upx;
+							margin-left: 20upx;
+						}
+	//地址栏
+	.box{
+		width: 670rpx;
+		background-color: #ffffff;
+		padding-left: 20upx;
+		margin-left: 32upx;
+		border-radius: 11rpx;
+		.searchBoxRadius2 {
+			// right: -157upx;
+			width: 83%;
+			height: 74upx;
+			background-color: #fff;
+            display: flex; 
+            position: relative;
+			background: #ffffff;
+			
+			.searchImage2 {
+				padding-left: 16upx;
+				padding-top: 20upx;
+				width: 50upx;
+				height: 48upx;
+				transform: scale(0.5);
+			}
+			.inputIocale2 {
+				position: absolute;
+				font-size: 30upx;
+				margin-left: 77upx;
+				margin-top: 15upx;
+				width: 85%;
+			}
+			
+		}
+		
 		// 旋转
 		.rotate{
 			position: absolute;
@@ -312,6 +435,7 @@
 		padding-left: 20upx;
 		margin-left: 32upx;
 		border-radius: 11rpx;
+		margin-bottom: 45upx;
 		.area1{
 			position: relative;
 			// right: -157upx;
@@ -325,10 +449,11 @@
 		.image1{
 			position: absolute;
 			padding-left: 16upx;
-			padding-top: 20upx;
+			padding-top: 14upx;
 			width: 25upx;
 			height: 32upx;
 		}
+		
 		.text1{
 			padding-left: 70upx;
 			font-size: 36upx;
@@ -338,6 +463,78 @@
 		.text2{
 			font-size: 24upx;
 			font-weight: lighter;
+		}
+		
+		.area2{
+			// right: -157upx;
+			height: 157upx;
+			background-color: #fff;
+			background: #ffffff;
+			padding-top: 20upx;
+			.text3{
+				padding-left: 70upx;
+				font-size: 36upx;
+				font-weight: 500;
+				
+			}
+			.text4{
+				position: absolute;
+				font-size: 36upx;
+				font-weight: 500;
+				color: #FF6600;
+				right: 30upx;
+			}
+			.area3{
+				padding-top: 20upx;
+				padding-bottom: 20upx;
+				position: relative;
+			  .text5{
+				padding-left: 70upx;
+				font-size: 26upx;
+				font-weight: lighter;
+				padding-top: 25upx;
+			        }
+			  .text6{
+				font-size: 26upx;
+				font-weight: lighter;
+				position: absolute;
+				right: 30upx;
+				padding-top: 15upx;
+			        }
+				
+			}
+		}
+		.more{
+			text-align: center;
+			font-size: 28upx;
+			color: #888888;
+			padding-top: 32upx;
+			padding-bottom: 32upx;
+		}
+	}
+	//历史
+	.box3{
+		width: 670rpx;
+		background-color: #ffffff;
+		padding-left: 20upx;
+		margin-left: 32upx;
+		border-radius: 11rpx;
+		margin-bottom: 45upx;
+		.area4{
+			padding-top: 20upx;
+			padding-bottom: 20upx;
+			.text7{
+				
+				font-size: 28upx;
+				color: #333333;
+			}
+			.image2{
+				padding-left: 16upx;
+				padding-top: 14upx;
+				width: 32upx;
+				height: 32upx;
+				padding-right: 20upx;
+			}
 		}
 	}
 </style>
