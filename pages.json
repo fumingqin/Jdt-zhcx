@@ -313,6 +313,17 @@
 				"navigationBarTitleText": "公交查询",
 				"navigationBarBackgroundColor": "#FFFFFF"
 			}
+<<<<<<< HEAD
+        }
+        ,{
+            "path" : "pages/GJCX/detailedBus",
+            "style" : {
+				"navigationBarTitleText": "42路",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
+    ],
+=======
 		}, {
 			"path": "pages/CZC/PaymentSuccess",
 			"style": {
@@ -331,6 +342,7 @@
 			"style": {}
 		}
 	],
+>>>>>>> 0d3bc4d093f8b5e351d3a84bd8f44a84a355afe9
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
