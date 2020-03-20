@@ -13,7 +13,7 @@
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{orderInfo[0].orderDateReminder}} &nbsp; {{orderInfo[0].orderDate}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{orderInfo[0].orderDate}} &nbsp; {{orderInfo[0].orderDateReminder}} &nbsp; 仅限当天</text>
 				</view>
 
 				<view class="MP_selectionDate">

@@ -585,7 +585,7 @@
 				info: [{
 						title: '景区门票',
 						orderNumber: '11126778833',
-						orderType: '已使用',
+						orderType: '待使用',
 						orderActualPayment: 434,
 						orderDateReminder: '2020-03-20',
 						orderDate: '今天',
@@ -598,7 +598,7 @@
 					}, {
 						title: '景区门票',
 						orderNumber: '11126778833',
-						orderType: '待使用',
+						orderType: '已使用',
 						orderActualPayment: 434,
 						orderDateReminder: '2020-03-20',
 						orderDate: '今天',
@@ -735,8 +735,6 @@
 						that.cancelArr.push(that.info[i]);
 					}
 				}
-				console.log(this.cancelArr)
-				console.log(this.unfinishArr)
 			},
 
 			//景区门票-打开二维码弹框
