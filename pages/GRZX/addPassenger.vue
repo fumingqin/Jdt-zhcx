@@ -43,13 +43,13 @@
 						:value="user.codeNum"
 						name="codeNum"
 						type="idcard"
-					/>				
+					/>	
 				</view>
 				
 				<view class="itemClass">
 					<view class="fontStyle">有效期至</view>
 					<view class="inputClass">
-						<picker mode="date" :value="user.date" :start="startDate" :end="endDate" @change="bindDateChange" name="date">
+						<picker mode="date" :value="user.date" @change="bindDateChange" name="date">
 							<view>{{user.date}}</view>
 						</picker>
 					</view>

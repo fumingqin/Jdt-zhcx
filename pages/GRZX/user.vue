@@ -51,7 +51,7 @@
 				<text class="fontStyle">在线客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="navTo('证照信息')">
+			<view class="boxClass borderTop" @click="infoClick">
 				<image src="../../static/GRZX/tubiao_zhengzhao.png" class="iconClass3"></image>
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
@@ -140,7 +140,12 @@
 				})  
 				console.log(url)
 			},
-			
+			//信息管理
+			infoClick(){
+				uni.navigateTo({
+					url:'/pages/GRZX/infoList'
+				})
+			},
 			// 投诉
 			complaintClick(){
 				uni.navigateTo({
@@ -179,6 +184,7 @@
 					title : '我的历史',
 					icon : 'none',
 				})
+				
 			},
 			scanClick(){
 				uni.showToast({
