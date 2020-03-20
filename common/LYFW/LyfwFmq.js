@@ -189,10 +189,10 @@ const orderInfo = {
 	status: 1, //1成功/0失败提示返回值
 	data: [{
 		orderNumber:'11126778833',
-		orderStatus:'待使用',
+		orderType:'待使用',
 		orderActualPayment: 434, //实际付款金额
-		orderDateReminder: '2020-03-11', //时间表达（今天，明天，星期X）
-		orderDate: '明天', //数字时间
+		orderDateReminder: '明天', //时间表达（今天，明天，星期X）
+		orderDate: '2020-03-11', //数字时间
 		orderTicketNumber: 'T8718283713', //取票号
 		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png', //二维码
 		orderInsure : true, //是否购买保险
@@ -221,10 +221,10 @@ const orderInfo = {
 		userEmergencyContact:false,
 	},{
 		orderNumber:'11126778833',
-		orderStatus:'待使用',
+		orderType:'待使用',
 		orderActualPayment: 434, //实际付款金额
-		orderDateReminder: '2020-03-11', //时间表达（今天，明天，星期X）
-		orderDate: '明天', //数字时间
+		orderDateReminder: '明天', //时间表达（今天，明天，星期X）
+		orderDate: '2020-03-11', //数字时间
 		orderTicketNumber: 'T8718283713',
 		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
 		orderInsure : true,

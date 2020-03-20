@@ -2,7 +2,7 @@
 	<view class="Cr_background">
 		<form @submit="formSubmit" >
 			<image class="bg" :src="background" mode="aspectFill" name="background"></image>
-			<image class="tx" :src="avatarUrl" @click="getPhoto" name="avatarUrl"></image>
+			<image class="tx" :src="avatarUrl" name="avatarUrl"></image>
 			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
 			<view class="Cr_slk1">
 				<text class="bz">姓&nbsp;名：</text>
@@ -36,9 +36,8 @@
 				<text class="bz">签&nbsp;名：</text>
 				<input class="slk" name="autograph"   placeholder="你想要说的话"  v-model="detailInfo.autograph" />
 			</view>
-			<!-- #ifdef MP-WEIXIN -->
 			<button class="an" type="primary" form-type="submit">保存</button>
-			<!-- #endif -->
+			
 		</form>
 	</view>
 	 
@@ -97,16 +96,21 @@
 		methods:{
 			
 			async loadUserInfo(){
-				var theself=this;
+				/* var theself=this;
 				uni.getStorage({
-					key: 'userInfo',			
+					key: 'Grxx',			
 					success: function (res) {
 						theself.selector =theself.genderSex[res.data.sex];
 						if(res.data.birthday==null||res.data.birthday==""){
 							
 						}else{
 							theself.detailInfo.birthday=res.data.birthday;
-						}			
+						}
+						if(res.data.sex==null||res.data.sex==""){
+							
+						}else{
+							theself.detailInfo.birthday=res.data.birthday;
+						}	
 						theself.background=res.data.background;
 						theself.detailInfo.autograph=res.data.autograph;
 						theself.detailInfo.nickName = res.data.nickName; 
@@ -114,7 +118,7 @@
 						theself.detailInfo.address= res.data.address;
 						//console.log(res,"res")
 					}
-				});	
+				});	 */
 			},
 			genderChange : function(e){
 				this.selector =this.genderSex[e.detail.value]; 
@@ -162,12 +166,13 @@
 					e.target.value.background=this.background;
 				}
 				uni.setStorage({
-					key:"userInfo",
+					key:"Grxx",
 					data:e.target.value
 				})
 				console.log(e.target.value,"555")
 				uni.navigateBack();
 			},
+			getPhoto(){},
 			// getPhoto: function () {
 			//         let id = uni.getStorageSync('user').id
 			//         uni.chooseImage({

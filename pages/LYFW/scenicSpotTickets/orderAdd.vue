@@ -139,7 +139,7 @@
 					<text class="people">共{{addressData.length}}人</text>
 				</view>
 
-				<view class="submitChange" :class="{submitColor: selectedValue===1}" @click="submit">
+				<view class="submitChange" :class="{submitColor: selectedValue===1 && addressData.length>0}" @click="submit">
 					<text class="submit">立即预订</text>
 				</view>
 			</view>
@@ -337,7 +337,7 @@
 
 			//提交表单
 			submit: function() {
-				if (this.selectedValue == 1) {
+				if (this.selectedValue == 1 && this.addressData.length>0) {
 					// uni.request({
 					// 	url : '',
 					// 	data:{
@@ -358,7 +358,12 @@
 						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
 					})
 
-				} else {
+				} else if(this.addressData.length==0){
+					uni.showToast({
+						title: '请添加购票人信息',
+						icon: 'none'
+					})
+				}else {
 					uni.showToast({
 						title: '请同意购买须知',
 						icon: 'none'

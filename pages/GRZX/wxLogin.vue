@@ -1,6 +1,6 @@
 <template>
     <view class="content">
-		<image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image>
+		<!-- <image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image> -->
 		<view class="inputItem phoneNum">
 			<image src="../../static/GRZX/shouji.png" class="iconClass1"></image>
 			<input type="number" placeholder="手机号码" maxlength="11" class="inputClass" data-key="phoneNumber" @input="inputChange1" />
@@ -15,6 +15,10 @@
 </template>
 
 <script>
+	import {
+		mapState,
+	    mapMutations  
+	} from 'vuex';
 	export default {
 	    data() {
 	        return {
@@ -27,10 +31,20 @@
 			
 	    },
 	    methods: {
+			...mapMutations(['login']),
 			returnClick(){		//返回个人中心
 				uni.switchTab({
 					url:'/pages/GRZX/user'
 				})
+			},
+			judgeNum(val){  //只能输入数字
+				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+				    if(regPos.test(val) || regNeg.test(val)) {
+				        return true;
+				    } else {
+				        return false;
+				    }
 			},
 			inputChange1(e){
 				var num=e.detail.value;
@@ -80,18 +94,20 @@
 							key:'captchaCode',
 							success(res) {
 								if(captcha==res.data){
-								var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);	
-									uni.setStorage({
-										key:'userInfo',
-										data:{
-											phoneNumber:phone,
-											nickName:"用户"+randomNum
-										}
-									})
+								var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
 									uni.getStorage({
 										key:'userInfo',
-										success:function(user){
-											that.login(user.data);
+										success:function(res1){
+											res1.data.phoneNumber=phone;
+											console.log(res1.data,"...res1")
+											uni.setStorage({
+												key:'userInfo',
+												data:res1.data
+											})
+											uni.setStorage({
+												key:'Grxx',
+												data:res1.data
+											})
 										}
 									})
 									 uni.switchTab({
