@@ -351,7 +351,7 @@
 				isPupop:true,//是否弹窗
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			var that = this;
 			uni.getStorage({ //获取历史记录
 				key: "historyAddress",
@@ -366,6 +366,7 @@
 					that.startlatitude = res.latitude;
 				}
 			});
+			this.current = options.current;
 		},
 		onShow() {
 			var that = this;

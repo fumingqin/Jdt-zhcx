@@ -16,6 +16,56 @@ const userInfo = {
 	msg: '提示'
 }
 
+
+/* 首页-轮播图 */
+const rotationPicture = {
+	status:1,
+	data:[{
+		ticketId: 0,
+		src: "../../static/Home/indexzhly/banner3.jpg",
+		background: "#149bf0",
+	},
+	{
+		ticketId: 1,
+		src: "../../static/Home/indexzhly/banner2.jpg",
+		background: "#4877c9",
+	},
+	{
+		ticketId: 2,
+		src: "../../static/Home/indexzhly/banner1.jpg",
+		background: "#69b4e6",
+	}],
+	msg: '提示',
+}
+
+/* 首页-四宫格 */
+const checkeredPattern = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+			ticketId: 0,
+			ticketName: '武夷山',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		},
+		{
+			ticketId: 1,
+			ticketName: '溪源峡谷',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg',
+		},
+		{
+			ticketId: 2,
+			ticketName: '芒荡山',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg',
+		},
+		{
+			ticketId: 3,
+			ticketName: '和平古镇',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg',
+		}],
+	msg: '提示',
+}
+
+
+
 /* 六宫格-景区列表 */
 const sixPalaceList = {
 	status: 1, //1成功/0失败提示返回值
@@ -260,6 +310,8 @@ const orderInfo = {
 // 接口声明区
 export default {
 	userInfo,
+	rotationPicture,
+	checkeredPattern,
 	sixPalaceList,
 	scenicList,
 	scSpotDetails,

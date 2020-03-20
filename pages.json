@@ -368,6 +368,50 @@
             "path" : "pages/CTKY/checkBusLocation",
             "style" : {"navigationBarTitleText": "查看班车位置"}
         }
+        ,{
+            "path" : "pages/Home/indexZhly",
+            "style" : {
+				// #ifdef MP
+				"navigationBarTitleText": "南平智慧旅游APP",
+				//"navigationStyle": "custom",
+				// #endif 
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent",
+						"searchInput": {
+							"backgroundColor": "rgba(231, 231, 231,.7)",
+							"borderRadius": "16px",
+							"placeholder": "请输入内容 如：武夷山",
+							"disabled": true,
+							"placeholderColor": "#606266"
+						},
+						"buttons": [{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue60d",
+								"fontSize": "26",
+								"color": "#303133",
+								"float": "left",
+								"background": "rgba(0,0,0,0)"
+							},
+							{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue744",
+								"fontSize": "27",
+								"color": "#303133",
+								"background": "rgba(0,0,0,0)",
+								"redDot": true
+							}
+						]
+					}
+				}
+			}
+        },
+		{
+		    "path" : "pages/Home/navigation",
+		    "style" : {
+				"navigationBarTitleText": "搜索"
+			}
+		}	
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -385,15 +429,15 @@
 		//#endif
 		"list": [{ 
 				"pagePath": "pages/Home/Index",
-				"text": "首页"
+				"text": "出行"
+			},
+			{
+				"pagePath": "pages/Home/indexZhly",
+				"text": "旅游"
 			},
 			{
 				"pagePath": "pages/order/OrderList",
 				"text": "订单"
-			},
-			{ 
-				"pagePath": "pages/Home/Index",
-				"text": "购物车"
 			},
 			{
 				"pagePath": "pages/GRZX/user",
@@ -411,3 +455,4 @@
 		}]
 	}
 }
+ 
