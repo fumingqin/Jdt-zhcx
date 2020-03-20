@@ -157,7 +157,7 @@
 	.btnsubmit{  //保存按钮
 		width: 60%;
 		height: 108upx;
-		background-color: #46A5FE;
+		background-color: #FC4B4B;
 		color: #FFFFFF;
 		position: fixed;
 		bottom: 0upx;

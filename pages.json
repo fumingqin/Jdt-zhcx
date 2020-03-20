@@ -79,17 +79,35 @@
 		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
-				"navigationBarTitleText": "选择支付 "
+				"navigationBarTitleText": "选择支付 ",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
 			"style": {
-				"navigationBarTitleText": "购票成功"
+				"navigationBarTitleText": "购票成功",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 			"style": {
-				"navigationBarTitleText": "填写订单"
+				"navigationBarTitleText": "填写订单",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
 			}
 		},
 		{
@@ -101,7 +119,7 @@
 		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
-"backgroundColor":"#007AFF",
+				"backgroundColor":"#007AFF",
 				"navigationStyle": "custom"
 			}
 		}, 
@@ -145,11 +163,15 @@
 		}, 
 		{
 			"path": "pages/GRZX/userLogin",
-			"style": {}
+			"style": {
+				"navigationStyle": "custom"
+			}
 		},
 		{
 			"path": "pages/GRZX/wxLogin",
-			"style": {}
+			"style": {
+				"navigationStyle": "custom"
+			}
 		},
 		{
 			"path": "pages/GRZX/personal",
@@ -206,6 +228,12 @@
 			"path": "pages/GRZX/myNews",    //我的消息
 			"style": {
 				"navigationBarTitleText": "我的消息"
+			}
+		},
+		{
+			"path": "pages/GRZX/infoList",    //常用信息设置
+			"style": {
+				"navigationBarTitleText": "常用信息设置"
 			}
 		},
 		//个人中心模块结束
@@ -350,7 +378,7 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		//"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},

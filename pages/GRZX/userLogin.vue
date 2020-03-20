@@ -175,7 +175,6 @@
 				
 			},
 			wxLogin(){		//微信授权登录
-				this.logining=true;
 				var theSelf=this;
 				var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
 				var address;
@@ -193,6 +192,7 @@
 									key:"userInfo",
 									data:res.userInfo
 								});
+								theSelf.logining=true;
 								uni.showToast({
 									title: '授权成功',
 									icon:"none"
@@ -200,6 +200,7 @@
 								if(res!=null||res!=""){
 									theSelf.login(res.userInfo);						
 								}
+								//绑定手机号
 								uni.getStorage({
 									key:'userInfo',
 									success:function(res1){
@@ -225,26 +226,53 @@
 							fail:function(){
 								theSelf.logining=false;
 							}
-				})
+						})
 					}
 				})
 				
 			},
 			qqLogin(){		//QQ授权登录
-				/* uni.getProvider({
+				var theSelf=this;
+				uni.getProvider({
 				    service: 'oauth',
 				    success: function (res) {
-				        console.log(res.provider)
 				        if (~res.provider.indexOf('qq')) {
 				            uni.login({
 				                provider: 'qq',
 				                success: function (loginRes) {
-				                    console.log(JSON.stringify(loginRes));
+				                    uni.getUserInfo({
+				                    	provider: 'qq',
+										success(logRes) {
+											console.log(logRes,"logRes")
+											var list={
+												nickName:logRes.userInfo.nickname,
+												openId:logRes.userInfo.openid,
+												avatarUrl:logRes.userInfo.figureurl_qq_2,
+											}
+											console.log(list,"list")
+											uni.setStorage({
+												key:'userInfo',
+												data:list
+											})
+											theSelf.logining=true;
+											if(list!=null||list!=""){
+												theSelf.login(list);						
+											}
+											uni.showToast({
+												title: '授权成功',
+												icon:"none"
+											});
+											uni.switchTab({
+												url:'/pages/GRZX/user'
+											})
+											
+										}
+				                    })
 				                }
 				            });
 				        }
 				    }
-				}); */
+				})
 			},
 			getCodeClick(e){	//获取验证码
 				var self=this;
@@ -411,15 +439,15 @@
 		color: #999999;
 	}
 	.leftLine{
-		border: 1upx solid #EAEAEA;
+		border-top: 1upx solid #EAEAEA;
 		height: 1upx;
 		width: 22.48%;
 		position: absolute;
 		top:920upx;
-		left: 11.73%;
+		left: 12.73%;
 	}
 	.rightLine{
-		border: 1upx solid #EAEAEA;
+		border-top: 1upx solid #EAEAEA;
 		height: 1upx;
 		width: 22.48%;
 		position: absolute;

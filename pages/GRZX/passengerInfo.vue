@@ -114,7 +114,7 @@
 		onLoad(options){
 			//传参，submitType参数为1,为出租车进入,其他界面设为2 
 			//limitNum参数为你限制添加乘车人的数量（大于等于1）
-			this.getType(options.submitType,options.limitNum); 
+			 this.getType(options.submitType,options.limitNum); 
 		},
 		methods:{
 			async getType(t,l){
@@ -139,7 +139,7 @@
 				})
 			},
 			choosePassenger(e){  //选择乘车人
-				console.log(this.limit,"....00000")
+				//console.log(this.limit,"....00000")
 				var list=this.passengerList;
 				var count=0;
 				for(var i=0;i<list.length;i++){
@@ -194,7 +194,7 @@
 		position: absolute;
 		left: 89.26%;
 		top:90upx;
-		width: 6.45%;
+		width: 45upx;
 		height:46upx ;
 	}
 	.returnClass{ //返回按钮
