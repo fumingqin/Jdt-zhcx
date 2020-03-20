@@ -1,11 +1,14 @@
 <template>
 	<view class="contentView">
+		<view class="top u-f-jsb" style="background-color: #FC4646; width: 100%; height: 180rpx;">
+			<view style="color: #FFFFFF; font-size: 35rpx; margin-left: 20rpx;">已完成</view>
+			<view style="color: #FFFFFF; font-size: 30rpx; margin-right: 20rpx;">￥49.5</view>
+		</view>
 		<!-- 头部视图 -->
 		<view class="head">
 			<!-- 起始站/价格 -->
 			<view class="u-f-jsb">
 				<view>泉州客运中心 — 安溪  x2</view>
-				<view>￥49.5</view>
 			</view>
 			<!-- 发车时间 -->
 			<view> 发车时间：2020-03-08  20:00</view>
@@ -41,8 +44,12 @@
 							<view>{{item.insurance}}</view>
 						</view>
 					</view>
+					<!-- 二维码 -->
 					<view class="QRImage">
 						<image style="width: 300rpx; height: 300rpx;" src="../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png" lazy-load mode="aspectFill"></image>
+					</view>
+					<view style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
+						  取票号 16565446
 					</view>
 					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
 						出示二维码，检票上车
@@ -60,21 +67,21 @@
 			return {
 				passageInfo:[
 					{
-						name:'张小娴  成人票',
+						name:'张小娴  (成人票)',
 						IDCard:'129097475652621',
 						phoneNum:'1234567890',
 						role:'当前时间申请退款  损失为32.5元',
 						insurance:'中国人寿意外保险  经济款 x1'
 					},
 					{
-						name:'张小娴  成人票',
+						name:'张小娴  (成人票)',
 						IDCard:'129097475652621',
 						phoneNum:'1234567890',
 						role:'当前时间申请退款  损失为32.5元',
 						insurance:'中国人寿意外保险  经济款 x1'
 					},
 					{
-						name:'张小娴  成人票',
+						name:'张小娴  (成人票)',
 						IDCard:'129097475652621',
 						phoneNum:'1234567890',
 						role:'当前时间申请退款  损失为32.5元',
@@ -123,6 +130,7 @@
 		background: #FFFFFF;
 		border-radius: 20rpx;
 		margin: 20rpx;
+		margin-top: -60rpx;
 	}
 	/* 起始站/价格 */
 	.head>view:first-child {
@@ -153,6 +161,7 @@
 	}
 	/* 标题 */
 	.title {
+		text-align: left;
 		color: #666666;
 		display: block;
 		padding-top: 20rpx;
