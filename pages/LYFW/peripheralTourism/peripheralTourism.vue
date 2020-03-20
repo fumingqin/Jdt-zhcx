@@ -96,34 +96,34 @@
 			this.tweetsInit();
 			this.loadData();
 			this.Getpostion();
-			this.isGetLocation();
+			
 		}, 
 		methods: {
-			getAuthorizeInfo(a="scope.userLocation"){  //1. uniapp弹窗弹出获取授权（地理，个人微信信息等授权信息）弹窗
-					var _this=this;
-					uni.authorize({
-						scope: a,
-						success() { //1.1 允许授权
-							_this.getLocationInfo();
-						},
-						fail(){    //1.2 拒绝授权
-							// console.log("你拒绝了授权，无法获得周边信息")
-						}
-					})
-				},
-				isGetLocation(a="scope.userLocation"){ // 3. 检查当前是否已经授权访问scope属性，参考下截图
-						var _this=this;
-						uni.getSetting({
-						    success(res) {	
-								// console.log(res)
-								if (!res.authSetting[a]) {  //3.1 每次进入程序判断当前是否获得授权，如果没有就去获得授权，如果获得授权，就直接获取当前地理位置
-									_this.getAuthorizeInfo()
-								}else{
-									_this.getLocationInfo()
-								}
-							}
-						});
-						},
+			// getAuthorizeInfo(a="scope.userLocation"){  //1. uniapp弹窗弹出获取授权（地理，个人微信信息等授权信息）弹窗
+			// 		var _this=this;
+			// 		uni.authorize({
+			// 			scope: a,
+			// 			success() { //1.1 允许授权
+			// 				_this.getLocationInfo();
+			// 			},
+			// 			fail(){    //1.2 拒绝授权
+			// 				// console.log("你拒绝了授权，无法获得周边信息")
+			// 			}
+			// 		})
+			// 	},
+			// 	isGetLocation(a="scope.userLocation"){ // 3. 检查当前是否已经授权访问scope属性，参考下截图
+			// 			var _this=this;
+			// 			uni.getSetting({
+			// 			    success(res) {	
+			// 					// console.log(res)
+			// 					if (!res.authSetting[a]) {  //3.1 每次进入程序判断当前是否获得授权，如果没有就去获得授权，如果获得授权，就直接获取当前地理位置
+			// 						_this.getAuthorizeInfo()
+			// 					}else{
+			// 						_this.getLocationInfo()
+			// 					}
+			// 				}
+			// 			});
+			// 			},
 			
 			//读取静态数据lyfw.js
 			async tweetsInit(){

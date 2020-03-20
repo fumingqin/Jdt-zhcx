@@ -339,7 +339,14 @@
         ,{
             "path" : "pages/CTKY/checkBusLocation",
             "style" : {"navigationBarTitleText": "查看班车位置"}
-        }
+        },
+		{
+		    "path" : "pages/GJCX/detailedBus",
+		    "style" : {
+				"navigationBarTitleText": "41路",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
