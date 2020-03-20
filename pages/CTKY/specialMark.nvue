@@ -137,6 +137,7 @@
 			//获取系统信息
 			uni.getSystemInfo({
 				success:function(res){
+					//地图高度
 					that.mapHeight = res.windowHeight + 'px';
 				}
 			});
@@ -147,12 +148,24 @@
 					LineCode:1
 				},
 				header : {'content-type':'application/json'},
-				
 				success: (res) => {
-					console.log('请求成功',res);
+					// console.log('请求成功',res);
 					//创建坐标数组保存坐标数据
-					var latLonArray = [];
-					
+					var coordinateArray = [];
+					for (var i = 0; i < res.data.length; i++) {
+						var coordinates = {
+							latitute : res.data[i].Log_Latitude,
+							longitude : res.data[i].Log_Longitude,
+						}
+						that.points.push(coordinates);
+					}
+					var obj = {
+						points : that.points,
+						color:"#669253",
+						width:2,
+						arrowLine: true,
+					}
+					that.polyline.push(obj);
 				},
 				fail:function(res){
 					console.log('请求失败',res);
