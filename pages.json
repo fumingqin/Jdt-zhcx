@@ -415,7 +415,7 @@
 				"navigationBarTitleText": "搜索"
 			}
 		}
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",

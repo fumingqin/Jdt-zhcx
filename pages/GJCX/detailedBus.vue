@@ -1,7 +1,5 @@
 <template>
 	<view>
-		<!-- 背景颜色 -->
-		<view  class="bgColor"></view>
 		<!-- 顶部基本信息 -->
 		<view class="box1">
 			<view class="text1">方向:   {{detailLine.data.endStation}}</view>
@@ -10,26 +8,37 @@
 			<view class="butter2">票价</view>
 			<view class="text3">{{detailLine.data.price}}  ></view>
 		</view>
-		<!-- 时间信息左 -->
-		<view class="box2">
-			<view class="area1">
-				<view class="text4">
-		            <text >预计到达</text>
+		<!-- 地图 -->
+		
+		<map id='map' ref="map" class="map" :style="{height:mapHeight,width:mapWidth}" :scale="scale" :longitude="longitude" :latitude="latitude" 
+		 :show-location="true" :controls="controls" @controltap="controltap">
+		</map>
+		
+		<view>
+		<!-- 嵌套弹窗 -->
+		<uni-popup ref="popup" type="bottom">
+			<!-- 线路信息 -->
+			<view class="box2">
+				<!-- 时间信息左 -->
+				<view class="area1">
+					<view class="text4">
+			            <text >预计到达</text>
+						</view>
+					<view class="text4">
+						<text>下一站/{{arriveTime}}分  {{detailLine.data.distance}}{{detailLine.data.unit}}</text>
 					</view>
-				<view class="text4">
-					<text>下一站/{{arriveTime}}分  {{detailLine.data.distance}}{{detailLine.data.unit}}</text>
-				</view>
-		    </view> 
-			<!-- 时间信息右 -->
-			<view class="area2">
-				<view class="text4">
-			        <text >预计起点发车</text>
+			    </view> 
+				
+				<!-- 时间信息右 -->
+				<view class="area2">
+					<view class="text4">
+				        <text >预计起点发车</text>
+						</view>
+					<view class="text4">
+						<text>{{detailLine.data.departureTime}}</text>
 					</view>
-				<view class="text4">
-					<text>{{detailLine.data.departureTime}}</text>
-				</view>
-			</view> 
-		</view>
+				</view> 
+			</view>
 		<!-- 横向动态列表 -->
 		<view class="box3">
 			<scroll-view scroll-x="true" class="scroll-X" >
@@ -49,14 +58,17 @@
 					
 					</view>
 			</scroll-view>
-	</view>
+	      </view>
+			
+			</uni-popup>
+			</view>
 			<!-- 底部操作 -->
 			<view class="box4">
 				<view class="areaLeft" @click="exchange">
 					<image class="exchange" src="../../static/GCJX/detailedBus/exchange.png"></image>
 					<text class="huanxiang">换向</text>
 				</view>
-				<view class="areaRight">
+				<view class="areaRight" @click="controlPopup">
 					<image class="map" src="../../static/GCJX/detailedBus/loction.png"></image>
 					<text class="ditu">地图</text>
 				</view>
@@ -65,6 +77,8 @@
 </template>
 
 <script>
+	import uniPopup from "../../components/uni-popup/uni-popup3.vue"
+	import taxi from '../../common/Czc.js'
 	export default {
 		data() {
 			return {
@@ -74,12 +88,67 @@
 				realtimeDynamic:[],
 				realtimeDynamicback:[],
 				direction:0,
-				list:'',      //接口
+				list:'',      //线路接口
+				longitude: "", //精度
+				latitude: "", //纬度
+				key: [],
+				scale: 16,
+				mapHeight: '',
+				mapWidth:'319px',
+				popupStatu:0, //弹窗状态
+				controls: [{
+						id: 'back',
+						position: {
+							left: 10,
+							top: 445,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Position.png',
+						clickable: true,
+					},
+					/* 			{
+									id: 'CallPollice',
+									position: {
+										left: 300,
+										top: 290,
+										width: 55,
+										height: 55
+									},
+									iconPath: '../../static/Home/CallPollice.png',
+									clickable: true,
+								}, */
+				],
 			}
 		},
 		onLoad() {
-			this.busIndex()
+			this.busIndex();
+			this.getGaoDeKey();
+			this.getMyLocation();
+			this.$refs.popup.open();
+			uni.getSystemInfo({
+				success: function(res) {
+					if (res.screenWidth < 350) {
+						//回到我的位置
+						this.controls[0].position.top = 350;
+					}
+				}
+			})
 
+		},
+		onReady() {
+			var that = this;
+			that.mapContext = uni.createMapContext("map", this);
+			uni.getSystemInfo({
+				//设置地图高度为可使用的高度
+				success: function(res) {
+					that.mapHeight = (res.windowHeight - 50) + 'px';
+				}
+			});
+		},
+		components: {
+			//加载多方弹框组件
+			uniPopup,
 		},
 		methods: {
 			async busIndex(){
@@ -94,8 +163,56 @@
 				let realtimedynamicback =await this.$api.gjcx('realtimeDynamicback');
 				this.realtimeDynamicback =realtimedynamicback.data;
 			},
+			getGaoDeKey: function() {
+				//获取高德key
+				var that = this;
+				that.key = taxi.GaoDeWebKey;
+			},
+			getMyLocation: function() {
+				//获取我的位置，将地图中心点移动至此
+				var that = this;
+				var ojb = {
+					type: 'gcj02',
+					geocode: true,
+					success: function(res) {
+						that.longitude = res.longitude;
+						that.latitude = res.latitude;
+					},
+					fail: function() {
+			
+					},
+				}
+				uni.getLocation(ojb);
+			},
+			//地图控件调用方法
+			controltap: function(e) {
+				var that = this;
+				var controlId = ''
+				// #ifdef APP-PLUS
+				controlId = e.detail.controlId;
+				// #endif
+				// #ifdef MP-WEIXIN
+				controlId = e.controlId;
+				// #endif
+			
+				if (controlId === 'back') {
+					//回到我的位置
+					that.mapContext.moveToLocation();
+				}   else if (controlId === 'Big') {
+					//放大
+					if (this.scale < 18) {
+						this.scale = this.scale + 1;
+					}
+				} else if (controlId === 'Small') {
+					//缩小
+					if (this.scale > 5) {
+						this.scale = this.scale - 1;
+					}
+				}
+			},
 			//换向 点击后更换接口
 			exchange(){
+				this.$refs.popup.open();
 				if(this.direction==0){
 				this.direction =1;
 				this.list=this.realtimeDynamicback
@@ -104,25 +221,39 @@
 					this.direction =0;
 					this.list=this.realtimeDynamic
 				}
+			},
+			//弹框
+			controlPopup(){
+				if(this.popupStatu==0){
+					this.$refs.popup.close();
+					this.popupStatu=1;
+
+				}
+				else{
+					this.$refs.popup.open();
+					this.popupStatu=0;
+
+				}
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
-	.bgColor{
-	    position: fixed;
-	    top: 0;
-	    left: 0;
-	    right: 0;
-	    bottom: 0;
-	    background: #F3F3F3;
-	    z-index: -1;
-	  }
+	// .bgColor{
+	//     position: fixed;
+	//     top: 0;
+	//     left: 0;
+	//     right: 0;
+	//     bottom: 0;
+	//     background: #F3F3F3;
+	//     z-index: -1;
+	//   }
   .box1{
 	  background-color: #FFFFFF;
 	  height: 160upx;
 	  position: relative;
+	  z-index: 999;
 	.text1{
 		  font-size: 32upx;
 		  margin-left: 33upx;
@@ -168,12 +299,12 @@
   .box2{
   	width: 690rpx;
   	background-color: #ffffff;
-  	margin-left: 32upx;
   	border-radius: 11rpx;
-	margin-top: 32upx;
     display: flex;
-		// position: relative;
-
+	margin-left: 32upx;
+	// position: absolute;
+	// right: 30upx;
+ //    top: 188upx;
        .area1{
 		   text-align: center;
 		   padding-top: 20upx;
@@ -187,10 +318,9 @@
 		}
 		}
        .area2{
-               margin-left: 71upx;
        		   text-align: center;
        		   padding-top: 20upx;
-       		   // margin-left: 71upx;
+       		   margin-left: 71upx;
        		   padding-bottom: 41upx;
 			   padding-right: 83upx;
        		.text4{
@@ -208,11 +338,15 @@
 		margin-left: 32upx;
 		border-radius: 11rpx;
 		margin-top: 32upx;
-		position: relative;
-
+		margin-left: 32upx;
+		margin-bottom: 187upx;
+		// position: fixed;
+		// top: 300upx;
+		// z-index: 998;
 		.scroll-X{
 			white-space: nowrap;
 			height: 600upx;
+			width: 690rpx;
 			position: absolute;
 			.image1{
 				position: relative;
@@ -263,12 +397,15 @@
 		}
 	}
 	.box4{
+		position: absolute;
 		width: 690rpx;
 		height: 96upx;
 		background-color: #ffffff;
 		margin-left: 32upx;
 		border-radius: 11rpx;
-		margin-top: 32upx;
+		bottom: 63upx;
+		
+		// margin-top: 32upx;
 		// position: relative;
 		display: flex;
 		.areaLeft{
