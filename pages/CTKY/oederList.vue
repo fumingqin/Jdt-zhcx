@@ -456,7 +456,6 @@
 
 	/* 可滚动区域 */
 	.panelScrollBox {
-		
 		margin-top: 100rpx;
 		/* 由于在手机上会有安全区域,所以可滚动高度暂时设置为92% */
 		height: 92%;

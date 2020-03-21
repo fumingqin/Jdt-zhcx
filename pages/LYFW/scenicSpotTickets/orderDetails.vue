@@ -60,21 +60,21 @@
 		
 		<!-- 信息详情 -->
 		<!-- 命名：Xx -->
-		<view class="Xx_view" v-for="(item,index) in orderInfo" :key="index">
-			<view class="Xx_titleView">
-				<text class="Xx_title">{{item.ticketTitle}}</text>
+		<view class="Xx_view" >
+			<view class="Xx_titleView" @click="route">
+				<text class="Xx_title">{{orderInfo[0].ticketTitle}}</text>
 				<text class="Xx_titleIcon"> > </text>
 			</view>
 			<view class="Xx_contentView"> 
 					<text class="Xx_contentTitle" >门票状态</text>
-					<text class="Xx_contentTitle2">{{item.orderStatus}}</text>
+					<text class="Xx_contentTitle2">{{orderInfo[0].orderType}}</text>
 				<view class="Xx_contentBlock">	
 					<text class="Xx_contentTitle" >使用日期</text>
-					<text class="Xx_contentTitle2">{{item.orderDateReminder}}&nbsp;{{item.orderDate}}&nbsp;当天可用</text>
+					<text class="Xx_contentTitle2">{{orderInfo[0].orderDateReminder}}&nbsp;{{orderInfo[0].orderDate}}&nbsp;当天可用</text>
 				</view>
 				<view class="Xx_contentBlock">
 					<text class="Xx_contentTitle" >入园时间</text>
-					<text class="Xx_contentTitle2">{{item.ticketOpenUp}}</text>
+					<text class="Xx_contentTitle2">{{orderInfo[0].ticketOpenUp}}</text>
 				</view>
 				<view class="Xx_contentBlock">
 					<text class="Xx_contentTitle" >使用方法</text>
@@ -83,15 +83,14 @@
 			
 				<!-- 二维码 -->
 				<view class="Xx_QRcodeView">
-					<text class="Xx_QRcodeTitle">﹊&nbsp;&nbsp;&nbsp;{{item.ticketName}}{{item.userType}}票&nbsp;&nbsp;&nbsp;﹊</text>
 					<view class="Xx_QRcodeBlock1">
 						<text class="Xx_QRcodeContentTitle">入园辅助码</text>
 					</view>
 					<view class="Xx_QRcodeBlock2">
-						<text class="Xx_QRcodeContent">{{item.orderTicketNumber}}</text>
+						<text class="Xx_QRcodeContent">{{orderInfo[0].orderTicketNumber}}</text>
 					</view>
 					<view class="Xx_QRcodeBlock2">
-						<image class="Xx_QRcodeImage" :src="item.orderQrCode" mode="aspectFill"></image>
+						<image class="Xx_QRcodeImage" :src="orderInfo[0].orderQrCode" mode="aspectFill"></image>
 					</view>
 					<view class="Xx_QRcodeBlock2">
 						<text class="Xx_QRcodeTips">出示二维码，检票入园</text>
@@ -99,25 +98,22 @@
 				</view>
 				
 				<!-- 出行人+退改+保险 -->
-				<text class="Xx_contentTitle" >出行人</text>
-				<text class="Xx_contentTitle2">{{item.userName}}</text>
-				<view></view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >身份证</text>
-					<text class="Xx_contentTitle2">{{item.userCodeNum}}</text>
+				<view style="margin-top: 20upx;" v-for="(item,index) in orderInfo" :key="index">
+					<text class="Xx_contentTitle" >出行人</text>
+					<text class="Xx_contentTitle2">{{item.userName}}&nbsp;{{item.userType}}</text>
+					<view></view>
+					<view class="Xx_contentBlock">
+						<text class="Xx_contentTitle" >身份证</text>
+						<text class="Xx_contentTitle2">{{item.userCodeNum}}</text>
+					</view>
+					<view class="Xx_contentBlock">
+						<text class="Xx_contentTitle" >手机号</text>
+						<text class="Xx_contentTitle2">{{item.userPhoneNum}}</text>
+					</view>
 				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >手机号</text>
-					<text class="Xx_contentTitle2">{{item.userPhoneNum}}</text>
-				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >退改规则</text>
-					<text class="Xx_contentTitle2">当前时间申请退款，退款损失...</text>
-					<text class="Xx_contentTitle2">＞</text>
-				</view>
-				<view class="Xx_contentBlock" v-if="item.orderInsure == true">
+				<view class="Xx_contentBlock" v-if="orderInfo[0].orderInsure == true">
 					<text class="Xx_contentTitle" >附加保险</text>
-					<text class="Xx_contentTitle2">太平洋门票意外险 经济款×1份</text>
+					<text class="Xx_contentTitle2">太平洋门票意外险 经济款×{{orderInfo.length}}份</text>
 				</view>
 			</view>
 		</view>
@@ -206,7 +202,12 @@
 				this.adultTotalPrice = adult.length * this.orderInfo[0].ticketAdultPrice;
 				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
 			},
-			
+			//跳转至景区详情
+			route(){
+				uni.navigateTo({
+					url: '../../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.orderInfo[0].ticketId)
+				})
+			}
 		}
 	}
 </script>

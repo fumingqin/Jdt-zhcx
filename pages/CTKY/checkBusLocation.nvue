@@ -1,19 +1,23 @@
 <template>
 	<view class="content">
-		<map id="map1" class="map" :latitude="centerLatitude" :longitude="centerLongitude" :markers="latLonArray" :show-location="showLocation"
+		<map id="map1" class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude" :markers="latLonArray" :show-location="showLocation"
 		:scale="scale" :polyline="polyline" :controls="controls">
-			<view class="orderInfo">
-				<view style="font-size:32rpx; margin: 20rpx 30rpx;">{{orderInfo.station}}</view>
-				<view class="textView">出发时间：{{orderInfo.time}}</view>
-				<view class="textView">当前所在站点：{{orderInfo.currentStation}}</view>
-				<view class="textView">预计到站：{{orderInfo.stationNum}}</view>
-				<view class="textView">预计时间：{{orderInfo.dowStation}}</view>
-				<view class="buttonView">
-					<button>查看司机</button>
-					<button>联系司机</button>
-				</view>
-			</view>
 		</map>
+		<view class="orderInfo">
+			<text style="font-size:32rpx; margin-left: 30rpx; margin-top: 20rpx;">{{orderInfo.station}}</text>
+			<text class="textView">出发时间：{{orderInfo.time}}</text>
+			<text class="textView">当前所在站点：{{orderInfo.currentStation}}</text>
+			<text class="textView">预计到站：{{orderInfo.stationNum}}</text>
+			<text class="textView">预计时间：{{orderInfo.dowStation}}</text>
+			<view class="buttonView">
+				<button class="button" style="background-color: #06B4FD;" @click="checkDriver">
+					<text class="butnText">查看司机</text>
+				</button>
+				<button class="button" style="background-color: #FC4646;" @click="contactDriver">
+					<text class="butnText">联系司机</text>
+				</button>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -116,6 +120,12 @@
 		},
 		onLoad() {
 			var that = this;
+			//获取系统信息
+			uni.getSystemInfo({
+				success:function(res){
+					that.mapHeight = res.windowHeight + 'px';
+				}
+			});
 			// 获取自身位置
 			that.getMyLocation();
 			// console.log('这是点的数组',pointArray);
@@ -163,60 +173,61 @@
 					}
 				});
 			},
+			//查看司机
+			checkDriver:function(){
+				console.log('点击了查看司机');
+			},
+			//联系司机
+			contactDriver:function(){
+				console.log('点击了联系司机');
+			}
 		}
 	}
 </script>
 
 <style>
-	page,.content {
-		width: 100%;
-		height: 100%;
-		background: #FFFFFF;
+	.content {
+		width: 750rpx;
+		background-color: #FFFFFF;
 	}
 	.map{
-		width: 100%;
-		height: 100%;
-		position: fixed;
-		margin: 0;
-		padding: 0;
+		width: 750rpx;
 	}
 	.orderInfo {
-		background: #FFFFFF;
-		width: 90%;
-		height: auto;
+		background-color: #FFFFFF;
 		position: fixed;
-		bottom: 60rpx;
-		left: 5%;
-		right: 5%;
 		border-radius: 20rpx;
-		display: block;
+		bottom: 20rpx;
+		left: 20rpx;
+		right: 20rpx;
 	}
 	.textView {
 		font-size: 28rpx;
 		color: #666666;
 		font-weight: 300;
 		line-height: 26rpx;
-		margin: 20rpx 30rpx;
+		margin-top: 20rpx;
+		margin-left: 30rpx;
 	}
 	.buttonView {
-		width: 90%;
-		margin: 20rpx 30rpx;
+		margin-top: 20rpx;
+		margin-bottom: 20rpx;
+		left: 20rpx;
+		right: 20rpx;
 		background-color: #FFFFFF;
-		display: flex;
+		flex-direction: row;
 		align-items: center;
 	}
-	.buttonView button {
+	.button {
 		border-radius: 12rpx;
-		width: 45%;
 		height: 84rpx;
+		width: 300rpx;
+		margin-left: 20rpx;
+	}
+	.butnText {
 		font-size: 34rpx;
-		color: #FFFFFF;
 		font-weight: 300;
+		color: #FFFFFF;
 	}
-	.buttonView>button:first-child {
-		background: #06B4FD;
-	}
-	.buttonView>button:last-child {
-		background: #FC4646;
-	}
+
 </style>

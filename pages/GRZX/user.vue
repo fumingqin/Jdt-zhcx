@@ -2,11 +2,11 @@
 	<view class="content">
 		<view class="backImg">
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
-			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
+			<!-- <image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
 			<image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
-			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image>
+			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image> -->
 			<view class="userInfoClass" @click="checkLogin">
-				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/default.png'"></image>
+				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
 				<text class="usernameClass">{{userInfo.nickName || '茜茜爱玩'}}</text>
 				<image src="../../static/GRZX/edit.png" class="editClass"></image>
 			</view>
@@ -23,15 +23,15 @@
 			
 			<view class="myBox">
 				<view class="collection" @click="collectionClick">
-					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1"></image>
+					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1" mode="aspectFill"></image>
 					<text class="myFont">我的收藏</text>
 				</view>
 				<view class="order" @click="orderClick">
-					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2"></image>
+					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2" mode="aspectFill"></image>
 					<text class="myFont">我的订单</text>
 				</view>
 				<view class="history" @click="historyClick">
-					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3"></image>
+					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3" mode="aspectFill"></image>
 					<text class="myFont">我的历史</text>
 				</view>
 			</view>
@@ -51,9 +51,9 @@
 				<text class="fontStyle">在线客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="navTo('证照信息')">
+			<view class="boxClass borderTop" @click="infoClick">
 				<image src="../../static/GRZX/tubiao_zhengzhao.png" class="iconClass3"></image>
-				<text class="fontStyle">证照信息</text>
+				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="complaintClick">
@@ -83,22 +83,7 @@
 			...mapState(['hasLogin','userInfo'])
 		},
 		onLoad(){
-			console.log(this.hasLogin,"6666")
-			if(!this.hasLogin){
-				uni.getStorage({
-					key:'userInfo',
-					success:function(res){
-						if(res.data.phoneNumber==""||res.data.phoneNumber==null){
-							uni.showToast({
-								title : '请绑定手机号',
-								icon : 'none',
-							})
-						}
-					}
-				})
-			}
-		},
-		onShow(){
+			/* console.log(this.hasLogin,"6666")
 			if(!this.hasLogin){
 				uni.getStorage({
 					key:'userInfo',
@@ -116,7 +101,32 @@
 						}
 					}
 				})
+			} */
+		},
+		onNavigationBarButtonTap(e) {
+			const index = e.index;
+			console.log(index,"00..00");
+			if(index === 0){
+				uni.navigateTo({
+					url:'/pages/GRZX/set'
+				})
 			}
+			if(index === 1){
+				uni.navigateTo({
+					url:'/pages/GRZX/myNews'
+				})
+			}
+			if(index === 2){
+				uni.scanCode({
+					onlyFromCamera:true,
+					success:function(res){
+						void plus.runtime.openWeb(res.result,function(){
+							//识别失败
+						});
+					}
+				})
+			}
+			
 		},
 		methods:{
 			orderClick(){
@@ -130,7 +140,12 @@
 				})  
 				console.log(url)
 			},
-			
+			//信息管理
+			infoClick(){
+				uni.navigateTo({
+					url:'/pages/GRZX/infoList'
+				})
+			},
 			// 投诉
 			complaintClick(){
 				uni.navigateTo({
@@ -169,6 +184,7 @@
 					title : '我的历史',
 					icon : 'none',
 				})
+				
 			},
 			scanClick(){
 				uni.showToast({
@@ -197,21 +213,21 @@
 		height: 490upx;
 	}
 	.setClass{ //设置按钮
-		width: 6.56%;
+		width: 47upx;
 		height: 45upx;
 		position: absolute;
 		left: 4.67%;
 		top: 74upx;
 	}
 	.scanClass{ //扫一扫按钮
-		width: 6.15%;
+		width: 44upx;
 		height: 41upx;
 		position: absolute;
 		left: 14.8%;
 		top: 74upx;
 	}
 	.infoClass{ 	//消息按钮
-		width: 6.56%;
+		width: 47upx;
 		height: 42upx;
 		position: absolute;
 		left: 87.73%;

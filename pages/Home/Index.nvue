@@ -22,11 +22,11 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<text class="tabItem-font">车票订购</text>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite')">
+				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<text class="tabItem-font">网络约车</text>
 				</view>
-				<view class="tabItem" @click="godetail('')">
+				<view class="tabItem" @click="godetail('/pages/GJCX/busIndex')">
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<text class="tabItem-font">公交查询</text>
 				</view>

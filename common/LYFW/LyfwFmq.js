@@ -16,6 +16,56 @@ const userInfo = {
 	msg: '提示'
 }
 
+
+/* 首页-轮播图 */
+const rotationPicture = {
+	status:1,
+	data:[{
+		ticketId: 0,
+		src: "../../static/Home/indexzhly/banner3.jpg",
+		background: "#149bf0",
+	},
+	{
+		ticketId: 1,
+		src: "../../static/Home/indexzhly/banner2.jpg",
+		background: "#4877c9",
+	},
+	{
+		ticketId: 2,
+		src: "../../static/Home/indexzhly/banner1.jpg",
+		background: "#69b4e6",
+	}],
+	msg: '提示',
+}
+
+/* 首页-四宫格 */
+const checkeredPattern = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+			ticketId: 0,
+			ticketName: '武夷山',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		},
+		{
+			ticketId: 1,
+			ticketName: '溪源峡谷',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg',
+		},
+		{
+			ticketId: 2,
+			ticketName: '芒荡山',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg',
+		},
+		{
+			ticketId: 3,
+			ticketName: '和平古镇',
+			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg',
+		}],
+	msg: '提示',
+}
+
+
+
 /* 六宫格-景区列表 */
 const sixPalaceList = {
 	status: 1, //1成功/0失败提示返回值
@@ -189,10 +239,10 @@ const orderInfo = {
 	status: 1, //1成功/0失败提示返回值
 	data: [{
 		orderNumber:'11126778833',
-		orderStatus:'待使用',
+		orderType:'待使用',
 		orderActualPayment: 434, //实际付款金额
-		orderDateReminder: '2020-03-11', //时间表达（今天，明天，星期X）
-		orderDate: '明天', //数字时间
+		orderDateReminder: '明天', //时间表达（今天，明天，星期X）
+		orderDate: '2020-03-11', //数字时间
 		orderTicketNumber: 'T8718283713', //取票号
 		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png', //二维码
 		orderInsure : true, //是否购买保险
@@ -221,10 +271,10 @@ const orderInfo = {
 		userEmergencyContact:false,
 	},{
 		orderNumber:'11126778833',
-		orderStatus:'待使用',
+		orderType:'待使用',
 		orderActualPayment: 434, //实际付款金额
-		orderDateReminder: '2020-03-11', //时间表达（今天，明天，星期X）
-		orderDate: '明天', //数字时间
+		orderDateReminder: '明天', //时间表达（今天，明天，星期X）
+		orderDate: '2020-03-11', //数字时间
 		orderTicketNumber: 'T8718283713',
 		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
 		orderInsure : true,
@@ -260,6 +310,8 @@ const orderInfo = {
 // 接口声明区
 export default {
 	userInfo,
+	rotationPicture,
+	checkeredPattern,
 	sixPalaceList,
 	scenicList,
 	scSpotDetails,
