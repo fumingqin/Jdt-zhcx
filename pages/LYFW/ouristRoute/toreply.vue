@@ -49,8 +49,8 @@
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
-				let routeComment2 = await this.$api.lyfwcwd('routeComment2');
-				this.picList = routeComment2.data.image;
+				let routeComment = await this.$api.lyfwcwd('routeComment');
+				this.picList = routeComment.data.image;
 				this.titleClick = routeComment.data;
 				let userInfo = await this.$api.lyfwcwd('userInfo');
 				this.userInfo = userInfo.data;
