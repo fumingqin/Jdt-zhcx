@@ -1,11 +1,11 @@
 <template>
 	<view>
-		<view style="width: 100%;height: 32rpx; display: flex">
+		<!-- <view style="width: 100%;height: 32rpx; display: flex">
 			<image @click="back" src="../../static/Order/fanhui.png" style="width: 18rpx; height: 34rpx; margin:103rpx 26rpx; color: #2C2D2D;"></image>
 			<view style="width: 152rpx; height: 48rpx; margin: 92rpx 232rpx;color: #333333; font-size: 38rpx;font-weight:bold;">我的订单</view>
-		</view>
+		</view> -->
 
-		<view class="tab" style="margin-top: 160rpx;">
+		<view class="tab">
 			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#FC4646"></uni-segmented-control>
 		</view>
 
@@ -1070,7 +1070,14 @@
 		height: 100vh;
 		/* #endif */
 	}
-
+	.tab{
+		position: sticky;
+		top: 0upx;
+		background: #f5f5f5;
+		height: 90upx;
+		z-index: 99999;
+	}
+	
 	.scroll-h {
 		width: 670upx;
 		height: 80upx;
