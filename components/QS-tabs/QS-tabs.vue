@@ -35,7 +35,7 @@
 				}">
 					<view class="itemBackground" :style="'transition-duration:' + getDuration + 's;' + 
 						'background-color:' + getItemBackgroundColor + ';' + 
-						'box-shadow: 0 0 5rpx 5rpx ' + getItemBackgroundColor + ';' + 
+						'box-shadow: 0 0 0rpx 0rpx ' + getItemBackgroundColor + ';' + 
 						itemBackgroundStyle + ';'" />
 				</view>
 				<!-- line2 -->
