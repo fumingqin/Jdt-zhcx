@@ -169,7 +169,8 @@
 						color: #333333;">{{tcky_selectEndStation}}</text>
 					</view>
 					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
-					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
+					font-size: 28upx;color: #666666;">共10趟
+						10:00发车</text>
 				</view>
 				<view class="ctky_View_Right">
 					<view style="text-align: right;">
@@ -346,10 +347,15 @@
 				endlongitude: "",
 				endtlatitude: "",
 				TaxiCost: "",
+				intervalAround: 0,
 				// map: '',
 				tcky_selectStartStation: '泉州客运中心站', //选中班次的起点站
 				tcky_selectEndStation: '漳州客运站', //选中班次的终点站
+<<<<<<< HEAD
 				isPupop: true, //是否弹窗
+=======
+				isPupop:true,//是否弹窗
+>>>>>>> 5b92662e5361ee08101363b6f3541cb5f340e54b
 			}
 		},
 		onLoad(options) {
@@ -368,6 +374,7 @@
 				}
 			});
 			this.current = options.current;
+			that.intervalGet();
 		},
 		onShow() {
 			var that = this;
@@ -410,6 +417,7 @@
 			},
 			goBack: function() { //返回上一页
 				uni.navigateBack();
+				clearInterval(this.intervalAround);
 			},
 			clearHistpry: function() { //清除历史记录
 				uni.clearStorage("historyAddress");
@@ -448,7 +456,7 @@
 						})
 					} else {
 						uni.navigateTo({
-							url: '../CZC/WaitTakeOrder?orderNo=1',
+							url: '../CZC/CallAndDrive?orderNumber=1',
 							animationType: 'pop-in',
 							animationDuration: 200,
 							success: function() {
@@ -539,6 +547,8 @@
 			},
 			search: function() { //搜索
 				var that = this;
+				that.markers = [];
+				clearInterval(that.intervalAround);
 				var Isrepeat = true;
 				if (that.initialPoint == '' || that.destination == '') {
 					uni.showToast({
@@ -756,7 +766,58 @@
 			noPupop() {
 				this.isPupop = false;
 				this.close();
-			}
+				},
+			setMarker: function(id, lon, lat, iconPath) {
+				let that = this;
+				var width = 40;
+				var height = 40;
+				//描绘点的方法
+				var marker = new Object();
+				marker = {
+					id: id,
+					latitude: lat,
+					longitude: lon,
+					iconPath: iconPath,
+					width: width,
+					height: height,
+				}
+				var json = JSON.stringify(that.markers);
+				var arr = JSON.parse(json);
+				arr.push(marker);
+				that.markers = arr;
+			},
+			selectCarAroung: function() {
+				let that = this;
+				that.markers = [];
+				uni.getLocation({
+					type:'gcj02',
+					success: function(res) {
+						uni.request({
+							url: taxi.InterfaceAddress[2],
+							data: {
+								lon: res.longitude,
+								lat: res.latitude,
+								DistanceRange: 1000
+							},
+							method: 'GET',
+							success: function(res) {
+								var carArr = res.data;
+								for (var i = 0; i < carArr.length; i++) {
+									that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
+										'../../static/CZC/Car.png');
+								}
+								console.log(carArr.length + '-' + that.markers.length);
+							},
+						});
+					}
+				});
+			},
+			intervalGet: function() {
+				var that = this;
+				that.intervalAround = setInterval(function() {
+					that.selectCarAroung();
+				}, 3000);			}
+
 		}
 	}
 </script>

@@ -22,17 +22,17 @@ const rotationPicture = {
 	status:1,
 	data:[{
 		ticketId: 0,
-		src: "../../static/Home/indexzhly/banner3.jpg",
+		ticketImage: "../../static/Home/indexzhly/banner3.jpg",
 		background: "#149bf0",
 	},
 	{
 		ticketId: 1,
-		src: "../../static/Home/indexzhly/banner2.jpg",
+		ticketImage: "../../static/Home/indexzhly/banner2.jpg",
 		background: "#4877c9",
 	},
 	{
 		ticketId: 2,
-		src: "../../static/Home/indexzhly/banner1.jpg",
+		ticketImage: "../../static/Home/indexzhly/banner1.jpg",
 		background: "#69b4e6",
 	}],
 	msg: '提示',
@@ -65,8 +65,26 @@ const checkeredPattern = {
 }
 
 
+/* 门票列表 - 搜索 */
+const ticketSearch= {
+	status: 1,
+	data: {
+			ticketId: 0,
+			ticketTitle: '南平武夷山',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
+			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+			ticketAdultPrice: 320,
+			ticketSales: 20188,
 
-/* 六宫格-景区列表 */
+		},
+msg: '提示'
+}
+
+
+
+/* 景区列表 - 六宫格 */
 const sixPalaceList = {
 	status: 1, //1成功/0失败提示返回值
 	data: [{
@@ -123,7 +141,9 @@ const scenicList = {
 	data: [{
 			ticketId: 0,
 			ticketTitle: '南平武夷山',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
 			ticketAdultPrice: 320,
 			ticketSales: 20188,
@@ -131,7 +151,9 @@ const scenicList = {
 		{
 			ticketId: 1,
 			ticketTitle: '南平溪源峡谷',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg',
 			ticketAdultPrice: 60,
 			ticketSales: 18687,
@@ -139,7 +161,9 @@ const scenicList = {
 		{
 			ticketId: 2,
 			ticketTitle: '南平芒荡山',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg',
 			ticketAdultPrice: 10,
 			ticketSales: 19245,
@@ -147,7 +171,9 @@ const scenicList = {
 		{
 			ticketId: 3,
 			ticketTitle: '邵武和平古镇',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg',
 			ticketAdultPrice: 0,
 			ticketSales: 12815,
@@ -155,7 +181,9 @@ const scenicList = {
 		{
 			ticketId: 4,
 			ticketTitle: '邵武天成奇峡',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/tianchengqixia.jpg',
 			ticketAdultPrice: 130,
 			ticketSales: 21048,
@@ -163,7 +191,9 @@ const scenicList = {
 		{
 			ticketId: 5,
 			ticketTitle: '武夷山青龙大瀑布',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/qinglongdapubu.jpg',
 			ticketAdultPrice: 60,
 			ticketSales: 23074,
@@ -172,7 +202,9 @@ const scenicList = {
 		{
 			ticketId: 6,
 			ticketTitle: '中华武夷茶博园',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/chaboyuan.jpg',
 			ticketAdultPrice: 218,
 			ticketSales: 23078,
@@ -181,7 +213,9 @@ const scenicList = {
 		{
 			ticketId: 7,
 			ticketTitle: '建阳卧龙湾花花世界',
-			ticketComment: '一码通 | 可订明日票 | 儿童半票',
+			ticketComment_s1: '一码通' ,
+			ticketComment_s2: '可订明日票' ,
+			ticketComment_s3: '儿童半票' ,
 			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/huahuashijie.jpg',
 			ticketAdultPrice: 10,
 			ticketSales: 110871,
@@ -199,7 +233,9 @@ const scSpotDetails = {
 		ticketTitle: '南平武夷山',
 		ticketOpenUp: '09:00 - 18:00',
 		ticketContain: '观光车+成票+竹筏票',
-		ticketComment: '一码通 | 可订明日票 | 儿童半票',
+		ticketComment_s1: '一码通' ,
+		ticketComment_s2: '可订明日票' ,
+		ticketComment_s3: '儿童半票' ,
 		ticketAdultPrice: 320,
 		ticketChildPrice: 160,
 		ticketScenicContent: '武夷山，武夷山位于江西与福建西北部两省交界处，武夷山脉北段东南麓总面积999.75平方公里，是中国著名的风景旅游区和避暑胜地。属典型的丹霞地貌，是首批国家级重点风景名胜区之一。武夷山是三教名山。自秦汉以来，武夷山就为羽流禅家栖息之地，留下了不少宫观、道院和庵堂故址。武夷山还曾是儒家学者倡道讲学之地。武夷山自然保护区，是地球同纬度地区保护最好、物种最丰富的生态系统，拥有2527种植物物种，近5000种野生动物。在中生代晚期，武夷山发生了强烈的火山喷发活动，继之为大规模的花岗岩侵入，已发现本区有丰富的火山机构，为典型的亚洲东部环太平洋带的构造特征。白垩纪晚期的红色砂砾岩是形成丹霞地貌的主体。中生代的地壳运动奠定了武夷山地貌的基本骨架。告性对武夷山地貌发育也很明显，西部海拔1500m以上的山峰，基本上由坚硬的凝灰熔岩和流纹岩等构成，东部红色砂页岩地区则往往发育有较宽的谷地和盆地。所以武夷山丰富的地貌类型是地质构造、流水侵蚀、风化剥蚀、重力崩塌等综合作用的结果。',
@@ -312,6 +348,7 @@ export default {
 	userInfo,
 	rotationPicture,
 	checkeredPattern,
+	ticketSearch,
 	sixPalaceList,
 	scenicList,
 	scSpotDetails,

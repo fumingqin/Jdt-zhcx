@@ -8,7 +8,7 @@
 			<view class="box1">
 				<view class="itemClass">
 					<view class="fontStyle">姓名	</view>
-					<input placeholder="与证件姓名一致" class="inputClass" :value="user.chineseName" name="chineseName" /> 
+					<input placeholder="与证件姓名一致" class="inputClass" :value="user.name" name="name" /> 
 				</view>
 				<view class="itemClass">
 					<view class="fontStyle">性别</view>
@@ -77,7 +77,7 @@
 				</view>
 			</view>
 			
-			<button form-type="reset" class="btndelete" @click="resetClick">删除</button>
+			<button form-type="reset" class="btndelete" @click="resetClick">重置</button>
 			<button form-type="submit" class="btnsubmit">保存</button>		
 		</form>
 	</view>
@@ -92,7 +92,7 @@
 					{title:'女'}
 				],
 				user:{
-					chineseName:'',	
+					name:'',	
 					englishSurname:'',
 					englishName:'',
 					sex:0,
@@ -119,7 +119,7 @@
 					key:'editPassenger',
 					success:function(res){
 						console.log(res,"res")
-						that.user.chineseName=res.data.name;
+						that.user.name=res.data.name;
 						/* that.user.englishSurname=res.data.englishSurname;
 						that.user.englishName=res.data.englishName; */
 						if(res.data.sex=="男"){
@@ -154,7 +154,11 @@
 			formSubmit:function(e){
 				var data=e.target.value;
 				data.date=this.user.date;
-				data.sex=this.user.sex;
+				if(this.user.sex==0){
+					data.sex="男";
+				}else{
+					data.sex="女";
+				}
 				if(data.default==null||data.default==""){
 					data.default=false;
 				}else{
@@ -184,7 +188,25 @@
 					data.ticketType="儿童";
 				}
 				//console.log(age);
-				console.log(data);
+				data.hiddenIndex=0;
+				var array=[];
+				array.push(data);
+				uni.getStorage({
+					key:'passengerList',
+					success(res) {
+						for(var i=0;i<res.data.length;i++){
+							array.push(res.data[i]);
+						}
+						uni.setStorage({
+							key:'passengerList',
+							data:array,
+						})
+					}
+				})
+				uni.redirectTo({
+					url:'/pages/GRZX/infoList'
+				})
+				//console.log(data);
 			},
 			bindDateChange:function(e){
 				 this.user.date = e.target.value;

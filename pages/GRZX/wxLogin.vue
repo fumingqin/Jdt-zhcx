@@ -128,7 +128,7 @@
 				var self=this;
 				const {phoneNumber, captchaCode} = this;		
 				if(self.judgeNum(self.phoneNumber)){
-					var timer=null,second=60; //倒计时的时间
+					var timer=null,second=59; //倒计时的时间
 					if(self.textCode == "获取验证码"){
 					  //获取6位随机数
 					  var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
@@ -137,6 +137,8 @@
 							key:'captchaCode',
 							data:randomNum
 					  })
+					  self.textCode = second+"秒后重发";
+					  if(self.textCode == "59秒后重发"){
 						uni.request({
 						   url: 'http://111.231.109.113:8000/api/MyTest/SendMessage',
 						   data:{
@@ -152,10 +154,10 @@
 									if(second<=0){	
 										self.textCode = "获取验证码";
 										clearInterval(timer);
-										second=60;	
+										second=59;	
 									}
 									else{			
-										self.disabled = true;
+										//self.disabled = true;
 										self.textCode = second+"秒后重发";
 									}},1000)
 								}else{
@@ -165,7 +167,8 @@
 									})
 								}
 						   }
-						})	
+						})	  
+					  }
 					}
 				}else{
 					uni.showToast({

@@ -16,7 +16,7 @@
 
 			<swiper class="carousel" circular @change="swiperChange" autoplay>
 				<swiper-item v-for="(item, index) in rotationPicture" :key="index" class="carousel-item" @click="navToDetailPage">
-					<image style="width: 100%;" :src="item.src" mode="aspectFill" />
+					<image style="width: 100%;" :src="item.ticketImage" mode="aspectFill" />
 				</swiper-item>
 			</swiper>
 
@@ -69,21 +69,21 @@
 			</view>
 		</view>
 
-		<!-- 南平路线 -->
-		<view class="titNp">南平路线</view>
-		<!-- <view class="guess-section">
+		<!-- 新闻资讯 -->
+		<view class="titNp">新闻资讯</view>
+		<view class="guess-section">
 				<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="navToDetailPage(item)">
 					<view class="image-wrapper">
 						<image :src="item.thumbnail_pic_s" mode="aspectFill"></image>
 					</view>
 					<view class="title clamp">{{item.title}}</view>
 					 <view> 
-					 <image class="Portrait" src="../../static/index/npzb3.png" mode="aspectFill"></image>
-					 <text class="price" >{{item.author_name}}</text>
+					 <image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
+					 <text class="price" >{{item.author_name}}</text> 
 					 <text class="price-zan" >1.1万</text>
 					 </view>
 				</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 
@@ -158,19 +158,19 @@
 			},
 			//金刚取各模块入口
 			route(url){
-				uni.navigateTo({
+				uni.navigateTo({ 
 					url: url
 				})
 			},
-			//南平周边-新闻接口
+			//新闻接口
 			getgoodsList() {
-				// uni.request({
-				// 	url:"http://v.juhe.cn/toutiao/index?type=top&key=82b35401fcba79402944b9f284c2f5c8",
-				// 	success:(res)=>{
-				// 		this.goodsList = res.data.result.data;
-				// 		// console.log(res.data.result.data)
-				// 	}
-				// });
+				uni.request({
+					url:"http://v.juhe.cn/toutiao/index?type=top&key=82b35401fcba79402944b9f284c2f5c8",
+					success:(res)=>{
+						this.goodsList = res.data.result.data;
+						// console.log(res.data.result.data)
+					}
+				});
 			},
 			
 		},
@@ -243,19 +243,20 @@
 
 		.carousel-section {
 			padding: 0;
-
 			.titleNview-placing {
 				position: absolute;
 				top: 0;
 			}
-
+			.titleNview-background {
+				height: 376upx;
+			}
 			.carousel {
+				background: #FFFFFF;
 				.carousel-item {}
 			}
 
 			.swiper-dots {
-				left: 45upx;
-				bottom: 40upx;
+				top: 400upx;
 			}
 		}
 	}
@@ -286,7 +287,7 @@
 			top: 0;
 			left: 0;
 			width: 100%;
-			height: 400upx;
+			height: 440upx;
 			transition: .4s;
 		}
 	}
@@ -295,7 +296,7 @@
 		margin-top: 56upx;
 		height: 350upx;
 		padding: 0 28upx;
-
+		background: #FFFFFF;
 		.carousel-item {
 			width: 100%;
 			height: 100%;
@@ -313,7 +314,7 @@
 		display: flex;
 		position: absolute;
 		left: 60upx;
-		bottom: 15upx;
+		top: 460upx;
 		width: 72upx;
 		height: 36upx;
 		background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAABkCAYAAADDhn8LAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTMyIDc5LjE1OTI4NCwgMjAxNi8wNC8xOS0xMzoxMzo0MCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OTk4MzlBNjE0NjU1MTFFOUExNjRFQ0I3RTQ0NEExQjMiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OTk4MzlBNjA0NjU1MTFFOUExNjRFQ0I3RTQ0NEExQjMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6Q0E3RUNERkE0NjExMTFFOTg5NzI4MTM2Rjg0OUQwOEUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6Q0E3RUNERkI0NjExMTFFOTg5NzI4MTM2Rjg0OUQwOEUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4Gh5BPAAACTUlEQVR42uzcQW7jQAwFUdN306l1uWwNww5kqdsmm6/2MwtVCp8CosQtP9vg/2+/gY+DRAMBgqnjIp2PaCxCLLldpPARRIiFj1yBbMV+cHZh9PURRLQNhY8kgWyL/WDtwujjI8hoE8rKLqb5CDJaRMJHokC6yKgSCR9JAukmokIknCQJpLOIrJFwMsBJELFcKHwM9BFkLBMKFxNcBCHlQ+FhoocgpVwwnv0Xn30QBJGMC0QcaBVJiAMiec/dcwKuL4j1QMsVCXFAJE4s4NQA3K/8Y6DzO4g40P7UcmIBJxbEesCKWBDg8wWxHrAiFgT4fEGsB/CwIhYE+AeBAAdPLOcV8HRmWRDAiQVcO7GcV8CLM8uCAE4sQCDAlHcQ7x+ABQEEAggEEAggEEAggEAAgQACASAQQCCAQACBAAIBBAIIBBAIIBBAIABe4e9iAe/xd7EAJxYgEGDeO4j3EODp/cOCAE4sYMyJ5cwCHs4rCwI4sYBxJ5YzC84rCwKcXxArAuthQYDzC2JF0H49LAhwYUGsCFqvx5EF2T07dMaJBetx4cRyaqFtHJ8EIhK0i8OJBQxcECuCVutxJhCRoE0cZwMRyRcFefa/ffZBVPogePihhyCnbBhcfMFFEFM+DD4m+ghSlgmDkwlOgpAl4+BkkJMgZdk4+EgaSCcpVX7bmY9kgXQQU+1TgE0c+QJZUUz1b2T4SBbIKmJW+3iMj2SBVBWz+leVfCQLpIqYbp8b85EskIxyfIOfK5Sf+wiCRJEsllQ+oqEkQfBxmD8BBgA5hVjXyrBNUQAAAABJRU5ErkJggg==);
@@ -450,7 +451,7 @@
 
 		.image-wrapper {
 			width: 100%;
-			height: 400upx;
+			height: 360upx;
 			border-radius: 3px;
 			overflow: hidden;
 
@@ -464,7 +465,12 @@
 		.title {
 			font-size: 32upx;
 			color: #333;
-			line-height: 80upx;
+			line-height: 72upx;
+			display: block;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			width: 160px;
 		}
 
 		.Portrait {
@@ -489,12 +495,10 @@
 		}
 
 		.price-zan {
-			position: relative;
 			font-size: 24upx;
 			color: #666;
 			float: right;
-			top: 6upx;
-
+			margin-top: 6upx;
 		}
 	}
 
