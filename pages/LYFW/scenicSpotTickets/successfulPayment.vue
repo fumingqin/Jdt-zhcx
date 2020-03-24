@@ -2,7 +2,7 @@
 	<view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 
 		<view class="cover-container">
@@ -21,26 +21,22 @@
 	export default {
 		data() {
 			return {
-				orderNumber : '', //订单编号
-				
+				godetailIndex:'',//跳转参数
 			}
 		},
-		onLoad(options) {
-			this.orderNumber = JSON.parse(options.orderNumber);
-			// console.log(this.orderNumber)
-			
-		},
 		onReady() {
-			// this.backHome();
+			this.backHome();
 		},
 		methods: {
 			//路由统一事件
 			godetail: function(e) {
-				if(e==0){
-					uni.redirectTo({
-						url: '/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(this.orderNumber)
+				if(e==0){ 
+					this.godetailIndex=1;
+					uni.switchTab({
+						url: '../../order/OrderList'	
 					});
 				}else if(e==1){
+					this.godetailIndex=2;
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});
@@ -48,11 +44,13 @@
 			},
 			backHome(){
 				setTimeout(() => {
-					uni.switchTab({
-						url: '/pages/Home/Index'
-					});
+					if(this.godetailIndex == ''){
+						uni.switchTab({
+							url: '/pages/Home/Index'
+						});
+					}
 				}, 10000)
-				// return false;
+				
 			}
 
 		}

@@ -65,22 +65,122 @@ const line ={
 }
 const detailLine ={
 	status: 1,  //成功/失败提示返回值
-	data:[{
+	data:{
 		lineID:'3',
 		starStation:'武夷花园',
 		endStation:'五金机电产业园',
 		starTime:'06:00',
 		endTime:'18:00',
 		price:'4元',
-		departureInterval:'15'
-		
-	}]
+		departureInterval:'15',
+		departureTime:'10:00',
+		distance:'600',
+		unit:'米',
+	}
 }
-
+// 实时动态
+const realtimeDynamic ={
+	status: 1,  //成功/失败提示返回值
+	direction:0, //判断方向 有0,1
+	data: [{
+		stationID:'1',
+		stationName:'武夷花园',
+		stationStatu:'0', //道路状态：0通畅，1一般，2拥堵
+		isArrive:'0',     //是否到站：0未到站，1到站
+	},
+	{
+		stationID:'2',
+		stationName:'玉屏公园 长富花园',
+		stationStatu:'1', //道路状态：0通畅，1一般，2拥堵
+		isArrive:'0',     //是否到站：0未到站，1到站
+	},
+	{
+		stationID:'3',
+		stationName:'交通运输局 住建局',
+		stationStatu:'1', //道路状态：0通畅，1一般，2拥堵
+		isArrive:'1',     //是否到站：0未到站，1到站
+	},
+	{
+		stationID:'4',
+		stationName:'商业城 小方舞蹈中心',
+		stationStatu:'2', //道路状态：0通畅，1一般，2拥堵
+		isArrive:'0',     //是否到站：0未到站，1到站
+	},
+	{
+		stationID:'5',
+		stationName:'爱尚生活城 文化广场',
+		stationStatu:'2', //道路状态：0通畅，1一般，2拥堵
+		isArrive:'0',     //是否到站：0未到站，1到站
+	},
+	{
+		stationID:'6',
+		stationName:'人民路',
+		stationStatu:'0', //道路状态：0通畅，1一般，2堵
+		isArrive:'0',     //是否到站：0未到站，1到站
+	},
+	{
+		stationID:'7',
+		stationName:'西湖公园',
+		stationStatu:'0', //道路状态：0通畅，1一般，2堵
+		isArrive:'0',     //是否到站：0未到站，1到站
+	}],
+	msg: '提示'	
+}
+//反向
+const realtimeDynamicback ={
+	status: 1,  //成功/失败提示返回值
+	direction:1, //判断方向 有0,1
+	data: [
+		{
+			stationID:'7',
+			stationName:'西湖公园',
+			stationStatu:'0', //道路状态：0通畅，1一般，2堵
+			isArrive:'0',     //是否到站：0未到站，1到站
+		},
+		{
+			stationID:'6',
+			stationName:'人民路',
+			stationStatu:'0', //道路状态：0通畅，1一般，2堵
+			isArrive:'0',     //是否到站：0未到站，1到站
+		},
+		{
+			stationID:'5',
+			stationName:'爱尚生活城   文化广场',
+			stationStatu:'2', //道路状态：0通畅，1一般，2拥堵
+			isArrive:'0',     //是否到站：0未到站，1到站
+		},
+		{
+			stationID:'4',
+			stationName:'商业城   小方舞蹈中心',
+			stationStatu:'2', //道路状态：0通畅，1一般，2拥堵
+			isArrive:'0',     //是否到站：0未到站，1到站
+		},
+		{
+			stationID:'3',
+			stationName:'交通运输局   住建局',
+			stationStatu:'1', //道路状态：0通畅，1一般，2拥堵
+			isArrive:'1',     //是否到站：0未到站，1到站
+		},
+		{
+			stationID:'2',
+			stationName:'玉屏公园   长富花园',
+			stationStatu:'1', //道路状态：0通畅，1一般，2拥堵
+			isArrive:'0',     //是否到站：0未到站，1到站
+		},
+		{
+		stationID:'1',
+		stationName:'武夷花园',
+		stationStatu:'0', //道路状态：0通畅，1一般，2拥堵
+		isArrive:'0',     //是否到站：0未到站，1到站
+	}],
+	msg: '提示'	
+}
 // 接口声明区
 export default {
 	userInfo,  
 	line,
 	nearBy,
-	detailLine
+	detailLine,
+	realtimeDynamic,
+	realtimeDynamicback
 }

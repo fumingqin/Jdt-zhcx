@@ -23,7 +23,7 @@
 					<text class="Tk_text1">{{scSpotContent.ticketTitle}}</text>
 					<text class="Tk_text3">¥{{scSpotContent.ticketAdultPrice}}元</text>
 					<text class="Tk_text2">包含：{{scSpotContent.ticketContain}}</text>
-					<text class="Tk_text2">{{scSpotContent.ticketComment}}</text>
+					<text class="Tk_text2">{{scSpotContent.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s3}}</text>
 					<view class="Tk_butter">立即预订</view>
 				</view>
 			</view>
@@ -218,7 +218,7 @@
 			background: #fff;
 
 			.Tk_item {
-				background: #f7f7f7;
+				background: #f9f9f9;
 				margin: 32upx 32upx;
 				border-radius: 16upx;
 				display: flex;

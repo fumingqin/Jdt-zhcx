@@ -2,10 +2,10 @@
 	<view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 
-
+		
 		<view class="cover-container">
 			<view class="MP_information1">
 				<view class="MP_title">{{orderInfo[0].ticketTitle}}</view>
@@ -13,10 +13,10 @@
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{orderInfo[0].orderDateReminder}} &nbsp; {{orderInfo[0].orderDate}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{orderInfo[0].orderDate}} &nbsp; {{orderInfo[0].orderDateReminder}} &nbsp; 仅限当天</text>
 				</view>
-
-				<view class="MP_selectionDate">
+				
+				<view class="MP_selectionDate" :hidden="hiddenValues==0" >
 					<view class="MP_title">购票人信息</view>
 					<view class="MP_userInformation" v-for="(item,index) in orderInfo" :key="index">
 						<text>{{item.userName}}</text>
@@ -29,7 +29,7 @@
 					</view>
 				</view>
 
-				<view class="MP_selectionDate">
+				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">费用详情</view>
 					<view class="MP_cost" v-if="adultIndex>=1">
 						<text>成人票</text>
@@ -57,12 +57,15 @@
 						<text class="MP_total">-&nbsp;¥{{orderInfo[0].couponPrice}}</text>
 					</view>
 
-					
 
 					<view class="MP_cost">
 						<text class="MP_total">共计&nbsp;¥{{orderInfo[0].orderActualPayment}}</text>
 					</view>
+					
 				</view>
+				
+				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)" :hidden="hiddenValues==1"></view>
+				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)" :hidden="hiddenValues==0"></view>
 
 			</view>
 
@@ -83,7 +86,7 @@
 			</view>
 
 			<view class="MP_information3" @click="payment">
-				立即支付
+				支付{{orderInfo[0].orderActualPayment}}元
 			</view>
 
 		</view>
@@ -95,6 +98,7 @@
 	export default {
 		data() {
 			return {
+				hiddenValues : '0',//隐藏状态值
 				channel: [{
 					name: '微信'
 				}, {
@@ -103,12 +107,11 @@
 				channeIndex: 0, //选择支付方式
 				orderInfo: [{
 					orderNumber: '',
-					orderStatus: '',
+					orderType: '',
 					orderActualPayment: '',
 					orderDateReminder: '',
 					orderDate: '',
-					orderTicketNumber: '',
-					orderQrCode: '',
+					orderCountdown : '',
 					orderInsure: '',
 					orderInsurePrice: '',
 
@@ -169,7 +172,16 @@
 				this.orderInfo = orderInfo.data;
 				this.screenUser();
 			},
-
+			
+			//隐藏操作
+			hide(e){
+				if(e==0){
+					this.hiddenValues =1;
+				}else {
+					this.hiddenValues =0;
+				}
+			},
+			
 			//同意购买-点击事件
 			Selection: function() {
 				if (this.channeIndex == 0) {
@@ -257,7 +269,7 @@
 		border-radius: 16upx;
 		background: #FFFFFF;
 		padding: 44upx 32upx;
-		padding-bottom: 80upx;
+		padding-bottom: 24upx;
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
 

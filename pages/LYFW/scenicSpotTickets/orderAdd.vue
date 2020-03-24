@@ -3,7 +3,7 @@
 
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 		
 		<!-- 门票信息/数量 -->
@@ -11,7 +11,7 @@
 		<view class="cover-container">
 			<view class="MP_information1">
 				<view class="MP_title">{{scSpotDetails.ticketTitle}}</view>
-				<text class="MP_text" @click="open2(1)">{{scSpotDetails.ticketComment}} &nbsp; > </text>
+				<text class="MP_text" @click="open2(1)">{{scSpotDetails.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s3}} &nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<view class="boxVlew">
@@ -139,7 +139,7 @@
 					<text class="people">共{{addressData.length}}人</text>
 				</view>
 
-				<view class="submitChange" :class="{submitColor: selectedValue===1}" @click="submit">
+				<view class="submitChange" :class="{submitColor: selectedValue===1 && addressData.length>0}" @click="submit">
 					<text class="submit">立即预订</text>
 				</view>
 			</view>
@@ -337,7 +337,7 @@
 
 			//提交表单
 			submit: function() {
-				if (this.selectedValue == 1) {
+				if (this.selectedValue == 1 && this.addressData.length>0) {
 					// uni.request({
 					// 	url : '',
 					// 	data:{
@@ -358,7 +358,12 @@
 						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
 					})
 
-				} else {
+				} else if(this.addressData.length==0){
+					uni.showToast({
+						title: '请添加购票人信息',
+						icon: 'none'
+					})
+				}else {
 					uni.showToast({
 						title: '请同意购买须知',
 						icon: 'none'

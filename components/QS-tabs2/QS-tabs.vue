@@ -83,7 +83,7 @@
 			},
 			fontSize: { //字体大小
 				type: [String, Number],
-				default: 33
+				default: 20
 			},
 			duration: { //过渡动画时长, 单位 s
 				type: [String, Number],
