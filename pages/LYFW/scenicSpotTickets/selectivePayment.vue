@@ -2,57 +2,70 @@
 	<view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 
-
+		
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{ticket.title}}</view>
-				<text class="MP_text">费用包含：{{ticket.contain}}</text>
+				<view class="MP_title">{{orderInfo[0].ticketTitle}}</view>
+				<text class="MP_text">费用包含：{{orderInfo[0].ticketContain}}</text>
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{date}} &nbsp; {{dateReminder}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{orderInfo[0].orderDate}} &nbsp; {{orderInfo[0].orderDateReminder}} &nbsp; 仅限当天</text>
 				</view>
-
-				<view class="MP_selectionDate">
+				
+				<view class="MP_selectionDate" :hidden="hiddenValues==0" >
 					<view class="MP_title">购票人信息</view>
-					<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
-						<text>{{item.name}}</text>
-						<text class="Mp_sex">{{item.sex}}</text>
-						<text class="Mp_square">{{item.ticketType}}</text>
-						<text class="Mp_square" v-if="item.default == true">本人</text>
-						<text class="Mp_square" v-if="item.emergencyContact == true">紧急联系人</text>
-						<text class="Mp_text">身份证：{{item.codeNum}}</text>
-						<text class="Mp_text">手机号：{{item.phoneNum}}</text>
+					<view class="MP_userInformation" v-for="(item,index) in orderInfo" :key="index">
+						<text>{{item.userName}}</text>
+						<text class="Mp_sex">{{item.userSex}}</text>
+						<text class="Mp_square">{{item.userType}}</text>
+						<text class="Mp_square" v-if="item.userDefault == true">本人</text>
+						<text class="Mp_square" v-if="item.userEmergencyContact == true">紧急联系人</text>
+						<text class="Mp_text">身份证：{{item.userCodeNum}}</text>
+						<text class="Mp_text">手机号：{{item.userPhoneNum}}</text>
 					</view>
 				</view>
 
-				<view class="MP_selectionDate">
+				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">费用详情</view>
 					<view class="MP_cost" v-if="adultIndex>=1">
 						<text>成人票</text>
 						<text class="MP_number">×{{adultIndex}}</text>
-						<text class="MP_userCost">{{ticket.adultPrice}}</text>
+						<text class="MP_userCost">{{adultTotalPrice}}</text>
 					</view>
+
 					<view class="MP_cost" v-if="childrenIndex>=1">
 						<text>儿童票</text>
 						<text class="MP_number">×{{childrenIndex}}</text>
-						<text class="MP_userCost">¥{{ticket.childPrice}}</text>
+						<text class="MP_userCost">¥{{childrenTotalPrice}}</text>
+					</view>
+					
+					<!-- 保险 -->
+					<view class="MP_cost" v-if="orderInfo[0].orderInsure==true">
+						<text>太平洋门票意外险 经济款</text>
+						<text class="MP_number">×{{orderInfo.length}}</text>
+						<text class="MP_total">¥{{orderInfo[0].orderInsurePrice}}</text>
+					</view>
+					
+					<!-- 优惠券 -->
+					<view class="MP_cost" v-if="orderInfo[0].couponPrice>0">
+						<text>{{orderInfo[0].couponTitle}}</text>
+						<text class="MP_number">×1</text>
+						<text class="MP_total">-&nbsp;¥{{orderInfo[0].couponPrice}}</text>
 					</view>
 
-					<!-- 优惠券 -->
-					<view class="MP_cost" v-if="coupon.price>0">
-						<text>{{coupon.title}}</text>
-						<text class="MP_number">×1</text>
-						<text class="MP_total">-&nbsp;¥{{coupon.price}}</text>
-					</view>
 
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{actualPayment}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo[0].orderActualPayment}}</text>
 					</view>
+					
 				</view>
+				
+				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)" :hidden="hiddenValues==1"></view>
+				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)" :hidden="hiddenValues==0"></view>
 
 			</view>
 
@@ -73,7 +86,7 @@
 			</view>
 
 			<view class="MP_information3" @click="payment">
-				立即支付
+				支付{{orderInfo[0].orderActualPayment}}元
 			</view>
 
 		</view>
@@ -85,29 +98,59 @@
 	export default {
 		data() {
 			return {
+				hiddenValues : '0',//隐藏状态值
 				channel: [{
 					name: '微信'
 				}, {
 					name: '支付宝'
 				}],
-				orderNumber: '', //订单编号
 				channeIndex: 0, //选择支付方式
-				ticket: '', //门票信息
-				addressData: '', //购票人信息
-				adultIndex: '', //成人票人数
-				childrenIndex: '', //儿童票人数
-				actualPayment: '', //实际付款金额
-				dateReminder: '', //时间表达（今天，明天，星期X）
-				date: '', //数字时间
-				coupon: '', //优惠券信息
+				orderInfo: [{
+					orderNumber: '',
+					orderType: '',
+					orderActualPayment: '',
+					orderDateReminder: '',
+					orderDate: '',
+					orderCountdown : '',
+					orderInsure: '',
+					orderInsurePrice: '',
+
+					ticketId: '',
+					ticketName: '',
+					ticketOpenUp: '',
+					ticketTitle: '',
+					ticketContain: '',
+					ticketAdultPrice: '',
+					ticketChildPrice: '',
+
+					couponID: '',
+					couponTitle: '',
+					couponPrice: '',
+					couponCondition: '',
+
+					userID: '',
+					userType: '',
+					userName: '',
+					userSex: '',
+					userCodeNum: '',
+					userPhoneNum: '',
+					userDefault: '',
+					userEmergencyContact: '',
+				}],
+
+
+				adultIndex: '', //成人数量
+				childrenIndex: '', //儿童数量	
+				adultTotalPrice: '', //成人总价
+				childrenTotalPrice: '', //儿童总价
+
 
 			}
 		},
 		onLoad: function(options) {
-			// console.log(JSON.parse(options.orderNumber));
-			this.orderNumber = options.orderNumber;
+			// console.log(JSON.parse(options.orderNumber)); 
 			this.lyfwData();
-			
+
 			// uni.request({
 			// 	url:'',
 			// 	data:{
@@ -125,14 +168,18 @@
 		},
 		methods: {
 			async lyfwData() {
-				let res = await this.$api.lyfwfmq('orderInfo');
-				this.ticket = res.data.ticket;
-				this.addressData = res.data.addressData;
-				this.actualPayment = res.data.actualPayment;
-				this.coupon = res.data.coupon;
-				this.date = res.data.date;
-				this.dateReminder = res.data.dateReminder;
+				let orderInfo = await this.$api.lyfwfmq('orderInfo');
+				this.orderInfo = orderInfo.data;
 				this.screenUser();
+			},
+			
+			//隐藏操作
+			hide(e){
+				if(e==0){
+					this.hiddenValues =1;
+				}else {
+					this.hiddenValues =0;
+				}
 			},
 			
 			//同意购买-点击事件
@@ -146,15 +193,17 @@
 
 			//数组提取
 			screenUser: function() {
-				let adult = this.addressData.filter(item => {
-					return item.ticketType == '成人';
+				let adult = this.orderInfo.filter(item => {
+					return item.userType == '成人';
 				})
-				let children = this.addressData.filter(item => {
-					return item.ticketType == '儿童';
+				let children = this.orderInfo.filter(item => {
+					return item.userType == '儿童';
 				})
-				
+
 				this.adultIndex = adult.length;
 				this.childrenIndex = children.length;
+				this.adultTotalPrice = adult.length * this.orderInfo[0].ticketAdultPrice;
+				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
 			},
 
 			//调起支付
@@ -178,14 +227,14 @@
 				// 		console.log('fail:' + JSON.stringify(err));
 				// 	}
 				// })
-				
+
 				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+					url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber='+JSON.stringify(this.orderInfo[0].orderNumber)
 				})
-				
+
 			}
-			
-			
+
+
 		}
 	}
 </script>
@@ -210,9 +259,9 @@
 
 	//整体容器样式
 	.cover-container {
-		padding: 64upx 30upx;
 		position: relative;
-		padding-bottom: 32upx;
+		top: 148upx;
+		padding: 32upx 30upx;
 	}
 
 	//公共样式 - 适用多个数据框
@@ -220,10 +269,9 @@
 		border-radius: 16upx;
 		background: #FFFFFF;
 		padding: 44upx 32upx;
-		padding-bottom: 80upx;
+		padding-bottom: 24upx;
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
-		margin-top: 24upx;
 
 		.MP_title {
 			font-size: 34upx;

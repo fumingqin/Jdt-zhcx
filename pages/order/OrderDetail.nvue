@@ -68,7 +68,7 @@
 				</view>
                 <!-- 评价框 -->
 				<view  style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;"> 
-					<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']"  @tap="tapInfo(index)" v-for="(item,index) in evaluate" :key="index">
+					<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate" :key="index">
 						<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
 					</view>
 				</view>
