@@ -128,6 +128,7 @@
 				this.selectIndex = e;
 				this.date = item.longDate;
 				console.log(this.date);
+				this.getDeparture();
 			},
 			onShowDatePicker(type) { //显示
 				this.type = type;

@@ -135,18 +135,19 @@
 				</view>
 			</view>
 		</view>
-		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999 ;position: fixed;align-items: center;">
+		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999 ;position: fixed;align-items: center; padding: 10upx;">
 			<view style="align-items: center;text-align: center;">
-				<view style="position:fixed;color: #FFFFFF;margin-top: 309upx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000" >传统与定制班车的差异</view>
-				<view style="position: fixed;margin-top: 391upx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
-					<view style="width: 505upx;color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;padding: 0;">
-						<text>传统：只能在车票的起终点进行上车</text>
-					</view>
-					<view style="width: 505upx;color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;padding: 0;">
-						<text>定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详情可见班次详情对应的地图标识</text>
-					</view>
-				</view>
-				<button style="border-radius: 18upx;margin-top: 645upx;position: fixed;width: 350upx;height: 100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015" @click="noPupop">下次不弹出</button>
+					<text style="position: fixed ;color: #FFFFFF;margin-top: 309upx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000">传统与定制班车的差异</text>
+					<view style="position: fixed; margin-top: 391upx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
+						<view style="width: 505upx; ">
+							<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">传统：只能在车票的起终点进行上车</text>
+						</view> 
+						<view style="width: 505upx;">
+							<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详情可见班次详情对应的地图标识</text>
+						</view> 
+					</view> 
+				<text style="position: fixed;border-radius: 18upx;margin-top: 645upx;width: 350upx;height: 100upx;line-height:100upx ;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
+				 @click="noPupop">下次不弹出</text>
 				<image src="../../static/CTKY/tipBackground.png" class="popupClass"></image>
 				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
@@ -346,9 +347,9 @@
 				endtlatitude: "",
 				TaxiCost: "",
 				// map: '',
-				tcky_selectStartStation:'泉州客运中心站',//选中班次的起点站
-				tcky_selectEndStation:'漳州客运站',//选中班次的终点站
-				isPupop:true,//是否弹窗
+				tcky_selectStartStation: '泉州客运中心站', //选中班次的起点站
+				tcky_selectEndStation: '漳州客运站', //选中班次的终点站
+				isPupop: true, //是否弹窗
 			}
 		},
 		onLoad(options) {
@@ -403,8 +404,7 @@
 				if (that.current !== e.currentIndex) {
 					that.current = e.currentIndex
 				}
-				if(that.current==1&&this.isPupop)
-				{
+				if (that.current == 1 && this.isPupop) {
 					that.open();
 				}
 			},
@@ -742,19 +742,19 @@
 			},
 			queryTickets: function() {
 				uni.navigateTo({
-					url: "../CTKY/selectTickets?StartStation="+this.tcky_selectStartStation+"&EndStation="+this.tcky_selectEndStation,
+					url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
 				})
 
 			},
 			//传统客运弹窗
-			open(){
-			         this.$refs.popup.open();
-			      },
-		    close(){
-				    this.$refs.popup.close();
-				},
-            noPupop(){
-				this.isPupop=false;
+			open() {
+				this.$refs.popup.open();
+			},
+			close() {
+				this.$refs.popup.close();
+			},
+			noPupop() {
+				this.isPupop = false;
 				this.close();
 			}
 		}
@@ -772,9 +772,11 @@
 	page {
 		background-color: #F5F7F9;
 	}
+
 	button::after {
 		border: none;
 	}
+
 	/* #endif */
 	.bt_now {
 		width: 329rpx;
@@ -863,8 +865,9 @@
 		text-align: right;
 		align-items: center;
 	}
-	.popupClass{
-		width:588upx ;
+
+	.popupClass {
+		width: 588upx;
 		height: 830upx;
 		/* z-index:10001; */
 		/* background-image: url(../../static/CTKY/tipBackground.png); */
