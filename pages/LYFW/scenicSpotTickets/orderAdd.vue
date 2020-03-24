@@ -3,7 +3,7 @@
 
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 		
 		<!-- 门票信息/数量 -->
@@ -11,7 +11,7 @@
 		<view class="cover-container">
 			<view class="MP_information1">
 				<view class="MP_title">{{scSpotDetails.ticketTitle}}</view>
-				<text class="MP_text" @click="open2(1)">{{scSpotDetails.ticketComment}} &nbsp; > </text>
+				<text class="MP_text" @click="open2(1)">{{scSpotDetails.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s3}} &nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<view class="boxVlew">

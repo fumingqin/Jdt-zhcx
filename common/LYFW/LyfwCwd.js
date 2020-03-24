@@ -157,7 +157,7 @@ const scSpotDetails = {
 	}, {
 		quantityStatus: false, //false为数量无限 true为数量有限
 		quantity: 50, //门票数量
-		title: '【儿童】南平武夷山三日游路线 （观光车+儿童门票+竹筏票）',
+		title: '【儿童】南平,三日游路线 （观光车+儿童门票+竹筏票）',
 		comment: '一码通 | 可订明日票 | 非即时退',
 		price: 160
 	}]
@@ -702,6 +702,56 @@ const complaint ={
 	msg: '提示'
 }
 
+const collectionContent ={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		routeId: 1,
+		title: '武夷山 | 全方位详尽三日',
+		scenicName: '南平市武夷山风景名胜区',
+		cost: 320,
+		day:3,
+		date: '2019-11-12',
+		like: 119,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+	},
+	{
+		routeId: 2,
+		title: '武夷山 | 全方位详尽三日',
+		scenicName: '南平市武夷山风景名胜区',
+		cost: 320,
+		day:3,
+		date: '2019-11-12',
+		like: 119,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+	}],
+	msg: '提示'
+}
+
+const collectionCommodity ={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		routeId: 1,
+		title: '南平正宗熏鹅（武夷山店)',
+		label:['老字号','南平特色','物美价廉'],
+		score:4.5,
+		cost:140,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/collection/shangping.png',
+	},
+	{
+		routeId: 2,
+		title: '南平正宗熏鹅（武夷山店)',
+		label:['老字号','南平特色','物美价廉'],
+		score:3.5,
+		cost:140,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/collection/shangping.png',
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -717,4 +767,6 @@ export default {
 	touristRoute2,
 	touristRoute3,
 	complaint,
+	collectionContent,
+	collectionCommodity,
 }
