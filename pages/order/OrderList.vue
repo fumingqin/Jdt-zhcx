@@ -700,13 +700,6 @@
 		},
 		methods: {
 
-			back: function() {
-				var that = this;
-				uni.switchTab({
-					url: '/pages/Home/Index',
-				});
-			},
-
 			detail: function(item) {
 				if (item == 1) {
 					uni.navigateTo({
