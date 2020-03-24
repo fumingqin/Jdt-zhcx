@@ -4,7 +4,7 @@
 			"path": "pages/Home/Index",
 			"style": {
 				"navigationStyle": "custom"
-			} 
+			}
 		},
 		{
 			"path": "pages/CZC/Index",
@@ -18,7 +18,7 @@
 			"style": {
 				"navigationBarTitleText": "景区列表"
 			}
-		}, 
+		},
 		{
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 			"style": {
@@ -39,7 +39,7 @@
 		},
 		{
 			"path": "pages/LYFW/currency/imgPreview",
-	
+
 			"style": {
 				"navigationBarTitleText": "查看图片"
 			}
@@ -51,7 +51,7 @@
 			}
 		},
 		{
-	
+
 			"path": "pages/LYFW/peripheralTourism/travelArticles",
 			"style": {
 				"navigationBarTitleText": "景点详情"
@@ -66,23 +66,23 @@
 		{
 			"path": "pages/CZC/PrivateTaxi",
 			"style": {
-		
+
 				"navigationStyle": "custom"
 			}
-		}, 
+		},
 		{
 			"path": "pages/CZC/WaitTakeOrder",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
-	{
+		{
 
 
 
 			"path": "pages/CZC/PriceDetail",
 			"style": {}
-		}, 
+		},
 		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
@@ -104,18 +104,18 @@
 			"style": {
 				"navigationBarTitleText": "旅游路线"
 			}
-		}, 
+		},
 		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
-"backgroundColor":"#007AFF",
+				"backgroundColor": "#007AFF",
 				"navigationStyle": "custom"
 			}
-		}, 
-		{		//个人中心模块开始
-			"path": "pages/GRZX/user",  
+		},
+		{ //个人中心模块开始
+			"path": "pages/GRZX/user",
 			"style": {}
-		}, 
+		},
 		{
 			"path": "pages/GRZX/userLogin",
 			"style": {}
@@ -133,19 +133,19 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		},  
+		},
 		{
 			"path": "pages/GRZX/set",
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
-		}, 
+		},
 		{
 			"path": "pages/GRZX/passengerInfo",
 			"style": {
-				"navigationStyle": "custom" 
+				"navigationStyle": "custom"
 			}
-		}, 
+		},
 		{
 			"path": "pages/GRZX/addPassenger", //添加乘客信息
 			"style": {
@@ -155,26 +155,26 @@
 			}
 		},
 		{
-			"path": "pages/GRZX/addAddress",    //添加邮寄地址
+			"path": "pages/GRZX/addAddress", //添加邮寄地址
 			"style": {
 				"navigationBarTitleText": "添加邮寄地址",
 				"navigationBarBackgroundColor": "#FFFFFF"
 			}
-		}, 
+		},
 		{
-			"path": "pages/GRZX/aboutApp",    //关于App
+			"path": "pages/GRZX/aboutApp", //关于App
 			"style": {
 				"navigationBarTitleText": "关于App"
 			}
-		}, 
+		},
 		{
-			"path": "pages/GRZX/coupon",    //卡券红包
+			"path": "pages/GRZX/coupon", //卡券红包
 			"style": {
 				"navigationBarTitleText": "卡券红包"
 			}
 		},
 		{
-			"path": "pages/GRZX/myNews",    //我的消息
+			"path": "pages/GRZX/myNews", //我的消息
 			"style": {
 				"navigationBarTitleText": "我的消息"
 			}
@@ -187,25 +187,25 @@
 			"path": "pages/LYFW/currency/index",
 			"style": {}
 		},
-        {
-            "path" : "pages/LYFW/peripheralTourism/imgListlql",
-            "style" : {}
-        },
-        {
-            "path" : "pages/LYFW/peripheralTourism/imgPreviewlql",
-            "style" : {}
-        },
-        {
-            "path" : "pages/LYFW/peripheralTourism/toreply",
-            "style" : {}
-        },
+		{
+			"path": "pages/LYFW/peripheralTourism/imgListlql",
+			"style": {}
+		},
+		{
+			"path": "pages/LYFW/peripheralTourism/imgPreviewlql",
+			"style": {}
+		},
+		{
+			"path": "pages/LYFW/peripheralTourism/toreply",
+			"style": {}
+		},
 		{
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
-				"backgroundColor":"#F1F1F1",
-				"navigationBarBackgroundColor":"#FC4646",
-				"navigationBarTextStyle":"white"
-				
+				"backgroundColor": "#F1F1F1",
+				"navigationBarBackgroundColor": "#FC4646",
+				"navigationBarTextStyle": "white"
+
 			}
 		},
 		{
@@ -237,10 +237,9 @@
 			"style": {
 				"navigationBarTitleText": "查看班车位置"
 			}
-		}
-        ,{
-            "path" : "pages/LYFW/scenicSpotTickets/orderDetails",
-            "style" : {
+		}, {
+			"path": "pages/LYFW/scenicSpotTickets/orderDetails",
+			"style": {
 				"navigationBarTitleText": "订单详情",
 				"navigationStyle": "custom",
 				"app-plus": {
@@ -249,48 +248,40 @@
 					}
 				}
 			}
-        },{
+		}, {
 			// 出租车订单列表
-            "path" : "pages/order/OrderList",            
-            "style" : {
-				"navigationStyle":"custom"
+			"path": "pages/order/OrderList",
+			"style": {
+				"navigationStyle": "custom"
 			}
-        },{
+		}, {
 			// 出租车订单详情
-	    "path" : "pages/order/OrderDetail",
-	    "style" : {
-			"navigationStyle":"custom"
-		}
-		},{
-			//价格详情
-	    "path" : "pages/CZC/PriceDetail",
-	    "style" : {}
-	}	
-	,{
-            "path" : "pages/LYFW/ouristRoute/toreply",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/GJCX/busIndex",
-            "style" : {
+			"path": "pages/order/OrderDetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/LYFW/ouristRoute/toreply",
+			"style": {}
+		}, {
+			"path": "pages/GJCX/busIndex",
+			"style": {
 				"navigationBarTitleText": "公交查询",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationBarBackgroundColor": "#FFFFFF"
 			}
-        }
-        ,{
-            "path" : "pages/CZC/PaymentSuccess",
-            "style" : {
-				"navigationStyle":"custom"
+		}, {
+			"path": "pages/CZC/PaymentSuccess",
+			"style": {
+				"navigationStyle": "custom"
 			}
-        }
-        ,{
-            "path" : "pages/CZC/PaymentFail",
-            "style" : {}
-        }, {
+		}, {
+			"path": "pages/CZC/PaymentFail",
+			"style": {}
+		}, {
 			"path": "pages/GRZX/complaint",
 			"style": {}
-		}	
-    ],
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -303,9 +294,9 @@
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
 		//#ifdef APP-PLUS
-		"fontSize":"16px" ,
+		"fontSize": "16px",
 		//#endif
-		"list": [{ 
+		"list": [{
 				"pagePath": "pages/Home/Index",
 				"text": "首页"
 			},
@@ -313,7 +304,7 @@
 				"pagePath": "pages/order/OrderList",
 				"text": "订单"
 			},
-			{ 
+			{
 				"pagePath": "pages/Home/Index",
 				"text": "购物车"
 			},
