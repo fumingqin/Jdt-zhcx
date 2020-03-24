@@ -40,7 +40,7 @@
 					</checkbox-group>
 				</view>
 			</view>
-			<button form-type="reset" class="btndelete" >删除</button>
+			<button form-type="reset" class="btndelete">重置</button>
 			<button form-type="submit" class="btnsubmit">保存</button>	
 		</form>
 	</view>
@@ -100,15 +100,32 @@
 				}	 */			
 			},
 			formSubmit:function(e){
-				var data=e.target.value;
-				data.district=this.address.district;
-				if(data.defaultAddress.length==0){
-					data.defaultAddress=0;
+				var addList=e.target.value;
+				addList.district=this.address.district;
+				if(addList.defaultAddress.length==0){
+					addList.default=false;
 				}else{
-					data.defaultAddress=1;
+					addList.default=true;
 				}
-				
-				console.log(data)
+				addList.hiddenIndex=0;
+				var array=[];
+				array.push(addList);
+				uni.getStorage({
+					key:'addressList',
+					success(res) {
+						for(var i=0;i<res.data.length;i++){
+							array.push(res.data[i]);
+						}
+						uni.setStorage({
+							key:'addressList',
+							data:array,
+						})
+					}
+				})
+				uni.redirectTo({
+					url:'/pages/GRZX/infoList'
+				})
+				//console.log(array,"array")
 			},
 			formReset:function(e){
 				this.address.district="请选择 省/市/区 >";

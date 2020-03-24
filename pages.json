@@ -231,9 +231,19 @@
 			}
 		},
 		{
-			"path": "pages/GRZX/infoList", //常用信息设置
+			"path": "pages/GRZX/infoList",    //常用信息设置
 			"style": {
-				"navigationBarTitleText": "常用信息设置"
+				"navigationStyle": "custom"
+				// "navigationBarTitleText": "常用信息设置"
+				// "buttons": [{
+				// 		"fontSrc": "/static/GRZX/jdticon.ttf",
+				// 		"text": "\ue60f",
+				// 		"fontSize": "24",
+				// 		"color": "#303133",
+				// 		"width": "46px",
+				// 		"background": "rgba(0,0,0,0)",
+				// 		"float": "left"
+				// 	}]
 			}
 		},
 		//个人中心模块结束

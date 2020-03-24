@@ -2,12 +2,14 @@
 	<view class="content">
 		<view class="backImg">
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
-			<!-- <image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
-			<image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
+			<!-- #ifdef MP-WEIXIN -->
+			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
+			<!-- #endif -->
+			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
 			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image> -->
 			<view class="userInfoClass" @click="checkLogin">
 				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
-				<text class="usernameClass">{{userInfo.nickName || '茜茜爱玩'}}</text>
+				<text class="usernameClass">{{userInfo.nickName || '游客'}}</text>
 				<image src="../../static/GRZX/edit.png" class="editClass"></image>
 			</view>
 			
@@ -76,36 +78,22 @@
 		},
 		data(){
 			return{
-				 
+				// userInfo:{
+				// 	nickName:'',
+				// 	avatarUrl:'',
+				// } 
 			}
 		},
 		computed: {
 			...mapState(['hasLogin','userInfo'])
 		},
 		onLoad(){
-			/* console.log(this.hasLogin,"6666")
-			if(!this.hasLogin){
-				uni.getStorage({
-					key:'userInfo',
-					success:function(res){
-						if(res.data.phoneNumber==""||res.data.phoneNumber==null){
-							uni.showToast({
-								title : '请绑定手机号',
-								icon : 'none',
-							})
-							setTimeout(function(){
-								uni.navigateTo({	
-									url  : '/pages/GRZX/wxLogin'
-								}) 
-							},500);
-						}
-					}
-				})
-			} */
+		},
+		onShow(){
+			//this.loadData();
 		},
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
-			console.log(index,"00..00");
 			if(index === 0){
 				uni.navigateTo({
 					url:'/pages/GRZX/set'
@@ -129,6 +117,23 @@
 			
 		},
 		methods:{
+			// async loadData(){
+			// 	var that=this;
+			// 	uni.getStorage({
+			// 		key:'userInfo',
+			// 		success:function(res){
+			// 			if(that.hasLogin){
+			// 				that.userInfo.nickName=res.data.nickName;
+			// 				that.userInfo.avatarUrl=res.data.avatarUrl;	
+			// 			}else{
+			// 				that.userInfo.nickName='游客';
+			// 				that.userInfo.avatarUrl='../../static/GRZX/missing-face.png';	
+			// 			}
+						
+			// 			console.log(res,"00000002")
+			// 		}
+			// 	})
+			// },
 			orderClick(){
 				uni.switchTab({
 					url:'/pages/order/OrderList'
@@ -255,6 +260,7 @@
 		color: #FFFFFF;
 		margin-top: 20upx;
 		margin-left: 3%;
+		//width: 300upx;
 	}
 	.grzyClass{  		//个人主页
 		width: 20%;
@@ -271,7 +277,7 @@
 		height: 29upx;
 		position: absolute;
 		left:82%;
-		top:1upx;
+		top:-1upx;
 	}
 	.typeBox{  //普通用户
 		width: 126upx;

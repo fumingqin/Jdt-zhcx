@@ -2,7 +2,7 @@
 	<view class="Cr_background">
 		<form @submit="formSubmit" >
 			<image class="bg" :src="background" mode="aspectFill" name="background"></image>
-			<image class="tx" :src="avatarUrl" name="avatarUrl"></image>
+			<image class="tx" :src="avatarUrl" name="avatarUrl" @click="getPhoto"></image>
 			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
 			<view class="Cr_slk1">
 				<text class="bz">姓&nbsp;名：</text>
@@ -10,7 +10,8 @@
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">性&nbsp;别：</text>
-				<picker class="slk1" name="sex"  mode="selector" @change="genderChange"  v-model="detailInfo.sex"   :range="genderSex" placeholder="请选择" >
+				<!-- <picker @change="selectorChange" mode = "selector" :range="aim" name="aim" :value="user.aim"> -->
+				<picker class="slk1" name="gender"  mode="selector" @change="genderChange" :range="genderSex" :value="detailInfo.gender">
 					{{selector}}
 				</picker>
 			</view>
@@ -48,23 +49,24 @@
 	import {
 	    mapState,  
 	    mapMutations  
-	} from 'vuex';  
+	} from 'vuex'; 
 	export default {
 		data() {
 			return {
 				avatarUrl : '../../static/GRZX/missing-face.png',
 				background:'../../static/GRZX/banner3.jpg',
 				mode:"region",
-				genderSex:['男','女'], 
+				genderSex:['','男','女'], 
 				selector:'请选择',
 				detailInfo : { 
 					nickName : '',
-					sex : '2',
+					gender:'',
 					birthday : '请选择',
 					address : '',
 					autograph : '',
 					background:'',
-				}
+				},
+				phoneNumber:'',
 			};
 		},
 		onLoad:function(){
@@ -82,7 +84,8 @@
 			 })
 		},
 		computed:{
-			...mapState(['userInfo']),
+			//...mapState(['userInfo']),
+			
 			startDate() {
 			            return this.getDate('start');
 			        }, 
@@ -94,33 +97,39 @@
 		     wPicker
 		},
 		methods:{
-			
+			...mapMutations(['login']),
 			async loadUserInfo(){
-				/* var theself=this;
+				var theself=this;
 				uni.getStorage({
-					key: 'Grxx',			
+					key: 'userInfo',			
 					success: function (res) {
-						theself.selector =theself.genderSex[res.data.sex];
+						console.log(res.data,"res")
+						
 						if(res.data.birthday==null||res.data.birthday==""){
 							
 						}else{
 							theself.detailInfo.birthday=res.data.birthday;
 						}
-						if(res.data.sex==null||res.data.sex==""){
-							
-						}else{
-							theself.detailInfo.birthday=res.data.birthday;
-						}	
+						theself.detailInfo.gender=res.data.gender;
+						theself.selector =theself.genderSex[res.data.gender]; 
+						// if(res.data.sex==null||res.data.sex==""){
+						// 	//theself.selector ="请选择";
+						// }else{
+						// 	theself.detailInfo.sex=res.data.sex;
+						// 	theself.selector =theself.genderSex[res.data.sex];
+						// }	
 						theself.background=res.data.background;
 						theself.detailInfo.autograph=res.data.autograph;
 						theself.detailInfo.nickName = res.data.nickName; 
 						theself.avatarUrl = res.data.avatarUrl;				
 						theself.detailInfo.address= res.data.address;
+						theself.phoneNumber= res.data.phoneNumber;
 						//console.log(res,"res")
 					}
-				});	 */
+				});	
 			},
 			genderChange : function(e){
+				console.log(e.detail.value,"sex")
 				this.selector =this.genderSex[e.detail.value]; 
 			},
 			dateChange : function(e){
@@ -148,13 +157,44 @@
 				this.detailInfo.address=e.result;
 			},
 			reviseBackground(){
-				
+				var that=this;
+				uni.chooseImage({
+					count:1,
+					//sourceType:['album'],
+					success(res) {
+						console.log(res,"res11");
+						var tempFilePaths = res.tempFilePaths;
+						uni.saveFile({
+						  tempFilePath: tempFilePaths[0],
+						  success: function (res1) {
+							var savedFilePath = res1.savedFilePath;
+							uni.setStorage({
+								key:'backUrl',
+								data:savedFilePath
+							})
+							uni.getStorage({
+								key:'backUrl',
+								success:function(res){
+									that.background=res.data;
+									console.log(res.data,"res..data")
+								}
+							})
+						  }
+						});
+						// pathToBase64(res.tempFilePaths[0])
+						// .then(base64 => {
+						// 	
+						// })
+						 
+					}
+				})
 			},
 			formSubmit: function(e) {
 				/* uni.showModal({
 					content: '表单数据内容：' + JSON.stringify(this.detailInfo),
 					showCancel: false
 				});		 */	
+				console.log(e.detail.value,"55556666")
 				if(this.avatarUrl==null||this.avatarUrl==undefined){
 					e.target.value.avatarUrl="../../static/GRZX/missing-face.png";
 				}else{
@@ -165,49 +205,59 @@
 				}else{
 					e.target.value.background=this.background;
 				}
+				if(this.selector=="男"){
+					e.target.value.gender=1;
+				}
+				if(this.selector=="女"){
+					e.target.value.gender=2;
+				}
+				e.target.value.birthday=this.detailInfo.birthday;
+				e.target.value.phoneNumber=this.phoneNumber;
 				uni.setStorage({
-					key:"Grxx",
+					key:"userInfo",
 					data:e.target.value
 				})
+				this.login(e.target.value);
 				console.log(e.target.value,"555")
 				uni.navigateBack();
 			},
-			getPhoto(){},
-			// getPhoto: function () {
-			//         let id = uni.getStorageSync('user').id
-			//         uni.chooseImage({
-			//         	count: 1,
-			//           sourceType: ['album'],
-			//           success:(res) => {
-			// 			  console.log(res)
-			//             pathToBase64(res.tempFilePaths[0])
-			//             .then(base64 => {
-			//               console.log(base64)
-			//               uni.request({
-			//                 url: 'http://hn216.api.yesapi.cn/?s=App.User.UpdateExtInfo&uuid=27376041451FD0136649177E901B3ADC&ext_info={"location":"广州"}&app_key={你的app_key}&sign={动态签名}',
-			//                 method: 'POST',
-			//                 name: 'file',
-			//                 data: {
-			//                   uid: id,jPHL6SiKbiZTi6OiKtFKCCuC5JmmObOt4EwjgSZUGJ9zYUYUUECRSEkUkbjn0AGIrBAMQC7iKoRQqEx0ACFQwAkBiAQDABCGAEgMQAAABrp3WRF6uOyaMYOpJ/J06lgenderMI4AG0IKQDYgATGACAAAQDEAgAKAQhgAgAQAIYioAAABgFgAmIbABUIYgAEAAXE0jyZxNFsQd+PfCvwczyPG3TaOjTu8dHLqFuzpz+pWOTV5L+n/cxllnP7pNhJUZtndzZ5eB6V/1kKbtCwvpnZy+T8dOXsxyfStyoz+uL+TjWX6UjTB1Sls067Hm4n269X6fR4vqxpjojTf6SRq0dXNApcFCCsOJWbJmM1UjSL2CNUMhMdhVDsmxgOwsQAVYWSAFWFiABiFY1uA6GojSGQeSAAQAAACGIAAAABiAYAAAAAAAAqGACABgIQwAQDEAC6VLZ8MYcMDxtdo3gz9cVtIWOqruezr8Sy6ZuuDw4/SzNdOa2ExXsDZlomJoYmFODpmpgVGdEHRB0aqSOVTKUwrsUkHUcqyD6wmupSKOaEmdENyyM2rQwSGbc6QDAqEIYAITGDQEiGAEgNiAQDFQCAbEAgGIBAAAAhiAaOuX1YLOQ6sT6sNBHFLmhFZFUmSFIQwAQAAAxDEAgGIAEMQAI
-			//                   image: base64
-			//                 },
-			//                 success: (res) => {
-			//                   console.log('上传头像', res)
-			//                   if (res.statusCode === 200) {
-			//                     this.$store.dispatch('userInfo', res.data.user)
-			//                     uni.setStorageSync('user', res.data)
-			//                   } else {
-			//                     uni.showToast({
-			//                       title: res.data.error,
-			//                       icon: 'none'
-			//                     })
-			//                   }
-			//                 }
-			//               })
-			//             })
-			//           }
-			//         })
-			//       },
+			getPhoto(){
+				var that=this;
+				uni.chooseImage({
+					count:1,
+					//sourceType:['album'],
+					success(res) {
+						//console.log(res,"res11");
+						var tempFilePaths = res.tempFilePaths;
+						uni.saveFile({
+						  tempFilePath: tempFilePaths[0],
+						  success: function (res1) {
+							//var savedFilePath = res1.savedFilePath;
+							that.avatarUrl=res1.savedFilePath;
+							// uni.setStorage({
+							// 	key:'headUrl',
+							// 	data:savedFilePath
+							// })
+							// uni.getStorage({
+							// 	key:'headUrl',
+							// 	success:function(res){
+							// 		that.avatarUrl=res.data;
+							// 		console.log(res.data,"res..data")
+							// 	}
+							// })
+						  }
+						});
+						// pathToBase64(res.tempFilePaths[0])
+						// .then(base64 => {
+						// 	
+						// })
+						 
+					}
+				})
+				
+				
+			},
+			
 	},
 }
 </script>

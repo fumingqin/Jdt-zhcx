@@ -22,11 +22,11 @@
 					</image>
 					<view style="width: 470rpx;margin-left: 30rpx;">
 						<view style="width: 470rpx;">
-							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">张师傅</text>
+							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{driverName}}</text>
 						</view>
 						<view style="width: 470rpx;flex-direction:row;margin-top: 20rpx;">
 							<view style="width: 200rpx;">
-								<text style="font-size:30rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">闽C1063</text>
+								<text style="font-size:30rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">{{plateNumber}}</text>
 							</view>
 							<view style="width: 200rpx;">
 								<text style="font-size:30rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text>
@@ -36,7 +36,7 @@
 					<image @click="call" src="../../static/CZC/Call.png" style="width: 40rpx;height: 40rpx;"></image>
 				</view>
 				<view v-if="orderType == 5" style="margin-top: 30rpx;border-top:1px solid #EAEAEA;padding-top: 30rpx;">
-					<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">司机距离您的位置{{Distance}}公里，预计{{Duration}}分钟到达目的地。</text>
+					<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">司机距离您的位置{{distance}}公里，预计{{duration}}分钟到达目的地。</text>
 				</view>
 			</view>
 		</view>
@@ -86,14 +86,14 @@
 							<!-- 勿删 -->
 						</view>
 						<view>
-							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">支付张师傅车费</text>
+							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">支付{{driverName}}车费</text>
 						</view>
 						<view>
 							<uni-icons @click="close" type="closeempty" size="19"></uni-icons>
 						</view>
 					</view>
 					<view style="margin-top: 30px;flex-direction: row;justify-content: center;align-items: center;">
-						<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">32.5</text><text
+						<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{totalPrice}}</text><text
 						 style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:Light;color:#2C2D2D;">元</text>
 					</view>
 					<view style="flex-direction: row;justify-content: center;align-items: center;">
@@ -152,6 +152,23 @@
 				scale: 15,
 				longitude: "", //地图中心点经度
 				latitude: "", //地图中心点纬度
+		
+				points: [],
+				polyline: [], //线
+				directionInterval: 0, //规划用定时器。
+				orderInterval: 0, //获取司机是否接单用定时器。
+				comingInterval: 0, //司机到达乘客出发地用定时器。
+				distance: '', //距离
+				duration: '', //预计时间
+				markers: [], //标记点
+				mapHeight: '', //地图高度
+				hintIndex:-1,//提示状态值
+				mapContext: '', //mapContext对象
+				isShow: false,
+				index:0,
+				
+				plateNumber:'闽C1063',
+				orderType: 0,
 				lon: "", //用户位置经度
 				lat: "", //用户位置纬度
 				startLon: "", //开始
@@ -160,23 +177,9 @@
 				endLat: "",
 				driverLon: "", //司机位置经度
 				driverLat: "", //司机位置纬度
-				points: [],
-				polyline: [], //线
-				directionInterval: 0, //规划用定时器。
-				orderInterval: 0, //获取司机是否接单用定时器。
-				comingInterval: 0, //司机到达乘客出发地用定时器。
-				Distance: '', //距离
-				Duration: '', //预计时间
-				markers: [], //标记点
-				mapHeight: '', //地图高度
-				isHaveDrive: [],
-				phoneNumber: '0', //司机电话号码
-				orderType: 0,
-				hintIndex:-1,//提示状态值
-				mapContext: '', //mapContext对象
-				isShow: false,
+				driverName:'张师傅',//司机姓名
 				totalPrice: 32.5,
-				index:0,
+				phoneNumber: '0', //司机电话号码
 				priceArr: [{
 						key: '起步价',
 						value: '10.0'
@@ -218,7 +221,6 @@
 			that.getMyLocaton();
 			that.getOrder();
 			that.getRealOrder();
-			/* that.setRealUpdate(); */
 			that.test();
 		},
 		onReady() {
@@ -251,8 +253,24 @@
 			getOrder: function() {
 				//上级页面统一返回订单编号。此处根据订单编号获取上下车点。
 				let that = this;
-
-				//赋值开始点经纬度
+				
+		/* 		uni.request({
+					url:'',
+					data:{
+						
+					},
+					method:'GET',
+					success:function(res){
+						
+						
+						
+						
+					},
+					fail:function(res){
+						
+					}
+				}); */
+				
 
 				//赋值结束点经纬度
 				that.endLon = '118.613688';
@@ -260,6 +278,7 @@
 				that.driverLon = "118.600455";
 				that.driverLat = "24.917733";
 				that.phoneNumber = '114';
+				//赋值开始点经纬度
 				that.startLon = '118.599705';
 				that.startLat = '24.889993';
 				that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
@@ -267,7 +286,6 @@
 				//描绘终点标记
 				if (that.orderType == 0) {
 					//如果没有司机接单
-					/* that.selectCarAroung(); */
 					that.hintIndex = 0;
 				} else if (that.orderType == 5) {
 					//如果司机接单，在接旅客的路上
@@ -322,7 +340,6 @@
 					that.driverLat = "24.917733";
 					if (that.orderType == 0) {
 						//等待司机接单中
-						/* that.selectCarAroung(); */
 						that.hintIndex = 0;
 					} else if (that.orderType == 5) {
 						//司机到达乘客地 
@@ -333,11 +350,7 @@
 							});   
 							that.hintIndex = 1;
 						}
-						/* for (var i = 0; i < that.markers.length; i++) {
-							if (that.markers[i].id == 'taxi') {
-								that.markers.splice(i, 1);
-							}
-						} */
+						
 						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
 						that.getDirectionDriving(that.driverLon + ',' + that.driverLat, that.startLon + ',' + that.startLat);
@@ -347,12 +360,6 @@
 					} else if (that.orderType == 10) {
 						//订单开始
 						//清除司机到达出发地的路径规划定时器
-
-						/* for (var i = 0; i < that.markers.length; i++) {
-							if (that.markers[i].id == 'taxi') {
-								that.markers.splice(i, 1);
-							}
-						} */
 						that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
 						clearInterval(that.comingInterval);
@@ -411,9 +418,6 @@
 			},
 			cancleOrder: function() {
 				//取消订单
-				uni.showToast({
-					title: 'cancleOrder'
-				});
 				uni.navigateBack({});
 			},
 			//--------前往终点
@@ -445,7 +449,7 @@
 
 				var timeStamp = new Date().getTime();
 				uni.requestPayment({
-					provider: e.detail.chooseType,
+					provider: e.detail.value.chooseType,
 					orderInfo: '111',
 					timeStamp: timeStamp,
 					nonceStr: '',
@@ -528,8 +532,8 @@
 						//日后会加入定时，此处需清空
 						that.points = [];
 						that.polyline = [];
-						that.Distance = (res.data.Distance / 1000).toFixed(1);
-						that.Duration = (res.data.Duration / 60).toFixed(0);
+						that.distance = (res.data.Distance / 1000).toFixed(1);
+						that.duration = (res.data.Duration / 60).toFixed(0);
 						var polylineArr = [];
 						var points = [];
 
@@ -619,36 +623,9 @@
 				that.markers = arr;
 			},
 
-			setRealUpdate: function() {
-				let that = this;
 
-				setInterval(function() {
-					that.updateLocation();
-				}, 10000);
-			},
 
-			updateLocation: function() {
-				let that = this;
-				uni.getLocation({
-					type: 'gcj02',
-					success: function(res) {
 
-						uni.request({
-							url: '',
-							data: {
-								longitude: res.longitude,
-								latitude: res.latitude,
-							},
-							method: 'GET',
-							success: function(res) {
-								console.log(res);
-							}
-						});
-
-					}
-				})
-
-			},
 
 			test: function() {
 				let that = this;
