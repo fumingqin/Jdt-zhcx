@@ -13,7 +13,7 @@
 			<view v-for="(item,index) in info" :key="index">
 				<view v-if="item.title=='出租车'">
 					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:03-05</text>
+						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{item.appointmentTime}}</text>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
@@ -249,6 +249,7 @@
 						starAddress: "茶叶大厦",
 						endAddress: "泉州市-丰泽区-泉秀路777号",
 						orderType: "已完成",
+						appointmentTime:"03-05",
 						appointment: true,
 					},
 					{
@@ -259,6 +260,7 @@
 						starAddress: "现代美居广场",
 						endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
 						orderType: "进行中",
+						appointmentTime:"03-05",
 						appointment: false,
 					},
 					{
@@ -269,6 +271,7 @@
 						starAddress: "丰泽区人民法院",
 						endAddress: "泉州市-丰泽区-泉秀路765号",
 						orderType: "未完成",
+						appointmentTime:"03-05",
 						appointment: false,
 					},
 					{
@@ -279,6 +282,7 @@
 						starAddress: "泉州汽车站",
 						endAddress: "泉州市-丰泽区-泉秀路222号",
 						orderType: "已取消",
+						appointmentTime:"03-05",
 						appointment: true,
 					},
 
