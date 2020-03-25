@@ -351,11 +351,7 @@
 				// map: '',
 				tcky_selectStartStation: '泉州客运中心站', //选中班次的起点站
 				tcky_selectEndStation: '漳州客运站', //选中班次的终点站
-<<<<<<< HEAD
 				isPupop: true, //是否弹窗
-=======
-				isPupop:true,//是否弹窗
->>>>>>> 5b92662e5361ee08101363b6f3541cb5f340e54b
 			}
 		},
 		onLoad(options) {
