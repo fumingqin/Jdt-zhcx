@@ -105,6 +105,48 @@
 						</view>
 					</view>
 				</view>
+				
+				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+				<view v-if="item.title=='客车-传统'">
+					
+					<!-- 预定日期 -->
+					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+						<view class="reserveDate">预定日期：03-05</view>
+					</view>
+					
+					<view class="whiteBg">
+						<view style="display: flex; margin-top: -40rpx;">
+							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+						</view>
+				
+						<view style="display: flex; margin-top: -72rpx;">
+							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+						</view>
+				
+						<view style="display: flex; margin-top: -16rpx;">
+							<view class="bluering"></view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+						</view>
+				
+						<view style="display: flex; margin-top: 36rpx;">
+							<view class="redring"></view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+						</view>
+				
+						<view style="display: flex;">
+							<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
+							<button class="allBtn" v-if="item.orderType=='已完成'" style="left: 100rpx;">投诉</button>
+							<button class="allBtn" v-if="item.orderType=='未支付'" style="left: 100rpx;background-color: #FC4646; color: #ffffff;">去支付</button>
+							<button class="allBtn" v-if="item.orderType=='已取消'" style="left: 100rpx;">删除</button>
+							<button class="allBtn" @tap="QRCodeTap" v-if="item.orderType=='进行中'" style="left: 100rpx;">二维码</button>
+						</view>
+					</view>
+				</view>
+				
 			</view>
 		</view>
 
@@ -202,6 +244,42 @@
 							<view class="at_buttonView" v-if="item.orderType=='已取消'">
 								<view class="at_button at_btDelete" @click="del(index)">删除</view>
 								<view class="at_button at_btQrCode" @click="repurchase(index)">再次预订</view>
+							</view>
+						</view>
+					</view>
+					
+					<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.title=='客车-传统'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+							<view class="reserveDate">预定日期：03-05</view>
+						</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+							</view>
+					
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							</view>
+					
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+							</view>
+					
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+							</view>
+					
+							<view style="display: flex;">
+								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
+								<button class="allBtn" v-if="item.orderType=='已完成'" style="left: 100rpx;">投诉</button>
 							</view>
 						</view>
 					</view>
@@ -303,6 +381,41 @@
 							</view>
 						</view>
 					</view>
+					
+					<!-- 客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.title=='客车-传统'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+							<view class="reserveDate">预定日期：03-05</view>
+						</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+							</view>
+								
+							<view style="display: flex;">
+								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
+							</view>
+						</view>
+					</view>
 				</view>
 			</view>
 			
@@ -340,8 +453,8 @@
 							</view>
 			
 							<view style="display: flex;">
-								<button style="width:146rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; align-items: center; left: 80rpx;">去支付</button>
-								<button style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
+								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
+								<button class="allBtn" style="background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; left: 100rpx;">去支付</button>
 							</view>
 						</view>
 					</view>
@@ -400,6 +513,43 @@
 							<view class="at_buttonView" v-if="item.orderType=='已取消'">
 								<view class="at_button at_btDelete" @click="del(index)">删除</view>
 								<view class="at_button at_btQrCode" @click="repurchase(index)">再次预订</view>
+							</view>
+						</view>
+					</view>
+					
+					<!-- 客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.title=='客车-传统'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+							<view class="reserveDate">预定日期：03-05</view>
+						</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+							</view>
+								
+							<view style="display: flex;">
+								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
+								<button class="allBtn" style="background-color: #FC4646; color: #ffffff; left: 100rpx;">去支付</button>
+								
 							</view>
 						</view>
 					</view>
@@ -505,6 +655,42 @@
 							</view>
 						</view>
 					</view>
+					
+					<!-- (已取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.title=='客车-传统'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+							<view class="reserveDate">预定日期：03-05</view>
+						</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+							</view>
+								
+							<view style="display: flex;">
+								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
+								<button class="allBtn" style="background-color: #FC4646; color: #ffffff; left: 100rpx;">去支付</button>
+							</view>
+						</view>
+					</view>
 				</view>
 			</view>
 
@@ -523,6 +709,31 @@
 						</view>
 					</view>
 				</view>
+			</uni-popup2>
+			
+			<!-- 客运二维码弹框代码 -->
+			<uni-popup2 type="bottom" ref="popup">
+				<swiper style="width: 100%;height: 500rpx;">
+					<swiper-item v-for="(item,index) in QRCodeArray" :key="index">
+						<view class="u-f-ac" style="border-top-right-radius: 20rpx;border-top-left-radius: 20rpx; width: 100%; background: #FFFFFF;display: block; text-align: center;">
+							<!-- 显示二维码 -->
+							<image src="../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png" 
+								mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image>
+								
+							<!-- 检票口/座位号 -->
+							<view style="display: flex; align-items: center;justify-content: space-between; font-size: 32rpx;color: #2C2D2D; padding: 20rpx 80rpx;font-weight: 300;">
+								<view>检票口：{{item.checkPlace}}</view>
+								<view>座位号：{{item.seatNum}}</view>
+							</view>
+							
+							<!-- 发车时间/车牌号 -->
+							<view style="display: flex; align-items: center;justify-content: space-between;font-size: 32rpx;color: #2C2D2D; padding: 0 80rpx;padding-bottom: 60rpx;">
+								<view>发车时间：{{item.lunchTime}}</view>
+								<view>车牌号：{{item.carNum}}</view>
+							</view>
+						</view>
+					</swiper-item>
+				</swiper>
 			</uni-popup2>
 
 			<!-- 退票弹框 -->
@@ -562,7 +773,7 @@
 					</view>
 				</view>
 			</uni-popup2>
-
+			
 		</view>
 </template>
 
@@ -582,7 +793,72 @@
 				index: 1,
 				orderIndex: 0, //订单调用数值
 				orderIndexData: '', //二维码订单数据
+				QRCodeArray:[
+					{
+						checkPlace:'A5',
+						seatNum:'E1',
+						lunchTime:'18:00',
+						carNum:'闽C12345'
+					}
+				],
 				info: [{
+						title: '客车-传统',
+						titleIndex: 2,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
+						starAddress: "现代美居广场",
+						endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
+						orderType: "进行中",
+						appointment: true,
+					},{
+						title: '客车-传统',
+						titleIndex: 2,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
+						starAddress: "茶叶大厦",
+						endAddress: "泉州市-丰泽区-泉秀路777号",
+						orderType: "已完成",
+						appointment: true,
+					},
+					{
+						title: '客车-传统',
+						titleIndex: 2,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
+						starAddress: "现代美居广场",
+						endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
+						orderType: "进行中",
+						appointment: true,
+					},
+					{
+						title: '客车-传统',
+						titleIndex: 2,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
+						starAddress: "丰泽区人民法院",
+						endAddress: "泉州市-丰泽区-泉秀路765号",
+						orderType: "未支付",
+						appointment: true,
+					},{
+						title: '客车-传统',
+						titleIndex: 2,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
+						starAddress: "泉州汽车站",
+						endAddress: "泉州市-丰泽区-泉秀路222号",
+						orderType: "已取消",
+						appointment: true,
+					},
+					{
+						title: '出租车',
+						titleIndex: 1,
+						time: '2020-03-06 8:00',
+						money: '¥32.6元',
+						starAddress: "泉州汽车站",
+						endAddress: "泉州市-丰泽区-泉秀路222号",
+						orderType: "已取消",
+						appointment: true,
+					},{
 						title: '景区门票',
 						orderNumber: '11126778833',
 						orderType: '待使用',
@@ -716,9 +992,16 @@
 					uni.navigateTo({
 						url: '/pages/order/OrderDetail',
 					})
+				}else if (item == 2) {
+					uni.navigateTo({
+						url: '/pages/CTKY/orderDetail',
+					})
 				}
 			},
-
+			// 客运二维码弹框
+			QRCodeTap: function(){
+				this.$refs.popup.open()
+			},
 
 			onClickItem(e) { //tab点击事件
 				if (this.current !== e.currentIndex) {
@@ -1080,6 +1363,7 @@
 		background: #f5f5f5;
 		height: 90upx;
 		z-index: 99999;
+		
 	}
 	
 	.scroll-h {
@@ -1243,8 +1527,28 @@
 			}
 		}
 	}
-
-
+	//所有按钮--LJH
+	.allBtn {
+		height:54rpx;
+		line-height: 54rpx;
+		border-radius:8rpx;
+		margin-top: 32rpx;
+		font-size: 26rpx;
+		text-align: center;
+		background-color: #fff;
+		border: 0.1 solid #06B4FD;
+		color: #666666;
+		right: 20rpx;
+		align-items: center;
+	}
+	//预定日期---LJH
+	.reserveDate {
+		padding: 5rpx 25rpx;
+		background-color: #06B4FD;
+		color: #FFFFFF;
+		border-radius: 24rpx;
+		font-size: 24rpx;
+	}
 	//须知弹框
 	.box_Vlew {
 		padding: 16upx 40upx;
