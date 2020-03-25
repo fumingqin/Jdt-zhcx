@@ -24,7 +24,7 @@
 			<view class="orderCommonClass">
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
-					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>
+					<view @tap="checkLocation" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>
 					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 				</view>
 			</view>
@@ -49,7 +49,7 @@
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
 				<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
 					<button style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
-					<button style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
 				</view>
 				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in info" :key=index v-model="info">
 					<view class="passengerInfoDetail">
@@ -176,6 +176,18 @@
 			deleteInfo(e) {
 				console.log(e)
 				this.info.splice(e, 1)
+			},
+			//跳转到地图标点
+			checkLocation() {
+				uni.navigateTo({
+					url:'/pages/CTKY/specialMark'
+				})
+			},
+			//选中乘客
+			pickPassenger() {
+				uni.navigateTo({
+					url:'/pages/CTKY/seatSelection'
+				})
 			}
 		}
 	}
