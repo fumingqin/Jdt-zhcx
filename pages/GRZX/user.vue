@@ -4,9 +4,10 @@
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
 			<!-- #ifdef MP-WEIXIN -->
 			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
+			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image>
 			<!-- #endif -->
 			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
-			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image> -->
+			 -->
 			<view class="userInfoClass" @click="checkLogin">
 				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
 				<text class="usernameClass">{{userInfo.nickName || '游客'}}</text>
@@ -235,7 +236,8 @@
 		width: 47upx;
 		height: 42upx;
 		position: absolute;
-		left: 87.73%;
+		//left: 87.73%;
+		left: 20%;
 		top: 74upx;
 	}
 	.userInfoClass{ 	//包括头像昵称
