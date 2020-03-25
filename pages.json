@@ -23,14 +23,12 @@
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 			"style": {
 				"navigationBarTitleText": "景区详情",
-				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
-				// #endif
 			}
 		},
 		{
@@ -61,7 +59,7 @@
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
-			"style": {
+			"style": { 
 				"navigationStyle": "custom"
 			}
 		},
@@ -82,40 +80,34 @@
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
 				"navigationBarTitleText": "选择支付 ",
-				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
-				// #endif
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
 			"style": {
 				"navigationBarTitleText": "购票成功",
-				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
-				// #endif
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 			"style": {
 				"navigationBarTitleText": "填写订单",
-				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
-				// #endif
 			}
 		},
 		{
@@ -350,9 +342,7 @@
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#f5f5f5"
-				// "navigationStyle": "custom"
+				"navigationStyle": "custom"
 			}
 		}, {
 			// 出租车订单详情
@@ -446,11 +436,12 @@
 			"style": {
 				"navigationBarTitleText": "搜索"
 			}
-		}, {
-			"path": "pages/CTKY/ctkyIndex",
-			"style": {}
 		}
-	],
+        ,{
+            "path" : "pages/CTKY/ctkyIndex",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -484,7 +475,6 @@
 			}
 		]
 	},
-
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
