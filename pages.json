@@ -123,6 +123,12 @@
 				"navigationStyle": "custom"
 			}
 		},
+		{
+			"path": "pages/LYFW/ouristRoute/collection",
+			"style": {
+				"navigationBarTitleText": "我的收藏"
+			}
+		},
 		{ //个人中心模块开始
 			"path": "pages/GRZX/user",
 			"style": {
@@ -239,7 +245,9 @@
 		//个人中心模块结束
 		{
 			"path": "pages/LYFW/ouristRoute/travelDetails",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "旅游详情"
+			}
 		}, {
 			"path": "pages/LYFW/currency/index",
 			"style": {}
@@ -336,7 +344,9 @@
 			}
 		}, {
 			"path": "pages/LYFW/ouristRoute/toreply",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "全部回复"
+			}
 		}, {
 			"path": "pages/GJCX/busIndex",
 			"style": {
@@ -358,7 +368,9 @@
 			}
 		}, {
 			"path": "pages/GRZX/complaint",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "我的回复"
+			}
 		}, {
 			"path": "pages/CTKY/checkBusLocation",
 			"style": {
@@ -415,7 +427,13 @@
 				"navigationBarTitleText": "搜索"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/LYFW/ouristRoute/history",
+            "style" : {
+				"navigationBarTitleText": "我的历史"
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -454,7 +472,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选	
+			"path": "pages/LYFW/ouristRoute/collection", //启动页面，必选	
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
