@@ -7,6 +7,7 @@
 			...mapMutations(['login'])
 		},
 		onLaunch: function() {
+			// 获取登录状态
 			let userInfo = uni.getStorageSync('userInfo') || '';
 			if(userInfo.nickName){
 				//更新登陆状态
@@ -17,6 +18,23 @@
 					}
 				});
 			}
+			
+			// #ifdef APP-PLUS
+			// 获取客户端的CID
+			const clientInfo = plus.push.getClientInfo();
+			// console.log(clientInfo);
+			// 获取推送消息
+			const _handlePush = function(message){
+					uni.switchTab({
+						url:'/pages/order/OrderList'
+				})
+			}
+			//事件处理
+			plus.push.addEventListener('click',_handlePush); //点击推送消息时 
+			// plus.push.addEventListener('receive',_handlePush); //从推送服务器获得消息时
+			// #endif
+			
+			
 		},
 		onShow: function() {
 			console.log('App Show')	

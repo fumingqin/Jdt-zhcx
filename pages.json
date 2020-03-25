@@ -23,12 +23,14 @@
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 			"style": {
 				"navigationBarTitleText": "景区详情",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
+				// #endif
 			}
 		},
 		{
@@ -59,7 +61,7 @@
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
-			"style": { 
+			"style": {
 				"navigationStyle": "custom"
 			}
 		},
@@ -80,34 +82,40 @@
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
 				"navigationBarTitleText": "选择支付 ",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
+				// #endif
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
 			"style": {
 				"navigationBarTitleText": "购票成功",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
+				// #endif
 			}
 		}, {
 			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 			"style": {
 				"navigationBarTitleText": "填写订单",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
 					}
 				}
+				// #endif
 			}
 		},
 		{
@@ -343,7 +351,7 @@
 			"path": "pages/order/OrderList",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor" : "#f5f5f5"
+				"navigationBarBackgroundColor": "#f5f5f5"
 				// "navigationStyle": "custom"
 			}
 		}, {
@@ -438,6 +446,9 @@
 			"style": {
 				"navigationBarTitleText": "搜索"
 			}
+		}, {
+			"path": "pages/CTKY/ctkyIndex",
+			"style": {}
 		}
 	],
 	"globalStyle": {

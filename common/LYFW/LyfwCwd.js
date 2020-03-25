@@ -706,8 +706,8 @@ const collectionContent ={
 	status: 1, //1成功,0失败提示返回值
 	data:[{
 		routeId: 1,
-		title: '武夷山 | 全方位详尽三日',
-		scenicName: '南平市武夷山风景名胜区',
+		scenicName: '武夷山 | 全方位详尽三日',
+		title: '南平市武夷山风景名胜区',
 		cost: 320,
 		day:3,
 		date: '2019-11-12',
@@ -717,11 +717,11 @@ const collectionContent ={
 	},
 	{
 		routeId: 2,
-		title: '武夷山 | 全方位详尽三日',
-		scenicName: '南平市武夷山风景名胜区',
+		scenicName: '武夷山 | 全方位详尽三日',
+		title: '南平市武夷山风景名胜区',
 		cost: 320,
 		day:3,
-		date: '2019-11-12',
+		date: '2019-11-13',
 		like: 119,
 		comment: 15,
 		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
@@ -733,7 +733,7 @@ const collectionCommodity ={
 	status: 1, //1成功,0失败提示返回值
 	data:[{
 		routeId: 1,
-		title: '南平正宗熏鹅（武夷山店)',
+		scenicName: '南平正宗熏鹅（武夷山店)',
 		label:['老字号','南平特色','物美价廉'],
 		score:4.5,
 		cost:140,
@@ -742,12 +742,57 @@ const collectionCommodity ={
 	},
 	{
 		routeId: 2,
-		title: '南平正宗熏鹅（武夷山店)',
+		scenicName: '南平正宗熏鹅（武夷山店)',
 		label:['老字号','南平特色','物美价廉'],
 		score:3.5,
 		cost:140,
 		comment: 15,
 		image: '../../../static/LYFW/ouristRoute/SceneryTable/collection/shangping.png',
+	}],
+	msg: '提示'
+}
+
+const record ={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		routeId: 1,
+		day:1,
+		date:'2020-11-16',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+	},
+	{
+		routeId: 2,
+		day:2,
+		date:'2020-11-17',
+		scenicName: '武夷山 | 全方位详尽三日路攻略',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON2.png',
+	},
+	{
+		routeId: 3,
+		day:2,
+		date:'2020-11-17',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+	},
+	{
+		routeId: 4,
+		day:3,
+		date:'2020-11-18',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+	},
+	{
+		routeId: 5,
+		day:3,
+		date:'2020-11-18',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	}],
 	msg: '提示'
 }
@@ -769,4 +814,5 @@ export default {
 	complaint,
 	collectionContent,
 	collectionCommodity,
+	record,
 }
