@@ -231,9 +231,31 @@
 			}
 		},
 		{
-			"path": "pages/GRZX/infoList", //常用信息设置
+			"path": "pages/GRZX/infoList",    //常用信息设置
 			"style": {
-				"navigationBarTitleText": "常用信息设置"
+				"navigationStyle": "custom"
+				// "navigationBarTitleText": "常用信息设置"
+				// "buttons": [{
+				// 		"fontSrc": "/static/GRZX/jdticon.ttf",
+				// 		"text": "\ue60f",
+				// 		"fontSize": "24",
+				// 		"color": "#303133",
+				// 		"width": "46px",
+				// 		"background": "rgba(0,0,0,0)",
+				// 		"float": "left"
+				// 	}]
+			}
+		},
+		{
+			"path": "pages/GRZX/notice", //推文通知
+			"style": {
+				"navigationBarTitleText": "通知"
+			}
+		},
+		{
+			"path": "pages/GRZX/detailTweet", //推文详情
+			"style": {
+				"navigationBarTitleText": "详情"
 			}
 		},
 		//个人中心模块结束
@@ -320,9 +342,7 @@
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor" : "#f5f5f5"
-				// "navigationStyle": "custom"
+				"navigationStyle": "custom"
 			}
 		}, {
 			// 出租车订单详情
@@ -417,7 +437,11 @@
 				"navigationBarTitleText": "搜索"
 			}
 		}
-	],
+        ,{
+            "path" : "pages/CTKY/ctkyIndex",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -451,7 +475,6 @@
 			}
 		]
 	},
-
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{

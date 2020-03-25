@@ -12,6 +12,7 @@
 		
 		<view class="list-cell m-t b-b" @click="clearStorage" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
+			<text style="font-size: 28upx;">{{currentSize}}kb</text>
 			<text class="cell-more jdticon icon-you"></text>
 		</view>
 		<view class="list-cell b-b b-l" @click="navTo('aboutApp')">
@@ -36,6 +37,7 @@
 					check1:true,
 					check2:true,
 				},
+				currentSize:'',
 			};
 		},
 		computed: {
@@ -66,6 +68,13 @@
 						that.statu.check2=res2.data;
 					}
 				})
+				uni.getStorageInfo({
+					success: function (res3) {
+						console.log(res3,"res3");
+						console.log(res3.currentSize,"currentSize");
+						that.currentSize=res3.currentSize;
+					}
+				});
 			},
 			//退出登录
 			toLogout(){

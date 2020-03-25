@@ -10,7 +10,7 @@
 			<text class="fontStyle">好友消息</text>
 			<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 		</view>
-		<view class="boxClass push">
+		<view class="boxClass push" @click="navTo('notice')">
 			<image src="../../static/GRZX/tuisong.png" class="iconClass"></image>
 			<text class="fontStyle">推送</text>
 			<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
@@ -31,7 +31,11 @@
 			}
 		},
 		methods:{
-			
+			navTo(url){
+				uni.navigateTo({
+					url
+				})
+			}
 		}
 	}
 </script>

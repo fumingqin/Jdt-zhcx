@@ -278,7 +278,7 @@
 				var self=this;
 				const {phoneNumber, captchaCode} = this;		
 				if(self.judgeNum(self.phoneNumber)){
-					var timer=null,second=60; //倒计时的时间
+					var timer=null,second=59; //倒计时的时间
 					if(self.textCode == "获取验证码"){
 					  //获取6位随机数
 					  var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
@@ -287,35 +287,39 @@
 							key:'captchaCode',
 							data:randomNum
 					  })
-						uni.request({
-						   url: 'http://111.231.109.113:8000/api/MyTest/SendMessage',
-						   data:{
-							  phoneNumber:self.phoneNumber,
-							  text:'动态验证码：'+randomNum+',如果不是本人请忽略此短信。'
-						   },
-						   method:"GET",
-						   success: function (res) {
-								console.log(res);
-								if(res.data){
-									timer=setInterval(function(){
-									second--;
-									if(second<=0){	
-										self.textCode = "获取验证码";
-										clearInterval(timer);
-										second=60;	
-									}
-									else{			
-										self.disabled = true;
-										self.textCode = second+"秒后重发";
-									}},1000)
-								}else{
-									uni.showToast({
-										title : '手机号码有误',
-										icon : 'none',
-									})
-								}
-						   }
-						})	
+					  
+					  self.textCode = second+"秒后重发";
+					  if(self.textCode == "59秒后重发"){
+						 uni.request({
+						    url: 'http://111.231.109.113:8000/api/MyTest/SendMessage',
+						    data:{
+						 	  phoneNumber:self.phoneNumber,
+						 	  text:'动态验证码：'+randomNum+',如果不是本人请忽略此短信。'
+						    },
+						    method:"GET",
+						    success: function (res) {
+						 		console.log(res);
+						 		if(res.data){
+						 			timer=setInterval(function(){
+						 			second--;
+						 			if(second<=0){	
+						 				self.textCode = "获取验证码";
+						 				clearInterval(timer);
+						 				second=59;	
+						 			}
+						 			else{			
+						 				self.textCode = second+"秒后重发";
+						 			}},1000)
+						 		}else{
+						 			uni.showToast({
+						 				title : '手机号码有误',
+						 				icon : 'none',
+						 			})
+						 		}
+						    }
+						 }) 
+					  }
+							
 					}
 				}else{
 					uni.showToast({
