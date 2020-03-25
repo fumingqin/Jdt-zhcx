@@ -2,12 +2,14 @@
 	<view class="content">
 		<view class="backImg">
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
+			<!-- #ifdef MP-WEIXIN -->
 			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
-			<image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
-			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image>
+			<!-- #endif -->
+			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
+			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image> -->
 			<view class="userInfoClass" @click="checkLogin">
-				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/default.png'"></image>
-				<text class="usernameClass">{{userInfo.nickName || '茜茜爱玩'}}</text>
+				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
+				<text class="usernameClass">{{userInfo.nickName || '游客'}}</text>
 				<image src="../../static/GRZX/edit.png" class="editClass"></image>
 			</view>
 			
@@ -23,15 +25,15 @@
 			
 			<view class="myBox">
 				<view class="collection" @click="collectionClick">
-					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1"></image>
+					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1" mode="aspectFill"></image>
 					<text class="myFont">我的收藏</text>
 				</view>
 				<view class="order" @click="orderClick">
-					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2"></image>
+					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2" mode="aspectFill"></image>
 					<text class="myFont">我的订单</text>
 				</view>
 				<view class="history" @click="historyClick">
-					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3"></image>
+					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3" mode="aspectFill"></image>
 					<text class="myFont">我的历史</text>
 				</view>
 			</view>
@@ -51,12 +53,12 @@
 				<text class="fontStyle">在线客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="navTo('证照信息')">
+			<view class="boxClass borderTop" @click="infoClick">
 				<image src="../../static/GRZX/tubiao_zhengzhao.png" class="iconClass3"></image>
-				<text class="fontStyle">证照信息</text>
+				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="navTo('我的投诉')">
+			<view class="boxClass borderTop" @click="complaintClick">
 				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
 				<text class="fontStyle">我的投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
@@ -76,13 +78,62 @@
 		},
 		data(){
 			return{
-				  
+				// userInfo:{
+				// 	nickName:'',
+				// 	avatarUrl:'',
+				// } 
 			}
 		},
 		computed: {
 			...mapState(['hasLogin','userInfo'])
 		},
+		onLoad(){
+		},
+		onShow(){
+			//this.loadData();
+		},
+		onNavigationBarButtonTap(e) {
+			const index = e.index;
+			if(index === 0){
+				uni.navigateTo({
+					url:'/pages/GRZX/set'
+				})
+			}
+			if(index === 1){
+				uni.navigateTo({
+					url:'/pages/GRZX/myNews'
+				})
+			}
+			if(index === 2){
+				uni.scanCode({
+					onlyFromCamera:true,
+					success:function(res){
+						void plus.runtime.openWeb(res.result,function(){
+							//识别失败
+						});
+					}
+				})
+			}
+			
+		},
 		methods:{
+			// async loadData(){
+			// 	var that=this;
+			// 	uni.getStorage({
+			// 		key:'userInfo',
+			// 		success:function(res){
+			// 			if(that.hasLogin){
+			// 				that.userInfo.nickName=res.data.nickName;
+			// 				that.userInfo.avatarUrl=res.data.avatarUrl;	
+			// 			}else{
+			// 				that.userInfo.nickName='游客';
+			// 				that.userInfo.avatarUrl='../../static/GRZX/missing-face.png';	
+			// 			}
+						
+			// 			console.log(res,"00000002")
+			// 		}
+			// 	})
+			// },
 			orderClick(){
 				uni.switchTab({
 					url:'/pages/order/OrderList'
@@ -94,16 +145,31 @@
 				})  
 				console.log(url)
 			},
+			//信息管理
+			infoClick(){
+				uni.navigateTo({
+					url:'/pages/GRZX/infoList'
+				})
+			},
+			// 投诉
+			complaintClick(){
+				uni.navigateTo({
+					url:'/pages/GRZX/complaint'
+				})  
+			},
 			checkLogin(){
-				console.log(this.hasLogin,"6666")
+				// console.log(this.hasLogin,"6666")
 				if(!this.hasLogin){
 					uni.showToast({
 						title : '请先登录',
 						icon : 'none',
 					})
 					setTimeout(function(){
-						uni.navigateTo({
-							url  : '/pages/GRZX/userLogin'
+						uni.navigateTo({	
+							//loginType=1,泉运登录界面
+							//loginType=2,今点通登录界面
+							//loginType=3,武夷股份登录界面
+							url  : '/pages/GRZX/userLogin?loginType=1'
 						}) 
 					},1500);
 				}else{
@@ -123,6 +189,7 @@
 					title : '我的历史',
 					icon : 'none',
 				})
+				
 			},
 			scanClick(){
 				uni.showToast({
@@ -138,8 +205,6 @@
 <style lang="scss">
 	page{
 		background-color: #F5F9FA;
-		margin: 0upx;
-		padding: 0upx;
 	}
 	.content{
 		
@@ -153,21 +218,21 @@
 		height: 490upx;
 	}
 	.setClass{ //设置按钮
-		width: 6.56%;
+		width: 47upx;
 		height: 45upx;
 		position: absolute;
 		left: 4.67%;
 		top: 74upx;
 	}
 	.scanClass{ //扫一扫按钮
-		width: 6.15%;
+		width: 44upx;
 		height: 41upx;
 		position: absolute;
 		left: 14.8%;
 		top: 74upx;
 	}
 	.infoClass{ 	//消息按钮
-		width: 6.56%;
+		width: 47upx;
 		height: 42upx;
 		position: absolute;
 		left: 87.73%;
@@ -195,6 +260,7 @@
 		color: #FFFFFF;
 		margin-top: 20upx;
 		margin-left: 3%;
+		//width: 300upx;
 	}
 	.grzyClass{  		//个人主页
 		width: 20%;
@@ -211,7 +277,7 @@
 		height: 29upx;
 		position: absolute;
 		left:82%;
-		top:1upx;
+		top:-1upx;
 	}
 	.typeBox{  //普通用户
 		width: 126upx;

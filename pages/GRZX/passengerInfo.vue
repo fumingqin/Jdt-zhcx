@@ -62,7 +62,7 @@
 					name:'黄小新',
 					sex:'男',
 					ticketType:'成人',
-					codeNum:'35058199503692645',
+					codeNum:'350518199503162645',
 					phoneNum:'13653989645',
 					hiddenIndex:0,
 					default:false,
@@ -114,7 +114,7 @@
 		onLoad(options){
 			//传参，submitType参数为1,为出租车进入,其他界面设为2 
 			//limitNum参数为你限制添加乘车人的数量（大于等于1）
-			this.getType(options.submitType,options.limitNum); 
+			 this.getType(options.submitType,options.limitNum); 
 		},
 		methods:{
 			async getType(t,l){
@@ -139,7 +139,7 @@
 				})
 			},
 			choosePassenger(e){  //选择乘车人
-				console.log(this.limit,"....00000")
+				//console.log(this.limit,"....00000")
 				var list=this.passengerList;
 				var count=0;
 				for(var i=0;i<list.length;i++){
@@ -194,7 +194,7 @@
 		position: absolute;
 		left: 89.26%;
 		top:90upx;
-		width: 6.45%;
+		width: 45upx;
 		height:46upx ;
 	}
 	.returnClass{ //返回按钮
@@ -323,12 +323,13 @@
 	.fontClass{ //本人，紧急联系人
 		height: 55upx;
 		line-height: 55upx;
-		font-size: 28upx;
+		font-size: 24upx;
 		color: #ff0000;
 		position: absolute;
 		left:45% ;
 		top: 25upx;
 		border: 1upx solid #ff0000;
+		border-radius: 4upx;
 		text-align: center;
 		width: 18%;
 	}

@@ -3,15 +3,15 @@
 
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 		
 		<!-- 门票信息/数量 -->
 		<!-- 命名：MP -->
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{scSpotDetails.title}}</view>
-				<text class="MP_text" @click="open2(1)">{{scSpotDetails.comment}} &nbsp; > </text>
+				<view class="MP_title">{{scSpotDetails.ticketTitle}}</view>
+				<text class="MP_text" @click="open2(1)">{{scSpotDetails.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s3}} &nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<view class="boxVlew">
@@ -22,7 +22,7 @@
 						<scroll-view class="noticeBox" scroll-y="ture">
 							<text class="Nb_text3">费用包含</text>
 							<text class="Nb_text4">
-								{{scSpotDetails.contain}}
+								{{scSpotDetails.ticketContain}}
 							</text>
 							<text class="Nb_text3">预订说明</text>
 							<text class="Nb_text4">{{notice.explain}}</text>
@@ -63,8 +63,8 @@
 				</view>
 
 				<view class="MP_userInformation">
-					<button class="Mp_addTo" type="default" plain="true">添加</button>
-					<button class="Mp_Selection" type="primary" plain="true" @click="choiceUser">选择</button>
+					<button class="Mp_addTo" type="default" plain="true" @click="choiceUser(0)">添加</button>
+					<button class="Mp_Selection" type="primary" plain="true" @click="choiceUser(1)">选择</button>
 				</view>
 
 			</view>
@@ -139,7 +139,7 @@
 					<text class="people">共{{addressData.length}}人</text>
 				</view>
 
-				<view class="submitChange" :class="{submitColor: selectedValue===1}" @click="submit">
+				<view class="submitChange" :class="{submitColor: selectedValue===1 && addressData.length>0}" @click="submit">
 					<text class="submit">立即预订</text>
 				</view>
 			</view>
@@ -158,7 +158,6 @@
 				format: true
 			})
 			return {
-				index: 0, //门票信息的数组值
 				actualPayment: '', //实际付款
 				selectedValue: 0, //同意须知的选中值
 				dateReminder: '明天', //日期提醒
@@ -169,6 +168,9 @@
 				couponColor: '', //优惠券couponID，大于等于0触发价格判断事件
 				couponCondition: '', //优惠券的满足条件值
 				notice : '', // 预订须知
+				addressData: '', //购票人信息
+				adultIndex: '', //成人数量
+				childrenIndex: '', //儿童数量
 				couponList: [{
 						couponID: '0',
 						title: '新用户专享优惠券',
@@ -192,15 +194,12 @@
 						title: '大型团购优惠券-今点通限量版',
 						price: 200,
 						condition: 1000,
-					}
-				],
-				addressData: '', //购票人信息
-				adultIndex: '', //成人数量
-				childrenIndex: '', //儿童数量
+					}]
 			}
 		},
 
-		onLoad(option) {
+		onLoad(options) {
+			// console.log(JSON.parse(options.ticketId)); 
 			this.lyfwData();
 			setInterval(() => {
 				this.userData();
@@ -216,7 +215,8 @@
 			//读取静态数据
 			async lyfwData() {
 				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
-				this.scSpotDetails = scSpotDetails.data.ticket[this.index];
+				this.scSpotDetails = scSpotDetails.data;
+				
 				let notice = await this.$api.lyfwfmq('notice');
 				this.notice = notice.data;
 			},
@@ -238,10 +238,18 @@
 			},
 
 			//选择用户
-			choiceUser: function() {
-				uni.navigateTo({
-					url: '/pages/GRZX/passengerInfo?submitType=1',
-				})
+			choiceUser: function(e) {
+				if(e==0){
+					uni.navigateTo({
+						url: '/pages/GRZX/addPassenger',
+					})
+				}else if(e==1){
+					uni.navigateTo({
+						url: '/pages/GRZX/passengerInfo?submitType=1',
+					})
+				}
+				
+				
 			},
 			
 			//用户数据读取
@@ -306,13 +314,14 @@
 			//仿穿透事件
 			stopPrevent() {},
 
-			// 数量
+			// 数量+计价
 			numberChange() {
-				const a = (this.scSpotDetails.adultPrice * this.adultIndex) + (this.scSpotDetails.childPrice * this.childrenIndex);
+				const a = (this.scSpotDetails.ticketAdultPrice * this.adultIndex) + (this.scSpotDetails.ticketChildPrice * this.childrenIndex);
 				if (this.couponColor == '') {
-					this.calcTotal();
+					this.actualPayment = a;
 				} else if (a >= this.couponCondition) {
-					this.calcTotal();
+					var total = a - this.couponList[this.couponColor].price;
+					this.actualPayment = total;
 				} else if (a < this.couponCondition) {
 					uni.showToast({
 						title: '您的金额不满足优惠券条件，已取消优惠券',
@@ -322,27 +331,13 @@
 					this.couponIndex = '请选择优惠券';
 					this.couponColor = '';
 					this.couponCondition = 0;
-					this.calcTotal();
-				}
-			},
-
-			// 计算总价
-			async calcTotal() {
-				var total;
-				const a = this.scSpotDetails.adultPrice * this.adultIndex;
-				const b = this.scSpotDetails.childPrice * this.childrenIndex;
-				const c = a + b;
-				if (this.couponColor == '') {
-					this.actualPayment = c;
-				} else if (c >= this.couponCondition) {
-					total = c - this.couponList[this.couponColor].price;
-					this.actualPayment = total;
+					this.actualPayment = a;
 				}
 			},
 
 			//提交表单
 			submit: function() {
-				if (this.selectedValue == 1) {
+				if (this.selectedValue == 1 && this.addressData.length>0) {
 					// uni.request({
 					// 	url : '',
 					// 	data:{
@@ -363,7 +358,12 @@
 						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
 					})
 
-				} else {
+				} else if(this.addressData.length==0){
+					uni.showToast({
+						title: '请添加购票人信息',
+						icon: 'none'
+					})
+				}else {
 					uni.showToast({
 						title: '请同意购买须知',
 						icon: 'none'
@@ -480,9 +480,10 @@
 
 	//整体容器样式
 	.cover-container {
-		padding: 64upx 30upx;
 		position: relative;
-		padding-bottom: 32upx;
+		top: 148upx;
+		padding: 32upx 30upx;
+		padding-bottom: 180upx;
 	}
 
 	//公共样式 - 适用多个数据框
@@ -492,7 +493,6 @@
 		padding: 24upx 32upx;
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
-		margin-top: 24upx;
 		.MP_title {
 			font-size: 34upx;
 			display: flex;

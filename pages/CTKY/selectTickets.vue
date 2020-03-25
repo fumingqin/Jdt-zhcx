@@ -128,6 +128,7 @@
 				this.selectIndex = e;
 				this.date = item.longDate;
 				console.log(this.date);
+				this.getDeparture();
 			},
 			onShowDatePicker(type) { //显示
 				this.type = type;
@@ -298,11 +299,6 @@
 						success: (res) => {
 							console.log(res.data);
 							this.departureData=res.data;
-							// uni.showToast({
-							// 	title: res.data,
-							// 	icon: 'none',
-							// 	duration: 4000
-							// })
 						}
 					});	
 

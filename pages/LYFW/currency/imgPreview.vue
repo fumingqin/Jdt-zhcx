@@ -3,7 +3,7 @@
 		<view class="mask">
 			<swiper @change="changeSwiper" class="my_swiper" :current="current" :circular="circular" :indicator-dots="indicatorDots" :autoplay="autoplay" :duration="duration">
 				<swiper-item v-for="(x, y) in picList" :key="y">
-					<view class="bg_img" :style="{ backgroundImage: 'url('+x.src+')'}"></view>
+					<view class="bg_img" :style="{ backgroundImage: 'url('+x.ticketImage+')'}"></view>
 				</swiper-item>
 			</swiper>
 		</view>
