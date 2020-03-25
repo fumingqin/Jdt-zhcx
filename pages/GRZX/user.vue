@@ -179,16 +179,14 @@
 				}
 			},
 			collectionClick(){
-				uni.showToast({
-					title : '我的收藏',
-					icon : 'none',
-				})
+				uni.navigateTo({
+					url:'/pages/LYFW/ouristRoute/collection'
+				}) 
 			},
 			historyClick(){
-				uni.showToast({
-					title : '我的历史',
-					icon : 'none',
-				})
+				uni.navigateTo({
+					url:'/pages/LYFW/ouristRoute/history'
+				}) 
 				
 			},
 			scanClick(){

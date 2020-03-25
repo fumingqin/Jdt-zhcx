@@ -61,7 +61,7 @@
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
-			"style": { 
+			"style": {
 				"navigationStyle": "custom"
 			}
 		},
@@ -239,7 +239,7 @@
 			}
 		},
 		{
-			"path": "pages/GRZX/infoList",    //常用信息设置
+			"path": "pages/GRZX/infoList", //常用信息设置
 			"style": {
 				"navigationStyle": "custom"
 				// "navigationBarTitleText": "常用信息设置"
@@ -339,7 +339,7 @@
 			"path": "pages/order/OrderList",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor" : "#f5f5f5"
+				"navigationBarBackgroundColor": "#f5f5f5"
 				// "navigationStyle": "custom"
 			}
 		}, {
@@ -434,6 +434,9 @@
 			"style": {
 				"navigationBarTitleText": "搜索"
 			}
+		}, {
+			"path": "pages/CTKY/ctkyIndex",
+			"style": {}
 		}
 	],
 	"globalStyle": {
