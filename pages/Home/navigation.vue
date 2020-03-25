@@ -71,7 +71,7 @@
 					});
 					// return false;
 				}
-				
+				uni.hideKeyboard()
 				var that = this;
 				that.searchKey.push(this.ipt);
 				uni.setStorage({

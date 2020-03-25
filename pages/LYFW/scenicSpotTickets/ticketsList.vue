@@ -4,14 +4,14 @@
 		<view class="searchTopBox">
 			<text  class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 			<view class="searchBoxRadius">
-				<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
+				<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
 				<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
 			</view>
 		</view>
 		
 		<popup-layer ref="popupRef" :direction="'right'">
 			<view style="width:750upx;height: 100%;">
-				<citySelect @back_city="back_city"></citySelect>
+				<citySelect @back_city="backCity"></citySelect>
 			</view>
 		</popup-layer>
 
@@ -46,7 +46,7 @@
 
 
 		<!-- 筛选列表 -->
-		<view class="screenView" :style="{position:headerPosition,top:headerTop}">
+		<view class="screenView">
 			<view class="screenText" :class="{current: screenIndex === 0}" @click="tabClick(0)">
 				综合排序
 			</view>
@@ -161,7 +161,7 @@
 			},
 			
 			//地区获取
-			back_city(e) { 
+			backCity(e) { 
 				if (e !== 'no') {
 					// console.log(e)
 					this.region = e.cityName
@@ -194,6 +194,7 @@
 					});
 					// retuan false;
 				}
+				uni.hideKeyboard()
 				this.loadData('refresh', 1);
 				uni.showLoading({
 					title: '正在搜索' + this.searchValue,
