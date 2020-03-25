@@ -450,6 +450,18 @@
 		}, {
 			"path": "pages/CTKY/ctkyIndex",
 			"style": {}
+		},
+		{
+			"path": "pages/GRZX/notice", //推文通知
+			"style": {
+				"navigationBarTitleText": "通知"
+			}
+		},
+		{
+			"path": "pages/GRZX/detailTweet", //推文详情
+			"style": {
+				"navigationBarTitleText": "详情"
+			}
 		}
 	],
 	"globalStyle": {
