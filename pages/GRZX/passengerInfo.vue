@@ -323,12 +323,13 @@
 	.fontClass{ //本人，紧急联系人
 		height: 55upx;
 		line-height: 55upx;
-		font-size: 28upx;
+		font-size: 24upx;
 		color: #ff0000;
 		position: absolute;
 		left:45% ;
 		top: 25upx;
 		border: 1upx solid #ff0000;
+		border-radius: 4upx;
 		text-align: center;
 		width: 18%;
 	}

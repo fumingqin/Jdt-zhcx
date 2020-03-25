@@ -2,7 +2,7 @@
 	<view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 
 		<view class="cover-container">

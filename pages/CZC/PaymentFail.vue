@@ -38,11 +38,11 @@
 				}
 			},
 			backHome : function() {
-				setInterval(() => {
+				setTimeout(() => {
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});
-				}, 10000)
+				}, 10000);
 			}
 
 		}

@@ -2,10 +2,18 @@
 	<view>
 		<!-- 搜索栏 -->
 		<view class="searchTopBox">
+			<text  class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 			<view class="searchBoxRadius">
-				<input class="searchBoxIpt" type="text" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区/地区名称" />
+				<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
+				<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
 			</view>
 		</view>
+		
+		<popup-layer ref="popupRef" :direction="'right'">
+			<view style="width:750upx;height: 100%;">
+				<citySelect @back_city="back_city"></citySelect>
+			</view>
+		</popup-layer>
 
 		<!-- 搜索内容 -->
 		<view :hidden="searchIndex==0">
@@ -14,7 +22,7 @@
 					<image class="Tk_image" :src="searchData.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{searchData.ticketTitle}}</text>
-						<text class="Tk_text2">{{searchData.ticketComment}}</text>
+						<text class="Tk_text2">{{searchData.ticketComment_s1}}&nbsp;|&nbsp;{{searchData.ticketComment_s2}}&nbsp;|&nbsp;{{searchData.ticketComment_s3}}</text>
 						<text class="Tk_text3">¥{{searchData.ticketAdultPrice}}元起</text>
 					</view>
 				</view>
@@ -62,7 +70,7 @@
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<text class="Tk_text2">{{item.ticketComment}}</text>
+						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
 						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
 					</view>
 				</view>
@@ -91,6 +99,8 @@
 
 
 <script>
+	import citySelect from '../../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/uni-location/popup-layer/popup-layer.vue'
 	export default {
 		data() {
 			return {
@@ -105,24 +115,63 @@
 				loadingType: 'more', //加载更多状态 
 				cateId: 0, //已选三级分类id
 				cateList: [], //分类数组
+				region: '请选择', //地区数值
 			}
+		},
+		components: {
+			citySelect,
+			popupLayer
+		},
+		mounted() {
+			this.$refs.popupRef.close();
 		},
 		onLoad(options) {
 			this.cateId = options.tid;
 			this.loadCateList(options.fid, options.sid);
+			this.Getpostion();
 			this.lyfwData();
 			this.loadData();
+			
 		},
-
+		
 		methods: {
 			//请求模拟接口数据
 			async lyfwData() {
-				let scenicList = await this.$api.lyfwfmq('scenicList');
-				this.searchData = scenicList.data[0];
 				let sixPalaceList = await this.$api.lyfwfmq('sixPalaceList');
 				this.sixPalaceList = sixPalaceList.data;
-				// console.log(this.searchData)
+				let ticketSearch = await this.$api.lyfwfmq('ticketSearch');
+				this.searchData = ticketSearch.data;
 			},
+			
+			//获取定位数据
+			Getpostion:function(){
+				try {
+				    this.region = uni.getStorageSync('Key_position');
+				    if (value) {
+				        // console.log(value);
+				    }
+				} catch (e) {
+				    // error
+				}
+			},
+			
+			//打开地区选择器
+			oncity() {
+				this.$refs.popupRef.show(); 
+			},
+			
+			//地区获取
+			back_city(e) { 
+				if (e !== 'no') {
+					// console.log(e)
+					this.region = e.cityName
+					this.$refs.popupRef.close();
+				} else {
+					this.$refs.popupRef.close();
+				}
+			},
+			
+			
 
 			//加载分类
 			async loadCateList(fid, sid) {
@@ -260,26 +309,45 @@
 <style lang="scss">
 	//搜索框
 	.searchTopBox {
-		width: 100%;
-		height: 120upx;
-		padding-top: 15upx;
-
+		display: flex;
+		text-overflow:ellipsis;//文本溢出：省略号
+		margin: 32upx 32upx;
+		.locationTxt{
+			color: #333333; 
+			font-size: 36upx;
+			font-weight: bold;
+			text-overflow: ellipsis;
+			margin-top: 16upx;
+			width: 25%;
+			text-overflow:ellipsis;//文本溢出：省略号
+		}
+		/* 向下小图标 */
+		.icon {
+			font-size: 20upx;
+			color: #AAAAAA;
+			margin-left: 15upx;
+		}
 		.searchBoxRadius {
-			width: 92%;
-			height: 80upx;
+			width: 76%;
+			height: 78upx;
 			background-color: #fff;
-			margin-left: 4%;
-			overflow: hidden;
 			border-radius: 46upx;
-			margin-top: 8upx;
 			background: #f5f5f5;
-
-			.searchBoxIpt {
-				height: 70upx;
-				text-align: center;
-				margin-top: 4upx;
+			
+			.searchImage {
+				padding-left: 24upx;
+				padding-top: 18upx;
+				width: 48upx;
+				height: 48upx;
+			}
+			.inputIocale {
+				position: absolute;
+				height: 72upx;
+				padding-top : 4upx;
+				padding-left: 88upx;
 				font-size: 30upx;
 			}
+			
 		}
 	}
 

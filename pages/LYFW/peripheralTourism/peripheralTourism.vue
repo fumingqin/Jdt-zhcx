@@ -3,7 +3,7 @@
 		<view :style="{height:statusBarHeight+'px'}" style="width: 100%;"></view>
 		<!-- 顶部搜索栏 -->
 		<view class="searchTopBox">
-			<text  class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
+			<text class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
 				<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
@@ -33,12 +33,12 @@
 		</view>
 		<!-- tabbar导航栏 -->
 		<view class="box">
-				<QSTabs :current="current_2" :tabs="tabs_2" minWidth="250" @change="change($event)"/>
-			</view>
-			<view>
-				<view class="Tk_scrollview" v-for="(item,index) in scenicSpot" :key="index">
+			<QSTabs :current="current_2" :tabs="tabs_2" minWidth="250" @change="change($event)" />
+		</view>
+		<view>
+			<view class="Tk_scrollview" v-for="(item,index) in scenicSpot" :key="index">
 				<view class="Tk_item" @click="godetail(item.scennicName)">
-					<image class="Tk_image" :src="item.image"/>
+					<image class="Tk_image" :src="item.image" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.scennicName}}</text>
 						<text class="Tk_text2">人均费用&nbsp;&nbsp;&nbsp;{{item.cost}}元</text>
@@ -47,17 +47,17 @@
 				</view>
 				<!-- 喜欢评论区 -->
 				<view class="Tk_btn">
-						<text>{{item.date}}</text>
-						<text class="yticon jdticon icon-shoucang"></text>
-						<text class="right">{{item.like}}</text>
-						<text class="yticon jdticon icon icon-pinglun-copy"></text>
-						<view></view>
-						<text class="right">{{item.comment}}</text>
-					</view>
-					</view>
+					<text>{{item.date}}</text>
+					<text class="yticon jdticon icon-shoucang"></text>
+					<text class="right">{{item.like}}</text>
+					<text class="yticon jdticon icon icon-pinglun-copy"></text>
+					<view></view>
+					<text class="right">{{item.comment}}</text>
 				</view>
-				</view>
+			</view>
 		</view>
+	</view>
+	</view>
 	</view>
 </template>
 
@@ -77,27 +77,27 @@
 			return {
 				statusBarHeight: this.statusBarHeight, //状态栏高度，在main.js里
 				region: '请选择', //地区 
-				sixPeripheral : [], //六宫格列表
-				ipt: '',		//搜索默认值
-				piclist :[],    //相册图片数组
-				tabs_2: ['推荐景点', '推荐路线', '最新路线'],  //选项标题
-				current_2: 0,	//标题下标
-				scenicSpot : [], //景点内容
-				filterIndex : 0,	//tabs默认值
+				sixPeripheral: [], //六宫格列表
+				ipt: '', //搜索默认值
+				piclist: [], //相册图片数组 
+				tabs_2: ['推荐景点', '推荐路线', '最新路线'], //选项标题
+				current_2: 0, //标题下标
+				scenicSpot: [], //景点内容
+				filterIndex: 0, //tabs默认值
 				loadingType: 'more', //加载更多状态
-				
+
 			}
 		},
-		created() {},  
-		mounted() {  
+		created() {},
+		mounted() {
 			this.$refs.popupRef.close();
 		},
 		onLoad() {
 			this.tweetsInit();
 			this.loadData();
 			this.Getpostion();
-			
-		}, 
+
+		},
 		methods: {
 			// getAuthorizeInfo(a="scope.userLocation"){  //1. uniapp弹窗弹出获取授权（地理，个人微信信息等授权信息）弹窗
 			// 		var _this=this;
@@ -124,30 +124,30 @@
 			// 				}
 			// 			});
 			// 			},
-			
+
 			//读取静态数据lyfw.js
-			async tweetsInit(){
+			async tweetsInit() {
 				let six_peripheral = await this.$api.lyfwlql('sixPeripheral');
 				this.sixPeripheral = six_peripheral;
 				let scenic_Spot = await this.$api.lyfwlql('scenicSpot');
 				this.scenicSpot = scenic_Spot;
-				},
-				//获取定位数据
-			Getpostion(){
+			},
+			//获取定位数据
+			Getpostion() {
 				try {
-				    this.region = uni.getStorageSync('Key_position');
-				    if (value) {
-				        // console.log(value);
-				    }
+					this.region = uni.getStorageSync('Key_position');
+					if (value) {
+						// console.log(value);
+					}
 				} catch (e) {
-				    // error
+					// error
 				}
 			},
 			oncity() {
 				var that = this
 				this.$refs.popupRef.show();
 			},
-			back_city(e) { 
+			back_city(e) {
 				if (e !== 'no') {
 					this.region = e.cityName
 					this.$refs.popupRef.close();
@@ -166,7 +166,7 @@
 					// return false;
 				}
 				//根据搜索的城市请求不同的接口,url待填充
-				
+
 				// uni.request({
 				// 	url:'',
 				// 	dataType::'jason',
@@ -181,30 +181,30 @@
 				// 	}
 				// })
 				uni.showToast({
-					title:'你搜索了'+this.ipt,
-					icon:'none',
+					title: '你搜索了' + this.ipt,
+					icon: 'none',
 				})
 				this.ipt = ''
-			}, 
+			},
 			// 景点点击链接地址
-			godetail : function (value){
+			godetail: function(value) {
 				uni.setStorage({
-					key:'_detailId',
-					data:0
+					key: '_detailId',
+					data: 0
 				})
 				uni.showToast({
-					title:'你点击了'+value,
-					icon : 'none'
+					title: '你点击了' + value,
+					icon: 'none'
 				})
-				setTimeout(function(){
+				setTimeout(function() {
 					uni.navigateTo({
-						url:'./travelArticles'
+						url: './travelArticles'
 					})
-				},500);
-				
+				}, 500);
+
 			},
 			//tabbar筛选点击
-			change(index){
+			change(index) {
 				this.current_2 = index;
 				this.filterIndex = index;
 				uni.pageScrollTo({
@@ -214,40 +214,40 @@
 				this.loadData('refresh', 1);
 			},
 			//加载信息 ，带下拉刷新和上滑加载
-			async loadData(type='add', loading) {
+			async loadData(type = 'add', loading) {
 				//没有更多直接返回
-				if(type === 'add'){
-					if(this.loadingType === 'nomore'){
+				if (type === 'add') {
+					if (this.loadingType === 'nomore') {
 						return;
 					}
 					this.loadingType = 'loading';
-				}else{
+				} else {
 					this.loadingType = 'more'
 				}
-				
+
 				let scenicSpot = await this.$api.lyfwlql('scenicSpot');
-				if(type === 'refresh'){
+				if (type === 'refresh') {
 					this.scenicSpot = [];
 				}
-				
+
 				//筛选，测试数据直接前端筛选了
-				if(this.filterIndex === 0){
-					scenicSpot.sort((a,b)=>b.like - a.like)
+				if (this.filterIndex === 0) {
+					scenicSpot.sort((a, b) => b.like - a.like)
 				}
-				if(this.filterIndex === 1){
-					scenicSpot.sort((a,b)=>a.id - b.id)
+				if (this.filterIndex === 1) {
+					scenicSpot.sort((a, b) => a.id - b.id)
 				}
-				if(this.filterIndex === 2){
-					scenicSpot.sort((a,b)=>a.date < b.date ? 1:-1)
+				if (this.filterIndex === 2) {
+					scenicSpot.sort((a, b) => a.date < b.date ? 1 : -1)
 				}
 				this.scenicSpot = this.scenicSpot.concat(scenicSpot);
-				
+
 				//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
-				this.loadingType  = this.scenicSpot.length > 20 ? 'nomore' : 'more';
-				if(type === 'refresh'){
-					if(loading == 1){
+				this.loadingType = this.scenicSpot.length > 20 ? 'nomore' : 'more';
+				if (type === 'refresh') {
+					if (loading == 1) {
 						uni.hideLoading()
-					}else{
+					} else {
 						uni.stopPullDownRefresh();
 					}
 				}
@@ -260,49 +260,46 @@
 	.height {
 		height: var(--status-bar-height);
 	}
+
 	/* 搜索栏区域样式 */
 	//搜索栏区域样式
 	.searchTopBox {
 		display: flex;
-		margin-top: 28upx;
 		text-overflow:ellipsis;//文本溢出：省略号
+		margin: 32upx 32upx;
 		.locationTxt{
 			color: #333333; 
-			padding-left: 32upx;
 			font-size: 36upx;
 			font-weight: bold;
 			text-overflow: ellipsis;
-			margin-top: 10upx;
-			width: 24%;
+			margin-top: 16upx;
+			width: 25%;
 			text-overflow:ellipsis;//文本溢出：省略号
 		}
 		.searchBoxRadius {
-			position: relative;
-			// right: -157upx;
 			width: 76%;
-			height: 74upx;
+			height: 78upx;
 			background-color: #fff;
-			overflow: hidden;
 			border-radius: 46upx;
 			background: #f5f5f5;
 			
 			.searchImage {
-				position: absolute;
-				padding-left: 16upx;
-				padding-top: 15upx;
+				padding-left: 24upx;
+				padding-top: 18upx;
 				width: 48upx;
 				height: 48upx;
 			}
 			.inputIocale {
 				position: absolute;
-				height: 70upx;
+				height: 72upx;
 				padding-top : 4upx;
-				padding-left: 64upx;
+				padding-left: 88upx;
 				font-size: 30upx;
 			}
 			
 		}
 	}
+
 	// .searchArea{
 	// 	display: flex;
 	// 	margin-top: 28upx;
@@ -315,7 +312,7 @@
 	// 	font-size: 36upx;
 	// 	font-weight: bold;
 	// 	text-overflow: ellipsis;
-		
+
 	// }
 	// /* 景点搜索框 */
 	// .inputIocale{
@@ -332,123 +329,139 @@
 	// 	font-size: 29rpx;
 	// }
 	/* 向下小图标 */
-	.icon{
+	.icon {
 		font-size: 20upx;
 		color: #AAAAAA;
 		margin-left: 15upx;
 	}
-	.box{
-		z-index: 999;//最外层
-		position: absolute;//绝对位置
-			position: sticky;
-			top: 0;
-			background: #fff;
-		}
-		
-			//Y轴滚动视图
-			.Tk_scrollview{
-				padding: 16upx 32upx;
-				margin: 0 auto;
-				.Tk_item{
-					display: flex;
-					 .Tk_image{
-					 		width: 182upx;
-					 		height: 152upx;
-					 		border-radius: 12upx;
-					 		margin: 24rpx 0rpx;
-					 	}
-					.Tk_bacg{
-						margin-top: 20upx;
-						margin-left: 24upx;
-					}
-					.Tk_text1{
-						 display: flex;
-						 text-overflow:ellipsis; //文章超出宽度隐藏并用...表示
-						 white-space:nowrap;
-						 overflow:hidden;
-						 width:480upx;			//内容宽度
-					}
-					.Tk_text2{
-						 font-size: 26upx;
-						 margin-top: 20upx;
-						 display: block; // 让字体换行
-					}
-					.Tk_text3{
-						 font-size: 24upx;
-						 margin-top: 10upx;
-						 color: #AAAAAA;
-						 display: block; // 让字体换行
-					}
-				}
-				.Tk_btn{
-					display: flex;
-					width: 100%;
-					font-size: 28upx;
-					color: #AAAAAA;
-					padding-right: 32upx;
-					.right{
-						position: relative;
-						margin-left: 12upx;
-						left: 368upx;
-						bottom: 6upx;
-					}
-					.yticon{
-						position: relative;
-						font-size: 28upx;
-						margin-left: 12upx; 
-						left: 368upx;
-					}
-					
-				}
+
+	.box {
+		z-index: 999; //最外层
+		position: absolute; //绝对位置
+		position: sticky;
+		top: 0;
+		background: #fff;
+	}
+
+	//Y轴滚动视图
+	.Tk_scrollview {
+		padding: 16upx 32upx;
+		margin: 0 auto;
+
+		.Tk_item {
+			display: flex;
+
+			.Tk_image {
+				width: 182upx;
+				height: 152upx;
+				border-radius: 12upx;
+				margin: 24rpx 0rpx;
 			}
-//标题
-	.currencyTitle{
+
+			.Tk_bacg {
+				margin-top: 20upx;
+				margin-left: 24upx;
+			}
+
+			.Tk_text1 {
+				display: flex;
+				text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
+				white-space: nowrap;
+				overflow: hidden;
+				width: 480upx; //内容宽度
+			}
+
+			.Tk_text2 {
+				font-size: 26upx;
+				margin-top: 20upx;
+				display: block; // 让字体换行
+			}
+
+			.Tk_text3 {
+				font-size: 24upx;
+				margin-top: 10upx;
+				color: #AAAAAA;
+				display: block; // 让字体换行
+			}
+		}
+
+		.Tk_btn {
+			display: flex;
+			width: 100%;
+			font-size: 28upx;
+			color: #AAAAAA;
+			padding-right: 32upx;
+
+			.right {
+				position: relative;
+				margin-left: 12upx;
+				left: 368upx;
+				bottom: 6upx;
+			}
+
+			.yticon {
+				position: relative;
+				font-size: 28upx;
+				margin-left: 12upx;
+				left: 368upx;
+			}
+
+		}
+	}
+
+	//标题
+	.currencyTitle {
 		font-size: 36upx;
 		font-weight: bold;
-		color: #333333; 
+		color: #333333;
 		padding-left: 32upx;
 		margin-top: 24upx;
 		margin-bottom: 8upx;
 	}
-	
+
 	//六宫格样式
-	.sixBackground{
+	.sixBackground {
 		display: flex;
-		justify-content: space-between;  //换行留白
-		flex-direction: row;   //换行对齐
-		flex-wrap: wrap;  //循环换行
+		justify-content: space-between; //换行留白
+		flex-direction: row; //换行对齐
+		flex-wrap: wrap; //循环换行
 		padding: 20upx;
+
 		//黑色暗幕，在图片上方覆盖一层渐变黑
-		.darkCurtain{
+		.darkCurtain {
 			position: absolute;
 			overflow: hidden;
 			width: 212upx;
 			height: 144upx;
 			border-radius: 12upx;
 			margin: 12upx 12upx;
-			background:rgba(7,17,27,0.2);      
+			background: rgba(7, 17, 27, 0.2);
 		}
-		image{
+
+		image {
 			width: 212upx;
 			height: 144upx;
 			border-radius: 12upx;
 			opacity: 1.5;
 			margin: 12upx 12upx;
 		}
-		.sixView{
+
+		.sixView {
 			position: absolute;
-			text-overflow:ellipsis; //文章超出宽度隐藏并用...表示
-			white-space:nowrap;
-			overflow:hidden;
+			text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
+			white-space: nowrap;
+			overflow: hidden;
 			color: #fff;
 			max-width: 192upx;
 			margin-left: 24upx;
 			margin-top: -115upx;
-			.sixText1{
+
+			.sixText1 {
 				font-weight: bold;
 				font-size: 30upx;
 			}
-			.sixText2{
+
+			.sixText2 {
 				display: block;
 				font-size: 24upx;
 				font-weight: 150;

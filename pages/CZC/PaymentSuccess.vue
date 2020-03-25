@@ -38,7 +38,7 @@
 				}
 			},
 			backHome : function() {
-				setInterval(() => {
+				setTimeout(() => { 
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});
