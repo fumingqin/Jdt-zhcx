@@ -17,6 +17,7 @@
 
 			"style": {
 				"navigationBarTitleText": "景区列表",
+				"navigationBarBackgroundColor": "#FFFFFF",
 				"app-plus": {
 				     "softinputNavBar": "none"
 				}
@@ -26,7 +27,9 @@
 			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 			"style": {
 				"navigationBarTitleText": "景区详情",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
+				// #endif
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
@@ -83,7 +86,9 @@
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
 				"navigationBarTitleText": "选择支付 ",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
+				// #endif
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
@@ -94,7 +99,9 @@
 			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
 			"style": {
 				"navigationBarTitleText": "购票成功",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
+				// #endif
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
@@ -105,7 +112,9 @@
 			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 			"style": {
 				"navigationBarTitleText": "填写订单",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
+				// #endif
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
@@ -322,7 +331,9 @@
 			"path": "pages/LYFW/scenicSpotTickets/orderDetails",
 			"style": {
 				"navigationBarTitleText": "订单详情",
+				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
+				// #endif
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
@@ -494,7 +505,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选	
+			"path": "pages/Home/indexZhly", //启动页面，必选	
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

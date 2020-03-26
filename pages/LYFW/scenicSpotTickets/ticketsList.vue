@@ -136,11 +136,16 @@
 		
 		methods: {
 			//请求模拟接口数据
-			async lyfwData() {
-				let sixPalaceList = await this.$api.lyfwfmq('sixPalaceList');
-				this.sixPalaceList = sixPalaceList.data;
-				let ticketSearch = await this.$api.lyfwfmq('ticketSearch');
-				this.searchData = ticketSearch.data;
+			lyfwData:function() {
+				uni.request({
+					url:'http://218.67.107.93:9266/travelImage/getSixPalaceList',
+					method:'POST',
+					success:(e) => { 
+						this.sixPalaceList = e.data.data;
+					}
+				})
+				// let ticketSearch = await this.$api.lyfwfmq('ticketSearch');
+				// this.searchData = ticketSearch.data;
 			},
 			
 			//获取定位数据
@@ -300,8 +305,6 @@
 					}
 				}
 			}
-
-
 
 		}
 	}
