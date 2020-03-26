@@ -263,6 +263,13 @@
 		top: 148upx;
 		padding: 32upx 30upx;
 	}
+	
+	/* #ifdef MP-WEIXIN */
+	//整体容器样式 -微信版
+	.cover-container {
+		top: 64upx;
+	}
+	/* #endif */
 
 	//公共样式 - 适用多个数据框
 	.MP_information1 {

@@ -135,4 +135,11 @@
 		}
 
 	}
+	
+	/* #ifdef MP-WEIXIN */
+	//整体容器样式 -微信版
+	.cover-container {
+		top: 64upx;
+	}
+	/* #endif */
 </style>

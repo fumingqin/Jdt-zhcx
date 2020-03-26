@@ -269,6 +269,12 @@
 				font-size: 28upx;
 			}
 		}
+		/* #ifdef MP-WEIXIN */
+		//整体容器样式 -微信版
+		.Dx_View {
+			top: 64upx;
+		}
+		/* #endif */
 	}
 	
 	
@@ -338,7 +344,6 @@
 		background: #FFFFFF;
 		.Xx_titleView{
 			padding: 32upx;
-			// border-top: 1px #F5F5F5 dashed;
 			border-bottom: 1px #F5F5F5 dashed;
 			.Xx_title{
 				font-size: 34upx;
@@ -396,9 +401,13 @@
 				font-size: 28upx;
 			}
 		}
-		
-		
 	}
+	/* #ifdef MP-WEIXIN */
+	//整体容器样式 -微信版
+	.Xx_view {
+		margin-top: -80upx;
+	}
+	/* #endif */
 	
 	
 </style>

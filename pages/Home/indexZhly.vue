@@ -15,7 +15,7 @@
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 
 			<swiper class="carousel" circular @change="swiperChange" autoplay>
-				<swiper-item v-for="(item, index) in rotationPicture" :key="index" class="carousel-item" @click="navToDetailPage">
+				<swiper-item v-for="(item, index) in rotationPicture" :key="index" class="carousel-item" @click="navToDetailPage(index)">
 					<image style="width: 100%;" :src="item.ticketImage" mode="aspectFill" />
 				</swiper-item>
 			</swiper>
@@ -118,22 +118,30 @@
 			}
 		},
 
-		onLoad() {
+		onLoad() { 
 			this.loadData();
 			this.getgoodsList();
 
-		},
+		}, 
 
 		methods: {
-
-			async loadData() {
-				let rotationPicture = await this.$api.lyfwfmq('rotationPicture');
-				this.titleNViewBackground = rotationPicture.data[0].background;
-				this.swiperLength = rotationPicture.data.length;
-				this.rotationPicture = rotationPicture.data;
-
-				let checkeredPattern = await this.$api.lyfwfmq('checkeredPattern');
-				this.square = checkeredPattern.data;
+			loadData : function(){
+				uni.request({
+					url:'http://218.67.107.93:9266/travelImage/getRotationPicture',
+					method:'POST',
+					success:(e) => { 
+						this.titleNViewBackground = e.data.data[0].background;
+						this.swiperLength = e.data.data.length;
+						this.rotationPicture = e.data.data;
+					}
+				}),
+				uni.request({
+					url:'http://218.67.107.93:9266/travelImage/getCheckeredPattern',
+					method:'POST',
+					success:(e) => { 
+						this.square = e.data.data;
+					}
+				})
 			},
 
 
