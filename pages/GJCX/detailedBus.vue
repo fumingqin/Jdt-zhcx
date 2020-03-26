@@ -2,11 +2,11 @@
 	<view>
 		<!-- 顶部基本信息 -->
 		<view class="box1">
-			<view class="text1">方向:   {{detailLine.data.endStation}}</view>
+			<view class="text1">方向:   {{endStation}}</view>
 			<view class="butter">首末时间</view>
-			<view class="text2">{{detailLine.data.starTime}} - {{detailLine.data.endTime}}</view>
+			<view class="text2">{{starTime}} - {{endTime}}</view>
 			<view class="butter2">票价</view>
-			<view class="text3">{{detailLine.data.price}}  ></view>
+			<view class="text3">{{price}}  ></view>
 		</view>
 		<!-- 地图 -->
 		
@@ -25,7 +25,7 @@
 			            <text >预计到达</text>
 						</view>
 					<view class="text4">
-						<text>下一站/{{arriveTime}}分  {{detailLine.data.distance}}{{detailLine.data.unit}}</text>
+						<text>下一站/{{arriveTime}}分  {{distance}}{{unit}}</text>
 					</view>
 			    </view> 
 				
@@ -35,7 +35,7 @@
 				        <text >预计起点发车</text>
 						</view>
 					<view class="text4">
-						<text>{{detailLine.data.departureTime}}</text>
+						<text>{{departureTime}}</text>
 					</view>
 				</view> 
 			</view>
@@ -122,6 +122,13 @@
 									clickable: true,
 								}, */
 				],
+				endStation:'',
+				starTime:'',
+				endTime:'',
+				price:'',
+				distance:'',
+				unit:'',
+				departureTime:''
 			}
 		},
 		onLoad() {
@@ -165,6 +172,13 @@
 				this.list=this.realtimeDynamic;
 				let realtimedynamicback =await this.$api.gjcx('realtimeDynamicback');
 				this.realtimeDynamicback =realtimedynamicback.data;
+				this.endStation =this.detailLine.data.endStation;
+				this.starTime =this.detailLine.data.starTime;
+				this.endTime =this.detailLine.data.endTime;
+				this.price =this.detailLine.data.price;
+				
+				this.unit =this.detailLine.data.unit;
+				this.departureTime =this.detailLine.data.departureTime;
 			},
 			getGaoDeKey: function() {
 				//获取高德key
