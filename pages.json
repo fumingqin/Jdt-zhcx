@@ -19,7 +19,7 @@
 				"navigationBarTitleText": "景区列表",
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"app-plus": {
-				     "softinputNavBar": "none"
+					"softinputNavBar": "none"
 				}
 			}
 		},
@@ -466,6 +466,11 @@
 			"path": "pages/GRZX/detailTweet", //推文详情
 			"style": {
 				"navigationBarTitleText": "详情"
+			}
+		}, {
+			"path": "pages/CTKY/orderPayment", //推文详情
+			"style": {
+				"navigationBarTitleText": "订单支付"
 			}
 		}
 	],
