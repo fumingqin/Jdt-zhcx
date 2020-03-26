@@ -11,7 +11,7 @@
 			<view class="userInfoClass" @click="checkLogin">
 				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
 				<text class="usernameClass">{{userInfo.nickName || '游客'}}</text>
-				<image src="../../static/GRZX/edit.png" class="editClass"></image>
+				<!-- <image src="../../static/GRZX/edit.png" class="editClass"></image> -->
 			</view>
 			
 			<view class="typeBox">
@@ -49,9 +49,9 @@
 				<text class="fontStyle">电子发票</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="navTo('在线客服')">
+			<view class="boxClass borderTop" @click="QQClick">
 				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
-				<text class="fontStyle">在线客服</text>
+				<text class="fontStyle">客服QQ</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="infoClick">
@@ -79,10 +79,7 @@
 		},
 		data(){
 			return{
-				// userInfo:{
-				// 	nickName:'',
-				// 	avatarUrl:'',
-				// } 
+				QQ:'2482549389',
 			}
 		},
 		computed: {
@@ -143,7 +140,14 @@
 			navTo(url){
 				uni.navigateTo({
 					url
-				})  
+				})
+				if(url=="电子发票"){
+					uni.showToast({
+				  	title : '开发中',
+				  	icon : 'none',
+				  })
+				}
+				  
 				console.log(url)
 			},
 			//信息管理
@@ -196,6 +200,9 @@
 					icon : 'none',
 				})
 			},
+			QQClick(){
+				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
+			}
 		}
 		
 	}
@@ -260,7 +267,12 @@
 		color: #FFFFFF;
 		margin-top: 20upx;
 		margin-left: 3%;
-		//width: 300upx;
+		width: 350upx;
+		display: block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		// border: 1upx solid #007AFF;
 	}
 	.grzyClass{  		//个人主页
 		width: 20%;

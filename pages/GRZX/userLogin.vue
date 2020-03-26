@@ -244,10 +244,18 @@
 				                    	provider: 'qq',
 										success(logRes) {
 											console.log(logRes,"logRes")
+											var sex;
+											if(logRes.userInfo.gender=="男"){
+												sex=1;
+											}
+											if(logRes.userInfo.gender=="女"){
+												sex=2;
+											}
 											var list={
 												nickName:logRes.userInfo.nickname,
 												openId:logRes.userInfo.openid,
 												avatarUrl:logRes.userInfo.figureurl_qq_2,
+												gender:sex,
 											}
 											console.log(list,"list")
 											uni.setStorage({
