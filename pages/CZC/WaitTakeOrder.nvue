@@ -409,8 +409,10 @@
 			},
 			close: function() {
 				//关闭
-				var that = this;
-				that.closeBottomPopup();
+				let that = this;
+				uni.switchTab({
+					url: '../order/OrderList'
+				});
 			},
 			payment: function(e) {
 				//支付
