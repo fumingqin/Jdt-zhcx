@@ -408,7 +408,7 @@
 					that.current = e.currentIndex
 				}
 				if (that.current == 1 && this.isPupop) {
-					that.open();
+					// that.open();
 				}
 			},
 			goBack: function() { //返回上一页
@@ -748,7 +748,8 @@
 			},
 			queryTickets: function() {
 				uni.navigateTo({
-					url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
+					// url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
+					url: '../CTKY/selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-26',
 				})
 
 			},
