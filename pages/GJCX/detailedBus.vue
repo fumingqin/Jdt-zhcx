@@ -10,13 +10,13 @@
 		</view>
 		<!-- 地图 -->
 		
-		<map id='map' ref="map" class="map" :style="{height:mapHeight,width:mapWidth}" :scale="scale" :longitude="longitude" :latitude="latitude" 
+		<!-- <map id='map' ref="map" class="map" :style="{height:mapHeight,width:mapWidth}" :scale="scale" :longitude="longitude" :latitude="latitude" 
 		 :show-location="true" :controls="controls" @controltap="controltap">
-		</map>
+		</map> -->
 		
 		<view>
 		<!-- 嵌套弹窗 -->
-		<uni-popup ref="popup" type="bottom">
+		<!-- <uni-popup ref="popup" type="bottom"> -->
 			<!-- 线路信息 -->
 			<view class="box2">
 				<!-- 时间信息左 -->
@@ -60,7 +60,10 @@
 			</scroll-view>
 	      </view>
 			
-			</uni-popup>
+			<!-- </uni-popup> -->
+			
+			
+			
 			</view>
 			<!-- 底部操作 -->
 			<view class="box4">

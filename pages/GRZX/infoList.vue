@@ -151,7 +151,7 @@
 			},
 			add(){
 				uni.setStorage({
-					key:'passengerList',
+					key:'passList',
 					data:[{
 						userID:0,
 						name:'张小娴',
@@ -407,7 +407,7 @@
 		font-size:32upx ;
 	}
 	.passengerClass1{
-		color: #2B9EF2;
+		color: #ff0000;
 		width: 50%;
 		text-align: center;
 	}
@@ -422,14 +422,14 @@
 		text-align: center;
 	}
 	.addressClass2{
-		color: #2B9EF2;
+		color: #ff0000;
 		width: 50%;
 		text-align: center;
 	}
 	.lineClass{
 		height: 5upx;
 		width: 100%;
-		background-color: #2B9EF2;
+		background-color: #ff0000;
 	}
 	//乘车人管理
 	.mt{
@@ -495,8 +495,8 @@
 		top:163upx;
 	}
 	.fontClass{ //本人，紧急联系人
-		height: 50upx;
-		line-height: 50upx;
+		height: 40upx;
+		line-height: 40upx;
 		font-size: 24upx;
 		color: #ff0000;
 		position: absolute;
@@ -505,7 +505,7 @@
 		border: 1upx solid #ff0000;
 		border-radius: 10upx;
 		text-align: center;
-		width: 110upx;
+		width: 80upx;
 	}
 	.btnRight{ //进入编辑的箭头
 		width:60upx;

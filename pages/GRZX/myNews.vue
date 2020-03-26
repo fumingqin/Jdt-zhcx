@@ -1,21 +1,21 @@
 <template>
 	<view class="content">
-		<view class="boxClass customerService">
+		<view class="boxClass customerService" @click="navTo('kefu')">
 			<image src="../../static/GRZX/kefu.png" class="iconClass"></image>
 			<text class="fontStyle">客服消息</text>
 			<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 		</view>
-		<view class="boxClass goodFriend">
+	<!-- 	<view class="boxClass goodFriend">
 			<image src="../../static/GRZX/haoyou.png" class="iconClass"></image>
 			<text class="fontStyle">好友消息</text>
 			<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
-		</view>
+		</view> -->
 		<view class="boxClass push" @click="navTo('notice')">
 			<image src="../../static/GRZX/tuisong.png" class="iconClass"></image>
 			<text class="fontStyle">推送</text>
 			<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 		</view>
-		<view class="boxClass notice">
+		<view class="boxClass notice" @click="navTo('tongzhi')">
 			<image src="../../static/GRZX/tongzhi.png" class="iconClass"></image>
 			<text class="fontStyle">通知</text>
 			<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
@@ -35,6 +35,12 @@
 				uni.navigateTo({
 					url
 				})
+				if(url=="tongzhi" ||url=="kefu"){
+					uni.showToast({
+				  	title : '开发中',
+				  	icon : 'none',
+				  })
+				}
 			}
 		}
 	}
