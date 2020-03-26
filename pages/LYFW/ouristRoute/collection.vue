@@ -36,7 +36,7 @@
 		</view>
 
 		<!-- 商品内容 -->
-	<!-- 	<view v-if="type==1">
+<!-- 		<view v-if="type==1">
 			<view class="commodity" v-for="(item,index) in collectionCommodity" :key="index" @click="godetail2(item.scenicName)">
 				<view class="commodityView">
 					<image class="commodityImage" :src="item.image" mode="aspectFill" />
@@ -61,8 +61,8 @@
 					</view>
 				</view>
 			</view>
-		</view> -->
-	</view>
+		</view>
+	</view> -->
 </template>
 
 <script>
