@@ -135,6 +135,23 @@
 				</view>
 			</view>
 		</view>
+		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999 ;position: fixed;align-items: center; padding: 10upx;">
+			<view style="align-items: center;text-align: center;">
+					<text style="position: fixed ;color: #FFFFFF;margin-top: 309upx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000">传统与定制班车的差异</text>
+					<view style="position: fixed; margin-top: 391upx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
+						<view style="width: 505upx; ">
+							<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">传统：只能在车票的起终点进行上车</text>
+						</view> 
+						<view style="width: 505upx;">
+							<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详情可见班次详情对应的地图标识</text>
+						</view> 
+					</view> 
+				<text style="position: fixed;border-radius: 18upx;margin-top: 645upx;width: 350upx;height: 100upx;line-height:100upx ;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
+				 @click="noPupop">下次不弹出</text>
+				<image src="../../static/CTKY/tipBackground.png" class="popupClass"></image>
+				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
+			</view>
+		</popup>
 		<view v-if="current === 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
@@ -248,11 +265,13 @@
 	import uniIcons from "../../components/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "../../components/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "../../components/h-timePicker/h-timePicker.vue";
+	import popup from "../../components/uni-popup/uni-popup.vue";
 	export default {
 		components: {
 			uniIcons,
 			uniSegmentedControl,
-			hTimePicker
+			hTimePicker,
+			popup
 		},
 		data() {
 			return {
@@ -329,12 +348,14 @@
 				endlongitude: "",
 				endtlatitude: "",
 				TaxiCost: "",
+				intervalAround: 0,
 				// map: '',
 				tcky_selectStartStation: '泉州客运中心站', //选中班次的起点站
 				tcky_selectEndStation: '漳州客运站', //选中班次的终点站
+				isPupop: true, //是否弹窗
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			var that = this;
 
 			uni.getStorage({ //获取历史记录
@@ -350,6 +371,8 @@
 					that.startlatitude = res.latitude;
 				}
 			});
+			this.current = options.current;
+			that.intervalGet();
 		},
 		onShow() {
 			var that = this;
@@ -386,9 +409,13 @@
 				if (that.current !== e.currentIndex) {
 					that.current = e.currentIndex
 				}
+				if (that.current == 1 && this.isPupop) {
+					// that.open();
+				}
 			},
 			goBack: function() { //返回上一页
 				uni.navigateBack();
+				clearInterval(this.intervalAround);
 			},
 			clearHistpry: function() { //清除历史记录
 				uni.clearStorage("historyAddress");
@@ -518,6 +545,8 @@
 			},
 			search: function() { //搜索
 				var that = this;		
+				that.markers = [];
+				clearInterval(that.intervalAround);
 				var Isrepeat = true;
 				if (that.initialPoint == '' || that.destination == '') {
 					uni.showToast({
@@ -720,18 +749,74 @@
 				});
 			},
 			queryTickets: function() {
-				// uni.setStorage({
-				// 	key: 'startStation',
-				// 	data: this.tcky_selectStartStation, //缓存选择的班次信息
-				// });
-				// uni.setStorage({
-				// 	key: 'endStation',
-				// 	data: this.tcky_selectEndStation, //缓存选择的班次信息
-				// });
 				uni.navigateTo({
-					url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
+					// url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
+					url: '../CTKY/selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-26',
 				})
+
 			},
+			//传统客运弹窗
+			open() {
+				this.$refs.popup.open();
+			},
+			close() {
+				this.$refs.popup.close();
+			},
+			noPupop() {
+				this.isPupop = false;
+				this.close();
+				},
+			setMarker: function(id, lon, lat, iconPath) {
+				let that = this;
+				var width = 40;
+				var height = 40;
+				//描绘点的方法
+				var marker = new Object();
+				marker = {
+					id: id,
+					latitude: lat,
+					longitude: lon,
+					iconPath: iconPath,
+					width: width,
+					height: height,
+				}
+				var json = JSON.stringify(that.markers);
+				var arr = JSON.parse(json);
+				arr.push(marker);
+				that.markers = arr;
+			},
+			selectCarAroung: function() {
+				let that = this;
+				that.markers = [];
+				uni.getLocation({
+					type:'gcj02',
+					success: function(res) {
+						uni.request({
+							url: taxi.InterfaceAddress[2],
+							data: {
+								lon: res.longitude,
+								lat: res.latitude,
+								DistanceRange: 1000
+							},
+							method: 'GET',
+							success: function(res) {
+								var carArr = res.data;
+								for (var i = 0; i < carArr.length; i++) {
+									that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
+										'../../static/CZC/Car.png');
+								}
+								console.log(carArr.length + '-' + that.markers.length);
+							},
+						});
+					}
+				});
+			},
+			intervalGet: function() {
+				var that = this;
+				that.intervalAround = setInterval(function() {
+					that.selectCarAroung();
+				}, 3000);			}
+
 		}
 	}
 </script>
@@ -839,5 +924,12 @@
 		flex-direction: row;
 		text-align: right;
 		align-items: center;
+	}
+
+	.popupClass {
+		width: 588upx;
+		height: 830upx;
+		/* z-index:10001; */
+		/* background-image: url(../../static/CTKY/tipBackground.png); */
 	}
 </style>

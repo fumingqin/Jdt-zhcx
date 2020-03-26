@@ -1,19 +1,21 @@
 <template>
 	<view class="container">
 		
-		<view class="list-cell m-t">
+		<view class="list-cell m-t b-b">
 			<text class="cell-tit">推送设置</text>
-			<switch checked color="#fa436a" @change="switchChange" />
+			<switch :checked="statu.check1" color="#fa436a" @change="switchChange" />
 		</view>
-		<view class="list-cell m-t">
+		<view class="list-cell b-b b-l">
 			<text class="cell-tit">视频自动播放</text>
-			<switch checked color="#fa436a" @change="playChange" />
+			<switch :checked="statu.check2"  color="#fa436a" @change="playChange" />
 		</view>
-		<view class="list-cell m-t b-b" @click="navTo('aboutApp')" hover-class="cell-hover" :hover-stay-time="50">
+		
+		<view class="list-cell m-t b-b" @click="clearStorage" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
+			<text style="font-size: 28upx;">{{currentSize}}kb</text>
 			<text class="cell-more jdticon icon-you"></text>
 		</view>
-		<view class="list-cell b-b" @click="navTo('aboutApp')">
+		<view class="list-cell b-b b-l" @click="navTo('aboutApp')">
 			<text class="cell-tit">关于APP</text>
 			<text class="cell-more jdticon icon-you"></text>
 		</view>
@@ -31,11 +33,18 @@
 	export default {
 		data() {
 			return {
-				
+				statu:{
+					check1:true,
+					check2:true,
+				},
+				currentSize:'',
 			};
 		},
 		computed: {
 			...mapState(['hasLogin','userInfo'])
+		},
+		onLoad(){
+			this.load();
 		},
 		methods:{
 			...mapMutations(['logout']),
@@ -44,6 +53,28 @@
 				uni.navigateTo({
 					url:url
 				})
+			},
+			async load(){
+				var that=this;
+				uni.getStorage({
+					key:'switch',
+					success:function(res1){					
+						that.statu.check1=res1.data;
+					}
+				})
+				uni.getStorage({
+					key:'play',
+					success:function(res2){
+						that.statu.check2=res2.data;
+					}
+				})
+				uni.getStorageInfo({
+					success: function (res3) {
+						console.log(res3,"res3");
+						console.log(res3.currentSize,"currentSize");
+						that.currentSize=res3.currentSize;
+					}
+				});
 			},
 			//退出登录
 			toLogout(){
@@ -75,13 +106,33 @@
 				}
 				
 			},
+			clearStorage(){
+				uni.showModal({
+				    content: '是否清除数据',
+				    success: (e)=>{
+				    	if(e.confirm){
+							uni.clearStorage();
+				    	}
+				    }
+				});
+			},
 			//switch
 			switchChange(e){
-				let statusTip = e.detail.value ? '打开': '关闭';
+				let statusTip = e.detail.value ? true: false;
+				uni.setStorage({
+					key:'switch',
+					data:statusTip
+				})
+				//console.log(statusTip)
 				//this.$api.msg(`${statusTip}消息推送`);
 			},
 			playChange(e){
-				let statusTip = e.detail.value ? '打开': '关闭';
+				let statusTip = e.detail.value ? true: false;
+				uni.setStorage({
+					key:'play',
+					data:statusTip
+				})
+				//console.log(statusTip)
 				//this.$api.msg(`${statusTip}消息推送`);
 			},
 
@@ -117,6 +168,9 @@
 		}
 		&.m-t{
 			margin-top: 16upx; 
+		}
+		&.b-l{
+			border-top: 1upx solid #EAEAEA;
 		}
 		.cell-more{
 			align-self: baseline;

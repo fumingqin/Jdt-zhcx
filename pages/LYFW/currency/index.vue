@@ -13,6 +13,9 @@
 				
 			}
 		},
+		onLoad() {
+			this.a();
+		},
 		methods: {
 			//路由统一事件
 			godetail : function(url){
@@ -20,6 +23,15 @@
 					url
 				})
 			},
+			a:function(){ 
+				uni.request({
+					url:'http://218.67.107.93:9266/travelImage/getRotationPicture',
+					method:'POST',
+					success:function(e){ 
+						console.log(e)
+					}
+				})
+			}
 		}
 	}
 </script>

@@ -3,27 +3,27 @@
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
 			<swiper-item class="swi-item" v-for="(item,index) in piclist" :key="index">
-				<image :src="item.src" @click="goImgList" />
+				<image :src="item.ticketImage" @click="goImgList" />
 				<view class="view">{{piclist.length}}张图片</view>
 			</swiper-item>
 		</swiper>
 		<view>
 			<!-- 标题、发布时间、点击量、分享 -->
 			<view class="clicks">
-				<text class="title">{{scSpotContent.scenicName}}</text>
-				<text class="time">开放时间：{{scSpotContent.openup}} </text>
+				<text class="title">{{scSpotContent.ticketTitle}}</text>
+				<text class="time">开放时间：{{scSpotContent.ticketOpenUp}} </text>
 			</view>
 		</view>
 		<!-- 门票滑块 -->
 		<!-- 模块命名：Tk -->
 		<scroll-view class="Tk_scrollview">
 			<view class="tweetsTitle2">门票</view>
-			<view class="Tk_item" v-for="(item,index) in ticket" :key="index" @click="godetail('/pages/LYFW/scenicSpotTickets/orderAdd')">
+			<view class="Tk_item" @click="godetail(scSpotContent.ticketId)">
 				<view class="Tk_bacg">
-					<text class="Tk_text1">{{item.title}}</text>
-					<text class="Tk_text3">¥{{item.adultPrice}}元</text>
-					<text class="Tk_text2">包含：{{item.contain}}</text>
-					<text class="Tk_text2">{{item.comment}}</text>
+					<text class="Tk_text1">{{scSpotContent.ticketTitle}}</text>
+					<text class="Tk_text3">¥{{scSpotContent.ticketAdultPrice}}元</text>
+					<text class="Tk_text2">包含：{{scSpotContent.ticketContain}}</text>
+					<text class="Tk_text2">{{scSpotContent.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s3}}</text>
 					<view class="Tk_butter">立即预订</view>
 				</view>
 			</view>
@@ -32,7 +32,7 @@
 		<!-- 文章内容 -->
 		<view class="Zj_background">
 			<view class="tweetsTitle">介绍</view>
-			<view class="tweetscontent">{{scSpotContent.scenicContent}}</view>
+			<view class="tweetscontent">{{scSpotContent.ticketScenicContent}}</view>
 		</view>
 	</view>
 </template>
@@ -40,20 +40,29 @@
 	export default {
 		data() {
 			return {
-				piclist: [], //相册图片数组
-				imgnumber: '', //图片张数
-				scSpotContent: '', //景区内容
-				ticket: [], //景区内容
-				scrollTop: 0, //相册图片
+				scSpotContent: [{
+					ticketId: '',
+					ticketName: '',
+					ticketTitle: '',
+					ticketOpenUp: '',
+					ticketContain: '',
+					ticketComment: '',
+					ticketAdultPrice: '',
+					ticketChildPrice: '',
+					ticketScenicContent: '',
+				}], //景区内容
+				piclist : [{
+					ticketImage: '',
+				}],//图片内容
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			// console.log(JSON.parse(options.ticketId));
 			// let id = options.id;
 			// if(id){
 			// 	this.$api.msg(`点击了${id}`);
 			// }
 			this.lyfwData();
-
 		},
 		onNavigationBarButtonTap: function() {
 			this.share();
@@ -62,7 +71,7 @@
 			if (res.from === 'menu') { // 来自页面内分享按钮
 				return {
 					title: '来自' + this.userInfo.nickname + '的分享',
-					imageUrl: this.scSpotContent.image[0].src,
+					imageUrl: this.piclist[0].ticketImage,
 					success: function() {
 						uni.showToast({
 							title: '分享成功',
@@ -83,10 +92,12 @@
 			async lyfwData() {
 				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
 				this.scSpotContent = scSpotDetails.data;
-				this.ticket = scSpotDetails.data.ticket;
-				this.piclist = scSpotDetails.data.image;
-				// console.log(scSpotDetails.data)
+				
+				let scSpotDetailsImage = await this.$api.lyfwfmq('scSpotDetailsImage');
+				this.piclist = scSpotDetailsImage.data;
+				// console.log(this.scSpotContent)
 			},
+			
 			//保存图片至本地并打开新页面
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.piclist);
@@ -95,9 +106,9 @@
 				})
 			},
 			//路由整合
-			godetail: function(url) {
+			godetail: function(e) {
 				uni.navigateTo({
-					url
+					url : '/pages/LYFW/scenicSpotTickets/orderAdd?ticketId='+JSON.stringify(e)
 				})
 			},
 
@@ -108,9 +119,9 @@
 					scene: "WXSceneSession",
 					type: 0,
 					href: "http://www.baidu.com",
-					title: "来自" + this.userInfo.nickname + "的分享",
-					summary: this.scSpotContent.title,
-					imageUrl: this.scSpotContent.image[0].src,
+					title: "来自" + this.userInfo.nickname + "的分享", 
+					summary: this.scSpotContent[0].ticketTitle,
+					imageUrl: this.piclist[0].ticketImage,
 					success: function() {
 						uni.showToast({
 							title: '分享成功',
@@ -207,7 +218,7 @@
 			background: #fff;
 
 			.Tk_item {
-				background: #f7f7f7;
+				background: #f9f9f9;
 				margin: 32upx 32upx;
 				border-radius: 16upx;
 				display: flex;

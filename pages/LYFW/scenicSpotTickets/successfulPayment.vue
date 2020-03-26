@@ -2,7 +2,7 @@
 	<view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFit"></image>
+			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 
 		<view class="cover-container">
@@ -20,31 +20,37 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				godetailIndex:'',//跳转参数
+			}
 		},
 		onReady() {
-			// this.backHome();
+			this.backHome();
 		},
 		methods: {
 			//路由统一事件
 			godetail: function(e) {
-				if(e==0){
-					uni.navigateTo({
-						url: '/pages/LYFW/scenicSpotTickets/orderDetails'
+				if(e==0){ 
+					this.godetailIndex=1;
+					uni.switchTab({
+						url: '../../order/OrderList'	
 					});
 				}else if(e==1){
+					this.godetailIndex=2;
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});
 				}
 			},
 			backHome(){
-				setInterval(() => {
-					uni.switchTab({
-						url: '/pages/Home/Index'
-					});
+				setTimeout(() => {
+					if(this.godetailIndex == ''){
+						uni.switchTab({
+							url: '/pages/Home/Index'
+						});
+					}
 				}, 10000)
-				// return false;
+				
 			}
 
 		}
@@ -73,10 +79,10 @@
 	.cover-container {
 		position: absolute;
 		margin: 0 24upx;
-		margin-top: 88upx;
+		margin-top: 180upx;
 		margin-bottom: 52upx;
 		width: 702upx;
-		height: 90%;
+		height: 85%;
 		background: #FFFFFF;
 		box-shadow: 0px 0.2px 0px #aaa;
 		border-radius: 16upx;
@@ -129,4 +135,11 @@
 		}
 
 	}
+	
+	/* #ifdef MP-WEIXIN */
+	//整体容器样式 -微信版
+	.cover-container {
+		top: 64upx;
+	}
+	/* #endif */
 </style>

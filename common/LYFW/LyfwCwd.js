@@ -157,7 +157,7 @@ const scSpotDetails = {
 	}, {
 		quantityStatus: false, //false为数量无限 true为数量有限
 		quantity: 50, //门票数量
-		title: '【儿童】南平武夷山三日游路线 （观光车+儿童门票+竹筏票）',
+		title: '【儿童】南平,三日游路线 （观光车+儿童门票+竹筏票）',
 		comment: '一码通 | 可订明日票 | 非即时退',
 		price: 160
 	}]
@@ -339,6 +339,22 @@ const touristRoute = {
 	}],
 	msg: '提示'
 }
+
+// 蔡伟达-旅游服务-路线评论区2
+const routeComment2 = {
+	status: 1, //1成功/0失败提示返回值
+	data: {
+		image: [{
+			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+		}, {
+			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner2.jpg',
+		}, {
+			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner3.jpg',
+		}],
+	},
+	msg: '提示'
+}
+
 
 // 蔡伟达-旅游服务-路线评论区
 const routeComment = {
@@ -667,9 +683,123 @@ const touristRoute3 = {
 	msg: '提示'
 }
 
+const complaint ={
+	status: 1, //1成功,0失败提示返回值
+	data:[
+		'请选择内容',
+		'bilibili公司',
+		'日升企业',
+		'腾讯企业',
+		'鹅厂',
+		'777电子竞技俱乐部',
+		'枣子哥电子企业',
+		'666大公司',
+		'无敌风火轮电子商务有限公司',
+		'国科电子培训有限公司',
+		'养猪场',
+		'4396电子有限公司',
+	],
+	msg: '提示'
+}
+
+const collectionContent ={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		routeId: 1,
+		scenicName: '武夷山 | 全方位详尽三日',
+		title: '南平市武夷山风景名胜区',
+		cost: 320,
+		day:3,
+		date: '2019-11-12',
+		like: 119,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+	},
+	{
+		routeId: 2,
+		scenicName: '武夷山 | 全方位详尽三日',
+		title: '南平市武夷山风景名胜区',
+		cost: 320,
+		day:3,
+		date: '2019-11-13',
+		like: 119,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+	}],
+	msg: '提示'
+}
+
+const collectionCommodity ={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		routeId: 1,
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		label:['老字号','南平特色','物美价廉'],
+		score:4.5,
+		cost:140,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/collection/shangping.png',
+	},
+	{
+		routeId: 2,
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		label:['老字号','南平特色','物美价廉'],
+		score:3.5,
+		cost:140,
+		comment: 15,
+		image: '../../../static/LYFW/ouristRoute/SceneryTable/collection/shangping.png',
+	}],
+	msg: '提示'
+}
+
+const record ={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		routeId: 1,
+		day:1,
+		date:'2020-11-16',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+	},
+	{
+		routeId: 2,
+		day:2,
+		date:'2020-11-17',
+		scenicName: '武夷山 | 全方位详尽三日路攻略',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON2.png',
+	},
+	{
+		routeId: 3,
+		day:2,
+		date:'2020-11-17',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+	},
+	{
+		routeId: 4,
+		day:3,
+		date:'2020-11-18',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+	},
+	{
+		routeId: 5,
+		day:3,
+		date:'2020-11-18',
+		scenicName: '南平正宗熏鹅（武夷山店)',
+		address:'南平 · 武夷山',
+		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+	}],
+	msg: '提示'
+}
 
 // 接口声明区
 export default {
+	routeComment2,
 	userInfo,
 	sixPalaceList,
 	scenicList,
@@ -681,5 +811,8 @@ export default {
 	reply,
 	touristRoute2,
 	touristRoute3,
-
+	complaint,
+	collectionContent,
+	collectionCommodity,
+	record,
 }

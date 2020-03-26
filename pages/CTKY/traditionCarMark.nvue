@@ -1,0 +1,161 @@
+<template>
+	<view class="content">
+		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
+		 :polyline="polyline" :markers="markers" :show-location="true">
+			
+		</map>
+		<view class="info">
+			<text class="title">{{info.station}}</text>
+			<view style="margin-top: 10rpx;">
+				<text class="text">{{info.time}}</text>
+				<text class="text">上车点：{{info.startStation}}</text>
+				<text class="text" style="margin-top: 10rpx;">下车点：{{info.endStation}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				info: {
+					station: "泉州客运中心 — 安溪",
+					time: "08月31日    12:30出发",
+					startStation: "泉州客运中心站",
+					endStation: "安溪"
+				},
+				mapHeight: '', //地图高度
+				longitude: "", //地图中心点经度
+				latitude: "", //地图中心点纬度
+				scale: 12, //地图缩放比例
+				markers: [{
+						id: 0,
+						latitude: '24.8906763700',
+						longitude: '118.5991555300',
+						iconPath: '../../static/CTKY/Start.png',
+						callout: { //自定义标记点上方的气泡窗口 点击有效
+							content: '丰泽区', //文本
+							color: '#FC4646', //文字颜色
+							fontSize: 10, //文本大小
+							borderRadius: 2, //边框圆角
+							bgColor: '#FFFFFF', //背景颜色
+							display: 'ALWAYS', //常显
+							padding: 1,
+						},
+					},
+					{
+						id: 0,
+						latitude: '24.9102214500',
+						longitude: '118.6143540000',
+						iconPath: '../../static/CTKY/end.png',
+						callout: { //自定义标记点上方的气泡窗口 点击有效
+							content: '丰泽区', //文本
+							color: '#FC4646', //文字颜色
+							fontSize: 10, //文本大小
+							borderRadius: 2, //边框圆角
+							bgColor: '#FFFFFF', //背景颜色
+							display: 'ALWAYS', //常显
+							padding: 1,
+						},
+					},
+				], //标记点
+				polyline: [{
+					points: [{
+							latitude: 24.8906763700,
+							longitude: 118.5991555300
+						},
+						{
+							latitude: 24.8956956900,
+							longitude: 118.6019855900
+						},
+						{
+							latitude: 24.8937906600,
+							longitude: 118.6079971900
+						},
+						{
+							latitude: 24.9014643600,
+							longitude: 118.6111359200
+						},
+						{
+							latitude: 24.9102214500,
+							longitude: 118.6143540000
+						},
+					],
+					color: "#669253",
+					width: 2,
+					arrowLine: true,
+				}], //规划的线
+				showLlocation: true, //是否显示当前位置
+			}
+		},
+		onLoad() {
+			var that = this;
+			uni.getSystemInfo({
+				//设置地图高度为可使用的高度
+				success: function(res) {
+					that.mapHeight = res.windowHeight + 'px';
+					console.log(that.mapHeight)
+
+				}
+			});
+			//获取自身位置
+			that.getMyLocation();
+		},
+		methods: {
+			//获取自身位置
+			getMyLocation: function() {
+				var that = this;
+				uni.getLocation({
+					type: "gcj02",
+					geocode: true,
+					success: function(res) {
+						//获取当前位置成功之后，给当前位置的经纬度赋值
+						if (that.longitude == "" && that.latitude == "") {
+							that.longitude = res.longitude;
+							that.latitude = res.latitude;
+						}
+					}
+				})
+			}
+		}
+	}
+</script>
+
+<style>
+	.content {
+		width: 750rpx;
+		height: 100%;
+		background-color: #FFFFFF;
+	}
+
+	.map {
+		
+		width: 750rpx;
+	}
+
+	.info {
+		background-color: #FFFFFF;
+		position: fixed;
+		border-radius: 20rpx;
+		left: 20rpx;
+		right: 20rpx;
+		bottom: 20rpx;
+	}
+	/* 起始站 */
+	.title {
+		margin-top: 20rpx;
+		margin-left: 20rpx;
+		font-size: 30rpx;
+		color: rgba(44,45,45,1);
+	}
+	/* 时间/上下车点 */
+	.text {
+		margin-top: 5rpx;
+		margin-left: 20rpx;
+		font-size: 26rpx;
+		color: rgba(102, 102, 102, 1);
+		margin-bottom: 20rpx;
+		font-weight: 300;
+	}
+</style>
