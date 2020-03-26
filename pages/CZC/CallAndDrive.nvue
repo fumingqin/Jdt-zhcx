@@ -100,7 +100,7 @@
 						<text @click="payDetail" style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#727272;">费用明细</text>
 						<uni-icons @click="payDetail" type="arrowright" size="15" color="#727272"></uni-icons>
 					</view>
-					<view style="flex-direction: row;justify-content: space-between;margin-top: 20px;">
+					<!-- <view style="flex-direction: row;justify-content: space-between;margin-top: 20px;">
 						<view>
 							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000">优惠券</text>
 						</view>
@@ -108,7 +108,7 @@
 							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#666666;">请选择优惠券</text>
 							<uni-icons type="arrowright" size="15" color="#666666"></uni-icons>
 						</view>
-					</view>
+					</view> -->
 					<view style="border-top-width: 1px;border-color: #EAEAEA;margin-top: 20px;padding-top: 20px;">
 						<radio-group name='chooseType'>
 							<view v-for='item in payType' :key='item.typeName' style="flex-direction: row;justify-content: space-between;padding-bottom: 20px;">
@@ -439,8 +439,8 @@
 			close: function() {
 				//关闭
 				let that = this;
-				uni.navigateTo({
-					url: '../order/OrderDetail'
+				uni.switchTab({
+					url: '../order/OrderList'
 				});
 			},
 			payment: function(e) {
