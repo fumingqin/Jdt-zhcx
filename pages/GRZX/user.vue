@@ -44,14 +44,14 @@
 	
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
-			<view class="boxClass marginTop" @click="navTo('电子发票')">
+			<!-- <view class="boxClass marginTop" @click="navTo('电子发票')">
 				<image src="../../static/GRZX/tubiao_fapiao.png" class="iconClass1"></image>
 				<text class="fontStyle">电子发票</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
-			<view class="boxClass borderTop" @click="QQClick">
+			</view> -->
+			<view class="boxClass" @click="QQClick">
 				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
-				<text class="fontStyle">客服QQ</text>
+				<text class="fontStyle">QQ客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="infoClick">
@@ -79,7 +79,7 @@
 		},
 		data(){
 			return{
-				QQ:'2482549389',
+				QQ:'450906905',
 			}
 		},
 		computed: {
@@ -141,13 +141,6 @@
 				uni.navigateTo({
 					url
 				})
-				if(url=="电子发票"){
-					uni.showToast({
-				  	title : '开发中',
-				  	icon : 'none',
-				  })
-				}
-				  
 				console.log(url)
 			},
 			//信息管理
@@ -386,7 +379,8 @@
 	}
 	.serviceBox{		//更多服务
 		width:91.47%;
-		height: 510upx;
+		//height: 510upx;
+		height: 390upx;
 		background-color: #FFFFFF;
 		border-radius: 12upx;
 		margin-top: 10upx;

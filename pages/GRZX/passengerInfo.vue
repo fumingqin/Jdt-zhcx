@@ -47,6 +47,7 @@
 		data(){
 			return{
 				limt:'',
+				//passengerList:[],
 				passengerList:[{
 					userID:0,
 					name:'张小娴',
@@ -120,6 +121,12 @@
 			async getType(t,l){
 				this.submitType=t;
 				this.limit=l;
+				// uni.setStorage({
+				// 	key:'passengerList',
+				// 	success(res) {
+						
+				// 	}
+				// })
 			},
 			addPassenger(){
 				uni.navigateTo({
