@@ -126,6 +126,11 @@
 		onLoad(){
 			this.loadData();
 		},
+		onBackPress() {
+			uni.switchTab({
+				url:'/pages/GRZX/user'
+			})
+		},
 	    methods: {	
 			async loadData(){
 				var array=this.passengerList;

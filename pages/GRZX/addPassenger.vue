@@ -43,6 +43,7 @@
 						:value="user.codeNum"
 						name="codeNum"
 						type="idcard"
+						maxlength="18"
 					/>	
 				</view>
 				
@@ -180,93 +181,98 @@
 					data1.emergencyContact=false;
 				}
 				var codeNum=data1.codeNum;
-				var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);			
-				var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
-				var  d=new Date(r[1],r[3]-1,r[4]);     
-				if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
-				{   
-					var Y=new  Date().getFullYear();   
-					var age=Y-r[1];
-				} 
-				if(age>=18){
-					data1.ticketType="成人";
-				}else{
-					data1.ticketType="儿童";
-				}
-				//console.log(age);
-				data1.hiddenIndex=0;
-				var array=[];
-				if(this.type=='edit'){	
-					//array.push(data);
-					uni.getStorage({
-						key:'passList',
-						success(res) {
-							for(var i=0;i<res.data.length;i++){
-								if(that.user.userID==res.data[i].userID){
-									array.push(data1);
-								}else{
+				if(codeNum.length==18){
+					var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);			
+					var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
+					var  d=new Date(r[1],r[3]-1,r[4]);     
+					if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
+					{   
+						var Y=new  Date().getFullYear();   
+						var age=Y-r[1];
+					} 
+					if(age>=18){
+						data1.ticketType="成人";
+					}else{
+						data1.ticketType="儿童";
+					}
+					data1.hiddenIndex=0;
+					var array=[];
+					if(this.type=='edit'){	
+						//array.push(data);
+						uni.getStorage({
+							key:'passList',
+							success(res) {
+								for(var i=0;i<res.data.length;i++){
+									if(that.user.userID==res.data[i].userID){
+										array.push(data1);
+									}else{
+										array.push(res.data[i]);
+									}
+								}
+								uni.setStorage({
+									key:'passList',
+									data:array,
+								})
+							}
+						})
+						uni.redirectTo({
+							url:'/pages/GRZX/infoList'
+						})
+					}else if(this.type=='add'){
+						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+						data1.userID=randomNum;
+						array.push(data1);
+						uni.getStorage({
+							key:'passList',
+							success(res) {
+								for(var i=0;i<res.data.length;i++){
 									array.push(res.data[i]);
 								}
+								uni.setStorage({
+									key:'passList',
+									data:array,
+								})
+							},
+							fail() {
+								uni.setStorage({
+									key:'passList',
+									data:array,
+								})
 							}
-							uni.setStorage({
-								key:'passList',
-								data:array,
-							})
-						}
-					})
-					uni.redirectTo({
-						url:'/pages/GRZX/infoList'
-					})
-				}else if(this.type=='add'){
-					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
-					data1.userID=randomNum;
-					array.push(data1);
-					uni.getStorage({
-						key:'passList',
-						success(res) {
-							for(var i=0;i<res.data.length;i++){
-								array.push(res.data[i]);
+						})
+						uni.redirectTo({
+							url:'/pages/GRZX/infoList'
+						})
+					}else{
+						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+						data1.userID=randomNum;
+						array.push(data1);
+						uni.getStorage({
+							key:'passList',
+							success(res) {
+								for(var i=0;i<res.data.length;i++){
+									array.push(res.data[i]);
+								}
+								uni.setStorage({
+									key:'passList',
+									data:array,
+								})
+							},
+							fail() {
+								uni.setStorage({
+									key:'passList',
+									data:array,
+								})
 							}
-							uni.setStorage({
-								key:'passList',
-								data:array,
-							})
-						},
-						fail() {
-							uni.setStorage({
-								key:'passList',
-								data:array,
-							})
-						}
-					})
-					uni.redirectTo({
-						url:'/pages/GRZX/infoList'
-					})
+						})
+						uni.navigateBack();
+					}
 				}else{
-					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
-					data1.userID=randomNum;
-					array.push(data1);
-					uni.getStorage({
-						key:'passList',
-						success(res) {
-							for(var i=0;i<res.data.length;i++){
-								array.push(res.data[i]);
-							}
-							uni.setStorage({
-								key:'passList',
-								data:array,
-							})
-						},
-						fail() {
-							uni.setStorage({
-								key:'passList',
-								data:array,
-							})
-						}
+					uni.showToast({
+						icon:'none',
+						title:'输入的身份证有误，请检查'
 					})
-					uni.navigateBack();
 				}
-				
 				
 				
 				//console.log(data);
