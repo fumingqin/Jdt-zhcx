@@ -137,15 +137,15 @@
 		</view>
 		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999 ;position: fixed;align-items: center; padding: 10upx;">
 			<view style="align-items: center;text-align: center;">
-					<text style="position: fixed ;color: #FFFFFF;margin-top: 309upx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000">传统与定制班车的差异</text>
-					<view style="position: fixed; margin-top: 391upx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
-						<view style="width: 505upx; ">
-							<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">传统：只能在车票的起终点进行上车</text>
-						</view> 
-						<view style="width: 505upx;">
-							<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详情可见班次详情对应的地图标识</text>
-						</view> 
-					</view> 
+				<text style="position: fixed ;color: #FFFFFF;margin-top: 309upx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000">传统与定制班车的差异</text>
+				<view style="position: fixed; margin-top: 391upx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
+					<view style="width: 505upx; ">
+						<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">传统：只能在车票的起终点进行上车</text>
+					</view>
+					<view style="width: 505upx;">
+						<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详情可见班次详情对应的地图标识</text>
+					</view>
+				</view>
 				<text style="position: fixed;border-radius: 18upx;margin-top: 645upx;width: 350upx;height: 100upx;line-height:100upx ;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
 				 @click="noPupop">下次不弹出</text>
 				<image src="../../static/CTKY/tipBackground.png" class="popupClass"></image>
@@ -369,7 +369,9 @@
 					that.startlatitude = res.latitude;
 				}
 			});
-			this.current = options.current;
+			if (options.current) {
+				that.current = parseInt(options.current);
+			}
 			that.intervalGet();
 		},
 		onShow() {
@@ -762,7 +764,7 @@
 			noPupop() {
 				this.isPupop = false;
 				this.close();
-				},
+			},
 			setMarker: function(id, lon, lat, iconPath) {
 				let that = this;
 				var width = 40;
@@ -786,7 +788,7 @@
 				let that = this;
 				that.markers = [];
 				uni.getLocation({
-					type:'gcj02',
+					type: 'gcj02',
 					success: function(res) {
 						uni.request({
 							url: taxi.InterfaceAddress[2],
@@ -812,7 +814,8 @@
 				var that = this;
 				that.intervalAround = setInterval(function() {
 					that.selectCarAroung();
-				}, 3000);			}
+				}, 3000);
+			}
 
 		}
 	}
