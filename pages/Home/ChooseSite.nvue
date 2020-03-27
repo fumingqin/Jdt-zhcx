@@ -202,7 +202,7 @@
 							</hTimePicker>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
-						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;" @click="selectPassenger">
+						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;" @click="selectPassenger">
 							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
@@ -276,6 +276,7 @@
 		data() {
 			return {
 				selecttime: "点击选择时间",
+				county:'',
 				Passenger: [{
 					name: "选择乘车人"
 				}],
@@ -356,6 +357,7 @@
 		},
 		onLoad(options) {
 			var that = this;
+
 			uni.getStorage({ //获取历史记录
 				key: "historyAddress",
 				success: function(res) {
@@ -410,7 +412,7 @@
 					that.current = e.currentIndex
 				}
 				if (that.current == 1 && this.isPupop) {
-					that.open();
+					// that.open();
 				}
 			},
 			goBack: function() { //返回上一页
@@ -454,7 +456,7 @@
 						})
 					} else {
 						uni.navigateTo({
-							url: '../CZC/CallAndDrive?orderNumber=1',
+							url: '../CZC/CallAndDrive?orderNo=1',
 							animationType: 'pop-in',
 							animationDuration: 200,
 							success: function() {
@@ -544,7 +546,7 @@
 				});
 			},
 			search: function() { //搜索
-				var that = this;
+				var that = this;		
 				that.markers = [];
 				clearInterval(that.intervalAround);
 				var Isrepeat = true;
@@ -750,7 +752,8 @@
 			},
 			queryTickets: function() {
 				uni.navigateTo({
-					url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
+					// url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
+					url: '../CTKY/selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-26',
 				})
 
 			},
