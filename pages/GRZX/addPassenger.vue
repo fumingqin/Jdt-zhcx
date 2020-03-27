@@ -92,6 +92,7 @@
 					{title:'女'}
 				],
 				user:{
+					userID:'',
 					name:'',	
 					englishSurname:'',
 					englishName:'',
@@ -103,17 +104,19 @@
 					show:true,
 					emergencyContact:false,
 					date:'请选择 >',
-				}
+				},
+				type:'',
 			}
 		},
 		onLoad (options){
+			var type=options.type;
+			this.type=options.type;
 			if(options.type=="edit"){
-				this.loadData();
-				
+				this.loadData(type);
 			}
 		},
 		methods:{
-			async loadData(){
+			async loadData(type){
 				var that=this;
 				uni.getStorage({
 					key:'editPassenger',
@@ -133,6 +136,7 @@
 						that.user.show=!res.data.default;
 						that.user.emergencyContact=res.data.emergencyContact;
 						that.user.phoneNum=res.data.phoneNum;
+						that.user.userID=res.data.userID;
 					}
 				})
 				/* this.user.chineseName=userInfo.data.chineseName;
@@ -152,60 +156,119 @@
 				this.user.sex = e;
 			},
 			formSubmit:function(e){
-				var data=e.target.value;
-				data.date=this.user.date;
+				//console.log(this.type)
+				var data1=e.target.value;
+				data1.date=this.user.date;
+				var that=this;
 				if(this.user.sex==0){
-					data.sex="男";
+					data1.sex="男";
 				}else{
-					data.sex="女";
+					data1.sex="女";
 				}
-				if(data.default==null||data.default==""){
-					data.default=false;
+				if(data1.default==null||data1.default==""){
+					data1.default=false;
 				}else{
-					data.default=true;
+					data1.default=true;
 				}
 				if(this.user.show){
-					if(data.emergencyContact==null||data.emergencyContact==""){
-						data.emergencyContact=false;
+					if(data1.emergencyContact==null||data1.emergencyContact==""){
+						data1.emergencyContact=false;
 					}else{
-						data.emergencyContact=true;
+						data1.emergencyContact=true;
 					}
 				}else{
-					data.emergencyContact=false;
+					data1.emergencyContact=false;
 				}
-				var codeNum=data.codeNum;
+				var codeNum=data1.codeNum;
 				var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);			
 				var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
 				var  d=new Date(r[1],r[3]-1,r[4]);     
 				if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
 				{   
-				    var Y=new  Date().getFullYear();   
-				    var age=Y-r[1];
+					var Y=new  Date().getFullYear();   
+					var age=Y-r[1];
 				} 
 				if(age>=18){
-					data.ticketType="成人";
+					data1.ticketType="成人";
 				}else{
-					data.ticketType="儿童";
+					data1.ticketType="儿童";
 				}
 				//console.log(age);
-				data.hiddenIndex=0;
+				data1.hiddenIndex=0;
 				var array=[];
-				array.push(data);
-				uni.getStorage({
-					key:'passengerList',
-					success(res) {
-						for(var i=0;i<res.data.length;i++){
-							array.push(res.data[i]);
+				if(this.type=='edit'){	
+					//array.push(data);
+					uni.getStorage({
+						key:'passList',
+						success(res) {
+							for(var i=0;i<res.data.length;i++){
+								if(that.user.userID==res.data[i].userID){
+									array.push(data1);
+								}else{
+									array.push(res.data[i]);
+								}
+							}
+							uni.setStorage({
+								key:'passList',
+								data:array,
+							})
 						}
-						uni.setStorage({
-							key:'passengerList',
-							data:array,
-						})
-					}
-				})
-				uni.redirectTo({
-					url:'/pages/GRZX/infoList'
-				})
+					})
+					uni.redirectTo({
+						url:'/pages/GRZX/infoList'
+					})
+				}else if(this.type=='add'){
+					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+					data1.userID=randomNum;
+					array.push(data1);
+					uni.getStorage({
+						key:'passList',
+						success(res) {
+							for(var i=0;i<res.data.length;i++){
+								array.push(res.data[i]);
+							}
+							uni.setStorage({
+								key:'passList',
+								data:array,
+							})
+						},
+						fail() {
+							uni.setStorage({
+								key:'passList',
+								data:array,
+							})
+						}
+					})
+					uni.redirectTo({
+						url:'/pages/GRZX/infoList'
+					})
+				}else{
+					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+					data1.userID=randomNum;
+					array.push(data1);
+					uni.getStorage({
+						key:'passList',
+						success(res) {
+							for(var i=0;i<res.data.length;i++){
+								array.push(res.data[i]);
+							}
+							uni.setStorage({
+								key:'passList',
+								data:array,
+							})
+						},
+						fail() {
+							uni.setStorage({
+								key:'passList',
+								data:array,
+							})
+						}
+					})
+					uni.navigateBack();
+				}
+				
+				
+				
 				//console.log(data);
 			},
 			bindDateChange:function(e){
@@ -215,7 +278,8 @@
 				this.user.date="请选择 >";
 			},
 			checkChange:function(e){
-				if(e.detail.value=="false"){ //选中
+				//console.log(e.detail.value,"xuanzhong");
+				if(e.detail.value=="false"||e.detail.value=="true"){ //选中
 					this.user.show=false;
 				}else{	//未选中
 					this.user.show=true;
