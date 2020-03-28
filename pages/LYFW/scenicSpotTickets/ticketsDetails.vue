@@ -10,7 +10,7 @@
 		<view>
 			<!-- 标题、发布时间、点击量、分享 -->
 			<view class="clicks">
-				<text class="title">{{scSpotContent.ticketTitle}}</text>
+				<text class="title">{{scSpotContent.ticketName}}</text>
 				<text class="time">开放时间：{{scSpotContent.ticketOpenUp}} </text>
 			</view>
 		</view>
@@ -20,7 +20,7 @@
 			<view class="tweetsTitle2">门票</view>
 			<view class="Tk_item" @click="godetail(scSpotContent.ticketId)">
 				<view class="Tk_bacg">
-					<text class="Tk_text1">{{scSpotContent.ticketTitle}}</text>
+					<text class="Tk_text1">{{scSpotContent.ticketName}}</text>
 					<text class="Tk_text3">¥{{scSpotContent.ticketAdultPrice}}元</text>
 					<text class="Tk_text2">包含：{{scSpotContent.ticketContain}}</text>
 					<text class="Tk_text2">{{scSpotContent.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s3}}</text>
@@ -32,7 +32,7 @@
 		<!-- 文章内容 -->
 		<view class="Zj_background">
 			<view class="tweetsTitle">介绍</view>
-			<view class="tweetscontent">{{scSpotContent.ticketScenicContent}}</view>
+			<rich-text class="tweetscontent" :nodes="scSpotContent.ticketScenicContent"></rich-text>
 		</view>
 	</view>
 </template>
@@ -84,10 +84,16 @@
 		},
 		methods: {
 			//读取静态数据json.js 
-			async lyfwData(e) {
-				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
-				this.scSpotContent = scSpotDetails.data;
-				
+			lyfwData: function(e) {
+				// 请求景区详情
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getScenicspotDetail?ticketId=' +e,
+					method:'POST',
+					success:(res) => {
+						console.log(res)
+						this.scSpotContent = res.data.data;
+					}
+				})
 				
 				// 请求景区列表
 				uni.request({
@@ -297,12 +303,10 @@
 		.tweetscontent {
 			display: flex;
 			position: relative;
-			flex-direction: column;
-			font-size: 34upx;
 			letter-spacing: 2upx;
 			color: #333333;
-			// bottom : 72upx;
 			padding: 32upx 32upx;
+			padding-top: 8upx;
 		}
 	}
 </style>

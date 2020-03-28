@@ -316,7 +316,7 @@
 			//分类点击
 			changeCate: function(item) {
 				// console.log(item)
-				this.cateId
+				this.cateId = item.id;
 				this.cateValue = item.name;
 				this.screenIndex = 3;
 				this.toggleCateMask();
