@@ -23,7 +23,7 @@
 			<view  class="box">
 				<view class="searchBoxRadius2">
 					<image class="searchImage2" src="../../static/GCJX/busIndex/green.png" />
-					<input class="inputIocale2" placeholder="我的位置"  @click="selectInitial" v-model="initialPoint" />
+					<input class="inputIocale2" placeholder="我的位置"  @click="selectInitial" v-model="initialPoint"/>
 					</view>
 					<!-- 虚线 -->
 					<view class="xuxian"></view>
@@ -79,6 +79,7 @@
 	import citySelect from '../../components/uni-location/linzq-citySelect/linzq-citySelect.vue';
 	import popupLayer from '../../components/uni-location/popup-layer/popup-layer.vue';
 	import QSTabs from '../../components/QS-tabs2/QS-tabs.vue'
+	import gjcx from "../../common/Gjcx.js";
 	export default {
 		components: {
 			citySelect,
@@ -97,7 +98,7 @@
 				filterIndex : 0,	//tabs默认值
 				nearstaion :[],//附近站点
 				linedata :[]  ,//站点数据
-				startlocation: {},
+				startlocation: {}, //
 				endlocation: {},
 				initialPoint:'',
 				destination:'',
@@ -105,6 +106,10 @@
 				endtlatitude: "",
 				arriveTime:"",
 				distance:"",
+				startLonLat: "",//出发点经度
+				endLonLat: "",//目的地经度
+				startlongitude: "",//出发点纬度
+				startlatitude: "",//出发点纬度
 			}
 		},
 		created() {},  
@@ -290,8 +295,28 @@
 				});
 			},
 			goDetail(){
+				//设置线路信息缓存 待添加
+				// uni.setStorage({
+					
+				// })
 				uni.navigateTo({
-					url:'detailedBus'
+					url:'detailed'
+				})
+			},
+			//获取附近站点信息
+			getNearbysites :function(){
+				//计算我的位置到附近站点的距离
+				uni.getLocation({
+					success:function(res){
+						var loction =res.longitude + "," + res.latitude;
+						uni.request({
+							url:gjcx.InterfaceAddress[0],
+							data:{
+								startLonLat: loction
+								// endLonLat=  获取到的最近站点经纬度，待填充
+							}
+						})
+					}
 				})
 			}
 		},

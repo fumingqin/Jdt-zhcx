@@ -18,7 +18,7 @@
 			"style": {
 				"navigationBarTitleText": "景区列表",
 				"navigationBarBackgroundColor": "#FFFFFF",
-				"onReachBottomDistance" : 0,
+				"onReachBottomDistance": 0,
 				"app-plus": {
 					"softinputNavBar": "none"
 				}
@@ -473,24 +473,26 @@
 			"style": {
 				"navigationBarTitleText": "订单支付"
 			}
-		}
-	    ,{
-            "path" : "pages/CTKY/selectStation",//上下车点选择
+		}, {
+			"path": "pages/CTKY/selectStation", //上下车点选择
 			// #ifdef APP-PLUS
 			"navigationStyle": "custom",
 			// #endif
-            "style" : {
+			"style": {
 				"navigationBarTitleText": "上下车点选择",
-				"navigationBarBackgroundColor":"#FE6C66"
+				"navigationBarBackgroundColor": "#FE6C66"
 			}
-        }
-        ,{
-            "path" : "pages/Home/InformationDetails",
-            "style" : {
+		}, {
+			"path": "pages/Home/InformationDetails",
+			"style": {
 				"navigationBarTitleText": "资讯详情"
 			}
-        }
-    ],
+		},
+		{
+			"path": "pages/GJCX/detailed",
+			"style": {}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
