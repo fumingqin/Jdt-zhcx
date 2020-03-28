@@ -468,7 +468,11 @@
 				"navigationBarTitleText": "详情"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/GJCX/detailed",
+            "style" : {} 
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
