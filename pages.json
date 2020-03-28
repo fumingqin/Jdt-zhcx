@@ -473,7 +473,17 @@
 				"navigationBarTitleText": "订单支付"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/CTKY/selectStation",//上下车点选择
+			// #ifdef APP-PLUS
+			"navigationStyle": "custom",
+			// #endif
+            "style" : {
+				"navigationBarTitleText": "上下车点选择",
+				"navigationBarBackgroundColor":"#FE6C66"
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
