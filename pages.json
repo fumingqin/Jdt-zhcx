@@ -474,10 +474,18 @@
 				"navigationBarTitleText": "订单支付"
 			}
 		}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3c7ee845c13a542a66b076432d2c25c24ffd44a5
 	    ,{
             "path" : "pages/GJCX/detailed",
             "style" : {} 
         }
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 3c7ee845c13a542a66b076432d2c25c24ffd44a5
 	    ,{
             "path" : "pages/CTKY/selectStation",//上下车点选择
 			// #ifdef APP-PLUS
@@ -488,6 +496,10 @@
 				"navigationBarBackgroundColor":"#FE6C66"
 			}
         }
+<<<<<<< HEAD
+=======
+>>>>>>> 66a30966b362f4dec7ba16a5c986ee9f8c7f5f3f
+>>>>>>> 3c7ee845c13a542a66b076432d2c25c24ffd44a5
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
