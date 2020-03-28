@@ -18,8 +18,9 @@
 			"style": {
 				"navigationBarTitleText": "景区列表",
 				"navigationBarBackgroundColor": "#FFFFFF",
+				"onReachBottomDistance" : 0,
 				"app-plus": {
-				     "softinputNavBar": "none"
+					"softinputNavBar": "none"
 				}
 			}
 		},
@@ -465,13 +466,31 @@
 		{
 			"path": "pages/GRZX/detailTweet", //推文详情
 			"style": {
-				"navigationBarTitleText": "详情"
+				"navigationBarTitleText": "资讯详情"
+			}
+		}, {
+			"path": "pages/CTKY/orderPayment", //推文详情
+			"style": {
+				"navigationBarTitleText": "订单支付"
 			}
 		}
+<<<<<<< HEAD
 	    ,{
             "path" : "pages/GJCX/detailed",
             "style" : {} 
         }
+=======
+	    ,{
+            "path" : "pages/CTKY/selectStation",//上下车点选择
+			// #ifdef APP-PLUS
+			"navigationStyle": "custom",
+			// #endif
+            "style" : {
+				"navigationBarTitleText": "上下车点选择",
+				"navigationBarBackgroundColor":"#FE6C66"
+			}
+        }
+>>>>>>> 66a30966b362f4dec7ba16a5c986ee9f8c7f5f3f
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

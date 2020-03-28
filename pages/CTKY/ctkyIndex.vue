@@ -8,7 +8,7 @@
 			<view class="lineClass">
 				<input class="start" v-model="departure" />
 				<image src="../../static/CTKY/change.png" mode="aspectFill" class="changeImage" @click="changeClick"></image>
-				<input class="end" v-model="destination" />
+				<input class="start" style="text-align: right;" v-model="destination" />
 			</view>
 			<view class="lineClass">
 				<view style="border-bottom: 1upx solid #dadada;width: 100%;">
@@ -38,13 +38,13 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 		data() {
 			return {
 				title: 'Hello',
-				departure: '泉州',
-				destination: '厦门',
+				departure: '泉州客运中心站',
+				destination: '漳州客运站',
 				changeText: '',
 				type: 'rangetime',
 				value: '',
 				showPicker: false,
-				date: '2019/01/01',
+				date: '2020/03/26',
 				historyLines: ['泉州-厦门', '泰宁-石家庄', '福州-婺源', '上海-绍兴'],
 				datestring: '',
 				Week: '',
@@ -73,8 +73,10 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 			//查询
 			queryClick: function() {
 				this.historyLines.unshift(this.departure + "-" + this.destination);
+				console.log(this.date,this.departure + "-" + this.destination)
+				
 				//页面传参通过地址后面添加参数
-				var params='./selectTickets?lineName='+this.departure + "-" + this.destination;
+				var params='./selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-26';
 				uni.navigateTo({ 
 					url:params
 				})
@@ -95,7 +97,7 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 					console.log('value => ' + e.value);
 					//原始的Date对象
 					console.log('date => ' + e.date);
-
+					this.date = e.value;
 				}
 			},
 			queryWeek(e) {
@@ -186,9 +188,8 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 
 	//出发点
 	.start {
-		font-size: 36upx;
-		font-family: MicrosoftYaHei;
-		font-weight: bold;
+		font-size: 32upx;
+		font-weight: 300;
 		color: #2C2D2D;
 		width: 234upx;
 		height: 125upx;
@@ -197,24 +198,11 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 		border-bottom: 1upx solid #dadada;
 	}
 
-	//目的点
-	.end {
-		font-size: 36upx;
-		font-family: MicrosoftYaHei;
-		font-weight: bold;
-		color: #2C2D2D;
-		width: 234upx;
-		height: 125upx;
-		text-align: right;
-		right: 0;
-		border-bottom: 1upx solid #dadada;
-	}
 
 	//选择日期
 	.dateClass {
 		font-size: 32upx;
-		font-family: MicrosoftYaHei;
-		font-weight: bold;
+		font-weight: 300;
 		width: 213upx;
 		height: 32upx;
 		line-height: 125upx;

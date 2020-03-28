@@ -110,18 +110,24 @@
 						}else{
 							theself.detailInfo.birthday=res.data.birthday;
 						}
-						theself.detailInfo.gender=res.data.gender;
-						theself.selector =theself.genderSex[res.data.gender]; 
-						// if(res.data.sex==null||res.data.sex==""){
-						// 	//theself.selector ="请选择";
-						// }else{
-						// 	theself.detailInfo.sex=res.data.sex;
-						// 	theself.selector =theself.genderSex[res.data.sex];
-						// }	
-						theself.background=res.data.background;
+						if(res.data.gender==null||res.data.gender==""){
+							theself.selector ="请选择";
+						}else{
+							theself.detailInfo.gender=res.data.gender;
+							theself.selector =theself.genderSex[res.data.gender];
+						}
+						if(res.data.avatarUrl==null||res.data.avatarUrl==""){
+							theself.avatarUrl ="../../static/GRZX/missing-face.png";
+						}else{
+							theself.avatarUrl = res.data.avatarUrl;	
+						}
+						if(res.data.background==null||res.data.background==""){
+							theself.background ="../../static/GRZX/banner3.jpg";
+						}else{
+							theself.background=res.data.background;
+						}
 						theself.detailInfo.autograph=res.data.autograph;
 						theself.detailInfo.nickName = res.data.nickName; 
-						theself.avatarUrl = res.data.avatarUrl;				
 						theself.detailInfo.address= res.data.address;
 						theself.phoneNumber= res.data.phoneNumber;
 						//console.log(res,"res")
@@ -129,7 +135,7 @@
 				});	
 			},
 			genderChange : function(e){
-				console.log(e.detail.value,"sex")
+				//console.log(e.detail.value,"sex")
 				this.selector =this.genderSex[e.detail.value]; 
 			},
 			dateChange : function(e){
@@ -194,7 +200,6 @@
 					content: '表单数据内容：' + JSON.stringify(this.detailInfo),
 					showCancel: false
 				});		 */	
-				console.log(e.detail.value,"55556666")
 				if(this.avatarUrl==null||this.avatarUrl==undefined){
 					e.target.value.avatarUrl="../../static/GRZX/missing-face.png";
 				}else{
@@ -208,8 +213,10 @@
 				if(this.selector=="男"){
 					e.target.value.gender=1;
 				}
-				if(this.selector=="女"){
+				else if(this.selector=="女"){
 					e.target.value.gender=2;
+				}else{
+					e.target.value.gender=0;
 				}
 				e.target.value.birthday=this.detailInfo.birthday;
 				e.target.value.phoneNumber=this.phoneNumber;
@@ -218,7 +225,7 @@
 					data:e.target.value
 				})
 				this.login(e.target.value);
-				console.log(e.target.value,"555")
+				//console.log(e.target.value,"555")
 				uni.navigateBack();
 			},
 			getPhoto(){

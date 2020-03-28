@@ -223,7 +223,7 @@
 		right: 20rpx;
 		border-radius: 20rpx;
 		height: 600rpx;
-		width: 94%;
+		/* width: 94%; */
 	}
 	.textView {
 		font-size: 26rpx;
