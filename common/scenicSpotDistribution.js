@@ -46,7 +46,7 @@ const cateList = [
 	{
 		id: 5,
 		pid: 1,
-		name: '武夷山'
+		name: '武夷山风景名胜区'
 	},
 	{
 		id: 6,

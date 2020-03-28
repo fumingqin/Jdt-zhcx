@@ -42,8 +42,8 @@
 
 						<view style="display: flex;">
 							<button @click="detail(item.titleIndex)" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
-							<button v-if="item.orderType=='已完成'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">投诉</button>
-							<button v-if="item.orderType=='未支付'" style="width:146rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; align-items: center; left: 80rpx;">去支付</button>
+							<button @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">投诉</button>
+							<button @click="openBottomPopup" v-if="item.orderType=='未支付'" style="width:146rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; align-items: center; left: 80rpx;">去支付</button>
 							<button v-if="item.orderType=='已取消'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">删除</button>
 						</view>
 					</view>
@@ -774,17 +774,68 @@
 				</view>
 			</uni-popup2>
 			
+			<!-- 出租车订单支付弹框 -->
+			<uni-popup ref="bottomPopup" :maskClick='false' type="bottom">
+				<form @submit="payment">
+					<view style="background-color: #FFFFFF;padding: 20px;box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);border-top-left-radius: 9px;border-top-right-radius: 9px;">
+						<!--<view style="flex-direction: row;justify-content: flex-end;	">
+							</view> -->
+						<view style="display: flex;flex-direction: row;justify-content: space-between;">
+							<view>
+								<!-- 勿删 -->
+							</view>
+							<view>
+								<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">支付{{driverName}}车费</text>
+							</view>
+							<view>
+								<uni-icons @click="closePayment" type="closeempty" size="19"></uni-icons>
+							</view>
+						</view>
+						<view style="margin-top: 30px;display: flex;flex-direction: row;justify-content: center;align-items: center;">
+							<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{totalPrice}}</text><text
+							 style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:Light;color:#2C2D2D;">元</text>
+						</view>
+						<view style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+							<text @click="payDetail" style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#727272;">费用明细</text>
+							<uni-icons @click="payDetail" type="arrowright" size="15" color="#727272"></uni-icons>
+						</view>
+						<view style="border-top-width: 1px;border-color: #EAEAEA;margin-top: 20px;padding-top: 20px;">
+							<radio-group name='chooseType'>
+								<view v-for='item in payType' :key='item.typeName' style="display: flex;flex-direction: row;justify-content: space-between;padding-bottom: 20px;">
+									<view style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+										<image :src='item.iconPath' style="height: 42rpx;width: 42rpx;"></image>
+										<text style="margin-left: 5rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000;">{{item.typeName}}</text>
+									</view>
+									<view>
+										<radio :value="item.value" :checked="item.checked" :color="item.typeColor" />
+									</view>
+								</view>
+							</radio-group>
+						</view>
+						<view>
+							<button form-type="submit" style="width: 100%;height: 100rpx;background-color: #FE4644;color: #FFFFFF;">
+								<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">确定支付{{totalPrice}}元</text>
+							</button>
+						</view>
+					</view>
+				</form>
+			</uni-popup>
+			
 		</view>
 </template>
 
 <script>
 	import uniSegmentedControl from "@/components/uni-segmented-control/uni-segmented-control.vue";
+	import uniPopup from "@/components/uni-popup/uni-popup.vue";
+	import uniIcons from "@/components/uni-icons/uni-icons.vue";
 	import uniPopup2 from "../../components/uni-popup/uni-popup2.vue";
 	export default {
 		components: {
 			uniSegmentedControl,
+			uniPopup,
 			//加载多方弹框组件
 			uniPopup2,
+			uniIcons,
 		},
 		data() {
 			return {
@@ -972,6 +1023,23 @@
 				goingArr: [],
 				unfinishArr: [],
 				cancelArr: [],
+				driverName:'张师傅',//司机姓名
+				totalPrice: 32.5,
+				payType: [{
+						typeName: '微信',
+						typeColor: '#00C805',
+						iconPath: '../../static/CZC/Wechatpay.png',
+						value: 'wxpay',
+						checked: true,
+					},
+					{
+						typeName: '支付宝',
+						typeColor: '#0EBDFF',
+						iconPath: '../../static/CZC/Alipay.png',
+						value: 'alipay',
+						checked: false
+					}
+				]
 			}
 		},
 		onLoad() {
@@ -979,6 +1047,54 @@
 			that.toFinished();
 		},
 		methods: {
+			//------支付页面
+			payDetail: function() {
+				//支付详情
+				uni.navigateTo({
+					url: '../CZC/PriceDetail'
+				});
+			
+			},
+			closePayment: function() {
+				//关闭
+				let that = this;
+				that.closeBottomPopup();
+			},
+			payment: function(e) {
+				//支付
+				let that = this;
+				var timeStamp = new Date().getTime();
+				uni.requestPayment({
+					provider: e.detail.value.chooseType,
+					orderInfo: '111',
+					timeStamp: timeStamp,
+					nonceStr: '',
+					package: '',
+					paySign: '',
+					success: function(res) {
+						console.log(res); 
+						uni.navigateTo({
+							url:'../CZC/PaymentSuccess'
+						});
+					},
+					fail: function(res) {
+						console.log(res);
+						uni.navigateTo({
+							url:'../CZC/PaymentFail'
+						});
+					}
+				});
+			},
+			openBottomPopup: function() {
+				this.$nextTick(function() {
+					this.$refs['bottomPopup'].open();
+				});
+			},
+			closeBottomPopup: function() {
+				this.$nextTick(function() {
+					this.$refs['bottomPopup'].close();
+				});
+			},
 
 			back: function() {
 				var that = this;

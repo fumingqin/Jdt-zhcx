@@ -33,14 +33,14 @@
 				<view class="boarding" style="border-bottom:#EAEAEA solid 1px ;">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">
-						<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">请选择上车点</view>
+						<view @tap="startStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{startStation}}</view>
 						<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 					</view>
 				</view>
 				<view class="boarding">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">下车点</view>
 					<view style="display: flex;align-items: center;">
-						<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">请选择下车点</view>
+						<view @tap="endStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{endStation}}</view>
 						<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 					</view>
 				</view>
@@ -48,10 +48,10 @@
 			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
 				<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
-					<button style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
+					<button @tap="addPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
 					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
 				</view>
-				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in info" :key=index v-model="info">
+				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in passengerInfo" :key=index v-model="passengerInfo">
 					<view class="passengerInfoDetail">
 						<view style="display: flex;text-align: center;align-items: center;">
 							<view style="width: 73upx;">
@@ -60,10 +60,10 @@
 							<view style="height: 100%;">
 								<view style="display: flex;margin-top: 18upx;margin-bottom: 18upx;">
 									<text style="font-size:32upx ;color: #333333;padding:0;padding-right: 24upx;">{{items.name}}</text>
-									<view style="background:#EBEBEB ; font-size:18upx ;border-radius: 24upx;width: 100upx;height: 37upx;line-height:37upx ;text-align: center;">成人票</view>
+									<view style="background:#EBEBEB ; font-size:18upx ;border-radius: 24upx;width: 100upx;height: 37upx;line-height:37upx ;text-align: center;">{{items.ticketType}}</view>
 								</view>
 								<view style="display: flex;font-size: 28upx;color:#999999 ;margin-top: 18upx;margin-bottom: 18upx;">
-									<text style="margin-right: 20upx;">身份证</text><text>{{items.id}}</text>
+									<text style="margin-right: 20upx;">身份证</text><text>{{items.codeNum}}</text>
 								</view>
 							</view>
 						</view>
@@ -73,29 +73,82 @@
 					</view>
 				</view>
 			</view>
-			<view class="orderCommonClass">
+			
+			<!-- 优惠券 -->
+			<view class="orderCommonClass" @click="toggleMask">
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">优惠券</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
-					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">无可用</view>
+					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">{{couponIndex}}</view>
 					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 				</view>
 			</view>
+			
+			<!-- 呼出优惠券面板 -->
+			<uni-popup type="bottom" ref="popup">
+				<view class="discountView">
+					<!-- 头部 -->
+					<view class="couponTitle">
+						<text class="Co_text1">优惠券</text>
+						<text class="Co_text2" @click="couponReset">不使用优惠券</text>
+					</view>
+					
+					<!-- 优惠券列表 -->
+					<scroll-view scroll-y="true" class="discountScroll">
+						
+						<view class="coupon-item" v-for="(item,index) in couponList" :key="index" @tap="couponEvent">
+							<view class="con">
+								<view class="left">
+									<text class="title">{{item.title}}</text>
+									<text class="time">有效期至2019-06-30</text>
+								</view>
+								
+								<view class="right">
+									<text class="price">{{item.price}}</text>
+									<text>满{{couponList[index].condition}}可用</text>
+								</view>
+								
+								<view class="circle l"></view>
+								<view class="circle r"></view>
+							</view>
+							<text class="tips">限新用户使用</text>
+						</view>
+						
+					</scroll-view>
+					
+				</view>
+			</uni-popup>
+			
 			<view class="orderCommonClass">
 				<view style="display: flex; align-items: center;">
 					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">购买乘车险</view>
 					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">2元</view>
 				</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
-					<image src="../../static/CTKY/check.png" style="width: 33upx;height: 33upx;margin-left: 10upx;"></image>
+					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="isInsurance===1 ? true : false" @click="insuranceTap"></radio>
 				</view>
 			</view>
 			<view class="orderCommonClass">
 				<view style="display: flex; align-items: center;">
 					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">同意购票须知</view>
-					<view style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
+					<view @tap="checkAttention" style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
 				</view>
+				<!-- 查看须知popup -->
+				<uni-popup ref="popup2" type="center">
+					<view class="boxVlew">
+						<view class="titleView">
+							<text class="Nb_text1">用户须知</text>
+							<text class="Nb_text2 jdticon icon-fork " @click="close(2)"></text>
+						</view>
+						<scroll-view class="noticeBox" scroll-y="ture">
+							<text class="Nb_text4">
+								{{notice.security}}
+							</text>
+						</scroll-view>
+					</view>
+				</uni-popup>
+				
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
-					<image src="../../static/CTKY/check.png" style="width: 33upx;height: 33upx;margin-left: 10upx;"></image>
+					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 				</view>
 			</view>
 		</scroll-view>
@@ -104,32 +157,64 @@
 				<text style="font-size: 38upx;color: #FC4646;padding: 0;">￥30</text>
 				<text style="font-size: 28upx;margin-left: 9upx;font-family:SourceHanSansSC-Light ; font-weight: lighter;color: #666666;padding: 0;">共2人</text>
 			</view>
-			<view style="width: 45%; height: 112upx;color: #FFFFFF;background:#FC4646 ;font-size: 32upx;line-height: 112upx;
-			text-align: center;">立即预定</view>
+			<view @tap="reserveTap" class="orderReserve" :class="{tapColor:selectedValue == 1}">立即预定</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import popup from "../../components/uni-popup/uni-popup.vue"
 	export default {
+		components:{
+			popup
+			},
 		data() {
 			return {
 				title: '',
 				count: 1,
-				info: [{
-						name: '小花',
-						id: '22555555555555555555'
+				startStation:'',//上车点
+				endStation:'',//下车点
+				indexArray:[],//下标数组
+				startStaionIndex:'',
+				endStationIndex:'',
+				passengerInfo: [],
+				couponList: [{
+						couponID: '0',
+						title: '新用户专享优惠券',
+						price: 5,
+						condition: 10,
 					},
 					{
-						name: '小明',
-						id: '22555555555555555555'
+						couponID: '1',
+						title: '春节限时限量优惠券',
+						price: 50,
+						condition: 400,
 					},
 					{
-						name: '小红',
-						id: '22555555555555555555'
-					}
-				],
-				 ticketDate:'',
+						couponID: '1',
+						title: '春节限时限量优惠券',
+						price: 50,
+						condition: 400,
+					},
+					{
+						couponID: '2',
+						title: '大型团购优惠券-今点通限量版',
+						price: 100,
+						condition: 800,
+					},
+					{
+						couponID: '3',
+						title: '大型团购优惠券-今点通限量版',
+						price: 200,
+						condition: 1000,
+					}],
+				couponIndex: '请选择优惠券', //优惠券默认内容
+				couponColor: '', //优惠券couponID，大于等于0触发价格判断事件
+				selectedValue: 0, //同意须知的选中值
+				couponCondition: '', //优惠券的满足条件值
+				isInsurance:0,
+				maskState: 0, //优惠券面板显示状态
+				ticketDate:'',
 				// ticketSettime:'',
 				// ticketPrice:'',
 				// ticketCount:'',
@@ -141,10 +226,23 @@
 			}
 		},
 		onLoad(e) {
+			var that = this;
+			if(this.startStation == '') {
+				this.startStation = "请选择上车点"
+			}
+			if(this.endStation == '') {
+				this.endStation = "请选择下车点"
+			}
+			
+			// 获取用户数据
+			setInterval(() => {
+				this.userData();
+			}, 500)
+			
 			uni.setNavigationBarTitle({
 				title: '填写订单'
 			});
-			var that = this;
+			
 			uni.getStorage({
 				key: 'selectedTicket',
 				success: function(res) {
@@ -173,9 +271,83 @@
 			Add() {
 
 			},
+			//用户数据读取
+			userData(){ 
+				uni.getStorage({
+				    key: 'passengerList',
+				    success: (res) => {
+				        this.passengerInfo = res.data;						
+				    }
+				});
+				uni.getStorage({
+					key:'CTKYStationList',
+					success: (res) =>{
+						this.startStation = res.data.startStation;
+						this.startStaionIndex = res.data.startStationIndex;
+						this.endStation = res.data.endStation;
+						this.endStationIndex = res.data.endStationIndex;
+					}
+				})
+			},
+			//点击上车点
+			startStationTap() {
+				var that = this;
+				//跳转到选择上车点页面
+				uni.navigateTo({
+					url:'/pages/CTKY/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+				})
+			},
+			//点击下车点
+			endStationTap() {
+				var that = this;
+				//跳转到选择下车点页面
+				uni.navigateTo({
+					url:'/pages/CTKY/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+				})
+			},
+			//删除乘车人
 			deleteInfo(e) {
 				console.log(e)
-				this.info.splice(e, 1)
+				this.passengerInfo.splice(e, 1)
+				uni.setStorage({
+					key:"passengerList",
+					data:this.passengerInfo,
+				})
+			},
+			//显示优惠券面板
+			toggleMask() {
+				this.$refs.popup.open();
+			},
+			//优惠券赋值
+			couponEvent(){
+				console.log('1111111')
+			},
+			//取消优惠券
+			couponReset: function(index) {
+				this.couponIndex = '请选择优惠券';
+				this.couponColor = '';
+				this.$refs.popup.close()
+				// this.numberChange();
+				// this.toggleMask();
+			},
+			Selection: function() {
+				if (this.selectedValue == 0) {
+					this.selectedValue = 1;
+				} else {
+					this.selectedValue = 0;
+				}
+			},
+			//选择保险
+			insuranceTap: function() {
+				if (this.isInsurance == 0) {
+					this.isInsurance = 1;
+				} else {
+					this.isInsurance = 0;
+				}
+			},
+			//查看须知
+			checkAttention() {
+				console.log('点击了查看须知')
 			},
 			//跳转到地图标点
 			checkLocation() {
@@ -183,11 +355,48 @@
 					url:'/pages/CTKY/specialMark'
 				})
 			},
-			//选中乘客
+			//选择乘客
 			pickPassenger() {
+				//跳转到选择乘客页面
 				uni.navigateTo({
-					url:'/pages/CTKY/seatSelection'
+					url: '/pages/GRZX/passengerInfo?submitType=1',
 				})
+			},
+			//点击添加乘客
+			addPassenger(){
+				uni.navigateTo({
+					url: '/pages/GRZX/addPassenger',
+				})
+			},
+			
+			
+			
+			//-------------------------------点击订单预定-----------------------------
+			reserveTap() {
+				var that = this;
+				//当选中用户须知且选择了上下车点和乘客之后发送请求
+				if(that.startStation.length == 0 || that.endStation.length == 0) {
+					uni.showToast({
+						title: '请选择上下车点',
+						icon: 'none'
+					})
+				}else if(that.passengerInfo.length==0) {
+					uni.showToast({
+						title: '请选择乘车人',
+						icon: 'none'
+					})
+				}else if(that.selectedValue == 0) {
+					uni.showToast({
+						title: '请同意购买须知',
+						icon: 'none'
+					})
+				}else {
+					//请求成功之后跳转到支付页面
+					uni.navigateTo({
+						url:'/pages/CTKY/orderPayment'
+					})
+				}
+				
 			}
 		}
 	}
@@ -206,7 +415,125 @@
 		height: 140upx;
 		background: #FC4646;
 	}
+	
+	
+	/* 优惠券面板 */
+	.discountView {
+		min-height: 30vh;
+		max-height: 70vh;
+		width: 100%;
+		background: #f3f3f3;
+		margin-bottom: 100rpx;
+	}
+	.discountScroll {
+		min-height: 30vh;
+		max-height: 60vh;
+		width: 100%;
+	}
+	//下弹框标题
+	.couponTitle {
+		padding: 40upx;
+		padding-bottom: 16upx;
+		.Co_text1 {
+			font-size: 38upx;
+			font-weight: bold;
+		}
+		.Co_text2 {
+			margin-top: 8upx;
+			float: right;
+			color: #f85e52;
+			font-size: 28upx;
+		}
+	}
 
+	.coupon-item {
+		display: flex;
+		flex-direction: column;
+		margin: 20upx 24upx;
+		background: #fff;
+		bottom: 100rpx;
+		.con {
+			display: flex;
+			align-items: center;
+			position: relative;
+			height: 120upx;
+			padding: 0 30upx;
+	
+			&:after {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				content: '';
+				width: 100%;
+				height: 0;
+				border-bottom: 1px dashed #f3f3f3;
+				transform: scaleY(50%);
+			}
+		}
+	
+		.left {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			flex: 1;
+			overflow: hidden;
+			height: 100upx;
+		}
+	
+		.title {
+			font-size: 32upx;
+			color: #f85e52;
+			margin-bottom: 10upx;
+		}
+	
+		.time {
+			font-size: 24upx;
+			color: #999999;
+		}
+	
+		.right {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			font-size: 26upx;
+			color: #999999;
+			height: 100upx;
+		}
+	
+		.price {
+			font-size: 44upx;
+			color: #f85e52;
+	
+			&:before {
+				content: '￥';
+				font-size: 34upx;
+			}
+		}
+	
+		.tips {
+			font-size: 24upx;
+			color: #999999;
+			line-height: 60upx;
+			padding-left: 30upx;
+		}
+	
+		.circle {
+			position: absolute;
+			left: -6upx;
+			bottom: -10upx;
+			z-index: 10;
+			width: 20upx;
+			height: 20upx;
+			background: #f3f3f3;
+			border-radius: 100px;
+	
+			&.r {
+				left: auto;
+				right: -6upx;
+			}
+		}
+	}
 	.ticketInfoClass {
 		height: 181upx;
 		width: 652upx;
@@ -279,5 +606,25 @@
 		align-items: center;
 		margin-left: 41upx;
 		margin-right: 41upx;
+	}
+	.Mp_box {
+		float: right;
+		position: relative;
+		bottom: 6upx;
+		right: -12upx;
+	}
+	//预定
+	.orderReserve {
+		width: 45%;
+		height: 112upx;
+		color: #FFFFFF;
+		background:#aaa;
+		font-size: 32upx;
+		line-height: 112upx;
+		text-align: center;
+			
+		&.tapColor {
+			background:#FC4646;
+		}
 	}
 </style>

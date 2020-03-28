@@ -2,9 +2,9 @@
 	<view class="Ly_background">
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
-			<swiper-item class="swi-item" v-for="(item,index) in piclist" :key="index">
-				<image :src="item.ticketImage" @click="goImgList" />
-				<view class="view">{{piclist.length}}张图片</view>
+			<swiper-item class="swi-item" >
+				<image :src="piclist.ticketImage" @click="goImgList" />
+				<view class="view">1张图片</view>
 			</swiper-item>
 		</swiper>
 		<view>
@@ -51,18 +51,13 @@
 					ticketChildPrice: '',
 					ticketScenicContent: '',
 				}], //景区内容
-				piclist : [{
+				piclist : {
 					ticketImage: '',
-				}],//图片内容
+				},//图片内容
 			}
 		},
 		onLoad(options) {
-			// console.log(JSON.parse(options.ticketId));
-			// let id = options.id;
-			// if(id){
-			// 	this.$api.msg(`点击了${id}`);
-			// }
-			this.lyfwData();
+			this.lyfwData(JSON.parse(options.ticketId));
 		},
 		onNavigationBarButtonTap: function() {
 			this.share();
@@ -89,13 +84,19 @@
 		},
 		methods: {
 			//读取静态数据json.js 
-			async lyfwData() {
+			async lyfwData(e) {
 				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
 				this.scSpotContent = scSpotDetails.data;
 				
-				let scSpotDetailsImage = await this.$api.lyfwfmq('scSpotDetailsImage');
-				this.piclist = scSpotDetailsImage.data;
-				// console.log(this.scSpotContent)
+				
+				// 请求景区列表
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getScenicspotDetailImg?ticketId=' +e,
+					method:'POST',
+					success:(res) => {
+						this.piclist = res.data.data;
+					}
+				})
 			},
 			
 			//保存图片至本地并打开新页面

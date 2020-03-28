@@ -61,7 +61,7 @@
 			</view>
 			<view class="boxClass borderTop" @click="complaintClick">
 				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
-				<text class="fontStyle">我的投诉</text>
+				<text class="fontStyle">我要投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 		</view>

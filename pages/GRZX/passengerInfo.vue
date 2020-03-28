@@ -47,68 +47,68 @@
 		data(){
 			return{
 				limt:'',
-				//passengerList:[],
-				passengerList:[{
-					userID:0,
-					name:'张小娴',
-					sex:'女',
-					ticketType:'成人',
-					codeNum:'35058199503692645',
-					phoneNum:'13653989645',
-					hiddenIndex:0,
-					default:true,
-					emergencyContact:false,
-				},{
-					userID:1,
-					name:'黄小新',
-					sex:'男',
-					ticketType:'成人',
-					codeNum:'350518199503162645',
-					phoneNum:'13653989645',
-					hiddenIndex:0,
-					default:false,
-					emergencyContact:true,
-				},{
-					userID:2,
-					name:'张新',
-					sex:'男',
-					ticketType:'儿童',
-					codeNum:'35058199503692645',
-					phoneNum:'13653989645',
-					hiddenIndex:0,
-					default:false,
-					emergencyContact:false,
-				},{
-					userID:3,
-					name:'张旺',
-					sex:'男',
-					ticketType:'儿童',
-					codeNum:'35058199503692645',
-					phoneNum:'13653989645',
-					hiddenIndex:0,
-					default:false,
-					emergencyContact:false,
-				},{
-					userID:4,
-					name:'张小芸',
-					sex:'女',
-					ticketType:'儿童',
-					codeNum:'35058199503692645',
-					phoneNum:'13653989645',
-					hiddenIndex:0,
-					default:false,
-					emergencyContact:false,
-				},{
-					userID:5,
-					name:'许小芸',
-					sex:'男',
-					ticketType:'儿童',
-					codeNum:'35058199503692645',
-					phoneNum:'13653989645',
-					hiddenIndex:0,
-					default:false,
-					emergencyContact:false,
-				}],
+				passengerList:[],
+				// passengerList:[{
+				// 	userID:0,
+				// 	name:'张小娴',
+				// 	sex:'女',
+				// 	ticketType:'成人',
+				// 	codeNum:'35058199503692645',
+				// 	phoneNum:'13653989645',
+				// 	hiddenIndex:0,
+				// 	default:true,
+				// 	emergencyContact:false,
+				// },{
+				// 	userID:1,
+				// 	name:'黄小新',
+				// 	sex:'男',
+				// 	ticketType:'成人',
+				// 	codeNum:'350518199503162645',
+				// 	phoneNum:'13653989645',
+				// 	hiddenIndex:0,
+				// 	default:false,
+				// 	emergencyContact:true,
+				// },{
+				// 	userID:2,
+				// 	name:'张新',
+				// 	sex:'男',
+				// 	ticketType:'儿童',
+				// 	codeNum:'35058199503692645',
+				// 	phoneNum:'13653989645',
+				// 	hiddenIndex:0,
+				// 	default:false,
+				// 	emergencyContact:false,
+				// },{
+				// 	userID:3,
+				// 	name:'张旺',
+				// 	sex:'男',
+				// 	ticketType:'儿童',
+				// 	codeNum:'35058199503692645',
+				// 	phoneNum:'13653989645',
+				// 	hiddenIndex:0,
+				// 	default:false,
+				// 	emergencyContact:false,
+				// },{
+				// 	userID:4,
+				// 	name:'张小芸',
+				// 	sex:'女',
+				// 	ticketType:'儿童',
+				// 	codeNum:'35058199503692645',
+				// 	phoneNum:'13653989645',
+				// 	hiddenIndex:0,
+				// 	default:false,
+				// 	emergencyContact:false,
+				// },{
+				// 	userID:5,
+				// 	name:'许小芸',
+				// 	sex:'男',
+				// 	ticketType:'儿童',
+				// 	codeNum:'35058199503692645',
+				// 	phoneNum:'13653989645',
+				// 	hiddenIndex:0,
+				// 	default:false,
+				// 	emergencyContact:false,
+				// }],
 				submitType:'',
 			}
 		},
@@ -121,12 +121,32 @@
 			async getType(t,l){
 				this.submitType=t;
 				this.limit=l;
-				// uni.setStorage({
-				// 	key:'passengerList',
-				// 	success(res) {
-						
-				// 	}
-				// })
+				var check=[];
+				var array=this.passengerList;
+				uni.getStorage({
+					key:'passengerList',
+					success(res) {
+						console.log(res)
+						for(var i=0;i<res.data.length;i++){
+							if(res.data[i].hiddenIndex==1){
+								check.push(res.data[i].userID);
+								array.push(res.data[i]);
+							}
+						}
+					}
+				})
+				uni.getStorage({
+					key:'passList',
+					success(res1) {
+						for(var j=0;j<res1.data.length;j++){
+							var data=res1.data;
+							var index=JSON.stringify(check).indexOf(JSON.stringify(data[j].userID));
+							if(index==-1){
+								array.push(data[j]);
+							}
+						}
+					}
+				})
 			},
 			addPassenger(){
 				uni.navigateTo({
@@ -328,16 +348,16 @@
 		/* border: 1px solid #4CD964; */
 	}
 	.fontClass{ //本人，紧急联系人
-		height: 55upx;
-		line-height: 55upx;
+		height: 40upx;
+		line-height: 40upx;
 		font-size: 24upx;
 		color: #ff0000;
 		position: absolute;
 		left:45% ;
-		top: 25upx;
+		top: 32upx;
 		border: 1upx solid #ff0000;
-		border-radius: 4upx;
+		border-radius: 10upx;
 		text-align: center;
-		width: 18%;
+		width: 80upx;
 	}
 </style>
