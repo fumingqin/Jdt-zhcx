@@ -55,6 +55,7 @@
 		data(){	
 			return{			
 				address:{
+					addressID:'',
 					receiver:'',
 					phoneNum:'',
 					district:'请选择 省/市/区 >',
@@ -62,11 +63,13 @@
 					detailAddress:'',
 					postalCode:'',
 					default:false
-				}
+				},
+				type:'',
 			}
 				
 		},
 		onLoad (options){
+			this.type=options.type;
 			if(options.type=="edit"){
 				this.loadData();
 			}
@@ -84,6 +87,7 @@
 						that.address.detailAddress=res.data.detailAddress;
 						that.address.postalCode=res.data.postalCode;
 						that.address.default=res.data.default;
+						that.address.addressID=res.data.addressID;
 					}
 				})
 				/* let addressInfo = await this.$api.grzx('addressInfo');
@@ -100,6 +104,7 @@
 				}	 */			
 			},
 			formSubmit:function(e){
+				var that=this;
 				var addList=e.target.value;
 				addList.district=this.address.district;
 				if(addList.defaultAddress.length==0){
@@ -109,22 +114,83 @@
 				}
 				addList.hiddenIndex=0;
 				var array=[];
-				array.push(addList);
-				uni.getStorage({
-					key:'addressList',
-					success(res) {
-						for(var i=0;i<res.data.length;i++){
-							array.push(res.data[i]);
+				if(this.type=='edit'){
+					//array.push(addList);
+					uni.getStorage({
+						key:'addressList',
+						success(res) {
+							for(var i=0;i<res.data.length;i++){
+								if(that.address.addressID==res.data[i].addressID){
+									array.push(addList);
+								}else{
+									array.push(res.data[i]);
+								}
+							}
+							uni.setStorage({
+								key:'addressList',
+								data:array,
+							})
+						},
+						fail() {
+							uni.setStorage({
+								key:'addressList',
+								data:array,
+							})
 						}
-						uni.setStorage({
-							key:'addressList',
-							data:array,
-						})
-					}
-				})
-				uni.redirectTo({
-					url:'/pages/GRZX/infoList'
-				})
+					})
+					uni.redirectTo({
+						url:'/pages/GRZX/infoList'
+					})
+				}else if(this.type=='add'){
+					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+					addList.addressID=randomNum;
+					array.push(addList);
+					uni.getStorage({
+						key:'addressList',
+						success(res) {
+							for(var i=0;i<res.data.length;i++){
+								array.push(res.data[i]);
+							}
+							uni.setStorage({
+								key:'addressList',
+								data:array,
+							})
+						},
+						fail() {
+							uni.setStorage({
+								key:'addressList',
+								data:array,
+							})
+						}
+					})
+					uni.redirectTo({
+						url:'/pages/GRZX/infoList'
+					})
+				}else{
+					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
+					addList.addressID=randomNum;
+					array.push(addList);
+					uni.getStorage({
+						key:'addressList',
+						success(res) {
+							for(var i=0;i<res.data.length;i++){
+								array.push(res.data[i]);
+							}
+							uni.setStorage({
+								key:'addressList',
+								data:array,
+							})
+						},
+						fail() {
+							uni.setStorage({
+								key:'addressList',
+								data:array,
+							})
+						}
+					})
+					uni.navigateBack();
+				}
+				
 				//console.log(array,"array")
 			},
 			formReset:function(e){
