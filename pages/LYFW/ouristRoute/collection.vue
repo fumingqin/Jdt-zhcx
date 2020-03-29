@@ -1,6 +1,6 @@
 <template>
 	<!-- 顶部滑动 -->
-<!-- 	<view>
+	<!-- <view>
 		<view class="screenView">
 			<view class="screenText" :class="{current:type===0}" @click="tabClick">
 				文章
@@ -36,7 +36,7 @@
 		</view>
 
 		<!-- 商品内容 -->
-<!-- 		<view v-if="type==1">
+		<!-- <view v-if="type==1">
 			<view class="commodity" v-for="(item,index) in collectionCommodity" :key="index" @click="godetail2(item.scenicName)">
 				<view class="commodityView">
 					<image class="commodityImage" :src="item.image" mode="aspectFill" />

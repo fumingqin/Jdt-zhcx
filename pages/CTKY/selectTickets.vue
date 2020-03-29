@@ -113,12 +113,32 @@
 			}
 		},
 		onLoad(param) {
-			this.date = this.getTime(0, new Date());
-			this.startStation=param.StartStation;
-			this.endStartion=param.EndStation;
+			this.date = param.date;
+			this.startStation=param.startStation;
+			this.endStartion=param.endStation;
+			
+			
+			// this.date = this.getTime(0, new Date());
+			// this.startStation=param.StartStation;
+			// this.endStartion=param.EndStation;
 			console.log(this.date,this.startStation,this.endStartion)
 			this.loadDate();
             this.getDeparture();
+			
+			// uni.request({
+			// 		url: "http://111.231.109.113:8000/api/MyTest/GetDeparture",
+			// 		data: {
+			// 			departureDate:param.date,
+			// 			startStation:param.startStation,
+			// 			endStation:param.endStation
+			// 		},
+			// 		method:"Get",
+			// 		header : {'content-type':'application/json'},
+			// 		success: (res) => {
+			// 			console.log(res.data);
+			// 			this.departureData=res.data;
+			// 		}
+			// 	});	
 		},
 		onReady() {
 
