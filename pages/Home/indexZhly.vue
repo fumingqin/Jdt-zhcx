@@ -72,17 +72,17 @@
 		<!-- 新闻资讯 -->
 		<view class="titNp">新闻资讯</view>
 		<view class="guess-section">
-				<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="navToDetailPage(item)">
-					<view class="image-wrapper">
-						<image :src="item.thumbnail_pic_s" mode="aspectFill"></image>
-					</view>
-					<view class="title clamp">{{item.title}}</view>
-					 <view> 
-					 <image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
-					 <text class="price" >{{item.author_name}}</text> 
-					 <text class="price-zan" >1.1万</text>
-					 </view>
+			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="informationTo(item.id)">
+				<view class="image-wrapper">
+					<image :src="item.imgUrl" mode="aspectFill"></image>
 				</view>
+				<view class="title clamp">{{item.title}}</view>
+				<view>
+					<image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
+					<text class="price">{{item.createdTime}}</text>
+					<text class="price-zan">阅读{{item.count+1080}}</text> 
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -99,49 +99,59 @@
 				rotationPicture: [],
 				goodsList: [],
 				square: [{
-						ticketId: '',
-						ticketName: '',
-						ticketImage: '',
-					},{
-						ticketId: '', 
-						ticketName: '',
-						ticketImage: '',
-					},{
-						ticketId: '',
-						ticketName: '',
-						ticketImage: '',
-					},{
-						ticketId: '',
-						ticketName: '',
-						ticketImage: '',
-					}],
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}, {
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}, {
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}, {
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}],
 			}
 		},
 
-		onLoad() { 
+		onLoad() {
 			this.loadData();
-			this.getgoodsList();
-
-		}, 
+		},
 
 		methods: {
-			loadData : function(){
+			loadData: function() {
+				// 轮播图
 				uni.request({
-					url:'http://218.67.107.93:9266/travelImage/getRotationPicture',
-					method:'POST',
-					success:(e) => { 
-						this.titleNViewBackground = e.data.data[0].background;
-						this.swiperLength = e.data.data.length;
-						this.rotationPicture = e.data.data;
-					}
-				}),
-				uni.request({
-					url:'http://218.67.107.93:9266/travelImage/getCheckeredPattern',
-					method:'POST',
-					success:(e) => { 
-						this.square = e.data.data;
-					}
-				})
+						url: 'http://218.67.107.93:9266/travelImage/getRotationPicture',
+						method: 'POST',
+						success: (e) => {
+							this.titleNViewBackground = e.data.data[0].background;
+							this.swiperLength = e.data.data.length;
+							this.rotationPicture = e.data.data;
+						}
+					}),
+					// 四宫格
+					uni.request({
+						url: 'http://218.67.107.93:9210/api/app/getFourScenicspotList',
+						method: 'POST',
+						success: (e) => {
+							// console.log(e)
+							this.square = e.data.data;
+						}
+					})
+					// 资讯
+					uni.request({
+						url: 'http://218.67.107.93:9210/api/app/getInformationList',
+						method: 'POST',
+						success: (e) => {
+							this.goodsList = e.data.data;
+							// console.log(e)
+						}
+					})
 			},
 
 
@@ -155,32 +165,31 @@
 			//轮播图跳详情页
 			navToDetailPage(e) {
 				uni.navigateTo({
-					url : '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+JSON.stringify(this.rotationPicture[e].ticketId)
+					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.rotationPicture[e].ticketId)
 				})
 			},
+			
+			//资讯详情页
+			informationTo(e) {
+				uni.navigateTo({
+					url: 'InformationDetails?id=' +e
+				})
+			},
+			
 			//四方格跳详情
 			navTo(e) {
 				uni.navigateTo({
-					url : '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+JSON.stringify(this.square[e].ticketId)
+					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.square[e].ticketId)
 				})
 			},
 			//金刚取各模块入口
-			route(url){
-				uni.navigateTo({ 
+			route(url) {
+				uni.navigateTo({
 					url: url
 				})
 			},
-			//新闻接口
-			getgoodsList() {
-				uni.request({
-					url:"http://v.juhe.cn/toutiao/index?type=top&key=82b35401fcba79402944b9f284c2f5c8",
-					success:(res)=>{
-						this.goodsList = res.data.result.data;
-						// console.log(res.data.result.data)
-					}
-				});
-			},
-			
+
+
 		},
 		// #ifndef MP
 		// 搜索框点击事件
@@ -251,15 +260,19 @@
 
 		.carousel-section {
 			padding: 0;
+
 			.titleNview-placing {
 				position: absolute;
 				top: 0;
 			}
+
 			.titleNview-background {
 				height: 376upx;
 			}
+
 			.carousel {
 				background: #FFFFFF;
+
 				.carousel-item {}
 			}
 
@@ -305,6 +318,7 @@
 		height: 350upx;
 		padding: 0 28upx;
 		background: #FFFFFF;
+
 		.carousel-item {
 			width: 100%;
 			height: 100%;
@@ -380,37 +394,47 @@
 		display: flex;
 		padding: 0 30upx;
 		background: #fff;
-
+		font-size: 30upx;
+		color: #fff;
 		.text1 {
 			position: absolute;
 			bottom: 48upx;
 			left: 24upx;
-			color: #fff;
-			font-size: 32upx;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			width: 200upx;
+
 		}
 
 		.text2 {
 			position: absolute;
 			bottom: 220upx;
 			left: 32upx;
-			color: #fff;
-			font-size: 32upx;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			width: 172upx;
 		}
 
 		.text3 {
 			position: absolute;
 			bottom: 220upx;
 			left: 256upx;
-			color: #fff;
-			font-size: 32upx;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			width: 172upx;
 		}
 
 		.text4 {
 			position: absolute;
 			bottom: 48upx;
 			left: 32upx;
-			color: #fff;
-			font-size: 32upx;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			width: 360upx;
 		}
 
 		.image1 {
@@ -498,7 +522,7 @@
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
-			width: 88px;
+			width: 76px;
 			margin-top: -80upx;
 		}
 
@@ -506,7 +530,7 @@
 			font-size: 24upx;
 			color: #666;
 			float: right;
-			margin-top: 6upx;
+			margin-top: 3upx;
 		}
 	}
 

@@ -126,11 +126,16 @@
 		onLoad(){
 			this.loadData();
 		},
+		onBackPress() {
+			uni.switchTab({
+				url:'/pages/GRZX/user'
+			})
+		},
 	    methods: {	
 			async loadData(){
 				var array=this.passengerList;
 				uni.getStorage({
-					key:'passengerList',
+					key:'passList',
 					success(res) {
 						console.log(res)
 						for(var i=0;i<res.data.length;i++){
@@ -326,7 +331,7 @@
 					})
 				}else{
 					uni.setStorage({
-						key:"passengerList",
+						key:"passList",
 						data:array
 					})	
 				}
