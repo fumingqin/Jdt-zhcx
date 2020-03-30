@@ -175,6 +175,15 @@ const realtimeDynamicback ={
 	}],
 	msg: '提示'	
 }
+const InterfaceAddress = [
+	//根据起终点经纬度获取线路规划
+	//计算经纬度距离
+	'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat' ,
+	//获取所有车辆定位数据
+	'http://111.231.109.113:8002/api/zhcx/getAllVehiclePosition',
+	//根据经纬度获取附近一定范围的经纬度
+	'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition',
+]
 // 接口声明区
 export default {
 	userInfo,  
@@ -182,5 +191,6 @@ export default {
 	nearBy,
 	detailLine,
 	realtimeDynamic,
-	realtimeDynamicback
+	realtimeDynamicback,
+	InterfaceAddress
 }

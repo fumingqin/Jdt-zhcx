@@ -18,6 +18,7 @@
 			"style": {
 				"navigationBarTitleText": "景区列表",
 				"navigationBarBackgroundColor": "#FFFFFF",
+				"onReachBottomDistance": 0,
 				"app-plus": {
 					"softinputNavBar": "none"
 				}
@@ -62,6 +63,11 @@
 			"style": {
 				"navigationBarTitleText": "景点详情"
 			}
+		},
+		{
+		
+			"path": "pages/LYFW/ouristRoute/travelArrange",
+			"style": {}
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
@@ -465,25 +471,33 @@
 		{
 			"path": "pages/GRZX/detailTweet", //推文详情
 			"style": {
-				"navigationBarTitleText": "详情"
+				"navigationBarTitleText": "推送详情"
 			}
 		}, {
 			"path": "pages/CTKY/orderPayment", //推文详情
 			"style": {
 				"navigationBarTitleText": "订单支付"
 			}
-		}
-	    ,{
-            "path" : "pages/CTKY/selectStation",//上下车点选择
+		}, {
+			"path": "pages/CTKY/selectStation", //上下车点选择
 			// #ifdef APP-PLUS
 			"navigationStyle": "custom",
 			// #endif
-            "style" : {
+			"style": {
 				"navigationBarTitleText": "上下车点选择",
-				"navigationBarBackgroundColor":"#FE6C66"
+				"navigationBarBackgroundColor": "#FE6C66"
 			}
-        }
-    ],
+		}, {
+			"path": "pages/Home/InformationDetails",
+			"style": {
+				"navigationBarTitleText": "资讯详情"
+			}
+		},
+		{
+			"path": "pages/GJCX/detailed",
+			"style": {}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -522,7 +536,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选	
+			"path": "pages/Home/indexZhly", //启动页面，必选	
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

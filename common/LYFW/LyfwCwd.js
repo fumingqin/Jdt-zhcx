@@ -797,6 +797,45 @@ const record ={
 	msg: '提示'
 }
 
+const travel={
+	status: 1, //1成功,0失败提示返回值
+	data:{
+		scenicName: '武夷山|全方位详尽三日路线全方位详尽三日路线',
+		date:'2019-11-05',
+		time:'13:20',
+		name:'南平中宝旅游',
+		number:'15625566555',
+		address: '南平',
+		cost:2500,
+		image:'../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/touxiang1.png',
+		ladel:'官方',
+		
+	},
+	msg: '提示'
+}
+
+const arrange={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		day:1,
+		title:'泉州 — 南平 — 武夷山二日游',
+		hotel:'南平武夷山香格里拉酒店',
+		dinnerTime:'晚',
+		content:[{
+			contentTitle:'集合：泉州湖美大酒店  不在二环的自发前往，不接送，不迟到 ',
+			contentTIme:'08:00 — 09:00',
+			contentText:'泉州市区二环内酒店接，不在二环的自行前往集合。集合时间：8：00 集合地点：泉州火车站旁边昆明汽车客运站1号门（湖美酒店对。',
+		},
+		{
+			contentTitle:'交通工具：大型高一大巴前往武夷山风景区',
+			contentTIme:'09:00 — 12:00',
+			contentText:'泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（三元宾馆对',
+		}]
+	}],
+	msg: '提示'
+}
+
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -815,4 +854,6 @@ export default {
 	collectionContent,
 	collectionCommodity,
 	record,
+	travel,
+	arrange,
 }
