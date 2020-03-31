@@ -3,16 +3,16 @@
 		<!-- 常用乘车人 -->
 		<view v-if="type==1 && state==1" class="mt">
 			<view class="boxClass" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
-				<view class="nameClass">{{item.name}}</view>
-				<view class="sexClass">{{item.sex}}</view>
-				<view class="typeClass">{{item.ticketType}}</view>
+				<view class="nameClass">{{item.userName}}</view>
+				<view class="sexClass">{{item.userSex}}</view>
+				<view class="typeClass">{{item.userType}}</view>
 				<view class="codeClass fontStyle">身份证</view>
-				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
+				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
-				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
+				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
-					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault " class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -28,16 +28,16 @@
 		
 		<view v-if="type==1 && state==2" class="mt">
 			<view class="boxClass" v-for="(item, index) in passengerList" :key="index" @click="selete(item)">  <!--个人中心页面进入 -->
-				<view class="nameClass">{{item.name}}</view>
-				<view class="sexClass">{{item.sex}}</view>
-				<view class="typeClass">{{item.ticketType}}</view>
+				<view class="nameClass">{{item.userName}}</view>
+				<view class="sexClass">{{item.userSex}}</view>
+				<view class="typeClass">{{item.userType}}</view>
 				<view class="codeClass fontStyle">身份证</view>
-				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
+				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
-				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
+				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
-					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	

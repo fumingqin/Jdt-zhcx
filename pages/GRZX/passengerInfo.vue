@@ -2,36 +2,36 @@
 	<view class="content">	
 		<view class="passengerList">
 			<view class="boxClass" v-if="submitType == 1 || submitType == 2" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
-				<view class="nameClass">{{item.name}}</view>
-				<view class="sexClass" name="sex">{{item.sex}}</view>
-				<view class="typeClass">{{item.ticketType}}</view>
+				<view class="nameClass">{{item.userName}}</view>
+				<view class="sexClass" name="sex">{{item.userSex}}</view>
+				<view class="typeClass">{{item.userType}}</view>
 				<view class="codeClass fontStyle">身份证</view>
-				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
+				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
-				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
+				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view>
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
 				</view>
 				<view class="redBox">
-					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
 				</view>
 			</view>
 			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
-				<view class="nameClass">{{item.name}}</view>
-				<view class="sexClass">{{item.sex}}</view>
-				<view class="typeClass">{{item.ticketType}}</view>
+				<view class="nameClass">{{item.userName}}</view>
+				<view class="sexClass">{{item.userSex}}</view>
+				<view class="typeClass">{{item.userType}}</view>
 				<view class="codeClass fontStyle">身份证</view>
-				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
+				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
-				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
+				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 				<view class="redBox">
-					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -58,67 +58,6 @@
 			return{
 				limt:'',
 				passengerList:[],
-				// passengerList:[{
-				// 	userID:0,
-				// 	name:'张小娴',
-				// 	sex:'女',
-				// 	ticketType:'成人',
-				// 	codeNum:'35058199503692645',
-				// 	phoneNum:'13653989645',
-				// 	hiddenIndex:0,
-				// 	default:true,
-				// 	emergencyContact:false,
-				// },{
-				// 	userID:1,
-				// 	name:'黄小新',
-				// 	sex:'男',
-				// 	ticketType:'成人',
-				// 	codeNum:'350518199503162645',
-				// 	phoneNum:'13653989645',
-				// 	hiddenIndex:0,
-				// 	default:false,
-				// 	emergencyContact:true,
-				// },{
-				// 	userID:2,
-				// 	name:'张新',
-				// 	sex:'男',
-				// 	ticketType:'儿童',
-				// 	codeNum:'35058199503692645',
-				// 	phoneNum:'13653989645',
-				// 	hiddenIndex:0,
-				// 	default:false,
-				// 	emergencyContact:false,
-				// },{
-				// 	userID:3,
-				// 	name:'张旺',
-				// 	sex:'男',
-				// 	ticketType:'儿童',
-				// 	codeNum:'35058199503692645',
-				// 	phoneNum:'13653989645',
-				// 	hiddenIndex:0,
-				// 	default:false,
-				// 	emergencyContact:false,
-				// },{
-				// 	userID:4,
-				// 	name:'张小芸',
-				// 	sex:'女',
-				// 	ticketType:'儿童',
-				// 	codeNum:'35058199503692645',
-				// 	phoneNum:'13653989645',
-				// 	hiddenIndex:0,
-				// 	default:false,
-				// 	emergencyContact:false,
-				// },{
-				// 	userID:5,
-				// 	name:'许小芸',
-				// 	sex:'男',
-				// 	ticketType:'儿童',
-				// 	codeNum:'35058199503692645',
-				// 	phoneNum:'13653989645',
-				// 	hiddenIndex:0,
-				// 	default:false,
-				// 	emergencyContact:false,
-				// }],
 				submitType:'',
 			}
 		},
@@ -190,7 +129,7 @@
 						count++;
 					}
 				}
-				if(e.auditState==2||e.ticketType=="儿童"||e.ticketType=="成人"||e.ticketType=="老人"){
+				if(e.auditState==2||e.userType=="儿童"||e.userType=="成人"||e.userType=="老人"){
 					if(e.hiddenIndex==1){
 						e.hiddenIndex=0;
 					}else if(count>(this.limit-1) && this.submitType==2){

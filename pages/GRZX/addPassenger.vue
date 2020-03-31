@@ -4,13 +4,13 @@
 			<view class="box1">
 				<view class="itemClass">
 					<view class="fontStyle">姓名	</view>
-					<input placeholder="与证件姓名一致" class="inputClass" :value="user.name" name="name" /> 
+					<input placeholder="与证件姓名一致" class="inputClass" :value="user.userName" name="userName" /> 
 				</view>
 				<view class="itemClass borderTop">
 					<view class="fontStyle">性别</view>
 					<radio-group class="inputClass" name="sex">
 						<label v-for="(item, index) in sexMode" :key="index" @click="radioClick(index)" > 
-							<radio style="transform: scale(0.7)" :value="user.sex" :checked="index===user.sex" />{{item.title}}
+							<radio style="transform: scale(0.7)" :value="user.userSex" :checked="index===user.sex" />{{item.title}}
 						</label>  
 					</radio-group>
 				</view>
@@ -21,8 +21,8 @@
 						placeholder="请输入手机号码"
 						maxlength="11"
 						class="inputClass"
-						:value="user.phoneNum"
-						name="phoneNum"
+						:value="user.userPhoneNum"
+						name="userPhoneNum"
 					/>				
 				</view>
 			</view>
@@ -37,7 +37,7 @@
 						placeholder="请保持与证件号码一致"
 						class="inputClass"
 						:value="user.codeNum"
-						name="codeNum"
+						name="userCodeNum"
 						type="idcard"
 						maxlength="18"
 					/>	
@@ -147,22 +147,20 @@
 				selector:'请选择',
 				user:{
 					userID:'',
-					name:'',	
-					englishSurname:'',
-					englishName:'',
-					sex:0,
-					phoneNum:'',
-					codeNum:'',
+					userName:'',	
+					userSex:0,
+					userPhoneNum:'',
+					userCodeNum:'',
 					date:'',
-					default:false,
+					userDefault:false,
 					show:true,
-					emergencyContact:false,
+					userEmergencyContact:false,
 					date:'请选择',
 					prove:1,
 					frontImg:'',
 					backImg:'',
 				},
-				type:'',
+				userType:'',
 				address:'',
 			}
 		},
@@ -184,21 +182,21 @@
 					key:'editPassenger',
 					success:function(res){
 						console.log(res,"res")
-						that.user.name=res.data.name;
-						if(res.data.sex=="男"){
-							that.user.sex=0;
+						that.user.userName=res.data.userName;
+						if(res.data.userSex=="男"){
+							that.user.userSex=0;
 						}else{
-							that.user.sex=1;
+							that.user.userSex=1;
 						}
-						that.user.codeNum=res.data.codeNum;
+						that.user.userCodeNum =res.data.userCodeNum ;
 						that.user.date=res.data.date;
-						that.user.default=res.data.default;
-						that.user.show=!res.data.default;
-						that.user.emergencyContact=res.data.emergencyContact;
-						that.user.phoneNum=res.data.phoneNum;
+						that.user.userDefault=res.data.userDefault;
+						that.user.show=!res.data.userDefault;
+						that.user.userEmergencyContact =res.data.userEmergencyContact ;
+						that.user.userPhoneNum=res.data.userPhoneNum;
 						that.user.userID=res.data.userID;
-						if(res.data.ticketType=="军人"||res.data.ticketType=="教师"||res.data.ticketType=="学生"){
-							that.selector=res.data.ticketType;
+						if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
+							that.selector=res.data.userType;
 							that.user.frontImg=res.data.frontImg;
 							that.user.backImg=res.data.backImg;
 							that.auditState1=res.data.auditState;
@@ -218,26 +216,26 @@
 				var data1=e.target.value;
 				data1.date=this.user.date;
 				var that=this;
-				if(this.user.sex==0){
-					data1.sex="男";
+				if(this.user.userSex==0){
+					data1.userSex="男";
 				}else{
-					data1.sex="女";
+					data1.userSex="女";
 				}
-				if(data1.default==null||data1.default==""){
-					data1.default=false;
+				if(data1.userDefault==null||data1.userDefault==""){
+					data1.userDefault=false;
 				}else{
-					data1.default=true;
+					data1.userDefault=true;
 				}
 				if(this.user.show){
-					if(data1.emergencyContact==null||data1.emergencyContact==""){
-						data1.emergencyContact=false;
+					if(data1.userEmergencyContact==null||data1.userEmergencyContact==""){
+						data1.userEmergencyContact=false;
 					}else{
-						data1.emergencyContact=true;
+						data1.userEmergencyContact=true;
 					}
 				}else{
-					data1.emergencyContact=false;
+					data1.userEmergencyContact=false;
 				}
-				var codeNum=data1.codeNum;
+				var codeNum=data1.userCodeNum;
 				if(codeNum.length==18){
 					var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);
 					var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
@@ -248,26 +246,26 @@
 						var age=Y-r[1];
 					} 
 					if(that.selector=="军人"){
-						data1.ticketType="军人";
+						data1.userType="军人";
 						data1.frontImg=that.user.frontImg;
 						data1.backImg=that.user.backImg;
 						data1.auditState=that.auditState1;
 					}else if(that.selector=="教师"){
-						data1.ticketType="教师";
+						data1.userType="教师";
 						data1.frontImg=that.user.frontImg;
 						data1.backImg=that.user.backImg;
 						data1.auditState=that.auditState1;
 					}else if(that.selector=="学生"){
-						data1.ticketType="学生";
+						data1.userType="学生";
 						data1.frontImg=that.user.frontImg;
 						data1.backImg=that.user.backImg;
 						data1.auditState=that.auditState1;
 					}else if(age>=65){
-						data1.ticketType="老人";
+						data1.userType="老人";
 					}else if(age>=18&&age<65){
-						data1.ticketType="成人";
+						data1.userType="成人";
 					}else{
-						data1.ticketType="儿童";
+						data1.userType="儿童";
 					}
 					data1.hiddenIndex=0;
 					var array=[];
