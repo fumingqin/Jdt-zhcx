@@ -15,9 +15,13 @@
 			</view>
 			<view class="ticketView">
 				<view class="lineClass">
-					<input class="start" v-model="departure" />
+					<navigator url="homeSattionPick" hover-class="hover">
+						<view class="start">{{departure}}</view>
+					</navigator>
 					<image src="../../static/CTKY/change.png" mode="aspectFill" class="changeImage" @click="changeClick"></image>
-					<input class="start" style="text-align: right;" v-model="destination" />
+					<navigator url="homeSattionPick" hover-class="hover">
+						<view class="start" style="text-align: right;" @tap="stationTap">{{destination}}</view>
+					</navigator>
 				</view>
 				<view class="lineClass">
 					<view style="border-bottom: 1upx solid #dadada;width: 100%;">
@@ -246,7 +250,8 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 	//选择起始点
 	.lineClass {
 		display: flex;
-		height: 125upx;
+		align-items: center;
+		justify-items: center;
 		padding-left: 50upx;
 		padding-right: 50upx;
 
@@ -268,10 +273,11 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 		font-weight: 300;
 		color: #2C2D2D;
 		width: 234upx;
-		height: 125upx;
 		left: 0;
 		text-align: left;
 		border-bottom: 1upx solid #dadada;
+		margin-top: 40rpx;
+		padding-bottom: 20rpx;
 	}
 
 
