@@ -2,8 +2,8 @@
 	<view class="Ly_background">
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
-			<swiper-item class="swi-item" >
-				<image :src="piclist.ticketImage" @click="goImgList" />
+			<swiper-item class="swi-item" v-for="(item,index) in piclist" :key="index">
+				<image :src="item.ticketImage" @click="goImgList" />
 				<view class="view">1张图片</view>
 			</swiper-item>
 		</swiper>
@@ -16,18 +16,20 @@
 		</view>
 		<!-- 门票滑块 -->
 		<!-- 模块命名：Tk -->
-		<scroll-view class="Tk_scrollview">
+		<view :hidden="admissionTicketStatus == '该景区暂无门票产品信息！'">
+		<scroll-view class="Tk_scrollview" >
 			<view class="tweetsTitle2">门票</view>
-			<view class="Tk_item" @click="godetail(scSpotContent.ticketId)">
+			<view class="Tk_item"  v-for="(item,index) in admissionTicket" :key="index" @click="godetail(item)">
 				<view class="Tk_bacg">
-					<text class="Tk_text1">{{scSpotContent.ticketName}}</text>
-					<text class="Tk_text3">¥{{scSpotContent.ticketAdultPrice}}元</text>
-					<text class="Tk_text2">包含：{{scSpotContent.ticketContain}}</text>
-					<text class="Tk_text2">{{scSpotContent.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s3}}</text>
+					<text class="Tk_text1">{{item.admissionTicketName}}</text>
+					<text class="Tk_text3">¥{{item.ticketAdultPrice}}元</text>
+					<text class="Tk_text2">包含：{{item.ticketContain}}</text>
+					<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
 					<view class="Tk_butter">立即预订</view>
 				</view>
 			</view>
 		</scroll-view>
+		</view>
 
 		<!-- 文章内容 -->
 		<view class="Zj_background">
@@ -40,20 +42,29 @@
 	export default {
 		data() {
 			return {
+				piclist: [{
+					ticketImage: '',
+				}], //图片内容
 				scSpotContent: [{
 					ticketId: '',
-					ticketName: '',
 					ticketTitle: '',
 					ticketOpenUp: '',
-					ticketContain: '',
-					ticketComment: '',
-					ticketAdultPrice: '',
-					ticketChildPrice: '',
 					ticketScenicContent: '',
 				}], //景区内容
-				piclist : {
-					ticketImage: '',
-				},//图片内容
+				admissionTicket: [{
+					admissionTicketID: '',
+					admissionTicketName: '',
+					ticketContain: '',
+					ticketComment_s1: '',
+					ticketComment_s2: '',
+					ticketComment_s3: '',
+					ticketAdultPrice: 240,
+					ticketChildPrice: '', 
+					ticketAdultPrice: '',
+					companyId : '',
+					executeScheduleId : '',
+				}], //门票内容
+				admissionTicketStatus:'',//判断是否展示
 			}
 		},
 		onLoad(options) {
@@ -85,26 +96,40 @@
 		methods: {
 			//读取静态数据json.js 
 			lyfwData: function(e) {
+				// 请求景区图片
+				uni.request({
+					url: 'http://218.67.107.93:9210/api/app/getScenicspotDetailImg?ticketId=' + e,
+					method: 'POST',
+					success: (res) => {
+						// console.log(res)
+						this.piclist = res.data.data;
+
+					}
+				})
+
 				// 请求景区详情
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getScenicspotDetail?ticketId=' +e,
-					method:'POST',
-					success:(res) => {
-						console.log(res)
+					url: 'http://218.67.107.93:9210/api/app/getScenicspotDetail?ticketId=' + e,
+					method: 'POST',
+					success: (res) => {
+						// console.log(res)
 						this.scSpotContent = res.data.data;
 					}
 				})
 				
-				// 请求景区列表
+				// 请求景区门票
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getScenicspotDetailImg?ticketId=' +e,
-					method:'POST',
-					success:(res) => {
-						this.piclist = res.data.data;
+					url: 'http://218.67.107.93:9210/api/app/getOneScenicspotTicket?ticketId=' + e,
+					method: 'POST',
+					success: (res) => {
+						// console.log(res)
+						this.admissionTicket = res.data.data;
+						this.admissionTicketStatus = res.data.msg;
 					}
 				})
+
 			},
-			
+
 			//保存图片至本地并打开新页面
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.piclist);
@@ -114,9 +139,16 @@
 			},
 			//路由整合
 			godetail: function(e) {
-				uni.navigateTo({
-					url : '/pages/LYFW/scenicSpotTickets/orderAdd?ticketId='+JSON.stringify(e)
+				uni.setStorage({
+					key:'ticketInformation',
+					data:e,
+					success() {
+						uni.navigateTo({
+							url: '/pages/LYFW/scenicSpotTickets/orderAdd'
+						})
+					}
 				})
+				
 			},
 
 			//分享
@@ -126,7 +158,7 @@
 					scene: "WXSceneSession",
 					type: 0,
 					href: "http://www.baidu.com",
-					title: "来自" + this.userInfo.nickname + "的分享", 
+					title: "来自" + this.userInfo.nickname + "的分享",
 					summary: this.scSpotContent[0].ticketTitle,
 					imageUrl: this.piclist[0].ticketImage,
 					success: function() {
@@ -143,7 +175,7 @@
 					}
 				});
 			},
-			
+
 			// 统一跳转接口
 			navTo(url) {
 				uni.navigateTo({
@@ -230,17 +262,18 @@
 				border-radius: 16upx;
 				display: flex;
 				box-shadow: 0px 1px 2px 0.1px #aaa;
+
 				.Tk_bacg {
 					position: relative;
 					margin: 32upx 32upx;
-					
+
 					.Tk_text1 {
 						font-size: 34upx;
 						display: flex;
 						font-weight: bold;
-						text-overflow:ellipsis; //文章超出宽度隐藏并用...表示
-						white-space:nowrap;
-						overflow:hidden;
+						text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
+						white-space: nowrap;
+						overflow: hidden;
 						width: 480upx; //内容宽度
 					}
 
@@ -248,9 +281,9 @@
 						font-size: 26upx;
 						margin-top: 20upx;
 						display: block; // 让字体换行
-						text-overflow:ellipsis; //文章超出宽度隐藏并用...表示
-						white-space:nowrap;
-						overflow:hidden;
+						text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
+						white-space: nowrap;
+						overflow: hidden;
 						width: 400upx; //内容宽度
 					}
 
@@ -303,10 +336,12 @@
 		.tweetscontent {
 			display: flex;
 			position: relative;
-			letter-spacing: 2upx;
+			letter-spacing: 4upx;
+			line-height: 48upx; 
 			color: #333333;
 			padding: 32upx 32upx;
 			padding-top: 8upx;
+			font-size: 33upx;
 		}
 	}
 </style>
