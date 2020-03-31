@@ -89,19 +89,7 @@
 						that.address.default=res.data.default;
 						that.address.addressID=res.data.addressID;
 					}
-				})
-				/* let addressInfo = await this.$api.grzx('addressInfo');
-				console.log(addressInfo)
-				this.address.receiver=addressInfo.data.receiver;
-				this.address.phoneNum=addressInfo.data.phoneNum;
-				this.address.district=addressInfo.data.district;
-				this.address.detailAddress=addressInfo.data.detailAddress;
-				this.address.postalCode=addressInfo.data.postalCode;
-				if(addressInfo.data.defaultAddress==0){
-					this.address.defaultAddress=false;
-				}else{
-					this.address.defaultAddress=true;
-				}	 */			
+				})		
 			},
 			formSubmit:function(e){
 				var that=this;
@@ -190,12 +178,9 @@
 					})
 					uni.navigateBack();
 				}
-				
-				//console.log(array,"array")
 			},
 			formReset:function(e){
 				this.address.district="请选择 省/市/区 >";
-				console.log(1)
 			},
 			districtChange:function(e){
 				this.address.district=e.data.join(' ');

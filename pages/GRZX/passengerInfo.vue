@@ -11,8 +11,13 @@
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<view>
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
-					<text v-if="item.default" class="fontClass">本人</text>
-					<text v-if="item.emergencyContact" class="fontClass">联系人</text>
+				</view>
+				<view class="redBox">
+					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
 				</view>
 			</view>
 			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
@@ -24,8 +29,13 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
-				<text v-if="item.default" class="fontClass">本人</text>
-				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
+				<view class="redBox">
+					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+				</view>
 			</view>
 		</view>	
 		<view v-if="submitType == 1 || submitType == 2" class="btnBox">  <!--非个人中心页面进入 -->
@@ -115,7 +125,7 @@
 		onLoad(options){
 			//传参，submitType参数为1,为出租车进入,其他界面设为2 
 			//limitNum参数为你限制添加乘车人的数量（大于等于1）
-			 this.getType(options.submitType,options.limitNum); 
+			this.getType(options.submitType,options.limitNum); 
 		},
 		methods:{
 			async getType(t,l){
@@ -149,12 +159,18 @@
 				})
 			},
 			addPassenger(){
-				uni.navigateTo({
-					url:'/pages/GRZX/addPassenger?type=add'
+				uni.redirectTo({
+					url:'/pages/GRZX/addPassenger?type=add&&address=Info'
 				})
 			},
 			returnPages(){
-				uni.navigateBack();
+				if(this.submitType==1){
+					uni.redirectTo({
+						url:'/pages/LYFW/scenicSpotTickets/orderAdd'
+					})
+				}else{
+					uni.navigateBack();
+				}
 			},
 			editPassenger(e){   //编辑乘车人信息
 				uni.setStorage({
@@ -166,7 +182,7 @@
 				})
 			},
 			choosePassenger(e){  //选择乘车人
-				//console.log(this.limit,"....00000")
+				//console.log(e,"....00000")
 				var list=this.passengerList;
 				var count=0;
 				for(var i=0;i<list.length;i++){
@@ -174,15 +190,22 @@
 						count++;
 					}
 				}
-				 if(e.hiddenIndex==1){
-					e.hiddenIndex=0;
-				}else if(count>(this.limit-1) && this.submitType==1){
-					uni.showToast({
-					    title: '乘客最多只能添加'+this.limit+'名',
-					    icon:"none"
-					});
+				if(e.auditState==2||e.ticketType=="儿童"||e.ticketType=="成人"||e.ticketType=="老人"){
+					if(e.hiddenIndex==1){
+						e.hiddenIndex=0;
+					}else if(count>(this.limit-1) && this.submitType==2){
+						uni.showToast({
+							title: '乘客最多只能添加'+this.limit+'名',
+							icon:"none"
+						});
+					}else{
+						e.hiddenIndex=1;
+					}		
 				}else{
-					e.hiddenIndex=1;
+					uni.showToast({
+						title: '该审核未通过或待审核，无法选用',
+						icon:"none"
+					});
 				}
 			},
 			definite(){ //提交array
@@ -347,17 +370,20 @@
 		background-color: #F6F8FC;
 		/* border: 1px solid #4CD964; */
 	}
-	.fontClass{ //本人，紧急联系人
+	.redBox{
+		position: absolute;
+		left:40%;
+		top: 34upx;
+		display: flex;
+	}
+	.fontClass{ //本人,紧急联系人,待审核,审核通过,审核未通过
 		height: 40upx;
 		line-height: 40upx;
 		font-size: 24upx;
 		color: #ff0000;
-		position: absolute;
-		left:45% ;
-		top: 32upx;
+		margin-left: 20upx;
 		border: 1upx solid #ff0000;
 		border-radius: 10upx;
 		text-align: center;
-		width: 80upx;
 	}
 </style>
