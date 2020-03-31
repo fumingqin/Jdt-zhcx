@@ -375,7 +375,7 @@
 							ticketId : 0,
 							ticketContain : this.admissionTicket.ticketContain,
 							
-							// companyId : this.admissionTicket.companyId,
+							companyId : this.admissionTicket.companyId,
 							executeScheduleId : this.admissionTicket.executeScheduleId,
 							
 							addressData : this.addressData,
