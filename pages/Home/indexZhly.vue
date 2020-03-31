@@ -45,7 +45,7 @@
 				<image src="../../static/Home/indexzhly/menpiao.png" mode="aspectFit"></image>
 				<text>景区门票</text>
 			</view>
-			<view class="cate-item" @click="route('/pages/Home/ChooseSite?current=1')">
+			<view class="cate-item" @click="route('/pages/CTKY/ctkyIndex')">
 				<image src="../../static/Home/indexzhly/chepiao.png" mode="aspectFit"></image>
 				<text>车票订购</text>
 			</view>

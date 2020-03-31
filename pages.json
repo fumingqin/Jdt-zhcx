@@ -492,7 +492,11 @@
 			"path": "pages/GJCX/detailed",
 			"style": {}
 		}
-	],
+	    ,{
+            "path" : "pages/LYFW/currency/independentTravel",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -531,7 +535,9 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/Home/indexZhly", //启动页面，必选	
+			// "path": "pages/Home/indexZhly", //启动页面，必选	
+			// "path": "pages/LYFW/currency/independentTravel", //启动页面，必选	
+			"path": "pages/LYFW/scenicSpotTickets/ticketsList", //启动页面，必选	
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

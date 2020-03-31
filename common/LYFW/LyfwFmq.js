@@ -229,19 +229,31 @@ const scSpotDetails = {
 	status: 1, //1成功/0失败提示返回值
 	data: {
 		ticketId: 0,
-		ticketName: '武夷山',
 		ticketTitle: '南平武夷山',
 		ticketOpenUp: '09:00 - 18:00',
-		ticketContain: '观光车+成票+竹筏票',
+		ticketScenicContent: '武夷山，武夷山位于江西与福建西北部两省交界处，武夷山脉北段东南麓总面积999.75平方公里，是中国著名的风景旅游区和避暑胜地。属典型的丹霞地貌，是首批国家级重点风景名胜区之一。武夷山是三教名山。自秦汉以来，武夷山就为羽流禅家栖息之地，留下了不少宫观、道院和庵堂故址。武夷山还曾是儒家学者倡道讲学之地。武夷山自然保护区，是地球同纬度地区保护最好、物种最丰富的生态系统，拥有2527种植物物种，近5000种野生动物。在中生代晚期，武夷山发生了强烈的火山喷发活动，继之为大规模的花岗岩侵入，已发现本区有丰富的火山机构，为典型的亚洲东部环太平洋带的构造特征。白垩纪晚期的红色砂砾岩是形成丹霞地貌的主体。中生代的地壳运动奠定了武夷山地貌的基本骨架。告性对武夷山地貌发育也很明显，西部海拔1500m以上的山峰，基本上由坚硬的凝灰熔岩和流纹岩等构成，东部红色砂页岩地区则往往发育有较宽的谷地和盆地。所以武夷山丰富的地貌类型是地质构造、流水侵蚀、风化剥蚀、重力崩塌等综合作用的结果。',
+	},
+	msg: '提示'
+}
+
+
+//景区门票
+const admissionTicket = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+		admissionTicketID: 0,
+		admissionTicketName: '武夷山门票',
+		ticketContain: '成人票/儿童票/老人票/军人票/教师票/学生票',
 		ticketComment_s1: '一码通' ,
 		ticketComment_s2: '可订明日票' ,
 		ticketComment_s3: '儿童半票' ,
 		ticketAdultPrice: 320,
 		ticketChildPrice: 160,
-		ticketScenicContent: '武夷山，武夷山位于江西与福建西北部两省交界处，武夷山脉北段东南麓总面积999.75平方公里，是中国著名的风景旅游区和避暑胜地。属典型的丹霞地貌，是首批国家级重点风景名胜区之一。武夷山是三教名山。自秦汉以来，武夷山就为羽流禅家栖息之地，留下了不少宫观、道院和庵堂故址。武夷山还曾是儒家学者倡道讲学之地。武夷山自然保护区，是地球同纬度地区保护最好、物种最丰富的生态系统，拥有2527种植物物种，近5000种野生动物。在中生代晚期，武夷山发生了强烈的火山喷发活动，继之为大规模的花岗岩侵入，已发现本区有丰富的火山机构，为典型的亚洲东部环太平洋带的构造特征。白垩纪晚期的红色砂砾岩是形成丹霞地貌的主体。中生代的地壳运动奠定了武夷山地貌的基本骨架。告性对武夷山地貌发育也很明显，西部海拔1500m以上的山峰，基本上由坚硬的凝灰熔岩和流纹岩等构成，东部红色砂页岩地区则往往发育有较宽的谷地和盆地。所以武夷山丰富的地貌类型是地质构造、流水侵蚀、风化剥蚀、重力崩塌等综合作用的结果。',
-	},
-	msg: '提示'
+	}],
+	msg: '提示'	
 }
+
+
 
 //景区详情 - 武夷山图片组
 const scSpotDetailsImage = {
@@ -342,12 +354,56 @@ const orderInfo = {
 }
 
 
+//景区门票
+const itText = {
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+		id : 0,
+		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		title: '武夷山',
+		conut_1: '5A风景',
+		conut_2: '周边游',
+	},{
+		id : 0,
+		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		title: '武夷山',
+		conut_1: '5A风景',
+		conut_2: '周边游',
+	},{
+		id : 0,
+		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		title: '武夷山',
+		conut_1: '5A风景',
+		conut_2: '周边游',
+	},{
+		id : 0,
+		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		title: '武夷山',
+		conut_1: '5A风景',
+		conut_2: '周边游',
+	},{
+		id : 0,
+		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		title: '武夷山',
+		conut_1: '5A风景',
+		conut_2: '周边游',
+	},{
+		id : 0,
+		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+		title: '武夷山',
+		conut_1: '5A风景',
+		conut_2: '周边游',
+	}],
+	msg: '提示'	
+}
+
 
 // 接口声明区
 export default {
 	userInfo,
 	rotationPicture,
 	checkeredPattern,
+	admissionTicket,
 	ticketSearch,
 	sixPalaceList,
 	scenicList,
@@ -355,4 +411,5 @@ export default {
 	scSpotDetailsImage,
 	notice,
 	orderInfo,
+	itText,
 }
