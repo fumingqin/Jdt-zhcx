@@ -2,15 +2,15 @@
 	<view class="Ly_background">
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
-			<swiper-item class="swi-item" v-for="(item,index) in piclist" :key="index">
-				<image :src="item.ticketImage" @click="goImgList" />
-				<view class="view">{{piclist.length}}张图片</view>
+			<swiper-item class="swi-item" >
+				<image :src="piclist.ticketImage" @click="goImgList" />
+				<view class="view">1张图片</view>
 			</swiper-item>
 		</swiper>
 		<view>
 			<!-- 标题、发布时间、点击量、分享 -->
 			<view class="clicks">
-				<text class="title">{{scSpotContent.ticketTitle}}</text>
+				<text class="title">{{scSpotContent.ticketName}}</text>
 				<text class="time">开放时间：{{scSpotContent.ticketOpenUp}} </text>
 			</view>
 		</view>
@@ -20,7 +20,7 @@
 			<view class="tweetsTitle2">门票</view>
 			<view class="Tk_item" @click="godetail(scSpotContent.ticketId)">
 				<view class="Tk_bacg">
-					<text class="Tk_text1">{{scSpotContent.ticketTitle}}</text>
+					<text class="Tk_text1">{{scSpotContent.ticketName}}</text>
 					<text class="Tk_text3">¥{{scSpotContent.ticketAdultPrice}}元</text>
 					<text class="Tk_text2">包含：{{scSpotContent.ticketContain}}</text>
 					<text class="Tk_text2">{{scSpotContent.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotContent.ticketComment_s3}}</text>
@@ -32,7 +32,7 @@
 		<!-- 文章内容 -->
 		<view class="Zj_background">
 			<view class="tweetsTitle">介绍</view>
-			<view class="tweetscontent">{{scSpotContent.ticketScenicContent}}</view>
+			<rich-text class="tweetscontent" :nodes="scSpotContent.ticketScenicContent"></rich-text>
 		</view>
 	</view>
 </template>
@@ -51,18 +51,13 @@
 					ticketChildPrice: '',
 					ticketScenicContent: '',
 				}], //景区内容
-				piclist : [{
+				piclist : {
 					ticketImage: '',
-				}],//图片内容
+				},//图片内容
 			}
 		},
 		onLoad(options) {
-			// console.log(JSON.parse(options.ticketId));
-			// let id = options.id;
-			// if(id){
-			// 	this.$api.msg(`点击了${id}`);
-			// }
-			this.lyfwData();
+			this.lyfwData(JSON.parse(options.ticketId));
 		},
 		onNavigationBarButtonTap: function() {
 			this.share();
@@ -89,13 +84,25 @@
 		},
 		methods: {
 			//读取静态数据json.js 
-			async lyfwData() {
-				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
-				this.scSpotContent = scSpotDetails.data;
+			lyfwData: function(e) {
+				// 请求景区详情
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getScenicspotDetail?ticketId=' +e,
+					method:'POST',
+					success:(res) => {
+						console.log(res)
+						this.scSpotContent = res.data.data;
+					}
+				})
 				
-				let scSpotDetailsImage = await this.$api.lyfwfmq('scSpotDetailsImage');
-				this.piclist = scSpotDetailsImage.data;
-				// console.log(this.scSpotContent)
+				// 请求景区列表
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getScenicspotDetailImg?ticketId=' +e,
+					method:'POST',
+					success:(res) => {
+						this.piclist = res.data.data;
+					}
+				})
 			},
 			
 			//保存图片至本地并打开新页面
@@ -296,12 +303,10 @@
 		.tweetscontent {
 			display: flex;
 			position: relative;
-			flex-direction: column;
-			font-size: 34upx;
 			letter-spacing: 2upx;
 			color: #333333;
-			// bottom : 72upx;
 			padding: 32upx 32upx;
+			padding-top: 8upx;
 		}
 	}
 </style>

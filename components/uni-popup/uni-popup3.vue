@@ -56,7 +56,7 @@
 				maskClass: {
 					'position': 'fixed',
 					'bottom': 0,
-					'top': 0,
+					'top': 75,
 					'left': 0,
 					'right': 0,
 					'backgroundColor': '#F5F5F5'
