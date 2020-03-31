@@ -11,8 +11,9 @@
 		<!-- 标题、发布时间-->
 		<view class="titleClass">
 			<text class="title">{{titleClick.scenicName}}</text>
-			<text class="date">{{titleClick.date}}&nbsp;&nbsp;{{titleClick.time}}</text>
-			<view class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</view>
+			<view class="dateCost">
+				<text class="date">{{titleClick.date}}&nbsp;&nbsp;{{titleClick.time}}<text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text></text>
+			</view>
 			<view class="grClass">
 				<image class="txImage" :src="titleClick.image" mode="aspectFill"></image>
 				<view class="grView">
@@ -52,8 +53,8 @@
 			<!-- 底部 -->
 			<view class="footer">
 				<view class="footerPrice">
-					<image class="kfIcon" src="../../../static/GRZX/tubiao_kefu.png" @click="godetail"></image>
-					<text class="jdticon icon-fenxiang2" type="primary" open-type="share" @click="share"></text>
+					<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/客服.png" @click="godetail"></image>
+					<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/转发.png" type="primary" open-type="share" @click="share"></image>
 				</view>
 				<view class="submitChange" @click="submit">
 					<text class="submit">立即预订</text>
@@ -64,19 +65,21 @@
 		<!-- 行程安排 -->
 		<view v-if="type==1">
 			<view class="scheduling" v-for="(item,index) in arrangeText" :key="index">
-				<view class="circle" style="background-color: #D8F3FF;">
-					<text class="circleDay">D{{item.day}}</text>
+				<view class="tripTitle">
+					<view class="circle" style="background-color: #D8F3FF;">
+						<text class="circleDay">D{{item.day}}</text>
+					</view>
 					<text class="title">{{item.title}}</text>
 				</view>
 				<view class="contentView">
-					<view class="hotel">
-						<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/酒店.png"></image>
-						<text class="hotelText">酒店:&nbsp;{{item.hotel}}</text>
-					</view>
-					<view class="hotel">
-						<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/用餐.png"></image>
-						<text class="hotelText">用餐:&nbsp;{{item.dinnerTime}}</text>
-					</view>
+						<view class="hotel">
+							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/酒店.png"></image>
+							<text class="hotelText">酒店:&nbsp;{{item.hotel}}</text>
+						</view>
+						<view class="hotel">
+							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/用餐.png"></image>
+							<text class="hotelText">用餐:&nbsp;{{item.dinnerTime}}</text>
+						</view>
 					<view class="content" v-for="(item2,index2) in information" :key="index2">
 						<view class="informationTitle">
 							<view class="titleDian"></view>
@@ -121,8 +124,8 @@
 				<!-- 底部 -->
 				<view class="footer">
 					<view class="footerPrice">
-						<image class="kfIcon" src="../../../static/GRZX/tubiao_kefu.png" @click="godetail"></image>
-						<text class="jdticon icon-fenxiang2" type="primary" open-type="share" @click="share"></text>
+						<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/客服.png" @click="godetail"></image>
+						<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/转发.png" type="primary" open-type="share" @click="share"></image>
 					</view>
 					<view class="submitChange" @click="submit">
 						<text class="submit">立即预订</text>
@@ -262,7 +265,7 @@
 
 		}
 	}
-</script>
+</script> 
 
 <style lang="scss">
 	//默认背景颜色
@@ -303,61 +306,64 @@
 			font-size: 44upx;
 			font-weight: bold;
 			margin-right: 40upx;
-			padding-left: 40upx;
+			margin-left: 40upx;
+			margin-top: 16upx;
 		}
-
-		.date {
-			display: flex;
-			font-size: 28upx;
+		
+		.dateCost{
 			padding-top: 29upx;
 			padding-left: 40upx;
-			color: #aba9aa;
-		}
-
-		.cost1 {
-			position: absolute;
-			padding-top: 29upx;
-			font-size: 30upx;
-			color: #FC4646;
-			top: 99upx;
-			left: 558upx;
-
-			.cost2 {
-				font-size: 40upx;
-				color: #FC4646;
+			padding-right: 40upx;
+			.date {
+				position: relative;
+				display: flex;
+				font-size: 28upx;
+				color: #aba9aa;
+				.cost1 {
+					position: absolute;
+					font-size: 30upx;
+					color: #FC4646;
+					right: 0;
+					.cost2 {
+						font-size: 40upx;
+						color: #FC4646;
+					}
+				}
 			}
 		}
 
 		.grClass {
+			position: relative;
 			display: flex;
-			margin-top: 19upx;
-
+			margin-top: 60upx;
+			margin-left: 40upx;
+			margin-right: 40upx;
+			padding-bottom: 30upx;
+			
 			// padding-right: 40upx;
 			.txImage {
 				border-radius: 50%;
 				width: 88upx;
 				height: 88upx;
-				padding-left: 40upx;
-				padding-top: 50upx;
-				padding-bottom: 32upx;
 			}
 
 			.grView {
-				padding-left: 25upx;
-				padding-top: 49upx;
-
+				margin-left: 25upx;
 				.name {
 					display: flex;
 					font-size: 32upx;
 					color: #333333;
 
 					.ladelView {
-						border-radius: 4px;
-						padding: 9upx 20upx;
+						border-radius: 5px;
 						margin-left: 11upx;
 						font-size: 20upx;
 						color: #FFFFFF;
 						text-align: center;
+						width: 80upx;
+						height: 35upx;
+						line-height: 32upx;
+						margin-top: 5upx;
 					}
 				}
 
@@ -370,11 +376,11 @@
 			}
 
 			.address {
-				// position: relative;
+				position: absolute;
 				font-size: 32upx;
 				color: #333333;
-				padding-left: 195upx;
-				padding-top: 60upx;
+				right: 0;
+				top: 16upx;
 			}
 		}
 
@@ -447,6 +453,7 @@
 			letter-spacing: 4upx;
 			line-height: 48upx;
 			// text-indent:2em;
+			text-align: justify;
 			font-size: 30upx;
 
 		}
@@ -473,17 +480,17 @@
 			padding-left: 55upx;
 
 			.kfIcon {
-				position: relative;
+				// position: relative;
 				width: 48upx;
 				height: 44upx;
 				color: rgba(44, 45, 45, 1);
-				top: 7upx;
+				// top: 7upx;
 			}
 
-			.jdticon {
+			.zfIcon {
 				padding-left: 40upx;
-				width: 39px;
-				height: 40px;
+				width: 39upx;
+				height: 40upx;
 				color: rgba(44, 45, 45, 1);
 			}
 		}
@@ -509,27 +516,31 @@
 		background: #FFFFFF;
 		padding-left: 40upx;
 		padding-top: 56upx;
-
-		.circle {
-			// position: relative;
-			width: 60upx;
-			height: 60upx;
-			border-radius: 50%;
-			border: 2px #06B4FD solid;
-
-			.circleDay {
-				font-size: 28upx;
-				color: #06B4FD;
-				padding: 19upx 14upx;
+		
+		.tripTitle{
+			display: flex;
+			.circle {
+				position: relative;
+				width: 60upx;
+				height: 60upx;
+				border-radius: 50%;
+				border: 2px #06B4FD solid;
+			
+				.circleDay {
+					position: absolute;
+					font-size: 28upx;
+					color: #06B4FD;
+					top: 12upx;
+					left: 12upx;
+				}
 			}
-
+			
 			.title {
-				// display: flex;
-				position: absolute;
 				font-size: 40upx;
 				color: #333333;
 				font-weight: bold;
 				padding-left: 31upx;
+				padding-top: 5upx;
 			}
 		}
 
@@ -537,22 +548,23 @@
 			margin-top: 50upx;
 			margin-left: 32upx;
 			border-left: 2upx dashed rgba(200, 200, 200, 1);
-
-			.hotel {
-				padding-left: 71upx;
-				padding-bottom: 30upx;
-
-				.iconHotel {
-					width: 39upx;
-					height: 33upx;
+			
+				.hotel {
+					padding-left: 71upx;
+					padding-bottom: 30upx;
+				
+					.iconHotel {
+						position: relative;
+						width: 39upx;
+						height: 33upx;
+					}
+				
+					.hotelText {
+						font-size: 30upx;
+						color: #aba9aa;
+						margin-left: 18upx;
+					}
 				}
-
-				.hotelText {
-					font-size: 30upx;
-					color: #aba9aa;
-					margin-left: 18upx;
-				}
-			}
 
 			.content {
 				// display: flex;
@@ -580,6 +592,7 @@
 						padding-left: 46upx;
 						line-height: 47upx;
 						letter-spacing: 4upx;
+						text-align: justify;
 					}
 				}
 
@@ -602,6 +615,7 @@
 					padding-bottom: 30upx;
 					letter-spacing: 4upx;
 					line-height: 48upx;
+					text-align: justify;
 				}
 			}
 		}
@@ -628,6 +642,7 @@
 				padding-right: 30upx;
 				font-size: 30upx;
 				color: #5E5E60;
+				text-align: justify;
 				line-height: 52upx;
 			}
 		}
@@ -657,6 +672,7 @@
 					line-height: 52upx;
 					padding-left: 30upx;
 					padding-right: 30upx;
+					text-align: justify;
 				}
 			}
 		}
