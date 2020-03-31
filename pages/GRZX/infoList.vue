@@ -10,8 +10,13 @@
 				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
-				<text v-if="item.default" class="fontClass">本人</text>
-				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
+				<view class="redBox">
+					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+				</view>
 				<view class="btnRight">
 					<image src="../../static/GRZX/btnRight.png" style="width: 100%;height: 100%;"></image>
 				</view>
@@ -30,8 +35,13 @@
 				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
-				<text v-if="item.default" class="fontClass">本人</text>
-				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
+				<view class="redBox">
+					<text v-if="item.default" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.emergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+				</view>
 				<view v-if="item.hiddenIndex==0" class="btnCheck"> 
 					<image src="../../static/GRZX/btnUncheck.png" style="width: 100%;height: 100%;"></image>
 				</view>
@@ -125,11 +135,6 @@
 	    },
 		onLoad(){
 			this.loadData();
-		},
-		onBackPress() {
-			uni.switchTab({
-				url:'/pages/GRZX/user'
-			})
 		},
 	    methods: {	
 			async loadData(){
@@ -284,18 +289,21 @@
 	        		key:'editPassenger',
 	        		data:e
 	        	})
-	        	uni.navigateTo({
-	        		url:'/pages/GRZX/addPassenger?type=edit'
-	        	})
+				uni.redirectTo({
+					url:'/pages/GRZX/addPassenger?type=edit'
+				})
+	        	// uni.navigateTo({
+	        	// 	url:'/pages/GRZX/addPassenger?type=edit'
+	        	// })
 	        },
 			addPassenger(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/GRZX/addPassenger?type=add'
 				})
 			},
 			//地址管理
 			addAddress(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/GRZX/addAddress?type=add'
 				})
 			},
@@ -312,7 +320,7 @@
 					key:'editAddress',
 					data:e
 				})
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/GRZX/addAddress?type=edit'
 				})
 			},
@@ -451,7 +459,8 @@
 		font-size:28upx;
 		color: #666666;
 		position: relative;
-		border-radius:20upx ;
+		border-radius:20upx;
+		// display: flex;
 	}
 	.nameClass{
 		font-size: 36upx;
@@ -499,18 +508,21 @@
 		left: 25%;
 		top:163upx;
 	}
-	.fontClass{ //本人，紧急联系人
+	.redBox{
+		position: absolute;
+		left:40%;
+		top: 34upx;
+		display: flex;
+	}
+	.fontClass{ //本人,紧急联系人,待审核,审核通过,审核未通过
 		height: 40upx;
 		line-height: 40upx;
 		font-size: 24upx;
 		color: #ff0000;
-		position: absolute;
-		left:45% ;
-		top: 32upx;
+		margin-left: 20upx;
 		border: 1upx solid #ff0000;
 		border-radius: 10upx;
 		text-align: center;
-		width: 80upx;
 	}
 	.btnRight{ //进入编辑的箭头
 		width:60upx;
