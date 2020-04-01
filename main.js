@@ -86,6 +86,7 @@ const lyfwcwd = type=>{
 }
 
 
+
 //模拟异步请求数据 - 旅游服务
 const sceniclist = type=>{
 	return new Promise(resolve=>{

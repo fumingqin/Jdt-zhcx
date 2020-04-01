@@ -76,10 +76,10 @@
 </template>
 
 <script>
-	import citySelect from '../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../components/uni-location/popup-layer/popup-layer.vue'
-	import QSTabs from '../../components/QS-tabs/QS-tabs2.vue'
-	import gjcx from "../../common/Gjcx.js"
+	import citySelect from '../../components/uni-location/linzq-citySelect/linzq-citySelect.vue';
+	import popupLayer from '../../components/uni-location/popup-layer/popup-layer.vue';
+	import QSTabs from '../../components/QS-tabs2/QS-tabs.vue'
+	import gjcx from "../../common/Gjcx.js";
 	export default {
 		components: {
 			citySelect,
@@ -337,7 +337,7 @@
 						})
 					}
 				})
-			},
+			}, 
 			//获得经过附近的站点线路数据
 			getLinedata: function(nearstaion1) {
 				var that = this;
