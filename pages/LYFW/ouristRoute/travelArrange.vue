@@ -12,7 +12,7 @@
 		<view class="titleClass">
 			<text class="title">{{titleClick.scenicName}}</text>
 			<view class="dateCost">
-				<text class="date">{{titleClick.date}}&nbsp;&nbsp;{{titleClick.time}}<text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text></text>
+				<view class="date">{{titleClick.date}}&nbsp;&nbsp;{{titleClick.time}}<text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text></view>
 			</view>
 			<view class="grClass">
 				<image class="txImage" :src="titleClick.image" mode="aspectFill"></image>
@@ -53,8 +53,8 @@
 			<!-- 底部 -->
 			<view class="footer">
 				<view class="footerPrice">
-					<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/客服.png" @click="godetail"></image>
-					<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/转发.png" type="primary" open-type="share" @click="share"></image>
+					<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/kefu.png" @click="godetail"></image>
+					<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/zhuanfa.png" type="primary" open-type="share" @click="share"></image>
 				</view>
 				<view class="submitChange" @click="submit">
 					<text class="submit">立即预订</text>
@@ -73,11 +73,11 @@
 				</view>
 				<view class="contentView">
 						<view class="hotel">
-							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/酒店.png"></image>
+							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/jiudian.png"></image>
 							<text class="hotelText">酒店:&nbsp;{{item.hotel}}</text>
 						</view>
 						<view class="hotel">
-							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/用餐.png"></image>
+							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/yongcan.png"></image>
 							<text class="hotelText">用餐:&nbsp;{{item.dinnerTime}}</text>
 						</view>
 					<view class="content" v-for="(item2,index2) in information" :key="index2">
@@ -324,6 +324,7 @@
 					font-size: 30upx;
 					color: #FC4646;
 					right: 0;
+					top: -11upx;
 					.cost2 {
 						font-size: 40upx;
 						color: #FC4646;
