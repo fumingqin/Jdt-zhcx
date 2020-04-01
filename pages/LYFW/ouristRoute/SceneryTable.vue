@@ -63,8 +63,8 @@
 
 <script>
 	import QStabs from '../../../components/LYFW/ouristRoute/QS-tabs/QS-tabs.vue'
-	import citySelect from '../../../components/LYFW/ouristRoute/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/LYFW/ouristRoute/popup-layer/popup-layer.vue'
+	import citySelect from '../../../components/LYFW/currency/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/LYFW/currency/popup-layer/popup-layer.vue' 
 	export default {
 		components:{
 			QStabs,
