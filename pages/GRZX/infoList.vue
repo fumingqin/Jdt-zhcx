@@ -118,7 +118,6 @@
 			<image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image>
 			<view v-if="state==1" class="dfClass" @click="deleteClick">管理</view>
 			<view v-if="state==2" class="dfClass" @click="finishClick">完成</view>
-			<!-- <view @click="add" style="position: absolute;left: 100upx;top: 80upx;">添加</view> -->
 		</view>
 	</view>
 </template>
@@ -134,11 +133,14 @@
 			}
 	    },
 		onLoad(){
+			
+		},
+		onShow(){
 			this.loadData();
 		},
 	    methods: {	
 			async loadData(){
-				var array=this.passengerList;
+				var array=[];;
 				uni.getStorage({
 					key:'passList',
 					success(res) {
@@ -148,7 +150,7 @@
 						}
 					}
 				})
-				var address=this.addressList;
+				var address=[];
 				uni.getStorage({
 					key:'addressList',
 					success(res1) {
@@ -158,124 +160,8 @@
 						}
 					}
 				})
-			},
-			add(){
-				uni.setStorage({
-					key:'passList',
-					data:[{
-						userID:0,
-						name:'张小娴',
-						sex:'女',
-						ticketType:'成人',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:true,
-						emergencyContact:false,
-					},{
-						userID:1,
-						name:'黄小新',
-						sex:'男',
-						ticketType:'成人',
-						codeNum:'350518199503162645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:true,
-					},{
-						userID:2,
-						name:'张新',
-						sex:'男',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					},{
-						userID:3,
-						name:'张旺',
-						sex:'男',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					},{
-						userID:4,
-						name:'张小芸',
-						sex:'女',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					},{
-						userID:5,
-						name:'许小芸',
-						sex:'男',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					}]
-				})
-				uni.setStorage({
-					key:'addressList',
-					data:[{
-						hiddenIndex:0,
-						receiver:'张小娴',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:true
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新1',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新2',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新3',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新4',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新5',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					}]
-				})
+				this.passengerList=array;
+				this.addressList=address;
 			},
 			//乘车人管理
 			passengerClick(){
@@ -289,15 +175,15 @@
 	        		key:'editPassenger',
 	        		data:e
 	        	})
-				uni.redirectTo({
-					url:'/pages/GRZX/addPassenger?type=edit'
-				})
-	        	// uni.navigateTo({
-	        	// 	url:'/pages/GRZX/addPassenger?type=edit'
-	        	// })
+				// uni.redirectTo({
+				// 	url:'/pages/GRZX/addPassenger?type=edit'
+				// })
+	        	uni.navigateTo({
+	        		url:'/pages/GRZX/addPassenger?type=edit'
+	        	})
 	        },
 			addPassenger(){
-				uni.redirectTo({
+				uni.navigateTo({
 					url:'/pages/GRZX/addPassenger?type=add'
 				})
 			},
@@ -327,12 +213,16 @@
 			deletePassenger(){ //删除乘车人信息
 				var data=this.passengerList;
 				var array=[];
+				var deleteList=[];
 				for(var i=0;i<data.length;i++){
+					if(data[i].hiddenIndex==1){
+						deleteList.push(data[i]);
+					}
 					if(data[i].hiddenIndex==0){
 						array.push(data[i]);
 					}
 				}
-				if(array.length==0){
+				if(deleteList.length==0){
 					uni.showToast({
 						title: '请选择',
 						icon:"none"
@@ -341,12 +231,13 @@
 					uni.setStorage({
 						key:"passList",
 						data:array
-					})	
+					})
+					this.state=1;
+					uni.redirectTo({
+						url:'/pages/GRZX/infoList'
+					})
 				}
-				this.state=1;
-				uni.redirectTo({
-					url:'/pages/GRZX/infoList'
-				})
+				
 			},
 			deleteAddress(){
 				var data=this.addressList;

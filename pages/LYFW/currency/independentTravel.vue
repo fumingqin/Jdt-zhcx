@@ -38,7 +38,7 @@
 		<view :hidden="current==1">
 			<!-- 六宫格列表栏 -->
 			<view class="listBarViewSpace">
-				<view class="listBarView" v-for="(item,index) in itText" :key="index">
+				<view class="listBarView" v-for="(item,index) in itText" :key="index" @click="natTo">
 					<image class="listBarImage" mode="aspectFill" :src="item.src"></image>
 					<text class="listBarText1">{{item.title}}</text>
 					<text class="listBarText2">{{item.conut_1}}|{{item.conut_2}}</text>
@@ -50,19 +50,32 @@
 				<view class="newDiscoveryTitleView">
 					<text class="newDiscoveryTitle">新发现</text>
 				</view>
-				<view class="newDiscoveryConentView" v-for="(item,index) in itText" :key="index">
+				<view class="newDiscoveryConentView" v-for="(item,index) in itText" :key="index" @click="natTo">
 					<image class="newDiscoveryConentImage" mode="aspectFill" :src="item.src"></image>
 					<text class="newDiscoveryConentText1">{{item.title}}</text>
 					<text class="newDiscoveryConentText2">点击量：{{item.conut_1}}</text>
 				</view>
 			</view>
 		</view>
+		
+		<view :hidden="current==0">
+			<!-- 左边导航栏 -->
+			<view style="width: 100%;display: flex;flex-direction: row;">
+				<scroll-view scroll-y="true" style="width: 200upx; flex: 0 0 200upx; background: #f5f5f5;" >
+					<view>
+						<view  v-for="(item,index) in region" :key="index" style="width: 100%; height: 100upx; display: flex; justify-content: center; align-items: center; font-size: 25upx; border-bottom: 1px solid #dedede; cursor: pointer;"></view>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
+		
+		
 	</view>
 </template>
 
 <script>
-	import citySelect from '../../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/uni-location/popup-layer/popup-layer.vue'
+	import citySelect from '../../../components/LYFW/currency/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/LYFW/currency/popup-layer/popup-layer.vue'
 	import QSTabs from '../../../components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
 	export default {
 		data() {
@@ -76,6 +89,13 @@
 				tabs: ['推荐', '全部'], //选项标题
 
 				itText: '',
+				
+				regin : [{
+					id:'0',
+					name:'南平',
+					image : '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+					label : '',
+				},], //地区
 			}
 		},
 		components: {
@@ -167,6 +187,13 @@
 			change(index) {
 				this.current = index;
 			},
+			
+			//跳转
+			natTo(){
+				uni.navigateTo({
+					url:'/pages/LYFW/ouristRoute/travelArrange'
+				})
+			}
 		}
 	}
 </script>

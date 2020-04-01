@@ -123,7 +123,7 @@
 </template>	 
 
 <script>
-	import uniPopup from "../../../components/uni-popup/uni-popup.vue"
+	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	export default {
 		data() {
 			return {

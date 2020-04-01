@@ -52,14 +52,14 @@
 				<text class="MP_text" style="color: #aaa;">请选择预订人，票价会根据人数自动变更</text>
 
 				<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
-					<text>{{item.name}}</text>
-					<text class="Mp_sex">{{item.sex}}</text>
-					<text class="Mp_square">{{item.ticketType}}</text>
-					<text class="Mp_square" v-if="item.default == true">本人</text>
-					<text class="Mp_square" v-if="item.emergencyContact == true">紧急联系人</text>
+					<text>{{item.userName}}</text>
+					<text class="Mp_sex">{{item.userSex}}</text>
+					<text class="Mp_square">{{item.userType}}</text>
+					<text class="Mp_square" v-if="item.userDefault == true">本人</text>
+					<text class="Mp_square" v-if="item.userEmergencyContact == true">紧急联系人</text>
 					<text class="Mp_delete  jdticon icon-fork" @click="deleteUser(index)"></text>
-					<text class="Mp_text">身份证：{{item.codeNum}}</text>
-					<text class="Mp_text">手机号：{{item.phoneNum}}</text>
+					<text class="Mp_text">身份证：{{item.userCodeNum}}</text>
+					<text class="Mp_text">手机号：{{item.userPhoneNum}}</text>
 				</view>
 
 				<view class="MP_userInformation">
@@ -150,9 +150,9 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/uni-popup/uni-popup.vue"
-	import uniCalendar from '../../../components/uni-calendar/uni-calendar.vue'
-	export default {
+	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniCalendar from '../../../components/LYFW/scenicSpotTickets/uni-calendar/uni-calendar.vue'
+	export default {  
 		data() {
 			const currentDate = this.getDate({
 				format: true
@@ -205,9 +205,9 @@
 
 		onLoad(options) {
 			this.lyfwData();
-			setInterval(() => {
-				this.userData();
-			}, 500)
+		},
+		onShow() {
+			this.userData();
 		},
 		components: {
 			//加载多方弹框组件
@@ -222,7 +222,7 @@
 					key:'ticketInformation',
 					success:(res) =>{
 						this.admissionTicket = res.data;
-						console.log(res)
+						// console.log(res)
 					}
 				})
 				
@@ -402,10 +402,12 @@
 									title:'下单失败，联系管理员！',
 									icon:'none',
 								})
+							}else if(res.data.msg =='下单成功'){
+								uni.redirectTo({
+									url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(res.data.orderNumber)
+								})
 							}
-							// uni.redirectTo({
-							// 	url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
-							// })
+							
 						}
 					})
 					
