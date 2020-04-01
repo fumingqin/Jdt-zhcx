@@ -50,16 +50,6 @@
 					<rich-text :nodes="information[0].content"></rich-text>
 				</view>
 			</view>
-			<!-- 底部 -->
-			<view class="footer">
-				<view class="footerPrice">
-					<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/kefu.png" @click="godetail"></image>
-					<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/zhuanfa.png" type="primary" open-type="share" @click="share"></image>
-				</view>
-				<view class="submitChange" @click="submit">
-					<text class="submit">立即预订</text>
-				</view>
-			</view>
 		</view>
 
 		<!-- 行程安排 -->
@@ -121,16 +111,16 @@
 						</view>
 					</view>
 				</view>
-				<!-- 底部 -->
-				<view class="footer">
-					<view class="footerPrice">
-						<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/客服.png" @click="godetail"></image>
-						<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/转发.png" type="primary" open-type="share" @click="share"></image>
-					</view>
-					<view class="submitChange" @click="submit">
-						<text class="submit">立即预订</text>
-					</view>
-				</view>
+			</view>
+		</view>
+		<!-- 底部 -->
+		<view class="footer">
+			<view class="footerPrice">
+				<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/kefu.png" @click="godetail"></image>
+				<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/zhuanfa.png" type="primary" open-type="share" @click="share"></image>
+			</view>
+			<view class="submitChange" @click="submit">
+				<text class="submit">立即预订</text>
 			</view>
 		</view>
 	</view>
@@ -460,63 +450,13 @@
 		}
 	}
 
-	//底部
-	.footer {
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		z-index: 995;
-		display: flex;
-		align-items: center;
-		width: 100%;
-		height: 90upx;
-		justify-content: space-between;
-		font-size: 30upx;
-		background: #fff;
-		z-index: 998;
-		color: #f85e52;
-		box-shadow: 0 -1px 5px rgba(0, 0, 0, .1);
-
-		.footerPrice {
-			padding-left: 55upx;
-
-			.kfIcon {
-				// position: relative;
-				width: 48upx;
-				height: 44upx;
-				color: rgba(44, 45, 45, 1);
-				// top: 7upx;
-			}
-
-			.zfIcon {
-				padding-left: 40upx;
-				width: 39upx;
-				height: 40upx;
-				color: rgba(44, 45, 45, 1);
-			}
-		}
-
-		.submitChange {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 280upx;
-			height: 100%;
-			background: #06B4FD;
-
-			.submit {
-				color: #fff;
-				font-size: 32upx;
-			}
-		}
-	}
-
 
 	// 行程安排样式
 	.scheduling {
 		background: #FFFFFF;
 		padding-left: 40upx;
 		padding-top: 56upx;
+		padding-bottom: 106upx;
 		
 		.tripTitle{
 			display: flex;
@@ -625,7 +565,7 @@
 	// 费用说明
 	.description {
 		background: #FFFFFF;
-		padding-bottom: 41upx;
+		padding-bottom: 106upx;
 
 		.costDescription {
 			position: relative;
@@ -678,4 +618,56 @@
 			}
 		}
 	}
+	
+	//底部
+	.footer {
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		z-index: 995;
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 90upx;
+		justify-content: space-between;
+		font-size: 30upx;
+		background: #fff;
+		z-index: 998;
+		color: #f85e52;
+		box-shadow: 0 -1px 5px rgba(0, 0, 0, .1);
+	
+		.footerPrice {
+			padding-left: 55upx;
+	
+			.kfIcon {
+				// position: relative;
+				width: 40upx;
+				height: 36upx;
+				color: rgba(44, 45, 45, 1);
+				// top: 7upx;
+			}
+	
+			.zfIcon {
+				padding-left: 40upx;
+				width: 32upx;
+				height: 33upx;
+				color: rgba(44, 45, 45, 1);
+			}
+		}
+	
+		.submitChange {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 280upx;
+			height: 100%;
+			background: #06B4FD;
+	
+			.submit {
+				color: #fff;
+				font-size: 32upx;
+			}
+		}
+	}
+	
 </style>

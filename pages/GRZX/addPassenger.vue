@@ -8,9 +8,9 @@
 				</view>
 				<view class="itemClass borderTop">
 					<view class="fontStyle">性别</view>
-					<radio-group class="inputClass" name="sex">
+					<radio-group class="inputClass" name="userSex">
 						<label v-for="(item, index) in sexMode" :key="index" @click="radioClick(index)" > 
-							<radio style="transform: scale(0.7)" :value="user.userSex" :checked="index===user.sex" />{{item.title}}
+							<radio style="transform: scale(0.7)" :value="user.userSex" :checked="index===user.userSex" />{{item.title}}
 						</label>  
 					</radio-group>
 				</view>
@@ -36,7 +36,7 @@
 					<input
 						placeholder="请保持与证件号码一致"
 						class="inputClass"
-						:value="user.codeNum"
+						:value="user.userCodeNum"
 						name="userCodeNum"
 						type="idcard"
 						maxlength="18"
@@ -103,9 +103,9 @@
 			<view class="personClass">
 				<view class="fontStyle">设置为本人</view>
 				<view class="checkBox">
-					<checkbox-group name="default" @change="checkChange">
+					<checkbox-group name="userDefault" @change="checkChange">
 						<label>
-							<checkbox :checked="user.default" :value="user.default" />
+							<checkbox :checked="user.userDefault" :value="user.userDefault" />
 						</label>
 					</checkbox-group>
 				</view>
@@ -114,9 +114,9 @@
 			<view v-if="user.show" class="emergencyClass">
 				<view class="fontStyle">紧急联系人</view>
 				<view class="checkBox">
-					<checkbox-group name="emergencyContact">
+					<checkbox-group name="userEmergencyContact">
 						<label>
-							<checkbox :checked="user.emergencyContact" :value="user.emergencyContact"/>
+							<checkbox :checked="user.userEmergencyContact" :value="user.userEmergencyContact"/>
 						</label>
 					</checkbox-group>
 				</view>
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-	import wPicker from "@/components/w-picker/w-picker.vue";
+	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
 	export default {
 		data(){
 			return{
@@ -167,7 +167,6 @@
 		onLoad (options){
 			var type=options.type;
 			this.type=options.type;
-			this.address=options.address;
 			if(options.type=="edit"){
 				this.loadData(type);
 			}
@@ -287,10 +286,7 @@
 								})
 							}
 						})
-						//uni.navigateBack();
-						uni.redirectTo({
-							url:'/pages/GRZX/infoList'
-						})
+						uni.navigateBack();
 					}else if(this.type=='add'){
 						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
 						data1.userID=randomNum;
@@ -313,17 +309,7 @@
 								})
 							}
 						})
-						//uni.navigateBack();
-						if(that.address=='Info'){
-							//uni.navigateBack();
-							uni.redirectTo({
-								url:'/pages/GRZX/passengerInfo?submitType=1'
-							});
-						}else{
-							uni.redirectTo({
-								url:'/pages/GRZX/infoList'
-							})
-						}
+						uni.navigateBack();
 					}else{
 						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
 						data1.userID=randomNum;

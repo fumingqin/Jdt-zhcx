@@ -44,8 +44,8 @@
 	 
 </template>
 <script>
-	import { pathToBase64, base64ToPath } from '../../components/js_sdk/gsq-image-tools/image-tools/index.js'
-	import wPicker from "@/components/w-picker/w-picker.vue";
+	import { pathToBase64, base64ToPath } from '../../components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js'
+	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
 	import {
 	    mapState,  
 	    mapMutations  
