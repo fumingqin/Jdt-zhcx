@@ -97,5 +97,5 @@ const sceniclist = type=>{
 
 
 
-Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfwfmq,lyfwcwd,sceniclist};
+Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfwfmq,lyfwcwd,lyfwlql,sceniclist};
 app.$mount()
