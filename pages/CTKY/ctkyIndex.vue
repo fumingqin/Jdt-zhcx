@@ -1,28 +1,48 @@
 <template>
-<view class="myView">
+    <view class="myView">
+		<!-- 照片背景图 -->
 		<view>
 			<image src="../../static/CTKY/background.png" class="imageTop" mode="aspectFill"></image>
 			<!-- <image src="../../static/index/左-箭头.png" class="imageReturn"></image> -->
 		</view>
+		<!-- 车票查询 -->
 		<view class="queryTickets">
-			<view class="lineClass">
-				<input class="start" v-model="departure" />
-				<image src="../../static/CTKY/change.png" mode="aspectFill" class="changeImage" @click="changeClick"></image>
-				<input class="start" style="text-align: right;" v-model="destination" />
+			<view class="typePickerView">
+				<view class="typePicker" :class="{'typePickerClick':normalPickerNum == 1}"
+				 style="border-top-right-radius: 0;" @tap="typeSelect('normal')">普通购票</view>
+				<view class="typePicker" :class="{'typePickerClick':specialPickerNum == 1}" 
+				style="border-top-left-radius: 0;" @tap="typeSelect('special')">定制班车</view>
 			</view>
-			<view class="lineClass">
-				<view style="border-bottom: 1upx solid #dadada;width: 100%;">
-					<text @click="onShowDatePicker('date')" class="dateClass">{{datestring}}    {{Week}}</text>
+			<view class="ticketView">
+				<view class="lineClass">
+					<navigator url="homeSattionPick" hover-class="hover">
+						<view class="start">{{departure}}</view>
+					</navigator>
+					<image src="../../static/CTKY/change.png" mode="aspectFill" class="changeImage" @click="changeClick"></image>
+					<navigator url="homeSattionPick" hover-class="hover">
+						<view class="start" style="text-align: right;" @tap="stationTap">{{destination}}</view>
+					</navigator>
 				</view>
-			</view>
-			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'"
-			 :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
-			<view class="queryView">
-				<button class="queryButton" @click="queryClick">查 询</button>
+				<view class="lineClass">
+					<view style="border-bottom: 1upx solid #dadada;width: 100%;">
+						<text @click="onShowDatePicker('date')" class="dateClass">{{datestring}}    {{Week}}</text>
+					</view>
+				</view>
+				<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'"
+				 :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
+				<view class="queryView">
+					<button class="queryButton" @click="queryClick">查 询</button>
+				</view>
+				<!-- <view>
+					<label class="historyText" v-for="(i,index) in historyLines" :key=index v-if="index<3">{{i}}</label>
+					<label class="clearHistory" @click="clickHistory">清除历史</label>
+				</view> -->
 			</view>
 			<view class="historyView">
-				<label class="historyText" v-for="(i,index) in historyLines" :key=index v-if="index<3">{{i}}</label>
-				<label class="clearHistory" @click="clickHistory">清除历史</label>
+				<label class="historyTitle">历史记录</label>
+				<view class="historyListView">
+					<view class="historyText" @tap="historyItemTap(index)" v-for="(i,index) in historyLines" :key=index v-if="index<20">{{i}}</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -45,15 +65,30 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 				value: '',
 				showPicker: false,
 				date: '2020/03/26',
-				historyLines: ['泉州-厦门', '泰宁-石家庄', '福州-婺源', '上海-绍兴'],
+				historyLines: ['泉州-厦门', '泰宁-石家庄', '福州-婺源', '上海-绍兴','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄'],
 				datestring: '',
 				Week: '',
+				normalPickerNum:1,
+				specialPickerNum:0,
+				isNormal:1,//默认是普通购票
 			}
 		},
 		onLoad() {
 			this.datestring = this.date.split('/')[1] + "月" + this.date.split('/')[2] + "日";
 		},
 		methods: {
+			//点击车票类型
+			typeSelect(type) {
+				if (type == 'normal') {//点击了普通购票
+					this.normalPickerNum = 1;
+					this.specialPickerNum = 0;
+					this.isNormal = 1;//当前是普通购票
+				}else if (type == 'special') {//点击了定制班车
+					this.normalPickerNum = 0;
+					this.specialPickerNum = 1;
+					this.isNormal = 0;//当前是定制班车
+				}
+			},
 			onShowDatePicker(type) { //显示
 				this.type = type;
 				this.showPicker = true;
@@ -70,13 +105,22 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 			clickHistory: function() {
 				this.historyLines = [];
 			},
+			//点击历史记录
+			historyItemTap(res) {
+				let stationArray = this.historyLines[res].split('-');
+				this.departure = stationArray[0];
+				this.destination = stationArray[1];
+			},
 			//查询
 			queryClick: function() {
+				//判断是普通购票还是定制购票this.isNormal=1是普通购票0是定制班车
+				console.log(this.isNormal);
+				
 				this.historyLines.unshift(this.departure + "-" + this.destination);
 				console.log(this.date,this.departure + "-" + this.destination)
 				
 				//页面传参通过地址后面添加参数
-				var params='./selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-26';
+				var params='./selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-30';
 				uni.navigateTo({ 
 					url:params
 				})
@@ -140,7 +184,7 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 		height: 100%;
 		background: #F1F1F1;
 	}
-
+	// 背景图片
 	.imageTop {
 		width: 100%;
 		height: 390upx;
@@ -156,21 +200,58 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 
 	//查询车票整块
 	.queryTickets {
-		background: #FFFFFF;
-		height: 466upx;
+		// background: #FFFFFF;
+		// height: 466upx;
 		width: 706upx;
 		margin-top: 10upx;
 		margin-bottom: 10upx;
 		margin: 0 auto; //左右边距自适应
 		position: relative;
-		top: -38upx;
+		top: -90upx;
 		border-radius: 20upx;
 	}
-
+	//选择车票类型 普通购票/定制购票
+	.typePickerView {
+		width: 100%;
+		height: 80rpx;
+		display: flex;
+	}
+	//普通购票/定制班车
+	.typePicker {
+		border-top-left-radius: 20rpx;
+		border-top-right-radius: 20rpx;
+		text-align: center;
+		line-height: 80rpx;
+		width: 353rpx;
+		font-size: 30rpx;
+		background-color: #393939;
+		color: #FFFFFF;
+		opacity: 0.8;
+	}
+	
+	//普通购票/定制班车 点击
+	.typePickerClick {
+		opacity: 1;
+		border-top-left-radius: 20rpx;
+		border-top-right-radius: 20rpx;
+		text-align: center;
+		line-height: 80rpx;
+		width: 353rpx;
+		font-size: 30rpx;
+		background-color: #FFFFFF;
+		color: #000000;
+	}
+	.ticketView {
+		background-color: #FFFFFF;
+		border-radius: 20rpx;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
 	//选择起始点
 	.lineClass {
 		display: flex;
-		height: 125upx;
+		align-items: center;
+		justify-items: center;
 		padding-left: 50upx;
 		padding-right: 50upx;
 
@@ -192,10 +273,11 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 		font-weight: 300;
 		color: #2C2D2D;
 		width: 234upx;
-		height: 125upx;
 		left: 0;
 		text-align: left;
 		border-bottom: 1upx solid #dadada;
+		margin-top: 40rpx;
+		padding-bottom: 20rpx;
 	}
 
 
@@ -214,6 +296,7 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 		margin-top: 43upx;
 		margin-left: 29upx;
 		margin-right: 29upx;
+		padding-bottom: 40rpx;
 	}
 
 	//查询
@@ -224,21 +307,41 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 		color: #FFFFFF;
 		font-size: 38upx;
 		border-radius: 10upx;
-
 	}
 
 	.historyView {
-		padding-top: 29upx;
-		padding-bottom: 29upx;
-		padding-left: 36upx;
-		padding-right: 36upx;
-		font-size: 24upx;
-		color: #999999;
+		padding-top: 20rpx;
+		// padding-bottom: 29upx;
+		// padding-left: 36upx;
+		// padding-right: 36upx;
+		background-color: #FFFFFF;
+		border-radius: 20rpx;
+		margin-top: 20rpx;
+		width: 706upx;
 		font-family: MicrosoftYaHei;
+		color: #999999;
+		font-size: 24upx;
 	}
-
+	.historyTitle {
+		font-size: 25rpx;
+		color: #2C2D2D;
+		margin-left: 20rpx;
+	}
+	.historyListView {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		color: #999999;
+		font-size: 20rpx;
+		font-weight: 300;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+		padding-bottom: 20rpx;
+	}
 	.historyText {
-		margin-right: 50upx;
+		margin-top: 20rpx;
+		margin-right: 20rpx;
 	}
 
 	.clearHistory {

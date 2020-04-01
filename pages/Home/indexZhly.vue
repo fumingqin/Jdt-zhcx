@@ -29,7 +29,7 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="route('/pages/LYFW/peripheralTourism/peripheralTourism')">
+			<view class="cate-item" @click="route('/pages/LYFW/currency/independentTravel')">
 				<image src="../../static/Home/indexzhly/fujin.png" mode="aspectFit"></image>
 				<text>周边旅游</text>
 			</view>
@@ -45,7 +45,7 @@
 				<image src="../../static/Home/indexzhly/menpiao.png" mode="aspectFit"></image>
 				<text>景区门票</text>
 			</view>
-			<view class="cate-item" @click="route('/pages/Home/ChooseSite?current=1')">
+			<view class="cate-item" @click="route('/pages/CTKY/ctkyIndex')">
 				<image src="../../static/Home/indexzhly/chepiao.png" mode="aspectFit"></image>
 				<text>车票订购</text>
 			</view>
@@ -72,7 +72,7 @@
 		<!-- 新闻资讯 -->
 		<view class="titNp">新闻资讯</view>
 		<view class="guess-section">
-			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="informationTo(index)">
+			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="informationTo(item.id)">
 				<view class="image-wrapper">
 					<image :src="item.imgUrl" mode="aspectFill"></image>
 				</view>
@@ -80,7 +80,7 @@
 				<view>
 					<image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
 					<text class="price">{{item.createdTime}}</text>
-					<text class="price-zan">1.1万</text>
+					<text class="price-zan">阅读{{item.count+1080}}</text> 
 				</view>
 			</view>
 		</view>
@@ -169,10 +169,10 @@
 				})
 			},
 			
-			//轮播图跳详情页
+			//资讯详情页
 			informationTo(e) {
 				uni.navigateTo({
-					url: '../GRZX/detailTweet?id=' +e
+					url: 'InformationDetails?id=' +e
 				})
 			},
 			
@@ -522,7 +522,7 @@
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
-			width: 88px;
+			width: 76px;
 			margin-top: -80upx;
 		}
 
@@ -530,7 +530,7 @@
 			font-size: 24upx;
 			color: #666;
 			float: right;
-			margin-top: 6upx;
+			margin-top: 3upx;
 		}
 	}
 

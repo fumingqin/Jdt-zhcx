@@ -112,6 +112,9 @@
 				    success: (e)=>{
 				    	if(e.confirm){
 							uni.clearStorage();
+							uni.redirectTo({
+								url:'/pages/GRZX/set'
+							})
 				    	}
 				    }
 				});

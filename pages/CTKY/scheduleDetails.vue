@@ -133,15 +133,24 @@
 					<view @tap="checkAttention" style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
 				</view>
 				<!-- 查看须知popup -->
-				<uni-popup ref="popup2" type="center">
-					<view class="boxVlew">
+				<uni-popup ref="popup2" type="bottom">
+					<view class="boxView">
 						<view class="titleView">
 							<text class="Nb_text1">用户须知</text>
 							<text class="Nb_text2 jdticon icon-fork " @click="close(2)"></text>
 						</view>
 						<scroll-view class="noticeBox" scroll-y="ture">
 							<text class="Nb_text4">
-								{{notice.security}}
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
+								用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知用户须知
 							</text>
 						</scroll-view>
 					</view>
@@ -347,7 +356,10 @@
 			},
 			//查看须知
 			checkAttention() {
-				console.log('点击了查看须知')
+				this.$refs.popup2.open()
+			},
+			close(e) {
+				this.$refs.popup2.close()
 			},
 			//跳转到地图标点
 			checkLocation() {
@@ -445,7 +457,49 @@
 			font-size: 28upx;
 		}
 	}
+//须知弹框
+	.boxView {
+		width: 90%;
+		padding: 16upx 40upx;
+		padding-bottom: 92upx;
+		background: #FFFFFF;
+		.titleView{
+			margin: 24upx 0;
+			//弹框标题
+			.Nb_text1 {
+				position: relative;
+				font-size: 38upx;
+				font-weight: bold;
+				top: 8upx;
+				margin-bottom: 16upx;
+			}
+			//弹框关闭按钮
+			.Nb_text2 {
+				margin-top: 8upx;
+				float: right;
+				color: #333;
+				font-size: 32upx;
+			}
+		}
+		.noticeBox {
+			min-height: 30vh;
+			max-height: 70vh;
+			line-height: 32upx;
+			.Nb_text3 {
+				display: block;
+				margin-top: 32upx;
+				font-size: 34upx;
+				font-weight: bold;
+			}
 
+			.Nb_text4 {
+				display: block;
+				line-height: 64upx;
+				margin: 32upx 0;
+				font-size: 30upx;
+			}
+		}
+	}
 	.coupon-item {
 		display: flex;
 		flex-direction: column;

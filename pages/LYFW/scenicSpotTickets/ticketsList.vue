@@ -116,8 +116,8 @@
 
 
 <script>
-	import citySelect from '../../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/uni-location/popup-layer/popup-layer.vue'
+	import citySelect from '../../../components/LYFW/currency/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/LYFW/currency/popup-layer/popup-layer.vue'
 	export default {
 		data() {
 			return {
@@ -316,7 +316,7 @@
 			//分类点击
 			changeCate: function(item) {
 				// console.log(item)
-				this.cateId
+				this.cateId = item.id;
 				this.cateValue = item.name;
 				this.screenIndex = 3;
 				this.toggleCateMask();

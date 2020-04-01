@@ -378,7 +378,7 @@
 	.iconClass1{   //手机图标
 		width: 26upx;
 		height: 36upx;
-		top: 57upx;
+		top: 55upx;
 		left:2%;
 		position: absolute;
 	}

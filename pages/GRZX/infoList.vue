@@ -3,15 +3,20 @@
 		<!-- 常用乘车人 -->
 		<view v-if="type==1 && state==1" class="mt">
 			<view class="boxClass" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
-				<view class="nameClass">{{item.name}}</view>
-				<view class="sexClass">{{item.sex}}</view>
-				<view class="typeClass">{{item.ticketType}}</view>
+				<view class="nameClass">{{item.userName}}</view>
+				<view class="sexClass">{{item.userSex}}</view>
+				<view class="typeClass">{{item.userType}}</view>
 				<view class="codeClass fontStyle">身份证</view>
-				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
+				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
-				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
-				<text v-if="item.default" class="fontClass">本人</text>
-				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
+				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
+				<view class="redBox">
+					<text v-if="item.userDefault " class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+				</view>
 				<view class="btnRight">
 					<image src="../../static/GRZX/btnRight.png" style="width: 100%;height: 100%;"></image>
 				</view>
@@ -23,15 +28,20 @@
 		
 		<view v-if="type==1 && state==2" class="mt">
 			<view class="boxClass" v-for="(item, index) in passengerList" :key="index" @click="selete(item)">  <!--个人中心页面进入 -->
-				<view class="nameClass">{{item.name}}</view>
-				<view class="sexClass">{{item.sex}}</view>
-				<view class="typeClass">{{item.ticketType}}</view>
+				<view class="nameClass">{{item.userName}}</view>
+				<view class="sexClass">{{item.userSex}}</view>
+				<view class="typeClass">{{item.userType}}</view>
 				<view class="codeClass fontStyle">身份证</view>
-				<view class="codeNumClass fontStyle">{{item.codeNum}}</view>
+				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
-				<view class="phoneNumClass fontStyle">{{item.phoneNum}}</view>
-				<text v-if="item.default" class="fontClass">本人</text>
-				<text v-if="item.emergencyContact" class="fontClass">联系人</text>
+				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
+				<view class="redBox">
+					<text v-if="item.userDefault" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+				</view>
 				<view v-if="item.hiddenIndex==0" class="btnCheck"> 
 					<image src="../../static/GRZX/btnUncheck.png" style="width: 100%;height: 100%;"></image>
 				</view>
@@ -108,7 +118,6 @@
 			<image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image>
 			<view v-if="state==1" class="dfClass" @click="deleteClick">管理</view>
 			<view v-if="state==2" class="dfClass" @click="finishClick">完成</view>
-			<!-- <view @click="add" style="position: absolute;left: 100upx;top: 80upx;">添加</view> -->
 		</view>
 	</view>
 </template>
@@ -124,16 +133,14 @@
 			}
 	    },
 		onLoad(){
-			this.loadData();
+			
 		},
-		onBackPress() {
-			uni.switchTab({
-				url:'/pages/GRZX/user'
-			})
+		onShow(){
+			this.loadData();
 		},
 	    methods: {	
 			async loadData(){
-				var array=this.passengerList;
+				var array=[];;
 				uni.getStorage({
 					key:'passList',
 					success(res) {
@@ -143,7 +150,7 @@
 						}
 					}
 				})
-				var address=this.addressList;
+				var address=[];
 				uni.getStorage({
 					key:'addressList',
 					success(res1) {
@@ -153,124 +160,8 @@
 						}
 					}
 				})
-			},
-			add(){
-				uni.setStorage({
-					key:'passList',
-					data:[{
-						userID:0,
-						name:'张小娴',
-						sex:'女',
-						ticketType:'成人',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:true,
-						emergencyContact:false,
-					},{
-						userID:1,
-						name:'黄小新',
-						sex:'男',
-						ticketType:'成人',
-						codeNum:'350518199503162645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:true,
-					},{
-						userID:2,
-						name:'张新',
-						sex:'男',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					},{
-						userID:3,
-						name:'张旺',
-						sex:'男',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					},{
-						userID:4,
-						name:'张小芸',
-						sex:'女',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					},{
-						userID:5,
-						name:'许小芸',
-						sex:'男',
-						ticketType:'儿童',
-						codeNum:'35058199503692645',
-						phoneNum:'13653989645',
-						hiddenIndex:0,
-						default:false,
-						emergencyContact:false,
-					}]
-				})
-				uni.setStorage({
-					key:'addressList',
-					data:[{
-						hiddenIndex:0,
-						receiver:'张小娴',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:true
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新1',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新2',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新3',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新4',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					},{
-						hiddenIndex:0,
-						receiver:'黄小新5',
-						postalCode:'366300',
-						phoneNum:'13660769766',
-						district:'福建省泉州市丰泽区',
-						detailAddress:'泉秀路茶叶大厦7楼',
-						default:false
-					}]
-				})
+				this.passengerList=array;
+				this.addressList=address;
 			},
 			//乘车人管理
 			passengerClick(){
@@ -284,6 +175,9 @@
 	        		key:'editPassenger',
 	        		data:e
 	        	})
+				// uni.redirectTo({
+				// 	url:'/pages/GRZX/addPassenger?type=edit'
+				// })
 	        	uni.navigateTo({
 	        		url:'/pages/GRZX/addPassenger?type=edit'
 	        	})
@@ -295,7 +189,7 @@
 			},
 			//地址管理
 			addAddress(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/GRZX/addAddress?type=add'
 				})
 			},
@@ -312,19 +206,23 @@
 					key:'editAddress',
 					data:e
 				})
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/GRZX/addAddress?type=edit'
 				})
 			},
 			deletePassenger(){ //删除乘车人信息
 				var data=this.passengerList;
 				var array=[];
+				var deleteList=[];
 				for(var i=0;i<data.length;i++){
+					if(data[i].hiddenIndex==1){
+						deleteList.push(data[i]);
+					}
 					if(data[i].hiddenIndex==0){
 						array.push(data[i]);
 					}
 				}
-				if(array.length==0){
+				if(deleteList.length==0){
 					uni.showToast({
 						title: '请选择',
 						icon:"none"
@@ -333,12 +231,13 @@
 					uni.setStorage({
 						key:"passList",
 						data:array
-					})	
+					})
+					this.state=1;
+					uni.redirectTo({
+						url:'/pages/GRZX/infoList'
+					})
 				}
-				this.state=1;
-				uni.redirectTo({
-					url:'/pages/GRZX/infoList'
-				})
+				
 			},
 			deleteAddress(){
 				var data=this.addressList;
@@ -451,7 +350,8 @@
 		font-size:28upx;
 		color: #666666;
 		position: relative;
-		border-radius:20upx ;
+		border-radius:20upx;
+		// display: flex;
 	}
 	.nameClass{
 		font-size: 36upx;
@@ -499,18 +399,21 @@
 		left: 25%;
 		top:163upx;
 	}
-	.fontClass{ //本人，紧急联系人
+	.redBox{
+		position: absolute;
+		left:40%;
+		top: 34upx;
+		display: flex;
+	}
+	.fontClass{ //本人,紧急联系人,待审核,审核通过,审核未通过
 		height: 40upx;
 		line-height: 40upx;
 		font-size: 24upx;
 		color: #ff0000;
-		position: absolute;
-		left:45% ;
-		top: 32upx;
+		margin-left: 20upx;
 		border: 1upx solid #ff0000;
 		border-radius: 10upx;
 		text-align: center;
-		width: 80upx;
 	}
 	.btnRight{ //进入编辑的箭头
 		width:60upx;
