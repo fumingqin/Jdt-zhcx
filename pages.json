@@ -473,7 +473,15 @@
 				"navigationBarTitleText": "订单支付"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/Home/MapIndex",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/Home/MapSearch",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
