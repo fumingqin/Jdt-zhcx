@@ -52,19 +52,7 @@
 				"navigationBarTitleText": "查看图片"
 			}
 		},
-		{
-			"path": "pages/LYFW/peripheralTourism/peripheralTourism",
-			"style": {
-				"navigationBarTitleText": "周边旅游"
-			}
-		},
-		{
 
-			"path": "pages/LYFW/peripheralTourism/travelArticles",
-			"style": {
-				"navigationBarTitleText": "景点详情"
-			}
-		},
 		{
 		
 			"path": "pages/LYFW/currency/travelDetails",
@@ -269,18 +257,7 @@
 			}
 		},
 		//个人中心模块结束
-		{
-			"path": "pages/LYFW/peripheralTourism/imgListlql",
-			"style": {}
-		},
-		{
-			"path": "pages/LYFW/peripheralTourism/imgPreviewlql",
-			"style": {}
-		},
-		{
-			"path": "pages/LYFW/peripheralTourism/toreply",
-			"style": {}
-		},
+
 		{
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
@@ -552,6 +529,6 @@
 			"name": "", //模式名称
 			"path": "", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
-		}]
+		}] 
 	}
 }
