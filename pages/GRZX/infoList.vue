@@ -134,11 +134,14 @@
 			}
 	    },
 		onLoad(){
+			
+		},
+		onShow(){
 			this.loadData();
 		},
 	    methods: {	
 			async loadData(){
-				var array=this.passengerList;
+				var array=[];;
 				uni.getStorage({
 					key:'passList',
 					success(res) {
@@ -148,7 +151,7 @@
 						}
 					}
 				})
-				var address=this.addressList;
+				var address=[];
 				uni.getStorage({
 					key:'addressList',
 					success(res1) {
@@ -158,6 +161,8 @@
 						}
 					}
 				})
+				this.passengerList=array;
+				this.addressList=address;
 			},
 			add(){
 				uni.setStorage({
@@ -289,15 +294,15 @@
 	        		key:'editPassenger',
 	        		data:e
 	        	})
-				uni.redirectTo({
-					url:'/pages/GRZX/addPassenger?type=edit'
-				})
-	        	// uni.navigateTo({
-	        	// 	url:'/pages/GRZX/addPassenger?type=edit'
-	        	// })
+				// uni.redirectTo({
+				// 	url:'/pages/GRZX/addPassenger?type=edit'
+				// })
+	        	uni.navigateTo({
+	        		url:'/pages/GRZX/addPassenger?type=edit'
+	        	})
 	        },
 			addPassenger(){
-				uni.redirectTo({
+				uni.navigateTo({
 					url:'/pages/GRZX/addPassenger?type=add'
 				})
 			},

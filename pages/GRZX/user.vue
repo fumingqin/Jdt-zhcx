@@ -69,7 +69,7 @@
 </template>
 
 <script>
-	import listCell from '@/components/mix-list-cell';
+	import listCell from '@/components/GRZX/mix-list-cell';
 	import {  
 	    mapState 
 	} from 'vuex'; 
