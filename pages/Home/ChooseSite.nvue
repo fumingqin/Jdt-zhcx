@@ -154,8 +154,8 @@
 				
 				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
-		</popup> -->
-		<view v-if="current === 1" style="margin-top: 10upx;">
+		</popup>
+		<view v-if="current == 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
 					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
@@ -184,7 +184,7 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="current === 2">
+		<view v-if="current == 2">
 			<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
 			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
 			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
@@ -235,8 +235,8 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="current === 3">我是公交</view>
-		<view v-if="current === 4" style="margin-top: 10rpx;">
+		<view v-if="current == 3">我是公交</view>
+		<view v-if="current == 4" style="margin-top: 10rpx;">
 			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick">
 				<text style="font-size: 36rpx;font-weight: bold;">专线出租</text>
 				<view style="justify-content: space-between;padding-top: 20rpx;">
@@ -359,7 +359,6 @@
 		},
 		onLoad(options) {
 			var that = this;
-
 			uni.getStorage({ //获取历史记录
 				key: "historyAddress",
 				success: function(res) {
@@ -473,7 +472,7 @@
 			},
 			selectPassenger: function() { //选择乘车人
 				uni.navigateTo({
-					url: '../GRZX/passengerInfo?submitType=1',
+					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=1',
 					animationType: 'pop-in',
 					animationDuration: 200
 				});
@@ -548,7 +547,7 @@
 				});
 			},
 			search: function() { //搜索
-				var that = this;		
+				var that = this;
 				that.markers = [];
 				clearInterval(that.intervalAround);
 				var Isrepeat = true;
@@ -929,12 +928,5 @@
 		flex-direction: row;
 		text-align: right;
 		align-items: center;
-	}
-
-	.popupClass {
-		width: 588upx;
-		height: 830upx;
-		/* z-index:10001; */
-		/* background-image: url(../../static/CTKY/tipBackground.png); */
 	}
 </style>

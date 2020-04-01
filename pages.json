@@ -52,7 +52,7 @@
 				"navigationBarTitleText": "查看图片"
 			}
 		},
-		
+
 		{
 		
 			"path": "pages/LYFW/currency/travelDetails",
@@ -512,6 +512,12 @@
 			{
 				"pagePath": "pages/GRZX/user",
 				"text": "我的"
+			},
+			{
+				"pagePath": "pages/Home/MapIndex"
+			},
+			{
+				"pagePath": "pages/Home/MapSearch"
 			}
 		]
 	},
@@ -522,6 +528,6 @@
 			"name": "", //模式名称
 			"path": "", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
-		}]
+		}] 
 	}
 }
