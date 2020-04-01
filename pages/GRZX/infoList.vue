@@ -327,12 +327,16 @@
 			deletePassenger(){ //删除乘车人信息
 				var data=this.passengerList;
 				var array=[];
+				var deleteList=[];
 				for(var i=0;i<data.length;i++){
+					if(data[i].hiddenIndex==1){
+						deleteList.push(data[i]);
+					}
 					if(data[i].hiddenIndex==0){
 						array.push(data[i]);
 					}
 				}
-				if(array.length==0){
+				if(deleteList.length==0){
 					uni.showToast({
 						title: '请选择',
 						icon:"none"
@@ -341,12 +345,13 @@
 					uni.setStorage({
 						key:"passList",
 						data:array
-					})	
+					})
+					this.state=1;
+					uni.redirectTo({
+						url:'/pages/GRZX/infoList'
+					})
 				}
-				this.state=1;
-				uni.redirectTo({
-					url:'/pages/GRZX/infoList'
-				})
+				
 			},
 			deleteAddress(){
 				var data=this.addressList;

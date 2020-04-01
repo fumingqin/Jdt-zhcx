@@ -3,7 +3,7 @@
 		<view class="passengerList">
 			<view class="boxClass" v-if="submitType == 1 || submitType == 2" v-for="(item, index) in passengerList" :key="index" @click="choosePassenger(item)">  <!--非个人中心页面进入 -->
 				<view class="nameClass">{{item.userName}}</view>
-				<view class="sexClass" name="sex">{{item.userSex}}</view>
+				<view class="sexClass" name="userSex">{{item.userSex}}</view>
 				<view class="typeClass">{{item.userType}}</view>
 				<view class="codeClass fontStyle">身份证</view>
 				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
