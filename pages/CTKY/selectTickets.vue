@@ -19,10 +19,8 @@
 		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(item)">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#1EA2FF  solid 1px;text-align: center;align-items: center;color:#1EA2FF 
-					;font-size: 24upx;font-family: SourceHanSansSC-Light;" v-if="item.DepartureType=='传统客运'">传统</view>
-					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#FF5A00  solid 1px;text-align: center;align-items: center;color:#FF5A00
-					;font-size: 24upx;font-family: SourceHanSansSC-Light;" v-if="item.DepartureType=='定制班车'">定制</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.DepartureType=='传统客运'">传统</view>
+					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.DepartureType=='定制班车'">定制</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.SetTime}}</view>
 				</view>
 				<!-- <view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view> -->
@@ -83,7 +81,7 @@
 </template>
 
 <script>
-	import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
+	import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue";
 	export default {
 		components: {
 			MxDatePicker
@@ -361,7 +359,16 @@
 		border-radius: 8upx;
 		display: inline-block; //里层写这个
 	}
-
+	.markType {
+		width:65upx;
+		height: 37upx;
+		line-height: 37rpx;
+		border-radius: 14upx;
+		text-align: center;
+		align-items: center;
+		font-size: 24upx;
+		font-family: SourceHanSansSC-Light;
+	}
 	.textCLass {
 		margin: 9upx 17upx;
 	}

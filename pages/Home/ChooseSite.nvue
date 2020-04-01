@@ -135,7 +135,7 @@
 				</view>
 			</view>
 		</view>
-		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999;position: fixed;align-items: center; padding: 10upx;">
+		<!-- <popup ref="popup" type="center" :maskClick="flase" style="z-index:99999;position: fixed;align-items: center; padding: 10upx;">
 			<image src="../../static/CTKY/tipBackground.png" class="popupClass"></image>
 			<text style="position: absolute;color: #FFFFFF;top: 300rpx;margin-left: 80rpx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000">传统与定制班车的差异</text>
 			<view style="position: absolute; margin-top: 391upx;margin-left: 50rpx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
@@ -154,7 +154,7 @@
 				
 				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
-		</popup>
+		</popup> -->
 		<view v-if="current === 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">

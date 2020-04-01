@@ -41,15 +41,15 @@
 			<view class="historyView">
 				<label class="historyTitle">历史记录</label>
 				<view class="historyListView">
-					<view class="historyText" @tap="historyItemTap(index)" v-for="(i,index) in historyLines" :key=index v-if="index<20">{{i}}</view>
+					<view class="historyText" @tap="historyItemTap(index)" v-for="(i,index) in historyLines" :key=index v-if="index<10">{{i}}</view>
 				</view>
 			</view>
 		</view>
 	</view>
-</template> 
+</template>
 
 <script>
-import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
+import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue";
 	export default {
 		components: {
 			MxDatePicker
@@ -64,13 +64,13 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 				type: 'rangetime',
 				value: '',
 				showPicker: false,
-				date: '2020/03/26',
+				date: '2020/04/01',
 				historyLines: ['泉州-厦门', '泰宁-石家庄', '福州-婺源', '上海-绍兴','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄'],
 				datestring: '',
 				Week: '',
 				normalPickerNum:1,
 				specialPickerNum:0,
-				isNormal:1,//默认是普通购票
+				isNormal:0,//判断是普通购票还是定制班车默认是普通购票
 			}
 		},
 		onLoad() {
@@ -82,11 +82,11 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 				if (type == 'normal') {//点击了普通购票
 					this.normalPickerNum = 1;
 					this.specialPickerNum = 0;
-					this.isNormal = 1;//当前是普通购票
+					this.isNormal = 0;//当前是普通购票
 				}else if (type == 'special') {//点击了定制班车
 					this.normalPickerNum = 0;
 					this.specialPickerNum = 1;
-					this.isNormal = 0;//当前是定制班车
+					this.isNormal = 1;//当前是定制班车
 				}
 			},
 			onShowDatePicker(type) { //显示
@@ -113,14 +113,11 @@ import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
 			},
 			//查询
 			queryClick: function() {
-				//判断是普通购票还是定制购票this.isNormal=1是普通购票0是定制班车
-				console.log(this.isNormal);
-				
 				this.historyLines.unshift(this.departure + "-" + this.destination);
 				console.log(this.date,this.departure + "-" + this.destination)
 				
-				//页面传参通过地址后面添加参数
-				var params='./selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-30';
+				//页面传参通过地址后面添加参数 this.isNormal=0是普通购票1是定制班车
+				var params='./selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-30' + '&isNormal' + this.isNormal;
 				uni.navigateTo({ 
 					url:params
 				})
