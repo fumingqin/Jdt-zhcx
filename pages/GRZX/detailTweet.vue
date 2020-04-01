@@ -95,6 +95,7 @@
 			letter-spacing: 4upx; 
 			line-height: 48upx; 
 			color: #444;
+			text-align: justify;
 		}
 		
 		.count {

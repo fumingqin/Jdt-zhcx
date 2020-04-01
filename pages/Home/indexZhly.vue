@@ -29,7 +29,7 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="route('/pages/LYFW/peripheralTourism/peripheralTourism')">
+			<view class="cate-item" @click="route('/pages/LYFW/currency/independentTravel')">
 				<image src="../../static/Home/indexzhly/fujin.png" mode="aspectFit"></image>
 				<text>周边旅游</text>
 			</view>

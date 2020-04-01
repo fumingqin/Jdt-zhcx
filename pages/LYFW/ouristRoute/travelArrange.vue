@@ -3,7 +3,7 @@
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
 			<swiper-item class="swiItem" v-for="(item,index) in picList" :key="index" @click="goImgList">
-				<image :src="item.src" />
+				<image :src="item.ticketImage" />
 				<!-- <view class="view">{{imgnumber}}</view> -->
 			</swiper-item>
 		</swiper>
@@ -209,7 +209,7 @@
 			
 			//点击跳转付款页面
 			submit: function() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../scenicSpotTickets/orderAdd',
 				})
 			},
@@ -236,7 +236,7 @@
 					href: "pages/LYFW/ouristRoute/travelArrange",
 					title: "来自" + this.titleClick.name + "的分享", 
 					summary: this.titleClick.scenicName,
-					imageUrl: this.picList[0].src,
+					imageUrl: this.picList[0].ticketImage,
 					success: function() {
 						uni.showToast({
 							title: '分享成功',
@@ -648,7 +648,7 @@
 			}
 	
 			.zfIcon {
-				padding-left: 40upx;
+				padding-left: 50upx;
 				width: 32upx;
 				height: 33upx;
 				color: rgba(44, 45, 45, 1);

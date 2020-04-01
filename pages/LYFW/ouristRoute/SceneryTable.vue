@@ -62,9 +62,9 @@
 </template>
 
 <script>
-	import QStabs from '../../../components/QS-tabs/QS-tabs.vue'
-	import citySelect from '../../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/uni-location/popup-layer/popup-layer.vue'
+	import QStabs from '../../../components/LYFW/ouristRoute/QS-tabs/QS-tabs.vue'
+	import citySelect from '../../../components/LYFW/ouristRoute/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/LYFW/ouristRoute/popup-layer/popup-layer.vue'
 	export default {
 		components:{
 			QStabs,

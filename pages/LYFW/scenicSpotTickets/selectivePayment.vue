@@ -148,7 +148,7 @@
 			}
 		},
 		onLoad: function(options) {
-			// console.log(JSON.parse(options.orderNumber)); 
+			console.log(JSON.parse(options.orderNumber)); 
 			this.lyfwData();
 
 			// uni.request({
