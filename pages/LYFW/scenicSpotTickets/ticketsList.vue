@@ -16,14 +16,14 @@
 		</popup-layer>
 
 		<!-- 搜索内容 -->
-		<view :hidden="searchIndex==0">
-			<view class="Tk_scrollview" @click="godetail(searchData.ticketId)">
+		<view :hidden="searchIndex==0" v-for="(item,index) in searchData" :key="index">
+			<view class="Tk_scrollview" @click="godetail(item.ticketId)">
 				<view class="Tk_item">
-					<image class="Tk_image" :src="searchData.ticketImage" />
+					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
-						<text class="Tk_text1">{{searchData.ticketTitle}}</text>
-						<text class="Tk_text2">{{searchData.ticketComment_s1}}&nbsp;|&nbsp;{{searchData.ticketComment_s2}}&nbsp;|&nbsp;{{searchData.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{searchData.ticketAdultPrice}}元起</text>
+						<text class="Tk_text1">{{item.ticketTitle}}</text>
+						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
+						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
 					</view>
 				</view>
 			</view>
@@ -39,7 +39,7 @@
 				<image :src="item.ticketImage"></image>
 				<view class="sixView">
 					<text class="sixText1">{{item.ticketName}}</text>
-					<text class="sixText2">{{item.ticketEnglishName}}</text>
+					<text class="sixText2" :hidden="item.ticketEnglishName==''">{{item.ticketEnglishName}}</text>
 				</view>
 			</view>
 		</view>
@@ -60,12 +60,29 @@
 					<text :class="{active: priceOrder === 2 && screenIndex === 2}" class="jdticon icon-shang xia"></text>
 				</view>
 			</view>
-			<text class="cate-item jdticon icon-fenlei1" @click="toggleCateMask('show')"></text>
+			<text :class="{active:screenIndex === 3}" class="cate-item jdticon icon-fenlei1"   @click="toggleCateMask('show')"></text>
 		</view>
 
+		<!-- 景区列表 -->
+		<view :hidden="screenIndex == 3">
+			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" v-if="index < scenicListIndex " @click="godetail(item.ticketId)">
+				<view class="Tk_item">
+					<image class="Tk_image" :src="item.ticketImage" />
+					<view class="Tk_bacg">
+						<text class="Tk_text1">{{item.ticketTitle}}</text>
+						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
+						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
+					</view>
+				</view>
+			</view>
+			<view style="text-align: center; padding: 24upx 0; margin-bottom: 48upx; font-size: 28upx; color: #aaa;">
+				<text>{{loadingType=== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
+			</view>
+		</view>
+		
 		<!-- 筛选的景区列表 -->
-		<view>
-			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" @click="godetail(item.ticketId)">
+		<view :hidden="screenIndex !== 3 ">
+			<view class="Tk_scrollview" v-for="(item,index) in scenicListCate" :key="index" @click="godetail(item.ticketId)">
 				<view class="Tk_item">
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
@@ -76,7 +93,7 @@
 				</view>
 			</view>
 		</view>
-
+		
 		<!-- 分类面板 -->
 		<view class="cate-mask" :class="cateMaskState===0 ? 'none' : cateMaskState===1 ? 'show' : ''" @click="toggleCateMask">
 			<view class="cate-content">
@@ -99,53 +116,82 @@
 
 
 <script>
-	import citySelect from '../../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/uni-location/popup-layer/popup-layer.vue'
+	import citySelect from '../../../components/LYFW/currency/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/LYFW/currency/popup-layer/popup-layer.vue'
 	export default {
 		data() {
 			return {
 				searchIndex: 0, //搜索框是否启用状态值
 				searchValue: '', //搜索框值
 				searchData: '', //搜索后的值
+				
 				sixPalaceList: [], //六宫格列表
 				screenIndex: 0, //筛选框默认值
 				priceOrder: 0, //1 价格从低到高  2价格从高到低
 				cateMaskState: 0, //分类面板展开状态
+				
 				scenicList: [], //景区列表
-				loadingType: 'more', //加载更多状态 
+				scenicListCate : [],//筛选后的景区列表
+				scenicListIndex : 10, //列表默认数量
+				
+				loadingType: 0, //加载更多状态
+				loadingText:{
+					down :'上拉加载更多',
+					refresh : '正在加载...',
+					nomore : '没有更多了',
+				},
+				
 				cateId: 0, //已选三级分类id
 				cateList: [], //分类数组
+				cateValue : '', //分类筛选值
+				
 				region: '请选择', //地区数值
 			}
 		},
+		
 		components: {
 			citySelect,
 			popupLayer
 		},
+		
 		mounted() {
 			this.$refs.popupRef.close();
 		},
+		
 		onLoad(options) {
 			this.cateId = options.tid;
 			this.loadCateList(options.fid, options.sid);
 			this.Getpostion();
-			this.lyfwData();
-			this.loadData();
+			this.lyfwData(); //请求接口数据
 			
+		},
+		
+		onReachBottom() {
+			this.getMore();
 		},
 		
 		methods: {
 			//请求模拟接口数据
 			lyfwData:function() {
+				// 六宫格
 				uni.request({
-					url:'http://218.67.107.93:9266/travelImage/getSixPalaceList',
+					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=南平市',
 					method:'POST',
-					success:(e) => { 
-						this.sixPalaceList = e.data.data;
+					success:(res) => { 
+						// console.log(res)
+						this.sixPalaceList = res.data.data;
 					}
 				})
-				// let ticketSearch = await this.$api.lyfwfmq('ticketSearch');
-				// this.searchData = ticketSearch.data;
+				
+				// 请求景区列表
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getScenicspotList?requestArea=南平市',
+					method:'POST',
+					success:(res) => {
+						// console.log(res)
+						this.scenicList = res.data.data;
+					}
+				})
 			},
 			
 			//获取定位数据
@@ -171,6 +217,9 @@
 					// console.log(e)
 					this.region = e.cityName
 					this.$refs.popupRef.close();
+					this.lyfwData();
+					this.screenIndex = 0;
+					this.searchIndex = 0;
 				} else {
 					this.$refs.popupRef.close();
 				}
@@ -199,13 +248,33 @@
 					});
 					// retuan false;
 				}
+				//搜索请求
 				uni.hideKeyboard()
-				this.loadData('refresh', 1);
 				uni.showLoading({
-					title: '正在搜索' + this.searchValue,
+					title:'正在搜索',
 				})
-				this.searchValue = ''
-				this.searchIndex = 1;
+				uni.request ({
+					url:'http://218.67.107.93:9210/api/app/searchScenicspotList?searchValue='+this.searchValue,
+					method: 'POST',
+					success : (res) => {
+						if(res.data.msg =='搜索景区信息成功！'){
+							this.searchData = res.data.data;
+							this.searchValue = '' 
+							this.searchIndex = 1;
+							uni.hideLoading()
+						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
+							uni.hideLoading() 
+							uni.showToast({
+								title: '查不到相关景区！如:武夷/武夷山',
+								icon: 'none',
+								duration: 1500
+							});
+							this.searchValue = ''
+							
+						}
+					}
+				})
+
 			},
 
 			//路由整合
@@ -230,7 +299,7 @@
 					duration: 300,
 					scrollTop: 0
 				})
-				this.loadData('refresh', 1);
+				this.clickSork();
 			},
 
 			//显示分类面板
@@ -242,67 +311,73 @@
 					this.cateMaskState = state;
 				}, timer)
 			},
+			
 
 			//分类点击
 			changeCate: function(item) {
 				// console.log(item)
 				this.cateId = item.id;
+				this.cateValue = item.name;
+				this.screenIndex = 3;
 				this.toggleCateMask();
 				uni.pageScrollTo({
 					duration: 300,
 					scrollTop: 0
 				})
-				this.loadData('refresh', 1);
 				uni.showLoading({
-					title: '正在搜索' + item.name,
+					title:'正在搜索',
 				})
+				this.clickSork();
+				
 			},
 
 
-			//加载信息 ，带下拉刷新和上滑加载
-			async loadData(type = 'add', loading) {
-				//没有更多直接返回
-				if (type === 'add') {
-					if (this.loadingType === 'nomore') {
-						return;
-					}
-					this.loadingType = 'loading';
-				} else {
-					this.loadingType = 'more'
-				}
-
-				let scenicList = await this.$api.lyfwfmq('scenicList');
-				var sc = scenicList.data;
-				if (type === 'refresh') {
-					this.scenicList = [];
-				}
-
+			//点击排序
+			clickSork :function(){
+				var sc = this.scenicList;
+				this.scenicList = [];
 				//筛选，测试数据直接前端筛选了
-				if (this.screenIndex === 0) {
+				if (this.screenIndex == 0) {
 					sc.sort((a, b) => a.ticketId - b.ticketId)
+					this.cateId = '';
 				}
-				if (this.screenIndex === 1) {
+				if (this.screenIndex == 1) {
 					sc.sort((a, b) => b.ticketSales - a.ticketSales)
+					this.cateId = '';
 				}
-				if (this.screenIndex === 2) {
+				if (this.screenIndex == 2) {
 					sc.sort((a, b) => {
 						if (this.priceOrder == 1) {
 							return a.ticketAdultPrice - b.ticketAdultPrice;
 						}
 						return b.ticketAdultPrice - a.ticketAdultPrice;
 					})
+					this.cateId = '';
 				}
-
+				if(this.screenIndex == 3) {
+					let screen = sc.filter(item => {
+						return item.ticketTitle == this.cateValue;
+					})
+					this.scenicListCate = screen;
+					uni.hideLoading() 
+				}
+				
 				this.scenicList = this.scenicList.concat(sc);
+			},
+			 
 
-				// 判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
-				// this.loadingType  = this.scenicList.length > 20 ? 'nomore' : 'more';
-				if (type === 'refresh') {
-					if (loading == 1) {
-						uni.hideLoading()
-					} else {
-						uni.stopPullDownRefresh();
-					}
+			
+			//加载信息
+			getMore(){
+				this.loadingType = 1;
+				
+				if(this.scenicListIndex < this.scenicList.length){
+					var a = this.scenicListIndex +10;
+					this.scenicListIndex = a;
+					this.loadingType = 0;
+				}
+				if(this.scenicListIndex >= this.scenicList.length){
+					this.loadingType = 2;
 				}
 			}
 
@@ -469,6 +544,7 @@
 				&.active {
 					color: #06B4FD;
 				}
+				
 			}
 
 			.xia {

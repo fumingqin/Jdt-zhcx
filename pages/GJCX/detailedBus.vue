@@ -80,7 +80,7 @@
 </template>
 
 <script>
-	import uniPopup from "../../components/uni-popup/uni-popup3.vue"
+	import uniPopup from '../../components/uni-popup/uni-popup3.vue'
 	import taxi from '../../common/Czc.js'
 	export default {
 		data() {
@@ -158,7 +158,7 @@
 		},
 		components: {
 			//加载多方弹框组件
-			uniPopup,
+			uniPopup
 		},
 		methods: {
 			async busIndex(){
@@ -176,7 +176,6 @@
 				this.starTime =this.detailLine.data.starTime;
 				this.endTime =this.detailLine.data.endTime;
 				this.price =this.detailLine.data.price;
-				
 				this.unit =this.detailLine.data.unit;
 				this.departureTime =this.detailLine.data.departureTime;
 			},
@@ -267,10 +266,10 @@
 	//     z-index: -1;
 	//   }
   .box1{
-	  background-color: #FFFFFF;
+	  background-color: #ff0000;
 	  height: 160upx;
 	  position: relative;
-	  z-index: 999;
+	  z-index: 9999;
 	.text1{
 		  font-size: 32upx;
 		  margin-left: 33upx;

@@ -10,15 +10,16 @@
         "usingComponents" : true,
         "nvueCompiler" : "uni-app",
         "splashscreen" : {
-            "alwaysShowBeforeRender" : true,
-            "waiting" : true,
+            "alwaysShowBeforeRender" : false,
+            "waiting" : false,
             "autoclose" : true,
             "delay" : 0
         },
         /* 模块配置 */
         "modules" : {
             "Maps" : {},
-            "Push" : {}
+            "Push" : {},
+            "OAuth" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -65,7 +66,8 @@
                 "payment" : {},
                 "push" : {
                     "unipush" : {}
-                }
+                },
+                "oauth" : {}
             },
             "icons" : {
                 "android" : {

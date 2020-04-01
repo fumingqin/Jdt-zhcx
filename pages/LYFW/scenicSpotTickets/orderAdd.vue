@@ -10,8 +10,8 @@
 		<!-- 命名：MP -->
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{scSpotDetails.ticketTitle}}</view>
-				<text class="MP_text" @click="open2(1)">{{scSpotDetails.ticketComment_s1}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s2}}&nbsp;|&nbsp;{{scSpotDetails.ticketComment_s3}} &nbsp; > </text>
+				<view class="MP_title">{{admissionTicket.admissionTicketName}}</view>
+				<text class="MP_text" @click="open2(1)">{{admissionTicket.ticketComment_s1}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s2}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s3}} &nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<view class="boxVlew">
@@ -22,7 +22,7 @@
 						<scroll-view class="noticeBox" scroll-y="ture">
 							<text class="Nb_text3">费用包含</text>
 							<text class="Nb_text4">
-								{{scSpotDetails.ticketContain}}
+								{{admissionTicket.ticketContain}}
 							</text>
 							<text class="Nb_text3">预订说明</text>
 							<text class="Nb_text4">{{notice.explain}}</text>
@@ -52,14 +52,14 @@
 				<text class="MP_text" style="color: #aaa;">请选择预订人，票价会根据人数自动变更</text>
 
 				<view class="MP_userInformation" v-for="(item,index) in addressData" :key="index">
-					<text>{{item.name}}</text>
-					<text class="Mp_sex">{{item.sex}}</text>
-					<text class="Mp_square">{{item.ticketType}}</text>
-					<text class="Mp_square" v-if="item.default == true">本人</text>
-					<text class="Mp_square" v-if="item.emergencyContact == true">紧急联系人</text>
+					<text>{{item.userName}}</text>
+					<text class="Mp_sex">{{item.userSex}}</text>
+					<text class="Mp_square">{{item.userType}}</text>
+					<text class="Mp_square" v-if="item.userDefault == true">本人</text>
+					<text class="Mp_square" v-if="item.userEmergencyContact == true">紧急联系人</text>
 					<text class="Mp_delete  jdticon icon-fork" @click="deleteUser(index)"></text>
-					<text class="Mp_text">身份证：{{item.codeNum}}</text>
-					<text class="Mp_text">手机号：{{item.phoneNum}}</text>
+					<text class="Mp_text">身份证：{{item.userCodeNum}}</text>
+					<text class="Mp_text">手机号：{{item.userPhoneNum}}</text>
 				</view>
 
 				<view class="MP_userInformation">
@@ -150,9 +150,9 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/uni-popup/uni-popup.vue"
-	import uniCalendar from '../../../components/uni-calendar/uni-calendar.vue'
-	export default {
+	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniCalendar from '../../../components/LYFW/scenicSpotTickets/uni-calendar/uni-calendar.vue'
+	export default {  
 		data() {
 			const currentDate = this.getDate({
 				format: true
@@ -160,17 +160,22 @@
 			return {
 				actualPayment: '', //实际付款
 				selectedValue: 0, //同意须知的选中值
-				dateReminder: '明天', //日期提醒
+				dateReminder: '今天', //日期提醒
 				date: currentDate, //默认时间
 				maskState: 0, //优惠券面板显示状态
-				scSpotDetails: '', //景区内容
+				
+				admissionTicket: '', //门票内容
+				
 				couponIndex: '请选择优惠券', //优惠券默认内容
-				couponColor: '', //优惠券couponID，大于等于0触发价格判断事件
+				couponColor: '', //优惠券couponID
 				couponCondition: '', //优惠券的满足条件值
+				
 				notice : '', // 预订须知
+				
 				addressData: '', //购票人信息
 				adultIndex: '', //成人数量
 				childrenIndex: '', //儿童数量
+				
 				couponList: [{
 						couponID: '0',
 						title: '新用户专享优惠券',
@@ -199,11 +204,10 @@
 		},
 
 		onLoad(options) {
-			// console.log(JSON.parse(options.ticketId)); 
 			this.lyfwData();
-			setInterval(() => {
-				this.userData();
-			}, 500)
+		},
+		onShow() {
+			this.userData();
 		},
 		components: {
 			//加载多方弹框组件
@@ -213,9 +217,14 @@
 		},
 		methods: {
 			//读取静态数据
-			async lyfwData() {
-				let scSpotDetails = await this.$api.lyfwfmq('scSpotDetails');
-				this.scSpotDetails = scSpotDetails.data;
+			async lyfwData(e) {
+				uni.getStorage({
+					key:'ticketInformation',
+					success:(res) =>{
+						this.admissionTicket = res.data;
+						// console.log(res)
+					}
+				})
 				
 				let notice = await this.$api.lyfwfmq('notice');
 				this.notice = notice.data;
@@ -316,7 +325,7 @@
 
 			// 数量+计价
 			numberChange() {
-				const a = (this.scSpotDetails.ticketAdultPrice * this.adultIndex) + (this.scSpotDetails.ticketChildPrice * this.childrenIndex);
+				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this.childrenIndex);
 				if (this.couponColor == '') {
 					this.actualPayment = a;
 				} else if (a >= this.couponCondition) {
@@ -338,26 +347,70 @@
 			//提交表单
 			submit: function() {
 				if (this.selectedValue == 1 && this.addressData.length>0) {
-					// uni.request({
-					// 	url : '',
-					// 	data:{
-					// 		ticket : this.scSpotDetails,
-					// 		addressData : this.addressData,
-					// 		actualPayment : this.actualPayment,
-					// 		dateReminder : this.dateReminder,
-					// 		date : this.date,
-					// 		coupon : this.couponColor,
-					// 	},
-					// 	//向服务器发送订单数据，返回订单编号
-					// 	success:(res)=>{
-					// 		console.log(res)
-					// 	}
-					// })
-					var a = '11126778833';
-					uni.redirectTo({
-						url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
+					console.log(this.admissionTicket.admissionTicketID)
+					console.log(this.admissionTicket.ticketContain)
+					console.log(this.admissionTicket.companyId)
+					console.log(this.admissionTicket.executeScheduleId)
+					console.log(this.addressData)
+					console.log(this.couponColor)
+					console.log(this.date)
+					console.log(this.dateReminder)
+					console.log(this.actualPayment)
+					uni.request({
+						// url : 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder?unid=12321'+
+						// '&admissionTicketID=' +this.admissionTicket.admissionTicketID +
+						// '&companyId=' +this.admissionTicket.companyId +
+						// '&executeScheduleId=' +this.admissionTicket.executeScheduleId +
+						// '&addressData=' +this.addressData +
+						// '&dateReminder=' +this.dateReminder +
+						// '&date=' +this.date +
+						// '&orderInsure= ' +'' +
+						// '&orderInsurePrice=' +'' +
+						// '&actualPayment=' +this.actualPayment,
+						
+						url : 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+						data:{
+							unid : '12321',
+							ticketProductId : this.admissionTicket.admissionTicketID,
+							ticketId : 0,
+							ticketContain : this.admissionTicket.ticketContain,
+							
+							companyId : this.admissionTicket.companyId,
+							executeScheduleId : this.admissionTicket.executeScheduleId,
+							
+							addressData : this.addressData,
+							couponID : this.couponColor,
+							
+							orderDateReminder : this.dateReminder,
+							orderDate : this.date,
+							orderInsure : '',
+							orderInsurePrice : '',
+							orderActualPayment : this.actualPayment,
+						},
+						
+						method:'POST',
+						//向服务器发送订单数据，返回订单编号
+						success:(res)=>{
+							console.log(res)
+							if(res.data.msg =='无可售门票！'){
+								uni.showToast({
+									title:'该景区无可售门票！',
+									icon:'none',
+								})
+							}else if(res.data.msg =='下单失败，联系管理员！'){
+								uni.showToast({
+									title:'下单失败，联系管理员！',
+									icon:'none',
+								})
+							}else if(res.data.msg =='下单成功'){
+								uni.redirectTo({
+									url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(res.data.orderNumber)
+								})
+							}
+							
+						}
 					})
-
+					
 				} else if(this.addressData.length==0){
 					uni.showToast({
 						title: '请添加购票人信息',
@@ -400,7 +453,7 @@
 				const date = new Date();
 				let year = date.getFullYear();
 				let month = date.getMonth() + 1;
-				let day = date.getDate() + 1;
+				let day = date.getDate();
 				if (type === 'start') {
 					year = year - 60;
 				} else if (type === 'end') {
@@ -424,6 +477,7 @@
 					second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 				day >= 0 && day <= 9 ? (day = "0" + day) : "";
 				var index = e.date - day;
+				console.log(index)
 				if (index < 0) {
 					uni.showToast({
 						title: '请勿选择以往日期',
