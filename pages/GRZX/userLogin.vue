@@ -53,8 +53,9 @@
 		<view class="loginMode">第三方登录</view>
 		<view class="leftLine"></view>
 		<view class="rightLine"></view>
-		<image src="../../static/GRZX/qqLogo.png" class="qqClass" @click="qqLogin"></image>
-		<image src="../../static/GRZX/wxLogo.png" class="wxClass" @click="wxLogin"></image>
+		<!-- <image src="../../static/GRZX/qqLogo.png" class="qqClass" @click="qqLogin"></image> -->
+		<!-- <image src="../../static/GRZX/wxLogo.png" class="wxClass" @click="wxLogin"></image> -->
+		<image src="../../static/GRZX/wxLogo.png" class="wxClass1" @click="wxLogin"></image>
 	</view>
 </template>
 
@@ -431,6 +432,13 @@
 	.wxClass{  //微信
 		position: absolute;
 		left: 33%;
+		top:1015upx;
+		width: 67upx;
+		height: 54upx;	
+	}
+	.wxClass1{  //微信1
+		position: absolute;
+		left: 44%;
 		top:1015upx;
 		width: 67upx;
 		height: 54upx;	

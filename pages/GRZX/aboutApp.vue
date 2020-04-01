@@ -1,9 +1,24 @@
 <template>
-	<view>关于App</view>
+	<view>
+		<text class="titleClass">大武夷智慧游</text>
+	</view>
 </template>
 
 <script>
+	export default{
+		data(){
+			return{
+				
+			}
+		},
+		methods:{
+			
+		}
+	}
 </script>
 
-<style>
+<style lang="scss">
+	page{
+		background-color: #FFFFFF;
+	}
 </style>
