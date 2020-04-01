@@ -163,10 +163,10 @@
 		</view>
 
 	</view>
-</template>
+</template> 
 
 <script>
-	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import uniPopup from "../../../components/LYFW/ouristRoute/uni-popup/uni-popup.vue"
 	import {
 		mapState
 	} from 'vuex';
