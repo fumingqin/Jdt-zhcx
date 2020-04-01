@@ -57,6 +57,19 @@
 				</view>
 			</view>
 		</view>
+		
+		<view :hidden="current==0">
+			<!-- 左边导航栏 -->
+			<view style="width: 100%;display: flex;flex-direction: row;">
+				<scroll-view scroll-y="true" style="width: 200upx; flex: 0 0 200upx; background: #f5f5f5;" >
+					<view>
+						<view  v-for="(item,index) in region" :key="index" style="width: 100%; height: 100upx; display: flex; justify-content: center; align-items: center; font-size: 25upx; border-bottom: 1px solid #dedede; cursor: pointer;"></view>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
+		
+		
 	</view>
 </template>
 
@@ -72,10 +85,17 @@
 				searchData: '', //搜索后的值
 				region: '请选择', //地区数值
 
-				current: 0, //标题下标
+				current: 1, //标题下标
 				tabs: ['推荐', '全部'], //选项标题
 
 				itText: '',
+				
+				regin : [{
+					id:'0',
+					name:'南平',
+					image : '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
+					label : '',
+				},], //地区
 			}
 		},
 		components: {
