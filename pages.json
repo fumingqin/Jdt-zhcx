@@ -1,3 +1,4 @@
+
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
@@ -65,7 +66,7 @@
 			}
 		},
 		{
-
+		
 			"path": "pages/LYFW/currency/travelDetails",
 			"style": {
 				// #ifdef APP-PLUS
@@ -489,29 +490,22 @@
 		{
 			"path": "pages/GJCX/detailed",
 			"style": {}
-		}, {
-			"path": "pages/LYFW/currency/independentTravel",
-			"style": {}
-		},
+		}
+	    ,{
+            "path" : "pages/LYFW/currency/independentTravel",
+            "style" : {}
+        },
 		{
-			"path": "pages/CTKY/homeSattionPick",
-			"style": {
+		    "path" : "pages/CTKY/homeSattionPick",
+		    "style" : {
 				"navigationBarTitleText": "选择站点"
 			}
-		}, {
-			"path": "pages/LYFW/groupTour/groupTourList",
-			"style": {}
-		},
-		{
-			"path":"pages/Home/MapIndex",
-			"style":{}
-		},
-		{
-			"path":"pages/Home/MapSearch",
-			"style":{}
 		}
-		
-	],
+        ,{
+            "path" : "pages/LYFW/groupTour/groupTourList",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -542,6 +536,12 @@
 			{
 				"pagePath": "pages/GRZX/user",
 				"text": "我的"
+			},
+			{
+				"pagePath": "pages/Home/MapIndex"
+			},
+			{
+				"pagePath": "pages/Home/MapSearch"
 			}
 		]
 	},

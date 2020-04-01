@@ -176,13 +176,18 @@ const realtimeDynamicback ={
 	msg: '提示'	
 }
 const InterfaceAddress = [
-	//根据起终点经纬度获取线路规划
-	//计算经纬度距离
-	'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat' ,
-	//获取所有车辆定位数据
-	'http://111.231.109.113:8002/api/zhcx/getAllVehiclePosition',
-	//根据经纬度获取附近一定范围的经纬度
-	'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition',
+	//获取线路信息，根据站点名称
+	'http://111.231.109.113:8002/api/bus/getBusLineInfoByStationName',
+	//获取离某个经纬度最近的一个站点信息，根据经纬度信息
+	'http://111.231.109.113:8002/api/bus/getBusStationInfoByLonLat',
+	//获取线路站点信息，根据线路编号，线路方向
+	'http://111.231.109.113:8002/api/bus/getBusLineStationInfoByLineIdDirection',
+	//获取车辆实时到站信息，根据线路编号，线路方向
+	'http://111.231.109.113:8002/api/bus/getBusArriveLeaveStationInfoByLineIdDirection',
+	//获取距离某站最近车辆信息 根据线路编号，方向，站点名称 
+	'http://111.231.109.113:8002/api/bus/getBusLineArriveLeaveStationInfoByLineIdDirectionStationName',
+	//根据起始点经纬度获取距离
+	'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat'
 ]
 // 接口声明区
 export default {
