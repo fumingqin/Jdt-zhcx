@@ -8,9 +8,9 @@
 				</view>
 				<view class="itemClass borderTop">
 					<view class="fontStyle">性别</view>
-					<radio-group class="inputClass" name="sex">
+					<radio-group class="inputClass" name="userSex">
 						<label v-for="(item, index) in sexMode" :key="index" @click="radioClick(index)" > 
-							<radio style="transform: scale(0.7)" :value="user.userSex" :checked="index===user.sex" />{{item.title}}
+							<radio style="transform: scale(0.7)" :value="user.userSex" :checked="index===user.userSex" />{{item.title}}
 						</label>  
 					</radio-group>
 				</view>
@@ -36,7 +36,7 @@
 					<input
 						placeholder="请保持与证件号码一致"
 						class="inputClass"
-						:value="user.codeNum"
+						:value="user.userCodeNum"
 						name="userCodeNum"
 						type="idcard"
 						maxlength="18"
@@ -103,9 +103,9 @@
 			<view class="personClass">
 				<view class="fontStyle">设置为本人</view>
 				<view class="checkBox">
-					<checkbox-group name="default" @change="checkChange">
+					<checkbox-group name="userDefault" @change="checkChange">
 						<label>
-							<checkbox :checked="user.default" :value="user.default" />
+							<checkbox :checked="user.userDefault" :value="user.userDefault" />
 						</label>
 					</checkbox-group>
 				</view>
@@ -114,9 +114,9 @@
 			<view v-if="user.show" class="emergencyClass">
 				<view class="fontStyle">紧急联系人</view>
 				<view class="checkBox">
-					<checkbox-group name="emergencyContact">
+					<checkbox-group name="userEmergencyContact">
 						<label>
-							<checkbox :checked="user.emergencyContact" :value="user.emergencyContact"/>
+							<checkbox :checked="user.userEmergencyContact" :value="user.userEmergencyContact"/>
 						</label>
 					</checkbox-group>
 				</view>
