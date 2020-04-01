@@ -5,20 +5,20 @@
 			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
 
-		
+
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{orderInfo[0].ticketTitle}}</view>
-				<text class="MP_text">费用包含：{{orderInfo[0].ticketContain}}</text>
+				<view class="MP_title">{{orderInfo.ticketTitle}}</view>
+				<text class="MP_text">费用包含：{{orderInfo.ticketContain}}</text>
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{orderInfo[0].orderDate}} &nbsp; {{orderInfo[0].orderDateReminder}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{orderInfo.orderDate}} &nbsp; {{orderInfo.orderDateReminder}} &nbsp; 仅限当天</text>
 				</view>
-				
-				<view class="MP_selectionDate" :hidden="hiddenValues==0" >
+
+				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">购票人信息</view>
-					<view class="MP_userInformation" v-for="(item,index) in orderInfo" :key="index">
+					<view class="MP_userInformation" v-for="(item,index) in orderInfo.appUserInfoList" :key="index">
 						<text>{{item.userName}}</text>
 						<text class="Mp_sex">{{item.userSex}}</text>
 						<text class="Mp_square">{{item.userType}}</text>
@@ -42,30 +42,32 @@
 						<text class="MP_number">×{{childrenIndex}}</text>
 						<text class="MP_userCost">¥{{childrenTotalPrice}}</text>
 					</view>
-					
+
 					<!-- 保险 -->
-					<view class="MP_cost" v-if="orderInfo[0].orderInsure==true">
+					<view class="MP_cost" v-if="orderInfo.orderInsure==true">
 						<text>太平洋门票意外险 经济款</text>
 						<text class="MP_number">×{{orderInfo.length}}</text>
-						<text class="MP_total">¥{{orderInfo[0].orderInsurePrice}}</text>
+						<text class="MP_total">¥{{orderInfo.orderInsurePrice}}</text>
 					</view>
-					
+
 					<!-- 优惠券 -->
-					<view class="MP_cost" v-if="orderInfo[0].couponPrice>0">
-						<text>{{orderInfo[0].couponTitle}}</text>
+					<view class="MP_cost" v-if="orderInfo.couponPrice>0">
+						<text>{{orderInfo.couponTitle}}</text>
 						<text class="MP_number">×1</text>
-						<text class="MP_total">-&nbsp;¥{{orderInfo[0].couponPrice}}</text>
+						<text class="MP_total">-&nbsp;¥{{orderInfo.couponPrice}}</text>
 					</view>
 
 
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{orderInfo[0].orderActualPayment}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo.orderActualPayment}}</text>
 					</view>
-					
+
 				</view>
-				
-				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)" :hidden="hiddenValues==1"></view>
-				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)" :hidden="hiddenValues==0"></view>
+
+				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)"
+				 :hidden="hiddenValues==1"></view>
+				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)"
+				 :hidden="hiddenValues==0"></view>
 
 			</view>
 
@@ -86,7 +88,7 @@
 			</view>
 
 			<view class="MP_information3" @click="payment">
-				支付{{orderInfo[0].orderActualPayment}}元
+				支付{{orderInfo.orderActualPayment}}元
 			</view>
 
 		</view>
@@ -98,7 +100,7 @@
 	export default {
 		data() {
 			return {
-				hiddenValues : '0',//隐藏状态值
+				hiddenValues: '0', //隐藏状态值
 				channel: [{
 					name: '微信'
 				}, {
@@ -111,7 +113,7 @@
 					orderActualPayment: '',
 					orderDateReminder: '',
 					orderDate: '',
-					orderCountdown : '',
+					orderCountdown: '',
 					orderInsure: '',
 					orderInsurePrice: '',
 
@@ -128,14 +130,17 @@
 					couponPrice: '',
 					couponCondition: '',
 
-					userID: '',
-					userType: '',
-					userName: '',
-					userSex: '',
-					userCodeNum: '',
-					userPhoneNum: '',
-					userDefault: '',
-					userEmergencyContact: '',
+					appUserInfoList: [{
+						userID: '',
+						userType: '',
+						userName: '',
+						userSex: '',
+						userCodeNum: '',
+						userPhoneNum: '',
+						userDefault: '',
+						userEmergencyContact: '',
+					}]
+
 				}],
 
 
@@ -147,41 +152,27 @@
 
 			}
 		},
-		onLoad: function(options) {
-			console.log(JSON.parse(options.orderNumber)); 
-			this.lyfwData();
-
-			// uni.request({
-			// 	url:'',
-			// 	data:{
-			// 		orderNumber : this.orderNumber
-			// 	},
-			// 	success: (res) => {
-			// 		this.ticket = res.data.ticket;
-			// 		this.addressData = res.data.addressData;
-			// 		this.actualPayment = res.data.actualPayment;
-			// 		this.coupon = res.data.coupon;
-			// 		this.date = res.data.date;
-			// 		this.dateReminder = res.data.dateReminder;
-			// 	}
-			// })
+		onLoad(options) { 
+			uni.request({
+					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + JSON.parse(options.orderNumber),
+					method: 'POST',
+					success: (res) => {
+						console.log(res)
+						this.orderInfo = res.data.data;
+						this.screenUser();
+					}
+				})
 		},
 		methods: {
-			async lyfwData() {
-				let orderInfo = await this.$api.lyfwfmq('orderInfo');
-				this.orderInfo = orderInfo.data;
-				this.screenUser();
-			},
-			
 			//隐藏操作
-			hide(e){
-				if(e==0){
-					this.hiddenValues =1;
-				}else {
-					this.hiddenValues =0;
+			hide(e) {
+				if (e == 0) {
+					this.hiddenValues = 1;
+				} else {
+					this.hiddenValues = 0;
 				}
 			},
-			
+
 			//同意购买-点击事件
 			Selection: function() {
 				if (this.channeIndex == 0) {
@@ -193,17 +184,17 @@
 
 			//数组提取
 			screenUser: function() {
-				let adult = this.orderInfo.filter(item => {
+				let adult = this.orderInfo.appUserInfoList.filter(item => {
 					return item.userType == '成人';
 				})
-				let children = this.orderInfo.filter(item => {
+				let children = this.orderInfo.appUserInfoList.filter(item => {
 					return item.userType == '儿童';
 				})
 
 				this.adultIndex = adult.length;
 				this.childrenIndex = children.length;
-				this.adultTotalPrice = adult.length * this.orderInfo[0].ticketAdultPrice;
-				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
+				this.adultTotalPrice = adult.length * this.orderInfo.ticketAdultPrice;
+				this.childrenTotalPrice = children.length * this.orderInfo.ticketChildPrice;
 			},
 
 			//调起支付
@@ -229,7 +220,7 @@
 				// })
 
 				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber='+JSON.stringify(this.orderInfo[0].orderNumber)
+					url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber=' + JSON.stringify(this.orderInfo.orderNumber)
 				})
 
 			}
@@ -263,12 +254,13 @@
 		top: 148upx;
 		padding: 32upx 30upx;
 	}
-	
+
 	/* #ifdef MP-WEIXIN */
 	//整体容器样式 -微信版
 	.cover-container {
 		top: 64upx;
 	}
+
 	/* #endif */
 
 	//公共样式 - 适用多个数据框
