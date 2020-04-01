@@ -345,11 +345,11 @@ const routeComment2 = {
 	status: 1, //1成功/0失败提示返回值
 	data: {
 		image: [{
-			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			ticketImage: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
 		}, {
-			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner2.jpg',
+			ticketImage: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner2.jpg',
 		}, {
-			src: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner3.jpg',
+			ticketImage: '../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner3.jpg',
 		}],
 	},
 	msg: '提示'

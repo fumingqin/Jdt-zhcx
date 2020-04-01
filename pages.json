@@ -67,8 +67,17 @@
 		},
 		{
 		
-			"path": "pages/LYFW/ouristRoute/travelArrange",
-			"style": {}
+			"path": "pages/LYFW/currency/travelDetails",
+			"style": {
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
 		},
 		{
 			"path": "pages/CZC/CallAndDrive",
@@ -127,12 +136,6 @@
 						"type": "transparent"
 					}
 				}
-			}
-		},
-		{
-			"path": "pages/LYFW/ouristRoute/SceneryTable",
-			"style": {
-				"navigationBarTitleText": "旅游路线"
 			}
 		},
 		{
@@ -267,10 +270,6 @@
 		},
 		//个人中心模块结束
 		{
-			"path": "pages/LYFW/ouristRoute/travelDetails",
-			"style": {}
-		},
-		{
 			"path": "pages/LYFW/peripheralTourism/imgListlql",
 			"style": {}
 		},
@@ -365,9 +364,6 @@
 				"navigationBarTitleText": "费用明细"
 			}
 		}, {
-			"path": "pages/LYFW/ouristRoute/toreply",
-			"style": {}
-		}, {
 			"path": "pages/GJCX/busIndex",
 			"style": {
 				"navigationBarTitleText": "公交查询",
@@ -447,12 +443,12 @@
 				"navigationBarTitleText": "搜索"
 			}
 		}, {
-			"path": "pages/LYFW/ouristRoute/collection",
+			"path": "pages/GRZX/collection",
 			"style": {
 				"navigationBarTitleText": "我的收藏"
 			}
 		}, {
-			"path": "pages/LYFW/ouristRoute/history",
+			"path": "pages/GRZX/history",
 			"style": {
 				"navigationBarTitleText": "我的历史"
 			}
@@ -505,6 +501,10 @@
 				"navigationBarTitleText": "选择站点"
 			}
 		}
+        ,{
+            "path" : "pages/LYFW/groupTour/groupTourList",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
