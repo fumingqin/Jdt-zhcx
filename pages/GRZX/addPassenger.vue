@@ -133,7 +133,7 @@
 </template>
 
 <script>
-	import wPicker from "@/components/w-picker/w-picker.vue";
+	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
 	export default {
 		data(){
 			return{
@@ -167,7 +167,6 @@
 		onLoad (options){
 			var type=options.type;
 			this.type=options.type;
-			this.address=options.address;
 			if(options.type=="edit"){
 				this.loadData(type);
 			}
@@ -287,10 +286,7 @@
 								})
 							}
 						})
-						//uni.navigateBack();
-						uni.redirectTo({
-							url:'/pages/GRZX/infoList'
-						})
+						uni.navigateBack();
 					}else if(this.type=='add'){
 						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
 						data1.userID=randomNum;
@@ -313,17 +309,7 @@
 								})
 							}
 						})
-						//uni.navigateBack();
-						if(that.address=='Info'){
-							//uni.navigateBack();
-							uni.redirectTo({
-								url:'/pages/GRZX/passengerInfo?submitType=1'
-							});
-						}else{
-							uni.redirectTo({
-								url:'/pages/GRZX/infoList'
-							})
-						}
+						uni.navigateBack();
 					}else{
 						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
 						data1.userID=randomNum;

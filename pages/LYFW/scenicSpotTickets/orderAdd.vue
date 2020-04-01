@@ -150,9 +150,9 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/uni-popup/uni-popup.vue"
-	import uniCalendar from '../../../components/uni-calendar/uni-calendar.vue'
-	export default {
+	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniCalendar from '../../../components/LYFW/scenicSpotTickets/uni-calendar/uni-calendar.vue'
+	export default {  
 		data() {
 			const currentDate = this.getDate({
 				format: true
@@ -402,10 +402,12 @@
 									title:'下单失败，联系管理员！',
 									icon:'none',
 								})
+							}else if(res.data.msg =='下单成功'){
+								uni.redirectTo({
+									url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(res.data.orderNumber)
+								})
 							}
-							// uni.redirectTo({
-							// 	url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(a)
-							// })
+							
 						}
 					})
 					

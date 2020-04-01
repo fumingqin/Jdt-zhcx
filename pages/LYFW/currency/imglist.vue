@@ -17,7 +17,7 @@ export default {
 	},
 	onLoad(query) {
 		// 获取图片列表数据
-		this.picList=uni.getStorageSync("imagePiclist");
+		this.picList=uni.getStorageSync("imagePiclist"); 
 	},
 	onUnload() {
 		uni.removeStorageSync("imagePiclist");

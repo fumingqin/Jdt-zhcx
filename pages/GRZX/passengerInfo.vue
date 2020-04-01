@@ -64,14 +64,16 @@
 		onLoad(options){
 			//传参，submitType参数为1,为出租车进入,其他界面设为2 
 			//limitNum参数为你限制添加乘车人的数量（大于等于1）
-			this.getType(options.submitType,options.limitNum); 
+			this.submitType=options.submitType;
+			this.limit=options.limitNum;
+		},
+		onShow() {
+			this.loadData();
 		},
 		methods:{
-			async getType(t,l){
-				this.submitType=t;
-				this.limit=l;
+			async loadData(){
 				var check=[];
-				var array=this.passengerList;
+				var array=[];
 				uni.getStorage({
 					key:'passengerList',
 					success(res) {
@@ -96,20 +98,15 @@
 						}
 					}
 				})
+				this.passengerList=array;
 			},
 			addPassenger(){
-				uni.redirectTo({
-					url:'/pages/GRZX/addPassenger?type=add&&address=Info'
+				uni.navigateTo({
+					url:'/pages/GRZX/addPassenger?type=add'
 				})
 			},
 			returnPages(){
-				if(this.submitType==1){
-					uni.redirectTo({
-						url:'/pages/LYFW/scenicSpotTickets/orderAdd'
-					})
-				}else{
-					uni.navigateBack();
-				}
+				uni.navigateBack();
 			},
 			editPassenger(e){   //编辑乘车人信息
 				uni.setStorage({
