@@ -54,9 +54,9 @@
 
 <script>
 	import taxi from "../../common/Czc.js";
-	import uniIcons from "../../components/uni-icons/uni-icons.vue";
-	import uniSegmentedControl from "../../components/uni-segmented-control/uni-segmented-control.vue";
-	import hTimePicker from "../../components/h-timePicker/h-timePicker.vue";
+	import uniIcons from "../../components/CZC/uni-icons/uni-icons.vue";
+	import uniSegmentedControl from "../../components/CZC/uni-segmented-control/uni-segmented-control.vue";
+	import hTimePicker from "../../components/CZC/h-timePicker/h-timePicker.vue";
 	export default {
 		components: {
 			uniIcons,
