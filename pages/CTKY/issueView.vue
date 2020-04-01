@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import uniRate from '@/components/StarJudge/uni-rate/uni-rate.vue'
+	import uniRate from '@/components/CTKY/StarJudge/uni-rate/uni-rate.vue'
 	export default {
 		components:{uniRate},
 		data() {
