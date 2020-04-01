@@ -7,7 +7,6 @@ import Gjcx from './common/Gjcx.js' //公交查询-测试用数据
 import Grzx from './common/Grzx.js' //个人中心-测试用数据
 import Lyfwfmq from './common/LYFW/LyfwFmq.js' //旅游服务-测试用数据-傅洺钦
 import Lyfwcwd from './common/LYFW/LyfwCwd.js' //旅游服务-测试用数据-蔡伟达
-import Lyfwlql from './common/LYFW/LyfwLql.js' //旅游服务-测试用数据-林奇隆
 import store from './common/login.js' //登录
 
 import Sceniclist from 'common/scenicSpotDistribution.js' //旅游服务-景区目录-测试用数据
@@ -86,14 +85,6 @@ const lyfwcwd = type=>{
 	})
 }
 
-//模拟异步请求数据 - 旅游服务
-const lyfwlql = type=>{
-	return new Promise(resolve=>{
-		setTimeout(()=>{
-			resolve(Lyfwlql[type]);
-		}, 500)
-	})
-}
 
 //模拟异步请求数据 - 旅游服务
 const sceniclist = type=>{
@@ -106,5 +97,5 @@ const sceniclist = type=>{
 
 
 
-Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfwfmq,lyfwcwd,lyfwlql,sceniclist};
+Vue.prototype.$api = {ctky,czc,dd,gjcx,grzx,lyfwfmq,lyfwcwd,sceniclist};
 app.$mount()
