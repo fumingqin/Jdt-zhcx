@@ -172,8 +172,7 @@
 						color: #333333;">{{tcky_selectEndStation}}</text>
 					</view>
 					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
-					font-size: 28upx;color: #666666;">共10趟
-						10:00发车</text>
+					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
 				</view>
 				<view class="ctky_View_Right">
 					<view style="text-align: right;">
