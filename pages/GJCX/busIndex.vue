@@ -42,44 +42,51 @@
 			<view  class="box2">
 				<view class="area1">
 					<image class="image1" src="../../static/GCJX/busIndex/icon.png"></image>
-					<text class="text1">{{nearstaion.stationName}}</text>
-					<text class="text2">{{nearstaion.distance}}></text>
+					<text class="text1">{{nearstaion1}}</text>
+					<text class="text2">{{distance}}千米></text>
 					</view>
 					
 				<view class="xuxian2"></view>
-				<view v-for="(item,index) in showdetailList" :key="index">
-				   <view class="area2" @click="goDetail">
+				<view v-for="(item,index) in showdetailList" :key="index" >
+				   <view v-if="item.lineDirection==0" class="area2" @click="goDetail" >
 					   <view style="display: flex; position: relative;">
 				      <text class="text3">{{item.lineName}}</text>
-					  <text class="text4">{{item.stationNumber}}</text>
+					 <!-- <text class="text4">{{item.stationNumber}}</text> -->
 					  </view>
 					  <view class="area3">
-					  <text class="text5">方向    {{item.direction}}</text>
-					  <text class="text6">{{item.arriveTime}}/{{item.distance}}{{item.unit}}</text>
+					  <text class="text5">方向    {{item.endName}}</text>
+					  <!-- <text class="text6">{{item.arriveNum}}/{{item.distance}}{{item.unit}}</text> -->
 					  </view>
 				   </view>
 				  </view>
-				<view class="more" v-if="linedata.length>3" @click="more">{{btustatu?"展开":"收起"}}</view>
+				<view class="more" v-if="linedata1.length>3" @click="more">{{btustatu?"展开":"收起"}}</view>
 			</view>
 		</view>
 		<view v-if="current_2===1">
-					   <view  class="box3">
+					   <!-- <view  class="box3">
 						   <view v-for="(item,index) in linedata" :key="index">
 							   <view  class="area4" @click="goDetail">
 							   <image class="image2" src="../../static/GCJX/busIndex/bus.png"></image>
 							   <text class="text7">{{item.lineName}}     方向     {{item.direction}}</text>
 							   </view>
 						   </view>
-					   </view>
+					   </view> -->
 		</view>
 	</view>
 </template>
 
 <script>
+<<<<<<< HEAD
+	import citySelect from '../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../components/uni-location/popup-layer/popup-layer.vue'
+	import QSTabs from '../../components/QS-tabs/QS-tabs2.vue'
+	import gjcx from "../../common/Gjcx.js"
+=======
 	import citySelect from '../../components/uni-location/linzq-citySelect/linzq-citySelect.vue';
 	import popupLayer from '../../components/uni-location/popup-layer/popup-layer.vue';
 	import QSTabs from '../../components/QS-tabs2/QS-tabs.vue'
 	import gjcx from "../../common/Gjcx.js";
+>>>>>>> d213717d17590eef790d0947999e20e4b5759ba3
 	export default {
 		components: {
 			citySelect,
@@ -96,20 +103,35 @@
 				tabs_2: ['去哪', '历史'],  //选项标题
 				current_2: 0,	//标题下标
 				filterIndex : 0,	//tabs默认值
-				nearstaion :[],//附近站点
+				nearstaion1 :'',//附近站点
+				nearstaion :[],
 				linedata :[]  ,//站点数据
+				linedata1:[],
 				startlocation: {}, //
 				endlocation: {},
 				initialPoint:'',
 				destination:'',
 				endlongitude: "",
 				endtlatitude: "",
-				arriveTime:"",
-				distance:"",
+				// arriveTime:[], //附近车辆到达时间
+				distance:"", //附近站点距离
 				startLonLat: "",//出发点经度
 				endLonLat: "",//目的地经度
 				startlongitude: "",//出发点纬度
 				startlatitude: "",//出发点纬度
+				Encryption:"XMJDTzzbusxmjdt",//接口校验码
+				longitudeNow:"",//当前位置经度
+				latitudeNow:"",//当前位置纬度
+				myLonLat:'',//当前经纬度位置
+				nearLonLat:'',//附近站点的经纬度
+				arriveNum:'',//车辆距离站点站数
+				lineInfo:[],//站点信息
+				stationIndex:[],//站点所在站序
+				carList:[],//线路车辆列表
+				distanceBus:'',//公交距离到当前位置距离
+				item2 :[],
+				nowStatus:[],
+				busDistance:'', //线路距离
 			}
 		},
 		created() {},  
@@ -120,35 +142,30 @@
 			showdetailList: {
 			      get: function () {
 			         if (this.btustatu) {
-			             if (this.linedata.length < 3) {
-			                return this.linedata
+			             if (this.linedata1.length < 3) {
+			                return this.linedata1
 			             }
 			             let newArr = []
 			             for (var i = 0; i < 3; i++) {
-							 // var that =this
-							 // that.distance=that.linedata[i].distance
-							 // if(that.linedata[i].unit=="千米")
-							 // {
-							 // 	that.distance =that.linedata[i].distance*1000
-							 // 	 console.log(that.distance)
-							 // }
-							 // that.arriveTime = that.distance%400
-			                 let item = this.linedata[i]
-			                 newArr.push(item)
+			                 let item = this.linedata1[i]
+			                 newArr.push(item);
 			              }
 			              return newArr
-						  console.log(this.newArr)
+						  // console.log(this.newArr)
 			           }
-			           return this.linedata
+			           return this.linedata1
 			        },
 			        set: function (val) {
 			            this.showdetailList = val
-			        }
+			        },
+					
 			    }
 		},
 		onLoad() {
 			this.Getpostion();
-			this.busInit()
+			this.busInit();
+			// this.Encryption();
+			this.getNearbysites();
 		},
 		methods: {
 			oncity() {
@@ -303,25 +320,102 @@
 					url:'detailed'
 				})
 			},
-			//获取附近站点信息
+			//获取附近站点信息并计算我的位置到附近站点的距离
 			getNearbysites :function(){
-				//计算我的位置到附近站点的距离
+				var that=this;
 				uni.getLocation({
-					success:function(res){
-						var loction =res.longitude + "," + res.latitude;
+					type: 'wgs84',
+					success:function(res){ 
+						that.myLonLat =res.longitude +','+res.latitude;
+						console.log(that.myLonLat)
 						uni.request({
-							url:gjcx.InterfaceAddress[0],
+							url:gjcx.InterfaceAddress[1],                     //调用最近站点方法
 							data:{
-								startLonLat: loction
-								// endLonLat=  获取到的最近站点经纬度，待填充
+								lon: res.longitude,
+								lat: res.latitude,
+								Encryption:that.Encryption,
+							},
+							success:function(sta){
+								that.nearLonLat = sta.lon +','+sta.lat;
+								that.nearstaion1=sta.data[0].stationName;
+								that.distance=parseInt(sta.data[0].distance);
+								console.log(sta);
+								that.getLinedata(that.nearstaion1)
 							}
 						})
 					}
 				})
+			},
+			//获得经过附近的站点线路数据
+			getLinedata:function(nearstaion1){
+				var that=this;
+				uni.request({
+					url:gjcx.InterfaceAddress[0],            //用站点调用站点线路方法
+					data:{
+						stationName:nearstaion1, 
+						Encryption:that.Encryption,
+					},
+					success:function(dis){
+						that.linedata1=dis.data;
+						// console.log(that.linedata1)
+						for(var i=0;i<that.linedata1.length;i++){     //循环线路信息
+							uni.request({
+								url:gjcx.InterfaceAddress[4],     //根据线路请求距离当前车站最近的车辆
+								data:{
+									lineID:that.linedata1[i].lineID,
+									direction:that.linedata1[i].lineDirection,
+									stationName:that.nearstaion1,
+									Encryption:that.Encryption,
+								},
+								success:function(res){
+									// that.linedata1.push(res.data);
+									that.carList.push(res.data);
+									// console.log(res)
+										// getArriveInfo(that.stationIndex[i]);
+									},
+									fail:function(info){
+										console.log(info)
+									}
+								});
+								// if(that.linedata1.res.data!==){
+								uni.request({
+									url:gjcx.InterfaceAddress[3],                 //根据线路信息获取车辆经纬度
+									data:{
+										lineID:that.linedata1[i].lineID,
+										direction:that.linedata1[i].lineDirection,
+										Encryption:that.Encryption,
+									},
+									success:function(res){
+										that.nowStatus=res.data;
+										// console.log(that.nowStatus)
+										// console.log(that.nowStatus.lon,that.nowStatus.lat)
+										that.getDistance(that.nowStatus.lon,that.nowStatus.lat)
+									}
+								})
+								///
+						}
+						that.linedata1.push(that.carList);
+					}
+				})
+			},
+			//获取公交到站点的距离
+			getDistance:function(lon,lat){
+				// console.log(lon+','+lat)
+				var that=this;
+				uni.request({
+					url:gjcx.InterfaceAddress[5],
+					data:{
+						startLonLat:that.myLonLat,
+						endLonLat:lon+','+lat
+					},
+					success:function(long){
+						that.linedata1.push(long.data.Distance);
+						// console.log(long)
+						// console.log(that.linedata1)
+					}
+				})
 			}
 		},
-		
-		
 	};
 </script>
 
