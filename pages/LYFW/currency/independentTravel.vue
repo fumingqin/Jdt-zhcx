@@ -38,7 +38,7 @@
 		<view :hidden="current==1">
 			<!-- 六宫格列表栏 -->
 			<view class="listBarViewSpace">
-				<view class="listBarView" v-for="(item,index) in itText" :key="index">
+				<view class="listBarView" v-for="(item,index) in itText" :key="index" @click="natTo">
 					<image class="listBarImage" mode="aspectFill" :src="item.src"></image>
 					<text class="listBarText1">{{item.title}}</text>
 					<text class="listBarText2">{{item.conut_1}}|{{item.conut_2}}</text>
@@ -50,7 +50,7 @@
 				<view class="newDiscoveryTitleView">
 					<text class="newDiscoveryTitle">新发现</text>
 				</view>
-				<view class="newDiscoveryConentView" v-for="(item,index) in itText" :key="index">
+				<view class="newDiscoveryConentView" v-for="(item,index) in itText" :key="index" @click="natTo">
 					<image class="newDiscoveryConentImage" mode="aspectFill" :src="item.src"></image>
 					<text class="newDiscoveryConentText1">{{item.title}}</text>
 					<text class="newDiscoveryConentText2">点击量：{{item.conut_1}}</text>
@@ -74,8 +74,8 @@
 </template>
 
 <script>
-	import citySelect from '../../../components/uni-location/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/uni-location/popup-layer/popup-layer.vue'
+	import citySelect from '../../../components/LYFW/currency/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '../../../components/LYFW/currency/popup-layer/popup-layer.vue'
 	import QSTabs from '../../../components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
 	export default {
 		data() {
@@ -85,7 +85,7 @@
 				searchData: '', //搜索后的值
 				region: '请选择', //地区数值
 
-				current: 1, //标题下标
+				current: 0, //标题下标
 				tabs: ['推荐', '全部'], //选项标题
 
 				itText: '',
@@ -187,6 +187,13 @@
 			change(index) {
 				this.current = index;
 			},
+			
+			//跳转
+			natTo(){
+				uni.navigateTo({
+					url:'/pages/LYFW/ouristRoute/travelArrange'
+				})
+			}
 		}
 	}
 </script>
