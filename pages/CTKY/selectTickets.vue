@@ -207,8 +207,7 @@
 			//点击班次进行缓存，并打开页面
 			ticketDetail(item) {
 				var that = this;
-				console.log('当前选择',item);
-				
+				//判断当前点击的是普通购票还是定制班车
 				if(item.DepartureType == '传统客运') {
 					this.isNormal = 0
 				}else if (item.DepartureType == '定制班车'){
