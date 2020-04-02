@@ -825,10 +825,10 @@
 </template>
 
 <script>
-	import uniSegmentedControl from "@/components/uni-segmented-control/uni-segmented-control.vue";
-	import uniPopup from "@/components/uni-popup/uni-popup.vue";
-	import uniIcons from "@/components/uni-icons/uni-icons.vue";
-	import uniPopup2 from "../../components/uni-popup/uni-popup2.vue";
+	import uniSegmentedControl from "@/components/Order/uni-segmented-control/uni-segmented-control.vue";
+	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
+	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
+	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
 	export default {
 		components: {
 			uniSegmentedControl,

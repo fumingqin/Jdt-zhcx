@@ -129,9 +129,9 @@
 
 <script>
 	import taxi from '../../common/Czc.js';
-	import uniPopup from "@/components/uni-popup/uni-popup.vue";
-	import uniIcons from "@/components/uni-icons/uni-icons.vue";
-	import uniRate from '@/components/StarJudge/uni-rate/uni-rate.vue';
+	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
+	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
+	import uniRate from '@/components/Order/StarJudge/uni-rate/uni-rate.vue';
 	export default {
 		components: {
 			uniPopup,

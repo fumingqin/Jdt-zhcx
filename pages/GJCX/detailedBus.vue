@@ -80,7 +80,7 @@
 </template>
 
 <script>
-	import uniPopup from '../../components/uni-popup/uni-popup3.vue'
+	import uniPopup from '../../components/GJCX/uni-popup/uni-popup3.vue'
 	import taxi from '../../common/Czc.js'
 	export default {
 		data() {

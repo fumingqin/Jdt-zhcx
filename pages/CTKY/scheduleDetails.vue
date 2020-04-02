@@ -3,6 +3,7 @@
 		<scroll-view scroll-y="true" style="margin-bottom: 112upx;">
 			<view class="headerClass">
 			</view>
+			<!-- 顶部订单信息 -->
 			<view class="orderCommonClass" style="margin-top: -110upx;">
 				<view class="ticketInfoClass">
 					<view>
@@ -10,9 +11,7 @@
 							{{ticketDetail.SetTime}}出发</view>
 						<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">{{ticketDetail.StartStaion}}
 							→ {{ticketDetail.EndStation}}</view>
-						<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{ticketDetail.CarType}}
-							 儿童半票</view>
-
+						<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{ticketDetail.CarType}}儿童半票</view>
 					</view>
 					<view style="display: flex; flex-direction: column;">
 						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketDetail.Price}}</view>
@@ -21,6 +20,8 @@
 					</view>
 				</view>
 			</view>
+			
+			<!-- 地图标点 -->
 			<view class="orderCommonClass">
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
@@ -28,16 +29,17 @@
 					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 				</view>
 			</view>
-			<view style="flex-direction: column;background: #FFFFFF;margin: 0 26upx; 
-		margin-bottom: 20upx;border-radius: 14upx;">
-				<view class="boarding" style="border-bottom:#EAEAEA solid 1px ;">
+			
+			<!-- 上下车点选择,0是普通购票不显示上下车点选择 -->
+			<view class="stationContentView" v-if="isNormal == '1'">
+				<view class="boarding" style="border-bottom:#EAEAEA solid 1px;" @tap="startStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">
 						<view @tap="startStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{startStation}}</view>
 						<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 					</view>
 				</view>
-				<view class="boarding">
+				<view class="boarding" @tap="endStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">下车点</view>
 					<view style="display: flex;align-items: center;">
 						<view @tap="endStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{endStation}}</view>
@@ -45,6 +47,8 @@
 					</view>
 				</view>
 			</view>
+			
+			<!-- 乘车人信息 -->
 			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
 				<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
@@ -118,6 +122,7 @@
 				</view>
 			</uni-popup>
 			
+			<!-- 乘车险 -->
 			<view class="orderCommonClass">
 				<view style="display: flex; align-items: center;">
 					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">购买乘车险</view>
@@ -127,6 +132,8 @@
 					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="isInsurance===1 ? true : false" @click="insuranceTap"></radio>
 				</view>
 			</view>
+			
+			<!-- 购票须知 -->
 			<view class="orderCommonClass">
 				<view style="display: flex; align-items: center;">
 					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">同意购票须知</view>
@@ -172,7 +179,8 @@
 </template>
 
 <script>
-	import popup from "../../components/uni-popup/uni-popup.vue"
+	import popup from "../../components/CTKY/uni-popup/uni-popup.vue"
+	
 	export default {
 		components:{
 			popup
@@ -180,6 +188,7 @@
 		data() {
 			return {
 				title: '',
+				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
 				count: 1,
 				startStation:'',//上车点
 				endStation:'',//下车点
@@ -236,16 +245,11 @@
 		},
 		onLoad(e) {
 			var that = this;
-			if(this.startStation == '') {
-				this.startStation = "请选择上车点"
-			}
-			if(this.endStation == '') {
-				this.endStation = "请选择下车点"
-			}
-			
+			//给车票类型赋值，0：普通购票，不显示上下车点选择 1:定制班车，显示上下车点选择
+			this.isNormal = e.isNormal;
 			// 获取用户数据
 			setInterval(() => {
-				this.userData();
+				
 			}, 500)
 			
 			uni.setNavigationBarTitle({
@@ -273,6 +277,10 @@
 			});
 
 		},
+		onShow() {
+			this.userData();
+			
+		},
 		onReady() {
 
 		},
@@ -285,7 +293,7 @@
 				uni.getStorage({
 				    key: 'passengerList',
 				    success: (res) => {
-				        this.passengerInfo = res.data;						
+				        this.passengerInfo = res.data;
 				    }
 				});
 				uni.getStorage({
@@ -295,6 +303,12 @@
 						this.startStaionIndex = res.data.startStationIndex;
 						this.endStation = res.data.endStation;
 						this.endStationIndex = res.data.endStationIndex;
+						if(this.startStation == '') {
+							this.startStation = "请选择上车点"
+						}
+						if(this.endStation == '') {
+							this.endStation = "请选择下车点"
+						}
 					}
 				})
 			},
@@ -427,7 +441,14 @@
 		height: 140upx;
 		background: #FC4646;
 	}
-	
+	// 上下车点选择
+	.stationContentView {
+		flex-direction: column;
+		background: #FFFFFF;
+		margin: 0 26upx; 
+		margin-bottom: 20upx;
+		border-radius: 14upx;
+	}
 	
 	/* 优惠券面板 */
 	.discountView {

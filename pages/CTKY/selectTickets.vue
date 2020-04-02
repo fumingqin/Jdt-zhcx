@@ -1,5 +1,6 @@
 <template>
 	<view class="myView">
+		<!-- 顶部时间选项卡 -->
 		<view class="headerClass">
 			<scroll-view class="scrollClass" scroll-x>
 				<view class="blockClass" :class="selectIndex == index ? 'viewPress': '' " v-for="(item,index) in dateArray" :key="index"
@@ -16,13 +17,13 @@
 			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'"
 			 :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
 		</view>
+		
+		<!-- 车票内容部分 -->
 		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(item)">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#1EA2FF  solid 1px;text-align: center;align-items: center;color:#1EA2FF 
-					;font-size: 24upx;font-family: SourceHanSansSC-Light;" v-if="item.DepartureType=='传统客运'">传统</view>
-					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#FF5A00  solid 1px;text-align: center;align-items: center;color:#FF5A00
-					;font-size: 24upx;font-family: SourceHanSansSC-Light;" v-if="item.DepartureType=='定制班车'">定制</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.DepartureType=='传统客运'">传统</view>
+					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.DepartureType=='定制班车'">定制</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.SetTime}}</view>
 				</view>
 				<!-- <view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view> -->
@@ -83,13 +84,14 @@
 </template>
 
 <script>
-	import MxDatePicker from "../../components/mx-datepicker/mx-datepicker.vue";
+	import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue";
 	export default {
 		components: {
 			MxDatePicker
 		},
 		data() {
 			return {
+				isNormal:'',
 				dateArray: [], //时间轴的数量的数组
 				selectIndex: '', //选中的下标
 				date: '', //时间轴上选中的日期
@@ -113,6 +115,8 @@
 			}
 		},
 		onLoad(param) {
+			//当前车票类型：0表示普通购票 1表示定制班车
+			this.isNormal = 0;
 			this.date = param.date;
 			this.startStation=param.startStation;
 			this.endStartion=param.endStation;
@@ -147,7 +151,7 @@
 			viewClick: function(e, item) {
 				this.selectIndex = e;
 				this.date = item.longDate;
-				console.log(this.date);
+				// console.log(this.date);
 				this.getDeparture();
 			},
 			onShowDatePicker(type) { //显示
@@ -202,6 +206,14 @@
 			},
 			//点击班次进行缓存，并打开页面
 			ticketDetail(item) {
+				var that = this;
+				console.log('当前选择',item);
+				
+				if(item.DepartureType == '传统客运') {
+					this.isNormal = 0
+				}else if (item.DepartureType == '定制班车'){
+					this.isNormal = 1
+				}
 				uni.setStorage({
 					key: 'shiftDate',
 					data:this.getTime(4,new Date(this.date)) , //缓存所选的班次日期
@@ -219,7 +231,7 @@
 					}
 				});
 				uni.navigateTo({
-					url: "scheduleDetails"
+					url: '/pages/CTKY/scheduleDetails?isNormal=' + this.isNormal
 				})
 			},
 			//日期时间转换函数   type 0 年月日 ，1 时分秒 ， 2 星期 ，3 月/日  4几月几日
@@ -317,7 +329,7 @@
 						method:"Get",
 						header : {'content-type':'application/json'},
 						success: (res) => {
-							console.log(res.data);
+							// console.log('类型',res.data);
 							this.departureData=res.data;
 						}
 					});	
@@ -361,7 +373,16 @@
 		border-radius: 8upx;
 		display: inline-block; //里层写这个
 	}
-
+	.markType {
+		width:65upx;
+		height: 37upx;
+		line-height: 37rpx;
+		border-radius: 14upx;
+		text-align: center;
+		align-items: center;
+		font-size: 24upx;
+		font-family: SourceHanSansSC-Light;
+	}
 	.textCLass {
 		margin: 9upx 17upx;
 	}

@@ -85,7 +85,7 @@
 
 <script> 
 	import taxi from '../../common/Czc.js'
-	import uniPopup from "@/components/uni-popup/uni-popup3.vue";
+	import uniPopup from "@/components/GJCX/uni-popup/uni-popup3.vue";
 	export default {
 		components: {
 			//加载多方弹框组件
