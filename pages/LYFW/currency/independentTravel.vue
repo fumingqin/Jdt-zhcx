@@ -5,7 +5,7 @@
 			<text class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
-				<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
+				<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
 			</view>
 		</view>
 		
@@ -74,8 +74,8 @@
 </template>
 
 <script>
-	import citySelect from '../../../components/LYFW/currency/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/LYFW/currency/popup-layer/popup-layer.vue'
+	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
 	import QSTabs from '../../../components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
 	export default {
 		data() {

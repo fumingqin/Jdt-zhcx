@@ -868,6 +868,92 @@ const reserve={
 	msg: '提示'
 }
 
+
+const groupTour={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		groupId:1,
+		groupTItle:'北京+天津+河北',
+		content:[{
+			contentId:1,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:2,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:3,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:4,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		}]
+	},
+	{
+		groupId:2,
+		groupTItle:'北京+天津+河北',
+		content:[{
+			contentId:1,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:2,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:3,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:4,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		}]
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -890,4 +976,5 @@ export default {
 	arrange,
 	description,
 	reserve,
+	groupTour,
 }
