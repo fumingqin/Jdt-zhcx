@@ -67,7 +67,11 @@
                 "push" : {
                     "unipush" : {}
                 },
-                "oauth" : {}
+                "oauth" : {
+                    "qq" : {
+                        "appid" : "1110314303"
+                    }
+                }
             },
             "icons" : {
                 "android" : {
