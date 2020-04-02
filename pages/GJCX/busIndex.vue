@@ -76,9 +76,9 @@
 </template>
 
 <script>
-	import citySelect from '../../components/uni-location/linzq-citySelect/linzq-citySelect.vue';
-	import popupLayer from '../../components/uni-location/popup-layer/popup-layer.vue';
-	import QSTabs from '../../components/QS-tabs2/QS-tabs.vue'
+	import citySelect from '../../components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue';
+	import popupLayer from '../../components/HOME/uni-location/popup-layer/popup-layer.vue';
+	import QSTabs from '../../components/GJCX/QS-tabs2/QS-tabs.vue'
 	import gjcx from "../../common/Gjcx.js";
 	export default {
 		components: {

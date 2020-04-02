@@ -267,7 +267,7 @@
 	import uniIcons from "../../components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "../../components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "../../components/HOME/h-timePicker/h-timePicker.vue";
-	import popup from "../../components/uni-popup/uni-popup.vue";
+	import popup from "../../components/HOME/uni-popup/uni-popup.vue";
 	export default {
 		components: {
 			uniIcons,
