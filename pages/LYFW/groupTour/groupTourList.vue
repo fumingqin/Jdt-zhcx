@@ -6,7 +6,7 @@
 				<text class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 				<view class="searchBoxRadius">
 					<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
-					<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
+					<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
 				</view>
 			</view>
 

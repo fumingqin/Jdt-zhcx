@@ -3,7 +3,7 @@
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
 		 :polyline="polyline" :markers="markers" :show-location="true">
 		</map>
-		<image @click="back" src="../../static/CZC/Back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
+		<image @click="back" src="../../static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
 		<scroll-view style="position: fixed;bottom:0;left: 0;right: 0;align-items: center;" class="map" :style="{height:viewHeight}"
 		 scroll-y='true'>
 			<view style="width: 700rpx;margin-left: 25rpx;margin-right: 25rpx;">
