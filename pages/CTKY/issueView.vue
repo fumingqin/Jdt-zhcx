@@ -3,7 +3,7 @@
 
 		<!-- 头部信息 -->
 		<view class="head u-f-ac">
-			<image src="" class="headIcon" mode="aspectFit"></image>
+			<image  class="headIcon" mode="aspectFit"></image>
 			<text class="headTitle">体验评级</text>
 			<!-- 星级图片 -->
 			<view class="starNormal">

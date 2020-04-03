@@ -14,7 +14,7 @@
 						当前定位
 					</view>
 					<view class="dingwei_city">
-						<view class="dingwei_city_one" @click="back_city()">
+						<view class="dingwei_city_one" @click="back_city2">
 							{{position}}
 						</view>
 						<view class="dingweis_div" @click="getWarpweft">
@@ -30,7 +30,7 @@
 						最近访问
 					</view>
 					<view class="dingwei_city dingwei_city_zuijin">
-						<view class="dingwei_city_one toright" v-for="(item,index) in Visit" v-if="index<2" @click="back_city(item)">
+						<view class="dingwei_city_one toright" v-for="(item,index) in Visit" :key="index" v-if="index<2" @click="back_city(item)">
 							{{item.cityName}}
 						</view> 
 					</view>
@@ -40,14 +40,14 @@
 
 
 			<!-- 城市列表 -->
-			<view v-if="searchValue == ''" v-for="(item, index) in list" :id="getId(index)" :key="index">
+			<view v-if="searchValue == ''" v-for="(item, index) in list" :key="index" :id="getId(index)" >
 				<view class="letter-header">{{ getId(index) }}</view>
 				<view class="city-div" v-for="(city, i) in item" :key="i" @click="back_city(city)">
 					<text class="city">{{ city.cityName }}</text>
 				</view>
 			</view>
 			<!-- 搜索结果 -->
-			<view class="city-div" v-for="(item, index) in searchList" @click="back_city(item)">
+			<view class="city-div" v-for="(item, index) in searchList" :key="index" @click="back_city(item)">
 				<text class="city">{{ item.cityName }}</text>
 			</view>
 		</scroll-view>
@@ -96,7 +96,7 @@
 				showMask: false,
 				disdingwei: true,
 				Visit: [], //最近访问
-				position: '泉州',
+				position: '',
 				longitude: '', //经度
 				latitude: '', //纬度
 				seconds: 3,
@@ -237,56 +237,45 @@
 				} else {
 					this.$emit('back_city', 'no');
 				}
-
 			},
+			back_city2(){
+				this.$emit('back_city', 'yes');
+			},
+			
 			getWarpweft() {
 				var that = this
 				that.po_tips = '定位中...'
-				let countdown = setInterval(() => {
-					that.seconds--;
-					uni.getLocation({
-						
-						
-						success: function(res) {
-							// console.log('当前位置的经度：' + res.longitude);
-							// console.log('当前位置的纬度：' + res.latitude);
-						    // this.position = res.address.city
-							// if(this.position =='')
-							
-							var longitude = res.longitude
-							var latitude = res.latitude
-							
-							that.loadCity(latitude,longitude);//调用高德
-							// that.position ='福建'//res.address.city
-							
-						}
-					});
-					if (that.seconds <= 0) {
-						that.seconds = 3
-						that.po_tips = '重新定位'
-						clearInterval(countdown);
-					}
-				}, 1000);
+				uni.getLocation({
+					type:'wgs84',
+					geocode:true,
+					success: function(res) {
+						// console.log(res)
+							uni.setStorage({
+								key: 'app_position',
+								data:res.address,
+							})
+							that.loadCity();//小程序-调用高德
+						},
+				})
 			},
 			//把当前位置的经纬度传给高德地图，调用高德API获取当前地理位置
-			    loadCity(latitude, longitude){
-			      var that=this;
-			      var myAmapFun = new amapFile.AMapWX({ key: that.markersData.key });
+			    loadCity:function(){
+			      var myAmapFun = new amapFile.AMapWX({ 
+					  key: this.markersData.key,
+					  });
 			      // console.log(myAmapFun);
 			      myAmapFun.getRegeo({
-			        // location: '' + longitude + ',' + latitude + '',//location的格式为'经度,纬度'
-			        success: function (data) {
-					  // console.log(data[0].regeocodeData.addressComponent.city);
-			          that.position =data[0].regeocodeData.addressComponent.city
+			        success:(data) =>{
+						// console.log(data)
+			          this.position =data[0].regeocodeData.addressComponent.city
 			          uni.setStorage({
-			          	key: 'Key_position',
-			          	data:that.position
+			          	key: 'wx_position',
+			          	data:this.position
 			          })
-			          
-			          
+					  this.po_tips = '重新定位'
 			        },
-			        fail: function (info) {
-						console.log(info)
+			        fail:()=>{
+						this.po_tips = '重新定位'
 					}
 			      });
 			 
