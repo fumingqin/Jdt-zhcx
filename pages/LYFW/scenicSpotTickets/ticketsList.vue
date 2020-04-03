@@ -62,7 +62,7 @@
 			</view>
 			<text :class="{active:screenIndex === 3}" class="cate-item jdticon icon-fenlei1"   @click="toggleCateMask('show')"></text>
 		</view>
-
+	
 		<!-- 景区列表 -->
 		<view :hidden="screenIndex == 3">
 			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" v-if="index < scenicListIndex " @click="godetail(item.ticketId)">
@@ -312,7 +312,6 @@
 				}, timer)
 			},
 			
-
 			//分类点击
 			changeCate: function(item) {
 				// console.log(item)

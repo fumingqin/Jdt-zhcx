@@ -275,10 +275,10 @@
 			//数组提取
 			screenUser:function(){
 				let adult = this.addressData.filter(item => {
-					return item.ticketType == '成人';
+					return item.userType == '成人';
 				})
 				let children = this.addressData.filter(item => {
-					return item.ticketType == '儿童';
+					return item.userType == '儿童';
 				})
 				this.adultIndex = adult.length;
 				this.childrenIndex = children.length;
@@ -324,7 +324,7 @@
 			stopPrevent() {},
 
 			// 数量+计价
-			numberChange() {
+			numberChange(){
 				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this.childrenIndex);
 				if (this.couponColor == '') {
 					this.actualPayment = a;
@@ -477,7 +477,7 @@
 					second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 				day >= 0 && day <= 9 ? (day = "0" + day) : "";
 				var index = e.date - day;
-				console.log(index)
+				// console.log(index)
 				if (index < 0) {
 					uni.showToast({
 						title: '请勿选择以往日期',

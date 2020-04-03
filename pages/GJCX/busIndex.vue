@@ -6,7 +6,7 @@
 			<text class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
-				<image class="searchImage" src="../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
+				<image class="searchImage" src="../../static/LYFW/currency/search.png" />
 			</view>
 		</view>
 		<popup-layer ref="popupRef" :direction="'right'">
@@ -29,7 +29,7 @@
 				<view class="xuxian"></view>
 				<!-- 转换 -->
 				<view @click="exchange">
-					<image class="rotate" src="../../static/GCJX/busIndex/rotate%20.png"></image>
+					<image class="rotate" src="../../static/GCJX/busIndex/rotate.png"></image>
 				</view>
 				<view class="searchBoxRadius2">
 					<image class="searchImage2" src="../../static/GCJX/busIndex/red.png" />
