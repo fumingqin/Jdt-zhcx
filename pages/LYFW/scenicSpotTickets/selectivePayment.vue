@@ -13,7 +13,7 @@
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{orderInfo.orderDate}} &nbsp; {{orderInfo.orderDateReminder}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{orderInfo.orderDate}} &nbsp; 仅限当天</text>
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
@@ -100,7 +100,7 @@
 	export default {
 		data() {
 			return {
-				countDownDate : 10,//倒计时时间
+				countDownDate : 300,//倒计时时间
 				hiddenValues: '0', //隐藏状态值
 				channel: [{
 					name: '微信'
@@ -228,17 +228,22 @@
 						success:(res) => {
 							// console.log(res)
 							if(res.data.data.orderType =='待支付'){
-								console.log('发起取消请求')
-								// uni.request({
-								// 	url:'?orderNumber=' +res.data.data.orderNumber',
-								// 	method:'POST'
-								// })
+								uni.request({
+									url:'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' +res.data.data.orderNumber,
+									method:'POST',
+									success() {
+										console.log('取消成功')
+									},
+									fail() {
+										console.log('取消失败')
+									}
+								})
 							}else{
 								return false
 							}
 						}
 					})
-				},11000)
+				},300000)
 			},
 
 			//调起支付

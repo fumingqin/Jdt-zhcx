@@ -7,8 +7,8 @@
 		<!-- 顶部信息
 		命名：Dx -->
 		<view class="Dx_View">
-			<text class="Dx_title">预约成功</text>
-			<text class="Dx_text">旅途愉快！</text>
+			<text class="Dx_title">{{orderInfo.orderType}}</text>
+			<text class="Dx_text" v-if="orderInfo.orderType !== '待支付' || orderInfo.orderType !== '已取消' || orderInfo.orderType !== '已退票'" >旅途愉快！</text>
 			<text class="Dx_priceIcon" @click="open">¥</text>
 			<text class="Dx_price" @click="open" >{{orderInfo.orderActualPayment}}</text>
 			<image class="Dx_image" src="../../../static/LYFW/scenicSpotTickets/orderDetails/gantan.png" @click="open"></image>
@@ -66,12 +66,8 @@
 				<text class="Xx_titleIcon"> > </text>
 			</view>
 			<view class="Xx_contentView"> 
-					<text class="Xx_contentTitle" >门票状态</text>
-					<text class="Xx_contentTitle2">{{orderInfo.orderType}}</text>
-				<view class="Xx_contentBlock">	
 					<text class="Xx_contentTitle" >使用日期</text>
-					<text class="Xx_contentTitle2">{{orderInfo.orderDate}}&nbsp;{{orderInfo.orderDateReminder}}&nbsp;当天可用</text>
-				</view>
+					<text class="Xx_contentTitle2">{{orderInfo.orderDate}}&nbsp;当天可用</text>
 				<view class="Xx_contentBlock">
 					<text class="Xx_contentTitle" >入园时间</text>
 					<text class="Xx_contentTitle2">{{orderInfo.ticketOpenUp}}</text>
@@ -169,9 +165,9 @@
 			//访问模拟数据
 			lyfwData(e) {
 				uni.request({
-					url : '',
+					url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber='+e,
 					method:'POST',
-					success(res) {
+					success:(res) => {
 						this.orderInfo = res.data.data;
 						this.screenUser();
 					}
