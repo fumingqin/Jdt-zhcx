@@ -471,7 +471,7 @@
 			"style": {}
 		}
 	    ,{
-            "path" : "pages/LYFW/currency/independentTravel",
+            "path" : "pages/LYFW/independentTravel/it_list",
             "style" : {}
 		},
 		{

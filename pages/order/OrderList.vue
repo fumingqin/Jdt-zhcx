@@ -193,7 +193,7 @@
 					<!-- 景区门票 -->
 					<!-- 标签class命名：pd;全称：Purchase Date -->
 					<!-- 内容class命名：at;全称：Admission ticket -->
-					<view v-if="item.title=='景区门票' && item.isDel == '是'">
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
 						<view class="pd_view">{{item.orderDate}}</view>
 						<view class="at_view">
 							<view class="at_titleView">
@@ -302,7 +302,7 @@
 					<!-- 景区门票 -->
 					<!-- 标签class命名：pd;全称：Purchase Date -->
 					<!-- 内容class命名：at;全称：Admission ticket -->
-					<view v-if="item.title=='景区门票' && item.isDel == '是'">
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
 						<view class="pd_view">{{item.orderDate}}</view>
 						<view class="at_view">
 							<view class="at_titleView">
@@ -414,7 +414,7 @@
 					<!-- 景区门票 -->
 					<!-- 标签class命名：pd;全称：Purchase Date -->
 					<!-- 内容class命名：at;全称：Admission ticket -->
-					<view v-if="item.title=='景区门票' && item.isDel == '是'">
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
 						<view class="pd_view">{{item.orderDate}}</view>
 						<view class="at_view">
 							<view class="at_titleView">
@@ -530,7 +530,7 @@
 					<!-- 景区门票 -->
 					<!-- 标签class命名：pd;全称：Purchase Date -->
 					<!-- 内容class命名：at;全称：Admission ticket -->
-					<view v-if="item.title=='景区门票' && item.isDel == '是'">
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
 						<view class="pd_view">{{item.orderDate}}</view>
 						<view class="at_view">
 							<view class="at_titleView">
