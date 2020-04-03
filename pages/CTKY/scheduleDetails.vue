@@ -88,7 +88,7 @@
 			</view>
 			
 			<!-- 呼出优惠券面板 -->
-			<uni-popup type="bottom" ref="popup">
+			<popup type="bottom" ref="popup">
 				<view class="discountView">
 					<!-- 头部 -->
 					<view class="couponTitle">
@@ -120,7 +120,7 @@
 					</scroll-view>
 					
 				</view>
-			</uni-popup>
+			</popup>
 			
 			<!-- 乘车险 -->
 			<view class="orderCommonClass">
@@ -140,7 +140,7 @@
 					<view @tap="checkAttention" style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
 				</view>
 				<!-- 查看须知popup -->
-				<uni-popup ref="popup2" type="bottom">
+				<popup ref="popup2" type="bottom">
 					<view class="boxView">
 						<view class="titleView">
 							<text class="Nb_text1">用户须知</text>
@@ -161,7 +161,7 @@
 							</text>
 						</scroll-view>
 					</view>
-				</uni-popup>
+				</popup>
 				
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
@@ -171,7 +171,7 @@
 		<view class="toPayClass">
 			<view style="display: flex;align-items: center;margin-left: 32upx;">
 				<text style="font-size: 38upx;color: #FC4646;padding: 0;">￥30</text>
-				<text style="font-size: 28upx;margin-left: 9upx;font-family:SourceHanSansSC-Light ; font-weight: lighter;color: #666666;padding: 0;">共2人</text>
+				<text style="font-size: 28upx;margin-left: 9upx;font-family:SourceHanSansSC-Light; font-weight: lighter;color: #666666;padding: 0;">共2人</text>
 			</view>
 			<view @tap="reserveTap" class="orderReserve" :class="{tapColor:selectedValue == 1}">立即预定</view>
 		</view>
@@ -180,7 +180,6 @@
 
 <script>
 	import popup from "../../components/CTKY/uni-popup/uni-popup.vue"
-	
 	export default {
 		components:{
 			popup
@@ -458,6 +457,7 @@
 		background: #f3f3f3;
 		margin-bottom: 100rpx;
 	}
+	//优惠券
 	.discountScroll {
 		min-height: 30vh;
 		max-height: 60vh;
