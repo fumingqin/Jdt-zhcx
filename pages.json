@@ -484,6 +484,10 @@
             "path" : "pages/LYFW/groupTour/groupTourList",
             "style" : {}
         }
+        ,{
+            "path" : "pages/LYFW/groupTour/viewMore",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
