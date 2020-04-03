@@ -3,11 +3,11 @@
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
 		 :polyline="polyline" :markers="markers" :show-location="true">
 		</map>
-		<image v-if='orderType == 0' @click="back" src="../../static/CZC/Back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
+		<image v-if='orderType == 0' @click="back" src="../../static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
 		<view v-if='orderType == 0' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机未接单 -->
 			<view class="waitContent" elevation='5px'>
-				<image src="../../static/CZC/Radar.png" style="width: 100rpx;height: 100rpx;"></image>
+				<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
 				<view style="margin-top: 50rpx;">
 					<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">正在等待司机接单...</text>
 				</view>
