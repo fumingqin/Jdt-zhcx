@@ -1,11 +1,11 @@
 <template>
 	<view>
+		<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
 			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
-
-
+		
 		<view class="cover-container">
 			<view class="MP_information1">
 				<view class="MP_title">{{orderInfo.ticketTitle}}</view>
@@ -22,8 +22,8 @@
 						<text>{{item.userName}}</text>
 						<text class="Mp_sex">{{item.userSex}}</text>
 						<text class="Mp_square">{{item.userType}}</text>
-						<text class="Mp_square" v-if="item.userDefault == true">本人</text>
-						<text class="Mp_square" v-if="item.userEmergencyContact == true">紧急联系人</text>
+						<text class="Mp_square" v-if="item.userDefault == 'true'">本人</text>
+						<text class="Mp_square" v-if="item.userEmergencyContact == 'true'">紧急联系人</text>
 						<text class="Mp_text">身份证：{{item.userCodeNum}}</text>
 						<text class="Mp_text">手机号：{{item.userPhoneNum}}</text>
 					</view>
@@ -34,7 +34,7 @@
 					<view class="MP_cost" v-if="adultIndex>=1">
 						<text>成人票</text>
 						<text class="MP_number">×{{adultIndex}}</text>
-						<text class="MP_userCost">{{adultTotalPrice}}</text>
+						<text class="MP_userCost">¥{{adultTotalPrice}}</text>
 					</view>
 
 					<view class="MP_cost" v-if="childrenIndex>=1">
@@ -46,7 +46,7 @@
 					<!-- 保险 -->
 					<view class="MP_cost" v-if="orderInfo.orderInsure==true">
 						<text>太平洋门票意外险 经济款</text>
-						<text class="MP_number">×{{orderInfo.length}}</text>
+						<text class="MP_number">×{{orderInfo.appUserInfoList.length}}</text>
 						<text class="MP_total">¥{{orderInfo.orderInsurePrice}}</text>
 					</view>
 
@@ -100,6 +100,7 @@
 	export default {
 		data() {
 			return {
+				countDownDate : 10,//倒计时时间
 				hiddenValues: '0', //隐藏状态值
 				channel: [{
 					name: '微信'
@@ -152,12 +153,23 @@
 
 			}
 		},
-		onLoad(options) { 
+		onLoad(options) {
+			uni.getStorage({
+				key:'countDown',
+				success:(res)=>{
+					this.countDownDate = res.data;
+					this.countDown();
+				},
+				fail:()=>{
+					this.countDown();
+				}
+			})
+			
 			uni.request({
 					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + JSON.parse(options.orderNumber),
 					method: 'POST',
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						this.orderInfo = res.data.data;
 						this.screenUser();
 					}
@@ -196,6 +208,38 @@
 				this.adultTotalPrice = adult.length * this.orderInfo.ticketAdultPrice;
 				this.childrenTotalPrice = children.length * this.orderInfo.ticketChildPrice;
 			},
+			//支付倒计时
+			countDown:function(){
+				var interval = setInterval(()=>{
+					--this.countDownDate;
+					uni.setStorage({
+						key:'countDown',
+						data:this.countDownDate,
+					})
+				},1000)
+				setTimeout(()=>{
+					clearInterval(interval)
+					uni.removeStorage({
+						key:'countDown'
+					})
+					uni.request({
+						url:'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' +this.orderInfo.orderNumber,
+						method:'POST',
+						success:(res) => {
+							// console.log(res)
+							if(res.data.data.orderType =='待支付'){
+								console.log('发起取消请求')
+								// uni.request({
+								// 	url:'?orderNumber=' +res.data.data.orderNumber',
+								// 	method:'POST'
+								// })
+							}else{
+								return false
+							}
+						}
+					})
+				},11000)
+			},
 
 			//调起支付
 			payment() {
@@ -218,9 +262,8 @@
 				// 		console.log('fail:' + JSON.stringify(err));
 				// 	}
 				// })
-
 				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber=' + JSON.stringify(this.orderInfo.orderNumber)
+					url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
 				})
 
 			}

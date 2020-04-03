@@ -53,7 +53,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票'">
-					<view class="pd_view">{{item.orderDateReminder}}</view>
+					<view class="pd_view">{{item.orderDate}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -68,40 +68,40 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDateReminder}}&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}&nbsp;{{item.orderDateReminder}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
 						<!-- 已使用 -->
 						<view class="at_buttonView" v-if="item.orderType=='已使用'">
-							<view class="at_button at_btDetails" @click="details(index)" style="margin-right: 0upx;">详情</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
 						</view>
 
 						<!-- 待使用 -->
 						<view class="at_buttonView" v-if="item.orderType=='待使用'">
-							<view class="at_button at_btDelete" @click="open2(index)">退票</view>
-							<view class="at_button at_btDetails" @click="details(index)">详情</view>
-							<view class="at_button at_btQrCode" @click="open(index)">二维码</view>
+							<view class="at_button at_btDelete" @click="open2(item.orderNumber)">退票</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="open(item)">二维码</view>
 						</view>
 
 						<!-- 待支付 -->
 						<view class="at_buttonView" v-if="item.orderType=='待支付'">
-							<view class="at_button at_btDelete" @click="open3(index)">取消</view>
-							<view class="at_button at_btDetails" @click="details(index)">详情</view>
-							<view class="at_button at_btToPay" @click="topay(index)">去支付</view>
+							<view class="at_button at_btDelete" @click="open3(item.orderNumber)">取消</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
 						</view>
 
 						<!-- 已退票 -->
 						<view class="at_buttonView" v-if="item.orderType=='已退票'">
-							<view class="at_button at_btDelete" @click="del(index)">删除</view>
-							<view class="at_button at_btDetails" @click="details(index)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(index)">再次预订</view>
+							<view class="at_button at_btDelete" @click="del(item.orderNumber)">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
 
 						<!-- 已取消 -->
 						<view class="at_buttonView" v-if="item.orderType=='已取消'">
-							<view class="at_button at_btDelete" @click="del(index)">删除</view>
-							<view class="at_button at_btQrCode" @click="repurchase(index)">再次预订</view>
+							<view class="at_button at_btDelete" @click="del(item.orderNumber)">删除</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
 					</view>
 				</view>
@@ -702,10 +702,10 @@
 						<text class="box_icon jdticon icon-fork " @click="close"></text>
 					</view>
 					<view class="box_qrCodeView">
-						<image class="box_qrCodeImage" :src="info[orderIndex].orderQrCode" mode="aspectFill"></image>
+						<image class="box_qrCodeImage" :src="orderIndexData.orderQrCode" mode="aspectFill"></image>
 						<view class="box_qrCodeTextView">
-							<text class="box_qrCodeText">取票码：{{info[orderIndex].orderTicketNumber}}</text>
-							<text class="box_qrCodeText">预订人数：{{info[orderIndex].orderUserIndex}}人</text>
+							<text class="box_qrCodeText">取票码：{{orderIndexData.orderTicketNumber}}</text>
+							<text class="box_qrCodeText">预订人数：{{orderIndexData.orderUserIndex}}人</text>
 						</view>
 					</view>
 				</view>
@@ -838,12 +838,17 @@
 			uniIcons,
 		},
 		data() {
+			const currentDate = this.getDate({
+				format: true
+			})
 			return {
 				items: ['全部', '已完成', '进行中', '未支付', '已取消'],
 				current: 0,
 				index: 1,
+				ticketOrderNumber : '', //门票订单编号
 				orderIndex: 0, //订单调用数值
 				orderIndexData: '', //二维码订单数据
+				date:currentDate,//获取当前时间
 				QRCodeArray:[
 					{
 						checkPlace:'A5',
@@ -852,173 +857,174 @@
 						carNum:'闽C12345'
 					}
 				],
-				info: [{
-						title: '客车-传统',
-						titleIndex: 2,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "现代美居广场",
-						endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
-						orderType: "进行中",
-						appointment: true,
-					},{
-						title: '客车-传统',
-						titleIndex: 2,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "茶叶大厦",
-						endAddress: "泉州市-丰泽区-泉秀路777号",
-						orderType: "已完成",
-						appointment: true,
-					},
-					{
-						title: '客车-传统',
-						titleIndex: 2,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "现代美居广场",
-						endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
-						orderType: "进行中",
-						appointment: true,
-					},
-					{
-						title: '客车-传统',
-						titleIndex: 2,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "丰泽区人民法院",
-						endAddress: "泉州市-丰泽区-泉秀路765号",
-						orderType: "未支付",
-						appointment: true,
-					},{
-						title: '客车-传统',
-						titleIndex: 2,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "泉州汽车站",
-						endAddress: "泉州市-丰泽区-泉秀路222号",
-						orderType: "已取消",
-						appointment: true,
-					},
-					{
-						title: '出租车',
-						titleIndex: 1,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "泉州汽车站",
-						endAddress: "泉州市-丰泽区-泉秀路222号",
-						orderType: "已取消",
-						appointment: true,
-					},{
-						title: '景区门票',
-						orderNumber: '11126778833',
-						orderType: '待使用',
-						orderActualPayment: 434,
-						orderDateReminder: '2020-03-20',
-						orderDate: '今天',
-						orderTicketNumber: 'T8718283713',
-						orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-						orderUserIndex: 1,
+				info : '',//请求服务器订单列表
+				// info: [{
+				// 		title: '客车-传统',
+				// 		titleIndex: 2,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "现代美居广场",
+				// 		endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
+				// 		orderType: "进行中",
+				// 		appointment: true,
+				// 	},{
+				// 		title: '客车-传统',
+				// 		titleIndex: 2,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "茶叶大厦",
+				// 		endAddress: "泉州市-丰泽区-泉秀路777号",
+				// 		orderType: "已完成",
+				// 		appointment: true,
+				// 	},
+				// 	{
+				// 		title: '客车-传统',
+				// 		titleIndex: 2,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "现代美居广场",
+				// 		endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
+				// 		orderType: "进行中",
+				// 		appointment: true,
+				// 	},
+				// 	{
+				// 		title: '客车-传统',
+				// 		titleIndex: 2,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "丰泽区人民法院",
+				// 		endAddress: "泉州市-丰泽区-泉秀路765号",
+				// 		orderType: "未支付",
+				// 		appointment: true,
+				// 	},{
+				// 		title: '客车-传统',
+				// 		titleIndex: 2,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "泉州汽车站",
+				// 		endAddress: "泉州市-丰泽区-泉秀路222号",
+				// 		orderType: "已取消",
+				// 		appointment: true,
+				// 	},
+				// 	{
+				// 		title: '出租车',
+				// 		titleIndex: 1,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "泉州汽车站",
+				// 		endAddress: "泉州市-丰泽区-泉秀路222号",
+				// 		orderType: "已取消",
+				// 		appointment: true,
+				// 	},{
+				// 		title: '景区门票',
+				// 		orderNumber: '11126778833',
+				// 		orderType: '待使用',
+				// 		orderActualPayment: 434,
+				// 		orderDateReminder: '2020-03-20',
+				// 		orderDate: '今天',
+				// 		orderTicketNumber: 'T8718283713',
+				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
+				// 		orderUserIndex: 1,
+						
+				// 		ticketId: 0,
+				// 		ticketTitle: '南平武夷山',
+				// 	}, {
+				// 		title: '景区门票',
+				// 		orderNumber: '11126778833',
+				// 		orderType: '已使用',
+				// 		orderActualPayment: 434,
+				// 		orderDateReminder: '2020-03-20',
+				// 		orderDate: '今天',
+				// 		orderTicketNumber: 'T8718283713',
+				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
+				// 		orderUserIndex: 1,
 
-						ticketId: 0,
-						ticketTitle: '南平武夷山',
-					}, {
-						title: '景区门票',
-						orderNumber: '11126778833',
-						orderType: '已使用',
-						orderActualPayment: 434,
-						orderDateReminder: '2020-03-20',
-						orderDate: '今天',
-						orderTicketNumber: 'T8718283713',
-						orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-						orderUserIndex: 1,
+				// 		ticketId: 0,
+				// 		ticketTitle: '南平武夷山',
+				// 	}, {
+				// 		title: '景区门票',
+				// 		orderNumber: '11126778833',
+				// 		orderType: '待支付',
+				// 		orderActualPayment: 434,
+				// 		orderDateReminder: '2020-03-20',
+				// 		orderDate: '今天',
+				// 		orderTicketNumber: 'T8718283713',
+				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
+				// 		orderUserIndex: 1,
 
-						ticketId: 0,
-						ticketTitle: '南平武夷山',
-					}, {
-						title: '景区门票',
-						orderNumber: '11126778833',
-						orderType: '待支付',
-						orderActualPayment: 434,
-						orderDateReminder: '2020-03-20',
-						orderDate: '今天',
-						orderTicketNumber: 'T8718283713',
-						orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-						orderUserIndex: 1,
+				// 		ticketId: 0,
+				// 		ticketTitle: '南平武夷山',
+				// 	}, {
+				// 		title: '景区门票',
+				// 		orderNumber: '11126778833',
+				// 		orderType: '已退票',
+				// 		orderActualPayment: 434,
+				// 		orderDateReminder: '2020-03-20',
+				// 		orderDate: '今天',
+				// 		orderTicketNumber: 'T8718283713',
+				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
+				// 		orderUserIndex: 1,
 
-						ticketId: 0,
-						ticketTitle: '南平武夷山',
-					}, {
-						title: '景区门票',
-						orderNumber: '11126778833',
-						orderType: '已退票',
-						orderActualPayment: 434,
-						orderDateReminder: '2020-03-20',
-						orderDate: '今天',
-						orderTicketNumber: 'T8718283713',
-						orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-						orderUserIndex: 1,
+				// 		ticketId: 0,
+				// 		ticketTitle: '南平武夷山',
+				// 	}, {
+				// 		title: '景区门票',
+				// 		orderNumber: '11126778833',
+				// 		orderType: '已取消',
+				// 		orderActualPayment: 434,
+				// 		orderDateReminder: '2020-03-20',
+				// 		orderDate: '今天',
+				// 		orderTicketNumber: 'T8718283713',
+				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
+				// 		orderUserIndex: 1,
 
-						ticketId: 0,
-						ticketTitle: '南平武夷山',
-					}, {
-						title: '景区门票',
-						orderNumber: '11126778833',
-						orderType: '已取消',
-						orderActualPayment: 434,
-						orderDateReminder: '2020-03-20',
-						orderDate: '今天',
-						orderTicketNumber: 'T8718283713',
-						orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-						orderUserIndex: 1,
-
-						ticketId: 0,
-						ticketTitle: '南平武夷山',
-					}, {
-						title: '出租车',
-						titleIndex: 1,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "茶叶大厦",
-						endAddress: "泉州市-丰泽区-泉秀路777号",
-						orderType: "已完成",
-						appointmentTime:"03-05",
-						appointment: true,
-					},
-					{
-						title: '出租车',
-						titleIndex: 1,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "现代美居广场",
-						endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
-						orderType: "进行中",
-						appointmentTime:"03-05",
-						appointment: false,
-					},
-					{
-						title: '出租车',
-						titleIndex: 1,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "丰泽区人民法院",
-						endAddress: "泉州市-丰泽区-泉秀路765号",
-						orderType: "未支付",
-						appointmentTime:"03-05",
-						appointment: false,
-					},
-					{
-						title: '出租车',
-						titleIndex: 1,
-						time: '2020-03-06 8:00',
-						money: '¥32.6元',
-						starAddress: "泉州汽车站",
-						endAddress: "泉州市-丰泽区-泉秀路222号",
-						orderType: "已取消",
-						appointmentTime:"03-05",
-						appointment: true,
-					}
-				],
+				// 		ticketId: 0,
+				// 		ticketTitle: '南平武夷山',
+				// 	}, {
+				// 		title: '出租车',
+				// 		titleIndex: 1,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "茶叶大厦",
+				// 		endAddress: "泉州市-丰泽区-泉秀路777号",
+				// 		orderType: "已完成",
+				// 		appointmentTime:"03-05",
+				// 		appointment: true,
+				// 	},
+				// 	{
+				// 		title: '出租车',
+				// 		titleIndex: 1,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "现代美居广场",
+				// 		endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
+				// 		orderType: "进行中",
+				// 		appointmentTime:"03-05",
+				// 		appointment: false,
+				// 	},
+				// 	{
+				// 		title: '出租车',
+				// 		titleIndex: 1,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "丰泽区人民法院",
+				// 		endAddress: "泉州市-丰泽区-泉秀路765号",
+				// 		orderType: "未支付",
+				// 		appointmentTime:"03-05",
+				// 		appointment: false,
+				// 	},
+				// 	{
+				// 		title: '出租车',
+				// 		titleIndex: 1,
+				// 		time: '2020-03-06 8:00',
+				// 		money: '¥32.6元',
+				// 		starAddress: "泉州汽车站",
+				// 		endAddress: "泉州市-丰泽区-泉秀路222号",
+				// 		orderType: "已取消",
+				// 		appointmentTime:"03-05",
+				// 		appointment: true,
+				// 	}
+				// ],
 				finishArr: [],
 				goingArr: [],
 				unfinishArr: [],
@@ -1127,37 +1133,48 @@
 
 			toFinished: function() {
 				var that = this;
-				for (var i = 0; i < that.info.length; i++) {
-					if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
-						that.finishArr.push(that.info[i]);
-					} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待使用') {
-						that.goingArr.push(that.info[i]);
-					} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
-						that.unfinishArr.push(that.info[i]);
-					} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票') {
-						that.cancelArr.push(that.info[i]);
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=17',
+					method:'POST',
+					success(res){
+						console.log(res)
+						that.info = res.data.data;
+						// for (var i = 0; i < that.info.length; i++) {
+						// 	if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
+						// 		that.finishArr.push(that.info[i]);
+						// 	} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待使用') {
+						// 		that.goingArr.push(that.info[i]);
+						// 	} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
+						// 		that.unfinishArr.push(that.info[i]);
+						// 	} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票') {
+						// 		that.cancelArr.push(that.info[i]);
+						// 	}
+						// }
 					}
-				}
+				})
+				
 			},
-
+			
+			//获取当前时间并格式化
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
+			
 			//景区门票-打开二维码弹框
 			open(e) {
-				if (this.current == 0) {
-					this.orderIndexData = this.info[e]
+					this.orderIndexData = e;
 					this.$refs.popup.open()
-				} else if (this.current == 1) {
-					this.orderIndexData = this.finishArr[e]
-					this.$refs.popup.open()
-				} else if (this.current == 2) {
-					this.orderIndexData = this.goingArr[e]
-					this.$refs.popup.open()
-				} else if (this.current == 3) {
-					this.orderIndexData = this.unfinishArr[e]
-					this.$refs.popup.open()
-				} else if (this.current == 4) {
-					this.orderIndexData = this.cancelArr[e]
-					this.$refs.popup.open()
-				}
 			},
 			//景区门票-关闭二维码弹框
 			close() {
@@ -1165,7 +1182,7 @@
 			},
 			//景区门票-打开退票弹框
 			open2(e) {
-				this.orderIndex = e;
+				this.ticketOrderNumber = e;
 				this.$refs.popup2.open()
 			},
 			//景区门票-关闭退票弹框
@@ -1174,7 +1191,7 @@
 			},
 			//景区门票-打开取消弹框
 			open3(e) {
-				this.orderIndex = e;
+				this.ticketOrderNumber = e;
 				this.$refs.popup3.open()
 			},
 			//景区门票-关闭取消弹框
@@ -1184,85 +1201,29 @@
 
 			//景区门票-详情跳转
 			details(e) {
-				if (this.current == 0) {
 					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(this.info[e].orderNumber)
+						url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(e)
 					})
-				} else if (this.current == 1) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(this.finishArr[e].orderNumber)
-					})
-				} else if (this.current == 2) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(this.goingArr[e].orderNumber)
-					})
-				} else if (this.current == 3) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(this.unfinishArr[e].orderNumber)
-					})
-				} else if (this.current == 4) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(this.cancelArr[e].orderNumber)
-					})
-				}
 			},
 			//景区门票-去支付跳转
 			topay(e) {
-				if (this.current == 0) {
 					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(this.info[e].orderNumber)
+						url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(e)
 					})
-				} else if (this.current == 1) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(this.finishArr[e].orderNumber)
-					})
-				} else if (this.current == 2) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(this.goingArr[e].orderNumber)
-					})
-				} else if (this.current == 3) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(this.unfinishArr[e].orderNumber)
-					})
-				} else if (this.current == 4) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(this.cancelArr[e].orderNumber)
-					})
-				}
-
 			},
 			//景区门票-再次购买
 			repurchase(e) {
-				if (this.current == 0) {
 					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.info[e].ticketId)
+						url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
 					})
-				} else if (this.current == 1) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.finishArr[e].ticketId)
-					})
-				} else if (this.current == 2) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.goingArr[e].ticketId)
-					})
-				} else if (this.current == 3) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.unfinishArr[e].ticketId)
-					})
-				} else if (this.current == 4) {
-					uni.navigateTo({
-						url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.cancelArr[e].ticketId)
-					})
-				}
-
 			},
 			//景区门票-退票
 			refund(e) {
-				if (this.current == 0) {
+					//
 					// uni.request({
-					// 	url,
+					// 	url : '',
 					// 	data: {
-					// 		orderNumber: this.info[e].orderNumber,
+					// 		orderNumber: this.ticketOrderNumber,
 					// 		content: 'refund',
 					// 	}
 					// })
@@ -1272,72 +1233,14 @@
 						duration:1500,
 					})
 					this.close2();
-				} else if (this.current == 1) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.finishArr[e].orderNumber,
-					// 		content: 'refund',
-					// 	}
-					// })
-					uni.showToast({
-						title:'退票成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close2();
-				} else if (this.current == 2) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.goingArr[e].orderNumber,
-					// 		content: 'refund',
-					// 	}
-					// })
-					uni.showToast({
-						title:'退票成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close2();
-				} else if (this.current == 3) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.unfinishArr[e].orderNumber,
-					// 		content: 'refund',
-					// 	}
-					// })
-					uni.showToast({
-						title:'退票成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close2();
-				} else if (this.current == 4) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.cancelArr[e].orderNumber,
-					// 		content: 'refund',
-					// 	}
-					// })
-					uni.showToast({
-						title:'退票成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close2();
-				}
 			},
 
 			//景区门票-取消
 			cancel(e) {
-				if (this.current == 0) {
 					// uni.request({
-					// 	url,
+					// 	url : '',
 					// 	data: {
-					// 		orderNumber: this.info[e].orderNumber,
+					// 		orderNumber: this.ticketOrderNumber,
 					// 		content: 'cancel',
 					// 	}
 					// })
@@ -1347,78 +1250,23 @@
 						duration:1500,
 					})
 					this.close3();
-				} else if (this.current == 1) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.finishArr[e].orderNumber,
-					// 		content: 'cancel',
-					// 	}
-					// })
-					uni.showToast({
-						title:'取消成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close3();
-				} else if (this.current == 2) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.goingArr[e].orderNumber,
-					// 		content: 'cancel',
-					// 	}
-					// })
-					uni.showToast({
-						title:'取消成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close3();
-				} else if (this.current == 3) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.unfinishArr[e].orderNumber,
-					// 		content: 'cancel',
-					// 	}
-					// })
-					uni.showToast({
-						title:'取消成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close3();
-				} else if (this.current == 4) {
-					// uni.request({
-					// 	url,
-					// 	data: {
-					// 		orderNumber: this.cancelArr[e].orderNumber,
-					// 		content: 'cancel',
-					// 	}
-					// })
-					uni.showToast({
-						title:'取消成功',
-						icon:'success',
-						duration:1500,
-					})
-					this.close3();
-				}
 			},
 
 			//景区门票-删除
 			del(e) {
-				if (this.current == 0) {
-					this.info.splice(e, 1);
-				} else if (this.current == 1) {
-					this.finishArr.splice(e, 1);
-				} else if (this.current == 2) {
-					this.goingArr.splice(e, 1);
-				} else if (this.current == 3) {
-					this.unfinishArr.splice(e, 1);
-				} else if (this.current == 4) {
-					this.cancelArr.splice(e, 1);
-				}
+				// uni.request({
+				// 	url : '',
+				// 	data: {
+				// 		orderNumber: this.ticketOrderNumber,
+				// 		content: 'del',
+				// 	}
+				// })
+				uni.showToast({
+					title:'删除成功',
+					icon:'success',
+					duration:1500,
+				})
+				this.close3();
 			}
 
 
