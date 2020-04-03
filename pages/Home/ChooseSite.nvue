@@ -155,6 +155,7 @@
 				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
 		</popup>
+		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运 -->
 		<view v-if="current == 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
@@ -376,6 +377,7 @@
 				that.current = parseInt(options.current);
 			}
 			that.intervalGet();
+			that.getKeYunInfo();
 		},
 		onShow() {
 			var that = this;
@@ -575,7 +577,41 @@
 						title: "正在查询",
 						// mask:true,
 					});
+					//获取数据
+					that.getmessengeInfo(that.current);
+					console.log(that.current);
 					that.IsSearch = true;
+				}
+			},
+			//获取数据
+			getmessengeInfo(param) {
+				console.log( typeof param);
+				switch(param){
+					case 0 :{//智能
+						
+						break;
+					}
+					case 1 :{//客运
+						// uni.request({
+							
+						// })
+						console.log('点击了客运')
+						break;
+					}
+					case 2 :{//出租车
+						
+						break;
+					}
+					case 3 :{//公交
+						
+						break;
+					}
+					case 4 :{//专线车
+						
+						break;
+					}
+					default:
+						break;
 				}
 			},
 			setMarkers: function() { //设置始末标点

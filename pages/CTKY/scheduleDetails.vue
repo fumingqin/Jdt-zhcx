@@ -7,16 +7,16 @@
 			<view class="orderCommonClass" style="margin-top: -110upx;">
 				<view class="ticketInfoClass">
 					<view>
-						<view class="textCLass" style="font-size: 28upx;color: #333333;display: block;padding: 0;">{{ticketDate}}
-							{{ticketDetail.SetTime}}出发</view>
-						<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">{{ticketDetail.StartStaion}}
-							→ {{ticketDetail.EndStation}}</view>
-						<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{ticketDetail.CarType}}儿童半票</view>
+						<view class="textCLass" style="font-size: 28upx;color: #333333;display: block;padding: 0;">
+							{{utils.timeTodate('Y-m-d H:i',ticketDetail.setTime)}}出发</view>
+						<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">{{ticketDetail.startStaion}}
+							→ {{ticketDetail.endStation}}</view>
+						<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{ticketDetail.carType}}  儿童半票</view>
 					</view>
 					<view style="display: flex; flex-direction: column;">
-						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketDetail.Price}}</view>
+						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketDetail.fare}}</view>
 						<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		       SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.Seat}}张</view>
+		       SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.remainingVotes}}张</view>
 					</view>
 				</view>
 			</view>
@@ -31,7 +31,7 @@
 			</view>
 			
 			<!-- 上下车点选择,0是普通购票不显示上下车点选择 -->
-			<view class="stationContentView" v-if="isNormal == '1'">
+			<view class="stationContentView" v-if="ticketDetail.shuttleType == '定制班车'">
 				<view class="boarding" style="border-bottom:#EAEAEA solid 1px;" @tap="startStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">
@@ -179,13 +179,15 @@
 </template>
 
 <script>
-	import popup from "../../components/CTKY/uni-popup/uni-popup.vue"
+	import popup from "../../components/CTKY/uni-popup/uni-popup.vue";
+	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components:{
 			popup
 			},
 		data() {
 			return {
+				utils: utils,
 				title: '',
 				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
 				count: 1,
@@ -232,16 +234,10 @@
 				isInsurance:0,
 				maskState: 0, //优惠券面板显示状态
 				ticketDate:'',
-				// ticketSettime:'',
-				// ticketPrice:'',
-				// ticketCount:'',
-				// ticketStart:'',
-				// ticketEnd:'',
-				// carType:'',
-				// ticketType:'',
 				ticketDetail: []
 			}
 		},
+		
 		onLoad(e) {
 			var that = this;
 			//给车票类型赋值，0：普通购票，不显示上下车点选择 1:定制班车，显示上下车点选择
@@ -254,26 +250,13 @@
 			uni.setNavigationBarTitle({
 				title: '填写订单'
 			});
-			
+			//读取订单数据
 			uni.getStorage({
-				key: 'selectedTicket',
-				success: function(res) {
-					// that.ticketSettime=res.data[0].ticketSettime;
-					// that.ticketPrice=res.data[0].ticketPrice;
-					// that.ticketCount=res.data[0].ticketCount;
-					// that.ticketStart=res.data[0].ticketStart;
-					// that.ticketEnd=res.data[0].ticketEnd;
-					// that.carType=res.data[0].carType;
-					// that.ticketType=res.data[0].ticketType
-					that.ticketDetail = res.data;
+				key: 'ticketDate',
+				success:function(data){
+					that.ticketDetail = data.data
 				}
-			});
-			uni.getStorage({
-				key: 'shiftDate',
-				success: function(res) {
-                     that.ticketDate=res.data;
-				}
-			});
+			})
 
 		},
 		onShow() {
@@ -283,11 +266,16 @@
 		onReady() {
 
 		},
+		onUnload() {
+			uni.removeStorage({
+			    key: 'ticketDate',
+			    success: function (res) {
+			        console.log('success');
+			    }
+			});
+		},
 		methods: {
-			Add() {
-
-			},
-			//用户数据读取
+			//乘客数据读取
 			userData(){ 
 				uni.getStorage({
 				    key: 'passengerList',
@@ -295,6 +283,7 @@
 				        this.passengerInfo = res.data;
 				    }
 				});
+				//读取上下车点缓存
 				uni.getStorage({
 					key:'CTKYStationList',
 					success: (res) =>{

@@ -824,12 +824,12 @@ const arrange={
 		content:[{
 			contentTitle:'集合：泉州湖美大酒店  不在二环的自发前往，不接送，不迟到 ',
 			contentTIme:'08:00 — 09:00',
-			contentText:'<div>泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（湖美酒店对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。具体时间以工作人员提前一天联系通知为准。</div>',
+			contentText:'泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（湖美酒店对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。具体时间以工作人员提前一天联系通知为准。</div>',
 		},
 		{
 			contentTitle:'交通工具：大型高一大巴前往武夷山风景区',
 			contentTIme:'09:00 — 12:00',
-			contentText:'<div>泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（三元宾馆对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。  <p></p><image src="../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/mangdangshan.jpg"/></div>',
+			contentText:'泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（三元宾馆对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。  <p></p><image src="../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/mangdangshan.jpg"/>',
 		}]
 	}],
 	msg: '提示'
@@ -925,24 +925,6 @@ const groupTour={
 		},
 		{
 			contentId:2,
-			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
-			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
-			contentLabel:'5A风景 | 周边游 | 历史古城 ',
-			cost:1800,
-			sell:55,
-			comment:8,
-		},
-		{
-			contentId:3,
-			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
-			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
-			contentLabel:'5A风景 | 周边游 | 历史古城 ',
-			cost:1800,
-			sell:55,
-			comment:8,
-		},
-		{
-			contentId:4,
 			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
 			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
 			contentLabel:'5A风景 | 周边游 | 历史古城 ',

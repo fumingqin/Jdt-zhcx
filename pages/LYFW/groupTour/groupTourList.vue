@@ -38,7 +38,7 @@
 		</view>
 
 		<!-- 内容1 -->
-		<view :hidden="current==1">
+		<view :hidden="current == 1">
 			<view class="content" v-for="(item,index) in groupTitle" :key="index">
 				<view class="title">
 					<view style="background: #00B5FF;width: 56upx;height: 56upx;border-radius:4px;"><text class="titleId">{{item.groupId}}</text></view>
@@ -57,20 +57,58 @@
 						</view>
 					</view>
 				</view>
+				<view class="findMore" v-if="item.content.length>3">
+					<text class="findMoreText" @click="selete(item.content)">查看更多>></text>
+				</view>
 			</view>
 		</view>
+		
+		<!-- 筛选内容 -->
+		<view :hidden="current == 0 ">
+			<view class="content">
+				<view class="groupTour" v-for="(item,index) in screenContent" :key="index">
+					<view class="groupContent">
+						<image class="contentImage" :src="item.contentImage" mode="aspectFill"></image>
+					</view>
+					<view class="groupText">
+						<text class="contentText">{{item.contentTitle}}</text>
+						<text class="contentLabel">{{item.contentLabel}}</text>
+						<view class="groupCost">
+							<view class="cost">￥<text class="contentCost">{{item.cost}}</text>元</view>
+							<text class="sellComment">已售{{item.sell}}&nbsp;&nbsp;{{item.comment}}评论</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		
+		<!-- 分类面板 -->
+		<view>
+			<view class="cate-mask" :class="currentIndex===0 ? 'none' : currentIndex===1 ? 'show' : ''" @click="close">
+				<view class="cate-content">
+					<scroll-view scroll-y class="cate">
+						<view class="cate-list" v-for="item in groupTitle" :key="item.groupId" @click="changeCate(item.content)">
+							<text class="cate-Text">{{item.groupId}}&nbsp;&nbsp;{{item.groupTItle}}</text>
+						</view>
+					</scroll-view>
+				</view>
+			</view>
+		</view>
+		
 	</view>
 </template>
 
-<script>	
-import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
+<script>
+	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
 	import QSTabs from '../../../components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
+	import uniPopup from '../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue'
 	export default {
 		components: {
 			citySelect,
 			popupLayer,
-			QSTabs
+			QSTabs,
+			uniPopup
 		},
 		data() {
 			return {
@@ -79,15 +117,20 @@ import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-ci
 				searchIndex: 0, //搜索框是否启用状态值
 				searchData: '', //搜索后的值
 				current: 0, //标题下标
+				currentIndex : 0,//弹框默认值
+				
+				screenContent : [],
+				
 				tabs: ['推荐', '全部'], //选项标题
 				groupTitle: [], //内容标题
+				cateMaskState: 0, //分类面板展开状态
 			}
 		},
-		
+
 		onLoad() {
 			this.routeInit();
 		},
-		
+
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
@@ -99,7 +142,7 @@ import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-ci
 			oncity() {
 				this.$refs.popupRef.show();
 			},
-			
+
 			//地区获取
 			backCity(e) {
 				if (e !== 'no') {
@@ -153,10 +196,38 @@ import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-ci
 			},
 
 			//tabbar筛选点击
-			change(index) {
-				this.current = index;
+			change(e) {
+				console.log(e)
+				if(e==0){
+					this.current = e;
+					this.currentIndex = 0;
+				}else if(e==1){
+					this.current = e;
+					this.currentIndex = 1;
+				}
+				
 			},
-
+			close(){
+				this.currentIndex = 0;
+			},
+			
+			selete(e) {
+				// console.log(e)
+				uni.setStorage({
+					key: 'groupTourContent',
+					data: e
+				})
+				uni.navigateTo({
+					url: '/pages/LYFW/groupTour/viewMore'
+				})
+			},
+			
+			changeCate: function(e){
+				console.log(e)
+				this.currentIndex = 1;
+				this.screenContent = e;	
+			}
+		
 		}
 	}
 </script>
@@ -267,76 +338,93 @@ import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-ci
 
 	//tabs点击
 	.tabsBox {
-		z-index: 999;
+		// z-index: 999;
 		position: sticky;
+		top: 0;
+		// width: 100%;
+		// height: 80upx;
 		background: #fff;
 	}
 
 	//内容1
 	.content {
 		background-color: #FFFFFF;
-		padding: 39upx 32upx;
+		padding: 0upx 32upx;
+		padding-top: 39upx;
 		margin-bottom: 20upx;
+
 		.title {
 			display: flex;
+
 			.titleId {
 				color: #FFFFFF;
 				font-size: 34upx;
 				margin: 0upx 18upx;
 				line-height: 53upx;
 			}
-			.contentTitle{
+
+			.contentTitle {
 				margin-left: 12upx;
 				color: #333333;
 				font-size: 40upx;
 				font-weight: bold;
 			}
 		}
-		.groupTour{
+
+		.groupTour {
 			display: flex;
 			padding-top: 40upx;
 			padding-bottom: 40upx;
 			border-bottom: 1px #F5F5F5 dotted;
-			.groupContent{
+
+			.groupContent {
+
 				// display: flex;
-				.contentImage{
+				.contentImage {
 					width: 228upx;
 					height: 190upx;
-					border-radius:8px;
+					border-radius: 8px;
 				}
 			}
-			.groupText{
+
+			.groupText {
 				margin-left: 25upx;
-				.contentText{
-					font-size:32upx;
+
+				.contentText {
+					font-size: 32upx;
 					font-weight: 40;
-					font-family:Source Han Sans SC;
-					overflow: hidden;//超出溢出
-					-webkit-line-clamp: 2;//限制2行
+					font-family: Source Han Sans SC;
+					overflow: hidden; //超出溢出
+					-webkit-line-clamp: 2; //限制2行
 					text-overflow: ellipsis;
 					display: -webkit-box;
 					-webkit-box-orient: vertical;
 					text-align: justify;
 				}
-				.contentLabel{
+
+				.contentLabel {
 					display: block;
 					font-size: 28upx;
 					color: #aba9aa;
 					margin-top: 21upx;
 				}
-				.groupCost{
+
+				.groupCost {
 					margin-top: 12upx;
 					display: flex;
 					position: relative;
-					.cost{
+
+					.cost {
 						font-size: 28upx;
 						color: #FF6600;
-						.contentCost{
+
+						.contentCost {
 							font-size: 36upx;
 							color: #FF6600;
 						}
 					}
-					.sellComment{
+
+					.sellComment {
 						position: absolute;
 						font-size: 28upx;
 						line-height: 53upx;
@@ -344,6 +432,63 @@ import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-ci
 						right: 0;
 					}
 				}
+			}
+		}
+
+		.findMore {
+			padding: 38upx 259upx;
+
+			.findMoreText {
+				font-size: 30upx;
+				color: #aba9aa;
+			}
+		}
+	}
+
+
+	/* 分类 */
+	.cate-mask {
+		// z-index: 999;
+		position: fixed;
+		left: 0;
+		top: var(--window-top);
+		bottom: 0;
+		width: 100%;
+		background: rgba(0, 0, 0, 0);
+		z-index: 95;
+		transition: .3s;
+
+		.cate-content {
+			width: 630upx;
+			height: 100%;
+			background: #fff;
+			float: right;
+			transform: translateX(100%);
+			transition: .3s;
+			z-index: 96;
+		}
+
+		&.none {
+			display: none;
+		}
+
+		&.show {
+			background: rgba(0, 0, 0, .4);
+
+			.cate-content {
+				transform: translateX(0);
+			}
+		}
+	}
+	
+	.cate{
+		.cate-list{
+			display: block;
+			padding: 40upx 40upx;
+			border-bottom: 1px #F5F5F5 dotted;
+			.cate-Text{
+				color: #333333;
+				font-size: 34upx;
 			}
 		}
 	}
