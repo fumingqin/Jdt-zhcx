@@ -40,11 +40,11 @@
 							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 						</view>
 
-						<view style="display: flex;">
-							<button @click="detail(item.titleIndex)" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
-							<button @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">投诉</button>
-							<button @click="openBottomPopup" v-if="item.orderType=='未支付'" style="width:146rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; align-items: center; left: 80rpx;">去支付</button>
-							<button v-if="item.orderType=='已取消'" style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">删除</button>
+						<view class="CTKYBtnView">
+							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+							<button class="allBtn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button>
+							<button class="allBtn payBtn" @click="openBottomPopup" v-if="item.orderType=='未支付'" >去支付</button>
+							<button class="allBtn" @tap="del(index)" v-if="item.orderType=='已取消'">删除</button>
 						</view>
 					</view>
 				</view>
@@ -137,12 +137,12 @@
 							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 						</view>
 				
-						<view style="display: flex;">
-							<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
-							<button class="allBtn" v-if="item.orderType=='已完成'" style="left: 100rpx;">投诉</button>
-							<button class="allBtn" v-if="item.orderType=='未支付'" style="left: 100rpx;background-color: #FC4646; color: #ffffff;">去支付</button>
-							<button class="allBtn" v-if="item.orderType=='已取消'" style="left: 100rpx;">删除</button>
-							<button class="allBtn" @tap="QRCodeTap" v-if="item.orderType=='进行中'" style="left: 100rpx;">二维码</button>
+						<view class="CTKYBtnView">
+							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+							<button class="allBtn" v-if="item.orderType=='已完成'" >投诉</button>
+							<button class="allBtn payBtn" @tap="keYunPay" v-if="item.orderType=='未支付'">去支付</button>
+							<button class="allBtn" @tap="del(index)" v-if="item.orderType=='已取消'" >删除</button>
+							<button class="allBtn" @tap="QRCodeTap" v-if="item.orderType=='进行中'">二维码</button>
 						</view>
 					</view>
 				</view>
@@ -183,9 +183,9 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 
-							<view style="display: flex;">
-								<button style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">投诉</button>
-								<button style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn">投诉</button>
+								<button class="allBtn">详情</button>
 							</view>
 						</view>
 					</view>
@@ -277,9 +277,9 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 					
-							<view style="display: flex;">
-								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
-								<button class="allBtn" v-if="item.orderType=='已完成'" style="left: 100rpx;">投诉</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+								<button class="allBtn" v-if="item.orderType=='已完成'">投诉</button>
 							</view>
 						</view>
 					</view>
@@ -318,8 +318,8 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 			
-							<view style="display: flex;">
-								<button style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn">详情</button>
 							</view>
 						</view>
 					</view>
@@ -382,7 +382,7 @@
 						</view>
 					</view>
 					
-					<!-- 客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<!-- (取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 					<view v-if="item.title=='客车-传统'">
 						<!-- 预定日期 -->
 						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
@@ -411,8 +411,8 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 								
-							<view style="display: flex;">
-								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
 							</view>
 						</view>
 					</view>
@@ -452,9 +452,9 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 			
-							<view style="display: flex;">
-								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
-								<button class="allBtn" style="background-color: #FC4646; border: 1px solid #FC4646; color: #ffffff; left: 100rpx;">去支付</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+								<button class="allBtn payBtn">去支付</button>
 							</view>
 						</view>
 					</view>
@@ -517,7 +517,7 @@
 						</view>
 					</view>
 					
-					<!-- 客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 					<view v-if="item.title=='客车-传统'">
 						<!-- 预定日期 -->
 						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
@@ -546,9 +546,9 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 								
-							<view style="display: flex;">
-								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
-								<button class="allBtn" style="background-color: #FC4646; color: #ffffff; left: 100rpx;">去支付</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+								<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
 								
 							</view>
 						</view>
@@ -591,9 +591,9 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 			
-							<view style="display: flex;">
-								<button style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; align-items: center; left: 80rpx;">删除</button>
-								<button style="width:132rpx;height:72rpx;border-radius:18rpx; margin-top: 32rpx; font-size: 28rpx;text-align: center;background-color: #fff; border: 1px solid #999999; color: #999999; right: 48rpx; align-items: center; position: absolute;">详情</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @tap="del(index)">删除</button>
+								<button class="allBtn">详情</button>
 							</view>
 						</view>
 					</view>
@@ -685,9 +685,10 @@
 								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
 							</view>
 								
-							<view style="display: flex;">
-								<button class="allBtn" @click="detail(item.titleIndex)" style="position: absolute;">详情</button>
-								<button class="allBtn" style="background-color: #FC4646; color: #ffffff; left: 100rpx;">去支付</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @tap="detail(item.titleIndex)">详情</button>
+								<button class="allBtn" @tap="del(index)">删除</button>
+								<!-- <button class="allBtn" @tap="keYunPay">去支付</button> -->
 							</view>
 						</view>
 					</view>
@@ -1102,7 +1103,7 @@
 					url: '/pages/Home/Index',
 				});
 			},
-
+			//客运详情
 			detail: function(item) {
 				if (item == 1) {
 					uni.navigateTo({
@@ -1113,6 +1114,12 @@
 						url: '/pages/CTKY/orderDetail',
 					})
 				}
+			},
+			// 客运支付
+			keYunPay: function(){
+				uni.navigateTo({
+					url:"../CTKY/orderPayment"
+				})
 			},
 			// 客运二维码弹框
 			QRCodeTap: function(){
@@ -1181,7 +1188,8 @@
 			close3() {
 				this.$refs.popup3.close()
 			},
-
+			
+			
 			//景区门票-详情跳转
 			details(e) {
 				if (this.current == 0) {
@@ -1643,19 +1651,25 @@
 			}
 		}
 	}
-	//所有按钮--LJH
-	.allBtn {
-		height:54rpx;
-		line-height: 54rpx;
-		border-radius:8rpx;
-		margin-top: 32rpx;
-		font-size: 26rpx;
-		text-align: center;
-		background-color: #fff;
-		border: 0.1 solid #06B4FD;
-		color: #666666;
-		right: 20rpx;
-		align-items: center;
+	//客运按钮区
+	.CTKYBtnView {
+		margin-top: 30upx;
+		display: flex;
+		float: right;
+		.allBtn {
+			padding: 0 20upx;
+			// padding-top: 32upx;
+			font-size: 26upx;
+			border-radius: 8upx;
+			border: 0.1 solid #06B4FD;
+			margin-right: 24upx;
+			background-color: #fff;
+			color: #666666;
+		}
+		.payBtn {
+			background-color: #FC4646;
+			color: #ffffff;
+		}
 	}
 	//预定日期---LJH
 	.reserveDate {
