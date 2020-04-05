@@ -275,10 +275,10 @@
 			//数组提取
 			screenUser:function(){
 				let adult = this.addressData.filter(item => {
-					return item.ticketType == '成人';
+					return item.userType == '成人';
 				})
 				let children = this.addressData.filter(item => {
-					return item.ticketType == '儿童';
+					return item.userType == '儿童';
 				})
 				this.adultIndex = adult.length;
 				this.childrenIndex = children.length;
@@ -324,7 +324,7 @@
 			stopPrevent() {},
 
 			// 数量+计价
-			numberChange() {
+			numberChange(){
 				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this.childrenIndex);
 				if (this.couponColor == '') {
 					this.actualPayment = a;
@@ -346,70 +346,69 @@
 
 			//提交表单
 			submit: function() {
-				if (this.selectedValue == 1 && this.addressData.length>0) {
-					console.log(this.admissionTicket.admissionTicketID)
-					console.log(this.admissionTicket.ticketContain)
-					console.log(this.admissionTicket.companyId)
-					console.log(this.admissionTicket.executeScheduleId)
-					console.log(this.addressData)
-					console.log(this.couponColor)
-					console.log(this.date)
-					console.log(this.dateReminder)
-					console.log(this.actualPayment)
+				if (this.selectedValue == 1 && this.addressData.length>0){
 					uni.request({
-						// url : 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder?unid=12321'+
-						// '&admissionTicketID=' +this.admissionTicket.admissionTicketID +
-						// '&companyId=' +this.admissionTicket.companyId +
-						// '&executeScheduleId=' +this.admissionTicket.executeScheduleId +
-						// '&addressData=' +this.addressData +
-						// '&dateReminder=' +this.dateReminder +
-						// '&date=' +this.date +
-						// '&orderInsure= ' +'' +
-						// '&orderInsurePrice=' +'' +
-						// '&actualPayment=' +this.actualPayment,
-						
-						url : 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
-						data:{
-							unid : '12321',
-							ticketProductId : this.admissionTicket.admissionTicketID,
-							ticketId : 0,
-							ticketContain : this.admissionTicket.ticketContain,
-							
-							companyId : this.admissionTicket.companyId,
-							executeScheduleId : this.admissionTicket.executeScheduleId,
-							
-							addressData : this.addressData,
-							couponID : this.couponColor,
-							
-							orderDateReminder : this.dateReminder,
-							orderDate : this.date,
-							orderInsure : '',
-							orderInsurePrice : '',
-							orderActualPayment : this.actualPayment,
-						},
-						
+						url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=17',
 						method:'POST',
-						//向服务器发送订单数据，返回订单编号
-						success:(res)=>{
-							console.log(res)
-							if(res.data.msg =='无可售门票！'){
-								uni.showToast({
-									title:'该景区无可售门票！',
-									icon:'none',
+						success:(res) => {
+							var a = '';
+							a = res.data.data.filter(item => {
+								return item.orderType == '待支付';
+							})
+							if(a == ''){
+								uni.request({
+									url : 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+									data:{
+										unid : '12321',
+										ticketProductId : this.admissionTicket.admissionTicketID,
+										ticketId : 0,
+										ticketContain : this.admissionTicket.ticketContain,
+										
+										companyId : this.admissionTicket.companyId,
+										executeScheduleId : this.admissionTicket.executeScheduleId,
+										
+										addressData : this.addressData,
+										couponID : this.couponColor,
+										
+										orderDateReminder : this.dateReminder,
+										orderDate : this.date,
+										orderInsure : '',
+										orderInsurePrice : '',
+										orderActualPayment : this.actualPayment,
+									},
+									
+									method:'POST',
+									//向服务器发送订单数据，返回订单编号
+									success:(res)=>{
+										console.log(res)
+										if(res.data.msg =='无可售门票！'){
+											uni.showToast({
+												title:'该景区无可售门票！',
+												icon:'none',
+											})
+										}else if(res.data.msg =='下单失败，联系管理员！'){
+											uni.showToast({
+												title:'下单失败，联系管理员！',
+												icon:'none',
+											})
+										}else if(res.data.msg =='下单成功'){
+											uni.redirectTo({
+												url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(res.data.orderNumber)
+											})
+										}
+										
+									}
 								})
-							}else if(res.data.msg =='下单失败，联系管理员！'){
+							}else if(a.length>0){
 								uni.showToast({
-									title:'下单失败，联系管理员！',
+									title:'订单中，存在待支付订单，请支付/取消后再下单',
 									icon:'none',
-								})
-							}else if(res.data.msg =='下单成功'){
-								uni.redirectTo({
-									url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(res.data.orderNumber)
+									duration:2000
 								})
 							}
-							
 						}
 					})
+					
 					
 				} else if(this.addressData.length==0){
 					uni.showToast({
@@ -477,7 +476,7 @@
 					second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 				day >= 0 && day <= 9 ? (day = "0" + day) : "";
 				var index = e.date - day;
-				console.log(index)
+				// console.log(e)
 				if (index < 0) {
 					uni.showToast({
 						title: '请勿选择以往日期',

@@ -29,13 +29,13 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="route('/pages/LYFW/currency/independentTravel')">
+			<view class="cate-item" @click="route('/pages/LYFW/independentTravel/it_list')">
 				<image src="../../static/Home/indexzhly/fujin.png" mode="aspectFit"></image>
-				<text>周边旅游</text>
+				<text>自由行</text>
 			</view>
 			<view class="cate-item" @click="route('/pages/LYFW/ouristRoute/SceneryTable')">
 				<image src="../../static/Home/indexzhly/luxian.png" mode="aspectFit"></image>
-				<text>旅游路线</text>
+				<text>跟团游</text>
 			</view>
 			<view class="cate-item" @click="route('/pages/GJCX/busIndex')">
 				<image src="../../static/Home/indexzhly/gongJiao.png" mode="aspectFit"></image>

@@ -58,13 +58,13 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 		data() {
 			return {
 				title: 'Hello',
-				departure: '泉州客运中心站',
-				destination: '漳州客运站',
+				departure: '延平',
+				destination: '顺昌',
 				changeText: '',
 				type: 'rangetime',
 				value: '',
 				showPicker: false,
-				date: '2020/04/01',
+				date: '',
 				historyLines: ['泉州-厦门', '泰宁-石家庄', '福州-婺源', '上海-绍兴','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄'],
 				datestring: '',
 				Week: '',
@@ -74,9 +74,11 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 			}
 		},
 		onLoad() {
-			this.datestring = this.date.split('/')[1] + "月" + this.date.split('/')[2] + "日";
+			//获取当前日期
+			this.getTodayDate();
 		},
 		methods: {
+			
 			//点击车票类型
 			typeSelect(type) {
 				if (type == 'normal') {//点击了普通购票
@@ -88,6 +90,15 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 					this.specialPickerNum = 1;
 					this.isNormal = 1;//当前是定制班车
 				}
+			},
+			//获取当前日期
+			getTodayDate() {
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+			    var timer = year + '-' + month + '-' + day;
+				this.datestring = timer;
 			},
 			onShowDatePicker(type) { //显示
 				this.type = type;
@@ -117,7 +128,7 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 				console.log(this.date,this.departure + "-" + this.destination)
 				
 				//页面传参通过地址后面添加参数 this.isNormal=0是普通购票1是定制班车
-				var params='./selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-30' + '&isNormal' + this.isNormal;
+				var params='./selectTickets?&startStation=' + this.departure +'&endStation=' + this.destination + '&date=' + this.datestring + '&isNormal=' + this.isNormal;
 				uni.navigateTo({ 
 					url:params
 				})
@@ -126,14 +137,13 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 			onSelected(e) { //选择
 				this.showPicker = false;
 				if (e) {
-					//this[this.type] = e.value;
-
-					this[this.type] = e.value.split('/')[1] + "月" + e.value.split('/')[2] + "日";
+					// this[this.type] = e.value;
+					this[this.type] = e.value.split('/')[0] + "-" + e.value.split('/')[1] + "-" + e.value.split('/')[2];
 					this.datestring = this[this.type];
 					this.queryWeek(e.date.toString().substring(0,3));
-					console.log(this[this.type]);
-					console.log(e.date.toString().substring(0,3));
-					console.log(this.Week);
+					// console.log(this[this.type]);
+					// console.log(e.date.toString().substring(0,3));
+					// console.log(this.Week);
 					//选择的值
 					console.log('value => ' + e.value);
 					//原始的Date对象

@@ -135,7 +135,7 @@
 				</view>
 			</view>
 		</view>
-		<!-- <popup ref="popup" type="center" :maskClick="flase" style="z-index:99999;position: fixed;align-items: center; padding: 10upx;">
+		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999;position: fixed;align-items: center; padding: 10upx;">
 			<image src="../../static/CTKY/tipBackground.png" class="popupClass"></image>
 			<text style="position: absolute;color: #FFFFFF;top: 300rpx;margin-left: 80rpx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000">传统与定制班车的差异</text>
 			<view style="position: absolute; margin-top: 391upx;margin-left: 50rpx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
@@ -155,11 +155,12 @@
 				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
 		</popup>
+		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运 -->
 		<view v-if="current == 1" style="margin-top: 10upx;">
 			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
 					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
-						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</text>
+						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">客运班车</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
@@ -196,7 +197,7 @@
 					</view>
 					<view style="flex-direction: row;justify-content: space-between;margin-top: 30rpx;margin-bottom: 30rpx;" v-if="!IsClick">
 						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;border-right-width: 1px;border-color: #EAEAEA;">
-							<!-- <text style="font-size: 28rpx;">预约时间</text> -->
+						 <text style="font-size: 28rpx;">预约时间</text>
 							<hTimePicker interval="5" @changeTime="changeTime">
 								<view slot="pCon" class="changeTime">
 									<text style="font-size: 28rpx;">{{selecttime}}</text>
@@ -267,7 +268,7 @@
 	import uniIcons from "../../components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "../../components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "../../components/HOME/h-timePicker/h-timePicker.vue";
-	import popup from "../../components/uni-popup/uni-popup.vue";
+	import popup from "../../components/HOME/uni-popup/uni-popup.vue";
 	export default {
 		components: {
 			uniIcons,
@@ -376,6 +377,7 @@
 				that.current = parseInt(options.current);
 			}
 			that.intervalGet();
+			that.getKeYunInfo();
 		},
 		onShow() {
 			var that = this;
@@ -575,7 +577,41 @@
 						title: "正在查询",
 						// mask:true,
 					});
+					//获取数据
+					that.getmessengeInfo(that.current);
+					console.log(that.current);
 					that.IsSearch = true;
+				}
+			},
+			//获取数据
+			getmessengeInfo(param) {
+				console.log( typeof param);
+				switch(param){
+					case 0 :{//智能
+						
+						break;
+					}
+					case 1 :{//客运
+						// uni.request({
+							
+						// })
+						console.log('点击了客运')
+						break;
+					}
+					case 2 :{//出租车
+						
+						break;
+					}
+					case 3 :{//公交
+						
+						break;
+					}
+					case 4 :{//专线车
+						
+						break;
+					}
+					default:
+						break;
 				}
 			},
 			setMarkers: function() { //设置始末标点

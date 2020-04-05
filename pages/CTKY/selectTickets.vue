@@ -1,4 +1,5 @@
 <template>
+	<!-- 班次列表 -->
 	<view class="myView">
 		<!-- 顶部时间选项卡 -->
 		<view class="headerClass">
@@ -19,161 +20,138 @@
 		</view>
 		
 		<!-- 车票内容部分 -->
-		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(item)">
+		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(departureData[index])">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.DepartureType=='传统客运'">传统</view>
-					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.DepartureType=='定制班车'">定制</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.SetTime}}</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType=='普通班车'">传统</view>
+					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.shuttleType=='定制班车'">定制</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{utils.timeTodate('Y-m-d H:i',item.setTime)}}</view>
 				</view>
-				<!-- <view style="margin:28upx 25upx;font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">传统班车</view> -->
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">{{item.StartStaion}}</view>
+					color: #333333;">{{item.startStaion}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">{{item.EndStation}}</view>
+					color: #333333;">{{item.endStation}}</view>
 				</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;" v-if="item.DepartureType=='传统客运'">{{item.CarType}}/约{{item.Duration}}分钟/儿童半票</view>
+				font-size: 28upx;color: #666666;" v-if="item.shuttleType=='普通班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;" v-if="item.DepartureType=='定制班车'">{{item.CarType}}/约{{item.Duration}}分钟/儿童半票/站外上车</view>
+				font-size: 28upx;color: #666666;" v-if="item.shuttleType=='定制班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票/站外上车</view>
 			</view>
 			<view class="ctky_View_Right">
 				<view>
 					<view style="margin-right: 28upx;font-size: 36upx;font-style:
-		           SourceHanSansSC-Regular; color: #FC4646;">￥{{item.Price}}</view>
+		           SourceHanSansSC-Regular; color: #FC4646;">￥{{item.fare}}</view>
 					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		           SourceHanSansSC-Light; color: #666666;">余{{item.Seat}}张</view>
+		           SourceHanSansSC-Light; color: #666666;">余{{item.remainingVotes}}张</view>
 				</view>
 			</view>
 		</view>
-<!-- 		<view class="ctky_View" v-for="(item,index) in 2" :key="index" @click="ticketDetail">
-			<view class="ctky_View_Left">
-				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view style="width:65upx ;height: 37upx;border-radius: 14upx; border:#FF5A00  solid 1px;text-align: center;align-items: center;color:#FF5A00 
-					;font-size: 24upx;font-family: SourceHanSansSC-Light;">定制</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">15:05</view>
-				</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">泉州客运中心站</view>
-				</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">安溪</view>
-				</view>
-				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;">大型高一/约1-2小时/儿童半票/站外上车</view>
-			</view>
-			<view class="ctky_View_Right">
-				<view>
-					<view style="margin-right: 28upx;font-size: 36upx;font-style:
-		           SourceHanSansSC-Regular; color: #FC4646;">￥28</view>
-					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		           SourceHanSansSC-Light; color: #666666;">余18张</view>
-				</view>
-			</view>
-		</view> -->
 	</view>
 </template>
 
 <script>
 	import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue";
+	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components: {
 			MxDatePicker
 		},
 		data() {
 			return {
-				isNormal:'',
+				utils: utils,
 				dateArray: [], //时间轴的数量的数组
 				selectIndex: '', //选中的下标
 				date: '', //时间轴上选中的日期
 				showPicker: false,
 				type: 'rangetime',
 				value: '',
-				//测试数据传输
-				ticketInfo: [{
-					ticketDate: '12月1日',
-					ticketSettime: '14:30',
-					ticketPrice: '37',
-					ticketCount: '25',
-					ticketStart: '厦门',
-					ticketEnd: '拉萨',
-					carType: '大型高一',
-					ticketType: '儿童半票'
-				}],
 				startStation:'',//出发站
-				endStartion:'',//终点站
+				endStation:'',//终点站
 				departureData:[],//班次数据
+				stationArray:[],
 			}
 		},
 		onLoad(param) {
-			//当前车票类型：0表示普通购票 1表示定制班车
-			this.isNormal = 0;
+			// console.log(param);
 			this.date = param.date;
 			this.startStation=param.startStation;
-			this.endStartion=param.endStation;
+			this.endStation=param.endStation;
 			
 			
 			// this.date = this.getTime(0, new Date());
 			// this.startStation=param.StartStation;
 			// this.endStartion=param.EndStation;
-			console.log(this.date,this.startStation,this.endStartion)
+			console.log(this.date,this.startStation,this.endStation)
 			this.loadDate();
             this.getDeparture();
 			
-			// uni.request({
-			// 		url: "http://111.231.109.113:8000/api/MyTest/GetDeparture",
-			// 		data: {
-			// 			departureDate:param.date,
-			// 			startStation:param.startStation,
-			// 			endStation:param.endStation
-			// 		},
-			// 		method:"Get",
-			// 		header : {'content-type':'application/json'},
-			// 		success: (res) => {
-			// 			console.log(res.data);
-			// 			this.departureData=res.data;
-			// 		}
-			// 	});	
+			//加载班次列表数据
+			this.getTicketInfo(this.date);
+			
 		},
 		onReady() {
 
 		},
 		methods: {
+			//加载班次列表数据
+			getTicketInfo:function(date){
+				//加载数据提示菊花
+				uni.showLoading();
+				uni.request({
+					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
+					data: {
+						systemName:'',
+						startPosition:this.startStation,
+						endPosition:this.endStation,
+						date:date,
+					},
+					method:"POST",
+					header : {'content-type':'application/json'},
+					success: (res) => {
+						uni.hideLoading();
+						let that = this;
+						that.departureData = res.data.data;
+					},
+					fail(res) {
+						uni.hideLoading();
+					}
+				});	
+			},
 			viewClick: function(e, item) {
 				this.selectIndex = e;
 				this.date = item.longDate;
-				// console.log(this.date);
 				this.getDeparture();
 			},
+			//显示日期
 			onShowDatePicker(type) { //显示
 				this.type = type;
 				this.showPicker = true;
 				this.value = this[type];
 			},
-			onSelected(e) { //选择
+			//选择日期
+			onSelected(e) { 
 				this.showPicker = false;
 				if (e) {
 					this[this.type] = e.value;
 					// this[this.type] = e.value.split('/')[1] + "月" + e.value.split('/')[2] + "日";
 					// this.datestring = this[this.type];
 					// this.queryWeek(e.date.toString().substring(0,3));
-					console.log(this[this.type]);
-					console.log(e.date.toString().substring(0, 3));
+					// console.log(this[this.type]);
+					// console.log(e.date.toString().substring(0, 3));
 					//console.log(this.Week);
 					//选择的值
-					console.log('value => ' + e.value);
+					// console.log('value => ' + e.value);
 					//原始的Date对象
-					console.log('date => ' + e.date);
+					// console.log('date => ' + e.date);
 					this.date = e.value;
+					
+					//从日历选择时间后刷新列表数据
+					this.getTicketInfo(e.value);
 					var IsExist = false;
 					for (var i = 0; i < this.dateArray.length; i++) {
 						if ((new Date(this.dateArray[i].longDate)).getTime() == (new Date(this.date)).getTime()) {
@@ -207,32 +185,19 @@
 			//点击班次进行缓存，并打开页面
 			ticketDetail(item) {
 				var that = this;
-				console.log('当前选择',item);
 				
-				if(item.DepartureType == '传统客运') {
-					this.isNormal = 0
-				}else if (item.DepartureType == '定制班车'){
-					this.isNormal = 1
-				}
+				let date = utils.timeTodate('Y-m-d H:i:s',item.setTime)
 				uni.setStorage({
-					key: 'shiftDate',
-					data:this.getTime(4,new Date(this.date)) , //缓存所选的班次日期
-					success() {},
-					fail() {
-
-					}
-				});
-				//将点击的班次存入缓存
-				uni.setStorage({
-					key: 'selectedTicket',
-					data: item, //缓存所选的班次日期
-					success() {},
+					key: 'ticketDate',
+					data: item,
+					success() {
+						uni.navigateTo({
+							url: '/pages/CTKY/scheduleDetails'
+						})
+					},
 					fail() {
 					}
 				});
-				uni.navigateTo({
-					url: '/pages/CTKY/scheduleDetails?isNormal=' + this.isNormal
-				})
 			},
 			//日期时间转换函数   type 0 年月日 ，1 时分秒 ， 2 星期 ，3 月/日  4几月几日
 			getTime: function(type, date1) {
@@ -316,24 +281,9 @@
 				}
 			},
 
-			//调用接口根据起点站、终点站、日期获取 班次数据
+			//点击顶部时间，请求该时间的班次列表
 			getDeparture(){
-
-				uni.request({
-						url: "http://111.231.109.113:8000/api/MyTest/GetDeparture",
-						data: {
-							departureDate:this.date,
-							startStation:this.startStation,
-							endStation:this.endStartion
-						},
-						method:"Get",
-						header : {'content-type':'application/json'},
-						success: (res) => {
-							// console.log('类型',res.data);
-							this.departureData=res.data;
-						}
-					});	
-
+				this.getTicketInfo(this.date);
 			}
 			
 		}
