@@ -43,14 +43,14 @@
 					/>	
 				</view>
 				
-				<view class="itemClass borderTop">
+				<!-- <view class="itemClass borderTop">
 					<view class="fontStyle">有效期至</view>
 					<view class="inputClass">
 						<picker mode="date" :value="user.date" @change="bindDateChange" name="date">
 							<view>{{user.date}}</view>
 						</picker>
 					</view>
-				</view>
+				</view> -->
 				
 				<view class="itemClass borderTop">
 					<text class="fontStyle">额外凭证</text>
@@ -162,9 +162,11 @@
 				},
 				userType:'',
 				address:'',
+				unid:'',
 			}
 		},
-		onLoad (options){
+		onLoad (options){	
+			this.loadUnid();
 			var type=options.type;
 			this.type=options.type;
 			if(options.type=="edit"){
@@ -175,6 +177,15 @@
 		     wPicker
 		},
 		methods:{
+			async loadUnid(){
+				var the=this;
+				uni.getStorage({
+					key:'userInfo',
+					success(res){
+						the.unid=res.data.unid;
+					}
+				})
+			},
 			async loadData(type){
 				var that=this;
 				uni.getStorage({
@@ -194,15 +205,15 @@
 						that.user.userEmergencyContact =res.data.userEmergencyContact ;
 						that.user.userPhoneNum=res.data.userPhoneNum;
 						that.user.userID=res.data.userID;
-						if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
-							that.selector=res.data.userType;
-							that.user.frontImg=res.data.frontImg;
-							that.user.backImg=res.data.backImg;
-							that.auditState1=res.data.auditState;
-							that.auditState2=res.data.auditState;
+						// if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
+						// 	that.selector=res.data.userType;
+						// 	that.user.frontImg=res.data.frontImg;
+						// 	that.user.backImg=res.data.backImg;
+						// 	that.auditState1=res.data.auditState;
+						// 	that.auditState2=res.data.auditState;
 							// that.auditState1=2;  //测试
 							// that.auditState2=2;	//测试
-						}
+						//}
 						
 					}
 				})
@@ -210,11 +221,10 @@
 			radioClick:function(e){
 				this.user.sex = e;
 			},
-			formSubmit:function(e){
-				//console.log(e.target.value,"00.00")
+			formSubmit(e){
 				var data1=e.target.value;
-				data1.date=this.user.date;
 				var that=this;
+				data1.userID=that.user.userID;
 				if(this.user.userSex==0){
 					data1.userSex="男";
 				}else{
@@ -235,112 +245,109 @@
 					data1.userEmergencyContact=false;
 				}
 				var codeNum=data1.userCodeNum;
-				if(codeNum.length==18){
-					var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);
-					var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
-					var  d=new Date(r[1],r[3]-1,r[4]);     
-					if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
-					{   
-						var Y=new  Date().getFullYear();   
-						var age=Y-r[1];
-					} 
-					if(that.selector=="军人"){
-						data1.userType="军人";
-						data1.frontImg=that.user.frontImg;
-						data1.backImg=that.user.backImg;
-						data1.auditState=that.auditState1;
-					}else if(that.selector=="教师"){
-						data1.userType="教师";
-						data1.frontImg=that.user.frontImg;
-						data1.backImg=that.user.backImg;
-						data1.auditState=that.auditState1;
-					}else if(that.selector=="学生"){
-						data1.userType="学生";
-						data1.frontImg=that.user.frontImg;
-						data1.backImg=that.user.backImg;
-						data1.auditState=that.auditState1;
-					}else if(age>=65){
-						data1.userType="老人";
-					}else if(age>=18&&age<65){
-						data1.userType="成人";
-					}else{
-						data1.userType="儿童";
-					}
-					data1.hiddenIndex=0;
-					var array=[];
-					if(this.type=='edit'){	
-						//array.push(data);
-						uni.getStorage({
-							key:'passList',
-							success(res) {
-								for(var i=0;i<res.data.length;i++){
-									if(that.user.userID==res.data[i].userID){
-										array.push(data1);
-									}else{
-										array.push(res.data[i]);
-									}
-								}
-								uni.setStorage({
-									key:'passList',
-									data:array,
+				if(data1.userName!=null&&data1.userName!=""&&data1.userPhoneNum!=null&&data1.userPhoneNum!=""&&data1.userCodeNum!=null&&data1.userCodeNum!=""){
+					var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+					if(data1.userPhoneNum.length!=11){
+						uni.showToast({
+							icon:'none',
+							title:'输入的手机号有误，请检查'
+						})
+					}else if(!regIdNo.test(codeNum)){ 
+							uni.showToast({
+								icon:'none',
+								title:'输入的身份证有误，请检查'
+							})
+						}else{
+							var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);
+							var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
+							var  d=new Date(r[1],r[3]-1,r[4]); 
+							var age=0;
+							if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
+							{   
+								var Y=new  Date().getFullYear();   
+								age=Y-r[1];
+								console.log(age,"age")
+							}
+							if(age<=0){
+								uni.showToast({
+									icon:'none',
+									title:'输入的身份证有误，请检查'
+								})
+							}else if(age<18){
+								data1.userType="儿童";
+							}else{
+								data1.userType="成人";
+							}
+							if(data1.userType=="儿童"||data1.userType=="成人"){
+								uni.request({
+									url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
+									data:{
+										userID:data1.userID,  
+										userType:data1.userType,   //用户类别 成人/儿童 
+										userName:data1.userName,   //用户姓名   
+										userSex:data1.userSex,   //用户性别   
+									  	userCodeNum:data1.userCodeNum,   //用户身份证   
+									  	userPhoneNum:data1.userPhoneNum,   //用户手机号   
+									  	userDefault:data1.userDefault,   //用户是否本人 true/false 
+									  	userEmergencyContact:data1.userEmergencyContact,   //是否设置为紧急联系人 true/false
+									},
+									method:'POST',
+									success(res) {
+										uni.navigateBack();
+										console.log(res,"2111")
+									},
 								})
 							}
-						})
-						uni.navigateBack();
-					}else if(this.type=='add'){
-						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
-						data1.userID=randomNum;
-						array.push(data1);
-						uni.getStorage({
-							key:'passList',
-							success(res) {
-								for(var i=0;i<res.data.length;i++){
-									array.push(res.data[i]);
-								}
-								uni.setStorage({
-									key:'passList',
-									data:array,
-								})
-							},
-							fail() {
-								uni.setStorage({
-									key:'passList',
-									data:array,
-								})
-							}
-						})
-						uni.navigateBack();
-					}else{
-						var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
-						data1.userID=randomNum;
-						array.push(data1);
-						uni.getStorage({
-							key:'passList',
-							success(res) {
-								for(var i=0;i<res.data.length;i++){
-									array.push(res.data[i]);
-								}
-								uni.setStorage({
-									key:'passList',
-									data:array,
-								})
-							},
-							fail() {
-								uni.setStorage({
-									key:'passList',
-									data:array,
-								})
-							}
-						})
-						uni.navigateBack();
-					}
+						}
 				}else{
 					uni.showToast({
 						icon:'none',
-						title:'输入的身份证有误，请检查'
+						title:'姓名，电话号码，身份证号未填完整，请检查'
 					})
 				}
+				
 			},
+			// uni.request({
+			// 	url:'http://218.67.107.93:9210/api/app/changeUserInfo?id=26',
+			// 	data:{
+			// 		userID:'',  
+			// 		userType:'成人',   //用户类别 成人/儿童 
+			// 		userName:'data1.userName',   //用户姓名   
+			// 		userSex:'男',   //用户性别   
+			// 	  	userCodeNum:'350821199610122411',   //用户身份证   
+			// 	  	userPhoneNum:'15260179755',   //用户手机号   
+			// 	  	userDefault:true,   //用户是否本人 true/false 
+			// 	  	userEmergencyContact:false,   //是否设置为紧急联系人 true/false
+			// 	},
+			// 	method:'POST',
+			// 	success(res) {
+			// 		console.log(res,"2222")
+			// 	},
+			// })
+			// formSubmit1:function(e){
+			// 	if(that.selector=="军人"){
+			// 		data1.userType="军人";
+			// 		data1.frontImg=that.user.frontImg;
+			// 		data1.backImg=that.user.backImg;
+			// 		data1.auditState=that.auditState1;
+			// 	}else if(that.selector=="教师"){
+			// 		data1.userType="教师";
+			// 		data1.frontImg=that.user.frontImg;
+			// 		data1.backImg=that.user.backImg;
+			// 		data1.auditState=that.auditState1;
+			// 	}else if(that.selector=="学生"){
+			// 		data1.userType="学生";
+			// 		data1.frontImg=that.user.frontImg;
+			// 		data1.backImg=that.user.backImg;
+			// 		data1.auditState=that.auditState1;
+			// 	}else if(age>=65){
+			// 		data1.userType="老人";
+			// 	}else if(age>=18&&age<65){
+			// 		data1.userType="成人";
+			// 	}else{
+			// 		data1.userType="儿童";
+			// 	}
+			// },
 			bindDateChange:function(e){
 				this.user.date = e.target.value;
 			},
@@ -364,6 +371,7 @@
 					this.user.show=false;
 				}else{	//未选中
 					this.user.show=true;
+					this.user.userEmergencyContact=false;
 				}
 			},
 			returnClick(){

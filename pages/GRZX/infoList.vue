@@ -11,8 +11,8 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
-					<text v-if="item.userDefault " class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -36,8 +36,8 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
-					<text v-if="item.userDefault" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -130,6 +130,7 @@
 				state:'1', //1管理， 2完成
 				passengerList:[],
 				addressList:[],
+				unid:'',
 			}
 	    },
 		onLoad(){
@@ -140,16 +141,24 @@
 		},
 	    methods: {	
 			async loadData(){
-				var array=[];;
+				var array=[];
 				uni.getStorage({
-					key:'passList',
-					success(res) {
-						console.log(res)
-						for(var i=0;i<res.data.length;i++){
-							array.push(res.data[i]);
-						}
+					key:'userInfo',
+					success(res){
+						uni.request({
+							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+res.data.unid,
+							method:'POST',
+							success(res1) {
+								console.log(res1,'111')
+								for(var i=0;i<res1.data.data.length;i++){
+									res1.data.data[i].hiddenIndex=0;
+									array.push(res1.data.data[i]);
+								}
+							}
+						})
 					}
 				})
+				
 				var address=[];
 				uni.getStorage({
 					key:'addressList',
@@ -175,9 +184,6 @@
 	        		key:'editPassenger',
 	        		data:e
 	        	})
-				// uni.redirectTo({
-				// 	url:'/pages/GRZX/addPassenger?type=edit'
-				// })
 	        	uni.navigateTo({
 	        		url:'/pages/GRZX/addPassenger?type=edit'
 	        	})
@@ -198,9 +204,9 @@
 				// 	key:'chooseAddress',
 				// 	data:e
 				// })
-				//console.log(2222)
+				console.log(2222)
 			},
-			editAddress(e){   //编辑乘车人信息
+			editAddress(e){   //
 			//console.log(3333)
 				uni.setStorage({
 					key:'editAddress',
@@ -210,16 +216,24 @@
 					url:'/pages/GRZX/addAddress?type=edit'
 				})
 			},
-			deletePassenger(){ //删除乘车人信息
+			deletePassenger(){
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/userInfoList?id=47',
+					method:'POST',
+					success(res) {
+						console.log(res,"r")
+					}
+				})
+				uni.redirectTo({
+					url:'/pages/GRZX/infoList'
+				})
+			},
+			deletePassenger1(){ //删除乘车人信息
 				var data=this.passengerList;
-				var array=[];
 				var deleteList=[];
 				for(var i=0;i<data.length;i++){
 					if(data[i].hiddenIndex==1){
 						deleteList.push(data[i]);
-					}
-					if(data[i].hiddenIndex==0){
-						array.push(data[i]);
 					}
 				}
 				if(deleteList.length==0){
@@ -228,15 +242,23 @@
 						icon:"none"
 					})
 				}else{
-					uni.setStorage({
-						key:"passList",
-						data:array
-					})
+					console.log(deleteList[0].userID,"111")
+					for(var j=0;j<deleteList.length;j++){
+						uni.request({
+							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+deleteList[j].userID,
+							method:'POST',
+							success(res) {
+								console.log(res,"res")
+							}
+						})
+					}
+					
 					this.state=1;
 					uni.redirectTo({
 						url:'/pages/GRZX/infoList'
 					})
 				}
+				
 				
 			},
 			deleteAddress(){
