@@ -54,13 +54,13 @@
 			<button type="warn" @click="deletePassenger" class="btnAdd">删除</button>
 		</view>
 		
-		<view v-if="type==1" class="navClass" >
+		<!-- <view v-if="type==1" class="navClass" >
 			<view class="passengerClass1" @click="passengerClick">
 				<text class="textClass">常用出行人</text>
 				<view class="lineClass"></view>
 			</view>
 			<view class="addressClass1" @click="addressClick"><text class="textClass">常用地址</text></view>
-		</view>
+		</view> -->
 		
 		<!-- 常用地址 -->
 		
@@ -216,19 +216,7 @@
 					url:'/pages/GRZX/addAddress?type=edit'
 				})
 			},
-			deletePassenger(){
-				uni.request({
-					url:'http://218.67.107.93:9210/api/app/userInfoList?id=47',
-					method:'POST',
-					success(res) {
-						console.log(res,"r")
-					}
-				})
-				uni.redirectTo({
-					url:'/pages/GRZX/infoList'
-				})
-			},
-			deletePassenger1(){ //删除乘车人信息
+			deletePassenger(){ //删除乘车人信息
 				var data=this.passengerList;
 				var deleteList=[];
 				for(var i=0;i<data.length;i++){
@@ -236,16 +224,17 @@
 						deleteList.push(data[i]);
 					}
 				}
+				console.log(deleteList,"deleteList")
 				if(deleteList.length==0){
 					uni.showToast({
 						title: '请选择',
 						icon:"none"
 					})
 				}else{
-					console.log(deleteList[0].userID,"111")
+					console.log(deleteList.length,"111")
 					for(var j=0;j<deleteList.length;j++){
 						uni.request({
-							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+deleteList[j].userID,
+							url:'http://218.67.107.93:9210/api/app/deleteUserInfo?userId='+deleteList[j].userID,
 							method:'POST',
 							success(res) {
 								console.log(res,"res")
@@ -360,7 +349,8 @@
 	//乘车人管理
 	.mt{
 		width: 100%;
-		margin-top: 292upx;
+		//margin-top: 292upx;
+		margin-top: 185upx;
 		margin-bottom: 160upx;
 	}
 	.boxClass{

@@ -14,6 +14,9 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
+						if(res.data.nickname==""||res.data.nickname==null){
+							res.data.nickname=res.data.username;
+						}
 						this.login(res.data);
 					}
 				});
