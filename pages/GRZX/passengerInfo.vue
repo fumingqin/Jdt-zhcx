@@ -13,8 +13,8 @@
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
 				</view>
 				<view class="redBox">
-					<text v-if="item.userDefault" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -30,8 +30,8 @@
 				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<image src="../../static/GRZX/btnRight.png" class="btnRight"></image>
 				<view class="redBox">
-					<text v-if="item.userDefault" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -72,33 +72,46 @@
 		},
 		methods:{
 			async loadData(){
-				var check=[];
+				var that=this;
 				var array=[];
+				var list=[];
 				uni.getStorage({
-					key:'passengerList',
-					success(res) {
-						console.log(res)
-						for(var i=0;i<res.data.length;i++){
-							if(res.data[i].hiddenIndex==1){
-								check.push(res.data[i].userID);
-								array.push(res.data[i]);
-							}
+					key:"passengerList",
+					success(res2) {
+						console.log("6666")
+						for(var j=0;j<res2.data.length;j++){
+							// console.log(data1.userID,"5555")
+							// console.log(res2.data[j].userID,"4444")
+							list.push(res2.data[j].userID);
 						}
 					}
 				})
+				console.log(list,"list")
 				uni.getStorage({
-					key:'passList',
-					success(res1) {
-						for(var j=0;j<res1.data.length;j++){
-							var data=res1.data;
-							var index=JSON.stringify(check).indexOf(JSON.stringify(data[j].userID));
-							if(index==-1){
-								array.push(data[j]);
+					key:'userInfo',
+					success(res){
+						uni.request({
+							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+res.data.unid,
+							method:'POST',
+							success(res1) {
+								console.log(res1,'111')
+								for(var i=0;i<res1.data.data.length;i++){
+									var data1=res1.data.data[i];
+									//console.log(data1,"data1")
+									data1.hiddenIndex=0;
+									for(var q=0;q<list.length;q++){
+										if(data1.userID==list[q]){
+											data1.hiddenIndex=1;
+										}
+									}
+									array.push(data1);
+								}
 							}
-						}
+						})
 					}
 				})
 				this.passengerList=array;
+				console.log(array)
 			},
 			addPassenger(){
 				uni.navigateTo({
