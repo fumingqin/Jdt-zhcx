@@ -81,7 +81,6 @@
 				</view>
 			</view>
 		</view>
-		
 		<!-- 分类面板 -->
 		<view>
 			<view class="cate-mask" :class="currentIndex===0 ? 'none' : currentIndex===1 ? 'show' : ''" @click="close">
@@ -240,7 +239,7 @@
 
 	.topSearch {
 		background-color: #FFFFFF;
-		margin-bottom: 20upx;
+		// margin-bottom: 20upx;
 
 		//搜索框
 		.searchTopBox {
