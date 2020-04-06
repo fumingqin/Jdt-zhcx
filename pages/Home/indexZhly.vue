@@ -33,7 +33,7 @@
 				<image src="../../static/Home/indexzhly/fujin.png" mode="aspectFit"></image>
 				<text>自由行</text>
 			</view>
-			<view class="cate-item" @click="route('/pages/LYFW/ouristRoute/SceneryTable')">
+			<view class="cate-item" @click="route('/pages/LYFW/groupTour/groupTourList')">
 				<image src="../../static/Home/indexzhly/luxian.png" mode="aspectFit"></image>
 				<text>跟团游</text>
 			</view>
