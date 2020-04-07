@@ -81,7 +81,7 @@
 			</view>
 
 			<view class="MP_information3" @click="payment">
-				支付{{orderInfo[0].orderActualPayment}}元
+				支付{{totalPrice}}元
 			</view>
 
 		</view>
@@ -96,6 +96,7 @@
 			return {
 				countDownDate : 120,//倒计时时间
 				utils: utils,
+				userInfo :[],//用户信息
 				hiddenValues : '0',//隐藏状态值
 				channel: [{
 					name: '微信'
@@ -107,24 +108,33 @@
 				channeIndex: 0, //选择支付方式
 				orderInfo: [],//订单数据
 				passengerInfo:[],//乘车人信息
+				idNameType:[],//乘车人数组（发送请求需要）
 				ticketNum: 0,//总票数
 				adultNum: 0, //成人数量
 				childrenNum: 0, //儿童数量	
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
+				totalPrice :'',//总价格
 			}
 		},
 		onLoad: function(param) {
+			this.totalPrice = param.totalPrice;
+			//读取车票信息
+			this.getTickerInfo();
+			//读取用户信息
+			this.getUserInfo();
 			//读取乘车人信息
-			this.getUserData();
+			this.getPassengerInfo();
+			
 			if(param.isInsurance == 1) {
 				this.insurance = '保险';
+				this.isInsurance = true;
 			}else {
 				this.insurance = '';
+				this.isInsurance = false;
 			}
-		    this.isInsurance = param.isInsurance;
-			
-			//计时器
+			console.log('是否有保险',this.isInsurance)
+			//--------------------------计时器--------------------------
 			uni.getStorage({
 				key:'keYunCountDown',
 				success:(res)=>{
@@ -137,8 +147,8 @@
 			})
 		},
 		methods: {
-			//读取乘车人信息
-			getUserData() {
+			//--------------------------读取车票信息--------------------------
+			getTickerInfo() {
 				var that = this;
 				//读取车票信息
 				uni.getStorage({
@@ -153,12 +163,40 @@
 						})
 					}
 				})
+			},
+			//--------------------------读取用户信息--------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key:'userInfo',
+					success:function(data) {
+						that.userInfo = data.data;
+						console.log('用户信息',that.userInfo);
+					}
+				})
+			},
+			//--------------------------读取乘车人信息--------------------------
+			getPassengerInfo() {
+				var that = this;
 				//读取乘车人信息
 				uni.getStorage({
-					key: 'passList',
+					key: 'passengerList',
 					success:function(data){
 						that.passengerInfo = data.data;
-						for(var i = 0; i < that.passengerInfo.length; i ++){
+						for(let i = 0; i < that.passengerInfo.length; i ++){
+							let array = {
+								userCodeNum : data.data[i].userCodeNum,
+								userDefault : data.data[i].userDefault,
+								userEmergencyContact : data.data[i].userEmergencyContact,
+								userID : data.data[i].userID,
+								userName : data.data[i].userName,
+								userPhoneNum : data.data[i].userPhoneNum,
+								userSex : data.data[i].userSex,
+								userType : data.data[i].userType,
+							}
+							that.idNameType.push(array);
+							console.log('idNameType',that.idNameType);
 							that.ticketNum ++;
 							//把儿童票筛选出来
 							if(that.passengerInfo.userType == '儿童'){
@@ -177,8 +215,7 @@
 				})
 			},
 			
-			
-			//隐藏操作
+			//--------------------------隐藏操作--------------------------
 			hide(e){
 				if(e==0){
 					this.hiddenValues =1;
@@ -187,7 +224,7 @@
 				}
 			},
 			
-			//同意购买-点击事件
+			//--------------------------同意购买-点击事件--------------------------
 			Selection: function() {
 				if (this.channeIndex == 0) {
 					this.channeIndex = 1;
@@ -196,7 +233,7 @@
 				}
 			},
 
-			//数组提取
+			//--------------------------数组提取--------------------------
 			screenUser: function() {
 				let adult = this.orderInfo.filter(item => {
 					return item.userType == '成人';
@@ -210,6 +247,7 @@
 				this.adultTotalPrice = adult.length * this.orderInfo[0].ticketAdultPrice;
 				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
 			},
+			//--------------------------计时器--------------------------
 			countDown:function(){
 				var interval = setInterval(()=>{
 					--this.countDownDate;
@@ -218,34 +256,118 @@
 						data:this.countDownDate,
 					})
 				},1000)
+				setTimeout(()=>{
+					var that = this;
+					// clearInterval(interval)
+					uni.removeStorage({
+						key:'keYunCountDown',
+						data:this.countDownDate,
+					})
+					// console.log('用户信息',that.userInfo);
+					// console.log('订单信息',that.orderInfo);
+					// console.log('idNameType',that.idNameType);
+					//--------------------------发起下单请求-----------------------
+					uni.showLoading();
+					uni.request({
+						url:'http://218.67.107.93:9210/api/app/addOrder',
+						method:'POST',
+						header:{'content-type':'application/json'},
+						data:{
+							companyCode : '南平旅游',
+							clientID : that.userInfo.unid,
+							clientName : that.userInfo.username,
+							scheduleCompanyCode : that.orderInfo.scheduleCompanyCode,
+							executeScheduleID : that.orderInfo.executeScheduleID,
+							startSiteID : that.orderInfo.startSiteID,
+							endSiteID : that.orderInfo.endSiteID,
+							startSiteName : that.orderInfo.startStaion,
+							endSiteName : that.orderInfo.endStation,
+							priceID : that.orderInfo.priceID,
+							phoneNumber : that.userInfo.phoneNumber,
+							fullTicket : that.orderInfo.fare,
+							halfTicket : that.orderInfo.halfTicket,
+							carryChild : that.childrenNum,
+							idNameType : that.idNameType,
+							insured : that.isInsurance,
+							insuredPrice : that.orderInfo.insurePrice,
+							openId : '',
+							totalPrice : that.totalPrice,
+							setOutTime : that.orderInfo.setTime,
+							carType : that.orderInfo.shuttleType,
+						},
+						success: (res) => {
+							uni.hideLoading();
+							let that = this;
+							// console.log('返回数据',res);
+							//获取车票支付参数
+							that.getTicketPaymentInfo(res);
+						},
+						fail(res) {
+							uni.hideLoading();
+						}
+					})
+					
+				},3000)
 			},
-			//调起支付
-			payment() {
-				// uni.requestPayment({
-				// 	provider: 'alipay',
-				// 	orderInfo: {
-				// 		"orderNumber": this.orderNumber,
-				// 		"ticket": this.ticket,
-				// 		"date": this.date,
-				// 		"dateReminder": this.dateReminder,
-				// 		"addressData": this.addressData,
-				// 		"actualPayment": this.actualPayment,
-				// 		"coupon": this.coupon,
-				// 		"channe": this.channel[this.channeIndex],
-				// 	},
-				// 	success: function(res) {
-				// 		console.log('success:' + JSON.stringify(res));
-				// 	},
-				// 	fail: function(err) {
-				// 		console.log('fail:' + JSON.stringify(err));
-				// 	}
-				// })
-
-				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber='+JSON.stringify(this.orderInfo[0].orderNumber)
+			//--------------------------获取车票支付参数--------------------------
+			getTicketPaymentInfo:function(res) {
+				var that = this;
+				console.log(res.data.data.resultStr)
+				console.log(res.data.data.id)
+				uni.showLoading();
+				
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getPayParam',
+					method:'POST',
+					header:{'content-type':'application/x-www-form-urlencoded'},
+					data:{
+						resultStr:res.data.data.resultStr,
+						id:res.data.data.id
+					},
+					success: (res) => {
+						uni.hideLoading();
+						console.log('返回数据',res);
+						if(res.data.msg != '') {
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none'
+							})
+						}
+						
+					},
+					fail(res) {
+						uni.hideLoading();
+					}
 				})
+				
+			},
+			//--------------------------调起支付--------------------------
+			// payment(res) {
+			// 	uni.requestPayment({
+			// 		provider: 'alipay',
+			// 		orderInfo: {
+			// 			"orderNumber": res.data.data.orderNumber,
+			// 			"ticket": this.ticket,
+			// 			"date": this.date,
+			// 			"dateReminder": this.dateReminder,
+			// 			"addressData": this.addressData,
+			// 			"actualPayment": this.actualPayment,
+			// 			"coupon": this.coupon,
+			// 			"channe": this.channel[this.channeIndex],
+			// 		},
+			// 		success: function(res) {
+			// 			console.log('success:' + JSON.stringify(res));
+			// 		},
+			// 		fail: function(err) {
+			// 			console.log('fail:' + JSON.stringify(err));
+			// 		}
+			// 	})
 
-			}
+			// 	uni.redirectTo({
+			// 		url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber='+JSON.stringify(this.orderInfo[0].orderNumber)
+			// 	})
+
+			// }
 
 
 		}

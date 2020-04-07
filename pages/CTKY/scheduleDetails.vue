@@ -257,7 +257,6 @@
 					console.log(that.ticketDetail)
 				}
 			})
-			
 		},
 		onShow() {
 			//读取乘车人信息
@@ -279,7 +278,7 @@
 			userData(){ 
 				var that = this;
 				uni.getStorage({
-				    key: 'passList',
+				    key: 'passengerList',
 				    success: (res) => {
 				        that.passengerInfo = res.data;
 						//计算价格
@@ -458,34 +457,12 @@
 				}else {
 					//计算价格
 					that.calculateTotalPrice();
-					//发送请求
-					// uni.request({
-					// 	url:'',
-					// 	method:'POST',
-					// 	header:{'content-type':'application/json'},
-					// 	data:{
-					// 		CompanyCode : '南平旅游APP',
-					// 		ClientID : '用户ID',
-					// 		ClientName : '用户名',
-					// 		ScheduleCompanyCode : '班次代码',
-					// 		ExecuteScheduleID :'班次ID',
-					// 		StartSiteID :'上车站点ID',
-					// 		EndSiteID : '下车站点ID',
-					// 		StartSiteName : '上车站点名',
-					// 		EndSiteName : '下车站点名',
-					// 		PriceID : ' 票价ID',
-					// 		PhoneNumber : '手机号',
-					// 		FullTicket : ''
-							
-					// 	}
-					// })
 					
 					//请求成功之后跳转到支付页面,传是否选择保险1:选择 0:未选择
 					uni.navigateTo({
-						url:'/pages/CTKY/orderPayment?isInsurance=' + that.isInsurance
+						url:'/pages/CTKY/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice
 					})
 				}
-				
 
 			}
 		}

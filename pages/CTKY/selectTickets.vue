@@ -104,13 +104,14 @@
 				uni.request({
 					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
 					data: {
-						systemName:'泉运实业综合出行',
+						systemName:'泉运公司综合出行',
 						startPosition:this.startStation,
 						endPosition:this.endStation,
 						date:date,
 					},
+					
 					method:"POST",
-					header : {'content-type':'application/json'},
+					header:{'content-type':'application/x-www-form-urlencoded'},
 					success: (res) => {
 						uni.hideLoading();
 						let that = this;
