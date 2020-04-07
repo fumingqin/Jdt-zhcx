@@ -18,6 +18,7 @@
 							res.data.nickname="用户"+res.data.username;
 						}
 						this.login(res.data);
+						console.log(555)
 					}
 				});
 			}
