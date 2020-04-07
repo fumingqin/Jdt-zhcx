@@ -1,19 +1,20 @@
 <template>
 	<!-- 订单支付页面 -->
 	<view>
+		<view style="color: #000000; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view>
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{orderInfo[0].ticketTitle}}</view>
-				<text class="MP_text">费用包含：{{orderInfo[0].ticketContain}}</text>
+				<view class="MP_title">{{orderInfo.startStaion}} - {{orderInfo.endStation}}</view>
+				<text class="MP_text">费用包含：车票 {{insurance}}</text>
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{orderInfo[0].orderDate}} &nbsp; {{orderInfo[0].orderDateReminder}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{utils.timeTodate('Y-m-d H:i',orderInfo.setTime)}} &nbsp; 仅限当天</text>
 				</view>
 				
 				<view class="MP_selectionDate" :hidden="hiddenValues==0" >
 					<view class="MP_title">购票人信息</view>
-					<view class="MP_userInformation" v-for="(item,index) in orderInfo" :key="index">
+					<view class="MP_userInformation" v-for="(item,index) in passengerInfo" :key="index">
 						<text>{{item.userName}}</text>
 						<text class="Mp_sex">{{item.userSex}}</text>
 						<text class="Mp_square">{{item.userType}}</text>
@@ -26,36 +27,35 @@
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">费用详情</view>
-					<view class="MP_cost" v-if="adultIndex>=1">
+					<view class="MP_cost" v-if="adultNum>=1">
 						<text>成人票</text>
-						<text class="MP_number">×{{adultIndex}}</text>
-						<text class="MP_userCost">{{adultTotalPrice}}</text>
+						<text class="MP_number">×{{adultNum}}</text>
+						<text class="MP_userCost">¥{{orderInfo.fare}}</text>
 					</view>
 
-					<view class="MP_cost" v-if="childrenIndex>=1">
+					<view class="MP_cost" v-if="childNum>=1">
 						<text>儿童票</text>
-						<text class="MP_number">×{{childrenIndex}}</text>
-						<text class="MP_userCost">¥{{childrenTotalPrice}}</text>
+						<text class="MP_number">×{{childNum}}</text>
+						<text class="MP_userCost">¥{{orderInfo.halfTicket}}</text>
 					</view>
 					
 					<!-- 保险 -->
-					<view class="MP_cost" v-if="orderInfo[0].orderInsure==true">
-						<text>太平洋门票意外险 经济款</text>
-						<text class="MP_number">×{{orderInfo.length}}</text>
-						<text class="MP_total">¥{{orderInfo[0].orderInsurePrice}}</text>
+					<view class="MP_cost" v-if="isInsurance == 1 ">
+						<text>保险</text>
+						<text class="MP_number">×{{ticketNum}}</text>
+						<text class="MP_total">¥{{orderInfo.insurePrice}}</text>
 					</view>
 					
 					<!-- 优惠券 -->
-					<view class="MP_cost" v-if="orderInfo[0].couponPrice>0">
+					<!-- <view class="MP_cost" v-if="orderInfo[0].couponPrice>0" v-if="false">
 						<text>{{orderInfo[0].couponTitle}}</text>
 						<text class="MP_number">×1</text>
 						<text class="MP_total">-&nbsp;¥{{orderInfo[0].couponPrice}}</text>
-					</view>
+					</view> -->
 
-
-					<view class="MP_cost">
+					<!-- <view class="MP_cost">
 						<text class="MP_total">共计&nbsp;¥{{orderInfo[0].orderActualPayment}}</text>
-					</view>
+					</view> -->
 					
 				</view>
 				
@@ -81,7 +81,7 @@
 			</view>
 
 			<view class="MP_information3" @click="payment">
-				支付{{orderInfo[0].orderActualPayment}}元
+				支付{{totalPrice}}元
 			</view>
 
 		</view>
@@ -90,85 +90,132 @@
 </template>
 
 <script>
+	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		data() {
 			return {
+				countDownDate : 120,//倒计时时间
+				utils: utils,
+				userInfo :[],//用户信息
 				hiddenValues : '0',//隐藏状态值
 				channel: [{
 					name: '微信'
 				}, {
 					name: '支付宝'
 				}],
+				insurance : '',//保险
+				isInsurance:'',//是否有保险
 				channeIndex: 0, //选择支付方式
-				orderInfo: [{
-					orderNumber: '',
-					orderType: '',
-					orderActualPayment: '',
-					orderDateReminder: '',
-					orderDate: '',
-					orderCountdown : '',
-					orderInsure: '',
-					orderInsurePrice: '',
-
-					ticketId: '',
-					ticketName: '',
-					ticketOpenUp: '',
-					ticketTitle: '',
-					ticketContain: '',
-					ticketAdultPrice: '',
-					ticketChildPrice: '',
-
-					couponID: '',
-					couponTitle: '',
-					couponPrice: '',
-					couponCondition: '',
-
-					userID: '',
-					userType: '',
-					userName: '',
-					userSex: '',
-					userCodeNum: '',
-					userPhoneNum: '',
-					userDefault: '',
-					userEmergencyContact: '',
-				}],
-
-
-				adultIndex: '', //成人数量
-				childrenIndex: '', //儿童数量	
+				orderInfo: [],//订单数据
+				passengerInfo:[],//乘车人信息
+				idNameType:[],//乘车人数组（发送请求需要）
+				ticketNum: 0,//总票数
+				adultNum: 0, //成人数量
+				childrenNum: 0, //儿童数量	
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
-
-
+				totalPrice :'',//总价格
 			}
 		},
-		onLoad: function(options) {
-			// console.log(JSON.parse(options.orderNumber)); 
-			this.lyfwData();
-
-			// uni.request({
-			// 	url:'',
-			// 	data:{
-			// 		orderNumber : this.orderNumber
-			// 	},
-			// 	success: (res) => {
-			// 		this.ticket = res.data.ticket;
-			// 		this.addressData = res.data.addressData;
-			// 		this.actualPayment = res.data.actualPayment;
-			// 		this.coupon = res.data.coupon;
-			// 		this.date = res.data.date;
-			// 		this.dateReminder = res.data.dateReminder;
-			// 	}
-			// })
+		onLoad: function(param) {
+			this.totalPrice = param.totalPrice;
+			//读取车票信息
+			this.getTickerInfo();
+			//读取用户信息
+			this.getUserInfo();
+			//读取乘车人信息
+			this.getPassengerInfo();
+			
+			if(param.isInsurance == 1) {
+				this.insurance = '保险';
+				this.isInsurance = true;
+			}else {
+				this.insurance = '';
+				this.isInsurance = false;
+			}
+			console.log('是否有保险',this.isInsurance)
+			//--------------------------计时器--------------------------
+			uni.getStorage({
+				key:'keYunCountDown',
+				success:(res)=>{
+					this.countDownDate = res.data;
+					this.countDown();
+				},
+				fail:()=>{
+					this.countDown();
+				}
+			})
 		},
 		methods: {
-			async lyfwData() {
-				let orderInfo = await this.$api.lyfwfmq('orderInfo');
-				this.orderInfo = orderInfo.data;
-				this.screenUser();
+			//--------------------------读取车票信息--------------------------
+			getTickerInfo() {
+				var that = this;
+				//读取车票信息
+				uni.getStorage({
+					key: 'ticketDate',
+					success:function(data){
+						that.orderInfo = data.data;
+					},
+					fail() {
+						uni.showToast({
+							title: '获取信息失败',
+							icon: 'none'
+						})
+					}
+				})
+			},
+			//--------------------------读取用户信息--------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key:'userInfo',
+					success:function(data) {
+						that.userInfo = data.data;
+						console.log('用户信息',that.userInfo);
+					}
+				})
+			},
+			//--------------------------读取乘车人信息--------------------------
+			getPassengerInfo() {
+				var that = this;
+				//读取乘车人信息
+				uni.getStorage({
+					key: 'passengerList',
+					success:function(data){
+						that.passengerInfo = data.data;
+						for(let i = 0; i < that.passengerInfo.length; i ++){
+							let array = {
+								userCodeNum : data.data[i].userCodeNum,
+								userDefault : data.data[i].userDefault,
+								userEmergencyContact : data.data[i].userEmergencyContact,
+								userID : data.data[i].userID,
+								userName : data.data[i].userName,
+								userPhoneNum : data.data[i].userPhoneNum,
+								userSex : data.data[i].userSex,
+								userType : data.data[i].userType,
+							}
+							that.idNameType.push(array);
+							console.log('idNameType',that.idNameType);
+							that.ticketNum ++;
+							//把儿童票筛选出来
+							if(that.passengerInfo.userType == '儿童'){
+								that.childNum ++;
+							}else {
+								that.adultNum ++;
+							}
+						}
+					},
+					fail() {
+						uni.showToast({
+							title: '获取信息失败',
+							icon: 'none'
+						})
+					}
+				})
 			},
 			
-			//隐藏操作
+			//--------------------------隐藏操作--------------------------
 			hide(e){
 				if(e==0){
 					this.hiddenValues =1;
@@ -177,7 +224,7 @@
 				}
 			},
 			
-			//同意购买-点击事件
+			//--------------------------同意购买-点击事件--------------------------
 			Selection: function() {
 				if (this.channeIndex == 0) {
 					this.channeIndex = 1;
@@ -186,7 +233,7 @@
 				}
 			},
 
-			//数组提取
+			//--------------------------数组提取--------------------------
 			screenUser: function() {
 				let adult = this.orderInfo.filter(item => {
 					return item.userType == '成人';
@@ -200,34 +247,127 @@
 				this.adultTotalPrice = adult.length * this.orderInfo[0].ticketAdultPrice;
 				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
 			},
-
-			//调起支付
-			payment() {
-				// uni.requestPayment({
-				// 	provider: 'alipay',
-				// 	orderInfo: {
-				// 		"orderNumber": this.orderNumber,
-				// 		"ticket": this.ticket,
-				// 		"date": this.date,
-				// 		"dateReminder": this.dateReminder,
-				// 		"addressData": this.addressData,
-				// 		"actualPayment": this.actualPayment,
-				// 		"coupon": this.coupon,
-				// 		"channe": this.channel[this.channeIndex],
-				// 	},
-				// 	success: function(res) {
-				// 		console.log('success:' + JSON.stringify(res));
-				// 	},
-				// 	fail: function(err) {
-				// 		console.log('fail:' + JSON.stringify(err));
-				// 	}
-				// })
-
-				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber='+JSON.stringify(this.orderInfo[0].orderNumber)
+			//--------------------------计时器--------------------------
+			countDown:function(){
+				var interval = setInterval(()=>{
+					--this.countDownDate;
+					uni.setStorage({
+						key:'keYunCountDown',
+						data:this.countDownDate,
+					})
+				},1000)
+				setTimeout(()=>{
+					var that = this;
+					// clearInterval(interval)
+					uni.removeStorage({
+						key:'keYunCountDown',
+						data:this.countDownDate,
+					})
+					// console.log('用户信息',that.userInfo);
+					// console.log('订单信息',that.orderInfo);
+					// console.log('idNameType',that.idNameType);
+					//--------------------------发起下单请求-----------------------
+					uni.showLoading();
+					uni.request({
+						url:'http://218.67.107.93:9210/api/app/addOrder',
+						method:'POST',
+						header:{'content-type':'application/json'},
+						data:{
+							companyCode : '南平旅游',
+							clientID : that.userInfo.unid,
+							clientName : that.userInfo.username,
+							scheduleCompanyCode : that.orderInfo.scheduleCompanyCode,
+							executeScheduleID : that.orderInfo.executeScheduleID,
+							startSiteID : that.orderInfo.startSiteID,
+							endSiteID : that.orderInfo.endSiteID,
+							startSiteName : that.orderInfo.startStaion,
+							endSiteName : that.orderInfo.endStation,
+							priceID : that.orderInfo.priceID,
+							phoneNumber : that.userInfo.phoneNumber,
+							fullTicket : that.orderInfo.fare,
+							halfTicket : that.orderInfo.halfTicket,
+							carryChild : that.childrenNum,
+							idNameType : that.idNameType,
+							insured : that.isInsurance,
+							insuredPrice : that.orderInfo.insurePrice,
+							openId : '',
+							totalPrice : that.totalPrice,
+							setOutTime : that.orderInfo.setTime,
+							carType : that.orderInfo.shuttleType,
+						},
+						success: (res) => {
+							uni.hideLoading();
+							let that = this;
+							// console.log('返回数据',res);
+							//获取车票支付参数
+							that.getTicketPaymentInfo(res);
+						},
+						fail(res) {
+							uni.hideLoading();
+						}
+					})
+					
+				},3000)
+			},
+			//--------------------------获取车票支付参数--------------------------
+			getTicketPaymentInfo:function(res) {
+				var that = this;
+				console.log(res.data.data.resultStr)
+				console.log(res.data.data.id)
+				uni.showLoading();
+				
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getPayParam',
+					method:'POST',
+					header:{'content-type':'application/x-www-form-urlencoded'},
+					data:{
+						resultStr:res.data.data.resultStr,
+						id:res.data.data.id
+					},
+					success: (res) => {
+						uni.hideLoading();
+						console.log('返回数据',res);
+						if(res.data.msg != '') {
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none'
+							})
+						}
+						
+					},
+					fail(res) {
+						uni.hideLoading();
+					}
 				})
+				
+			},
+			//--------------------------调起支付--------------------------
+			// payment(res) {
+			// 	uni.requestPayment({
+			// 		provider: 'alipay',
+			// 		orderInfo: {
+			// 			"orderNumber": res.data.data.orderNumber,
+			// 			"ticket": this.ticket,
+			// 			"date": this.date,
+			// 			"dateReminder": this.dateReminder,
+			// 			"addressData": this.addressData,
+			// 			"actualPayment": this.actualPayment,
+			// 			"coupon": this.coupon,
+			// 			"channe": this.channel[this.channeIndex],
+			// 		},
+			// 		success: function(res) {
+			// 			console.log('success:' + JSON.stringify(res));
+			// 		},
+			// 		fail: function(err) {
+			// 			console.log('fail:' + JSON.stringify(err));
+			// 		}
+			// 	})
 
-			}
+			// 	uni.redirectTo({
+			// 		url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber='+JSON.stringify(this.orderInfo[0].orderNumber)
+			// 	})
+
+			// }
 
 
 		}
@@ -255,7 +395,7 @@
 	//整体容器样式
 	.cover-container {
 		position: relative;
-		top: 20upx;
+		top: 30upx;
 		padding: 32upx 30upx;
 	}
 
