@@ -178,12 +178,12 @@
 			},
 			collectionClick(){
 				uni.navigateTo({
-					url:'/pages/LYFW/ouristRoute/collection'
+					url:'/pages/GRZX/collection'
 				}) 
 			},
 			historyClick(){
 				uni.navigateTo({
-					url:'/pages/LYFW/ouristRoute/history'
+					url:'/pages/GRZX/history'
 				}) 
 				
 			},

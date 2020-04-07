@@ -515,8 +515,8 @@
 				"text": "出行"
 			},
 			{
-				"pagePath": "pages/Home/indexZhly",
-				"text": "旅游"
+				"pagePath": "pages/GRZX/notice",
+				"text": "通知"
 			},
 			{
 				"pagePath": "pages/order/OrderList",
