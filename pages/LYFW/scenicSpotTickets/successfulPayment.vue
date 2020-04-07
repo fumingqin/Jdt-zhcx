@@ -38,7 +38,7 @@
 				}else if(e==1){
 					this.godetailIndex=2;
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url: '/pages/Home/indexZhly'
 					});
 				}
 			},
@@ -46,7 +46,7 @@
 				setTimeout(() => {
 					if(this.godetailIndex == ''){
 						uni.switchTab({
-							url: '/pages/Home/Index'
+							url: '/pages/Home/indexZhly'
 						});
 					}
 				}, 10000)
@@ -74,7 +74,9 @@
 			height: 100%;
 		}
 	}
-
+	
+	
+	
 	//整体容器样式
 	.cover-container {
 		position: absolute;
@@ -139,7 +141,7 @@
 	/* #ifdef MP-WEIXIN */
 	//整体容器样式 -微信版
 	.cover-container {
-		top: 64upx;
+		margin-top: 64upx;
 	}
 	/* #endif */
 </style>

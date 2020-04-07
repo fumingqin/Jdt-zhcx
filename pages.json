@@ -17,6 +17,7 @@
 
 			"style": {
 				"navigationBarTitleText": "景区列表",
+				"enablePullDownRefresh":true,
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"onReachBottomDistance": 0,
 				"app-plus": {
@@ -324,6 +325,7 @@
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
+				"enablePullDownRefresh":true,
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#f5f5f5"
 				// "navigationStyle": "custom"
@@ -379,6 +381,7 @@
 		}, {
 			"path": "pages/Home/indexZhly",
 			"style": {
+				"enablePullDownRefresh":true,
 				// #ifdef MP
 				"navigationBarTitleText": "南平智慧旅游APP",
 				//"navigationStyle": "custom",
@@ -417,7 +420,9 @@
 		{
 			"path": "pages/Home/navigation",
 			"style": {
-				"navigationBarTitleText": "搜索"
+				"navigationBarTitleText": "搜索",
+				"navigationBarBackgroundColor" : "#149bf0",
+				"navigationBarTextStyle" : "white"
 			}
 		}, {
 			

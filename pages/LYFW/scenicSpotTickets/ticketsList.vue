@@ -164,12 +164,14 @@
 			this.$refs.popupRef.close();
 		},
 		
-		onLoad(options) {
+		onLoad:function(options) {
 			this.cateId = options.tid;
 			this.loadCateList(options.fid, options.sid);
 			this.Getpostion();
+		},
+		
+		onPullDownRefresh:function(){
 			this.lyfwData(); //请求接口数据
-			
 		},
 		
 		onReachBottom() {
@@ -179,9 +181,10 @@
 		methods: {
 			//请求模拟接口数据
 			lyfwData:function() {
+				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=南平市',
+					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=' +this.regionWeixin,
 					method:'POST',
 					success:(res) => { 
 						// console.log(res)
@@ -191,13 +194,16 @@
 				
 				// 请求景区列表
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getScenicspotList?requestArea=南平市',
+					url:'http://218.67.107.93:9210/api/app/getScenicspotList?requestArea=' +this.regionWeixin,
 					method:'POST',
 					success:(res) => {
 						// console.log(res)
 						this.scenicList = res.data.data;
 					}
 				})
+				setTimeout(()=>{
+					uni.stopPullDownRefresh();
+				},1000)
 			},
 			
 			//获取定位数据
@@ -208,6 +214,9 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+						},
+						complete: () => {
+							this.lyfwData(); //请求接口数据
 						}
 					}),
 					
@@ -216,7 +225,7 @@
 						success: (res) => {
 							// console.log(res)
 							this.regionApp = res.data;
-						}
+						},
 					})
 				},500)
 				
@@ -243,6 +252,7 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+							this.lyfwData(); //请求接口数据
 						}
 					}),
 					uni.getStorage({

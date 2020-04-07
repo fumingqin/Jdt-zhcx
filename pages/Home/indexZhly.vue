@@ -3,7 +3,7 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<view class="mp-search-box">
-			<input class="ser-input" type="text" value="输入关键字搜索" disabled />
+			<input class="ser-input" type="text" value="输入关键字搜索" disabled @click="searchTo" />
 		</view>
 		<!-- #endif -->
 
@@ -12,8 +12,7 @@
 			<!-- 标题栏和状态栏占位符 -->
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
-			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
-
+			<view class="titleNview-background" :style="{background:titleNViewBackground}"></view>
 			<swiper class="carousel" circular @change="swiperChange" autoplay>
 				<swiper-item v-for="(item, index) in rotationPicture" :key="index" class="carousel-item" @click="navToDetailPage(index)">
 					<image style="width: 100%;" :src="item.ticketImage" mode="aspectFill" />
@@ -29,23 +28,23 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="route('/pages/LYFW/independentTravel/it_list')">
+			<view class="cate-item" @click="route1">
 				<image src="../../static/Home/indexzhly/fujin.png" mode="aspectFit"></image>
 				<text>自由行</text>
 			</view>
-			<view class="cate-item" @click="route('/pages/LYFW/groupTour/groupTourList')">
+			<view class="cate-item" @click="route2">
 				<image src="../../static/Home/indexzhly/luxian.png" mode="aspectFit"></image>
 				<text>跟团游</text>
 			</view>
-			<view class="cate-item" @click="route('/pages/GJCX/busIndex')">
+			<view class="cate-item" @click="route3">
 				<image src="../../static/Home/indexzhly/gongJiao.png" mode="aspectFit"></image>
 				<text>公交查询</text>
 			</view>
-			<view class="cate-item" @click="route('/pages/LYFW/scenicSpotTickets/ticketsList')">
+			<view class="cate-item" @click="route4">
 				<image src="../../static/Home/indexzhly/menpiao.png" mode="aspectFit"></image>
 				<text>景区门票</text>
 			</view>
-			<view class="cate-item" @click="route('/pages/CTKY/ctkyIndex')">
+			<view class="cate-item" @click="route5">
 				<image src="../../static/Home/indexzhly/chepiao.png" mode="aspectFit"></image>
 				<text>车票订购</text>
 			</view>
@@ -121,14 +120,18 @@
 		onLoad() {
 			this.loadData();
 		},
-
+		onPullDownRefresh:function(){
+			this.loadData(); //请求接口数据
+		},
 		methods: {
 			loadData: function() {
 				// 轮播图
 				uni.request({
 						url: 'http://218.67.107.93:9266/travelImage/getRotationPicture',
 						method: 'POST',
+						header: {'content-type': 'application/x-www-form-urlencoded'},
 						success: (e) => {
+							console.log(e)
 							this.titleNViewBackground = e.data.data[0].background;
 							this.swiperLength = e.data.data.length;
 							this.rotationPicture = e.data.data;
@@ -152,45 +155,76 @@
 							// console.log(e)
 						}
 					})
+					setTimeout(()=>{
+						uni.stopPullDownRefresh();
+					},1000)
+					
 			},
 
 
 			//轮播图切换修改背景色
-			swiperChange(e) {
+			swiperChange:function(e) {
 				// console.log(e)
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 				this.titleNViewBackground = this.rotationPicture[index].background;
 			},
 			//轮播图跳详情页
-			navToDetailPage(e) {
+			navToDetailPage:function(e) {
 				uni.navigateTo({
 					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.rotationPicture[e].ticketId)
 				})
 			},
 			
 			//资讯详情页
-			informationTo(e) {
+			informationTo:function(e) {
 				uni.navigateTo({
 					url: 'InformationDetails?id=' +e
 				})
 			},
 			
 			//四方格跳详情
-			navTo(e) {
+			navTo:function(e) {
 				uni.navigateTo({
 					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.square[e].ticketId)
 				})
 			},
-			//金刚取各模块入口
-			route(url) {
+			
+			//金刚区各模块入口
+			route1:function() {
 				uni.navigateTo({
-					url: url
+					url: '/pages/LYFW/independentTravel/it_list'
 				})
 			},
-
-
+			route2:function() {
+				uni.navigateTo({
+					url: '/pages/LYFW/groupTour/groupTourList'
+				})
+			},
+			route3:function() {
+				uni.navigateTo({
+					url: '/pages/GJCX/busIndex'
+				})
+			},
+			route4:function() {
+				uni.navigateTo({
+					url: '/pages/LYFW/scenicSpotTickets/ticketsList'
+				})
+			},
+			route5:function() {
+				uni.navigateTo({
+					url: '/pages/CTKY/ctkyIndex'
+				}) 
+			},
+			
+			//小程序-搜索框点击事件
+			searchTo:function(){
+				uni.navigateTo({
+					url: './navigation'
+				})
+			},
 		},
+		
 		// #ifndef MP
 		// 搜索框点击事件
 		onNavigationBarSearchInputClicked: async function(e) {
@@ -198,6 +232,8 @@
 				url: 'navigation'
 			})
 		},
+		
+		
 		//扫描按钮点击事件
 		onNavigationBarButtonTap(e) {
 			// console.log(e);
@@ -281,9 +317,25 @@
 			}
 		}
 	}
-
 	/* #endif */
-
+	
+	/* #ifdef H5 */
+	page {
+		.carousel-section {
+			.titleNview-background {
+				height: 376upx;
+			}
+			.carousel {
+				margin-top: 0upx;
+			}
+			.swiper-dots {
+				top: 400upx;
+			}
+		}
+	}
+	/* #endif */
+	
+	
 
 	page {
 		background: #f5f5f5;
