@@ -6,7 +6,7 @@
 		</view> -->
 
 		<view class="tab">
-			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#FC4646"></uni-segmented-control>
+			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#3DABFC"></uni-segmented-control>
 		</view>
 
 		<view v-if="current === 0" style="margin-top: 20rpx;">
@@ -101,40 +101,41 @@
 						<!-- 已取消 -->
 						<view class="at_buttonView" v-if="item.orderType=='已取消'">
 							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
 					</view>
 				</view>
 				
 				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.title=='客车-传统'">
+				<view v-if="item.carType=='普通班车'">
 					
 					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-						<view class="reserveDate">预定日期：03-05</view>
+					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
+						<view class="reserveDate">预定日期：{{item.setTime}}</view>
 					</view>
 					
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderState}}</view>
 						</view>
 				
 						<view style="display: flex; margin-top: -72rpx;">
 							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setTime}}</view>
+							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.price}}</view>
 						</view>
 				
 						<view style="display: flex; margin-top: -16rpx;">
 							<view class="bluering"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startStation}}</view>
 						</view>
 				
 						<view style="display: flex; margin-top: 36rpx;">
 							<view class="redring"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endStation}}</view>
 						</view>
 				
 						<view class="CTKYBtnView">
@@ -334,7 +335,7 @@
 					</view>
 					
 					<!-- (取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-					<view v-if="item.title=='客车-传统'">
+					<view v-if="item.carType=='普通班车'">
 						<!-- 预定日期 -->
 						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
 							<view class="reserveDate">预定日期：03-05</view>
@@ -446,32 +447,32 @@
 					</view>
 					
 					<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-					<view v-if="item.title=='客车-传统'">
+					<view v-if="item.carType=='普通班车'">
 						<!-- 预定日期 -->
 						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-							<view class="reserveDate">预定日期：03-05</view>
+							<view class="reserveDate">预定日期：{{item.setTime}}</view>
 						</view>
 						<view class="whiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
-								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderType}}</view>
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderState}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -72rpx;">
 								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.price}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -16rpx;">
 								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startStation}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: 36rpx;">
 								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endStation}}</view>
 							</view>
 								
 							<view class="CTKYBtnView">
@@ -560,6 +561,7 @@
 							<!-- 已取消 -->
 							<view class="at_buttonView" v-if="item.orderType=='已取消'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 							</view>
 						</view>
@@ -782,177 +784,13 @@
 					}
 				],
 				info : '',//请求服务器订单列表
-				// info: [{
-				// 		title: '客车-传统',
-				// 		titleIndex: 2,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "现代美居广场",
-				// 		endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
-				// 		orderType: "进行中",
-				// 		appointment: true,
-				// 	},{
-				// 		title: '客车-传统',
-				// 		titleIndex: 2,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "茶叶大厦",
-				// 		endAddress: "泉州市-丰泽区-泉秀路777号",
-				// 		orderType: "已完成",
-				// 		appointment: true,
-				// 	},
-				// 	{
-				// 		title: '客车-传统',
-				// 		titleIndex: 2,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "现代美居广场",
-				// 		endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
-				// 		orderType: "进行中",
-				// 		appointment: true,
-				// 	},
-				// 	{
-				// 		title: '客车-传统',
-				// 		titleIndex: 2,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "丰泽区人民法院",
-				// 		endAddress: "泉州市-丰泽区-泉秀路765号",
-				// 		orderType: "未支付",
-				// 		appointment: true,
-				// 	},{
-				// 		title: '客车-传统',
-				// 		titleIndex: 2,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "泉州汽车站",
-				// 		endAddress: "泉州市-丰泽区-泉秀路222号",
-				// 		orderType: "已取消",
-				// 		appointment: true,
-				// 	},
-				// 	{
-				// 		title: '出租车',
-				// 		titleIndex: 1,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "泉州汽车站",
-				// 		endAddress: "泉州市-丰泽区-泉秀路222号",
-				// 		orderType: "已取消",
-				// 		appointment: true,
-				// 	},{
-				// 		title: '景区门票',
-				// 		orderNumber: '11126778833',
-				// 		orderType: '待使用',
-				// 		orderActualPayment: 434,
-				// 		orderDateReminder: '2020-03-20',
-				// 		orderDate: '今天',
-				// 		orderTicketNumber: 'T8718283713',
-				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-				// 		orderUserIndex: 1,
-						
-				// 		ticketId: 0,
-				// 		ticketTitle: '南平武夷山',
-				// 	}, {
-				// 		title: '景区门票',
-				// 		orderNumber: '11126778833',
-				// 		orderType: '已使用',
-				// 		orderActualPayment: 434,
-				// 		orderDateReminder: '2020-03-20',
-				// 		orderDate: '今天',
-				// 		orderTicketNumber: 'T8718283713',
-				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-				// 		orderUserIndex: 1,
-
-				// 		ticketId: 0,
-				// 		ticketTitle: '南平武夷山',
-				// 	}, {
-				// 		title: '景区门票',
-				// 		orderNumber: '11126778833',
-				// 		orderType: '待支付',
-				// 		orderActualPayment: 434,
-				// 		orderDateReminder: '2020-03-20',
-				// 		orderDate: '今天',
-				// 		orderTicketNumber: 'T8718283713',
-				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-				// 		orderUserIndex: 1,
-
-				// 		ticketId: 0,
-				// 		ticketTitle: '南平武夷山',
-				// 	}, {
-				// 		title: '景区门票',
-				// 		orderNumber: '11126778833',
-				// 		orderType: '已退票',
-				// 		orderActualPayment: 434,
-				// 		orderDateReminder: '2020-03-20',
-				// 		orderDate: '今天',
-				// 		orderTicketNumber: 'T8718283713',
-				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-				// 		orderUserIndex: 1,
-
-				// 		ticketId: 0,
-				// 		ticketTitle: '南平武夷山',
-				// 	}, {
-				// 		title: '景区门票',
-				// 		orderNumber: '11126778833',
-				// 		orderType: '已取消',
-				// 		orderActualPayment: 434,
-				// 		orderDateReminder: '2020-03-20',
-				// 		orderDate: '今天',
-				// 		orderTicketNumber: 'T8718283713',
-				// 		orderQrCode: '../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-				// 		orderUserIndex: 1,
-
-				// 		ticketId: 0,
-				// 		ticketTitle: '南平武夷山',
-				// 	}, {
-				// 		title: '出租车',
-				// 		titleIndex: 1,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "茶叶大厦",
-				// 		endAddress: "泉州市-丰泽区-泉秀路777号",
-				// 		orderType: "已完成",
-				// 		appointmentTime:"03-05",
-				// 		appointment: true,
-				// 	},
-				// 	{
-				// 		title: '出租车',
-				// 		titleIndex: 1,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "现代美居广场",
-				// 		endAddress: "泉州市-丰泽区-温秀路/雅园路(路口)",
-				// 		orderType: "进行中",
-				// 		appointmentTime:"03-05",
-				// 		appointment: false,
-				// 	},
-				// 	{
-				// 		title: '出租车',
-				// 		titleIndex: 1,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "丰泽区人民法院",
-				// 		endAddress: "泉州市-丰泽区-泉秀路765号",
-				// 		orderType: "未支付",
-				// 		appointmentTime:"03-05",
-				// 		appointment: false,
-				// 	},
-				// 	{
-				// 		title: '出租车',
-				// 		titleIndex: 1,
-				// 		time: '2020-03-06 8:00',
-				// 		money: '¥32.6元',
-				// 		starAddress: "泉州汽车站",
-				// 		endAddress: "泉州市-丰泽区-泉秀路222号",
-				// 		orderType: "已取消",
-				// 		appointmentTime:"03-05",
-				// 		appointment: true,
-				// 	}
-				// ],
+				userInfo : '',//个人信息
 				finishArr: [],
 				goingArr: [],
 				unfinishArr: [],
 				cancelArr: [],
+				keYunTicketArray:[],//客运订单
+				keYunTicket:[],//客运订单
 				driverName:'张师傅',//司机姓名
 				totalPrice: 32.5,
 				payType: [{
@@ -974,10 +812,21 @@
 		},
 		onLoad() {
 			var that = this;
+			//读取用户信息
+			that.getUserInfo();
+			//请求景区门票数据
 			that.toFinished();
+			//-------------------------请求客运订单数据-------------------------
+			
+		},
+		onShow:function(){
+			this.toFinished();
+		},
+		onPullDownRefresh:function(){
+			this.toFinished(); //请求接口数据
 		},
 		methods: {
-			//------支付页面
+			//-------------------------支付页面-------------------------
 			payDetail: function() {
 				//支付详情
 				uni.navigateTo({
@@ -1032,7 +881,60 @@
 					url: '/pages/Home/Index',
 				});
 			},
-			//客运详情
+			//客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运
+			//-------------------------客运详情-------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key:'userInfo',
+					success:function(data) {
+						that.userInfo = data.data;
+						console.log('用户信息',that.userInfo);
+						that.getKeYunOrderInfo();
+					},
+					fail(res) {
+						console.log('错误',res);
+					}
+				})
+			},
+			getKeYunOrderInfo:function() {
+				var that = this;
+				console.log('返回数据',that.userInfo.unid);
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getcpxsOrderList',
+					method:'POST',
+					header:{'content-type':'application/x-www-form-urlencoded'},
+					data: {
+						unid : that.userInfo.unid
+					},
+					success: (res) => {
+						console.log('返回数据',res);
+						var ticketArray = []; 
+						
+						for(var i = 0; i < res.data.data.length; i++) {
+							that.info.push(res.data.data[i]);
+						}
+						console.log('返回数据',that.info);
+						// that.info = res.data.data;
+						for (var i = 0; i < res.data.data.length; i++) {
+							if (res.data.data[i].orderState == '已完成' || res.data.data[i].orderState == '已使用') {
+								that.finishArr.push(res.data.data[i]);
+							} else if (res.data.data[i].orderState == '进行中' || res.data.data[i].orderState == '待使用') {
+								that.goingArr.push(res.data.data[i]);
+							} else if (res.data.data[i].orderState == '未支付' || res.data.data[i].orderState == '待支付') {
+								that.unfinishArr.push(res.data.data[i]);
+								// console.log(res.data.data);
+							} else if (res.data.data[i].orderState == '已取消' || res.data.data[i].orderState == '已退票') {
+								that.cancelArr.push(res.data.data[i]);
+							}
+						}
+					},
+					fail(res) {
+						console.log('错误',res);
+					}
+				})
+			},
 			detail: function(item) {
 				if (item == 1) {
 					uni.navigateTo({
@@ -1044,104 +946,122 @@
 					})
 				}
 			},
-			// 客运支付
+			// -------------------------客运支付-------------------------
 			keYunPay: function(){
 				uni.navigateTo({
 					url:"../CTKY/orderPayment"
 				}) 
 			},
-			// 客运二维码弹框
+			//-------------------------客运二维码弹框-------------------------
 			QRCodeTap: function(){
 				this.$refs.popup.open()
 			},
-
+			//客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运
 			onClickItem(e) { //tab点击事件
 				if (this.current !== e.currentIndex) {
 					this.current = e.currentIndex
 				}
 			},
-
+			
 			toFinished: function() {
 				var that = this;
-				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=17',
-					method:'POST',
-					success:(res)=>{
+				uni.getStorage({
+					key:'userInfo',
+					success:(res) =>{
+						this.userInfo = res.data;
 						// console.log(res)
-						that.info = res.data.data;
-						for (var i = 0; i < that.info.length; i++) {
-							if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
-								that.finishArr.push(that.info[i]);
-							} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待使用') {
-								that.goingArr.push(that.info[i]);
-							} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
-								that.unfinishArr.push(that.info[i]);
-							} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票') {
-								that.cancelArr.push(that.info[i]);
+						uni.request({
+							url:'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' +that.userInfo.unid,
+							method:'POST',
+							success:(res)=>{
+								// console.log(res)
+								// console.log(that.info)
+								that.info = res.data.data;
+								if(that.info !== ''){
+									for (var i = 0; i < that.info.length; i++) {
+										if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
+											that.finishArr.push(that.info[i]);
+										} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待使用') {
+											that.goingArr.push(that.info[i]);
+										} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
+											that.unfinishArr.push(that.info[i]);
+										} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票') {
+											that.cancelArr.push(that.info[i]);
+										}
+									}
+								}
 							}
-						}
+						})
+					},
+					fail() {
+						uni.showToast({
+							title:'暂无订单数据，请先登录后查看订单',
+							icon:'none'
+						})
 					}
 				})
-				
+				setTimeout(()=>{
+					uni.stopPullDownRefresh();
+				},1000)
 			},
 			
-			//景区门票-打开二维码弹框
+			//-------------------------景区门票-打开二维码弹框-------------------------
 			open(e) {
 					this.orderIndexData = e;
 					this.$refs.popup.open()
 			},
-			//景区门票-关闭二维码弹框
+			//-------------------------景区门票-关闭二维码弹框-------------------------
 			close() {
 				this.$refs.popup.close()
 			},
-			//景区门票-打开退票弹框
+			//-------------------------景区门票-打开退票弹框-------------------------
 			open2(e) {
 				this.ticketOrderNumber = e;
 				this.$refs.popup2.open()
 			},
-			//景区门票-关闭退票弹框
+			//-------------------------景区门票-关闭退票弹框-------------------------
 			close2() {
 				this.$refs.popup2.close()
 			},
-			//景区门票-打开取消弹框
+			//-------------------------景区门票-打开取消弹框-------------------------
 			open3(e) {
 				this.ticketOrderNumber = e;
 				this.$refs.popup3.open()
 			},
-			//景区门票-关闭取消弹框
+			//-------------------------景区门票-关闭取消弹框-------------------------
 			close3() {
 				this.$refs.popup3.close()
 			},
-			//景区门票-打开删除弹框
+			//-------------------------景区门票-打开删除弹框-------------------------
 			open4(e) {
 				this.ticketOrderNumber = e;
 				this.$refs.popup4.open()
 			},
-			//景区门票-关闭删除弹框
+			//-------------------------景区门票-关闭删除弹框-------------------------
 			close4() {
 				this.$refs.popup4.close()
 			},
 			
 			
-			//景区门票-详情跳转
+			//-------------------------景区门票-详情跳转-------------------------
 			details(e) {
 					uni.navigateTo({
 						url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + JSON.stringify(e)
 					})
 			},
-			//景区门票-去支付跳转
+			//-------------------------景区门票-去支付跳转-------------------------
 			topay(e) {
 					uni.navigateTo({
 						url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(e)
 					})
 			},
-			//景区门票-再次购买
+			//-------------------------景区门票-再次购买-------------------------
 			repurchase(e) {
 					uni.navigateTo({
 						url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
 					})
 			},
-			//景区门票-退票
+			//-------------------------景区门票-退票-------------------------
 			refund:() =>{
 					//
 					// uni.request({
@@ -1159,7 +1079,7 @@
 					this.close2();
 			},
 
-			//景区门票-取消
+			//-------------------------景区门票-取消-------------------------
 			cancel:function(){
 					uni.request({
 						url : 'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' + this.ticketOrderNumber,
@@ -1185,7 +1105,7 @@
 					
 			},
 
-			//景区门票-删除
+			//-------------------------景区门票-删除-------------------------
 			del:function(){
 				uni.request({
 					url : 'http://218.67.107.93:9210/api/app/delOrder?orderNumber=' +this.ticketOrderNumber,
@@ -1360,7 +1280,7 @@
 			position: relative;
 			margin: 24upx 0;
 			margin-left: 60upx;
-
+			
 			.at_contentFrame {
 				padding: 8upx 20upx;
 				margin-right: 16upx;
