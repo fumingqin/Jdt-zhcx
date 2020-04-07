@@ -10,8 +10,8 @@
         "usingComponents" : true,
         "nvueCompiler" : "uni-app",
         "splashscreen" : {
-            "alwaysShowBeforeRender" : false,
-            "waiting" : false,
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
             "autoclose" : true,
             "delay" : 0
         },

@@ -15,6 +15,7 @@
 					key: 'userInfo',
 					success: (res) => {
 						this.login(res.data);
+						console.log(555)
 					}
 				});
 			}
