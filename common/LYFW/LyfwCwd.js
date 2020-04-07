@@ -713,7 +713,7 @@ const collectionContent ={
 		date: '2019-11-12',
 		like: 119,
 		comment: 15,
-		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+		image: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
 	},
 	{
 		routeId: 2,
@@ -724,7 +724,7 @@ const collectionContent ={
 		date: '2019-11-13',
 		like: 119,
 		comment: 15,
-		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+		image: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
 	}],
 	msg: '提示'
 }
