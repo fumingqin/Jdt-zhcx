@@ -713,7 +713,7 @@ const collectionContent ={
 		date: '2019-11-12',
 		like: 119,
 		comment: 15,
-		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+		image: '../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
 	},
 	{
 		routeId: 2,
@@ -724,7 +724,7 @@ const collectionContent ={
 		date: '2019-11-13',
 		like: 119,
 		comment: 15,
-		image: '../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/wuyishan.jpg',
+		image: '../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
 	}],
 	msg: '提示'
 }
@@ -760,7 +760,7 @@ const record ={
 		date:'2020-11-16',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	},
 	{
 		routeId: 2,
@@ -768,7 +768,7 @@ const record ={
 		date:'2020-11-17',
 		scenicName: '武夷山 | 全方位详尽三日路攻略',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON2.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON2.png',
 	},
 	{
 		routeId: 3,
@@ -776,7 +776,7 @@ const record ={
 		date:'2020-11-17',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	},
 	{
 		routeId: 4,
@@ -784,7 +784,7 @@ const record ={
 		date:'2020-11-18',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	},
 	{
 		routeId: 5,
@@ -792,7 +792,7 @@ const record ={
 		date:'2020-11-18',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	}],
 	msg: '提示'
 }
@@ -824,12 +824,12 @@ const arrange={
 		content:[{
 			contentTitle:'集合：泉州湖美大酒店  不在二环的自发前往，不接送，不迟到 ',
 			contentTIme:'08:00 — 09:00',
-			contentText:'<div>泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（湖美酒店对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。具体时间以工作人员提前一天联系通知为准。</div>',
+			contentText:'泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（湖美酒店对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。具体时间以工作人员提前一天联系通知为准。</div>',
 		},
 		{
 			contentTitle:'交通工具：大型高一大巴前往武夷山风景区',
 			contentTIme:'09:00 — 12:00',
-			contentText:'<div>泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（三元宾馆对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。  <p></p><image src="../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/mangdangshan.jpg"/></div>',
+			contentText:'泉州市区二环内酒店接，不在二环的自行前往集合。 集合时间：8：00 集合地点： 泉州火车站旁边昆明汽车客运站1号门（三元宾馆对面）集合泉州二环内可免费接，正常接送时间为6：00——7：40之间。如您入住稍远，可能接送安排会提前。  <p></p><image src="../../../static/LYFW/ouristRoute/SceneryTable/TouristRoute/mangdangshan.jpg"/>',
 		}]
 	}],
 	msg: '提示'
@@ -868,6 +868,74 @@ const reserve={
 	msg: '提示'
 }
 
+
+const groupTour={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		groupId:1,
+		groupTItle:'北京+天津+河北',
+		content:[{
+			contentId:1,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:2,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:3,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:4,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		}]
+	},
+	{
+		groupId:2,
+		groupTItle:'北京+天津+河北',
+		content:[{
+			contentId:1,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		},
+		{
+			contentId:2,
+			contentImage:'../../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner1.jpg',
+			contentTitle:'【立即下单立减300】北京天津河北五日游北京天津河北五日游北京天津河北五日游北京天津河北五日游',
+			contentLabel:'5A风景 | 周边游 | 历史古城 ',
+			cost:1800,
+			sell:55,
+			comment:8,
+		}]
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -890,4 +958,5 @@ export default {
 	arrange,
 	description,
 	reserve,
+	groupTour,
 }

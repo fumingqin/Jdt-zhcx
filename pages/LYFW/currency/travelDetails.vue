@@ -170,7 +170,7 @@
 				let reserve = await this.$api.lyfwcwd('reserve');
 				this.reserve = reserve.data;
 			},
-
+			
 			//保存图片至本地并打开新页面
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.picList);
@@ -202,7 +202,7 @@
 						for(var i=0;i<res.data.data.length;i++){
 							that.information[i].content = res.data.data[i].content.replace(/\<img/g,'<img style="max-width:100%;height:auto;margin: 2px 0px;" ');
 						}
-						// console.log(res)
+						console.log(res)
 					}
 				})
 			},

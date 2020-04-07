@@ -2,10 +2,15 @@
 	<view>
 		<!-- 搜索栏 -->
 		<view class="searchTopBox">
-			<text  class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
+			<!-- #ifdef MP -->
+			<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
+			<!-- #endif -->
+			<!-- #ifdef APP-PLUS -->
+			<text  class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
+			<!-- #endif -->
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
-				<image class="searchImage" src="../../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
+				<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
 			</view>
 		</view>
 		
@@ -62,7 +67,7 @@
 			</view>
 			<text :class="{active:screenIndex === 3}" class="cate-item jdticon icon-fenlei1"   @click="toggleCateMask('show')"></text>
 		</view>
-
+	
 		<!-- 景区列表 -->
 		<view :hidden="screenIndex == 3">
 			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" v-if="index < scenicListIndex " @click="godetail(item.ticketId)">
@@ -116,8 +121,8 @@
 
 
 <script>
-	import citySelect from '../../../components/LYFW/currency/linzq-citySelect/linzq-citySelect.vue'
-	import popupLayer from '../../../components/LYFW/currency/popup-layer/popup-layer.vue'
+	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
+	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
 	export default {
 		data() {
 			return {
@@ -145,7 +150,8 @@
 				cateList: [], //分类数组
 				cateValue : '', //分类筛选值
 				
-				region: '请选择', //地区数值
+				regionWeixin: '请选择', //微信地区数值
+				regionApp : '请选择',//APP地区数值
 			}
 		},
 		
@@ -158,12 +164,14 @@
 			this.$refs.popupRef.close();
 		},
 		
-		onLoad(options) {
+		onLoad:function(options) {
 			this.cateId = options.tid;
 			this.loadCateList(options.fid, options.sid);
 			this.Getpostion();
+		},
+		
+		onPullDownRefresh:function(){
 			this.lyfwData(); //请求接口数据
-			
 		},
 		
 		onReachBottom() {
@@ -173,9 +181,10 @@
 		methods: {
 			//请求模拟接口数据
 			lyfwData:function() {
+				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=南平市',
+					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=' +this.regionWeixin,
 					method:'POST',
 					success:(res) => { 
 						// console.log(res)
@@ -185,25 +194,41 @@
 				
 				// 请求景区列表
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getScenicspotList?requestArea=南平市',
+					url:'http://218.67.107.93:9210/api/app/getScenicspotList?requestArea=' +this.regionWeixin,
 					method:'POST',
 					success:(res) => {
 						// console.log(res)
 						this.scenicList = res.data.data;
 					}
 				})
+				setTimeout(()=>{
+					uni.stopPullDownRefresh();
+				},1000)
 			},
 			
 			//获取定位数据
 			Getpostion:function(){
-				try {
-				    this.region = uni.getStorageSync('Key_position');
-				    if (value) {
-				        // console.log(value);
-				    }
-				} catch (e) {
-				    // error
-				}
+				setTimeout(()=>{
+					uni.getStorage({
+						key:'wx_position',
+						success:(res)=>{
+							// console.log(res)
+							this.regionWeixin = res.data;
+						},
+						complete: () => {
+							this.lyfwData(); //请求接口数据
+						}
+					}),
+					
+					uni.getStorage({
+						key:'app_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionApp = res.data;
+						},
+					})
+				},500)
+				
 			},
 			
 			//打开地区选择器
@@ -212,15 +237,33 @@
 			},
 			
 			//地区获取
-			backCity(e) { 
-				if (e !== 'no') {
+			backCity(e) {
+				if (e !== 'no' && e !== 'yes') {
 					// console.log(e)
-					this.region = e.cityName
+					this.regionWeixin = e.cityName
+					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
 					this.lyfwData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
-				} else {
+				} else if(e == 'yes'){
+					uni.getStorage({
+						key:'wx_position',
+						success:(res)=>{
+							// console.log(res)
+							this.regionWeixin = res.data;
+							this.lyfwData(); //请求接口数据
+						}
+					}),
+					uni.getStorage({
+						key:'app_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionApp = res.data;
+						}
+					})
+					this.$refs.popupRef.close();
+				}else{
 					this.$refs.popupRef.close();
 				}
 			},
@@ -312,7 +355,6 @@
 				}, timer)
 			},
 			
-
 			//分类点击
 			changeCate: function(item) {
 				// console.log(item)

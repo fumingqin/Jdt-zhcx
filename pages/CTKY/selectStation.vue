@@ -102,19 +102,23 @@
 			//---------------------------点击完成---------------------------
 			doneClick(){
 				var that = this;
+				//获取选中站点的下标
 				let startSelectIndex = that.startSelectIndex;
 				let endSelectIndex = that.endSelectIndex;
+				//点击完成时如果只选中了下车点没有选上车点，给上车点赋值上次选中的值
 				if(that.startStation == '') {
 					that.startStation = that.startStationList[startSelectIndex].stationName;
 				}
+				//点击完成时如果只选中了上车点没有选下车点，给下车点赋值上次选中的值
 				if(that.endStation == '') {
 					that.endStation = that.endStationList[endSelectIndex].stationName;
 				} 
 				//将上下车点放到一个数组中
 				var stationArray = {
+					//上车点名称和下标
 					startStation:that.startStation,
 					startStationIndex:startSelectIndex,
-					
+					//下车点名称和下标
 					endStation:that.endStation,
 					endStationIndex:endSelectIndex,
 				}

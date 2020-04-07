@@ -5,26 +5,23 @@
 			
 		</map>
 		<view class="info">
-			<text class="title">{{info.station}}</text>
+			<text class="title">{{info.startStaion}} - {{info.endStation}}</text>
 			<view style="margin-top: 10rpx;">
-				<text class="text">{{info.time}}</text>
-				<text class="text">上车点：{{info.startStation}}</text>
-				<text class="text" style="margin-top: 10rpx;">下车点：{{info.endStation}}</text>
+				<text class="text">{{utils.timeTodate('Y-m-d H:i',info.setTime)}}出发</text>
+				<text class="text">上车点：{{info.startStaion}}</text>
+				<text class="text">下车点：{{info.endStation}}</text>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		data() {
 			return {
-				info: {
-					station: "泉州客运中心 — 安溪",
-					time: "08月31日    12:30出发",
-					startStation: "泉州客运中心站",
-					endStation: "安溪"
-				},
+				utils: utils,
+				info: {},
 				mapHeight: '', //地图高度
 				longitude: "", //地图中心点经度
 				latitude: "", //地图中心点纬度
@@ -96,11 +93,17 @@
 				success: function(res) {
 					that.mapHeight = res.windowHeight + 'px';
 					console.log(that.mapHeight)
-
 				}
 			});
 			//获取自身位置
 			that.getMyLocation();
+			//读取车票缓存数据
+			uni.getStorage({
+				key:'ticketDate',
+				success: function (res) {
+					that.info = res.data
+				}
+			});
 		},
 		methods: {
 			//获取自身位置

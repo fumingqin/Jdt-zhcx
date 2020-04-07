@@ -3,10 +3,15 @@
 		<view class="bgColor"></view>
 		<view :style="{height:statusBarHeight+'px'}" style="width: 100%;"></view>
 		<view class="searchTopBox">
-			<text class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
+			<!-- #ifdef MP -->
+			<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
+			<!-- #endif -->
+			<!-- #ifdef APP-PLUS -->
+			<text  class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
+			<!-- #endif -->
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="搜索景区名称" />
-				<image class="searchImage" src="../../static/LYFW/peripheralTourism/peripheralTourism/search.png" />
+				<image class="searchImage" src="../../static/LYFW/currency/search.png" />
 			</view>
 		</view>
 		<popup-layer ref="popupRef" :direction="'right'">
@@ -29,7 +34,7 @@
 				<view class="xuxian"></view>
 				<!-- 转换 -->
 				<view @click="exchange">
-					<image class="rotate" src="../../static/GCJX/busIndex/rotate%20.png"></image>
+					<image class="rotate" src="../../static/GCJX/busIndex/rotate.png"></image>
 				</view>
 				<view class="searchBoxRadius2">
 					<image class="searchImage2" src="../../static/GCJX/busIndex/red.png" />
@@ -76,9 +81,9 @@
 </template>
 
 <script>
-	import citySelect from '../../components/uni-location/linzq-citySelect/linzq-citySelect.vue';
-	import popupLayer from '../../components/uni-location/popup-layer/popup-layer.vue';
-	import QSTabs from '../../components/QS-tabs2/QS-tabs.vue'
+	import citySelect from '../../components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue';
+	import popupLayer from '../../components/HOME/uni-location/popup-layer/popup-layer.vue';
+	import QSTabs from '../../components/GJCX/QS-tabs2/QS-tabs.vue'
 	import gjcx from "../../common/Gjcx.js";
 	export default {
 		components: {
@@ -91,7 +96,8 @@
 			return {
 				btustatu: true, //展开收起状态
 				statusBarHeight: this.statusBarHeight, //状态栏高度，在main.js里
-				region: '请选择...', //地区 
+				regionWeixin: '请选择', //微信地区数值
+				regionApp : '请选择',//APP地区数值
 				ipt: '', //搜索默认值
 				tabs_2: ['去哪', '历史'], //选项标题
 				current_2: 0, //标题下标
@@ -166,10 +172,32 @@
 				this.$refs.popupRef.show();
 			},
 			back_city(e) {
-				if (e !== 'no') {
-					this.region = e.cityName
+				if (e !== 'no' && e !== 'yes') {
+					// console.log(e)
+					this.regionWeixin = e.cityName
+					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
-				} else {
+					this.lyfwData();
+					this.screenIndex = 0;
+					this.searchIndex = 0;
+				} else if(e == 'yes'){
+					uni.getStorage({
+						key:'wx_position',
+						success:(res)=>{
+							// console.log(res)
+							this.regionWeixin = res.data;
+							this.lyfwData(); //请求接口数据
+						}
+					}),
+					uni.getStorage({
+						key:'app_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionApp = res.data;
+						}
+					})
+					this.$refs.popupRef.close();
+				}else{
 					this.$refs.popupRef.close();
 				}
 			},
@@ -184,14 +212,26 @@
 			},
 			// 获取定位
 			Getpostion() {
-				try {
-					this.region = uni.getStorageSync('Key_position');
-					if (value) {
-						// console.log(value);
-					}
-				} catch (e) {
-					// error
-				}
+				setTimeout(()=>{
+					uni.getStorage({
+						key:'wx_position',
+						success:(res)=>{
+							// console.log(res)
+							this.regionWeixin = res.data;
+						},
+						complete: () => {
+							this.lyfwData(); //请求接口数据
+						}
+					}),
+					
+					uni.getStorage({
+						key:'app_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionApp = res.data;
+						},
+					})
+				},500)
 			},
 			//搜索事件
 			searchNow: function(e) {

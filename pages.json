@@ -17,6 +17,7 @@
 
 			"style": {
 				"navigationBarTitleText": "景区列表",
+				"enablePullDownRefresh":true,
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"onReachBottomDistance": 0,
 				"app-plus": {
@@ -322,6 +323,7 @@
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
+				"enablePullDownRefresh":true,
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#f5f5f5"
 				// "navigationStyle": "custom"
@@ -377,6 +379,7 @@
 		}, {
 			"path": "pages/Home/indexZhly",
 			"style": {
+				"enablePullDownRefresh":true,
 				// #ifdef MP
 				"navigationBarTitleText": "南平智慧旅游APP",
 				//"navigationStyle": "custom",
@@ -415,7 +418,9 @@
 		{
 			"path": "pages/Home/navigation",
 			"style": {
-				"navigationBarTitleText": "搜索"
+				"navigationBarTitleText": "搜索",
+				"navigationBarBackgroundColor" : "#149bf0",
+				"navigationBarTextStyle" : "white"
 			}
 		}, {
 			"path": "pages/GRZX/collection",
@@ -467,7 +472,7 @@
 			"style": {}
 		}
 	    ,{
-            "path" : "pages/LYFW/currency/independentTravel",
+            "path" : "pages/LYFW/independentTravel/it_list",
             "style" : {}
         },
 		{
@@ -478,6 +483,12 @@
 		}
         ,{
             "path" : "pages/LYFW/groupTour/groupTourList",
+            "style" : {
+				"navigationBarTitleText": "跟团游列表"
+			}
+        }
+        ,{
+            "path" : "pages/LYFW/groupTour/viewMore",
             "style" : {}
         },
 		{
@@ -520,8 +531,8 @@
 				"text": "出行"
 			},
 			{
-				"pagePath": "pages/Home/indexZhly",
-				"text": "旅游"
+				"pagePath": "pages/GRZX/notice",
+				"text": "通知"
 			},
 			{
 				"pagePath": "pages/order/OrderList",
