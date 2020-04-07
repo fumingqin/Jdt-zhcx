@@ -58,8 +58,8 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 		data() {
 			return {
 				title: 'Hello',
-				departure: '延平',
-				destination: '顺昌',
+				departure: '泉州',
+				destination: '石狮',
 				changeText: '',
 				type: 'rangetime',
 				value: '',

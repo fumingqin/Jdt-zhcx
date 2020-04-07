@@ -760,7 +760,7 @@ const record ={
 		date:'2020-11-16',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	},
 	{
 		routeId: 2,
@@ -768,7 +768,7 @@ const record ={
 		date:'2020-11-17',
 		scenicName: '武夷山 | 全方位详尽三日路攻略',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON2.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON2.png',
 	},
 	{
 		routeId: 3,
@@ -776,7 +776,7 @@ const record ={
 		date:'2020-11-17',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	},
 	{
 		routeId: 4,
@@ -784,7 +784,7 @@ const record ={
 		date:'2020-11-18',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	},
 	{
 		routeId: 5,
@@ -792,7 +792,7 @@ const record ={
 		date:'2020-11-18',
 		scenicName: '南平正宗熏鹅（武夷山店)',
 		address:'南平 · 武夷山',
-		icon:'../../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
+		icon:'../../static/LYFW/ouristRoute/SceneryTable/history/ICON1.png',
 	}],
 	msg: '提示'
 }

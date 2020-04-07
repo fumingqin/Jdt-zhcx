@@ -170,7 +170,7 @@
 				let reserve = await this.$api.lyfwcwd('reserve');
 				this.reserve = reserve.data;
 			},
-
+			
 			//保存图片至本地并打开新页面
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.picList);
