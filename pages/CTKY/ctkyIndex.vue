@@ -98,13 +98,13 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 				//监听事件,监听下个页面返回的值
 				uni.$on('startstaionChange', function(data) {
 				    // data即为传过来的值，给上车点赋值
-					that.departure = data.data1;
+					that.departure = data.data;
 				    //清除监听，不清除会消耗资源
 				    uni.$off('startstaionChange');
 				});
 				uni.navigateTo({
 					//跳转到下个页面的时候加个字段，判断当前点击的是上车点
-					url:'./homeSattionPick?&station=' + 'startStation'
+					url:'./homeSattionPick?&station=' + 'qidian'
 				})
 			},
 			//---------------------------------点击终点站---------------------------------
@@ -113,13 +113,13 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 				//监听事件,监听下个页面返回的值，给下车点赋值
 				uni.$on('endStaionChange', function(data) {
 				    // data即为传过来的值
-					that.destination = data.data1;
+					that.destination = data.data;
 				    //清除监听，不清除会消耗资源
 				    uni.$off('endStaionChange');
 				});
 				uni.navigateTo({
 					//跳转到下个页面的时候加个字段，判断当前点击的是下车点
-					url:'./homeSattionPick?&station=' + 'endStation'
+					url:'./homeSattionPick?&station=' + 'zhongdian'
 				})
 			},
 			//---------------------------------点击车票类型---------------------------------

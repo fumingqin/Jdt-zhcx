@@ -15,9 +15,10 @@
 					key: 'userInfo',
 					success: (res) => {
 						if(res.data.nickname==""||res.data.nickname==null){
-							res.data.nickname=res.data.username;
+							res.data.nickname="用户"+res.data.username;
 						}
 						this.login(res.data);
+						console.log(555)
 					}
 				});
 			}

@@ -9,8 +9,8 @@
 			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
 			 -->
 			<view class="userInfoClass" @click="checkLogin">
-				<image class="portraitClass" :src=" userInfo.avatarUrl || '/static/GRZX/missing-face.png'"></image>
-				<text class="usernameClass">{{userInfo.nickName || '游客'}}</text>
+				<image class="portraitClass" :src=" userInfo.portrait || '/static/GRZX/missing-face.png'"></image>
+				<text class="usernameClass">{{userInfo.nickname || '游客'}}</text>
 				<!-- <image src="../../static/GRZX/edit.png" class="editClass"></image> -->
 			</view>
 			
@@ -178,12 +178,12 @@
 			},
 			collectionClick(){
 				uni.navigateTo({
-					url:'/pages/LYFW/ouristRoute/collection'
+					url:'/pages/GRZX/collection'
 				}) 
 			},
 			historyClick(){
 				uni.navigateTo({
-					url:'/pages/LYFW/ouristRoute/history'
+					url:'/pages/GRZX/history'
 				}) 
 				
 			},

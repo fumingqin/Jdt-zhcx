@@ -16,7 +16,7 @@
 											<view class="bluering"></view>
 										</view>
 										<view>
-											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="true" @click="selectInitial"
+											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="true" @click="selectInitial('qidian')"
 											 v-model="initialPoint" />
 										</view>
 									</view>
@@ -27,7 +27,7 @@
 										<view class="redring"></view>
 									</view>
 									<view>
-										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="true" @click="selectDestination"
+										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="true" @click="selectDestination('zhongdian')"
 										 v-model="destination" />
 									</view>
 								</view>
@@ -64,7 +64,7 @@
 									<image src="../../static/CZC/position.png" style="width: 37rpx;height: 37rpx;"></image>
 								</view>
 								<view style="padding-left: 20rpx;width: 560rpx;">
-									<view><text style="font-size: 30rpx;">{{item.name}}</text></view>
+									<view><text style="font-size: 30rpx;">{{item.addressName}}</text></view>
 									<view style="height: 10rpx;"></view>
 									<view><text style="color: #999999;font-size: 30rpx;">{{item.address}}</text></view>
 								</view>
@@ -197,7 +197,7 @@
 					</view>
 					<view style="flex-direction: row;justify-content: space-between;margin-top: 30rpx;margin-bottom: 30rpx;" v-if="!IsClick">
 						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;border-right-width: 1px;border-color: #EAEAEA;">
-						 <text style="font-size: 28rpx;">预约时间</text>
+							<!-- <text style="font-size: 28rpx;">预约时间</text> -->
 							<hTimePicker interval="5" @changeTime="changeTime">
 								<view slot="pCon" class="changeTime">
 									<text style="font-size: 28rpx;">{{selecttime}}</text>
@@ -212,7 +212,7 @@
 					</view>
 					<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
 						<view style="flex-direction: row;justify-content: center;align-items: center;">
-							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
+							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
@@ -281,7 +281,7 @@
 				selecttime: "点击选择时间",
 				county:'',
 				Passenger: [{
-					name: "选择乘车人"
+					userName: "选择乘车人"
 				}],
 				privateTaxi: [{
 						startpoint: '泉金客运码头',
@@ -358,6 +358,7 @@
 				isPupop: true, //是否弹窗
 			}
 		},
+		
 		onLoad(options) {
 			var that = this;
 			uni.getStorage({ //获取历史记录
@@ -378,12 +379,41 @@
 			}
 			that.intervalGet();
 		},
+		onUnload() {
+			uni.removeStorage({
+				key:"StartPoint"
+			})
+			uni.removeStorage({
+				key:"EndPoint"
+			})
+		},
 		onShow() {
 			var that = this;
-			// that.map=uni.createMapContext("map555",that);
+			uni.getStorage({ //获取起点
+				key: "StartPoint",
+				success: function(res) {
+					that.initialPoint = res.data.addressName;
+					that.startLonLat = res.data.lng + "," + res.data.lat;
+					that.startlongitude = res.data.lng;
+					that.startlatitude = res.data.lat;
+					that.startlocation = res.data;
+					// console.log(that.startLonLat);
+				}
+			});
+			uni.getStorage({ //获取终点
+				key: "EndPoint",
+				success: function(res) {
+					that.destination = res.data.addressName;
+					that.endLonLat =res.data.lng + "," + res.data.lat;
+					that.endlongitude = res.data.lng;
+					that.endtlatitude = res.data.lat;
+					that.endlocation = res.data;
+				}
+			});
 			uni.getStorage({ //获取乘车人
 				key: "passengerList",
 				success: function(res) {
+					// console.log(res);
 					that.Passenger = res.data;
 				}
 			});
@@ -431,10 +461,10 @@
 					key: 'endlocation',
 					data: that.historyAddress[index],
 					success: function(res) {
-						that.destination = that.historyAddress[index].name;
-						that.endLonLat = that.historyAddress[index].longitude + "," + that.historyAddress[index].latitude;
-						that.endlongitude = that.historyAddress[index].longitude;
-						that.endtlatitude = that.historyAddress[index].latitude;
+						that.destination = that.historyAddress[index].addressName;
+						that.endLonLat = that.historyAddress[index].lng + "," + that.historyAddress[index].lat;
+						that.endlongitude = that.historyAddress[index].lng;
+						that.endtlatitude = that.historyAddress[index].lat;
 						that.endlocation = that.historyAddress[index];
 					}
 				});
@@ -462,7 +492,15 @@
 							animationType: 'pop-in',
 							animationDuration: 200,
 							success: function() {
-								uni.clearStorage("passengerList");
+								uni.removeStorage({
+									key:"passengerList"
+								})
+								uni.removeStorage({
+									key:"StartPoint"
+								})
+								uni.removeStorage({
+									key:"EndPoint"
+								})
 							}
 						});
 					}
@@ -484,7 +522,12 @@
 			click_btbooking: function() {
 				this.IsClick = false;
 			},
-			selectInitial: function() { //选择起点
+			selectInitial:function(name){//选择起点
+				uni.navigateTo({
+					url:"./MapIndex?name="+name
+				})
+			},
+			selectInitial1: function() { //选择起点
 				var that = this;
 				uni.chooseLocation({
 					success: function(res) {
@@ -502,7 +545,12 @@
 					}
 				});
 			},
-			selectDestination: function() { //选择终点
+			selectDestination:function(name){//选择终点
+				uni.navigateTo({
+					url:"./MapIndex?name="+name
+				})
+			},
+			selectDestination1: function() { //选择终点
 				var that = this;
 				uni.chooseLocation({
 					success: function(res) {
@@ -526,6 +574,9 @@
 				var newstartlocation = that.startlocation;
 				var newstartlatitude = that.startlatitude;
 				var newstartlongitude = that.startlongitude;
+				var newstartLonLat=that.startlongitude;
+				that.startLonLat =that.endLonLat;
+				that.endLonLat=newstartLonLat;
 				uni.setStorage({
 					key: 'startlocation',
 					data: that.endlocation,
@@ -560,7 +611,7 @@
 					})
 				} else {
 					for (var i = 0; i < that.historyAddress.length; i++) {
-						if (that.endlocation.address == that.historyAddress[i].address) {
+						if (that.endlocation.addressName == that.historyAddress[i].addressName) {
 							Isrepeat = false;
 						}
 					}
@@ -740,6 +791,7 @@
 			},
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
+				// console.log(startLonLat);
 				var that = this;
 				uni.request({
 					url: taxi.InterfaceAddress[0],
@@ -781,7 +833,7 @@
 						}
 						var obj = {
 							points: that.points,
-							width: 10,
+							width: 6,
 							arrowLine: true,
 							// arrowIconPath:'../../static/CZC/jiantou.png',
 							color: "#4BDC27",
@@ -857,7 +909,7 @@
 									that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
 										'../../static/CZC/Car.png');
 								}
-								console.log(carArr.length + '-' + that.markers.length);
+								// console.log(carArr.length + '-' + that.markers.length);
 							},
 						});
 					}

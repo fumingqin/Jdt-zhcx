@@ -52,12 +52,12 @@
 					</view>
 				</view> -->
 				
-				<view class="itemClass borderTop">
+				<!-- <view class="itemClass borderTop">
 					<text class="fontStyle">额外凭证</text>
 					<picker class="inputClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
 						{{selector}}
 					</picker>
-				</view>
+				</view> -->
 			</view>
 			
 			<!-- 上传证件 -->
@@ -156,7 +156,7 @@
 					show:true,
 					userEmergencyContact:false,
 					date:'请选择',
-					prove:1,
+					prove:0,
 					frontImg:'',
 					backImg:'',
 				},

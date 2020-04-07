@@ -36,9 +36,9 @@
 					<swiper-item v-for="(item,index) in stationArray" :key="index">
 						<scroll-view  scroll-y="true" :style="{ 'height':scrollHeight }">
 							<view class="item">
-								<view class="goods" v-for="(item2,index2) in mainArray" :key="index2">
+								<view class="goods" v-for="(item2,index2) in mainArray" :key="index2" @tap="detailStationTap(item2)">
 									<view>
-										<view @tap="detailStationTap(item2)">{{item2.countys}}</view>
+										<view>{{item2.countys}}</view>
 									</view>
 								</view>
 							</view>
@@ -77,14 +77,11 @@
 					this.scrollHeight=`${res.windowHeight}px`;
 				}
 			});
-			// this.stationArray = ['泉州', '晋江', '石狮', '惠安', '南安', '安溪', '永春', '德化', '厦门'];
-		},
-		mounted(){
-			// this.getListData();
 		},
 		methods: {
 			//-------------------------获取车站列表数据-------------------------
 			getBusStationList() {
+				uni.showLoading();
 				uni.request({
 					url:'http://27.148.155.9:9055/CTKY/getStations',
 					method:'POST',
@@ -128,6 +125,7 @@
 				this.isShowList = true;
 				this.isShowAllList = false;
 				//以下示例截取淘宝的关键字，请替换成你的接口
+				uni.showLoading();
 				uni.request({
 					url: 'http://27.148.155.9:9055/CTKY/getSatartSite',
 					method:'POST',
@@ -137,10 +135,13 @@
 						keyword:keyword
 					},
 					success: (res) => {
+						uni.hideLoading();
 						// console.log(res);
 						this.keywordList = [];
 						this.keywordList = this.drawCorrelativeKeyword(res.data, keyword);
-						
+					},
+					fail(res) {
+						uni.hideLoading();
 					}
 				});
 			},
@@ -164,65 +165,44 @@
 			},
 			//-------------------------点击下拉站点-------------------------
 			itemClick(index){
+				var that = this;
 				//获取点击选项的文字
 				var key = this.keywordList[index].keyword;
-				// console.log(key);
+				
+				if (that.stationType == 'qidian') {
+					//当前是上车点
+					uni.$emit('startstaionChange', {
+					    data: key
+					});
+					uni.navigateBack({ });
+				}else if(that.stationType == 'zhongdian') {
+					//当前是下车点
+					uni.$emit('endStaionChange', {
+					    data: key
+					});
+					uni.navigateBack({ });
+				}
 			},
 			//-------------------------点击站点-------------------------
 			detailStationTap(item){
 				// console.log(item.countys);
 				var that = this;
-				if (that.stationType == 'startStation') {
+				if (that.stationType == 'qidian') {
 					//当前是上车点
 					uni.$emit('startstaionChange', {
-					    data1: item.countys
+					    data: item.countys
 					});
 					uni.navigateBack({ });
-				}else if(that.stationType == 'endStation') {
+				}else if(that.stationType == 'zhongdian') {
 					//当前是下车点
 					uni.$emit('endStaionChange', {
-					    data1: item.countys
+					    data: item.countys
 					});
 					uni.navigateBack({ });
 				}
 				
 			},
-			//-------------------------获取列表数据-------------------------
-			getListData(){
-				// Promise 为 ES6 新增的API ，有疑问的请自行学习该方法的使用。
-				new Promise((resolve,reject)=>{
-					/* 因无真实数据，当前方法模拟数据。正式项目中将此处替换为 数据请求即可 */
-					uni.showLoading();
-					setTimeout(()=>{
-						/* 因无真实数据，当前方法模拟数据 */
-						let [left,main]=[[],[]];
-						
-						for(let i=0;i<10;i++){
-							left.push(`${i+1}类商品`);
-							
-							let list=[];
-							let max = Math.floor(Math.random()*15) || 8;
-							for(let j=0;j<max;j++){
-								list.push(j);
-							}
-							main.push({
-								title:`第${i+1}类商品标题`,
-								list
-							})
-						}
-						
-						// 将请求接口返回的数据传递给 Promise 对象的 then 函数。
-						resolve({left,main});
-					},1000);
-				}).then((res)=>{
-					console.log('-----------请求接口返回数据示例-------------');
-					console.log(res);
-					
-					uni.hideLoading();
-					// this.leftArray=res.left;
-					// this.mainArray=res.main;
-				});
-			},
+			
 			//-------------------------左侧导航点击-------------------------
 			leftTap(e){
 				let index=e.currentTarget.dataset.index;

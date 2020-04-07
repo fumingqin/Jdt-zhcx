@@ -119,11 +119,11 @@
 								}else{
 									theself.nickname =res1.data.data.nickname;
 								}
+								
 								if(res1.data.data.gender==null||res1.data.data.gender==""){
-									theself.gender=0;
+									theself.selector="请选择";
 								}else{
-									theself.gender=res1.data.data.gender;
-									theself.selector=theself.genderSex[res1.data.data.gender];
+									theself.selector=res1.data.data.gender;
 								}
 								if(res1.data.data.birthday==null||res1.data.data.birthday==""){
 									theself.birthday="请选择";
@@ -221,7 +221,7 @@
 				console.log(this.unid)
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
-				console.log(this.gender)
+				console.log(this.selector)
 				console.log(this.address)
 				console.log(this.nickname)
 				console.log(this.birthday)
@@ -235,9 +235,9 @@
 						unid:this.unid,
 						openId_qq:this.openId_qq,
 						openId_wx:this.openId_wx,
-						// openId_qq:'12',
-						// openId_wx:'12',
-						gender:this.gender,
+						// openId_qq:'',
+						// openId_wx:'',
+						gender:this.selector,
 						address:this.address,
 						nickname:this.nickname,
 						birthday:this.birthday,
@@ -246,6 +246,17 @@
 						phoneNumber:this.phoneNumber,
 						username:this.username,
 					},
+					
+					// portrait:'1',
+					// unid:31,
+					// openId_qq:'',
+					// openId_wx:'',
+					// gender:1,
+					// address:'福建省泉州市丰泽区',
+					// nickname:'0201',
+					// birthday:'2013-01-02',
+					// phoneNumber:'15880655182',
+					// username:'15880655182',
 					method:'POST',
 					success(res) {
 						console.log(res)
@@ -288,10 +299,10 @@
 							//var savedFilePath = res1.savedFilePath;
 							// pathToBase64(res1.savedFilePath)
 							// .then(base64 => {
-							// 	that.portrait=base64;
+							// 	that.portrait=JSON.stringify(base64);
 							// 	console.log(that.portrait)
 							// })
-								that.portrait=res1.savedFilePath;
+							that.portrait=res1.savedFilePath;
 						  }
 						});
 						// pathToBase64(res.tempFilePaths[0])
