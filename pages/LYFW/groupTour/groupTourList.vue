@@ -3,7 +3,12 @@
 		<view class="topSearch">
 			<!-- 搜索栏 -->
 			<view class="searchTopBox">
-				<text class="locationTxt" @click="oncity">{{region}}<text class="icon jdticon icon-xia"></text></text>
+				<!-- #ifdef MP -->
+				<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
+				<!-- #endif -->
+				<!-- #ifdef APP-PLUS -->
+				<text  class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
+				<!-- #endif -->
 				<view class="searchBoxRadius">
 					<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
 					<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
@@ -81,7 +86,6 @@
 				</view>
 			</view>
 		</view>
-		
 		<!-- 分类面板 -->
 		<view>
 			<view class="cate-mask" :class="currentIndex===0 ? 'none' : currentIndex===1 ? 'show' : ''" @click="close">
@@ -113,7 +117,9 @@
 		data() {
 			return {
 				searchValue: '', //搜索框值
-				region: '请选择', //地区数值
+				regionWeixin: '请选择', //微信地区数值
+				regionApp : '请选择',//APP地区数值
+				
 				searchIndex: 0, //搜索框是否启用状态值
 				searchData: '', //搜索后的值
 				current: 0, //标题下标
@@ -129,6 +135,7 @@
 
 		onLoad() {
 			this.routeInit();
+			this.Getpostion();
 		},
 
 		methods: {
@@ -137,7 +144,28 @@
 				let groupTour = await this.$api.lyfwcwd('groupTour');
 				this.groupTitle = groupTour.data;
 			},
-
+			//获取定位数据
+			Getpostion:function(){
+				setTimeout(()=>{
+					uni.getStorage({
+						key:'wx_position',
+						success:(res)=>{
+							// console.log(res)
+							this.regionWeixin = res.data;
+						}
+					}),
+					
+					uni.getStorage({
+						key:'app_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionApp = res.data;
+						}
+					})
+				},500)
+				
+			},
+			
 			//打开地区选择器
 			oncity() {
 				this.$refs.popupRef.show();
@@ -145,14 +173,31 @@
 
 			//地区获取
 			backCity(e) {
-				if (e !== 'no') {
+				if (e !== 'no' && e !== 'yes') {
 					// console.log(e)
-					this.region = e.cityName
+					this.regionWeixin = e.cityName
+					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
 					this.lyfwData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
-				} else {
+				} else if(e == 'yes'){
+					uni.getStorage({
+						key:'wx_position',
+						success:(res)=>{
+							// console.log(res)
+							this.regionWeixin = res.data;
+						}
+					}),
+					uni.getStorage({
+						key:'app_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionApp = res.data;
+						}
+					})
+					this.$refs.popupRef.close();
+				}else{
 					this.$refs.popupRef.close();
 				}
 			},
@@ -240,7 +285,7 @@
 
 	.topSearch {
 		background-color: #FFFFFF;
-		margin-bottom: 20upx;
+		// margin-bottom: 20upx;
 
 		//搜索框
 		.searchTopBox {

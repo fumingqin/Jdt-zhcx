@@ -7,12 +7,14 @@
 		<!-- 顶部信息
 		命名：Dx -->
 		<view class="Dx_View">
+			<view class="Dx_viewAndView">
 			<text class="Dx_title">{{orderInfo.orderType}}</text>
-			<text class="Dx_text" v-if="orderInfo.orderType !== '待支付' || orderInfo.orderType !== '已取消' || orderInfo.orderType !== '已退票'" >旅途愉快！</text>
-			<text class="Dx_priceIcon" @click="open">¥</text>
-			<text class="Dx_price" @click="open" >{{orderInfo.orderActualPayment}}</text>
+			<text class="Dx_text" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票'" >预订成功，旅途愉快！</text>
 			<image class="Dx_image" src="../../../static/LYFW/scenicSpotTickets/orderDetails/gantan.png" @click="open"></image>
+			<text class="Dx_price" @click="open" >{{orderInfo.orderActualPayment}}</text>
+			<text class="Dx_priceIcon" @click="open">¥</text>
 			<text class="Dx_remarks">订单编号：{{orderInfo.orderNumber}}</text>
+			</view>
 		</view>
 		</view> 
 		
@@ -76,10 +78,13 @@
 					<text class="Xx_contentTitle" >使用方法</text>
 					<text class="Xx_contentTitle2">凭身份证或订单二维码扫码入园</text>
 				</view>
+				
+				<!-- 空白二维码区域 -->
+				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消'">支付后生成二维码及取票码</view>
 			
 				<!-- 二维码 -->
-				<view class="Xx_QRcodeView">
-					<view class="Xx_QRcodeBlock1">
+				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消'">
+					<view class="Xx_QRcodeBlock1"> 
 						<text class="Xx_QRcodeContentTitle">入园辅助码</text>
 					</view>
 					<view class="Xx_QRcodeBlock2">
@@ -90,7 +95,7 @@
 					</view>
 					<view class="Xx_QRcodeBlock2">
 						<text class="Xx_QRcodeTips">出示二维码，检票入园</text>
-					</view> 
+					</view>  
 				</view>
 				
 				<!-- 出行人+退改+保险 -->
@@ -227,47 +232,54 @@
 			top: 180upx;
 			color: #FFFFFF;
 			right: 0;
-			.Dx_title{
-				margin-left: 32upx;
-				font-size: 48upx;
-				font-weight: 300;
-			}
-			.Dx_text{
-				margin-left: 32upx;
-				font-size: 30upx;
-			}
-			.Dx_image{
+			.Dx_viewAndView{
 				position: relative;
-				width: 28upx;
-				height: 28upx;
-				left: 184upx;
-				top: 6upx;
-			}
-			.Dx_price{
-				position: relative;
-				font-size: 52upx;
-				margin-right: 6upx;
-				text-align: right;
-				left: 184upx;
-				top: 4upx;
-			}
-			.Dx_priceIcon{
-				font-size: 30upx;
-				position: relative;
-				margin-right: 2upx;
-				left: 184upx;
-				top: 4upx;
-			}
-			.Dx_remarks{
-				display: block;
-				margin: 20upx 32upx;
-				font-size: 28upx;
+				.Dx_title{
+					margin-left: 32upx;
+					font-size: 48upx;
+					font-weight: 300;
+				}
+				.Dx_text{
+					margin-left: 32upx;
+					font-size: 30upx;
+				}
+				.Dx_image{
+					float: right;
+					width: 28upx;
+					height: 28upx;
+					margin-right: 32upx;
+					margin-top: 20upx;
+				}
+				.Dx_price{
+					float: right;
+					font-size: 52upx;
+					margin-right: 6upx;
+					text-align: right;
+				}
+				.Dx_priceIcon{
+					float: right;
+					font-size: 30upx;
+					position: relative;
+					margin-right: 2upx;
+					margin-top: 2upx;
+				}
+				.Dx_remarks{
+					display: block;
+					margin: 20upx 32upx;
+					font-size: 28upx;
+				}
 			}
 		}
 		/* #ifdef MP-WEIXIN */
 		//整体容器样式 -微信版
 		.Dx_View {
 			top: 64upx;
+			.Dx_image{
+				margin-top: 30upx;
+			}
+			.Dx_priceIcon{
+				margin-top: 8upx;
+			}
 		}
 		/* #endif */
 	}
@@ -365,6 +377,13 @@
 			}
 		}
 		
+		.Xx_QRcodeViewBlank{
+			text-align: center;
+			color: #AAAAAA;
+			font-size: 28upx;
+			padding: 180upx 0;
+		}
+		
 		.Xx_QRcodeView{
 			margin: 56upx 0;
 			text-align: center;
@@ -397,6 +416,8 @@
 			}
 		}
 	}
+	
+	
 	/* #ifdef MP-WEIXIN */
 	//整体容器样式 -微信版
 	.Xx_view {

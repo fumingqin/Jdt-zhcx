@@ -377,7 +377,6 @@
 				that.current = parseInt(options.current);
 			}
 			that.intervalGet();
-			that.getKeYunInfo();
 		},
 		onShow() {
 			var that = this;
@@ -577,7 +576,7 @@
 						title: "正在查询",
 						// mask:true,
 					});
-					//获取数据
+					//获取数据,传入当前选择的模块index
 					that.getmessengeInfo(that.current);
 					console.log(that.current);
 					that.IsSearch = true;
@@ -585,17 +584,31 @@
 			},
 			//获取数据
 			getmessengeInfo(param) {
-				console.log( typeof param);
+				console.log(param)
 				switch(param){
 					case 0 :{//智能
 						
 						break;
 					}
 					case 1 :{//客运
-						// uni.request({
-							
-						// })
-						console.log('点击了客运')
+					uni.showLoading();
+					uni.request({
+						url:'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
+						data: {
+							systemName:'泉运实业综合出行',
+							startPosition:this.initialPoint,
+							endPosition:this.destination,
+						},
+						method:'POST',
+						header:{'content-type':'application/json'},
+						success: (res) => {
+							uni.hideLoading();
+							console.log(res)
+						},
+						fail(res) {
+							uni.hideLoading();
+						}
+					})
 						break;
 					}
 					case 2 :{//出租车
