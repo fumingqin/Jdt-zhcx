@@ -86,7 +86,7 @@
 			// this.date = this.getTime(0, new Date());
 			// this.startStation=param.StartStation;
 			// this.endStartion=param.EndStation;
-			console.log(this.date,this.startStation,this.endStation)
+			// console.log(this.date,this.startStation,this.endStation)
 			this.loadDate();
             this.getDeparture();
 			

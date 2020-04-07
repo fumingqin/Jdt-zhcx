@@ -25,7 +25,7 @@
 						:class="{ 'active':index==leftIndex }" 
 						:data-index="index"
 						@tap="leftTap"
-					>{{item}}</view>
+					>{{item.cityName}}</view>
 		        </scroll-view>
 			</view>
 			<!-- 右边的列表 -->
@@ -33,12 +33,12 @@
 				<swiper class="swiper" :style="{ 'height':scrollHeight }" 
 					:current="leftIndex" @change="swiperChange"
 					 vertical="true" duration="300">
-					<swiper-item v-for="(item,index) in mainArray" :key="index">
+					<swiper-item v-for="(item,index) in stationArray" :key="index">
 						<scroll-view  scroll-y="true" :style="{ 'height':scrollHeight }">
 							<view class="item">
-								<view class="goods" v-for="(item2,index2) in item.list" :key="index2">
+								<view class="goods" v-for="(item2,index2) in mainArray" :key="index2">
 									<view>
-										<view @tap="detailStationTap(item2)">第{{index2+1}}个车站</view>
+										<view @tap="detailStationTap(item2)">{{item2.countys}}</view>
 									</view>
 								</view>
 							</view>
@@ -62,22 +62,61 @@
 				keywordList: [],
 				isShowAllList:true,//是否显示联动列表
 				isShowList:false,//是否显示站点列表
+				stationType:'',//判断上个页面点击的是上车点还是下车点
 			}
 		},
-		onLoad(){
+		onLoad(param){
+			var that = this;
+			// console.log(param);
+			that.stationType = param.station;
+			//获取站点列表
+			that.getBusStationList();
 			/* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
 			uni.getSystemInfo({
 				success:(res)=>{
 					this.scrollHeight=`${res.windowHeight}px`;
 				}
 			});
-			this.stationArray = ['泉州', '晋江', '石狮', '惠安', '南安', '安溪', '永春', '德化', '厦门'];
+			// this.stationArray = ['泉州', '晋江', '石狮', '惠安', '南安', '安溪', '永春', '德化', '厦门'];
 		},
 		mounted(){
-			this.getListData();
+			// this.getListData();
 		},
 		methods: {
-			// 监听输入
+			//-------------------------获取车站列表数据-------------------------
+			getBusStationList() {
+				uni.request({
+					url:'http://27.148.155.9:9055/CTKY/getStations',
+					method:'POST',
+					header:{'content-type':'application/x-www-form-urlencoded'},
+					data:{
+						systemName:'泉运公司综合出行'
+					},
+					success: (res) => {
+						uni.hideLoading();
+						let that = this;
+						// console.log(res.data);
+						if (res.data.length != 0) {
+							for (var i = 0; i < res.data.length; i++) {
+								var cityNameArray = {
+									cityName : res.data[i].cityName
+								}
+								this.stationArray.push(cityNameArray);
+								for (var j = 0; j < res.data[i].countys.length;j++) {
+									var countysArray = {
+										countys : res.data[i].countys[j]
+									}
+									this.mainArray.push(countysArray);
+								}
+							}
+						}
+					},
+					fail(res) {
+						uni.hideLoading();
+					}
+				})
+			},
+			//-------------------------监听输入-------------------------
 			onInput(event){
 				var keyword = event.detail?event.detail.value:event;
 				if (!keyword) {
@@ -90,42 +129,65 @@
 				this.isShowAllList = false;
 				//以下示例截取淘宝的关键字，请替换成你的接口
 				uni.request({
-					url: 'https://suggest.taobao.com/sug?code=utf-8&q=' + keyword, //仅为示例
+					url: 'http://27.148.155.9:9055/CTKY/getSatartSite',
+					method:'POST',
+					header:{'content-type':'application/x-www-form-urlencoded'},
+					data:{
+						systemName:'泉运公司综合出行',
+						keyword:keyword
+					},
 					success: (res) => {
+						// console.log(res);
 						this.keywordList = [];
-						this.keywordList = this.drawCorrelativeKeyword(res.data.result, keyword);
+						this.keywordList = this.drawCorrelativeKeyword(res.data, keyword);
 						
 					}
 				});
 			},
-			//高亮关键字
+			//-------------------------高亮关键字-------------------------
 			drawCorrelativeKeyword(keywords, keyword) {
+				// console.log(keywords);
 				var len = keywords.length,
 					keywordArr = [];
 				for (var i = 0; i < len; i++) {
-					var row = keywords[i];
+					var row = keywords[i].siteName;
 					//定义高亮#9f9f9f
-					var html = row[0].replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
+					var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
 					html = '<div>' + html + '</div>';
 					var tmpObj = {
-						keyword: row[0],
+						keyword: row,
 						htmlStr: html
 					};
 					keywordArr.push(tmpObj)
 				}
 				return keywordArr;
 			},
-			//点击下拉站点
+			//-------------------------点击下拉站点-------------------------
 			itemClick(index){
 				//获取点击选项的文字
 				var key = this.keywordList[index].keyword;
-				console.log(key);
+				// console.log(key);
 			},
-			//点击站点
+			//-------------------------点击站点-------------------------
 			detailStationTap(item){
-				console.log(item);
+				// console.log(item.countys);
+				var that = this;
+				if (that.stationType == 'startStation') {
+					//当前是上车点
+					uni.$emit('startstaionChange', {
+					    data1: item.countys
+					});
+					uni.navigateBack({ });
+				}else if(that.stationType == 'endStation') {
+					//当前是下车点
+					uni.$emit('endStaionChange', {
+					    data1: item.countys
+					});
+					uni.navigateBack({ });
+				}
+				
 			},
-			/* 获取列表数据 */
+			//-------------------------获取列表数据-------------------------
 			getListData(){
 				// Promise 为 ES6 新增的API ，有疑问的请自行学习该方法的使用。
 				new Promise((resolve,reject)=>{
@@ -157,11 +219,11 @@
 					console.log(res);
 					
 					uni.hideLoading();
-					this.leftArray=res.left;
-					this.mainArray=res.main;
+					// this.leftArray=res.left;
+					// this.mainArray=res.main;
 				});
 			},
-			/* 左侧导航点击 */
+			//-------------------------左侧导航点击-------------------------
 			leftTap(e){
 				let index=e.currentTarget.dataset.index;
 				this.leftIndex=Number(index);

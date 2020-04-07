@@ -172,7 +172,7 @@
 		<view class="toPayClass">
 			<view style="display: flex;align-items: center;margin-left: 32upx;">
 				<text style="font-size: 38upx;color: #FC4646;padding: 0;">￥{{totalPrice}}</text>
-				<text style="font-size: 28upx;margin-left: 9upx;font-family:SourceHanSansSC-Light; font-weight: lighter;color: #666666;padding: 0;">共2人</text>
+				<text style="font-size: 28upx;margin-left: 9upx;font-family:SourceHanSansSC-Light; font-weight: lighter;color: #666666;padding: 0;">共{{passengerInfo.length}}人</text>
 			</view>
 			<view @tap="reserveTap" class="orderReserve" :class="{tapColor:selectedValue == 1}">立即预定</view>
 		</view>
@@ -274,7 +274,7 @@
 			});
 		},
 		methods: {
-			//乘客数据读取
+			//-------------------------------乘客数据读取-------------------------------
 			userData(){ 
 				var that = this;
 				uni.getStorage({
@@ -285,7 +285,7 @@
 						that.calculateTotalPrice();
 				    }
 				});
-				//读取上下车点缓存
+				//-------------------------------读取上下车点缓存-------------------------------
 				uni.getStorage({
 					key:'CTKYStationList',
 					success: (res) =>{
@@ -386,7 +386,7 @@
 					url: '/pages/GRZX/passengerInfo?submitType=1',
 				})
 			},
-			//点击添加乘客
+			//-------------------------------点击添加乘客-------------------------------
 			addPassenger(){
 				uni.navigateTo({
 					url: '/pages/GRZX/addPassenger',
