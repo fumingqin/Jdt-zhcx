@@ -165,6 +165,7 @@
 				maskState: 0, //优惠券面板显示状态
 				
 				admissionTicket: '', //门票内容
+				userInfo : '',//个人信息
 				
 				couponIndex: '请选择优惠券', //优惠券默认内容
 				couponColor: '', //优惠券couponID
@@ -222,6 +223,13 @@
 					key:'ticketInformation',
 					success:(res) =>{
 						this.admissionTicket = res.data;
+						// console.log(res)
+					}
+				})
+				uni.getStorage({
+					key:'userInfo',
+					success:(res) =>{
+						this.userInfo = res.data;
 						// console.log(res)
 					}
 				})
@@ -348,7 +356,7 @@
 			submit: function() {
 				if (this.selectedValue == 1 && this.addressData.length>0){
 					uni.request({
-						url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=17',
+						url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' +this.userInfo.unid,
 						method:'POST',
 						success:(res) => {
 							var a = '';
@@ -359,7 +367,7 @@
 								uni.request({
 									url : 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
 									data:{
-										unid : '12321',
+										unid : this.userInfo.unid,
 										ticketProductId : this.admissionTicket.admissionTicketID,
 										ticketId : 0,
 										ticketContain : this.admissionTicket.ticketContain,

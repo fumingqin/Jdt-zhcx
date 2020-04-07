@@ -50,12 +50,12 @@
 			<image src="../../static/GRZX/logo3.png" class="logoClass"></image>	
 		</view>
 		
-		<view class="loginMode">第三方登录</view>
+		<!-- <view class="loginMode">第三方登录</view>
 		<view class="leftLine"></view>
-		<view class="rightLine"></view>
+		<view class="rightLine"></view> -->
 		<!-- <image src="../../static/GRZX/qqLogo.png" class="qqClass" @click="qqLogin"></image> -->
 		<!-- <image src="../../static/GRZX/wxLogo.png" class="wxClass" @click="wxLogin"></image> -->
-		<image src="../../static/GRZX/wxLogo.png" class="wxClass1" @click="wxLogin"></image>
+		<!-- <image src="../../static/GRZX/wxLogo.png" class="wxClass1" @click="wxLogin"></image> -->
 	</view>
 </template>
 
@@ -146,21 +146,29 @@
 							key:'captchaCode',
 							success(res) {
 								if(captcha==res.data){
-								var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);	
-									uni.setStorage({
-										key:'userInfo',
-										data:{
-											phoneNumber:phone,
-											nickName:"用户"+randomNum
+									uni.request({
+										url:'http://218.67.107.93:9210/api/app/login?phoneNumber='+phone,
+										method:"POST",
+										success(res) {
+											console.log(res)
+											uni.showToast({
+												title:res.data.msg,
+												icon:"none"
+											})
+											uni.setStorage({
+												key:'userInfo',
+												data:res.data.data,
+											})
+											uni.getStorage({
+												key:'userInfo',
+												success:function(user){
+													console.log(user,"user")
+													that.login(user.data);
+												}
+											})
 										}
 									})
-									uni.getStorage({
-										key:'userInfo',
-										success:function(user){
-											that.login(user.data);
-										}
-									})
-									 uni.switchTab({
+									uni.switchTab({
 										url:'/pages/Home/Index',
 									}) 
 								}else{
@@ -289,42 +297,40 @@
 				if(self.judgeNum(self.phoneNumber)){
 					var timer=null,second=59; //倒计时的时间
 					if(self.textCode == "获取验证码"){
-					  //获取6位随机数
-					  var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
-					  //短信接口
-					  uni.setStorage({
-							key:'captchaCode',
-							data:randomNum
-					  })
-					  
 					  self.textCode = second+"秒后重发";
 					  if(self.textCode == "59秒后重发"){
+						  timer=setInterval(function(){
+						  second--;
+						  if(second<=0){	
+						  	self.textCode = "获取验证码";
+						  	clearInterval(timer);
+						  	second=59;	
+						  }
+						  else{			
+						  	self.textCode = second+"秒后重发";
+						  }},1000)
 						 uni.request({
-						    url: 'http://111.231.109.113:8000/api/MyTest/SendMessage',
-						    data:{
-						 	  phoneNumber:self.phoneNumber,
-						 	  text:'动态验证码：'+randomNum+',如果不是本人请忽略此短信。'
-						    },
-						    method:"GET",
-						    success: function (res) {
-						 		console.log(res);
-						 		if(res.data){
-						 			timer=setInterval(function(){
-						 			second--;
-						 			if(second<=0){	
-						 				self.textCode = "获取验证码";
-						 				clearInterval(timer);
-						 				second=59;	
-						 			}
-						 			else{			
-						 				self.textCode = second+"秒后重发";
-						 			}},1000)
-						 		}else{
-						 			uni.showToast({
-						 				title : '手机号码有误',
-						 				icon : 'none',
-						 			})
-						 		}
+							url:'http://218.67.107.93:9210/api/app/getLoginCode?phoneNumber='+self.phoneNumber,
+						    method:"POST",
+							success:(res)=>{
+						 		console.log(res.data.code);
+								uni.setStorage({
+									key:'captchaCode',
+									data:res.data.code,
+								})
+								setTimeout(function(){
+									uni.removeStorage({
+										key:'captchaCode',
+									})
+								},300000);
+						 		// if(res.data){
+						 			
+						 		// }else{
+						 		// 	uni.showToast({
+						 		// 		title : '手机号码有误',
+						 		// 		icon : 'none',
+						 		// 	})
+						 		// }
 						    }
 						 }) 
 					  }
@@ -392,7 +398,8 @@
 	}
 	.inputContent{  //登录区域的样式
 		width: 90.4%;
-		height: 874upx;
+		//height: 874upx;
+		height: 700upx;
 		position: absolute;
 		top:277upx;
 		left: 4.8%;

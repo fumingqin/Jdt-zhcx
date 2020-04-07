@@ -1,29 +1,29 @@
 <template>
 	<view class="Cr_background">
 		<form @submit="formSubmit" >
-			<image class="bg" :src="background" mode="aspectFill" name="background"></image>
-			<image class="tx" :src="avatarUrl" name="avatarUrl" @click="getPhoto"></image>
+			<image class="bg" :src="backImg||'/static/GRZX/banner3.jpg'" mode="aspectFill" name="backImg"></image>
+			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait" @click="getPhoto"></image>
 			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
 			<view class="Cr_slk1">
 				<text class="bz">姓&nbsp;名：</text>
-				<input class="slk"  name="nickName"  placeholder="请输入" v-model="detailInfo.nickName" adjust-position="" />
+				<input class="slk"  name="nickname"  placeholder="请输入" v-model="nickname" adjust-position="" />
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">性&nbsp;别：</text>
 				<!-- <picker @change="selectorChange" mode = "selector" :range="aim" name="aim" :value="user.aim"> -->
-				<picker class="slk1" name="gender"  mode="selector" @change="genderChange" :range="genderSex" :value="detailInfo.gender">
+				<picker class="slk1" name="gender"  mode="selector" @change="genderChange" :range="genderSex" :value="gender">
 					{{selector}}
 				</picker>
 			</view>
 			<view class="Cr_slk2"> 
 				<text class="bz">生&nbsp;日：</text>
-				<picker class="slk1" name="birthday"  mode="date" @change="dateChange" v-model="detailInfo.birthday"  :start="startDate" :end="endDate" placeholder="请选择"  >
-					{{detailInfo.birthday}}
+				<picker class="slk1" name="birthday"  mode="date" @change="dateChange" v-model="birthday"  :start="startDate" :end="endDate" placeholder="请选择"  >
+					{{birthday}}
 				</picker>
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">地&nbsp;址：</text>
-				<input class="slk" name="address"  disabled="disabled" @tap="toggleTab"  placeholder="你的常住地" v-model="detailInfo.address" />
+				<input class="slk" name="address"  disabled="disabled" @tap="toggleTab"  placeholder="你的常住地" v-model="address" />
 				<w-picker
 					mode="region"
 					:areaCode="['35', '3507', '350782']"
@@ -33,10 +33,10 @@
 					:timeout="true"
 				></w-picker>
 			</view>
-			<view class="Cr_slk2">
+		<!-- 	<view class="Cr_slk2">
 				<text class="bz">签&nbsp;名：</text>
-				<input class="slk" name="autograph"   placeholder="你想要说的话"  v-model="detailInfo.autograph" />
-			</view>
+				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
+			</view> -->
 			<button class="an" type="primary" form-type="submit">保存</button>
 			
 		</form>
@@ -53,35 +53,27 @@
 	export default {
 		data() {
 			return {
-				avatarUrl : '../../static/GRZX/missing-face.png',
-				background:'../../static/GRZX/banner3.jpg',
 				mode:"region",
 				genderSex:['','男','女'], 
 				selector:'请选择',
-				detailInfo : { 
-					nickName : '',
-					gender:'',
-					birthday : '请选择',
-					address : '',
-					autograph : '',
-					background:'',
-				},
+				/* 载入数据 */
+				portrait : '',
+				backImg:'',
+				nickname : '',
+				gender:'',
+				birthday : '请选择',
+				address : '',
+				//autograph : '',
 				phoneNumber:'',
+				unid:'',
+				openId_qq:'',
+				openId_wx:'',
+				username:'',
 			};
 		},
 		onLoad:function(){
 			this.loadUserInfo();
 			
-		},
-		onNavigationBarButtonTap : function() {
-			 uni.showModal({
-				 content: '表单数据内容：' + JSON.stringify(this.detailInfo),
-				 showCancel: false
-			 });
-			 uni.setStorage({
-			 	key:"userInfo",
-				data:this.detailInfo
-			 })
 		},
 		computed:{
 			//...mapState(['userInfo']),
@@ -101,45 +93,74 @@
 			async loadUserInfo(){
 				var theself=this;
 				uni.getStorage({
-					key: 'userInfo',			
-					success: function (res) {
-						console.log(res.data,"res")
-						
-						if(res.data.birthday==null||res.data.birthday==""){
-							
-						}else{
-							theself.detailInfo.birthday=res.data.birthday;
-						}
-						if(res.data.gender==null||res.data.gender==""){
-							theself.selector ="请选择";
-						}else{
-							theself.detailInfo.gender=res.data.gender;
-							theself.selector =theself.genderSex[res.data.gender];
-						}
-						if(res.data.avatarUrl==null||res.data.avatarUrl==""){
-							theself.avatarUrl ="../../static/GRZX/missing-face.png";
-						}else{
-							theself.avatarUrl = res.data.avatarUrl;	
-						}
-						if(res.data.background==null||res.data.background==""){
-							theself.background ="../../static/GRZX/banner3.jpg";
-						}else{
-							theself.background=res.data.background;
-						}
-						theself.detailInfo.autograph=res.data.autograph;
-						theself.detailInfo.nickName = res.data.nickName; 
-						theself.detailInfo.address= res.data.address;
-						theself.phoneNumber= res.data.phoneNumber;
-						//console.log(res,"res")
+					key:'backUrl',
+					success:function(res){
+						theself.backImg=res.data;
 					}
-				});	
+				})
+				uni.getStorage({
+					key:'userInfo',
+					success(res){
+						uni.request({
+							url:'http://218.67.107.93:9210/api/app/login?phoneNumber='+res.data.phoneNumber,
+							method:"POST",
+							success(res1) {
+								uni.setStorage({
+									key:'userInfo',
+									data:res1.data.data,
+								})
+								// base64ToPath(res1.data.data.portrait)
+								// .then(path => {
+								// 	theself.portrait=path;
+								// })
+								theself.portrait=res1.data.data.portrait;
+								if(res1.data.data.nickname==null||res1.data.data.nickname==""){
+									theself.nickname="";
+								}else{
+									theself.nickname =res1.data.data.nickname;
+								}
+								if(res1.data.data.gender==null||res1.data.data.gender==""){
+									theself.gender=0;
+								}else{
+									theself.gender=res1.data.data.gender;
+									theself.selector=theself.genderSex[res1.data.data.gender];
+								}
+								if(res1.data.data.birthday==null||res1.data.data.birthday==""){
+									theself.birthday="请选择";
+								}else{
+									theself.birthday =res1.data.data.birthday.substring(0,10);
+								}
+								// if(res1.data.data.autograph==null||res1.data.data.autograph==""){
+								// 	theself.autograph="";
+								// }else{
+								// 	theself.autograph =res1.data.data.autograph;
+								// }
+								if(res1.data.data.address==null||res1.data.data.address==""){
+									theself.address="";
+								}else{
+									theself.address =res1.data.data.address;
+								}
+								theself.phoneNumber=res1.data.data.phoneNumber;
+								theself.unid=res1.data.data.unid;
+								theself.openId_qq=res1.data.data.openId_qq;
+								theself.openId_wx=res1.data.data.openId_wx;
+								theself.username=res1.data.data.username;
+							}
+						})
+					}
+				})	
 			},
 			genderChange : function(e){
 				//console.log(e.detail.value,"sex")
-				this.selector =this.genderSex[e.detail.value]; 
+				if(e.detail.value==0){
+					this.selector="请选择";
+				}else{
+					this.selector =this.genderSex[e.detail.value]; 
+				}
+				this.gender=e.detail.value;
 			},
 			dateChange : function(e){
-				this.detailInfo.birthday = e.detail.value;
+				this.birthday = e.detail.value;
 			},
 			getDate(type) {
 						const date = new Date();
@@ -160,7 +181,7 @@
 				this.$refs[this.mode].show(); 
 			},
 			onConfirm(e){
-				this.detailInfo.address=e.result;
+				this.address=e.result;
 			},
 			reviseBackground(){
 				var that=this;
@@ -181,7 +202,7 @@
 							uni.getStorage({
 								key:'backUrl',
 								success:function(res){
-									that.background=res.data;
+									that.backImg=res.data;
 									console.log(res.data,"res..data")
 								}
 							})
@@ -196,37 +217,62 @@
 				})
 			},
 			formSubmit: function(e) {
-				/* uni.showModal({
-					content: '表单数据内容：' + JSON.stringify(this.detailInfo),
-					showCancel: false
-				});		 */	
-				if(this.avatarUrl==null||this.avatarUrl==undefined){
-					e.target.value.avatarUrl="../../static/GRZX/missing-face.png";
-				}else{
-					e.target.value.avatarUrl=this.avatarUrl;
-				}
-				if(this.background==null||this.background==undefined){
-					e.target.value.background="../../static/GRZX/banner3.jpg";
-				}else{
-					e.target.value.background=this.background;
-				}
-				if(this.selector=="男"){
-					e.target.value.gender=1;
-				}
-				else if(this.selector=="女"){
-					e.target.value.gender=2;
-				}else{
-					e.target.value.gender=0;
-				}
-				e.target.value.birthday=this.detailInfo.birthday;
-				e.target.value.phoneNumber=this.phoneNumber;
-				uni.setStorage({
-					key:"userInfo",
-					data:e.target.value
+				console.log(this.portrait)
+				console.log(this.unid)
+				console.log(this.openId_qq)
+				console.log(this.openId_wx)
+				console.log(this.gender)
+				console.log(this.address)
+				console.log(this.nickname)
+				console.log(this.birthday)
+				console.log(this.backImg)
+				console.log(this.phoneNumber)
+				console.log(this.username)
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/changeInfo',
+					data:{
+						portrait:this.portrait,
+						unid:this.unid,
+						openId_qq:this.openId_qq,
+						openId_wx:this.openId_wx,
+						// openId_qq:'12',
+						// openId_wx:'12',
+						gender:this.gender,
+						address:this.address,
+						nickname:this.nickname,
+						birthday:this.birthday,
+						//autograph:'123',
+						backImg:this.backImg,
+						phoneNumber:this.phoneNumber,
+						username:this.username,
+					},
+					method:'POST',
+					success(res) {
+						console.log(res)
+					}
 				})
-				this.login(e.target.value);
-				//console.log(e.target.value,"555")
-				uni.navigateBack();
+				var list={
+						portrait:this.portrait,
+						unid:this.unid,
+						openId_qq:this.openId_qq,
+						openId_wx:this.openId_wx,
+						// openId_qq:'12',
+						// openId_wx:'12',
+						gender:this.gender,
+						address:this.address,
+						nickname:this.nickname,
+						birthday:this.birthday,
+						//autograph:'123',
+						backImg:this.backImg,
+						phoneNumber:this.phoneNumber,
+						username:this.username,
+					};
+				uni.setStorage({
+					key:'userInfo',
+					data:list,
+				})
+				 this.login(list);
+				 uni.navigateBack();
 			},
 			getPhoto(){
 				var that=this;
@@ -234,29 +280,23 @@
 					count:1,
 					//sourceType:['album'],
 					success(res) {
-						//console.log(res,"res11");
+						//console.log(res.tempFilePaths,"res11");
 						var tempFilePaths = res.tempFilePaths;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
 						  success: function (res1) {
 							//var savedFilePath = res1.savedFilePath;
-							that.avatarUrl=res1.savedFilePath;
-							// uni.setStorage({
-							// 	key:'headUrl',
-							// 	data:savedFilePath
+							// pathToBase64(res1.savedFilePath)
+							// .then(base64 => {
+							// 	that.portrait=base64;
+							// 	console.log(that.portrait)
 							// })
-							// uni.getStorage({
-							// 	key:'headUrl',
-							// 	success:function(res){
-							// 		that.avatarUrl=res.data;
-							// 		console.log(res.data,"res..data")
-							// 	}
-							// })
+								that.portrait=res1.savedFilePath;
 						  }
 						});
 						// pathToBase64(res.tempFilePaths[0])
 						// .then(base64 => {
-						// 	
+						// 	that.portrait=base64;
 						// })
 						 
 					}
