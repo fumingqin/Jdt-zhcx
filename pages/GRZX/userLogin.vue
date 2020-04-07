@@ -163,12 +163,15 @@
 												key:'userInfo',
 												success:function(user){
 													console.log(user,"user")
+													if(user.data.nickname==""||user.data.nickname==null){
+														user.data.nickname="用户"+user.data.username;
+													}
 													that.login(user.data);
 												}
 											})
 										}
 									})
-									uni.switchTab({
+									uni.switchTab({  //返回首页
 										url:'/pages/Home/Index',
 									}) 
 								}else{
@@ -181,7 +184,6 @@
 						})
 					}
 				}
-				
 			},
 			wxLogin(){		//微信授权登录
 				var theSelf=this;

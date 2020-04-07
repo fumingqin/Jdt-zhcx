@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image src="../../static/GRZX/logo_wuyi.png" class="logoClass"></image>
+		<image src="../../static/GRZX/logo_quanzhou.png" class="logoClass"></image>
 		<text class="titleClass">{{title}}</text>
 		<text class="versionClass">{{versionNum}}</text>
 		<view class="boxClass1">
@@ -28,20 +28,20 @@
 	export default{
 		data(){
 			return{
-				title:'大武夷智慧游',
+				title:'泉州综合出行',
 				versionNum:'Version 1.0.0',
 				functionIntroduction:'功能介绍',
 				checkVersion:'检查新版本',
 				agreement:'《软件许可及服务协议》',
 				privacy:'《隐私保护指引》',
-				copyright1:'**公司版权所有',
-				copyright2:'Copyright©2019-2020',
+				copyright1:'车联网络科技 版权所有',
+				copyright2:'Copyright©2020 Journey',
 				copyright3:'All Rights Reserved',
-				version:'',
+				version:'1.0.0',
 			}
 		},
 		onLoad(){
-			this.version=plus.runtime.version;
+			//this.version=plus.runtime.version;
 		},
 		methods:{
 			functionClick(){
