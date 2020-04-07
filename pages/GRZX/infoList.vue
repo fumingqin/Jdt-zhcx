@@ -156,6 +156,12 @@
 								}
 							}
 						})
+					},
+					fail() {
+						uni.showToast({
+							icon:'none',
+							title:'暂无乘车人,请先登录'
+						})
 					}
 				})
 				
@@ -189,8 +195,19 @@
 	        	})
 	        },
 			addPassenger(){
-				uni.navigateTo({
-					url:'/pages/GRZX/addPassenger?type=add'
+				uni.getStorage({
+					key:'userInfo',
+					fail:function(){
+						uni.showToast({
+							icon:'none',
+							title:'未登录无法添加乘车人,请先登录'
+						})
+					},
+					success:function(res){
+						uni.navigateTo({
+							url:'/pages/GRZX/addPassenger?type=add'
+						})
+					}
 				})
 			},
 			//地址管理
@@ -287,7 +304,19 @@
 				})
 			},
 			deleteClick(){
-				this.state=2;
+				var that=this;
+				uni.getStorage({
+					key:'userInfo',
+					fail:function(){
+						uni.showToast({
+							icon:'none',
+							title:'未登录无法添加乘车人,请先登录'
+						})
+					},
+					success:function(res){
+						that.state=2;
+					}
+				})
 			},
 			finishClick(){
 				this.state=1;
