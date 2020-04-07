@@ -121,8 +121,7 @@
 					</checkbox-group>
 				</view>
 			</view>
-			
-			<button form-type="reset" class="btndelete" @click="resetClick">重置</button>
+			<button  class="btndelete" @click="resetClick">重置</button>
 			<button form-type="submit" class="btnsubmit">保存</button>		
 		</form>
 		<view class="title">
@@ -200,9 +199,17 @@
 						}
 						that.user.userCodeNum =res.data.userCodeNum ;
 						that.user.date=res.data.date;
-						that.user.userDefault=res.data.userDefault;
-						that.user.show=!res.data.userDefault;
-						that.user.userEmergencyContact =res.data.userEmergencyContact ;
+						if(res.data.userDefault=="true"){
+							that.user.userDefault=true;
+						}else{
+							that.user.userDefault=false;
+						}
+						that.user.show=!that.user.userDefault;
+						if(res.data.userEmergencyContact=="true"){
+							that.user.userEmergencyContact=true;
+						}else{
+							that.user.userEmergencyContact=false;
+						}
 						that.user.userPhoneNum=res.data.userPhoneNum;
 						that.user.userID=res.data.userID;
 						// if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
@@ -219,16 +226,17 @@
 				})
 			}, 
 			radioClick:function(e){
-				this.user.sex = e;
+				this.user.userSex = e;
 			},
 			formSubmit(e){
 				var data1=e.target.value;
 				var that=this;
 				data1.userID=that.user.userID;
-				if(this.user.userSex==0){
-					data1.userSex="男";
-				}else{
+				// console.log(this.type,"235");
+				if(this.user.userSex==1){
 					data1.userSex="女";
+				}else{
+					data1.userSex="男";
 				}
 				if(data1.userDefault==null||data1.userDefault==""){
 					data1.userDefault=false;
@@ -280,22 +288,126 @@
 							}
 							if(data1.userType=="儿童"||data1.userType=="成人"){
 								uni.request({
-									url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
-									data:{
-										userID:data1.userID,  
-										userType:data1.userType,   //用户类别 成人/儿童 
-										userName:data1.userName,   //用户姓名   
-										userSex:data1.userSex,   //用户性别   
-									  	userCodeNum:data1.userCodeNum,   //用户身份证   
-									  	userPhoneNum:data1.userPhoneNum,   //用户手机号   
-									  	userDefault:data1.userDefault,   //用户是否本人 true/false 
-									  	userEmergencyContact:data1.userEmergencyContact,   //是否设置为紧急联系人 true/false
-									},
+									url:'http://218.67.107.93:9210/api/app/userInfoList?id='+that.unid,
 									method:'POST',
-									success(res) {
-										uni.navigateBack();
-										console.log(res,"2111")
-									},
+									success(listRes) {
+										//判断是否有本人
+										if(data1.userDefault){
+											var defaultList=listRes.data.data.filter(item => {
+												return item.userDefault == "true";
+											})
+											if(defaultList.length>0){
+												uni.request({
+													url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
+													data:{
+														userID:defaultList[0].userID,  
+														userType:defaultList[0].userType,   //用户类别 成人/儿童 
+														userName:defaultList[0].userName,   //用户姓名   
+														userSex:defaultList[0].userSex,   //用户性别   
+													  	userCodeNum:defaultList[0].userCodeNum,   //用户身份证   
+													  	userPhoneNum:defaultList[0].userPhoneNum,   //用户手机号   
+													  	userDefault:'false',   //用户是否本人 true/false 
+													  	userEmergencyContact:defaultList[0].userEmergencyContact,   //是否设置为紧急联系人 true/false
+													},
+													method:'POST',
+													success(resd) {
+														console.log(resd,"315")
+													}
+												})
+											}
+											
+										}
+										//判断是否有紧急联系人
+										if(data1.userEmergencyContact){
+											var defaultList=listRes.data.data.filter(item => {
+												return item.userEmergencyContact == "true";
+											})
+											if(defaultList.length>0){
+												uni.request({
+													url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
+													data:{
+														userID:defaultList[0].userID,  
+														userType:defaultList[0].userType,   //用户类别 成人/儿童 
+														userName:defaultList[0].userName,   //用户姓名   
+														userSex:defaultList[0].userSex,   //用户性别   
+													  	userCodeNum:defaultList[0].userCodeNum,   //用户身份证   
+													  	userPhoneNum:defaultList[0].userPhoneNum,   //用户手机号   
+													  	userDefault:defaultList[0].userDefault,   //用户是否本人 true/false 
+													  	userEmergencyContact:'false',   //是否设置为紧急联系人 true/false
+													},
+													method:'POST',
+													success(resd) {
+														console.log(resd,"315")
+													}
+												})
+											}
+											
+										}
+										// 判断身份证号是否存在乘车人列表
+										var code=listRes.data.data.filter(item => {
+											return item.userCodeNum == data1.userCodeNum;
+										})
+										if(code.length>0&&(that.type=="add"||that.type=="ad")){
+											uni.showToast({
+												icon:'none',
+												title:'乘车人已存在，请重新输入'
+											})
+										}else{
+											uni.request({
+												url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
+												data:{
+													userID:data1.userID,  
+													userType:data1.userType,   //用户类别 成人/儿童 
+													userName:data1.userName,   //用户姓名   
+													userSex:data1.userSex,   //用户性别   
+												  	userCodeNum:data1.userCodeNum,   //用户身份证   
+												  	userPhoneNum:data1.userPhoneNum,   //用户手机号   
+												  	userDefault:data1.userDefault,   //用户是否本人 true/false 
+												  	userEmergencyContact:data1.userEmergencyContact,   //是否设置为紧急联系人 true/false
+												},
+												method:'POST',
+												success(res) {
+													console.log(res,"370")
+													uni.showToast({
+														icon:'success',
+														title:'完成'
+													})
+													if(that.type=="add"){
+														uni.getStorage({
+															key:'passengerList',
+															success(list){
+																console.log(list,"378")
+																var passList=[];
+																for(var i=0;i<list.data.length;i++){
+																	passList.push(list.data[i]);
+																}
+																var list1={
+																	userID:data1.userID,
+																	userType:data1.userType,   //用户类别 成人/儿童 
+																	userName:data1.userName,   //用户姓名   
+																	userSex:data1.userSex,   //用户性别   
+																  	userCodeNum:data1.userCodeNum,   //用户身份证   
+																  	userPhoneNum:data1.userPhoneNum,   //用户手机号   
+																  	userDefault:data1.userDefault,   //用户是否本人 true/false 
+																  	userEmergencyContact:data1.userEmergencyContact, //是否设置为紧急联系人 true/false
+																	hiddenIndex:1,  //1代表选中
+																}
+																passList.push(list1);
+																uni.setStorage({
+																	key:'passengerList',
+																	data:passList
+																})
+															}
+														})
+													}
+													setTimeout(function(){
+														uni.navigateBack();
+													},500);
+													// console.log(res,"2111")
+												},
+											})
+										}
+									}
 								})
 							}
 						}
@@ -364,6 +476,13 @@
 			},
 			resetClick:function(e){
 				this.user.date="请选择";
+				this.user.userSex=0;
+				this.user.show=true;
+				this.user.userName="";
+				this.user.userPhoneNum="";
+				this.user.userCodeNum="";
+				this.user.userDefault=false;
+				this.user.userEmergencyContact=false;
 			},
 			checkChange:function(e){
 				//console.log(e.detail.value,"xuanzhong");

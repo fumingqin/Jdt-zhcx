@@ -258,7 +258,7 @@
 			choiceUser: function(e) {
 				if(e==0){
 					uni.navigateTo({
-						url: '/pages/GRZX/addPassenger',
+						url: '/pages/GRZX/addPassenger?type=add',
 					})
 				}else if(e==1){
 					uni.navigateTo({

@@ -169,7 +169,7 @@
 							//loginType=3,武夷股份登录界面
 							url  : '/pages/GRZX/userLogin?loginType=1'
 						}) 
-					},1500);
+					},500);
 				}else{
 					uni.navigateTo({
 						url :'/pages/GRZX/personal'
@@ -254,7 +254,7 @@
 		height: 127upx;
 	}
 	.usernameClass{		//昵称
-		height: 44upx;
+		height: 60upx;
 		line-height: 44upx;
 		font-size: 48upx;
 		color: #FFFFFF;
