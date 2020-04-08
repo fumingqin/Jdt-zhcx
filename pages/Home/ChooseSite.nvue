@@ -419,24 +419,34 @@
 				}
 			});
 		},
-		onReady: function() {
+		mounted() {
 			//动态设置高度
 			var that = this;
 			// that.map=uni.createMapContext("map555",this);
-			let query = uni.createSelectorQuery().in(that).select("#ceshi");
-			query.fields({
-				size: true,
-				scrollOffset: true
-			}, data => {
-				that.winheight = data.height + 'px';
-				uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
-					success: function(res) {
-						that.historyheight = (res.windowHeight - data.height - 108) + "px";
-						that.pageheight = res.screenHeight + "px";
-						that.mapheight = (res.windowHeight - data.height) + "px";
-					}
-				})
-			}).exec();
+			setTimeout(function(){
+				let query = uni.createSelectorQuery().in(that).select("#ceshi");
+				query.fields({
+					size: true,
+					scrollOffset: true
+				}, data => {
+					that.winheight = data.height + 'px';
+					uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
+						success: function(res) {
+							that.historyheight = (res.windowHeight - data.height - 108) + "px";
+							that.pageheight = res.windowHeight + "px";
+							that.mapheight = (res.windowHeight - data.height) + "px";
+							if(res.platform=="ios"){
+								// that.historyheight = (res.windowHeight - data.height - 130) + "px";
+							    // that.winheight=data.height+25+'px';
+							}
+						}
+					})
+				}).exec();
+			},200)
+			
+		},
+		onReady: function() {
+			
 		},
 		methods: {
 			onClickItem(e) { //tab点击事件
@@ -689,7 +699,7 @@
 							systemName:'泉运公司综合出行',
 							startPosition:this.initialPoint,
 							endPosition:this.destination,
-							date:'2020-04-08',
+							date:date,
 						},
 						method:'POST',
 						header:{'content-type':'application/json'},
@@ -890,7 +900,7 @@
 							width: 6,
 							arrowLine: true,
 							// arrowIconPath:'../../static/CZC/jiantou.png',
-							color: "#4BDC27",
+							color: "rgba(75,220,39,1)",
 							borderColor: "#8c918b",
 						};
 						that.polyline.push(obj);

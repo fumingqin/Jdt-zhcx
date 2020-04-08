@@ -25,7 +25,7 @@
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
 					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType=='普通班车'">传统</view>
 					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.shuttleType=='定制班车'">定制</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{utils.timeTodate('Y-m-d H:i',item.setTime)}}</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{utils.timeTodate('Y-m-d H:i:s',item.setTime)}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
@@ -79,6 +79,7 @@
 		onLoad(param) {
 			// console.log(param);
 			this.date = param.date;
+			
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			

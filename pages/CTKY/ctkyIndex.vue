@@ -62,8 +62,8 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 		data() {
 			return {
 				title: 'Hello',
-				departure: '泉州',
-				destination: '石狮',
+				departure: '',
+				destination: '',
 				changeText: '',
 				type: 'rangetime',
 				value: '',
@@ -79,6 +79,12 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 		},
 		onLoad() {
 			var that = this;
+			if(that.departure == '') {
+				that.departure = '选择上车点'
+			}
+			if (that.destination == '') {
+				that.destination = '选择下车点'
+			}
 			//读取历史记录
 			uni.getStorage({
 				key:'historyLines',
@@ -86,7 +92,6 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 					that.historyLines = data.data;
 				}
 			})
-			
 			//获取当前日期
 			that.getTodayDate();
 		},
@@ -167,18 +172,24 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 			},
 			//---------------------------------点击查询---------------------------------
 			queryClick: function() {
-				this.historyLines.unshift(this.departure + "-" + this.destination);
-				// console.log(this.date,this.departure + "-" + this.destination)
-				uni.setStorage({
-					key:'historyLines',
-					data:this.historyLines,
-				})
-				//页面传参通过地址后面添加参数 this.isNormal=0是普通购票1是定制班车
-				var params='./selectTickets?&startStation=' + this.departure +'&endStation=' + this.destination + '&date=' + this.datestring + '&isNormal=' + this.isNormal;
-				uni.navigateTo({ 
-					url:params
-				})
-				
+				var that = this;
+				if(that.departure == '选择上车点' || that.destination == '选择下车点') {
+					uni.showToast({
+						title: '请选择上下车点',
+						icon: 'none'
+					})
+				}else {
+					this.historyLines.unshift(this.departure + "-" + this.destination);
+					uni.setStorage({
+						key:'historyLines',
+						data:this.historyLines,
+					})
+					//页面传参通过地址后面添加参数 this.isNormal=0是普通购票1是定制班车
+					var params='./selectTickets?&startStation=' + this.departure +'&endStation=' + this.destination + '&date=' + this.datestring + '&isNormal=' + this.isNormal;
+					uni.navigateTo({ 
+						url:params
+					})
+				}
 			},
 			onSelected(e) { //选择
 				this.showPicker = false;
