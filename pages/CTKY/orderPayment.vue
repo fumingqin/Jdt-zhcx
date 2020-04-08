@@ -273,7 +273,7 @@
 						method:'POST',
 						header:{'content-type':'application/json'},
 						data:{
-							companyCode : '南平旅游',
+							companyCode : '泉运公司综合出行',
 							clientID : that.userInfo.unid,
 							clientName : that.userInfo.username,
 							scheduleCompanyCode : that.orderInfo.scheduleCompanyCode,
@@ -298,7 +298,7 @@
 						success: (res) => {
 							uni.hideLoading();
 							let that = this;
-							// console.log('返回数据',res);
+							console.log('返回订单数据',res);
 							//获取车票支付参数
 							that.getTicketPaymentInfo(res);
 						},
@@ -326,7 +326,7 @@
 					},
 					success: (res) => {
 						uni.hideLoading();
-						console.log('返回数据',res);
+						console.log('返回支付参数数据',res);
 						if(res.data.msg != '') {
 							uni.showToast({
 								title: res.data.msg,

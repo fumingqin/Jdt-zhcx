@@ -14,15 +14,19 @@
 				style="border-top-left-radius: 0;" @tap="typeSelect('special')">定制班车</view>
 			</view>
 			<view class="ticketView">
+				
 				<view class="lineClass">
-					<navigator url="homeSattionPick" hover-class="hover">
-						<view class="start">{{departure}}</view>
-					</navigator>
+					<!-- 起点站 -->
+					<!-- <navigator url="homeSattionPick" hover-class="hover"> -->
+						<view class="start" @tap="startStationTap">{{departure}}</view>
+					<!-- </navigator> -->
 					<image src="../../static/CTKY/change.png" mode="aspectFill" class="changeImage" @click="changeClick"></image>
-					<navigator url="homeSattionPick" hover-class="hover">
-						<view class="start" style="text-align: right;" @tap="stationTap">{{destination}}</view>
-					</navigator>
+					<!-- 终点站 -->
+					<!-- <navigator url="homeSattionPick" hover-class="hover"> -->
+						<view class="start" style="text-align: right;" @tap="endStationTap">{{destination}}</view>
+					<!-- </navigator> -->
 				</view>
+				
 				<view class="lineClass">
 					<view style="border-bottom: 1upx solid #dadada;width: 100%;">
 						<text @click="onShowDatePicker('date')" class="dateClass">{{datestring}}    {{Week}}</text>
@@ -65,7 +69,7 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 				value: '',
 				showPicker: false,
 				date: '',
-				historyLines: ['泉州-厦门', '泰宁-石家庄', '福州-婺源', '上海-绍兴','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄','泰宁-石家庄'],
+				historyLines: [],
 				datestring: '',
 				Week: '',
 				normalPickerNum:1,
@@ -74,12 +78,51 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 			}
 		},
 		onLoad() {
+			var that = this;
+			//读取历史记录
+			uni.getStorage({
+				key:'historyLines',
+				success:function(data){
+					that.historyLines = data.data;
+				}
+			})
+			
 			//获取当前日期
-			this.getTodayDate();
+			that.getTodayDate();
 		},
 		methods: {
 			
-			//点击车票类型
+			//---------------------------------点击起点站---------------------------------
+			startStationTap(){
+				var that = this;
+				//监听事件,监听下个页面返回的值
+				uni.$on('startstaionChange', function(data) {
+				    // data即为传过来的值，给上车点赋值
+					that.departure = data.data;
+				    //清除监听，不清除会消耗资源
+				    uni.$off('startstaionChange');
+				});
+				uni.navigateTo({
+					//跳转到下个页面的时候加个字段，判断当前点击的是上车点
+					url:'./homeSattionPick?&station=' + 'qidian'
+				})
+			},
+			//---------------------------------点击终点站---------------------------------
+			endStationTap(){
+				var that = this;
+				//监听事件,监听下个页面返回的值，给下车点赋值
+				uni.$on('endStaionChange', function(data) {
+				    // data即为传过来的值
+					that.destination = data.data;
+				    //清除监听，不清除会消耗资源
+				    uni.$off('endStaionChange');
+				});
+				uni.navigateTo({
+					//跳转到下个页面的时候加个字段，判断当前点击的是下车点
+					url:'./homeSattionPick?&station=' + 'zhongdian'
+				})
+			},
+			//---------------------------------点击车票类型---------------------------------
 			typeSelect(type) {
 				if (type == 'normal') {//点击了普通购票
 					this.normalPickerNum = 1;
@@ -91,7 +134,7 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 					this.isNormal = 1;//当前是定制班车
 				}
 			},
-			//获取当前日期
+			//---------------------------------获取当前日期---------------------------------
 			getTodayDate() {
 				var date = new Date();
 				var year = date.getFullYear();
@@ -106,27 +149,30 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 				this.value = this[type];
 
 			},
-			//互换起止地址
+			//---------------------------------互换起止地址---------------------------------
 			changeClick: function() {;
 				this.changeText = this.departure;
 				this.departure = this.destination;
 				this.destination = this.changeText;
 			},
-			//清除历史
+			//---------------------------------清除历史---------------------------------
 			clickHistory: function() {
 				this.historyLines = [];
 			},
-			//点击历史记录
+			//---------------------------------点击历史记录---------------------------------
 			historyItemTap(res) {
 				let stationArray = this.historyLines[res].split('-');
 				this.departure = stationArray[0];
 				this.destination = stationArray[1];
 			},
-			//查询
+			//---------------------------------点击查询---------------------------------
 			queryClick: function() {
 				this.historyLines.unshift(this.departure + "-" + this.destination);
-				console.log(this.date,this.departure + "-" + this.destination)
-				
+				// console.log(this.date,this.departure + "-" + this.destination)
+				uni.setStorage({
+					key:'historyLines',
+					data:this.historyLines,
+				})
 				//页面传参通过地址后面添加参数 this.isNormal=0是普通购票1是定制班车
 				var params='./selectTickets?&startStation=' + this.departure +'&endStation=' + this.destination + '&date=' + this.datestring + '&isNormal=' + this.isNormal;
 				uni.navigateTo({ 

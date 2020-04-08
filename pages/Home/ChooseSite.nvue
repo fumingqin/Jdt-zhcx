@@ -16,7 +16,7 @@
 											<view class="bluering"></view>
 										</view>
 										<view>
-											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="true" @click="selectInitial('qidian')"
+											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" @click="selectInitial('qidian')"
 											 v-model="initialPoint" />
 										</view>
 									</view>
@@ -27,7 +27,7 @@
 										<view class="redring"></view>
 									</view>
 									<view>
-										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="true" @click="selectDestination('zhongdian')"
+										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" @click="selectDestination('zhongdian')"
 										 v-model="destination" />
 									</view>
 								</view>
@@ -157,30 +157,30 @@
 		</popup>
 		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运 -->
 		<view v-if="current == 1" style="margin-top: 10upx;">
-			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
+			<view class="ctky_View" v-for="(item,index) in keYunList" :key="index" @click="queryTickets">
 				<view class="ctky_View_Left">
 					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
-						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">客运班车</text>
+						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">{{item.shuttleType}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">{{tcky_selectStartStation}}</text>
+						color: #333333;">{{item.startStaion}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">{{tcky_selectEndStation}}</text>
+						color: #333333;">{{item.endStation}}</text>
 					</view>
 					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
-					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
+					font-size: 28upx;color: #666666;">共{{item.Trips}}趟 {{item.firstDepartureTime}}发车</text>
 				</view>
 				<view class="ctky_View_Right">
 					<view style="text-align: right;">
 						<text style="margin-right: 28upx;font-size: 36upx;font-style:
-                       SourceHanSansSC-Regular; color: #FC4646;">￥28</text>
+                       SourceHanSansSC-Regular; color: #FC4646;">￥{{item.fare}}</text>
 						<text style="margin-right: 28upx;font-size: 24upx;font-style:
-                       SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余18张</text>
+                       SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余{{item.remainingVotes}}张</text>
 					</view>
 				</view>
 			</view>
@@ -353,9 +353,10 @@
 				TaxiCost: "",
 				intervalAround: 0,
 				// map: '',
-				tcky_selectStartStation: '泉州客运中心站', //选中班次的起点站
-				tcky_selectEndStation: '漳州客运站', //选中班次的终点站
+				// tcky_selectStartStation: '泉州客运中心站',
+				// tcky_selectEndStation: '漳州客运站',
 				isPupop: true, //是否弹窗
+				keYunList:[],
 			}
 		},
 		
@@ -444,6 +445,10 @@
 					that.current = e.currentIndex
 				}
 				if (that.current == 1 && this.isPupop) {
+					uni.clearStorage("StartPoint");
+					uni.clearStorage("EndPoint");
+					that.initialPoint = '';
+					that.destination = '';
 					that.open();
 				}
 			},
@@ -522,10 +527,26 @@
 			click_btbooking: function() {
 				this.IsClick = false;
 			},
-			selectInitial:function(name){//选择起点
-				uni.navigateTo({
-					url:"./MapIndex?name="+name
-				})
+			selectInitial:function(name){
+				//选择起点
+				var that = this;
+				if(that.current == 1) {
+					//当前选择的是客运
+					//监听事件,监听下个页面返回的值
+					uni.$on('startstaionChange', function(data) {
+					    // data即为传过来的值，给上车点赋值
+						that.initialPoint = data.data;
+					    //清除监听，不清除会消耗资源
+					    uni.$off('startstaionChange');
+					});
+					uni.navigateTo({
+						url:'../CTKY/homeSattionPick?&station=' + 'qidian'
+					})
+				}else {
+					uni.navigateTo({
+						url:"./MapIndex?name="+name
+					})
+				}
 			},
 			selectInitial1: function() { //选择起点
 				var that = this;
@@ -545,10 +566,26 @@
 					}
 				});
 			},
-			selectDestination:function(name){//选择终点
-				uni.navigateTo({
-					url:"./MapIndex?name="+name
-				})
+			selectDestination:function(name){
+				//选择终点
+				var that = this;
+				if(that.current == 1) {
+					//当前选择的是客运
+					//监听事件,监听下个页面返回的值，给下车点赋值
+					uni.$on('endStaionChange', function(data) {
+					    // data即为传过来的值
+						that.destination = data.data;
+					    //清除监听，不清除会消耗资源
+					    uni.$off('endStaionChange');
+					});
+					uni.navigateTo({
+						url:'../CTKY/homeSattionPick?&station=' + 'zhongdian'
+					})
+				}else {
+					uni.navigateTo({
+						url:"./MapIndex?name="+name
+					})
+				}
 			},
 			selectDestination1: function() { //选择终点
 				var that = this;
@@ -633,7 +670,7 @@
 					that.IsSearch = true;
 				}
 			},
-			//获取数据
+			//------------------------------------------------获取数据----------------------------------------
 			getmessengeInfo(param) {
 				console.log(param)
 				switch(param){
@@ -641,20 +678,24 @@
 						
 						break;
 					}
-					case 1 :{//客运
+					case 1 :{
+					//---------------------------------------获取客运数据----------------------------------------
+					var that = this;
+					var date = that.getTime();
 					uni.showLoading();
 					uni.request({
 						url:'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
 						data: {
-							systemName:'泉运实业综合出行',
+							systemName:'泉运公司综合出行',
 							startPosition:this.initialPoint,
 							endPosition:this.destination,
+							date:'2020-04-08',
 						},
 						method:'POST',
 						header:{'content-type':'application/json'},
 						success: (res) => {
 							uni.hideLoading();
-							console.log(res)
+							this.keYunList = res.data.data
 						},
 						fail(res) {
 							uni.hideLoading();
@@ -677,6 +718,19 @@
 					default:
 						break;
 				}
+			},
+			getTime:function(){
+				var date = new Date(),
+				year = date.getFullYear(),
+				month = date.getMonth() + 1,
+				day = date.getDate(),
+				hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+				minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
+				second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+				month >= 1 && month <= 9 ? (month = "0" + month) : "";
+				day >= 0 && day <= 9 ? (day = "0" + day) : "";
+				var timer = year + '-' + month + '-' + day;
+				return timer;
 			},
 			setMarkers: function() { //设置始末标点
 				var that = this;
