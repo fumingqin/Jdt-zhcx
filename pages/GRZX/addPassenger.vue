@@ -53,8 +53,7 @@
 				</view> -->
 				
 				<!-- <view class="itemClass borderTop">
-					<text class="fontStyle">额外凭证</text>
-					<picker class="inputClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
+					<picker class="proveClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
 						{{selector}}
 					</picker>
 				</view> -->
@@ -105,7 +104,7 @@
 				<view class="checkBox">
 					<checkbox-group name="userDefault" @change="checkChange">
 						<label>
-							<checkbox :checked="user.userDefault" :value="user.userDefault" />
+							<checkbox :checked="user.userDefault" :value="user.userDefault"  />
 						</label>
 					</checkbox-group>
 				</view>
@@ -116,7 +115,7 @@
 				<view class="checkBox">
 					<checkbox-group name="userEmergencyContact">
 						<label>
-							<checkbox :checked="user.userEmergencyContact" :value="user.userEmergencyContact"/>
+							<checkbox :checked="user.userEmergencyContact" :value="user.userEmergencyContact" />
 						</label>
 					</checkbox-group>
 				</view>
@@ -138,12 +137,13 @@
 			return{
 				auditState1:'',
 				auditState2:'',
+				//add:1,
 				sexMode :[
 					{title:'男'},
 					{title:'女'}
 				],
 				proveType:['请选择','军人','教师','学生'],
-				selector:'请选择',
+				selector:'添加额外凭证',
 				user:{
 					userID:'',
 					userName:'',	
@@ -382,14 +382,14 @@
 																	passList.push(list.data[i]);
 																}
 																var list1={
-																	userID:data1.userID,
-																	userType:data1.userType,   //用户类别 成人/儿童 
-																	userName:data1.userName,   //用户姓名   
-																	userSex:data1.userSex,   //用户性别   
-																  	userCodeNum:data1.userCodeNum,   //用户身份证   
-																  	userPhoneNum:data1.userPhoneNum,   //用户手机号   
-																  	userDefault:data1.userDefault,   //用户是否本人 true/false 
-																  	userEmergencyContact:data1.userEmergencyContact, //是否设置为紧急联系人 true/false
+																	userID:res.data.data.userID,
+																	userType:res.data.data.userType,   //用户类别 成人/儿童 
+																	userName:res.data.data.userName,   //用户姓名   
+																	userSex:res.data.data.userSex,   //用户性别   
+																  	userCodeNum:res.data.data.userCodeNum,   //用户身份证   
+																  	userPhoneNum:res.data.data.userPhoneNum,   //用户手机号   
+																  	userDefault:res.data.data.userDefault,   //用户是否本人 true/false 
+																  	userEmergencyContact:res.data.data.userEmergencyContact, //是否设置为紧急联系人 true/false
 																	hiddenIndex:1,  //1代表选中
 																}
 																passList.push(list1);
@@ -399,6 +399,7 @@
 																})
 															}
 														})
+														
 													}
 													setTimeout(function(){
 														uni.navigateBack();
@@ -464,7 +465,11 @@
 				this.user.date = e.target.value;
 			},
 			proveChange:function(e){
-				this.selector=this.proveType[e.detail.value];
+				if(e.detail.value==0){
+					this.selector="添加额外凭证";
+				}else{
+					this.selector=this.proveType[e.detail.value];
+				}
 				// console.log(this.user.frontImg,"1")
 				// console.log(this.user.backImg,"2")
 				if(this.selector=='军人' || this.selector=='教师' || this.selector=='学生'){
@@ -675,15 +680,28 @@
 		position: absolute;
 		right: 9%;
 	}
+	//checkBox样式
+	/* #ifdef APP-PLUS*/
+	uni-checkbox-group{ 
+		width:50% !important; 
+	}
+	uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked{
+		//background: #ff0000;
+		border-color:#ff0000;
+	}
+	uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before{
+		border-color:#ff0000 ;
+	}
+	/* #endif */
 	.borderTop{  
-		border-top: 1upx solid #EAEAEA;
+		border-top: 1upx solid #F5F5F5;
 	}
 	.frontClass{  //证件正面
 		width: 93.07%;
 		height: 440upx;
 		margin-top: 20upx;
 		margin-left: 3.47%;
-		border: 1upx solid #EAEAEA;
+		// border: 1upx solid #EAEAEA;
 		background-color: #FFFFFF;
 		border-radius: 25upx;
 		position: relative;
@@ -693,7 +711,7 @@
 		height:	440upx;
 		margin-top: 20upx;
 		margin-left: 3.47%;
-		border: 1upx solid #EAEAEA;
+		// border: 1upx solid #EAEAEA;
 		background-color: #FFFFFF;
 		border-radius: 25upx;
 		position: relative;
@@ -712,6 +730,15 @@
 		position: absolute;
 		top:270upx;
 		color:#cdcdcd;
+	}
+	.proveClass{	//额外凭证
+		font-size: 32upx;
+		height: 108upx;
+		line-height: 108upx;
+		// margin-top: -53upx;
+		// margin-left: 39%;
+		//color: #ff0000;
+		text-align: center;
 	}
 	.imgClass{
 		width: 100%;

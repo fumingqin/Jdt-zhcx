@@ -111,15 +111,33 @@
 								}
 							}
 						})
+					},
+					fail() {
+						uni.showToast({
+							icon:'none',
+							title:'暂未登录,请登录后查看'
+						})
 					}
 				})
 				this.passengerList=array;
 				console.log(array)
 			},
 			addPassenger(){
-				uni.navigateTo({
-					url:'/pages/GRZX/addPassenger?type=add'
+				uni.getStorage({
+					key:'userInfo',
+					success() {
+						uni.navigateTo({
+							url:'/pages/GRZX/addPassenger?type=ad'
+						})
+					},
+					fail() {
+						uni.showToast({
+							icon:'none',
+							title:'暂未登录,无法添加乘客'
+						})
+					}
 				})
+				
 			},
 			returnPages(){
 				uni.navigateBack();

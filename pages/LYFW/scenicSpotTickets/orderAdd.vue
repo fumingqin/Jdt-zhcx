@@ -257,8 +257,19 @@
 			//选择用户
 			choiceUser: function(e) {
 				if(e==0){
-					uni.navigateTo({
-						url: '/pages/GRZX/addPassenger?type=add',
+					uni.getStorage({
+						key:'userInfo',
+						fail(){
+							uni.showToast({
+								icon:'none',
+								title:'未登录无法添加乘车人,请先登录'
+							})	
+						},
+						success() {
+							uni.navigateTo({
+								url: '/pages/GRZX/addPassenger?type=add',
+							})
+						}
 					})
 				}else if(e==1){
 					uni.navigateTo({
