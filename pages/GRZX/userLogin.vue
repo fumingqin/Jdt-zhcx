@@ -428,8 +428,8 @@
 		left: 12%;
 		top:51upx;
 		font-size: 32upx;
-		height: 30upx;
-		line-height: 30upx;
+		height: 50upx;
+		line-height: 50upx;
 		color: #999999;
 	}
 	.btnLogin{ //按钮

@@ -62,7 +62,10 @@
 			}
 		},
 		onLoad(options){
-			//传参，submitType参数为1,为出租车进入,其他界面设为2 
+			//传参
+			//submitType参数为1,为旅游进入
+			//submitType参数为2,为出租车进入
+			//submitType参数为3,为传统客运进入
 			//limitNum参数为你限制添加乘车人的数量（大于等于1）
 			this.submitType=options.submitType;
 			this.limit=options.limitNum;
@@ -108,15 +111,33 @@
 								}
 							}
 						})
+					},
+					fail() {
+						uni.showToast({
+							icon:'none',
+							title:'暂未登录,请登录后查看'
+						})
 					}
 				})
 				this.passengerList=array;
 				console.log(array)
 			},
 			addPassenger(){
-				uni.navigateTo({
-					url:'/pages/GRZX/addPassenger?type=add'
+				uni.getStorage({
+					key:'userInfo',
+					success() {
+						uni.navigateTo({
+							url:'/pages/GRZX/addPassenger?type=ad'
+						})
+					},
+					fail() {
+						uni.showToast({
+							icon:'none',
+							title:'暂未登录,无法添加乘客'
+						})
+					}
 				})
+				
 			},
 			returnPages(){
 				uni.navigateBack();
