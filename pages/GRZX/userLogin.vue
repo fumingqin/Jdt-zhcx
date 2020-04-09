@@ -72,9 +72,11 @@
 				captchaCode:'',
 				imgHeight:'',
 				loginType:'',
+				urlData:'',
 			}
 		},
 		onLoad(options) {
+			this.urlData=options.urlData;
 			this.load(options.loginType);
 		},
 		methods: {
@@ -171,9 +173,13 @@
 											})
 										}
 									})
-									uni.switchTab({  //返回首页
-										url:'/pages/Home/Index',
-									}) 
+									if(that.urlData==1){
+										uni.switchTab({  //返回首页
+											url:'/pages/Home/Index',
+										}) 
+									}else{
+										uni.navigateBack();//返回上一页
+									}
 								}else{
 									uni.showToast({
 										title:"验证码错误",
@@ -346,9 +352,10 @@
 				}
 			},
 			returnClick(){		//返回个人中心
-				uni.switchTab({
-					url:'/pages/GRZX/user'
-				})
+				// uni.switchTab({
+				// 	url:'/pages/GRZX/user'
+				// })
+				uni.navigateBack();
 			},
 		}
 	}
@@ -380,7 +387,7 @@
 	.logoClass{		//logo的样式
 		width: 32.4%;
 		height: 233upx;
-		top: 147upx;
+		top: 200upx;
 		left: 33.87%;
 		position: absolute;
 	}
@@ -403,7 +410,7 @@
 		//height: 874upx;
 		height: 700upx;
 		position: absolute;
-		top:277upx;
+		top:324upx;
 		left: 4.8%;
 		background-color: white;
 		border-radius: 20upx;

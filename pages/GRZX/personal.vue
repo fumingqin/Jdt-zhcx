@@ -58,6 +58,7 @@
 				selector:'请选择',
 				/* 载入数据 */
 				portrait : '',
+				port:'',
 				backImg:'',
 				nickname : '',
 				gender:'',
@@ -114,6 +115,8 @@
 								// 	theself.portrait=path;
 								// })
 								theself.portrait=res1.data.data.portrait;
+								//theself.portrait="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556465765776&di=57bb5ff70dc4f67dcdb856e5d123c9e7&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01fd015aa4d95fa801206d96069229.jpg%401280w_1l_2o_100sh.jpg";
+								console.log(theself.portrait,"117")
 								if(res1.data.data.nickname==null||res1.data.data.nickname==""){
 									theself.nickname="";
 								}else{
@@ -130,11 +133,6 @@
 								}else{
 									theself.birthday =res1.data.data.birthday.substring(0,10);
 								}
-								// if(res1.data.data.autograph==null||res1.data.data.autograph==""){
-								// 	theself.autograph="";
-								// }else{
-								// 	theself.autograph =res1.data.data.autograph;
-								// }
 								if(res1.data.data.address==null||res1.data.data.address==""){
 									theself.address="";
 								}else{
@@ -218,6 +216,7 @@
 			},
 			formSubmit: function(e) {
 				console.log(this.portrait)
+				console.log(this.port)
 				console.log(this.unid)
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
@@ -228,40 +227,36 @@
 				console.log(this.backImg)
 				console.log(this.phoneNumber)
 				console.log(this.username)
-				uni.request({
-					url:'http://218.67.107.93:9210/api/app/changeInfo',
-					data:{
-						portrait:this.portrait,
-						unid:this.unid,
-						openId_qq:this.openId_qq,
-						openId_wx:this.openId_wx,
-						// openId_qq:'',
-						// openId_wx:'',
-						gender:this.selector,
-						address:this.address,
-						nickname:this.nickname,
-						birthday:this.birthday,
-						//autograph:'123',
-						backImg:this.backImg,
-						phoneNumber:this.phoneNumber,
-						username:this.username,
-					},
-					
-					// portrait:'1',
-					// unid:31,
-					// openId_qq:'',
-					// openId_wx:'',
-					// gender:1,
-					// address:'福建省泉州市丰泽区',
-					// nickname:'0201',
-					// birthday:'2013-01-02',
-					// phoneNumber:'15880655182',
-					// username:'15880655182',
-					method:'POST',
-					success(res) {
-						console.log(res)
-					}
-				})
+				var that=this;
+				// pathToBase64(that.portrait)
+				// .then(base64 => {
+				// 	port=JSON.stringify(base64);
+					//port=base64;
+					uni.request({
+						url:'http://218.67.107.93:9210/api/app/changeInfo',
+						data:{
+							portrait:this.port,
+							unid:this.unid,
+							openId_qq:this.openId_qq,
+							openId_wx:this.openId_wx,
+							// openId_qq:'',
+							// openId_wx:'',
+							gender:this.selector,
+							address:this.address,
+							nickname:this.nickname,
+							birthday:this.birthday,
+							backImg:this.backImg,
+							phoneNumber:this.phoneNumber,
+							username:this.username,
+						},
+						method:'POST',
+						success(res) {
+							console.log(res)
+						}
+					})
+				// }),
+				//console.log(port,"1111")
+				
 				var list={
 						portrait:this.portrait,
 						unid:this.unid,
@@ -293,16 +288,18 @@
 					success(res) {
 						//console.log(res.tempFilePaths,"res11");
 						var tempFilePaths = res.tempFilePaths;
+						that.port=res.tempFiles;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
 						  success: function (res1) {
-							//var savedFilePath = res1.savedFilePath;
+							var savedFilePath = res1.savedFilePath;
 							// pathToBase64(res1.savedFilePath)
 							// .then(base64 => {
 							// 	that.portrait=JSON.stringify(base64);
 							// 	console.log(that.portrait)
 							// })
-							that.portrait=res1.savedFilePath;
+							// that.portrait=JSON.stringify(res1.savedFilePath);
+							// console.log(that.portrait,"301")
 						  }
 						});
 						// pathToBase64(res.tempFilePaths[0])
