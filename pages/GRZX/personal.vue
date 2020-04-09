@@ -44,7 +44,7 @@
 	 
 </template>
 <script>
-	import { pathToBase64, base64ToPath } from '../../components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js'
+	import { pathToBase64, base64ToPath } from '../../components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
 	import {
 	    mapState,  
@@ -109,11 +109,14 @@
 									key:'userInfo',
 									data:res1.data.data,
 								})
-								// base64ToPath(res1.data.data.portrait)
-								// .then(path => {
-								// 	theself.portrait=path;
-								// })
-								theself.portrait=res1.data.data.portrait;
+								var base64=res1.data.data.portrait;
+								base64ToPath(base64)
+								  .then(path => {
+								    theself.portrait=path;
+								  })
+								  .catch(error => {
+								    console.error(error)
+								  })
 								if(res1.data.data.nickname==null||res1.data.data.nickname==""){
 									theself.nickname="";
 								}else{
@@ -130,11 +133,6 @@
 								}else{
 									theself.birthday =res1.data.data.birthday.substring(0,10);
 								}
-								// if(res1.data.data.autograph==null||res1.data.data.autograph==""){
-								// 	theself.autograph="";
-								// }else{
-								// 	theself.autograph =res1.data.data.autograph;
-								// }
 								if(res1.data.data.address==null||res1.data.data.address==""){
 									theself.address="";
 								}else{
@@ -218,6 +216,7 @@
 			},
 			formSubmit: function(e) {
 				console.log(this.portrait)
+				console.log(this.port)
 				console.log(this.unid)
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
@@ -228,42 +227,37 @@
 				console.log(this.backImg)
 				console.log(this.phoneNumber)
 				console.log(this.username)
-				uni.request({
-					url:'http://218.67.107.93:9210/api/app/changeInfo',
-					data:{
-						portrait:this.portrait,
-						unid:this.unid,
-						openId_qq:this.openId_qq,
-						openId_wx:this.openId_wx,
-						// openId_qq:'',
-						// openId_wx:'',
-						gender:this.selector,
-						address:this.address,
-						nickname:this.nickname,
-						birthday:this.birthday,
-						//autograph:'123',
-						backImg:this.backImg,
-						phoneNumber:this.phoneNumber,
-						username:this.username,
-					},
-					
-					// portrait:'1',
-					// unid:31,
-					// openId_qq:'',
-					// openId_wx:'',
-					// gender:1,
-					// address:'福建省泉州市丰泽区',
-					// nickname:'0201',
-					// birthday:'2013-01-02',
-					// phoneNumber:'15880655182',
-					// username:'15880655182',
-					method:'POST',
-					success(res) {
-						console.log(res)
-					}
-				})
+				var that=this;
+				var port=this.portrait;
+				pathToBase64(this.portrait)
+				.then(base64 => {
+					that.portrait=JSON.stringify(base64);
+					console.log(that.portrait)
+					uni.request({
+						url:'http://218.67.107.93:9210/api/app/changeInfo',
+						data:{
+							portrait:this.portrait,
+							unid:this.unid,
+							openId_qq:this.openId_qq,
+							openId_wx:this.openId_wx,
+							// openId_qq:'',
+							// openId_wx:'',
+							gender:this.selector,
+							address:this.address,
+							nickname:this.nickname,
+							birthday:this.birthday,
+							backImg:this.backImg,
+							phoneNumber:this.phoneNumber,
+							username:this.username,
+						},
+						method:'POST',
+						success(res) {
+							console.log(res)
+						}
+					})
+				})//结束
 				var list={
-						portrait:this.portrait,
+						portrait:port,
 						unid:this.unid,
 						openId_qq:this.openId_qq,
 						openId_wx:this.openId_wx,
@@ -293,16 +287,18 @@
 					success(res) {
 						//console.log(res.tempFilePaths,"res11");
 						var tempFilePaths = res.tempFilePaths;
+						that.port=res.tempFiles;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
 						  success: function (res1) {
-							//var savedFilePath = res1.savedFilePath;
+							var savedFilePath = res1.savedFilePath;
 							// pathToBase64(res1.savedFilePath)
 							// .then(base64 => {
 							// 	that.portrait=JSON.stringify(base64);
 							// 	console.log(that.portrait)
 							// })
-							that.portrait=res1.savedFilePath;
+							 that.portrait=res1.savedFilePath;
+							// console.log(that.portrait,"301")
 						  }
 						});
 						// pathToBase64(res.tempFilePaths[0])
@@ -315,8 +311,7 @@
 				
 				
 			},
-			
-	},
+	}
 }
 </script>
 <style lang="scss">	

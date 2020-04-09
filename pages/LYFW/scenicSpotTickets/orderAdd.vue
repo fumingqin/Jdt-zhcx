@@ -257,8 +257,27 @@
 			//选择用户
 			choiceUser: function(e) {
 				if(e==0){
-					uni.navigateTo({
-						url: '/pages/GRZX/addPassenger?type=add',
+					uni.getStorage({
+						key:'userInfo',
+						fail(){
+							uni.showToast({
+								icon:'none',
+								title:'未登录无法添加乘车人,请先登录'
+							})
+							setTimeout(function(){
+								uni.navigateTo({	
+									//loginType=1,泉运登录界面
+									//loginType=2,今点通登录界面
+									//loginType=3,武夷股份登录界面
+									url  : '/pages/GRZX/userLogin?loginType=1'
+								}) 
+							},500);
+						},
+						success() {
+							uni.navigateTo({
+								url: '/pages/GRZX/addPassenger?type=add',
+							})
+						}
 					})
 				}else if(e==1){
 					uni.navigateTo({
@@ -412,6 +431,9 @@
 									title:'订单中，存在待支付订单，请支付/取消后再下单',
 									icon:'none',
 									duration:2000
+								})
+								uni.switchTab({
+									url:'../../order/OrderList'
 								})
 							}
 						}

@@ -42,10 +42,10 @@
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
 				</view>
-				<view v-if="item.hiddenIndex==0" class="btnCheck"> 
+				<view v-if="item.deleteIndex==0" class="btnCheck"> 
 					<image src="../../static/GRZX/btnUncheck.png" style="width: 100%;height: 100%;"></image>
 				</view>
-				<view v-if="item.hiddenIndex==1" class="btnCheck"> 
+				<view v-if="item.deleteIndex==1" class="btnCheck"> 
 					<image src="../../static/GRZX/btnCheck.png" style="width: 100%;height: 100%;"></image>
 				</view>
 			</view>
@@ -91,10 +91,10 @@
 				<view class="fontStyle1" style="top:101upx;">手机号码：{{item.phoneNum}}</view>
 				<view class="fontStyle1" style="top:158upx;">所在地区：{{item.district}}</view>
 				<view class="fontStyle1" style="top:216upx;">详细地址：{{item.detailAddress}}</view>
-				<view v-if="item.hiddenIndex==0" class="btnCheck1">
+				<view v-if="item.deleteIndex==0" class="btnCheck1">
 					<image src="../../static/GRZX/btnUncheck.png" style="width: 100%;height: 100%;"></image>
 				</view>
-				<view v-if="item.hiddenIndex==1" class="btnCheck1"> 
+				<view v-if="item.deleteIndex==1" class="btnCheck1"> 
 					<image src="../../static/GRZX/btnCheck.png" style="width: 100%;height: 100%;"></image>
 				</view>
 				
@@ -142,6 +142,15 @@
 	    methods: {	
 			async loadData(){
 				var array=[];
+				var list=[];
+				uni.getStorage({
+					key:"passengerList",
+					success(res2) {
+						for(var j=0;j<res2.data.length;j++){
+							list.push(res2.data[j].userID);
+						}
+					}
+				})
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
@@ -151,32 +160,65 @@
 							success(res1) {
 								console.log(res1,'111')
 								for(var i=0;i<res1.data.data.length;i++){
-									res1.data.data[i].hiddenIndex=0;
-									array.push(res1.data.data[i]);
+									res1.data.data[i].deleteIndex=0;
+									var data1=res1.data.data[i];
+									data1.hiddenIndex=0;
+									for(var q=0;q<list.length;q++){
+										if(data1.userID==list[q]){
+											data1.hiddenIndex=1;
+										}
+									}
+									array.push(data1);
 								}
+								var list1=[];
+								for(var i=0;i<array.length;i++){
+									if(array[i].hiddenIndex==1){
+										list1.push(array[i]);
+									}
+								}
+								uni.setStorage({
+									key:'passengerList',
+									data:list1,
+								})
 							}
 						})
 					},
 					fail() {
 						uni.showToast({
 							icon:'none',
-							title:'暂无乘车人,请先登录'
+							title:'暂未登录,请登录后查看'
 						})
+						setTimeout(function(){
+							uni.navigateTo({	
+								//loginType=1,泉运登录界面
+								//loginType=2,今点通登录界面
+								//loginType=3,武夷股份登录界面
+								url  : '/pages/GRZX/userLogin?loginType=1'
+							}) 
+						},500);
 					}
 				})
-				
-				var address=[];
-				uni.getStorage({
-					key:'addressList',
-					success(res1) {
-						console.log(res1)
-						for(var i=0;i<res1.data.length;i++){
-							address.push(res1.data[i]);
-						}
-					}
-				})
+				// var address=[];
+				// uni.getStorage({
+				// 	key:'addressList',
+				// 	success(res1) {
+				// 		console.log(res1)
+				// 		for(var i=0;i<res1.data.length;i++){
+				// 			address.push(res1.data[i]);
+				// 		}
+				// 	}
+				// })
+				// console.log(array.length,"array193")
+				// console.log(array,"array")
+				// var list1=[];
+				// for(var i=0;i<array.length;i++){
+				// 	if(array[i].hiddenIndex==1){
+				// 		list1.push(array[i]);
+				// 	}
+				// }
+		
 				this.passengerList=array;
-				this.addressList=address;
+				// this.addressList=address;
 			},
 			//乘车人管理
 			passengerClick(){
@@ -205,7 +247,7 @@
 					},
 					success:function(res){
 						uni.navigateTo({
-							url:'/pages/GRZX/addPassenger?type=add'
+							url:'/pages/GRZX/addPassenger?type=ad'
 						})
 					}
 				})
@@ -223,7 +265,7 @@
 				// })
 				console.log(2222)
 			},
-			editAddress(e){   //
+			editAddress(e){   
 			//console.log(3333)
 				uni.setStorage({
 					key:'editAddress',
@@ -235,9 +277,15 @@
 			},
 			deletePassenger(){ //删除乘车人信息
 				var data=this.passengerList;
+				// uni.removeStorage({
+				//     key: 'passengerList',
+				//     success: function (res) {
+				//         //console.log('success');
+				//     }
+				// });
 				var deleteList=[];
 				for(var i=0;i<data.length;i++){
-					if(data[i].hiddenIndex==1){
+					if(data[i].deleteIndex==1){
 						deleteList.push(data[i]);
 					}
 				}
@@ -248,30 +296,26 @@
 						icon:"none"
 					})
 				}else{
-					console.log(deleteList.length,"111")
 					for(var j=0;j<deleteList.length;j++){
 						uni.request({
 							url:'http://218.67.107.93:9210/api/app/deleteUserInfo?userId='+deleteList[j].userID,
 							method:'POST',
 							success(res) {
-								console.log(res,"res")
+								//console.log(res,"res")
 							}
-						})
+						})	
 					}
-					
 					this.state=1;
 					uni.redirectTo({
 						url:'/pages/GRZX/infoList'
 					})
 				}
-				
-				
 			},
-			deleteAddress(){
+			deleteAddress(){  //删除地址
 				var data=this.addressList;
 				var array=[];
 				for(var i=0;i<data.length;i++){
-					if(data[i].hiddenIndex==0){
+					if(data[i].deleteIndex==0){
 						array.push(data[i]);
 					}
 				}
@@ -292,10 +336,10 @@
 				})
 			},
 			selete(e){
-				if(e.hiddenIndex==0){
-					e.hiddenIndex=1;
+				if(e.deleteIndex==0){
+					e.deleteIndex=1;
 				}else{
-					e.hiddenIndex=0;
+					e.deleteIndex=0;
 				}
 			},
 			returnClick(){
@@ -310,7 +354,7 @@
 					fail:function(){
 						uni.showToast({
 							icon:'none',
-							title:'未登录无法添加乘车人,请先登录'
+							title:'未登录无法管理,请先登录'
 						})
 					},
 					success:function(res){
