@@ -424,6 +424,9 @@
 									icon:'none',
 									duration:2000
 								})
+								uni.switchTab({
+									url:'../../order/OrderList'
+								})
 							}
 						}
 					})

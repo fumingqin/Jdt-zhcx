@@ -977,6 +977,10 @@
 								// console.log(res)
 								// console.log(that.info)
 								that.info = res.data.data;
+								that.finishArr = [];
+								that.goingArr = [];
+								that.unfinishArr = [];
+								that.cancelArr = [];
 								if(that.info !== ''){
 									for (var i = 0; i < that.info.length; i++) {
 										if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
@@ -997,6 +1001,9 @@
 						uni.showToast({
 							title:'暂无订单数据，请先登录后查看订单',
 							icon:'none'
+						})
+						uni.navigateTo({
+							url:'../GRZX/userLogin?loginType=1'
 						})
 					}
 				})
