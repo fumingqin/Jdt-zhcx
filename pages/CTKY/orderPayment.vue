@@ -341,9 +341,7 @@
 						},
 						success: (res) => {
 							uni.hideLoading();
-							console.log('支付参数返回数据', res);
 							if (res.data.msg != '') {
-								
 								uni.showToast({
 									title: res.data.msg,
 									icon: 'none'
@@ -354,8 +352,8 @@
 								// console.log('有数据了',res.data.data);
 								clearInterval(timer);
 								that.paymentData = JSON.parse(res.data.data);
-								
 							}
+							// console.log('支付参数返回数据', res);
 						},
 						fail(res) {
 							uni.hideLoading();

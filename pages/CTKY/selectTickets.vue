@@ -77,20 +77,14 @@
 			}
 		},
 		onLoad(param) {
-			// console.log(param);
+			console.log(param);
+			//班次列表数据参数，从上一个页面传过来的时间，上下车点
 			this.date = param.date;
-			
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			
-			
-			// this.date = this.getTime(0, new Date());
-			// this.startStation=param.StartStation;
-			// this.endStartion=param.EndStation;
-			// console.log(this.date,this.startStation,this.endStation)
 			this.loadDate();
             this.getDeparture();
-			
 			//加载班次列表数据
 			this.getTicketInfo(this.date);
 			
@@ -101,7 +95,9 @@
 		methods: {
 			//加载班次列表数据
 			getTicketInfo:function(date){
+				
 				uni.showLoading();
+				console.log(this.startStation,this.endStation,date);
 				uni.request({
 					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
 					data: {
@@ -113,10 +109,20 @@
 					
 					method:"POST",
 					header:{'content-type':'application/x-www-form-urlencoded'},
-					success: (res) => {
+					success: (res) => {6
 						uni.hideLoading();
+						// console.log(res.data.data);
 						let that = this;
-						that.departureData = res.data.data;
+						//非空判断
+						if(res.data.data.length != 0) {
+							that.departureData = res.data.data;
+						}else {
+							that.departureData = res.data.data;
+							uni.showToast({
+								title:'暂无班次信息',
+								icon:'none'
+							})
+						}
 					},
 					fail(res) {
 						uni.hideLoading();
