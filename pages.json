@@ -57,6 +57,7 @@
 		
 			"path": "pages/LYFW/currency/travelDetails",
 			"style": {
+				"navigationBarTitleText": "详情页",
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				// #endif
@@ -494,7 +495,21 @@
         ,{
             "path" : "pages/LYFW/groupTour/viewMore",
             "style" : {}
-        }
+        },
+		{
+		    "path" : "pages/Home/ho_zhly",
+		    "style" : {
+				"navigationBarTitleText": "旅游服务",
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
