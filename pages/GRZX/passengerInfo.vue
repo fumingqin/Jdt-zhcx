@@ -87,7 +87,11 @@
 				}
 			})
 		},
+		onPullDownRefresh:function(){
+		  this.loadData();
+		},
 		onShow() {
+			//uni.startPullDownRefresh();
 			this.loadData();
 		},
 		methods:{
@@ -114,6 +118,7 @@
 							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+res.data.unid,
 							method:'POST',
 							success(res1) {
+								uni.stopPullDownRefresh();
 								console.log(res1,'111')
 								for(var i=0;i<res1.data.data.length;i++){
 									var data1=res1.data.data[i];
