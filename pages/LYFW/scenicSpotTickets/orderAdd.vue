@@ -402,6 +402,8 @@
 										orderInsure : '',
 										orderInsurePrice : '',
 										orderActualPayment : this.actualPayment,
+										sellerCompanyCode : '南平旅游APP',
+										tppId : 0,
 									},
 									
 									method:'POST',
