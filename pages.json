@@ -52,12 +52,11 @@
 				"navigationBarTitleText": "查看图片"
 			}
 		},
-
+	
 		{
 		
 			"path": "pages/LYFW/currency/travelDetails",
 			"style": {
-				"navigationBarTitleText": "详情页",
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				// #endif
@@ -203,6 +202,7 @@
 		{
 			"path": "pages/GRZX/passengerInfo",
 			"style": {
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -226,8 +226,7 @@
 		{
 			"path": "pages/GRZX/aboutApp", //关于App
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#FFFFFF"
+				"navigationBarTitleText": "关于App"
 			}
 		},
 		{
@@ -245,6 +244,7 @@
 		{
 			"path": "pages/GRZX/infoList", //常用信息设置
 			"style": {
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 				// "navigationBarTitleText": "常用信息设置"
 				// "buttons": [{
@@ -259,7 +259,6 @@
 			}
 		},
 		//个人中心模块结束
-
 		{
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
@@ -426,13 +425,11 @@
 				"navigationBarTextStyle" : "white"
 			}
 		}, {
-			
 			"path": "pages/GRZX/collection",
 			"style": {
 				"navigationBarTitleText": "我的收藏"
 			}
 		}, {
-			
 			"path": "pages/GRZX/history",
 			"style": {
 				"navigationBarTitleText": "我的历史"
@@ -479,7 +476,7 @@
 	    ,{
             "path" : "pages/LYFW/independentTravel/it_list",
             "style" : {}
-		},
+        },
 		{
 		    "path" : "pages/CTKY/homeSattionPick",
 		    "style" : {
@@ -497,9 +494,9 @@
             "style" : {}
         },
 		{
-		    "path" : "pages/Home/ho_zhly",
-		    "style" : {
-				"navigationBarTitleText": "旅游服务",
+            "path" : "pages/Home/ho_zhly",
+            "style" : {
+				"navigationBarTitleText": "南平智慧旅游APP",
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				// #endif
@@ -509,6 +506,26 @@
 					}
 				}
 			}
+        },
+		{
+			"path": "pages/Home/MapIndex",
+			"style": {
+				"navigationBarTitleText": "hello",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"text": "确定",
+							"type": "transparent",
+							"fontSize": "16px",
+							"width":"77px"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/Home/MapSearch",
+			"style": {}
 		}
     ],
 	"globalStyle": {
@@ -541,8 +558,9 @@
 			{
 				"pagePath": "pages/GRZX/user",
 				"text": "我的"
-			}]
-},
+			}
+		]
+	},
 
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
@@ -550,6 +568,6 @@
 			"name": "", //模式名称
 			"path": "", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
-		}] 
+		}]
 	}
 }

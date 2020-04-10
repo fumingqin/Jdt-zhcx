@@ -115,23 +115,6 @@
 			
 		},
 		methods:{
-			// async loadData(){
-			// 	var that=this;
-			// 	uni.getStorage({
-			// 		key:'userInfo',
-			// 		success:function(res){
-			// 			if(that.hasLogin){
-			// 				that.userInfo.nickName=res.data.nickName;
-			// 				that.userInfo.avatarUrl=res.data.avatarUrl;	
-			// 			}else{
-			// 				that.userInfo.nickName='游客';
-			// 				that.userInfo.avatarUrl='../../static/GRZX/missing-face.png';	
-			// 			}
-						
-			// 			console.log(res,"00000002")
-			// 		}
-			// 	})
-			// },
 			orderClick(){
 				uni.switchTab({
 					url:'/pages/order/OrderList'
@@ -167,9 +150,9 @@
 							//loginType=1,泉运登录界面
 							//loginType=2,今点通登录界面
 							//loginType=3,武夷股份登录界面
-							url  : '/pages/GRZX/userLogin?loginType=1'
+							url  : '/pages/GRZX/userLogin?loginType=1&&urlData=1'
 						}) 
-					},1500);
+					},500);
 				}else{
 					uni.navigateTo({
 						url :'/pages/GRZX/personal'
@@ -254,8 +237,8 @@
 		height: 127upx;
 	}
 	.usernameClass{		//昵称
-		height: 44upx;
-		line-height: 44upx;
+		// height: 60upx;
+		// line-height: 44upx;
 		font-size: 48upx;
 		color: #FFFFFF;
 		margin-top: 20upx;

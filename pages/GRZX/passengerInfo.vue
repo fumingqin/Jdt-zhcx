@@ -62,12 +62,36 @@
 			}
 		},
 		onLoad(options){
-			//传参，submitType参数为1,为出租车进入,其他界面设为2 
+			//传参
+			//submitType参数为1,为旅游进入
+			//submitType参数为2,为出租车进入
+			//submitType参数为3,为传统客运进入
 			//limitNum参数为你限制添加乘车人的数量（大于等于1）
 			this.submitType=options.submitType;
 			this.limit=options.limitNum;
+			uni.getStorage({
+				key:'userInfo',
+				fail() {
+					uni.showToast({
+						icon:'none',
+						title:'暂未登录,请登录后查看'
+					})
+					setTimeout(function(){
+						uni.navigateTo({	
+							//loginType=1,泉运登录界面
+							//loginType=2,今点通登录界面
+							//loginType=3,武夷股份登录界面
+							url  : '/pages/GRZX/userLogin?loginType=1'
+						}) 
+					},500);
+				}
+			})
+		},
+		onPullDownRefresh:function(){
+		  this.loadData();
 		},
 		onShow() {
+			//uni.startPullDownRefresh();
 			this.loadData();
 		},
 		methods:{
@@ -94,6 +118,7 @@
 							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+res.data.unid,
 							method:'POST',
 							success(res1) {
+								uni.stopPullDownRefresh();
 								console.log(res1,'111')
 								for(var i=0;i<res1.data.data.length;i++){
 									var data1=res1.data.data[i];
@@ -114,9 +139,21 @@
 				console.log(array)
 			},
 			addPassenger(){
-				uni.navigateTo({
-					url:'/pages/GRZX/addPassenger?type=add'
+				uni.getStorage({
+					key:'userInfo',
+					success() {
+						uni.navigateTo({
+							url:'/pages/GRZX/addPassenger?type=ad'
+						})
+					},
+					fail() {
+						uni.showToast({
+							icon:'none',
+							title:'暂未登录,无法添加乘客'
+						})
+					}
 				})
+				
 			},
 			returnPages(){
 				uni.navigateBack();

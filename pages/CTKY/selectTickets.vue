@@ -25,7 +25,7 @@
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
 					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType=='普通班车'">传统</view>
 					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.shuttleType=='定制班车'">定制</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{utils.timeTodate('Y-m-d H:i',item.setTime)}}</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{utils.timeTodate('Y-m-d H:i:s',item.setTime)}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
@@ -77,19 +77,14 @@
 			}
 		},
 		onLoad(param) {
-			// console.log(param);
+			console.log(param);
+			//班次列表数据参数，从上一个页面传过来的时间，上下车点
 			this.date = param.date;
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			
-			
-			// this.date = this.getTime(0, new Date());
-			// this.startStation=param.StartStation;
-			// this.endStartion=param.EndStation;
-			console.log(this.date,this.startStation,this.endStation)
 			this.loadDate();
             this.getDeparture();
-			
 			//加载班次列表数据
 			this.getTicketInfo(this.date);
 			
@@ -100,7 +95,9 @@
 		methods: {
 			//加载班次列表数据
 			getTicketInfo:function(date){
+				
 				uni.showLoading();
+				console.log(this.startStation,this.endStation,date);
 				uni.request({
 					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
 					data: {
@@ -112,10 +109,20 @@
 					
 					method:"POST",
 					header:{'content-type':'application/x-www-form-urlencoded'},
-					success: (res) => {
+					success: (res) => {6
 						uni.hideLoading();
+						// console.log(res.data.data);
 						let that = this;
-						that.departureData = res.data.data;
+						//非空判断
+						if(res.data.data.length != 0) {
+							that.departureData = res.data.data;
+						}else {
+							that.departureData = res.data.data;
+							uni.showToast({
+								title:'暂无班次信息',
+								icon:'none'
+							})
+						}
 					},
 					fail(res) {
 						uni.hideLoading();
@@ -187,6 +194,7 @@
 				var that = this;
 				
 				let date = utils.timeTodate('Y-m-d H:i:s',item.setTime)
+				// console.log(item);
 				uni.setStorage({
 					key: 'ticketDate',
 					data: item,
