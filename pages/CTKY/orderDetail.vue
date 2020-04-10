@@ -90,6 +90,11 @@
 				]
 			}
 		},
+		onLoad(res) {
+			console.log(res);
+			var orderInfo = JSON.parse(res.orderInfo);
+			console.log(orderInfo);
+		},
 		methods: {
 			
 		}

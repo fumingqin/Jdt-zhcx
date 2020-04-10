@@ -60,6 +60,7 @@
 </template>
 
 <script>
+	import { pathToBase64, base64ToPath } from '../../components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import {
 		mapState,
 	    mapMutations  
@@ -72,9 +73,11 @@
 				captchaCode:'',
 				imgHeight:'',
 				loginType:'',
+				urlData:'',
 			}
 		},
 		onLoad(options) {
+			this.urlData=options.urlData;
 			this.load(options.loginType);
 		},
 		methods: {
@@ -145,35 +148,48 @@
 						uni.getStorage({
 							key:'captchaCode',
 							success(res) {
-								if(captcha==res.data){
+								if(captcha==res.data.code&&phone==res.data.phone){
 									uni.request({
 										url:'http://218.67.107.93:9210/api/app/login?phoneNumber='+phone,
 										method:"POST",
 										success(res) {
-											console.log(res)
+											//console.log(res)
 											uni.showToast({
 												title:res.data.msg,
 												icon:"none"
 											})
 											uni.setStorage({
 												key:'userInfo',
-												data:res.data.data,
+												data:res.data.data
 											})
 											uni.getStorage({
 												key:'userInfo',
 												success:function(user){
-													console.log(user,"user")
+													//console.log(user,"user")
 													if(user.data.nickname==""||user.data.nickname==null){
 														user.data.nickname="用户"+user.data.username;
 													}
-													that.login(user.data);
+													var base64=res.data.data.portrait;
+													base64ToPath(base64)
+													  .then(path => {
+													    user.data.portrait=path;
+														that.login(user.data);
+													  })
+													  .catch(error => {
+													    console.error(error)
+													  })
+													
 												}
 											})
 										}
 									})
-									uni.switchTab({  //返回首页
-										url:'/pages/Home/Index',
-									}) 
+									if(that.urlData==1){
+										uni.switchTab({  //返回首页
+											url:'/pages/Home/Index',
+										}) 
+									}else{
+										uni.navigateBack();//返回上一页
+									}
 								}else{
 									uni.showToast({
 										title:"验证码错误",
@@ -318,7 +334,10 @@
 						 		console.log(res.data.code);
 								uni.setStorage({
 									key:'captchaCode',
-									data:res.data.code,
+									data:{
+										code:res.data.code,
+										phone:self.phoneNumber,
+									}
 								})
 								setTimeout(function(){
 									uni.removeStorage({
@@ -346,9 +365,10 @@
 				}
 			},
 			returnClick(){		//返回个人中心
-				uni.switchTab({
-					url:'/pages/GRZX/user'
-				})
+				// uni.switchTab({
+				// 	url:'/pages/GRZX/user'
+				// })
+				uni.navigateBack();
 			},
 		}
 	}
@@ -380,21 +400,21 @@
 	.logoClass{		//logo的样式
 		width: 32.4%;
 		height: 233upx;
-		top: 147upx;
+		top: 200upx;
 		left: 33.87%;
 		position: absolute;
 	}
 	.iconClass1{   //手机图标
 		width: 26upx;
 		height: 36upx;
-		top: 55upx;
+		top: 58upx;
 		left:2%;
 		position: absolute;
 	}
 	.iconClass2{	//验证码图标
 		width: 31upx;
 		height: 38upx;
-		top: 54upx;
+		top: 56upx;
 		left: 2%;
 		position: absolute;
 	}
@@ -403,7 +423,7 @@
 		//height: 874upx;
 		height: 700upx;
 		position: absolute;
-		top:277upx;
+		top:324upx;
 		left: 4.8%;
 		background-color: white;
 		border-radius: 20upx;
@@ -428,8 +448,8 @@
 		left: 12%;
 		top:51upx;
 		font-size: 32upx;
-		height: 30upx;
-		line-height: 30upx;
+		height: 50upx;
+		line-height: 50upx;
 		color: #999999;
 	}
 	.btnLogin{ //按钮
