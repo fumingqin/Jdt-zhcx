@@ -202,6 +202,7 @@
 		{
 			"path": "pages/GRZX/passengerInfo",
 			"style": {
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -243,6 +244,7 @@
 		{
 			"path": "pages/GRZX/infoList", //常用信息设置
 			"style": {
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 				// "navigationBarTitleText": "常用信息设置"
 				// "buttons": [{
@@ -490,6 +492,20 @@
         ,{
             "path" : "pages/LYFW/groupTour/viewMore",
             "style" : {}
+        },
+		{
+            "path" : "pages/Home/ho_zhly",
+            "style" : {
+				"navigationBarTitleText": "南平智慧旅游APP",
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
         },
 		{
 			"path": "pages/Home/MapIndex",

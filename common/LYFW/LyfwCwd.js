@@ -936,6 +936,50 @@ const groupTour={
 	msg: '提示'
 }
 
+const Announcement={
+	status: 1, //1成功,0失败提示返回值
+	data:{
+		zl_title:'不负灿烂时光，周边游更精彩，美轮美奂',
+		LabelContent:[{
+			lc_text:'海丝泉州一日游',
+		},
+		{
+			lc_text:'普陀山祈福双飞三日游',
+		}]
+	},
+	msg: '提示'
+}
+
+const recommendedContent={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		rc_id:1,
+		rc_image:'../../static/Home/ho_zhly/xiaoxichen.png',
+		rc_text:'泉州小西埕',
+	},
+	{
+		rc_id:2,
+		rc_image:'../../static/Home/ho_zhly/moyu.png',
+		rc_text:'稻田摸鱼',
+	},
+	{
+		rc_id:3,
+		rc_image:'../../static/Home/ho_zhly/zhonglou.png',
+		rc_text:'泉州钟楼',
+	},
+	{
+		rc_id:4,
+		rc_image:'../../static/Home/ho_zhly/luoyangqiao.png',
+		rc_text:'泉州洛阳桥',
+	},
+	{
+		rc_id:5,
+		rc_image:'../../static/Home/ho_zhly/qicai.png',
+		rc_text:'七彩官畲',
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -959,4 +1003,6 @@ export default {
 	description,
 	reserve,
 	groupTour,
+	Announcement,
+	recommendedContent,
 }

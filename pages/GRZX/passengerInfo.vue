@@ -69,8 +69,29 @@
 			//limitNum参数为你限制添加乘车人的数量（大于等于1）
 			this.submitType=options.submitType;
 			this.limit=options.limitNum;
+			uni.getStorage({
+				key:'userInfo',
+				fail() {
+					uni.showToast({
+						icon:'none',
+						title:'暂未登录,请登录后查看'
+					})
+					setTimeout(function(){
+						uni.navigateTo({	
+							//loginType=1,泉运登录界面
+							//loginType=2,今点通登录界面
+							//loginType=3,武夷股份登录界面
+							url  : '/pages/GRZX/userLogin?loginType=1'
+						}) 
+					},500);
+				}
+			})
+		},
+		onPullDownRefresh:function(){
+		  this.loadData();
 		},
 		onShow() {
+			//uni.startPullDownRefresh();
 			this.loadData();
 		},
 		methods:{
@@ -97,6 +118,7 @@
 							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+res.data.unid,
 							method:'POST',
 							success(res1) {
+								uni.stopPullDownRefresh();
 								console.log(res1,'111')
 								for(var i=0;i<res1.data.data.length;i++){
 									var data1=res1.data.data[i];
@@ -111,20 +133,6 @@
 								}
 							}
 						})
-					},
-					fail() {
-						uni.showToast({
-							icon:'none',
-							title:'暂未登录,请登录后查看'
-						})
-						setTimeout(function(){
-							uni.navigateTo({	
-								//loginType=1,泉运登录界面
-								//loginType=2,今点通登录界面
-								//loginType=3,武夷股份登录界面
-								url  : '/pages/GRZX/userLogin?loginType=1'
-							}) 
-						},500);
 					}
 				})
 				this.passengerList=array;

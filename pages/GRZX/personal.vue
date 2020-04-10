@@ -44,7 +44,7 @@
 	 
 </template>
 <script>
-	import { pathToBase64, base64ToPath } from '../../components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js'
+	import { pathToBase64, base64ToPath } from '../../components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
 	import {
 	    mapState,  
@@ -58,7 +58,6 @@
 				selector:'请选择',
 				/* 载入数据 */
 				portrait : '',
-				port:'',
 				backImg:'',
 				nickname : '',
 				gender:'',
@@ -110,13 +109,14 @@
 									key:'userInfo',
 									data:res1.data.data,
 								})
-								// base64ToPath(res1.data.data.portrait)
-								// .then(path => {
-								// 	theself.portrait=path;
-								// })
-								theself.portrait=res1.data.data.portrait;
-								//theself.portrait="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556465765776&di=57bb5ff70dc4f67dcdb856e5d123c9e7&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01fd015aa4d95fa801206d96069229.jpg%401280w_1l_2o_100sh.jpg";
-								console.log(theself.portrait,"117")
+								var base64=res1.data.data.portrait;
+								base64ToPath(base64)
+								  .then(path => {
+								    theself.portrait=path;
+								  })
+								  .catch(error => {
+								    console.error(error)
+								  })
 								if(res1.data.data.nickname==null||res1.data.data.nickname==""){
 									theself.nickname="";
 								}else{
@@ -228,14 +228,15 @@
 				console.log(this.phoneNumber)
 				console.log(this.username)
 				var that=this;
-				// pathToBase64(that.portrait)
-				// .then(base64 => {
-				// 	port=JSON.stringify(base64);
-					//port=base64;
+				var port=this.portrait;
+				pathToBase64(this.portrait)
+				.then(base64 => {
+					that.portrait=JSON.stringify(base64);
+					console.log(that.portrait)
 					uni.request({
 						url:'http://218.67.107.93:9210/api/app/changeInfo',
 						data:{
-							portrait:this.port,
+							portrait:this.portrait,
 							unid:this.unid,
 							openId_qq:this.openId_qq,
 							openId_wx:this.openId_wx,
@@ -254,11 +255,9 @@
 							console.log(res)
 						}
 					})
-				// }),
-				//console.log(port,"1111")
-				
+				})//结束
 				var list={
-						portrait:this.portrait,
+						portrait:port,
 						unid:this.unid,
 						openId_qq:this.openId_qq,
 						openId_wx:this.openId_wx,
@@ -298,7 +297,7 @@
 							// 	that.portrait=JSON.stringify(base64);
 							// 	console.log(that.portrait)
 							// })
-							// that.portrait=JSON.stringify(res1.savedFilePath);
+							 that.portrait=res1.savedFilePath;
 							// console.log(that.portrait,"301")
 						  }
 						});
@@ -312,8 +311,7 @@
 				
 				
 			},
-			
-	},
+	}
 }
 </script>
 <style lang="scss">	

@@ -1,17 +1,17 @@
 <template>
 	<view class="contentView">
 		<view class="top u-f-jsb" style="background-color: #FC4646; width: 100%; height: 180rpx;">
-			<view style="color: #FFFFFF; font-size: 35rpx; margin-left: 20rpx;">已完成</view>
-			<view style="color: #FFFFFF; font-size: 30rpx; margin-right: 20rpx;">￥49.5</view>
+			<view style="color: #FFFFFF; font-size: 35rpx; margin-left: 20rpx;">{{orderInfo.orderState}}</view>
+			<view style="color: #FFFFFF; font-size: 30rpx; margin-right: 20rpx;">￥{{orderInfo.price}}</view>
 		</view>
 		<!-- 头部视图 -->
 		<view class="head">
 			<!-- 起始站/价格 -->
 			<view class="u-f-jsb">
-				<view>泉州客运中心 — 安溪  x2</view>
+				<view>{{orderInfo.startStation}} — {{orderInfo.endStation}}  x{{passageInfo.length}}</view>
 			</view>
 			<!-- 发车时间 -->
-			<view> 发车时间：2020-03-08  20:00</view>
+			<view> 发车时间：{{orderInfo.setTime}}</view>
 		</view>
 		<!-- 乘客信息 -->
 		<scroll-view class="scrollBox" scroll-y="true">
@@ -33,15 +33,15 @@
 						</view>
 						<view class="detailInfo">
 							<!-- 出行人 -->
-							<view>{{item.name}}</view>
+							<view>{{item.userName}}</view>
 							<!-- 身份证 -->
-							<view>{{item.IDCard}}</view>
+							<view>{{item.userCodeNum}}</view>
 							<!-- 联系电话 -->
-							<view>{{item.phoneNum}}</view>
+							<view>{{item.userPhoneNum}}</view>
 							<!-- 退改规则 -->
-							<view>{{item.role}}</view>
+							<view>{{role}}</view>
 							<!-- 附加保险 -->
-							<view>{{item.insurance}}</view>
+							<view>乘车险</view>
 						</view>
 					</view>
 					<!-- 二维码 -->
@@ -65,6 +65,9 @@
 	export default {
 		data() {
 			return {
+				orderID:'',
+				role:'暂不支持在线退票',
+				orderInfo:[],//订单数据
 				passageInfo:[
 					{
 						name:'张小娴  (成人票)',
@@ -90,8 +93,38 @@
 				]
 			}
 		},
+		onLoad(res) {
+			var that = this;
+			var orderInfo = JSON.parse(res.orderInfo);
+			// that.orderID = orderInfo.orderId;
+			console.log(orderInfo);
+			that.getOrderDetailInfo(orderInfo.orderId);
+		},
 		methods: {
-			
+			//-------------------------------请求数据-------------------------------
+			getOrderDetailInfo:function(param){
+				var that = this;
+				console.log(param)
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getCpxsOrderDetail',
+					method:'POST',
+					// header:{'content-type':'application/json'},
+					header:{'content-type':'application/x-www-form-urlencoded'},
+					data: {
+						orderId:param
+					},
+					success: (res) => {
+						console.log('详情数据',res)
+						//订单数据
+						that.orderInfo = res.data.data
+						//乘车人信息
+						that.passageInfo = res.data.data.appUserInfoList
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
+			}
 		}
 	}
 </script>

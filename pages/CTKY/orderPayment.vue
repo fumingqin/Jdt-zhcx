@@ -82,8 +82,7 @@
 				</view>
 			</view>
 
-			<view class="MP_information3" @click="payment">
-				支付{{totalPrice}}元
+			<view class="MP_information3" @click="payment">支付{{totalPrice}}元
 			</view>
 
 		</view>
@@ -119,6 +118,7 @@
 				totalPrice: '', //总价格
 				paymentData:[],//保存支付参数
 				timer:'',//定时器数据
+				isPayEnable: 0,//当前是否可以点击支付
 			}
 		},
 		onLoad: function(param) {
@@ -182,7 +182,6 @@
 					key: 'userInfo',
 					success: function(data) {
 						that.userInfo = data.data;
-						// console.log('用户信息', that.userInfo);
 					}
 				})
 			},
@@ -199,22 +198,20 @@
 								userCodeNum: data.data[i].userCodeNum,
 								userDefault: data.data[i].userDefault,
 								userEmergencyContact: data.data[i].userEmergencyContact,
-								userID: data.data[i].userID,
+								userID: data.data[i].userID,//乘车人ID
 								userName: data.data[i].userName,
 								userPhoneNum: data.data[i].userPhoneNum,
 								userSex: data.data[i].userSex,
 								userType: data.data[i].userType,
 							}
 							that.idNameType.push(array);
-							// console.log('idNameType', that.idNameType);
+							console.log('idNameType',array);
 							that.ticketNum++;
 							//把儿童票筛选出来
 							if (that.passengerInfo.userType == '儿童') {
 								that.childrenNum++;
-								// console.log('idNameType', that.childrenNum);
 							} else {
 								that.adultNum++;
-								// console.log('idNameType', that.adultNum);
 							}
 						}
 					},
@@ -287,8 +284,10 @@
 					},
 					data: {
 						companyCode: '泉运公司综合出行',
-						clientID: that.userInfo.unid,
-						clientName: that.userInfo.username,
+						clientID: that.userInfo.unid,//用户ID
+						clientName: that.userInfo.username,//用户名
+						phoneNumber: that.userInfo.phoneNumber,//手机号码
+						
 						scheduleCompanyCode: that.orderInfo.scheduleCompanyCode,
 						executeScheduleID: that.orderInfo.executeScheduleID,
 						startSiteID: that.orderInfo.startSiteID,//上车点ID
@@ -296,20 +295,21 @@
 						startSiteName: that.orderInfo.startStaion,//起点站
 						endSiteName: that.orderInfo.endStation,//终点站
 						priceID: that.orderInfo.priceID,//价格ID
-						phoneNumber: that.userInfo.phoneNumber,//手机号码
+						setOutTime: that.orderInfo.setTime,//订单时间
+						insuredPrice: that.orderInfo.insurePrice,//保险价格
+						carType: that.orderInfo.shuttleType,//班车类型
+						
 						fullTicket: that.adultNum,//全票人数
 						halfTicket: that.childrenNum,//半票人数
 						carryChild: that.childrenNum,//携童人数
 						idNameType: that.idNameType,
 						insured: that.isInsurance,//是否选择了保险
-						insuredPrice: that.orderInfo.insurePrice,//保险价格
 						openId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
 						totalPrice: that.totalPrice,//总价格
-						setOutTime: that.orderInfo.setTime,//订单时间
-						carType: that.orderInfo.shuttleType,//班车类型
+						
 					},
 					success: (res) => {
-						uni.hideLoading();
+						// uni.hideLoading();
 						
 						let that = this;
 						// console.log('订单返回数据',res);
@@ -328,7 +328,7 @@
 				var timer=null;
 				that.timer = timer;
 				timer=setInterval(function(){
-					uni.showLoading();
+					// uni.showLoading();
 					uni.request({
 						url: 'http://218.67.107.93:9210/api/app/getPayParam',
 						method: 'POST',
@@ -340,22 +340,20 @@
 							id: res.data.data.id
 						},
 						success: (res) => {
-							uni.hideLoading();
-							console.log('支付参数返回数据', res);
-							if (res.data.msg != '') {
-								
+							if(res.data.data != null) {
+								uni.hideLoading();
+								that.paymentData = JSON.parse(res.data.data);
+								that.isPayEnable = 1;
+								clearInterval(timer);
+							}
+							if (res.data.msg != null) {
 								uni.showToast({
-									title: res.data.msg,
+									title: '请在2分钟内完成支付',
 									icon: 'none'
 								})
 								clearInterval(timer);
 							}
-							if(res.data.data != null) {
-								// console.log('有数据了',res.data.data);
-								clearInterval(timer);
-								that.paymentData = JSON.parse(res.data.data);
-								
-							}
+							// console.log('支付参数返回数据', res);
 						},
 						fail(res) {
 							uni.hideLoading();
@@ -369,43 +367,42 @@
 			//--------------------------调起支付--------------------------
 			payment: function() {
 				console.log('点击了支付');
-				
 				var that = this;
-				console.log('点击了支付',that.paymentData);
-				// uni.showToast({
-				// 	title: that.paymentData.AppId + that.paymentData.TimeStamp + that.paymentData.NonceStr + that.paymentData.Package + that.paymentData.SignType + that.paymentData.PaySign,
-				// 	icon: 'none'
-				// }),
-				// history.pushState(null, null, "/");
-				WeixinJSBridge.invoke('getBrandWCPayRequest', {
-					"appId": that.paymentData.AppId,//公众号名称，由商户传入
-					"timeStamp": that.paymentData.TimeStamp, //时间戳
-					"nonceStr": that.paymentData.NonceStr, //随机串
-					"package": that.paymentData.Package, //扩展包
-					"signType": that.paymentData.SignType, //微信签名方式:MD5
-					"paySign": that.paymentData.PaySign //微信签名
-				}, function(res) {
-					if (res.err_msg == "get_brand_wcpay_request:ok") {
-						//支付成功再进计时器查询状态
-						// location.href = "/Order/BaseCallback/" + flowID;
-						alert("支付成功");
-					}
-					else if(res.err_msg == "get_brand_wcpay_request:cancel" ){
-					   alert("您取消了支付，请重新支付");
-					}
-					else if(res.err_msg == "get_brand_wcpay_request:faile" ){
-					   alert("支付失败，请重新支付");
-					}
-					else {
-						// location.href = "/Coach/GetCoach";
-					}
-				});
-					//威富通
-				// 	if (res.jsapi.TokenID != null) {
-				// 		window.location.href = "https://pay.swiftpass.cn/pay/jspay?showwxtitle=1&token_id=" + result.jsapi.TokenID;
-				// 	} else {
-						
-				// }
+				if(that.isPayEnable == 0) {
+					uni.showToast({
+						title: '正在获取支付,请稍等...',
+						icon: 'none'
+					})
+				}else {
+					console.log('点击了支付',that.paymentData);
+					WeixinJSBridge.invoke('getBrandWCPayRequest', {
+						"appId": that.paymentData.AppId,//公众号名称，由商户传入
+						"timeStamp": that.paymentData.TimeStamp, //时间戳
+						"nonceStr": that.paymentData.NonceStr, //随机串
+						"package": that.paymentData.Package, //扩展包
+						"signType": that.paymentData.SignType, //微信签名方式:MD5
+						"paySign": that.paymentData.PaySign //微信签名
+					}, function(res) {
+						if (res.err_msg == "get_brand_wcpay_request:ok") {
+							//支付成功再进计时器查询状态
+							// location.href = "/Order/BaseCallback/" + flowID;
+							alert("支付成功");
+							uni.navigateTo({
+								url:'../LYFW/scenicSpotTickets/successfulPayment'
+							})
+						}
+						else if(res.err_msg == "get_brand_wcpay_request:cancel" ){
+						   alert("您取消了支付，请重新支付");
+						}
+						else if(res.err_msg == "get_brand_wcpay_request:faile" ){
+						   alert("支付失败，请重新支付");
+						}
+						else {
+							// location.href = "/Coach/GetCoach";
+						}
+					});
+				}
+				
 				// 	uni.requestPayment({
 				// 		provider: 'alipay',
 				// 		orderInfo: {
