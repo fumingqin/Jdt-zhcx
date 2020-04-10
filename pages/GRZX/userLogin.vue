@@ -148,24 +148,24 @@
 						uni.getStorage({
 							key:'captchaCode',
 							success(res) {
-								if(captcha==res.data){
+								if(captcha==res.data.code&&phone==res.data.phone){
 									uni.request({
 										url:'http://218.67.107.93:9210/api/app/login?phoneNumber='+phone,
 										method:"POST",
 										success(res) {
-											console.log(res)
+											//console.log(res)
 											uni.showToast({
 												title:res.data.msg,
 												icon:"none"
 											})
 											uni.setStorage({
 												key:'userInfo',
-												data:res.data.data,
+												data:res.data.data
 											})
 											uni.getStorage({
 												key:'userInfo',
 												success:function(user){
-													console.log(user,"user")
+													//console.log(user,"user")
 													if(user.data.nickname==""||user.data.nickname==null){
 														user.data.nickname="用户"+user.data.username;
 													}
@@ -173,11 +173,12 @@
 													base64ToPath(base64)
 													  .then(path => {
 													    user.data.portrait=path;
+														that.login(user.data);
 													  })
 													  .catch(error => {
 													    console.error(error)
 													  })
-													that.login(user.data);
+													
 												}
 											})
 										}
@@ -333,7 +334,10 @@
 						 		console.log(res.data.code);
 								uni.setStorage({
 									key:'captchaCode',
-									data:res.data.code,
+									data:{
+										code:res.data.code,
+										phone:self.phoneNumber,
+									}
 								})
 								setTimeout(function(){
 									uni.removeStorage({
