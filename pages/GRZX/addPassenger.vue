@@ -682,16 +682,16 @@
 	}
 	//checkBox样式
 	/* #ifdef APP-PLUS*/
-	uni-checkbox-group{ 
-		width:50% !important; 
-	}
-	uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked{
-		//background: #ff0000;
-		border-color:#ff0000;
-	}
-	uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before{
-		border-color:#ff0000 ;
-	}
+	// uni-checkbox-group{ 
+	// 	width:50% !important; 
+	// }
+	// uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked{
+	// 	//background: #ff0000;
+	// 	border-color:#ff0000;
+	// }
+	// uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before{
+	// 	border-color:#ff0000 ;
+	// }
 	/* #endif */
 	.borderTop{  
 		border-top: 1upx solid #F5F5F5;
