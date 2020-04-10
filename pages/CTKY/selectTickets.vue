@@ -194,6 +194,7 @@
 				var that = this;
 				
 				let date = utils.timeTodate('Y-m-d H:i:s',item.setTime)
+				// console.log(item);
 				uni.setStorage({
 					key: 'ticketDate',
 					data: item,
