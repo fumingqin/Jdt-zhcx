@@ -1,7 +1,7 @@
 <template>
 	<scroll-view style="background-color: #F5F7F9;" :style="{height:pageheight}" :scroll-y="true">
 		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;">
-			<view class="status_bar"></view>
+			<!-- <view class="status_bar"></view> -->
 			<view style="background-color: #FFF; ">
 				<view style="padding-bottom: 30rpx;">
 					<view style="flex-direction: row;justify-content: center;">
@@ -16,7 +16,7 @@
 											<view class="bluering"></view>
 										</view>
 										<view>
-											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="true" @click="selectInitial('qidian')"
+											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="disabled"  @click="selectInitial('qidian')"
 											 v-model="initialPoint" />
 										</view>
 									</view>
@@ -27,7 +27,7 @@
 										<view class="redring"></view>
 									</view>
 									<view>
-										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="true" @click="selectDestination('zhongdian')"
+										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="disabled"  @click="selectDestination('zhongdian')"
 										 v-model="destination" />
 									</view>
 								</view>
@@ -206,7 +206,7 @@
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;" @click="selectPassenger">
-							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
+							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
@@ -356,6 +356,7 @@
 				tcky_selectStartStation: '泉州客运中心站', //选中班次的起点站
 				tcky_selectEndStation: '漳州客运站', //选中班次的终点站
 				isPupop: true, //是否弹窗
+				disabled:true,
 			}
 		},
 		
@@ -392,6 +393,7 @@
 			uni.getStorage({ //获取起点
 				key: "StartPoint",
 				success: function(res) {
+					// console.log(res);
 					that.initialPoint = res.data.addressName;
 					that.startLonLat = res.data.lng + "," + res.data.lat;
 					that.startlongitude = res.data.lng;
@@ -419,6 +421,9 @@
 			});
 		},
 		onReady: function() {
+			
+		},
+		mounted() {
 			//动态设置高度
 			var that = this;
 			// that.map=uni.createMapContext("map555",this);
@@ -431,8 +436,12 @@
 				uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
 					success: function(res) {
 						that.historyheight = (res.windowHeight - data.height - 108) + "px";
-						that.pageheight = res.screenHeight + "px";
+						that.pageheight = res.windowHeight + "px";
 						that.mapheight = (res.windowHeight - data.height) + "px";
+						if(res.platform=="ios"){
+							that.winheight=data.height+50+'px';
+							that.disabled=false;
+						}
 					}
 				})
 			}).exec();
@@ -629,7 +638,7 @@
 					});
 					//获取数据,传入当前选择的模块index
 					that.getmessengeInfo(that.current);
-					console.log(that.current);
+					// console.log(that.current);
 					that.IsSearch = true;
 				}
 			},
