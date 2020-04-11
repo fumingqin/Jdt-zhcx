@@ -21,7 +21,7 @@
 					<citySelect @back_city="backCity"></citySelect>
 				</view>
 			</popup-layer>
-
+		
 			<!-- 搜索内容 -->
 			<view :hidden="searchIndex==0" v-for="(item,index) in searchData" :key="index">
 				<view class="Tk_scrollview" @click="godetail(item.ticketId)">
@@ -49,7 +49,7 @@
 					<view style="background: #00B5FF;width: 56upx;height: 56upx;border-radius:4px;"><text class="titleId">{{item.groupId}}</text></view>
 					<text class="contentTitle">{{item.groupTItle}}</text>
 				</view>
-				<view class="groupTour" v-for="(item2,index2) in item.content" :key="index2" v-if="index2<3">
+				<view class="groupTour" v-for="(item2,index2) in item.content" :key="index2" v-if="index2<3" @click="details">
 					<view class="groupContent">
 						<image class="contentImage" :src="item2.contentImage" mode="aspectFill"></image>
 					</view>
@@ -136,6 +136,7 @@
 		onLoad() {
 			this.routeInit();
 			this.Getpostion();
+			this.routeData();
 		},
 
 		methods: {
@@ -144,6 +145,18 @@
 				let groupTour = await this.$api.lyfwcwd('groupTour');
 				this.groupTitle = groupTour.data;
 			},
+			
+			routeData : function(){
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getPackageTourList',
+					method:'POST',
+					success: (e) => {
+						console.log(e)
+					}
+				})
+			},
+			
+			
 			//获取定位数据
 			Getpostion:function(){
 				setTimeout(()=>{
@@ -239,7 +252,15 @@
 					}
 				})
 			},
-
+			
+			
+			details:function(e){
+				uni.navigateTo({
+					url: '../currency/travelDetails'
+				})
+			},
+			
+			
 			//tabbar筛选点击
 			change(e) {
 				console.log(e)

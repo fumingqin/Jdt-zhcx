@@ -166,7 +166,7 @@
 			})
 			
 			uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + JSON.parse(options.orderNumber),
+					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=20200409165656',
 					method: 'POST',
 					success: (res) => {
 						// console.log(res)
@@ -247,29 +247,28 @@
 			},
 
 			//调起支付
-			payment() {
-				// uni.requestPayment({
-				// 	provider: 'alipay',
-				// 	orderInfo: {
-				// 		"orderNumber": this.orderNumber,
-				// 		"ticket": this.ticket,
-				// 		"date": this.date,
-				// 		"dateReminder": this.dateReminder,
-				// 		"addressData": this.addressData,
-				// 		"actualPayment": this.actualPayment,
-				// 		"coupon": this.coupon,
-				// 		"channe": this.channel[this.channeIndex],
-				// 	},
-				// 	success: function(res) {
-				// 		console.log('success:' + JSON.stringify(res));
-				// 	},
-				// 	fail: function(err) {
-				// 		console.log('fail:' + JSON.stringify(err));
-				// 	}
-				// })
-				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+			payment:function() {
+				uni.getProvider({
+					service:'payment',
+					success:function(res) {
+						console.log(res)
+					}
 				})
+				let value = 'app_id=2021001152683415&biz_content=%7b%22out_trade_no%22%3a%2220200410103519617%22%2c%22product_code%22%3a%22QUICK_MSECURITY_PAY%22%2c%22subject%22%3a%22%e5%95%86%e5%93%81%e8%b4%ad%e4%b9%b0%22%2c%22timeout_express%22%3a%2230m%22%2c%22total_amount%22%3a%220.01%22%7d&charset=utf-8&format=json&method=alipay.trade.app.pay&notify_url=nply.fjbmcx.com&sign_type=RSA2&timestamp=2020-04-10+10%3a35%3a19&version=1.0&sign=JBwRXQ%2f7oGbHSSJNxcWh6uqNdgq8g1h1eUR6t9r5KJOi8DBAzgzlPQ56Bcb3SLpqwKVF2XypikJnEYa2mbtznYI5GlQGcI%2bMQ2o7adg6g3hmsZV%2fLyJtNEExdAP8AR3DNtxe7ZS%2fk70ElP3qzxeTmSuUbstJzZZZ%2bWViy9gLCHwgt15IYP1sy%2bOnMbICV8bwbuNNjSVwvT9zeWL8NJp2ndtzEuG7YzSUH1eHzbMlNxPCQpq%2b3NedKmD89o%2f0Dux9RixDbXfRhxwVSIv1chU%2fuxGeGkMASUgzR7HOMupE3wyMZtKmsKWjTc%2bcxvX7rc0vq3btPWfPgPVCg9y8LW2UaA%3d%3d';
+				uni.requestPayment({
+					provider: 'alipay',
+					orderInfo: value,
+					success: function(res) {
+						console.log(res)
+						uni.redirectTo({
+							url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+						})
+					},
+					fail: function(res) {
+						// console.log(res)
+					}
+				})
+				
 
 			}
 

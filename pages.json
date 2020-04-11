@@ -495,6 +495,20 @@
             "style" : {}
         },
 		{
+            "path" : "pages/Home/ho_zhly",
+            "style" : {
+				"navigationBarTitleText": "南平智慧旅游APP",
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+        },
+		{
 			"path": "pages/Home/MapIndex",
 			"style": {
 				"navigationBarTitleText": "hello",
