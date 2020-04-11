@@ -309,10 +309,7 @@
 						
 					},
 					success: (res) => {
-						// uni.hideLoading();
-						
 						let that = this;
-						// console.log('订单返回数据',res);
 						//获取车票支付参数
 						that.getTicketPaymentInfo(res);
 					},

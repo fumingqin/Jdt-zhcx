@@ -77,20 +77,20 @@
 			}
 		},
 		onLoad(param) {
-			console.log(param);
 			//班次列表数据参数，从上一个页面传过来的时间，上下车点
 			this.date = param.date;
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			
+			//初始化时间轴
 			this.loadDate();
+			
+			//点击顶部时间，请求该时间的班次列表
             this.getDeparture();
+			
 			//加载班次列表数据
 			this.getTicketInfo(this.date);
 			
-		},
-		onReady() {
-
 		},
 		methods: {
 			//加载班次列表数据
