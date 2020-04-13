@@ -186,8 +186,12 @@
 				})
 			},
 			route4:function() {
-				uni.navigateTo({
-					url: '/pages/CTKY/ctkyIndex'
+				// uni.navigateTo({
+				// 	url: '/pages/CTKY/ctkyIndex'
+				// })
+				uni.showToast({
+					title:'正在开发中...',
+					icon:'none'
 				})
 			},
 		}
