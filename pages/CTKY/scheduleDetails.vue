@@ -276,13 +276,18 @@
 			uni.setNavigationBarTitle({
 				title: '填写订单'
 			});
-			//读取订单数据
+			//---------------------读取订单数据-----------------
 			uni.getStorage({
 				key: 'ticketDate',
 				success:function(data){
 					that.ticketDetail = data.data
 					that.totalPrice = data.data.fare
 					console.log(that.ticketDetail)
+					if(data.data.insurePrice == 0) {
+						that.isInsurance = 0;
+					}else {
+						that.isInsurance = 1;
+					}
 				}
 			})
 		},
@@ -302,7 +307,7 @@
 			});
 		},
 		methods: {
-			//乘客数据读取
+			//-------------------------------乘客数据读取-------------------------------
 			userData(){ 
 				var that = this;
 				uni.getStorage({
@@ -313,7 +318,7 @@
 						that.calculateTotalPrice();
 				    }
 				});
-				//读取上下车点缓存
+				//-------------------------------读取上下车点缓存-------------------------------
 				uni.getStorage({
 					key:'CTKYStationList',
 					success: (res) =>{
@@ -350,6 +355,10 @@
 			deleteInfo(e) {
 				console.log(e)
 				this.passengerInfo.splice(e, 1)
+				this.passengerNum --
+				if(this.passengerNum == 0) {
+					this.totalPrice = 0;
+				}
 				uni.setStorage({
 					key:"passengerList",
 					data:this.passengerInfo,
@@ -427,6 +436,8 @@
 				let childNum = 0;
 				//成年票数量
 				let adultNum = 0;
+				//清空乘车人
+				that.passengerNum = 0;
 				//儿童数组
 				let childArray = [];
 				//成年数组
@@ -486,7 +497,6 @@
 				}else {
 					//计算价格
 					that.calculateTotalPrice();
-					
 					//请求成功之后跳转到支付页面,传是否选择保险1:选择 0:未选择
 					uni.navigateTo({
 						url:'/pages/CTKY/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice

@@ -14,14 +14,14 @@
 			<view class="dateCost">
 				<view class="date">{{titleClick.date}}&nbsp;&nbsp;{{titleClick.time}}<text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text></view>
 			</view>
-			<view class="grClass">
+			<!-- <view class="grClass">
 				<image class="txImage" :src="titleClick.image" mode="aspectFill"></image>
 				<view class="grView">
 					<view class="name">{{titleClick.name}}<text class="ladelView" style="background-color: #0CA1DF;">官方</text></view>
 					<text class="number">电话：{{titleClick.number}}</text>
 				</view>
 				<text class="address">|&nbsp;&nbsp;&nbsp;{{titleClick.address}}</text>
-			</view>
+			</view> -->
 		</view>
 
 		<!-- 顶部滑动 -->
@@ -114,7 +114,7 @@
 			</view>
 		</view>
 		<!-- 底部 -->
-		<view class="footer">
+		<!-- <view class="footer">
 			<view class="footerPrice">
 				<image class="kfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/kefu.png" @click="godetail"></image>
 				<image class="zfIcon" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/zhuanfa.png" type="primary" open-type="share" @click="share"></image>
@@ -122,7 +122,7 @@
 			<view class="submitChange" @click="submit">
 				<text class="submit">立即预订</text>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -289,6 +289,7 @@
 		width: 100%;
 		background-color: #FFFFFF;
 		margin-top: -25upx;
+		padding-bottom: 47upx;//暂时的，事后有数据了之后要删除
 
 		.title {
 			display: flex;

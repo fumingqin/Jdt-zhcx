@@ -260,55 +260,6 @@
 		},
 		//个人中心模块结束
 		{
-			"path": "pages/CTKY/scheduleDetails",
-			"style": {
-				"backgroundColor": "#F1F1F1",
-				"navigationBarBackgroundColor": "#FC4646",
-				"navigationBarTextStyle": "white"
-
-			}
-		},
-		{
-			"path": "pages/CTKY/seatSelection",
-			"style": {
-				"backgroundColor": "#F1F1F1",
-				"navigationBarBackgroundColor": "#FC4646",
-				"navigationBarTextStyle": "white"
-
-			}
-		},
-		{
-			"path": "pages/CTKY/selectTickets",
-			"style": {
-				"navigationBarTitleText": "班次列表"
-			}
-		},
-		{
-			"path": "pages/CTKY/oederList",
-			"style": {
-				"navigationBarTitleText": "班次列表"
-			}
-		},
-		{
-			"path": "pages/CTKY/orderDetail",
-			"style": {
-				"navigationBarTitleText": "订单详情"
-			}
-		},
-		{
-			"path": "pages/CTKY/issueView",
-			"style": {
-				"navigationBarTitleText": "订单评价"
-			}
-		},
-		{
-			"path": "pages/CTKY/traditionCarMark",
-			"style": {
-				"navigationBarTitleText": "传统地图标识"
-			}
-		},
-
-		{
 			"path": "pages/LYFW/scenicSpotTickets/orderDetails",
 			"style": {
 				"navigationBarTitleText": "订单详情",
@@ -356,22 +307,95 @@
 		}, {
 			"path": "pages/CZC/PaymentFail",
 			"style": {}
-		}, {
-			"path": "pages/CTKY/specialMark",
-			"style": {
-				"navigationBarTitleText": "定制标识"
-			}
-		}, {
+		},  {
 			"path": "pages/GRZX/complaint",
 			"style": {
 				"navigationBarTitleText": "我要投诉"
+			}
+		},
+		//----------------------------客运模块开始----------------------------
+		{
+			"path": "pages/CTKY/ctkyIndex",
+			"style": {
+				"navigationBarTitleText": "客运"
+			}
+		},{
+		    "path" : "pages/CTKY/homeSattionPick",
+		    "style" : {
+				"navigationBarTitleText": "选择站点"
+			}
+		},{
+			"path": "pages/CTKY/selectTickets",
+			"style": {
+				"navigationBarTitleText": "班次列表"
+			}
+		},{
+			"path": "pages/CTKY/scheduleDetails",
+			"style": {
+				"backgroundColor": "#F1F1F1",
+				"navigationBarBackgroundColor": "#FC4646",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "班次详情"
+			}
+		},
+		{
+			"path": "pages/CTKY/seatSelection",
+			"style": {
+				"backgroundColor": "#F1F1F1",
+				"navigationBarBackgroundColor": "#FC4646",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "选择座位"
+			}
+		},{
+			"path": "pages/CTKY/oederList",
+			"style": {
+				"navigationBarTitleText": "订单列表"
+			}
+		},
+		{
+			"path": "pages/CTKY/orderDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		},
+		{
+			"path": "pages/CTKY/issueView",
+			"style": {
+				"navigationBarTitleText": "订单评价"
+			}
+		},
+		{
+			"path": "pages/CTKY/traditionCarMark",
+			"style": {
+				"navigationBarTitleText": "传统地图标识"
+			}
+		},
+		{
+			"path": "pages/CTKY/specialMark",
+			"style": {
+				"navigationBarTitleText": "定制标识"
 			}
 		}, {
 			"path": "pages/CTKY/checkBusLocation",
 			"style": {
 				"navigationBarTitleText": "查看班车位置"
 			}
+		},{
+			"path": "pages/CTKY/orderPayment", //推文详情
+			"style": {
+				"navigationBarTitleText": "订单支付"
+			}
+		}, {
+			"path": "pages/CTKY/selectStation", //上下车点选择
+			// #ifdef APP-PLUS
+			"navigationStyle": "custom",
+			// #endif
+			"style": {
+				"navigationBarTitleText": "上下车点选择",
+				"navigationBarBackgroundColor": "#FE6C66"
+			}
 		},
+		//----------------------------客运模块结束----------------------------
 		{
 			"path": "pages/GJCX/detailedBus",
 			"style": {
@@ -434,10 +458,7 @@
 			"style": {
 				"navigationBarTitleText": "我的历史"
 			}
-		}, {
-			"path": "pages/CTKY/ctkyIndex",
-			"style": {}
-		},
+		}, 
 		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
@@ -449,21 +470,7 @@
 			"style": {
 				"navigationBarTitleText": "推送详情"
 			}
-		}, {
-			"path": "pages/CTKY/orderPayment", //推文详情
-			"style": {
-				"navigationBarTitleText": "订单支付"
-			}
-		}, {
-			"path": "pages/CTKY/selectStation", //上下车点选择
-			// #ifdef APP-PLUS
-			"navigationStyle": "custom",
-			// #endif
-			"style": {
-				"navigationBarTitleText": "上下车点选择",
-				"navigationBarBackgroundColor": "#FE6C66"
-			}
-		}, {
+		},  {
 			"path": "pages/Home/InformationDetails",
 			"style": {
 				"navigationBarTitleText": "资讯详情"
@@ -478,12 +485,6 @@
             "style" : {}
         },
 		{
-		    "path" : "pages/CTKY/homeSattionPick",
-		    "style" : {
-				"navigationBarTitleText": "选择站点"
-			}
-		}
-        ,{
             "path" : "pages/LYFW/groupTour/groupTourList",
             "style" : {
 				"navigationBarTitleText": "跟团游列表"
@@ -492,6 +493,20 @@
         ,{
             "path" : "pages/LYFW/groupTour/viewMore",
             "style" : {}
+        },
+		{
+            "path" : "pages/Home/ho_zhly",
+            "style" : {
+				"navigationBarTitleText": "南平智慧旅游APP",
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
         },
 		{
 			"path": "pages/Home/MapIndex",

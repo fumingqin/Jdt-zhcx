@@ -55,10 +55,10 @@
 				<view class="newDiscoveryTitleView">
 					<text class="newDiscoveryTitle">新发现</text>
 				</view>
-				<view class="newDiscoveryConentView" v-for="(item,index) in itText" :key="index" @click="natTo">
+				<view class="newDiscoveryConentView" v-for="(item,index) in newDiscovery" :key="index" @click="natTo">
 					<image class="newDiscoveryConentImage" mode="aspectFill" :src="item.src"></image>
 					<text class="newDiscoveryConentText1">{{item.title}}</text>
-					<text class="newDiscoveryConentText2">点击量：{{item.conut_1}}</text>
+					<text class="newDiscoveryConentText2">销售量：{{item.salesVolume}}</text>
 				</view>
 			</view>
 		</view>
@@ -80,19 +80,19 @@
 					<scroll-view class="mainScView" scroll-y="true">
 							<!-- 大图样式，命名：big -->
 							<view>
-								<image class="big_image" style=""></image>
+								<image class="big_image" :src="ifyFirst.src"></image>
 								<view style="margin: 0upx 32upx;">
-									<text class="big_title" >北京精品旅游</text>
+									<text class="big_title" >{{ifyFirst.title}}</text>
 									<text class="big_text" >京城上下五千年 历史沉淀</text>
 								</view>
 							</view>
 							
 							<!-- 小图样式，命名:sma -->
 							<view class="sma_view" style="">
-								<view style="float: left;" v-for="(item,index) in itText" :key="index" >
-									<image class="sma_image" ></image>
+								<view style="float: left;" v-for="(item,index) in ifyList" :key="index" >
+									<image class="sma_image" :src="item.src" ></image>
 									<text class="sma_title">{{item.title}}</text>
-									<text class="sma_text" >销售量：113245</text>
+									<text class="sma_text" >销售量：{{item.salesVolume}}</text>
 								</view>
 							</view>
 							
@@ -121,7 +121,11 @@
 				current: 0, //标题下标
 				tabs: ['推荐', '全部'], //选项标题
 
-				itText: '',
+				itText: '',//六宫格
+				newDiscovery : '',//新发现
+				
+				ifyFirst: '',//分类产品首个
+				ifyList:'',//分类产品列表
 				
 				region : [{
 					id:'0',
@@ -143,14 +147,42 @@
 		onLoad() {
 			this.Getpostion();
 			this.textData();
+			this.classifyList();
 		},
 		methods: {
-			async textData() {
-				
-				let itText = await this.$api.lyfwfmq('itText');
-				this.itText = itText.data;
-				
+			textData:function() {
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
+					method:'POST',
+					success: (res) => {
+						// console.log(res)
+						this.itText = res.data.data;
+					}
+				})
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
+					method:'POST',
+					success: (res) => {
+						var sc = res.data.data;;
+						sc.sort((a, b) => a.id - b.id)
+						this.newDiscovery = sc;
+					}
+				})
 			},
+			classifyList:function(){
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
+					method:'POST',
+					success: (res) => {
+						this.ifyFirst =res.data.data[0];
+						var sc = res.data.data;
+						sc.shift();
+						this.ifyList = sc;
+						uni.hideLoading();
+					}
+				})
+			},
+			
 
 
 			//获取定位数据
@@ -263,9 +295,12 @@
 			},
 			
 			/* 左侧导航点击 */
-			leftTap(item,index){
+			leftTap:function(item,index){
 				this.leftIndex=index;
-				this.textData(item);
+				this.classifyList(item);
+				uni.showLoading({
+					title:'正在搜索'+item
+				});
 			},
 		}
 	}
@@ -392,6 +427,9 @@
 				display: block;
 				margin-top: 12upx;
 				font-size: 30upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 216upx;
 			}
 
 			.listBarText2 {
@@ -399,6 +437,9 @@
 				font-size: 26upx;
 				color: #999;
 				margin-top: 8upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 216upx;
 			}
 
 		}
@@ -432,6 +473,9 @@
 				display: block;
 				margin-top: 12upx;
 				font-size: 30upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 332upx;
 			}
 
 			.newDiscoveryConentText2 {
@@ -439,6 +483,9 @@
 				font-size: 26upx;
 				color: #999;
 				margin-top: 8upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 332upx;
 			}
 		}
 	}
@@ -502,7 +549,6 @@
 					margin: 12upx 32upx; 
 					width: 492upx; 
 					height: 240upx; 
-					background: red; 
 					border-radius:8upx;
 				}
 				.big_title{
@@ -520,7 +566,6 @@
 						margin: 24upx 12upx 12upx 12upx; 
 						width: 232upx; 
 						height: 190upx; 
-						background: red; 
 						border-radius:8upx;
 					}
 					.sma_title{

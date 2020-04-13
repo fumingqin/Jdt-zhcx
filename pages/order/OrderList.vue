@@ -142,14 +142,14 @@
 							<button class="allBtn" v-if="item.orderState=='待支付'" @tap="cancelTap(item.orderId)">取消</button>
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<button class="allBtn" v-if="item.orderState=='已完成'" >投诉</button>
-							<button class="allBtn payBtn" v-if="item.orderState=='待支付'" @tap="keYunPay" >去支付</button>
+							<button class="allBtn payBtn" v-if="item.orderState=='待支付'" @tap="keYunPay(index)" >去支付</button>
 							<button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.orderState=='已取消'" >删除</button>
 							<button class="allBtn" v-if="item.orderState=='待使用'" @tap="QRCodeTap">二维码</button>
 							<!-- <button class="allBtn" v-if="item.orderState=='待使用'"@tap="">选座</button> -->
 						</view>
 					</view>
 				</view>
-				
+				<empty-data :isShow="info.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 		</view>
 
@@ -262,6 +262,7 @@
 						</view>
 					</view>
 				</view>
+				<empty-data :isShow="finishArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 
 			<!-- 进行中 -->
@@ -377,6 +378,7 @@
 						</view>
 					</view>
 				</view>
+				<empty-data :isShow="goingArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 			
 
@@ -492,6 +494,7 @@
 						</view>
 					</view>
 				</view>
+				<empty-data :isShow="unfinishArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 			
 			
@@ -612,6 +615,7 @@
 						</view>
 					</view>
 				</view>
+				<empty-data :isShow="cancelArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 
 			<!-- 二维码弹框 -->
@@ -770,6 +774,7 @@
 	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
+	import emptyData from "@/components/CTKY/emptyData/emptyData.vue";//无数据时显示内容
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -777,6 +782,7 @@
 			//加载多方弹框组件
 			uniPopup2,
 			uniIcons,
+			emptyData
 		},
 		data() {
 			return {
@@ -802,6 +808,7 @@
 				cancelArr: [],
 				keYunTicketArray:[],//客运订单
 				keYunTicket:[],//客运订单
+				keYunPaymentData:'',//客运支付
 				driverName:'张师傅',//司机姓名
 				totalPrice: 32.5,
 				payType: [{
@@ -823,26 +830,23 @@
 		},
 		onLoad() {
 			var that = this;
-			that.info = [];
-			//-------注意！！！！！-----出租车要在这里再请求一次---出租车要在这里再请求一次---出租车要在这里再请求一次---出租车要在这里再请求一次
-			//请求景区门票数据
-			that.toFinished();
-			//读取用户信息，请求客运订单数据--客运-------由于客运订单数据是加在info数组中，所以需要在获取景区门票数据时再请求一次，否则数据会被覆盖
-			that.getUserInfo();
 		},
 		onShow:function(){
-			// this.info = [];
-			//-------注意！！！！！-----出租车要在这里再请求一次---出租车要在这里再请求一次---出租车要在这里再请求一次---出租车要在这里再请求一次
-			// this.toFinished();
-			//读取用户信息，请求客运订单数据--客运-------由于客运订单数据是加在info数组中，所以需要在获取景区门票数据时再请求一次，否则数据会被覆盖
-			// this.getUserInfo();
+			//开始刷新---请求数据方法写在刷新的代理方法中
+			uni.startPullDownRefresh();
 		},
 		onPullDownRefresh:function(){
-			this.info = [];
-			//-------注意！！！！！-----出租车要在这里再请求一次---出租车要在这里再请求一次---出租车要在这里再请求一次---出租车要在这里再请求一次
-			this.toFinished(); //请求接口数据
-			//读取用户信息，请求客运订单数据--客运-------由于客运订单数据是加在info数组中，所以需要在获取景区门票数据时再请求一次，否则数据会被覆盖
-			this.getUserInfo();
+			var that = this;
+			//-------注意！！！！！-----出租车请求接口数据写在延时方法里-----出租车请求接口数据写在延时方法里-----出租车请求接口数据写在延时方法里
+			//景区请求接口数据-----景区----
+			that.toFinished();
+			//延时操作，避免异步加载造成数据不同步
+			setTimeout(function () {
+				//读取用户信息，请求客运订单数据----客运-------由于客运订单数据是加在info数组中，所以需要在获取景区门票数据时再请求一次，否则数据会被覆盖
+				that.getUserInfo();
+			 }, 1500);
+			
+			
 		},
 		methods: {
 			//-------------------------支付页面-------------------------
@@ -851,7 +855,6 @@
 				uni.navigateTo({
 					url: '../CZC/PriceDetail'
 				});
-			
 			},
 			closePayment: function() {
 				//关闭
@@ -920,7 +923,6 @@
 			//-------------------------请求客运订单数据-------------------------
 			getKeYunOrderInfo:function() {
 				var that = this;
-				// console.log('返回数据',that.userInfo.unid);
 				uni.request({
 					url:'http://218.67.107.93:9210/api/app/getcpxsOrderList',
 					method:'POST',
@@ -929,12 +931,13 @@
 						unid : that.userInfo.unid
 					},
 					success: (res) => {
+						//请求数据成功，停止刷新
+						uni.stopPullDownRefresh();
 						//由于界面是遍历info数组，所以需要把客运数据加入info中
 						//注意！！！---出租车也要将数据加入到info中---------------------出租车看这里------------------
 						for(var i = 0; i < res.data.data.length; i++) {
 							that.info.push(res.data.data[i]);
 						}
-						console.log('返回数据',that.info);
 						that.finishArr = [];
 						that.goingArr = [];
 						that.unfinishArr = [];
@@ -952,6 +955,8 @@
 						}
 					},
 					fail(res) {
+						//请求数据失败，停止刷新
+						uni.stopPullDownRefresh();
 						console.log('错误',res);
 					}
 				})
@@ -1019,10 +1024,94 @@
 				})
 			},
 			// -------------------------客运支付-------------------------
-			keYunPay: function(){
-				uni.navigateTo({
-					url:"../CTKY/orderPayment"
-				}) 
+			keYunPay: function(index){
+				var orderInfo = this.info[index];
+				this.getTicketPaymentInfo(orderInfo);
+			},
+			//--------------------------获取车票支付参数--------------------------
+			getTicketPaymentInfo: function(res) {
+				console.log('支付参数', res);
+				var that = this;
+				var timer=null;
+				that.timer = timer;
+				uni.showLoading();
+				timer=setInterval(function(){
+					uni.request({
+						url: 'http://218.67.107.93:9210/api/app/getPayParam',
+						method: 'POST',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							resultStr: res.resultStr,
+							id: res.orderId
+						},
+						success: (res) => {
+							console.log('支付参数返回数据', res);
+							if(res.data.data != null) {
+								
+								that.keYunPaymentData = JSON.parse(res.data.data);
+								uni.hideLoading();
+								clearInterval(timer);
+							}
+							if (res.data.msg != null) {
+								//调起支付
+								// that.keYunPayment();
+								uni.showToast({
+									title: '请在2分钟内完成支付',
+									icon: 'none'
+								})
+								uni.hideLoading();
+								clearInterval(timer);
+							}
+						},
+						fail(res) {
+							uni.hideLoading();
+							console.log('失败');
+							//回调失败，取消定时器
+							clearInterval(timer);
+						}
+					})
+				}, 3000)
+			},
+			//--------------------------调起支付--------------------------
+			keYunPayment: function() {
+				console.log('点击了支付');
+				var that = this;
+				if(that.isPayEnable == 0) {
+					uni.showToast({
+						title: '正在获取支付,请稍等...',
+						icon: 'none'
+					})
+				}else {
+					console.log('点击了支付',that.keYunPaymentData);
+					WeixinJSBridge.invoke('getBrandWCPayRequest', {
+						"appId": that.keYunPaymentData.AppId,//公众号名称，由商户传入
+						"timeStamp": that.keYunPaymentData.TimeStamp, //时间戳
+						"nonceStr": that.keYunPaymentData.NonceStr, //随机串
+						"package": that.keYunPaymentData.Package, //扩展包
+						"signType": that.keYunPaymentData.SignType, //微信签名方式:MD5
+						"paySign": that.keYunPaymentData.PaySign //微信签名
+					}, function(res) {
+						if (res.err_msg == "get_brand_wcpay_request:ok") {
+							//支付成功再进计时器查询状态
+							// location.href = "/Order/BaseCallback/" + flowID;
+							alert("支付成功");
+							uni.navigateTo({
+								url:'../LYFW/scenicSpotTickets/successfulPayment'
+							})
+						}
+						else if(res.err_msg == "get_brand_wcpay_request:cancel" ){
+						   alert("您取消了支付，请重新支付");
+						}
+						else if(res.err_msg == "get_brand_wcpay_request:faile" ){
+						   alert("支付失败，请重新支付");
+						}
+						else {
+							// location.href = "/Coach/GetCoach";
+						}
+					});
+				}
 			},
 			//-------------------------客运二维码弹框-------------------------
 			QRCodeTap: function(){
@@ -1037,6 +1126,8 @@
 			
 			toFinished: function() {
 				var that = this;
+				//请求数据之前清空之前所有数据
+				that.info = [];
 				uni.getStorage({
 					key:'userInfo',
 					success:(res) =>{
@@ -1070,6 +1161,8 @@
 						})
 					},
 					fail() {
+						//请求数据失败，停止刷新
+						uni.stopPullDownRefresh();
 						uni.showToast({
 							title:'暂无订单数据，请先登录后查看订单',
 							icon:'none'
@@ -1079,9 +1172,6 @@
 						})
 					}
 				})
-				setTimeout(()=>{
-					uni.stopPullDownRefresh();
-				},1000)
 			},
 			
 			//-------------------------景区门票-打开二维码弹框-------------------------
