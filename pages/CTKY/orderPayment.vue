@@ -205,7 +205,6 @@
 								userType: data.data[i].userType,
 							}
 							that.idNameType.push(array);
-							console.log('idNameType',array);
 							that.ticketNum++;
 							//把儿童票筛选出来
 							if (that.passengerInfo.userType == '儿童') {
@@ -214,6 +213,34 @@
 								that.adultNum++;
 							}
 						}
+						console.log('idNameType',that.idNameType);
+						var data= {
+							companyCode: '泉运公司综合出行',
+							clientID: that.userInfo.unid,//用户ID
+							clientName: that.userInfo.username,//用户名
+							phoneNumber: that.userInfo.phoneNumber,//手机号码
+							
+							scheduleCompanyCode: that.orderInfo.scheduleCompanyCode,
+							executeScheduleID: that.orderInfo.executeScheduleID,
+							startSiteID: that.orderInfo.startSiteID,//上车点ID
+							endSiteID: that.orderInfo.endSiteID,//下车点ID
+							startSiteName: that.orderInfo.startStaion,//起点站
+							endSiteName: that.orderInfo.endStation,//终点站
+							priceID: that.orderInfo.priceID,//价格ID
+							setOutTime: that.orderInfo.setTime,//订单时间
+							insuredPrice: that.orderInfo.insurePrice,//保险价格
+							carType: that.orderInfo.shuttleType,//班车类型
+							
+							fullTicket: that.adultNum,//全票人数
+							halfTicket: that.childrenNum,//半票人数
+							carryChild: that.childrenNum,//携童人数
+							idNameType: that.idNameType,
+							insured: that.isInsurance,//是否选择了保险
+							openId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
+							totalPrice: that.totalPrice,//总价格
+							
+						}
+						console.log('data',data)
 					},
 					fail() {
 						uni.showToast({

@@ -7,17 +7,19 @@
 			<view class="orderCommonClass" style="margin-top: -110upx;">
 				<!-- 顶部订单信息 -->
 				<view class="ticketInfoClass">
-					<view>
-						<view class="textCLass" style="font-size: 28upx;color: #333333;display: block;padding: 0;">
-							{{utils.timeTodate('Y-m-d H:i',ticketDetail.setTime)}}出发</view>
-						<view class="textCLass" style="font-size: 32upx;color: #333333;margin-top:21upx ;display: block;padding: 0;">{{ticketDetail.startStaion}}
-							→ {{ticketDetail.endStation}}</view>
-						<view class="textCLass" style="font-size: 24upx;color: #999999; margin-top:18upx ;display: block;padding: 0;">{{ticketDetail.carType}}  儿童半票</view>
-					</view>
-					<view style="display: flex; flex-direction: column;">
+					<!-- 时间-价格 -->
+					<view class="ticketContent">
+						<view class="textCLass" style="font-size: 28upx;color: #333333;">{{turnDate(ticketDetail.setTime)}}出发</view>
 						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketDetail.fare}}</view>
-						<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		       SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.remainingVotes}}张</view>
+					</view>
+					<!-- 站点-余票 -->
+					<view class="ticketContent">
+						<view class="textCLass" style="font-size: 32upx;color: #333333;">{{ticketDetail.startStaion}}→ {{ticketDetail.endStation}}</view>
+						<view class="textCLass" style="font-size: 24upx;font-style: SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.remainingVotes}}张</view>
+					</view>
+					<!-- 车型-儿童半价 -->
+					<view class="ticketContent">
+						<view class="textCLass" style="font-size: 24upx;color: #999999;">{{ticketDetail.carType}}  儿童半票</view>
 					</view>
 				</view>
 			</view>
@@ -141,7 +143,7 @@
 					<view @tap="checkAttention" style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
 				</view>
 				<!-- 查看须知popup -->
-				<popup ref="popup2" type="bottom">
+				<popup ref="popup2" type="center">
 					<view class="boxView">
 						<view class="titleView">
 							<text class="Nb_text1">用户须知</text>
@@ -334,6 +336,10 @@
 						}
 					}
 				})
+			},
+			//-------------------------------时间转换-------------------------------
+			turnDate(date) {
+				return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------点击上车点-----------------------------
 			startStationTap() {
@@ -700,23 +706,24 @@
 		}
 	}
 	.ticketInfoClass {
-		height: 181upx;
 		width: 652upx;
 		text-align: left;
 		padding-left: 29upx;
 		padding-right: 29upx;
 		padding-top: 28upx;
+	}
+	.ticketContent {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 	}
-
 	.textCLass {
 		font-family: MicrosoftYaHei;
 		font-weight: 400;
-		// padding-top: 10upx;
-		// padding-bottom: 10upx;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-bottom: 10upx;
 	}
-
 
 	.passengerInfoDetail {
 		border-bottom: 1upx solid #DADADA;
