@@ -528,6 +528,14 @@
 			"path": "pages/Home/MapSearch",
 			"style": {}
 		}
+        ,{
+            "path" : "pages/CTKY/CTKYPaySuccess",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/CTKY/CTKYPayFail",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
