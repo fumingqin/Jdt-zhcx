@@ -169,7 +169,7 @@
 					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + JSON.parse(options.orderNumber),
 					method: 'POST',
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						this.orderInfo = res.data.data;
 						this.screenUser();
 					}
@@ -247,30 +247,44 @@
 			},
 
 			//调起支付
-			payment() {
-				// uni.requestPayment({
-				// 	provider: 'alipay',
-				// 	orderInfo: {
-				// 		"orderNumber": this.orderNumber,
-				// 		"ticket": this.ticket,
-				// 		"date": this.date,
-				// 		"dateReminder": this.dateReminder,
-				// 		"addressData": this.addressData,
-				// 		"actualPayment": this.actualPayment,
-				// 		"coupon": this.coupon,
-				// 		"channe": this.channel[this.channeIndex],
-				// 	},
-				// 	success: function(res) {
-				// 		console.log('success:' + JSON.stringify(res));
-				// 	},
-				// 	fail: function(err) {
-				// 		console.log('fail:' + JSON.stringify(err));
-				// 	}
-				// })
-				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
-				})
-
+			payment:function() {
+			// 查看服务商
+			uni.getProvider({
+				service:'payment',
+				success:function(res) {
+					console.log(res)
+				}
+			})
+			uni.request({
+				url:'',
+				method:'POST',
+				success:(e)=>{
+					uni.requestPayment({
+						provider: 'alipay',
+						orderInfo: e,
+						success: function(res) {
+							console.log(res)
+							uni.redirectTo({
+								url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+							})
+						},
+						fail: function(ee) {
+							uni.showToast({
+								title:'支付失败，请检查手机网络是否正常，如若无问题请联系客服',
+								icon:'none',
+								duration:3000
+							})
+						}
+					})
+				},
+				fail: () => {
+					uni.showToast({
+						title:'支付失败，请查看订单是否已取消，如若无问题请联系客服',
+						icon:'none',
+						duration:3000
+					})
+				}
+			})
 			}
 
 

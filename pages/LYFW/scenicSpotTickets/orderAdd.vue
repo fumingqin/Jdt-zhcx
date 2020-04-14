@@ -255,9 +255,10 @@
 			},
 
 			//选择用户
-			choiceUser: function(e) {
+			choiceUser:function(e) {
+				// console.log(e)
 				if(e==0){
-					uni.getStorage({
+					uni.getStorage({		
 						key:'userInfo',
 						fail(){
 							uni.showToast({
@@ -402,6 +403,8 @@
 										orderInsure : '',
 										orderInsurePrice : '',
 										orderActualPayment : this.actualPayment,
+										sellerCompanyCode : '南平旅游APP',
+										tppId : 0,
 									},
 									
 									method:'POST',
@@ -955,7 +958,7 @@
 			justify-content: center;
 			width: 280upx;
 			height: 100%;
-			background: #aaa;
+			background: #aaa; 
 
 			.submit {
 				color: #fff;

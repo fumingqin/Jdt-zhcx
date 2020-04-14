@@ -239,7 +239,7 @@
 	.usernameClass{		//昵称
 		// height: 60upx;
 		// line-height: 44upx;
-		font-size: 48upx;
+		font-size: 42upx;
 		color: #FFFFFF;
 		margin-top: 20upx;
 		margin-left: 3%;
@@ -273,7 +273,7 @@
 		background-color: #C25E4E;
 		position: absolute;
 		top: 245upx;
-		left: 24%;
+		left: 23%;
 		border-radius: 8upx;
 	}
 	.imgTubiao{
