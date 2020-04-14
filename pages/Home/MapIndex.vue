@@ -249,6 +249,7 @@
 					address: list[index],
 					mapStatus: 0
 				})
+				this.submit();
 			},
 			setData(obj) {
 				Object.assign(this, obj)
