@@ -33,10 +33,10 @@
 					:timeout="true"
 				></w-picker>
 			</view>
-		<!-- 	<view class="Cr_slk2">
+			<view class="Cr_slk2">
 				<text class="bz">签&nbsp;名：</text>
 				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
-			</view> -->
+			</view>
 			<button class="an" type="primary" form-type="submit">保存</button>
 			
 		</form>
@@ -63,12 +63,11 @@
 				gender:'',
 				birthday : '请选择',
 				address : '',
-				//autograph : '',
-				phoneNumber:'',
-				unid:'',
+				autograph : '',
+				userId:'',
 				openId_qq:'',
 				openId_wx:'',
-				username:'',
+				phoneNumber:'',
 			};
 		},
 		onLoad:function(){
@@ -102,52 +101,72 @@
 					key:'userInfo',
 					success(res){
 						uni.request({
-							url:'http://218.67.107.93:9210/api/app/login?phoneNumber='+res.data.phoneNumber,
+							url:'http://111.231.109.113:8002/api/person/login',
+							data:{
+								phoneNumber:res.data.phoneNumber,
+							},
 							method:"POST",
 							success(res1) {
+								console.log(res1,"108")
 								uni.setStorage({
 									key:'userInfo',
 									data:res1.data.data,
 								})
+								// ------------1.头像-------------
 								var base64=res1.data.data.portrait;
-								base64ToPath(base64)
-								  .then(path => {
-								    theself.portrait=path;
-								  })
-								  .catch(error => {
-								    console.error(error)
-								  })
+								if(theself.isBase64(base64)){
+									base64ToPath(base64)
+									  .then(path => {
+									    theself.portrait=path;
+									  })
+									  .catch(error => {
+									    console.error(error)
+									  })
+								}
+								// ------------2.昵称-------------
 								if(res1.data.data.nickname==null||res1.data.data.nickname==""){
 									theself.nickname="";
 								}else{
 									theself.nickname =res1.data.data.nickname;
 								}
-								
+								// ------------3.性别-------------
 								if(res1.data.data.gender==null||res1.data.data.gender==""){
 									theself.selector="请选择";
 								}else{
-									theself.selector=res1.data.data.gender;
+									theself.selector=theself.genderSex[res1.data.data.gender];
 								}
+								// ------------4.生日-------------
 								if(res1.data.data.birthday==null||res1.data.data.birthday==""){
 									theself.birthday="请选择";
 								}else{
 									theself.birthday =res1.data.data.birthday.substring(0,10);
 								}
+								// ------------5.地址-------------
 								if(res1.data.data.address==null||res1.data.data.address==""){
 									theself.address="";
 								}else{
 									theself.address =res1.data.data.address;
 								}
-								theself.phoneNumber=res1.data.data.phoneNumber;
-								theself.unid=res1.data.data.unid;
+								// ------------6.签名-------------
+								if(res1.data.data.autograph==null||res1.data.data.autograph==""){
+									theself.autograph="";
+								}else{
+									theself.autograph =res1.data.data.autograph;
+								}
+								// ------------7.用户Id-------------
+								theself.userId=res1.data.data.userId;
+								// ------------8.openId_qq-------------
 								theself.openId_qq=res1.data.data.openId_qq;
+								// ------------9.openId_wx-------------
 								theself.openId_wx=res1.data.data.openId_wx;
-								theself.username=res1.data.data.username;
+								// ------------10.手机号-------------
+								theself.phoneNumber=res1.data.data.phoneNumber;
 							}
 						})
 					}
 				})	
 			},
+			// --------性别---------
 			genderChange : function(e){
 				//console.log(e.detail.value,"sex")
 				if(e.detail.value==0){
@@ -157,9 +176,11 @@
 				}
 				this.gender=e.detail.value;
 			},
+			// --------日期---------
 			dateChange : function(e){
 				this.birthday = e.detail.value;
 			},
+			// --------获得日期---------
 			getDate(type) {
 						const date = new Date();
 						let year = date.getFullYear();
@@ -175,12 +196,14 @@
 						day = day > 9 ? day : '0' + day;
 						return `${year}-${month}-${day}`;
 					},
+			// --------地址切换---------
 			toggleTab(e){
 				this.$refs[this.mode].show(); 
 			},
 			onConfirm(e){
 				this.address=e.result;
 			},
+			// --------背景图---------
 			reviseBackground(){
 				var that=this;
 				uni.chooseImage({
@@ -206,71 +229,83 @@
 							})
 						  }
 						});
-						// pathToBase64(res.tempFilePaths[0])
-						// .then(base64 => {
-						// 	
-						// })
 						 
 					}
 				})
 			},
+			// --------提交数据---------
 			formSubmit: function(e) {
+				console.log(this.userId)
+				console.log(this.nickname)
 				console.log(this.portrait)
-				console.log(this.port)
-				console.log(this.unid)
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
-				console.log(this.selector)
+				if(this.selector=='男'){
+					this.gender=1;
+				}
+				if(this.selector=='女'){
+					this.gender=2;
+				}
+				console.log(this.gender)
 				console.log(this.address)
 				console.log(this.nickname)
 				console.log(this.birthday)
-				console.log(this.backImg)
-				console.log(this.phoneNumber)
-				console.log(this.username)
 				var that=this;
 				var port=this.portrait;
-				pathToBase64(this.portrait)
-				.then(base64 => {
-					that.portrait=JSON.stringify(base64);
-					console.log(that.portrait)
+				if(!this.isBase64(port)){
+					pathToBase64(this.portrait)
+					.then(base64 => {
+						that.portrait=JSON.stringify(base64);
+						uni.request({
+							url:'http://111.231.109.113:8002/api/person/changeInfo',
+							data:{
+								portrait:this.portrait,
+								userId:this.userId,
+								gender:this.gender,
+								openId_qq:this.openId_qq,
+								openId_wx:this.openId_wx,
+								address:this.address,
+								nickname:this.nickname,
+								birthday:this.birthday,
+								autograph:this.autograph,
+							},
+							method:'POST',
+							success(res) {
+								console.log(res,"286")
+							}
+						})
+					})//结束
+				}else{
 					uni.request({
-						url:'http://218.67.107.93:9210/api/app/changeInfo',
+						url:'http://111.231.109.113:8002/api/person/changeInfo',
 						data:{
 							portrait:this.portrait,
-							unid:this.unid,
+							userId:this.userId,
+							gender:this.gender,
 							openId_qq:this.openId_qq,
 							openId_wx:this.openId_wx,
-							// openId_qq:'',
-							// openId_wx:'',
-							gender:this.selector,
 							address:this.address,
 							nickname:this.nickname,
 							birthday:this.birthday,
-							backImg:this.backImg,
-							phoneNumber:this.phoneNumber,
-							username:this.username,
+							autograph:this.autograph,
 						},
 						method:'POST',
 						success(res) {
-							console.log(res)
+							console.log(res,"286")
 						}
 					})
-				})//结束
+				}
 				var list={
 						portrait:port,
-						unid:this.unid,
+						userId:this.userId,
 						openId_qq:this.openId_qq,
 						openId_wx:this.openId_wx,
-						// openId_qq:'12',
-						// openId_wx:'12',
 						gender:this.gender,
 						address:this.address,
 						nickname:this.nickname,
 						birthday:this.birthday,
-						//autograph:'123',
-						backImg:this.backImg,
+						autograph:this.autograph,
 						phoneNumber:this.phoneNumber,
-						username:this.username,
 					};
 				uni.setStorage({
 					key:'userInfo',
@@ -279,37 +314,33 @@
 				 this.login(list);
 				 uni.navigateBack();
 			},
+			// --------获得头像---------
 			getPhoto(){
 				var that=this;
 				uni.chooseImage({
 					count:1,
 					//sourceType:['album'],
 					success(res) {
-						//console.log(res.tempFilePaths,"res11");
 						var tempFilePaths = res.tempFilePaths;
 						that.port=res.tempFiles;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
 						  success: function (res1) {
 							var savedFilePath = res1.savedFilePath;
-							// pathToBase64(res1.savedFilePath)
-							// .then(base64 => {
-							// 	that.portrait=JSON.stringify(base64);
-							// 	console.log(that.portrait)
-							// })
 							 that.portrait=res1.savedFilePath;
-							// console.log(that.portrait,"301")
 						  }
-						});
-						// pathToBase64(res.tempFilePaths[0])
-						// .then(base64 => {
-						// 	that.portrait=base64;
-						// })
-						 
+						}); 
 					}
-				})
-				
-				
+				})	
+			},
+			//------------判断是否为base64格式-----------
+			isBase64:function(str) {
+			    if (str ==='' || str.trim() ===''){ return false; }
+			    try {
+			        return btoa(atob(str)) == str;
+			    } catch (err) {
+			        return false;
+			    }
 			},
 	}
 }

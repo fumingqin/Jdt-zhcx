@@ -150,12 +150,15 @@
 							success(res) {
 								if(captcha==res.data.code&&phone==res.data.phone){
 									uni.request({
-										url:'http://218.67.107.93:9210/api/app/login?phoneNumber='+phone,
+										url:'http://111.231.109.113:8002/api/person/login',
+										data:{
+											phoneNumber:phone,
+										},
 										method:"POST",
 										success(res) {
-											//console.log(res)
+											console.log(res)
 											uni.showToast({
-												title:res.data.msg,
+												title:"登录成功!",
 												icon:"none"
 											})
 											uni.setStorage({
@@ -167,29 +170,33 @@
 												success:function(user){
 													//console.log(user,"user")
 													if(user.data.nickname==""||user.data.nickname==null){
-														user.data.nickname="用户"+user.data.username;
+														user.data.nickname="用户"+user.data.phoneNumber;
 													}
 													var base64=res.data.data.portrait;
-													base64ToPath(base64)
-													  .then(path => {
-													    user.data.portrait=path;
+													if(that.isBase64(base64)){
+														base64ToPath(base64)
+														  .then(path => {
+															user.data.portrait=path;
+															that.login(user.data);
+														  })
+														  .catch(error => {
+															console.error(error)
+														  })	
+													}else{
 														that.login(user.data);
-													  })
-													  .catch(error => {
-													    console.error(error)
-													  })
-													
+													}	
+													if(that.urlData==1){
+														uni.switchTab({  //返回首页
+															url:'/pages/Home/Index',
+														}) 
+													}else{
+														uni.navigateBack();//返回上一页
+													}
 												}
 											})
 										}
 									})
-									if(that.urlData==1){
-										uni.switchTab({  //返回首页
-											url:'/pages/Home/Index',
-										}) 
-									}else{
-										uni.navigateBack();//返回上一页
-									}
+									
 								}else{
 									uni.showToast({
 										title:"验证码错误",
@@ -204,7 +211,7 @@
 			wxLogin(){		//微信授权登录
 				var theSelf=this;
 				var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
-				var address;
+				//var address;
 				uni.login({
 					provider:'weixin',
 					success:function(loginRes){
@@ -328,14 +335,20 @@
 						  	self.textCode = second+"秒后重发";
 						  }},1000)
 						 uni.request({
-							url:'http://218.67.107.93:9210/api/app/getLoginCode?phoneNumber='+self.phoneNumber,
-						    method:"POST",
+							// url:'http://218.67.107.93:9210/api/app/getLoginCode?phoneNumber='+self.phoneNumber,
+							url:'http://111.231.109.113:8002/api/person/getLoginCode',
+						    data:{
+								phoneNumber:self.phoneNumber,
+							},
+							method:"POST",
 							success:(res)=>{
-						 		console.log(res.data.code);
+								console.log(res,"340");
+						 		console.log(res.data.data);
 								uni.setStorage({
 									key:'captchaCode',
 									data:{
-										code:res.data.code,
+										code:res.data.data,
+										//code:'1234',
 										phone:self.phoneNumber,
 									}
 								})
@@ -344,14 +357,6 @@
 										key:'captchaCode',
 									})
 								},300000);
-						 		// if(res.data){
-						 			
-						 		// }else{
-						 		// 	uni.showToast({
-						 		// 		title : '手机号码有误',
-						 		// 		icon : 'none',
-						 		// 	})
-						 		// }
 						    }
 						 }) 
 					  }
@@ -369,6 +374,15 @@
 				// 	url:'/pages/GRZX/user'
 				// })
 				uni.navigateBack();
+			},
+			//------------判断是否为base64格式-----------
+			isBase64:function(str) {
+			    if (str ==='' || str.trim() ===''){ return false; }
+			    try {
+			        return btoa(atob(str)) == str;
+			    } catch (err) {
+			        return false;
+			    }
 			},
 		}
 	}

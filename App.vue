@@ -9,13 +9,13 @@
 		onLaunch: function() {
 			// 获取登录状态
 			let userInfo = uni.getStorageSync('userInfo') || '';
-			if(userInfo.unid){
+			if(userInfo.userId){
 				//更新登陆状态
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
 						if(res.data.nickname==""||res.data.nickname==null){
-							res.data.nickname="用户"+res.data.username;
+							res.data.nickname="用户"+res.data.phoneNumber;
 						}
 						this.login(res.data);
 						//console.log(res.data.portrait,"555")
