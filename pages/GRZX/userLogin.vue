@@ -184,7 +184,7 @@
 														  })	
 													}else{
 														that.login(user.data);
-													}	
+													}
 													if(that.urlData==1){
 														uni.switchTab({  //返回首页
 															url:'/pages/Home/Index',

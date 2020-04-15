@@ -172,7 +172,7 @@
 						console.log(res)
 						this.orderInfo = res.data.data;
 						this.screenUser();
-					}
+					} 
 				})
 		},
 		methods: {
@@ -255,6 +255,7 @@
 					console.log(res)
 				}
 			})
+			// #ifdef H5
 			uni.request({
 				url:'',
 				method:'POST',
@@ -285,6 +286,43 @@
 					})
 				}
 			})
+			// #endif
+			
+			
+			// #ifdef APP-PLUS
+			uni.request({
+				url:'',
+				method:'POST',
+				success:(e)=>{
+					uni.requestPayment({
+						provider: 'alipay',
+						orderInfo: e,
+						success: function(res) {
+							console.log(res)
+							uni.redirectTo({
+								url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+							})
+						},
+						fail: function(ee) {
+							uni.showToast({
+								title:'支付失败，请检查手机网络是否正常，如若无问题请联系客服',
+								icon:'none',
+								duration:3000
+							})
+						}
+					})
+				},
+				fail: () => {
+					uni.showToast({
+						title:'支付失败，请查看订单是否已取消，如若无问题请联系客服',
+						icon:'none',
+						duration:3000
+					})
+				}
+			})
+			// #endif
+			
+			
 			}
 
 

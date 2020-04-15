@@ -90,6 +90,7 @@
 						systemName:'泉运公司综合出行'
 					},
 					success: (res) => {
+						console.log(res)
 						uni.hideLoading();
 						let that = this;
 						// console.log(res.data);
