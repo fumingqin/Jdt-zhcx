@@ -178,18 +178,18 @@
 													  .catch(error => {
 													    console.error(error)
 													  })
-													
+													if(that.urlData==1){
+														uni.switchTab({  //返回首页
+															url:'/pages/Home/Index',
+														}) 
+													}else{
+														uni.navigateBack();//返回上一页
+													}
 												}
 											})
 										}
 									})
-									if(that.urlData==1){
-										uni.switchTab({  //返回首页
-											url:'/pages/Home/Index',
-										}) 
-									}else{
-										uni.navigateBack();//返回上一页
-									}
+									
 								}else{
 									uni.showToast({
 										title:"验证码错误",
