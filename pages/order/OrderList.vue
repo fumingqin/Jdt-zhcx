@@ -116,26 +116,31 @@
 					</view>
 					
 					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderState}}</view>
+						<!-- 站点-状态 -->
+						<view class="u-f-ac">
+							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
+								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{item.orderState}}</view>
+							</view>
 						</view>
-				
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setTime}}</view>
-							<view style="width: 160rpx; height: 44rpx; text-align: center; color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.price}}</view>
+						<!-- 时间-价格 -->
+						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+								<view>{{item.setTime}}</view>
+								<view style="margin-right: 20rpx;">¥{{item.price}}</view>
+							</view>
 						</view>
-				
-						<view style="display: flex; margin-top: -16rpx;">
+						<!-- 上车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="bluering"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startStation}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startStation}}</view>
 						</view>
-				
-						<view style="display: flex; margin-top: 36rpx;">
+						<!-- 下车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="redring"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endStation}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endStation}}</view>
 						</view>
 				
 						<view class="CTKYBtnView">
@@ -938,6 +943,7 @@
 						for(var i = 0; i < res.data.data.length; i++) {
 							that.info.push(res.data.data[i]);
 						}
+						
 						that.finishArr = [];
 						that.goingArr = [];
 						that.unfinishArr = [];
@@ -1310,6 +1316,30 @@
 </script>
 
 <style lang="scss">
+	/* flex布局 */
+	.u-f,
+	.u-f-ac,
+	.u-f-jsb,
+	.u-f-jc {
+		display: flex;
+		/* 设置当前内容全部水平布局 */
+	}
+	
+	.u-f-ac,
+	.u-f-jsb,
+	.u-f-jc {
+		align-items: center;
+		/* 设置内容中心点对齐 */
+	}
+	
+	.u-f-jc {
+		justify-content: center;
+	}
+	
+	.u-f-jsb {
+		justify-content: space-between;
+		/* 设置左右两边靠边布局 */
+	}
 	page {
 		width: 100%;
 		height: 100%;
@@ -1328,14 +1358,13 @@
 		border-radius: 12rpx;
 		box-shadow: 0 0 5rpx 0rpx #aaa;
 	}
-
 	.bluering {
 		width: 8rpx;
 		height: 8rpx;
 		border: 4rpx solid #06B4FD;
 		background: #06B4FD;
 		border-radius: 100%;
-		margin: 0rpx 96rpx;
+		margin-left: 96rpx;
 	}
 
 	.redring {
@@ -1344,7 +1373,7 @@
 		border: 4rpx solid #FC4646;
 		background: #FC4646;
 		border-radius: 100%;
-		margin: 0rpx 96rpx;
+		margin-left: 96rpx;
 	}
 
 

@@ -1,5 +1,5 @@
 <template>
-	<view class="nodata" v-if="isShow">
+	<view class="nodata" v-if="isShow" style="display: flex;width: 100%;">
 		<image :src="image" mode="widthFix" class="empty_image"></image>
 		<text :style="{color:textColor}">{{ text }}</text>
 	</view>
@@ -39,19 +39,17 @@ export default {
 
 <style lang="scss">
 .nodata {
-	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	height: 400rpx;
-	width: 100%;
 	margin-top: 200rpx;
 	align-items: center;
 	color: #555555;
 	font-size: 24rpx;
-	
 }
 .empty_image {
 		width: 200rpx !important;
+		height: 200rpx;
 		margin-bottom: 50rpx;
 	}
 </style>
