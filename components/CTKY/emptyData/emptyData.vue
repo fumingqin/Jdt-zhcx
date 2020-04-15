@@ -22,7 +22,8 @@ export default {
 			type: String,
 			default: '#999999'
 		},
-		isShow: {
+		
+		isShow: { 
 			type: Boolean,
 			default: false
 		}
