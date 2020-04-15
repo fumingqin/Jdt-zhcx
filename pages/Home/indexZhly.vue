@@ -131,7 +131,7 @@
 						method: 'POST',
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						success: (e) => {
-							console.log(e)
+							// console.log(e)
 							this.titleNViewBackground = e.data.data[0].background;
 							this.swiperLength = e.data.data.length;
 							this.rotationPicture = e.data.data;

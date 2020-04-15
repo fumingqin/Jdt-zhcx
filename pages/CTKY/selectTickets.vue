@@ -25,7 +25,7 @@
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
 					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType=='普通班车'">传统</view>
 					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.shuttleType=='定制班车'">定制</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{utils.timeTodate('Y-m-d H:i:s',item.setTime)}}</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{turnDate(item.setTime)}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
@@ -77,20 +77,20 @@
 			}
 		},
 		onLoad(param) {
-			console.log(param);
 			//班次列表数据参数，从上一个页面传过来的时间，上下车点
 			this.date = param.date;
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			
+			//初始化时间轴
 			this.loadDate();
+			
+			//点击顶部时间，请求该时间的班次列表
             this.getDeparture();
+			
 			//加载班次列表数据
 			this.getTicketInfo(this.date);
 			
-		},
-		onReady() {
-
 		},
 		methods: {
 			//加载班次列表数据
@@ -134,13 +134,17 @@
 				this.date = item.longDate;
 				this.getDeparture();
 			},
-			//显示日期
+			//-------------------------------时间转换-------------------------------
+			turnDate(date) {
+				return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
+			},
+			//-------------------------------显示日期-------------------------------
 			onShowDatePicker(type) { //显示
 				this.type = type;
 				this.showPicker = true;
 				this.value = this[type];
 			},
-			//选择日期
+			//-------------------------------选择日期-------------------------------
 			onSelected(e) { 
 				this.showPicker = false;
 				if (e) {
@@ -189,7 +193,7 @@
 					}
 				}
 			},
-			//点击班次进行缓存，并打开页面
+			//-------------------------------点击班次进行缓存，并打开页面-------------------------------
 			ticketDetail(item) {
 				var that = this;
 				
@@ -268,7 +272,7 @@
 					return currentDate + " " + currentTime;
 				}
 			},
-			//初始化时间轴
+			//-------------------------------初始化时间轴-------------------------------
 			loadDate() {
 				var date = new Date();
 				console.log(date);
