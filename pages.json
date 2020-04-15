@@ -538,6 +538,10 @@
 		}, {
 			"path": "pages/BCFW/home/ho_choice",
 			"style": {}
+		},
+		{
+			"path":"pages/BCFW/choice/ci_information",
+			"style": {}
 		}
 	],
 	"globalStyle": {
