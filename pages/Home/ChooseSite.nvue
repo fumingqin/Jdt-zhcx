@@ -482,7 +482,9 @@
 				}
 			},
 			goBack: function() { //返回上一页
-				uni.navigateBack();
+				uni.switchTab({
+					url:"/pages/Home/Index"
+				});
 				clearInterval(this.intervalAround);
 			},
 			clearHistpry: function() { //清除历史记录
