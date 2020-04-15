@@ -21,9 +21,9 @@
 				<view class='bg color-ff padding-lr btn border' @click='submit'>确定</view>
 			</view> -->
 		</view>
-		<map id='map' :scale='map.scale' :show-location='map.showLocation' :longitude='map.longitude' :latitude='map.latitude'
+		<map id='map' :scale='map.scale' show-location="true" :longitude='map.longitude' :latitude='map.latitude'
 		 :width='map.width' :height='map.height' :controls='map.controls' :markers='map.markers' @regionchange='mapChange'
-		 :style="{height:mapHeight}">
+		 :style="{height:mapHeight}" :enable-overlooking="false" :enable-satellite="false" :enable-3D="false">
 			<!-- <cover-view class='icon-position' style="margin-top: 100px;"> -->
 			<cover-image src="../../static/Home/icon_position.png" class="icon-img"></cover-image>
 			<!-- </cover-view> -->
