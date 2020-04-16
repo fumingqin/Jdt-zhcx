@@ -140,6 +140,8 @@
 		},
 		onReady() {
 			var that = this;
+			/* getApp().globalData.orderNumber=1;
+			getApp().globalData.constantly(); */
 			that.mapContext = uni.createMapContext("map", this);
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
