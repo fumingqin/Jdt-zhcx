@@ -157,12 +157,12 @@
 		  this.loadData();
 		},
 		onShow(){
-			//uni.startPullDownRefresh();
+			uni.startPullDownRefresh();
 			this.loadData();
 		},
 	    methods: {	
 			// ---------加载数据---------
-			 loadData(){
+			async loadData(){
 				var array=[];
 				var list=[];
 				var that=this;
@@ -185,8 +185,7 @@
 							},
 							method:'POST',
 							success(res1) {
-								uni.stopPullDownRefresh();
-								console.log(res1,'111')
+								//console.log(res1,'111')
 								for(var i=0;i<res1.data.data.length;i++){
 									if(res1.data.data[i].userSex==0){
 										res1.data.data[i].userSex="男";
@@ -209,6 +208,7 @@
 										list1.push(array[i]);
 									}
 								}
+								uni.stopPullDownRefresh();
 								uni.setStorage({
 									key:'passengerList',
 									data:list1,

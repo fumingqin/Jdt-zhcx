@@ -52,11 +52,11 @@
 					</view>
 				</view> -->
 				
-				<view class="itemClass borderTop">
+				<!-- <view class="itemClass borderTop">
 					<picker class="proveClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
 						{{selector}}
 					</picker>
-				</view>
+				</view> -->
 			</view>
 			
 			<!-- 上传证件 -->
@@ -284,7 +284,7 @@
 				var codeNum=data1.userCodeNum;
 				if(data1.userName!=null&&data1.userName!=""&&data1.userPhoneNum!=null&&data1.userPhoneNum!=""&&data1.userCodeNum!=null&&data1.userCodeNum!=""){
 					//--------额外凭证--------
-					if(that.selector!="请添加额外凭证"&&that.fImg!=""&&that.fImg!=null&&that.bImg!=""&&that.bImg!=null){
+					if((that.selector!="请添加额外凭证"&&that.fImg!=""&&that.fImg!=null&&that.bImg!=""&&that.bImg!=null)||(that.selector=="请添加额外凭证")){
 						var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 						if(data1.userPhoneNum.length!=11){
 							uni.showToast({
