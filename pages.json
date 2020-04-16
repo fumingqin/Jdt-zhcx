@@ -550,9 +550,25 @@
 		},
 		{
 			"path":"pages/BCFW/choice/ci_information",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "用车信息"
+			}
 		}
-	],
+	    ,{
+            "path" : "pages/BCFW/choice/ci_choiceVehicleType",
+            "style" : {
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				},
+				"navigationBarTitleText": "选择车型"
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
