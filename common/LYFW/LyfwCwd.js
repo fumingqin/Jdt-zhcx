@@ -1028,6 +1028,35 @@ const noticeContent={
 	msg: '提示'
 }
 
+const choiceVehicle={
+	status: 1, //1成功,0失败提示返回值
+	data:{
+		id:1,
+		address:'厦门国际机场',
+		destination:'泉州晋江',
+		time:'2020-03-20',
+		day:'1天',
+	},
+	msg: '提示'
+}
+
+const priceExplain={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		title:'费用说明',
+		way:'用车当日可使用8小时，包括100公里（多日包车中，当日未用完的部分不可累计）',
+	},
+	{
+		title:'费用包含',
+		way:'车辆使用费，燃油费，司机服务费，司机餐食费',
+	},
+	{
+		title:'费用不含',
+		way:'费用中，不包括以下内容产生的费用： <p></p> 1、超时长费：超出套餐时长外产生的费用（收费标准详见订单填写页） <p></p> 2、超公里费：超出套餐公里数产生的费用（收费标准详见订单填写页） <p></p> 3、空驶费：实际下车地点与下车时填写的不一致，导致的司机车辆空驶的费用。（具体收费标准详见订单填写页）',
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -1055,4 +1084,6 @@ export default {
 	recommendedContent,
 	charteredCarContent,
 	noticeContent,
+	choiceVehicle,
+	priceExplain,
 }
