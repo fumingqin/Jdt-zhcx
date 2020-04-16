@@ -11,8 +11,8 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
-					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -36,8 +36,8 @@
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
-					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -130,7 +130,7 @@
 				state:'1', //1管理， 2完成
 				passengerList:[],
 				addressList:[],
-				unid:'',
+				userId:'',
 			}
 	    },
 		onLoad(){
@@ -146,12 +146,13 @@
 							//loginType=1,泉运登录界面
 							//loginType=2,今点通登录界面
 							//loginType=3,武夷股份登录界面
-							url  : '/pages/GRZX/userLogin?loginType=1'
+							url  : '/pages/GRZX/userLogin?loginType=1&&urlData=3'
 						}) 
 					},500);
 				}
 			})
 		},
+		// ---------下拉刷新---------
 		onPullDownRefresh:function(){
 		  this.loadData();
 		},
@@ -160,32 +161,42 @@
 			this.loadData();
 		},
 	    methods: {	
-			 loadData(){
+			// ---------加载数据---------
+			async loadData(){
 				var array=[];
 				var list=[];
+				var that=this;
 				uni.getStorage({
 					key:"passengerList",
 					success(res2) {
 						for(var j=0;j<res2.data.length;j++){
-							list.push(res2.data[j].userID);
+							list.push(res2.data[j].passengerId);
 						}
 					}
 				})
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
+						that.userId=res.data.userId;
 						uni.request({
-							url:'http://218.67.107.93:9210/api/app/userInfoList?id='+res.data.unid,
+							url:'http://111.231.109.113:8002/api/person/userInfoList',
+							data:{
+								userId:res.data.userId
+							},
 							method:'POST',
 							success(res1) {
-								uni.stopPullDownRefresh();
-								console.log(res1,'111')
+								//console.log(res1,'111')
 								for(var i=0;i<res1.data.data.length;i++){
+									if(res1.data.data[i].userSex==0){
+										res1.data.data[i].userSex="男";
+									}else{
+										res1.data.data[i].userSex="女";
+									}
 									res1.data.data[i].deleteIndex=0;
 									var data1=res1.data.data[i];
 									data1.hiddenIndex=0;
 									for(var q=0;q<list.length;q++){
-										if(data1.userID==list[q]){
+										if(data1.passengerId==list[q]){
 											data1.hiddenIndex=1;
 										}
 									}
@@ -197,6 +208,7 @@
 										list1.push(array[i]);
 									}
 								}
+								uni.stopPullDownRefresh();
 								uni.setStorage({
 									key:'passengerList',
 									data:list1,
@@ -230,14 +242,15 @@
 				this.passengerList=array;
 				// this.addressList=address;
 			},
-			//乘车人管理
+			//---------乘车人管理---------
 			passengerClick(){
 				this.type=1;
 			},
 			addressClick(){
 				this.type=2;
 			},
-	        editPassenger(e){   //编辑乘车人信息
+			// ---------编辑乘车人---------
+	        editPassenger(e){  
 	        	uni.setStorage({
 	        		key:'editPassenger',
 	        		data:e
@@ -246,6 +259,7 @@
 	        		url:'/pages/GRZX/addPassenger?type=edit'
 	        	})
 	        },
+			// ---------添加乘车人---------
 			addPassenger(){
 				uni.getStorage({
 					key:'userInfo',
@@ -262,12 +276,13 @@
 					}
 				})
 			},
-			//地址管理
+			// ---------地址管理---------
 			addAddress(){
 				uni.redirectTo({
 					url:'/pages/GRZX/addAddress?type=add'
 				})
 			},
+			// ---------选择地址---------
 			chooseAddress(e){
 				// uni.setStorage({
 				// 	key:'chooseAddress',
@@ -275,6 +290,7 @@
 				// })
 				console.log(2222)
 			},
+			// ---------编辑地址---------
 			editAddress(e){   
 			//console.log(3333)
 				uni.setStorage({
@@ -285,8 +301,10 @@
 					url:'/pages/GRZX/addAddress?type=edit'
 				})
 			},
-			deletePassenger(){ //删除乘车人信息
+			// ---------删除乘车人信息---------
+			deletePassenger(){ 
 				var data=this.passengerList;
+				var that=this;
 				// uni.removeStorage({
 				//     key: 'passengerList',
 				//     success: function (res) {
@@ -308,7 +326,11 @@
 				}else{
 					for(var j=0;j<deleteList.length;j++){
 						uni.request({
-							url:'http://218.67.107.93:9210/api/app/deleteUserInfo?userId='+deleteList[j].userID,
+							url:'http://111.231.109.113:8002/api/person/deletuserInfoList',
+							data:{
+								userId:that.userId,
+								passengerId:deleteList[j].passengerId,
+							},
 							method:'POST',
 							success(res) {
 								//console.log(res,"res")
@@ -321,7 +343,8 @@
 					})
 				}
 			},
-			deleteAddress(){  //删除地址
+			// ---------删除地址---------
+			deleteAddress(){  //
 				var data=this.addressList;
 				var array=[];
 				for(var i=0;i<data.length;i++){
@@ -345,6 +368,7 @@
 					url:'/pages/GRZX/infoList'
 				})
 			},
+			// ---------选中---------
 			selete(e){
 				if(e.deleteIndex==0){
 					e.deleteIndex=1;
@@ -352,11 +376,13 @@
 					e.deleteIndex=0;
 				}
 			},
+			// ---------返回按钮---------
 			returnClick(){
 				uni.switchTab({
 					url:'/pages/GRZX/user'
 				})
 			},
+			// ---------删除乘车人---------
 			deleteClick(){
 				var that=this;
 				uni.getStorage({
@@ -372,6 +398,7 @@
 					}
 				})
 			},
+			// ---------完成---------
 			finishClick(){
 				this.state=1;
 			},
