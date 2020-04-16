@@ -52,11 +52,11 @@
 					</view>
 				</view> -->
 				
-				<!-- <view class="itemClass borderTop">
+				<view class="itemClass borderTop">
 					<picker class="proveClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
 						{{selector}}
 					</picker>
-				</view> -->
+				</view>
 			</view>
 			
 			<!-- 上传证件 -->
@@ -219,30 +219,37 @@
 						if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
 							that.selector=res.data.userType;
 							uni.request({
-								url:'http://111.231.109.113:8002/api/person/userInfoList',
+								url:'http://111.231.109.113:8002/api/person/userInfoListDetail',
 								data:{
 									userId:that.userId,
+									passengerId:that.user.passengerId,
 								},
 								method:'POST',
 								success(res1) {
 									console.log(res1,"res1")
-									var list=res1.data.data.filter(item => {
-										return item.passengerId === that.user.passengerId;
-									})
-									if(that.isBase64(list.userfrontImg)){
-										base64ToPath(list.userfrontImg)
+									var front= res1.data.data.userfrontImg;
+									if(that.isBase64(front)){
+										base64ToPath(front)
 										  .then(path => {
 										    that.user.userfrontImg=path;
+											console.log(that.user.userfrontImg,"235")
+										})
+									}else{
+										that.user.userfrontImg=front;
+									}
+									var back= res1.data.data.userbackImg;
+									if(that.isBase64(back)){
+										base64ToPath(back)
+										  .then(path2 => {
+										    that.user.userbackImg=path2;
+											console.log(that.user.userbackImg,"245")
 										})
 									}
-									if(that.isBase64(list.userbackImg)){
-										base64ToPath(list.userbackImg)
-										  .then(path => {
-										    that.user.userbackImg=path;
-										})
+									else{
+										that.user.userbackImg=back;
 									}
-									that.auditState1=res.data.userauditState;
-									that.auditState2=res.data.userauditState;
+									that.auditState1=res1.data.data.userauditState;
+									that.auditState2=res1.data.data.userauditState;
 								}
 							})
 							// that.user.userfrontImg=res.data.userfrontImg;
@@ -549,7 +556,7 @@
 			},
 			//------------判断是否为base64格式-----------
 			isBase64:function(str) {
-			    if (str ==='' || str.trim() ===''){ return false; }
+			    if (str ===''){ return false; }
 			    try {
 			        return btoa(atob(str)) == str;
 			    } catch (err) {
