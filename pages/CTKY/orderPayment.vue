@@ -74,7 +74,7 @@
 				</view>
 			</view>
 
-			<view class="MP_information2">
+			<view class="MP_information2" v-if="false">
 				<view class="MP_optionBar">
 					<text class="Mp-icon jdticon icon-alipay"></text>
 					<text class="Mp_title">支付宝</text>
@@ -109,14 +109,13 @@
 				channeIndex: 0, //选择支付方式
 				orderInfo: [], //订单数据
 				passengerInfo: [], //乘车人信息
-				idNameType: [], //乘车人数组（发送请求需要）（摸料子接口）
 				idNameTypeStr: '', //乘车人信息字符串（发送请求需要）（小叶接口）
-				ticketNum: 0, //总票数
-				adultNum: 0, //成人数量
-				childrenNum: 0, //儿童数量	
+				ticketNum: '0', //总票数
+				adultNum: '0', //成人数量
+				childrenNum: '0', //儿童数量	
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
-				totalPrice: '', //总价格
+				totalPrice: '0', //总价格
 				paymentData:[],//保存支付参数
 				timer:'',//定时器数据
 				isPayEnable: 0,//当前是否可以点击支付
@@ -165,7 +164,7 @@
 					key: 'ticketDate',
 					success: function(data) {
 						that.orderInfo = data.data;
-						console.log('订单数据',that.orderInfo)
+						// console.log('订单数据',that.orderInfo)
 					},
 					fail() {
 						uni.showToast({
@@ -206,7 +205,6 @@
 							//拼接id name type
 							that.idNameTypeStr += data.data[i].userCodeNum + ',' + data.data[i].userName + ',' + type + '|';
 							
-							// that.idNameType.push(array);
 							that.ticketNum++;
 							//把儿童票筛选出来
 							if (that.passengerInfo.userType == '儿童') {
@@ -217,34 +215,32 @@
 						}
 						that.idNameTypeStr = that.idNameTypeStr.substring(0,that.idNameTypeStr.length-1);
 						console.log('idNameTypeStr',that.idNameTypeStr);
-						// console.log('idNameType',that.idNameType);
-						// var data= {
-						// 	companyCode: '泉运公司综合出行',
-						// 	clientID: that.userInfo.unid,//用户ID
-						// 	clientName: that.userInfo.username,//用户名
-						// 	phoneNumber: that.userInfo.phoneNumber,//手机号码
+						var data= {
+							companyCode: '泉运公司综合出行',
+							clientID: that.userInfo.unid,//用户ID
+							clientName: that.userInfo.username,//用户名
+							phoneNumber: that.userInfo.phoneNumber,//手机号码
 							
-						// 	scheduleCompanyCode: that.orderInfo.scheduleCompanyCode,
-						// 	executeScheduleID: that.orderInfo.executeScheduleID,
-						// 	startSiteID: that.orderInfo.startSiteID,//上车点ID
-						// 	endSiteID: that.orderInfo.endSiteID,//下车点ID
-						// 	startSiteName: that.orderInfo.startStaion,//起点站
-						// 	endSiteName: that.orderInfo.endStation,//终点站
-						// 	priceID: that.orderInfo.priceID,//价格ID
-						// 	setOutTime: that.orderInfo.setTime,//订单时间
-						// 	insuredPrice: that.orderInfo.insurePrice,//保险价格
-						// 	carType: that.orderInfo.shuttleType,//班车类型
+							scheduleCompanyCode: that.orderInfo.scheduleCompanyCode,
+							executeScheduleID: that.orderInfo.executeScheduleID,
+							startSiteID: that.orderInfo.startSiteID,//上车点ID
+							endSiteID: that.orderInfo.endSiteID,//下车点ID
+							startSiteName: that.orderInfo.startStaion,//起点站
+							endSiteName: that.orderInfo.endStation,//终点站
+							priceID: that.orderInfo.priceID,//价格ID
+							setOutTime: that.orderInfo.setTime,//订单时间
+							insuredPrice: that.orderInfo.insurePrice,//保险价格
+							carType: that.orderInfo.shuttleType,//班车类型
 							
-						// 	fullTicket: that.adultNum,//全票人数
-						// 	halfTicket: that.childrenNum,//半票人数
-						// 	carryChild: that.childrenNum,//携童人数
-						// 	idNameType: that.idNameType,
-						// 	insured: that.isInsurance,//是否选择了保险
-						// 	openId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
-						// 	totalPrice: that.totalPrice,//总价格
-							
-						// }
-						// console.log('data',data)
+							fullTicket: that.adultNum,//全票人数
+							halfTicket: that.childrenNum,//半票人数
+							carryChild: that.childrenNum,//携童人数
+							idNameType: that.idNameTypeStr,
+							insured: that.isInsurance,//是否选择了保险
+							openId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
+							totalPrice: that.totalPrice,//总价格
+						}
+						console.log('data',data)
 					},
 					fail() {
 						uni.showToast({
@@ -304,7 +300,8 @@
 				})
 				// console.log('用户信息',that.userInfo);
 				// console.log('订单信息',that.orderInfo);
-				// console.log('idNameType',that.idNameType);
+				var setTime = that.orderInfo.setTime.replace('T',' ');
+				console.log(setTime);
 				//--------------------------发起下单请求-----------------------
 				uni.showLoading();
 				uni.request({
@@ -326,7 +323,7 @@
 						startSiteName: that.orderInfo.startStaion,//起点站
 						endSiteName: that.orderInfo.endStation,//终点站
 						priceID: that.orderInfo.priceID,//价格ID
-						setOutTime: that.orderInfo.setTime,//发车时间
+						setOutTime: setTime,//发车时间
 						insuredPrice: that.orderInfo.insurePrice,//保险价格
 						carType: that.orderInfo.shuttleType,//班车类型
 						
@@ -342,6 +339,7 @@
 					success: (res) => {
 						let that = this;
 						console.log('返回参数',res);
+						
 						//获取车票支付参数
 						// that.getTicketPaymentInfo(res);
 					},
@@ -374,8 +372,12 @@
 								that.paymentData = JSON.parse(res.data.data);
 								that.isPayEnable = 1;
 								clearInterval(timer);
+							}else {
+								uni.hideLoading();
+								clearInterval(timer);
 							}
 							if (res.data.msg != null) {
+								uni.hideLoading();
 								uni.showToast({
 									title: '请在2分钟内完成支付',
 									icon: 'none'

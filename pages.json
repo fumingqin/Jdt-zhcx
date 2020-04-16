@@ -317,6 +317,9 @@
 		{
 			"path": "pages/CTKY/ctkyIndex",
 			"style": {
+				// #ifdef APP-PLUS
+				"navigationStyle": "default",
+				// #endif
 				"navigationBarTitleText": "客运"
 			}
 		},{
