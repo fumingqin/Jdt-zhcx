@@ -5,10 +5,10 @@
 			<view style="background-color: #FFF; ">
 				<view style="padding-bottom: 30rpx;">
 					<view style="flex-direction: row;justify-content: center;">
-						<view style="width: 10%;">
-							<uni-icons type="arrowleft" size="24" @click="goBack"></uni-icons>
+						<view style="width: 60rpx;align-items: flex-start">
+							<uni-icons type="arrowleft" size="26" @click="goBack"></uni-icons>
 						</view>
-						<view style="width: 674rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
+						<view style="width: 634rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
 							<view style="flex-grow:1">
 								<view>
 									<view style="flex-direction: row; align-items: center;padding-top: 15rpx;">
@@ -16,7 +16,7 @@
 											<view class="bluering"></view>
 										</view>
 										<view>
-											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="disabled" @click="selectInitial('qidian')"
+											<input placeholder="请输入起点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectInitial('qidian')"
 											 v-model="initialPoint" />
 										</view>
 									</view>
@@ -27,7 +27,7 @@
 										<view class="redring"></view>
 									</view>
 									<view>
-										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="disabled" @click="selectDestination('zhongdian')"
+										<input placeholder="请输入终点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectDestination('zhongdian')"
 										 v-model="destination" />
 									</view>
 								</view>
@@ -482,7 +482,9 @@
 				}
 			},
 			goBack: function() { //返回上一页
-				uni.navigateBack();
+				uni.switchTab({
+					url:"/pages/Home/Index"
+				});
 				clearInterval(this.intervalAround);
 			},
 			clearHistpry: function() { //清除历史记录

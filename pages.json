@@ -17,7 +17,7 @@
 
 			"style": {
 				"navigationBarTitleText": "景区列表",
-				"enablePullDownRefresh":true,
+				"enablePullDownRefresh": true,
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"onReachBottomDistance": 0,
 				"app-plus": {
@@ -52,9 +52,9 @@
 				"navigationBarTitleText": "查看图片"
 			}
 		},
-	
+
 		{
-		
+
 			"path": "pages/LYFW/currency/travelDetails",
 			"style": {
 				// #ifdef APP-PLUS
@@ -276,7 +276,7 @@
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
-				"enablePullDownRefresh":true,
+				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#f5f5f5"
 				// "navigationStyle": "custom"
@@ -307,7 +307,7 @@
 		}, {
 			"path": "pages/CZC/PaymentFail",
 			"style": {}
-		},  {
+		}, {
 			"path": "pages/GRZX/complaint",
 			"style": {
 				"navigationBarTitleText": "我要投诉"
@@ -319,17 +319,17 @@
 			"style": {
 				"navigationBarTitleText": "客运"
 			}
-		},{
-		    "path" : "pages/CTKY/homeSattionPick",
-		    "style" : {
+		}, {
+			"path": "pages/CTKY/homeSattionPick",
+			"style": {
 				"navigationBarTitleText": "选择站点"
 			}
-		},{
+		}, {
 			"path": "pages/CTKY/selectTickets",
 			"style": {
 				"navigationBarTitleText": "班次列表"
 			}
-		},{
+		}, {
 			"path": "pages/CTKY/scheduleDetails",
 			"style": {
 				"backgroundColor": "#F1F1F1",
@@ -346,7 +346,7 @@
 				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "选择座位"
 			}
-		},{
+		}, {
 			"path": "pages/CTKY/oederList",
 			"style": {
 				"navigationBarTitleText": "订单列表"
@@ -380,7 +380,7 @@
 			"style": {
 				"navigationBarTitleText": "查看班车位置"
 			}
-		},{
+		}, {
 			"path": "pages/CTKY/orderPayment", //推文详情
 			"style": {
 				"navigationBarTitleText": "订单支付"
@@ -405,7 +405,7 @@
 		}, {
 			"path": "pages/Home/indexZhly",
 			"style": {
-				"enablePullDownRefresh":true,
+				"enablePullDownRefresh": true,
 				// #ifdef MP
 				"navigationBarTitleText": "南平智慧旅游APP",
 				//"navigationStyle": "custom",
@@ -445,8 +445,8 @@
 			"path": "pages/Home/navigation",
 			"style": {
 				"navigationBarTitleText": "搜索",
-				"navigationBarBackgroundColor" : "#149bf0",
-				"navigationBarTextStyle" : "white"
+				"navigationBarBackgroundColor": "#149bf0",
+				"navigationBarTextStyle": "white"
 			}
 		}, {
 			"path": "pages/GRZX/collection",
@@ -458,7 +458,7 @@
 			"style": {
 				"navigationBarTitleText": "我的历史"
 			}
-		}, 
+		},
 		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
@@ -470,7 +470,7 @@
 			"style": {
 				"navigationBarTitleText": "推送详情"
 			}
-		},  {
+		}, {
 			"path": "pages/Home/InformationDetails",
 			"style": {
 				"navigationBarTitleText": "资讯详情"
@@ -479,24 +479,22 @@
 		{
 			"path": "pages/GJCX/detailed",
 			"style": {}
-		}
-	    ,{
-            "path" : "pages/LYFW/independentTravel/it_list",
-            "style" : {}
-        },
+		}, {
+			"path": "pages/LYFW/independentTravel/it_list",
+			"style": {}
+		},
 		{
-            "path" : "pages/LYFW/groupTour/groupTourList",
-            "style" : {
+			"path": "pages/LYFW/groupTour/groupTourList",
+			"style": {
 				"navigationBarTitleText": "跟团游列表"
 			}
-        }
-        ,{
-            "path" : "pages/LYFW/groupTour/viewMore",
-            "style" : {}
-        },
+		}, {
+			"path": "pages/LYFW/groupTour/viewMore",
+			"style": {}
+		},
 		{
-            "path" : "pages/Home/ho_zhly",
-            "style" : {
+			"path": "pages/Home/ho_zhly",
+			"style": {
 				"navigationBarTitleText": "南平智慧旅游APP",
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
@@ -507,7 +505,7 @@
 					}
 				}
 			}
-        },
+		},
 		{
 			"path": "pages/Home/MapIndex",
 			"style": {
@@ -518,7 +516,7 @@
 							"text": "确定",
 							"type": "transparent",
 							"fontSize": "16px",
-							"width":"77px"
+							"width": "77px"
 						}]
 					}
 				}
@@ -527,16 +525,34 @@
 		{
 			"path": "pages/Home/MapSearch",
 			"style": {}
+		}, {
+			"path": "pages/CTKY/CTKYPaySuccess",
+			"style": {}
+		}, {
+			"path": "pages/CTKY/CTKYPayFail",
+			"style": {}
+		},
+		{
+			"path": "pages/BCFW/home/ho_chartered",
+			"style": {
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		}, {
+			"path": "pages/BCFW/home/ho_choice",
+			"style": {}
+		},
+		{
+			"path":"pages/BCFW/choice/ci_information",
+			"style": {}
 		}
-        ,{
-            "path" : "pages/CTKY/CTKYPaySuccess",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/CTKY/CTKYPayFail",
-            "style" : {}
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -575,7 +591,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选
+			"path": "pages/BCFW/home/ho_chartered", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
