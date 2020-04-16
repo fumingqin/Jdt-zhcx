@@ -217,7 +217,7 @@
 						console.log('idNameTypeStr',that.idNameTypeStr);
 						var data= {
 							companyCode: '泉运公司综合出行',
-							clientID: that.userInfo.unid,//用户ID
+							clientID: that.userInfo.userId,//用户ID
 							clientName: that.userInfo.username,//用户名
 							phoneNumber: that.userInfo.phoneNumber,//手机号码
 							
