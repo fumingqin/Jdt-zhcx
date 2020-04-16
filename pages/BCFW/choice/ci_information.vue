@@ -2,15 +2,15 @@
 	<view class="ci_view" >
 		<view class="ci_titleView">
 		</view>
-		<view class="ci_siteView" >
-			<text class="sv_depart">出发地</text>
-			<text class="sv_departName">{{charteredBus.departName}}</text>
-			<text class="sv_borun">目的地</text>
-			<text class="sv_borunName">{{charteredBus.borunName}}</text>
-			<text class="sv_go">出发时间</text>
-			<text class="sv_date">{{charteredBus.date}}</text>
-			<text class="sv_days">包车天数</text>
-			<text class="sv_number">{{charteredBus.number}}天</text>
+		<view class="ci_siteView">
+			<view class="cs_departureContents1">
+				<view class="cs_depart">出发地 &nbsp;<text class="cs_departName">{{charteredBus.departName}}</text></view>
+				<view class="cs_borun">目的地 &nbsp;<text class="cs_borunName">{{charteredBus.borunName}}</text></view>
+			</view>
+			<view class="cs_departureContents2">
+				<view class="cs_go">出发时间 &nbsp;<text class="cs_date">{{charteredBus.date}}</text></view>
+				<view class="cs_days">包车天数 &nbsp;<text class="cs_number">{{charteredBus.number}}天</text></view>
+			</view>
 		</view>
 		<view class="ci_carModelView">
 			<text class="cmv_selected">已选车型</text>
@@ -244,89 +244,90 @@
 		text-align: center;
 	}
 	
+	//出发内容
 	.ci_siteView{
-		width: 700upx;
-		height: 180upx;
 		position: absolute;
-		background: #FFFFFF;
-		left: 25upx;
 		top: 180upx;
-		border-radius: 20upx;
-		.sv_depart{
-			font-size: 30upx;
-			font-weight:300;
-			color:#808080;
-			position: absolute;
-			left: 40upx;
-			top:40upx
+		width: 698upx;
+		margin:0 26upx;
+		background:rgba(255,255,255,1);
+		box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);
+		border-radius:13px;
+		
+		//内容样式
+		.cs_departureContents1{
+			display: flex;
+			padding-top: 40upx;
+			padding-left: 40upx;
+			.cs_depart{
+				color:rgba(102,102,102,1);
+				font-size: 30upx;
+				width: 320upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				.cs_departName{
+					width: 200upx;
+					font-size: 30upx;
+					color:rgba(44,45,45,1);
+					margin-left: 15upx;
+					font-weight: bold;
+				}
+			}
+			.cs_borun{
+				color:rgba(102,102,102,1);
+				font-size: 30upx;
+				width: 240upx;
+				padding-left: 68upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				.cs_borunName{
+					width: 200upx;
+					font-size: 30upx;
+					color:rgba(44,45,45,1);
+					margin-left: 15upx;
+					font-weight: bold;
+				}
+			}
 		}
-		.sv_departName{
-			width: 280upx;
-			font-size:30upx;
-			font-weight:300;
-			color:#333333;
-			text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
-			white-space: nowrap;
-			overflow: hidden;
-			position: absolute;
-			left: 160upx;
-			top:40upx
-		}
-		.sv_borun{
-			font-size: 30upx;
-			font-weight:300;
-			color: #808080;
-			position: absolute;
-			left: 440upx;
-			top:40upx
-		}
-		.sv_borunName{
-			width: 150upx;
-			font-size: 30upx;
-			color: #333333;
-			font-weight:300;
-			text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
-			white-space: nowrap;
-			overflow: hidden;
-			position: absolute;
-			left: 560upx;
-			top: 40upx;
-		}
-		.sv_go{
-			font-size: 30upx;
-			font-weight:300;
-			color:#808080;
-			position: absolute;
-			left: 40upx;
-			top:110upx
-		}
-		.sv_date{
-			font-size:30upx;
-			font-weight:300;
-			color:#333333;
-			position: absolute;
-			left: 200upx;
-			top:110upx
-		}
-		.sv_days{
-			font-size: 30upx;
-			font-weight:300;
-			color: #808080;
-			position: absolute;
-			left: 440upx;
-			top:110upx
-		}
-		.sv_number{
-			width: 100upx;
-			font-size: 30upx;
-			font-weight:300;
-			color: #333333;
-			text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
-			white-space: nowrap;
-			overflow: hidden;
-			position: absolute;
-			left: 590upx;
-			top: 110upx;
+		//内容样式
+		.cs_departureContents2{
+			display: flex;
+			padding-top: 40upx;
+			padding-left: 40upx;
+			padding-bottom: 40upx;
+			.cs_go{
+				color:rgba(102,102,102,1);
+				font-size: 30upx;
+				width: 320upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				.cs_date{
+					width: 200upx;
+					font-size: 30upx;
+					color:rgba(44,45,45,1);
+					margin-left: 15upx;
+					font-weight: bold;
+				}
+			}
+			.cs_days{
+				color:rgba(102,102,102,1);
+				font-size: 30upx;
+				width: 225upx;
+				padding-left: 68upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			.cs_number{
+					width: 200upx;
+					font-size: 30upx;
+					color:rgba(44,45,45,1);
+					margin-left: 15upx;
+					font-weight: bold;
+				}
+			}
 		}
 	}
 	
@@ -338,7 +339,7 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
-		top: 380upx;
+		top: 400upx;
 		.cmv_selected{
 			font-size: 36upx;
 			color: #333333;
@@ -534,7 +535,7 @@
 		height: 100upx;
 		background: #FFFFFF;
 		position: absolute;
-		top: 1520upx;
+		top: 1540upx;
 		.av_money{
 			font-size: 26upx;
 			color: #FC4646;
