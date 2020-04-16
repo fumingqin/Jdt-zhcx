@@ -52,48 +52,48 @@
 					</view>
 				</view> -->
 				
-				<!-- <view class="itemClass borderTop">
+				<view class="itemClass borderTop">
 					<picker class="proveClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
 						{{selector}}
 					</picker>
-				</view> -->
+				</view>
 			</view>
 			
 			<!-- 上传证件 -->
 			<view class="frontClass" v-if="selector=='军人' || selector=='教师' || selector=='学生'" @click="getPhoto1">
-				<view v-if="auditState1==0">
+				<view v-if="auditState1=='待提交'">
 					<image src="../../static/GRZX/addImg.png" class="addClass"></image>
 					<text class="fontClass">点击上传证件的正面</text>
 				</view>
-				<view v-if="auditState1==1">
-					<image class="imgClass" :src="user.frontImg" name="frontImg"  mode="aspectFill"></image>
+				<view v-if="auditState1=='待审核'">
+					<image class="imgClass" :src="user.userfrontImg" name="userfrontImg"  mode="aspectFill"></image>
 					<!-- <image class="auditClass" src="../../static/GRZX/auditImg.png"></image> -->
 					<text class="stateClass">待审核</text>
 				</view>
-				<view v-if="auditState1==2">
-					<image class="imgClass" :src="user.frontImg" name="frontImg"  mode="aspectFill"></image>
+				<view v-if="auditState1=='审核通过'">
+					<image class="imgClass" :src="user.userfrontImg" name="userfrontImg"  mode="aspectFill"></image>
 					<text class="stateClass">审核通过</text>
 				</view>
-				<view v-if="auditState1==3">
-					<image class="imgClass" :src="user.frontImg" name="frontImg"  mode="aspectFill"></image>
+				<view v-if="auditState1=='审核未通过'">
+					<image class="imgClass" :src="user.userfrontImg" name="userfrontImg"  mode="aspectFill"></image>
 					<text class="stateClass">审核未通过</text>
 				</view>
 			</view>
 			<view class="backClass" v-if="selector=='军人' || selector=='教师' || selector=='学生'" @click="getPhoto2">
-				<view v-if="auditState2==0">
+				<view v-if="auditState2=='待提交'">
 					<image src="../../static/GRZX/addImg.png" class="addClass"></image>
 					<text class="fontClass">点击上传证件的主页</text>
 				</view>
-				<view v-if="auditState2==1">
-					<image class="imgClass" :src="user.backImg" name="backImg"  mode="aspectFill"></image>
+				<view v-if="auditState2=='待审核'">
+					<image class="imgClass" :src="user.userbackImg" name="userbackImg"  mode="aspectFill"></image>
 					<text class="stateClass">待审核</text>
 				</view>
-				<view v-if="auditState2==2">
-					<image class="imgClass" :src="user.backImg" name="backImg"  mode="aspectFill"></image>
+				<view v-if="auditState2=='审核通过'">
+					<image class="imgClass" :src="user.userbackImg" name="userbackImg"  mode="aspectFill"></image>
 					<text class="stateClass">审核通过</text>
 				</view>
-				<view v-if="auditState2==3">
-					<image class="imgClass" :src="user.backImg" name="backImg"  mode="aspectFill"></image>
+				<view v-if="auditState2=='审核未通过'">
+					<image class="imgClass" :src="user.userbackImg" name="userbackImg"  mode="aspectFill"></image>
 					<text class="stateClass">审核未通过</text>
 				</view>
 			</view>
@@ -132,6 +132,7 @@
 
 <script>
 	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
+	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	export default {
 		data(){
 			return{
@@ -143,9 +144,9 @@
 					{title:'女'}
 				],
 				proveType:['请选择','军人','教师','学生'],
-				selector:'添加额外凭证',
+				selector:'请添加额外凭证',
 				user:{
-					userID:'',
+					passengerId:'',//乘车人id
 					userName:'',	
 					userSex:0,
 					userPhoneNum:'',
@@ -156,12 +157,14 @@
 					userEmergencyContact:false,
 					date:'请选择',
 					prove:0,
-					frontImg:'',
-					backImg:'',
+					userfrontImg:'',
+					userbackImg:'',
+					fImg:'',
+					bfmg:'',
 				},
 				userType:'',
 				address:'',
-				unid:'',
+				userId:'', //账号id
 			}
 		},
 		onLoad (options){	
@@ -176,68 +179,98 @@
 		     wPicker
 		},
 		methods:{
+			//----------加载账号id--------
 			async loadUnid(){
 				var the=this;
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
-						the.unid=res.data.unid;
+						the.userId=res.data.userId;
 					}
 				})
 			},
+			//----------加载乘车人信息--------
 			async loadData(type){
 				var that=this;
 				uni.getStorage({
 					key:'editPassenger',
 					success:function(res){
 						console.log(res,"res")
+					//----------加载passengerId--------
+						that.user.passengerId=res.data.passengerId;
+					//----------加载姓名--------
 						that.user.userName=res.data.userName;
+					//----------加载性别--------
 						if(res.data.userSex=="男"){
 							that.user.userSex=0;
 						}else{
 							that.user.userSex=1;
 						}
+					//----------加载身份证--------
 						that.user.userCodeNum =res.data.userCodeNum ;
-						that.user.date=res.data.date;
-						if(res.data.userDefault=="true"){
-							that.user.userDefault=true;
-						}else{
-							that.user.userDefault=false;
-						}
+					//----------是否为本人--------
+						that.user.userDefault=res.data.userDefault;
 						that.user.show=!that.user.userDefault;
-						if(res.data.userEmergencyContact=="true"){
-							that.user.userEmergencyContact=true;
-						}else{
-							that.user.userEmergencyContact=false;
-						}
+					//----------是否为紧急联系人--------
+						that.user.userEmergencyContact=res.data.userEmergencyContact;
+					//----------加载电话号码--------
 						that.user.userPhoneNum=res.data.userPhoneNum;
-						that.user.userID=res.data.userID;
-						// if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
-						// 	that.selector=res.data.userType;
-						// 	that.user.frontImg=res.data.frontImg;
-						// 	that.user.backImg=res.data.backImg;
-						// 	that.auditState1=res.data.auditState;
-						// 	that.auditState2=res.data.auditState;
-							// that.auditState1=2;  //测试
-							// that.auditState2=2;	//测试
-						//}
+					//----------加载证件信息--------
+						if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
+							that.selector=res.data.userType;
+							uni.request({
+								url:'http://111.231.109.113:8002/api/person/userInfoListDetail',
+								data:{
+									userId:that.userId,
+									passengerId:that.user.passengerId,
+								},
+								method:'POST',
+								success(res1) {
+									console.log(res1,"res1")
+									var front= res1.data.data.userfrontImg;
+									if(that.isBase64(front)){
+										base64ToPath(front)
+										  .then(path => {
+										    that.user.userfrontImg=path;
+											console.log(that.user.userfrontImg,"235")
+										})
+									}else{
+										that.user.userfrontImg=front;
+									}
+									var back= res1.data.data.userbackImg;
+									if(that.isBase64(back)){
+										base64ToPath(back)
+										  .then(path2 => {
+										    that.user.userbackImg=path2;
+											console.log(that.user.userbackImg,"245")
+										})
+									}
+									else{
+										that.user.userbackImg=back;
+									}
+									that.auditState1=res1.data.data.userauditState;
+									that.auditState2=res1.data.data.userauditState;
+								}
+							})
+							// that.user.userfrontImg=res.data.userfrontImg;
+							// that.user.userbackImg=res.data.userbackImg;
+							// that.auditState1=res.data.userauditState;
+							// that.auditState2=res.data.userauditState;
+						}
 						
 					}
 				})
 			}, 
+			//----------选择性别--------
 			radioClick:function(e){
 				this.user.userSex = e;
 			},
+			//----------上传乘车人信息--------
 			formSubmit(e){
 				var data1=e.target.value;
 				var that=this;
-				data1.userID=that.user.userID;
-				// console.log(this.type,"235");
-				if(this.user.userSex==1){
-					data1.userSex="女";
-				}else{
-					data1.userSex="男";
-				}
+				data1.userId=that.userId;
+				data1.passengerId=that.user.passengerId; 
 				if(data1.userDefault==null||data1.userDefault==""){
 					data1.userDefault=false;
 				}else{
@@ -252,111 +285,112 @@
 				}else{
 					data1.userEmergencyContact=false;
 				}
+				data1.fImg=this.fImg;
+				data1.bImg=this.bImg;
+				data1.userauditState=that.auditState2;
 				var codeNum=data1.userCodeNum;
 				if(data1.userName!=null&&data1.userName!=""&&data1.userPhoneNum!=null&&data1.userPhoneNum!=""&&data1.userCodeNum!=null&&data1.userCodeNum!=""){
-					var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-					if(data1.userPhoneNum.length!=11){
-						uni.showToast({
-							icon:'none',
-							title:'输入的手机号有误，请检查'
-						})
-					}else if(!regIdNo.test(codeNum)){ 
+					//--------额外凭证--------
+					if((that.selector!="请添加额外凭证"&&that.fImg!=""&&that.fImg!=null&&that.bImg!=""&&that.bImg!=null)||(that.selector=="请添加额外凭证")){
+						var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+						if(data1.userPhoneNum.length!=11){
 							uni.showToast({
 								icon:'none',
-								title:'输入的身份证有误，请检查'
+								title:'输入的手机号有误，请检查'
 							})
-						}else{
-							var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);
-							var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
-							var  d=new Date(r[1],r[3]-1,r[4]); 
-							var age=0;
-							if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
-							{   
-								var Y=new  Date().getFullYear();   
-								age=Y-r[1];
-								console.log(age,"age")
-							}
-							if(age<=0){
+						}else if(!regIdNo.test(codeNum)){ 
 								uni.showToast({
 									icon:'none',
 									title:'输入的身份证有误，请检查'
 								})
-							}else if(age<18){
-								data1.userType="儿童";
 							}else{
-								data1.userType="成人";
-							}
-							if(data1.userType=="儿童"||data1.userType=="成人"){
-								uni.request({
-									url:'http://218.67.107.93:9210/api/app/userInfoList?id='+that.unid,
-									method:'POST',
-									success(listRes) {
-										//判断是否有本人
-										if(data1.userDefault){
-											var defaultList=listRes.data.data.filter(item => {
-												return item.userDefault == "true";
-											})
-											if(defaultList.length>0){
-												uni.request({
-													url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
-													data:{
-														userID:defaultList[0].userID,  
-														userType:defaultList[0].userType,   //用户类别 成人/儿童 
-														userName:defaultList[0].userName,   //用户姓名   
-														userSex:defaultList[0].userSex,   //用户性别   
-													  	userCodeNum:defaultList[0].userCodeNum,   //用户身份证   
-													  	userPhoneNum:defaultList[0].userPhoneNum,   //用户手机号   
-													  	userDefault:'false',   //用户是否本人 true/false 
-													  	userEmergencyContact:defaultList[0].userEmergencyContact,   //是否设置为紧急联系人 true/false
-													},
-													method:'POST',
-													success(resd) {
-														console.log(resd,"315")
-													}
+								var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);
+								var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
+								var  d=new Date(r[1],r[3]-1,r[4]); 
+								var age=0;
+								if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
+								{   
+									var Y=new  Date().getFullYear();   
+									age=Y-r[1];
+									console.log(age,"age")
+								}
+								if(that.selector!="请添加额外凭证"){
+									data1.userType=that.selector;	
+								}else if(age<0){
+									uni.showToast({
+										icon:'none',
+										title:'输入的身份证有误，请检查'
+									})
+								}else if(age<18){
+									data1.userType="儿童";
+								}else{
+									data1.userType="成人";
+								}
+								if(age>0){
+									uni.request({
+										url:'http://111.231.109.113:8002/api/person/userInfoList',
+										data:{
+											userId:that.userId,
+										},
+										method:'POST',
+										success(listRes) {
+											//判断是否有本人
+											if(data1.userDefault&&listRes.data.data!=null&&listRes.data.data!=""){
+												var defaultList=listRes.data.data.filter(item => {
+													return item.userDefault == true;
 												})
+												if(defaultList.length>0){
+													uni.request({
+														url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+														data:{
+															userId:defaultList[0].userId, //账号id
+															passengerId:defaultList[0].passengerId, //乘车人id
+															userType:defaultList[0].userType,   //用户类别 成人/儿童 
+															userName:defaultList[0].userName,   //用户姓名   
+															userSex:defaultList[0].userSex,   //用户性别   
+														  	userCodeNum:defaultList[0].userCodeNum,   //用户身份证   
+														  	userPhoneNum:defaultList[0].userPhoneNum,   //用户手机号   
+														  	userDefault:'false',   //用户是否本人 true/false 
+														  	userEmergencyContact:defaultList[0].userEmergencyContact,   //是否设置为紧急联系人 true/false
+														},
+														method:'POST',
+														success(resd) {
+															console.log(resd,"315")
+														}
+													})
+												}	
 											}
-											
-										}
-										//判断是否有紧急联系人
-										if(data1.userEmergencyContact){
-											var defaultList=listRes.data.data.filter(item => {
-												return item.userEmergencyContact == "true";
-											})
-											if(defaultList.length>0){
-												uni.request({
-													url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
-													data:{
-														userID:defaultList[0].userID,  
-														userType:defaultList[0].userType,   //用户类别 成人/儿童 
-														userName:defaultList[0].userName,   //用户姓名   
-														userSex:defaultList[0].userSex,   //用户性别   
-													  	userCodeNum:defaultList[0].userCodeNum,   //用户身份证   
-													  	userPhoneNum:defaultList[0].userPhoneNum,   //用户手机号   
-													  	userDefault:defaultList[0].userDefault,   //用户是否本人 true/false 
-													  	userEmergencyContact:'false',   //是否设置为紧急联系人 true/false
-													},
-													method:'POST',
-													success(resd) {
-														console.log(resd,"315")
-													}
+											//判断是否有紧急联系人
+											if(data1.userEmergencyContact&&listRes.data.data!=null&&listRes.data.data!=""){
+												var defaultList=listRes.data.data.filter(item => {
+													return item.userEmergencyContact == true;
 												})
-											}
-											
-										}
-										// 判断身份证号是否存在乘车人列表
-										var code=listRes.data.data.filter(item => {
-											return item.userCodeNum == data1.userCodeNum;
-										})
-										if(code.length>0&&(that.type=="add"||that.type=="ad")){
-											uni.showToast({
-												icon:'none',
-												title:'乘车人已存在，请重新输入'
-											})
-										}else{
+												if(defaultList.length>0){
+													uni.request({
+														url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+														data:{
+															userId:defaultList[0].userId, //账号id
+															passengerId:defaultList[0].passengerId, //乘车人id  
+															userType:defaultList[0].userType,   //用户类别 成人/儿童 
+															userName:defaultList[0].userName,   //用户姓名   
+															userSex:defaultList[0].userSex,   //用户性别   
+														  	userCodeNum:defaultList[0].userCodeNum,   //用户身份证   
+														  	userPhoneNum:defaultList[0].userPhoneNum,   //用户手机号   
+														  	userDefault:defaultList[0].userDefault,   //用户是否本人 true/false 
+														  	userEmergencyContact:'false',   //是否设置为紧急联系人 true/false
+														},
+														method:'POST',
+														success(resd) {
+															console.log(resd,"315")
+														}
+													})
+												}
+											} 
 											uni.request({
-												url:'http://218.67.107.93:9210/api/app/changeUserInfo?id='+that.unid,
+												url:'http://111.231.109.113:8002/api/person/changeUserInfo',
 												data:{
-													userID:data1.userID,  
+													userId:data1.userId, //账号id
+													passengerId:data1.passengerId, //乘车人id   
 													userType:data1.userType,   //用户类别 成人/儿童 
 													userName:data1.userName,   //用户姓名   
 													userSex:data1.userSex,   //用户性别   
@@ -364,54 +398,67 @@
 												  	userPhoneNum:data1.userPhoneNum,   //用户手机号   
 												  	userDefault:data1.userDefault,   //用户是否本人 true/false 
 												  	userEmergencyContact:data1.userEmergencyContact,   //是否设置为紧急联系人 true/false
+													userfrontImg:data1.fImg,  	//证件正面
+													userbackImg:data1.bImg,		//证件主页
+													userauditState:data1.userauditState,   //审核状态
 												},
 												method:'POST',
 												success(res) {
 													console.log(res,"370")
-													uni.showToast({
-														icon:'success',
-														title:'完成'
-													})
-													if(that.type=="add"){
-														uni.getStorage({
-															key:'passengerList',
-															success(list){
-																console.log(list,"378")
-																var passList=[];
-																for(var i=0;i<list.data.length;i++){
-																	passList.push(list.data[i]);
-																}
-																var list1={
-																	userID:res.data.data.userID,
-																	userType:res.data.data.userType,   //用户类别 成人/儿童 
-																	userName:res.data.data.userName,   //用户姓名   
-																	userSex:res.data.data.userSex,   //用户性别   
-																  	userCodeNum:res.data.data.userCodeNum,   //用户身份证   
-																  	userPhoneNum:res.data.data.userPhoneNum,   //用户手机号   
-																  	userDefault:res.data.data.userDefault,   //用户是否本人 true/false 
-																  	userEmergencyContact:res.data.data.userEmergencyContact, //是否设置为紧急联系人 true/false
-																	hiddenIndex:1,  //1代表选中
-																}
-																passList.push(list1);
-																uni.setStorage({
-																	key:'passengerList',
-																	data:passList
-																})
-															}
+													if(res.data.msg!=""&&res.data.msg!=null){
+														uni.showToast({
+															icon:'none',
+															title:res.data.msg
 														})
-														
+													}else{
+														uni.showToast({
+															icon:'success',
+															title:'完成'
+														})
+														if(that.type=="add"){
+															uni.getStorage({
+																key:'passengerList',
+																success(list){
+																	console.log(list,"378")
+																	var passList=[];
+																	for(var i=0;i<list.data.length;i++){
+																		passList.push(list.data[i]);
+																	}
+																	var list1={
+																		passengerId:res.data.data.passengerId, //乘车人id
+																		userType:res.data.data.userType,   //用户类别 成人/儿童 
+																		userName:res.data.data.userName,   //用户姓名   
+																		userSex:res.data.data.userSex,   //用户性别   
+																	  	userCodeNum:res.data.data.userCodeNum,   //用户身份证   
+																	  	userPhoneNum:res.data.data.userPhoneNum,   //用户手机号   
+																	  	userDefault:res.data.data.userDefault,   //用户是否本人 true/false 
+																	  	userEmergencyContact:res.data.data.userEmergencyContact, //是否设置为紧急联系人 true/false
+																		hiddenIndex:1,  //1代表选中
+																	}
+																	passList.push(list1);
+																	uni.setStorage({
+																		key:'passengerList',
+																		data:passList
+																	})
+																}
+															})
+														}
+														setTimeout(function(){
+															uni.navigateBack();
+														},500);	
 													}
-													setTimeout(function(){
-														uni.navigateBack();
-													},500);
-													// console.log(res,"2111")
 												},
 											})
 										}
-									}
-								})
+									})
+								}
 							}
-						}
+					}else{
+						uni.showToast({
+							icon:'none',
+							title:'请上传额外凭证'
+						})
+					}
 				}else{
 					uni.showToast({
 						icon:'none',
@@ -420,65 +467,25 @@
 				}
 				
 			},
-			// uni.request({
-			// 	url:'http://218.67.107.93:9210/api/app/changeUserInfo?id=26',
-			// 	data:{
-			// 		userID:'',  
-			// 		userType:'成人',   //用户类别 成人/儿童 
-			// 		userName:'data1.userName',   //用户姓名   
-			// 		userSex:'男',   //用户性别   
-			// 	  	userCodeNum:'350821199610122411',   //用户身份证   
-			// 	  	userPhoneNum:'15260179755',   //用户手机号   
-			// 	  	userDefault:true,   //用户是否本人 true/false 
-			// 	  	userEmergencyContact:false,   //是否设置为紧急联系人 true/false
-			// 	},
-			// 	method:'POST',
-			// 	success(res) {
-			// 		console.log(res,"2222")
-			// 	},
-			// })
-			// formSubmit1:function(e){
-			// 	if(that.selector=="军人"){
-			// 		data1.userType="军人";
-			// 		data1.frontImg=that.user.frontImg;
-			// 		data1.backImg=that.user.backImg;
-			// 		data1.auditState=that.auditState1;
-			// 	}else if(that.selector=="教师"){
-			// 		data1.userType="教师";
-			// 		data1.frontImg=that.user.frontImg;
-			// 		data1.backImg=that.user.backImg;
-			// 		data1.auditState=that.auditState1;
-			// 	}else if(that.selector=="学生"){
-			// 		data1.userType="学生";
-			// 		data1.frontImg=that.user.frontImg;
-			// 		data1.backImg=that.user.backImg;
-			// 		data1.auditState=that.auditState1;
-			// 	}else if(age>=65){
-			// 		data1.userType="老人";
-			// 	}else if(age>=18&&age<65){
-			// 		data1.userType="成人";
-			// 	}else{
-			// 		data1.userType="儿童";
-			// 	}
-			// },
+			//----------绑定日期--------
 			bindDateChange:function(e){
 				this.user.date = e.target.value;
 			},
+			//----------添加额外凭证--------
 			proveChange:function(e){
 				if(e.detail.value==0){
-					this.selector="添加额外凭证";
+					this.selector="请添加额外凭证";
 				}else{
 					this.selector=this.proveType[e.detail.value];
 				}
-				// console.log(this.user.frontImg,"1")
-				// console.log(this.user.backImg,"2")
 				if(this.selector=='军人' || this.selector=='教师' || this.selector=='学生'){
-					this.auditState1=0;
-					this.auditState2=0;
-					this.user.frontImg="";
-					this.user.backImg="";
+					this.auditState1="待提交";
+					this.auditState2="待提交";
+					this.user.userfrontImg="";
+					this.user.userbackImg="";
 				}
 			},
+			//----------重置信息--------
 			resetClick:function(e){
 				this.user.date="请选择";
 				this.user.userSex=0;
@@ -489,6 +496,7 @@
 				this.user.userDefault=false;
 				this.user.userEmergencyContact=false;
 			},
+			//----------是否选中本人--------
 			checkChange:function(e){
 				//console.log(e.detail.value,"xuanzhong");
 				if(e.detail.value=="false"||e.detail.value=="true"){ //选中
@@ -498,12 +506,13 @@
 					this.user.userEmergencyContact=false;
 				}
 			},
+			//----------返回按钮--------
 			returnClick(){
 				uni.navigateBack();
 			},
-			getPhoto1(){  	//证件正面
+			//----------证件正面--------
+			getPhoto1(){  
 				var that=this;
-				
 				uni.chooseImage({
 					count:1,
 					success(res) {
@@ -511,16 +520,20 @@
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
 							success: function (res1) {
-								that.user.frontImg=res1.savedFilePath;
-								that.auditState1=1;
+								that.user.userfrontImg=res1.savedFilePath;
+								that.auditState1="待审核";
+								pathToBase64(res1.savedFilePath)
+									.then(base64 => {
+									that.fImg=JSON.stringify(base64);	
+								})
 							}
 						});
 					}
 				})
 			},
-			getPhoto2(){	//证件主页
+			//----------证件主页--------
+			getPhoto2(){
 				var that=this;
-				
 				uni.chooseImage({
 					count:1,
 					//sourceType:['album'],
@@ -530,13 +543,26 @@
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
 							success: function (res1) {
-								that.user.backImg=res1.savedFilePath;
-								that.auditState2=1;
+								that.user.userbackImg=res1.savedFilePath;
+								that.auditState2="待审核";
+								pathToBase64(res1.savedFilePath)
+									.then(base64 => {
+									that.bImg=JSON.stringify(base64);	
+								})
 							}
 						});
 					}
 				})
-			}
+			},
+			//------------判断是否为base64格式-----------
+			isBase64:function(str) {
+			    if (str ===''){ return false; }
+			    try {
+			        return btoa(atob(str)) == str;
+			    } catch (err) {
+			        return false;
+			    }
+			},
 		}
 	}
 </script>
