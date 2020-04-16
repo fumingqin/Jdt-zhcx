@@ -550,7 +550,9 @@
 		},
 		{
 			"path":"pages/BCFW/choice/ci_information",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "用车信息"
+			}
 		}
 	],
 	"globalStyle": {

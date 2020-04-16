@@ -17,13 +17,14 @@
 			<image class="cmv_car" :src="charteredBus.car"></image>
 			<text class="cmv_carName">{{charteredBus.carName}}</text>
 			<text class="cmv_carType">{{charteredBus.carType}}</text>
-			<text class="cmv_carMoney">{{charteredBus.carMoney}}</text>
+			<text class="cmv_carMoney">{{charteredBus.carMoney}}元</text>
 		</view>
 		<view class="ci_charteredBusView">
 			<text class="cbv_charteredBusMessage">包车人信息</text>
 			<text class="cbv_explain">仅需填写一人信息，填写后自动保存至通讯录</text>
 			<text class="cbv_tripMan">出行人</text>
 			<text class="cbv_name">{{charteredBus.tripName}}</text>
+			<image class="cbv_addressBook" src="../../../static/BCFW/choice/tongxun.png"></image>
 			<text class="cbv_idCord">身份证</text>
 			<text class="cbv_id">{{charteredBus.tripId}}</text>
 			<text class="cbv_mobile">联系电话</text>
@@ -32,12 +33,13 @@
 		<view class="ci_couponView" @click="toggleMask('show')">
 			<text class="cv_coupon">优惠券</text>
 			<text class="cv_noUsable">无可用</text>
+			<text class="cv_symbol">></text>
 		</view>
 		<!-- 呼出优惠券面板 -->
-		<!-- <view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
+		<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
 			<view class="mask-content" @click.stop.prevent="stopPrevent">
 				<!-- 优惠券页面，仿mt -->
-				<!-- <view class="couponTitle">
+				<view class="couponTitle">
 					<text class="Co_text1">优惠券</text>
 					<text class="Co_text2" @click="couponReset">不使用优惠券</text>
 				</view>
@@ -60,11 +62,11 @@
 					<text class="tips">限新用户使用</text>
 				</view>
 			</view>
-		</view> -->
+		</view>
 		<view class="ci_noticeView">
 			<text class="nv_charteredBusNotice" >包车须知</text>
 			<text class="nv_all" @click="open()">点击查看全部</text>
-			  <label class="nv_radio"><radio/></label>
+			  <radio class="nv_radio" value="1" :color="'#ffaa7f'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 		</view>
 		<uni-popup ref="popup2" type="bottom">
 			<view class="boxVlew">
@@ -74,7 +76,7 @@
 			</view>
 			<scroll-view class="noticeBox" scroll-y="ture">
 				<text class="Nb_text4">
-					1111111111111111111111111111111
+					{{notice.security}}
 				</text>
 			</scroll-view>
 			</view>
@@ -98,6 +100,13 @@
 		},
 		data() {
 			return {
+				maskState: 0, //优惠券面板显示状态
+				couponIndex: '请选择优惠券', //优惠券默认内容
+				couponColor: '', //优惠券couponID
+				couponCondition: '', //优惠券的满足条件值
+				admissionTicket: '', //门票内容
+				notice:'',//须知内容
+				selectedValue: 0, //同意须知的选中值
 				charteredBus:[],
 				couponList: [{
 						couponID: '0',
@@ -127,13 +136,21 @@
 		},
 		onLoad() {
 			this.getcharteredBus();
+			this.getnotice();
 		},
 		methods: {
+			
 			async getcharteredBus() {
 			 let charteredBus = await this.$api.bcfwzyx('charteredBus');
 			 this.charteredBus = charteredBus.data;
 			 console.log(charteredBus)
 			},
+			async getnotice() {
+			let notice = await this.$api.bcfwzyx('notice');
+			this.notice = notice.data;
+			 console.log(notice)
+			},
+			
 			open() {
 					this.$refs.popup2.open()
 
@@ -143,44 +160,72 @@
 					this.$refs.popup2.close()
 			},
 			//显示优惠券面板
-			// toggleMask(type) {
-			// 	let timer = type === 'show' ? 10 : 300;
-			// 	let state = type === 'show' ? 1 : 0;
-			// 	this.maskState = 2;
-			// 	setTimeout(() => {
-			// 		this.maskState = state;
-			// 	}, timer)
-			// },
+			toggleMask(type) {
+				let timer = type === 'show' ? 10 : 300;
+				let state = type === 'show' ? 1 : 0;
+				this.maskState = 2;
+				setTimeout(() => {
+					this.maskState = state;
+				}, timer)
+			},
 			
-			// //优惠券赋值
-			// couponEvent: function(index) {
-			// 	if (this.actualPayment >= this.couponList[index].condition) {
-			// 		this.couponIndex = '-' + this.couponList[index].price;
-			// 		this.couponColor = this.couponList[index].couponID;
-			// 		this.couponCondition = this.couponList[index].condition;
-			// 		this.numberChange();
-			// 		this.toggleMask();
-			// 	} else {
-			// 		uni.showToast({
-			// 			title: '您的实付款未达到条件，请重新选择',
-			// 			icon: 'none'
-			// 		})
-			// 	}
+			//优惠券赋值
+			couponEvent: function(index) {
+				if (this.actualPayment >= this.couponList[index].condition) {
+					this.couponIndex = '-' + this.couponList[index].price;
+					this.couponColor = this.couponList[index].couponID;
+					this.couponCondition = this.couponList[index].condition;
+					this.numberChange();
+					this.toggleMask();
+				} else {
+					uni.showToast({
+						title: '您的实付款未达到条件，请重新选择',
+						icon: 'none'
+					})
+				}
 			
-			// },
+			},
 			
-			// //取消优惠券
-			// couponReset: function(index) {
-			// 	this.couponIndex = '请选择优惠券';
-			// 	this.couponColor = '';
-			// 	this.numberChange();
-			// 	this.toggleMask();
-			// },
+			//取消优惠券
+			couponReset: function(index) {
+				this.couponIndex = '请选择优惠券';
+				this.couponColor = '';
+				this.numberChange();
+				this.toggleMask();
+			},
 			
-			// //仿穿透事件
-			// stopPrevent() {}
-
-		}
+			//仿穿透事件
+			stopPrevent() {},
+			
+			numberChange(){
+				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this.childrenIndex);
+				if (this.couponColor == '') {
+					this.actualPayment = a;
+				} else if (a >= this.couponCondition) {
+					var total = a - this.couponList[this.couponColor].price;
+					this.actualPayment = total;
+				} else if (a < this.couponCondition) {
+					uni.showToast({
+						title: '您的金额不满足优惠券条件，已取消优惠券',
+						icon: 'none',
+						duration: 2000
+					})
+					this.couponIndex = '请选择优惠券';
+					this.couponColor = '';
+					this.couponCondition = 0;
+					this.actualPayment = a;
+				}
+			},
+			//同意购买-点击事件
+			Selection: function() {
+				 console.log(this.selectedValue);
+				if (this.selectedValue == 0) {
+					this.selectedValue = 1;
+				} else {
+					this.selectedValue = 0;
+				}
+			},
+			}
 	} 
 </script>
 
@@ -375,6 +420,14 @@
 			left: 200upx;
 			top: 170upx;
 		}
+		.cbv_addressBook{
+			width: 50upx;
+			height: 50upx;
+			position: absolute;
+			left: 625upx;
+			top: 165upx;
+			
+		}
 		.cbv_idCord{
 			font-size: 30upx;
 			color: #333333;
@@ -432,6 +485,13 @@
 			font-weight: 300;
 			position: absolute;
 			left: 540upx;
+			top: 28upx;
+		}
+		.cv_symbol{
+			font-size: 28upx;
+			color:#999999;
+			position: absolute;
+			left: 650upx;
 			top: 28upx;
 		}
 	}
@@ -575,5 +635,114 @@
 		}
 	}
 	
+	/* 优惠券列表 */
+	
+	//下弹框标题
+	.couponTitle {
+		padding: 40upx;
+		padding-bottom: 16upx;
+	
+		.Co_text1 {
+			font-size: 38upx;
+			font-weight: bold;
+		}
+	
+		.Co_text2 {
+			margin-top: 8upx;
+			float: right;
+			color: #f85e52;
+			font-size: 28upx;
+		}
+	}
+	
+	
+	.coupon-item {
+		display: flex;
+		flex-direction: column;
+		margin: 20upx 24upx;
+		background: #fff;
+	
+		.con {
+			display: flex;
+			align-items: center;
+			position: relative;
+			height: 120upx;
+			padding: 0 30upx;
+	
+			&:after {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				content: '';
+				width: 100%;
+				height: 0;
+				border-bottom: 1px dashed #f3f3f3;
+				transform: scaleY(50%);
+			}
+		}
+	
+		.left {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			flex: 1;
+			overflow: hidden;
+			height: 100upx;
+		}
+	
+		.title {
+			font-size: 32upx;
+			color: #f85e52;
+			margin-bottom: 10upx;
+		}
+	
+		.time {
+			font-size: 24upx;
+			color: #999999;
+		}
+	
+		.right {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			font-size: 26upx;
+			color: #999999;
+			height: 100upx;
+		}
+	
+		.price {
+			font-size: 44upx;
+			color: #f85e52;
+	
+			&:before {
+				content: '￥';
+				font-size: 34upx;
+			}
+		}
+	
+		.tips {
+			font-size: 24upx;
+			color: #999999;
+			line-height: 60upx;
+			padding-left: 30upx;
+		}
+	
+		.circle {
+			position: absolute;
+			left: -6upx;
+			bottom: -10upx;
+			z-index: 10;
+			width: 20upx;
+			height: 20upx;
+			background: #f3f3f3;
+			border-radius: 100px;
+	
+			&.r {
+				left: auto;
+				right: -6upx;
+			}
+		}
+	}
 	
 </style>
