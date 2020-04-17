@@ -106,7 +106,7 @@
 						for(var j=0;j<res2.data.length;j++){
 							// console.log(data1.userID,"5555")
 							// console.log(res2.data[j].userID,"4444")
-							list.push(res2.data[j].userID);
+							list.push(res2.data[j].passengerId);
 						}
 					}
 				})
@@ -132,7 +132,7 @@
 									//console.log(data1,"data1")
 									data1.hiddenIndex=0;
 									for(var q=0;q<list.length;q++){
-										if(data1.userID==list[q]){
+										if(data1.passengerId==list[q]){
 											data1.hiddenIndex=1;
 										}
 									}
