@@ -102,15 +102,11 @@
 				uni.getStorage({
 					key:"passengerList",
 					success(res2) {
-						console.log("6666")
 						for(var j=0;j<res2.data.length;j++){
-							// console.log(data1.userID,"5555")
-							// console.log(res2.data[j].userID,"4444")
 							list.push(res2.data[j].passengerId);
 						}
 					}
 				})
-				console.log(list,"list")
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
