@@ -312,6 +312,24 @@
 			"style": {
 				"navigationBarTitleText": "我要投诉"
 			}
+<<<<<<< HEAD
+		},
+		//----------------------------客运模块开始----------------------------
+		{
+			"path": "pages/CTKY/ctkyIndex",
+			"style": {
+				// #ifdef APP-PLUS
+				"navigationStyle": "default",
+				// #endif
+				"navigationBarTitleText": "客运"
+			}
+		},{
+		    "path" : "pages/CTKY/homeSattionPick",
+		    "style" : {
+				"navigationBarTitleText": "选择站点"
+			}
+		},{
+=======
 		},
 		//----------------------------客运模块开始----------------------------
 		{
@@ -325,6 +343,7 @@
 				"navigationBarTitleText": "选择站点"
 			}
 		}, {
+>>>>>>> 88832eef7f6825256bb86df481089a127810c2bf
 			"path": "pages/CTKY/selectTickets",
 			"style": {
 				"navigationBarTitleText": "班次列表"
