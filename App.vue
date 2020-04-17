@@ -54,6 +54,10 @@
 					}, 10000);
 				}
 			},
+			closeUpload:function(){
+				let that = this;
+				clearInterval(that.globalInterval);
+			}
 		},
 		
 		methods: {

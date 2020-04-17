@@ -541,7 +541,6 @@
 					},
 					method: "GET",
 					success: function(res) {
-						console.log(res);
 						//日后会加入定时，此处需清空
 						that.points = [];
 						that.polyline = [];
@@ -569,11 +568,12 @@
 						}
 						var obj = {
 							points: that.points,
-							color: "rgba(75,220,39,1)",
+							color: "#4bdc27",
 							arrowLine: true,
 							width: 6
 						};
 						that.polyline.push(obj);
+						console.log(JSON.stringify(that.polyline));
 					},
 					fail: function(res) {
 						console.log(res);
