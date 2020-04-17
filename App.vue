@@ -1,23 +1,81 @@
 <script>
+	import homeJS from 'common/Home.js';
+	import utils from '@/components/CTKY/shoyu-date/utils.filter.js'
 	import {
 		mapMutations
 	} from 'vuex';
 	export default {
+		
+		globalData: {
+			//定时上传旅客定位数据
+			globalInterval: 0,
+			orderNumber:'0',
+			uploadMyLocation: function() {
+				let that = this;
+				let userInfo = uni.getStorageSync('userInfo') || '';
+				if(userInfo == ''){
+					uni.showToast({
+						title:'未登录',
+						icon:'none'
+					});
+					return ;
+				}
+				uni.getLocation({
+					type: 'gcj02 ',
+					success: function(res) {	
+						uni.request({
+							url: homeJS.Interface.addPassengerPosition.value, 
+							method:homeJS.Interface.addPassengerPosition.method,
+							data: {
+								orderNumber:that.orderNumber,
+								passengerNumber:userInfo.userId,
+								lon: res.longitude,
+								lat: res.latitude,
+								speed:res.speed, 
+								reportTime: utils.timeTodate(homeJS.dateFormat.dateformat, new Date().getTime())
+							},
+							success:function(res){
+								if(res.data.status){
+									console.log(res);
+								}
+							},
+							fail:function(res){
+								console.log(res);
+							}
+						});
+					}
+				});
+			},
+			constantly: function() {
+				let that = this;
+				if (that.globalInterval == 0) {
+					that.globalInterval = setInterval(function() {
+					    that.uploadMyLocation();
+					}, 10000);
+				}
+			},
+			closeUpload:function(){
+				let that = this;
+				clearInterval(that.globalInterval);
+			}
+		},
+		
 		methods: {
 			...mapMutations(['login'])
 		},
 		onLaunch: function() {
 			// 获取登录状态
 			let userInfo = uni.getStorageSync('userInfo') || '';
-			if(userInfo.unid){
+			if(userInfo.userId){
 				//更新登陆状态
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
 						if(res.data.nickname==""||res.data.nickname==null){
-							res.data.nickname="用户"+res.data.username;
+							res.data.nickname="用户"+res.data.phoneNumber;
 						}
 						this.login(res.data);
+						//console.log(res.data.portrait,"555")
 					}
 				});
 			}

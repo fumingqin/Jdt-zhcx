@@ -19,7 +19,8 @@
         "modules" : {
             "Maps" : {},
             "Push" : {},
-            "OAuth" : {}
+            "OAuth" : {},
+            "Payment" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -63,7 +64,9 @@
                     }
                 },
                 "ad" : {},
-                "payment" : {},
+                "payment" : {
+                    "alipay" : {}
+                },
                 "push" : {
                     "unipush" : {}
                 },
@@ -126,5 +129,9 @@
     },
     "mp-toutiao" : {
         "usingComponents" : true
+    },
+    "h5" : {
+        "title" : "综合出行",
+        "domain" : "27.148.155.9"
     }
 }

@@ -5,13 +5,13 @@
 		<view class="ob_background">
 			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
-		
+
 		<!-- 门票信息/数量 -->
 		<!-- 命名：MP -->
 		<view class="cover-container">
 			<view class="MP_information1">
 				<view class="MP_title">{{admissionTicket.admissionTicketName}}</view>
-				<text class="MP_text" @click="open2(1)">{{admissionTicket.ticketComment_s1}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s2}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s3}} &nbsp; > </text>
+				<text class="MP_text" @click="open2(1)">{{admissionTicket.ticketComment_s1}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s2}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s3}}&nbsp; > </text>
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<view class="boxVlew">
@@ -113,19 +113,19 @@
 					<text class="Mp_textBlue" @click="open2(2)">(点击查看须知)</text>
 					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 				</view>
-				
+
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup2" type="bottom">
 					<view class="boxVlew">
-					<view class="titleView">
-						<text class="Nb_text1">游客须知</text>
-						<text class="Nb_text2 jdticon icon-fork " @click="close(2)"></text>
-					</view>
-					<scroll-view class="noticeBox" scroll-y="ture">
-						<text class="Nb_text4">
-							{{notice.security}}
-						</text>
-					</scroll-view>
+						<view class="titleView">
+							<text class="Nb_text1">游客须知</text>
+							<text class="Nb_text2 jdticon icon-fork " @click="close(2)"></text>
+						</view>
+						<scroll-view class="noticeBox" scroll-y="ture">
+							<text class="Nb_text4">
+								{{notice.security}}
+							</text>
+						</scroll-view>
 					</view>
 				</uni-popup>
 			</view>
@@ -139,7 +139,7 @@
 					<text class="people">共{{addressData.length}}人</text>
 				</view>
 
-				<view class="submitChange" :class="{submitColor: selectedValue===1 && addressData.length>0}" @click="submit">
+				<view class="submitChange" enabl :class="{submitColor: selectedValue===1 && addressData.length>0}" @click="submitState">
 					<text class="submit">立即预订</text>
 				</view>
 			</view>
@@ -152,31 +152,32 @@
 <script>
 	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	import uniCalendar from '../../../components/LYFW/scenicSpotTickets/uni-calendar/uni-calendar.vue'
-	export default {  
+	export default {
 		data() {
 			const currentDate = this.getDate({
 				format: true
 			})
 			return {
+				submissionState: false, //提交状态
 				actualPayment: '', //实际付款
 				selectedValue: 0, //同意须知的选中值
 				dateReminder: '今天', //日期提醒
 				date: currentDate, //默认时间
 				maskState: 0, //优惠券面板显示状态
-				
+
 				admissionTicket: '', //门票内容
-				userInfo : '',//个人信息
-				
+				userInfo: '', //个人信息
+
 				couponIndex: '请选择优惠券', //优惠券默认内容
 				couponColor: '', //优惠券couponID
 				couponCondition: '', //优惠券的满足条件值
-				
-				notice : '', // 预订须知
-				
+
+				notice: '', // 预订须知
+
 				addressData: '', //购票人信息
 				adultIndex: '', //成人数量
 				childrenIndex: '', //儿童数量
-				
+
 				couponList: [{
 						couponID: '0',
 						title: '新用户专享优惠券',
@@ -200,7 +201,8 @@
 						title: '大型团购优惠券-今点通限量版',
 						price: 200,
 						condition: 1000,
-					}]
+					}
+				]
 			}
 		},
 
@@ -220,20 +222,20 @@
 			//读取静态数据
 			async lyfwData(e) {
 				uni.getStorage({
-					key:'ticketInformation',
-					success:(res) =>{
+					key: 'ticketInformation',
+					success: (res) => {
 						this.admissionTicket = res.data;
 						// console.log(res)
 					}
 				})
 				uni.getStorage({
-					key:'userInfo',
-					success:(res) =>{
+					key: 'userInfo',
+					success: (res) => {
 						this.userInfo = res.data;
 						// console.log(res)
 					}
 				})
-				
+
 				let notice = await this.$api.lyfwfmq('notice');
 				this.notice = notice.data;
 			},
@@ -247,7 +249,7 @@
 					var b = a.slice(0, e).concat(a.slice(e + 1, a.length));
 					this.addressData = b;
 					uni.setStorage({
-						key:"passengerList",
+						key: "passengerList",
 						data: b
 					})
 					this.screenUser();
@@ -256,32 +258,51 @@
 
 			//选择用户
 			choiceUser: function(e) {
-				if(e==0){
-					uni.navigateTo({
-						url: '/pages/GRZX/addPassenger',
+				if (e == 0) {
+					uni.getStorage({
+						key: 'userInfo',
+						fail() {
+							uni.showToast({
+								icon: 'none',
+								title: '未登录无法添加乘车人,请先登录'
+							})
+							setTimeout(function() {
+								uni.navigateTo({
+									//loginType=1,泉运登录界面
+									//loginType=2,今点通登录界面
+									//loginType=3,武夷股份登录界面
+									url: '../../GRZX/userLogin?loginType=1'
+								})
+							}, 500);
+						},
+						success() {
+							uni.navigateTo({
+								url: '../../GRZX/addPassenger?type=add',
+							})
+						}
 					})
-				}else if(e==1){
+				} else if (e == 1) {
 					uni.navigateTo({
-						url: '/pages/GRZX/passengerInfo?submitType=1',
+						url: '../../GRZX/passengerInfo?submitType=1',
 					})
 				}
-				
-				
+
+
 			},
-			
+
 			//用户数据读取
-			userData(){ 
+			userData() {
 				uni.getStorage({
-				    key: 'passengerList',
-				    success: (res) => {
-				        this.addressData = res.data;
+					key: 'passengerList',
+					success: (res) => {
+						this.addressData = res.data;
 						this.screenUser();
-				    }
+					}
 				});
 			},
 
 			//数组提取
-			screenUser:function(){
+			screenUser: function() {
 				let adult = this.addressData.filter(item => {
 					return item.userType == '成人';
 				})
@@ -332,8 +353,9 @@
 			stopPrevent() {},
 
 			// 数量+计价
-			numberChange(){
-				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this.childrenIndex);
+			numberChange() {
+				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this
+					.childrenIndex);
 				if (this.couponColor == '') {
 					this.actualPayment = a;
 				} else if (a >= this.couponCondition) {
@@ -351,84 +373,112 @@
 					this.actualPayment = a;
 				}
 			},
+			
+			//提交按钮状态赋值
+			submitState: function() {
+				if (this.submissionState == false) {
+					this.submissionState = true;
+					this.submit();
+				} else if (this.submissionState == true) {
+					uni.showToast({
+						title: '请勿重复点击提交',
+						icon: 'none',
+						duration:2000
+					})
+				}
+			},
 
 			//提交表单
 			submit: function() {
-				if (this.selectedValue == 1 && this.addressData.length>0){
+				uni.showLoading({
+					title: '提交订单中...'
+				})
+				if (this.selectedValue == 1 && this.addressData.length > 0) {
 					uni.request({
-						url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' +this.userInfo.unid,
-						method:'POST',
-						success:(res) => {
+						url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' + this.userInfo.unid,
+						method: 'POST',
+						success: (res) => {
 							var a = '';
 							a = res.data.data.filter(item => {
 								return item.orderType == '待支付';
 							})
-							if(a == ''){
+							if (a == '') {
 								uni.request({
-									url : 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
-									data:{
-										unid : this.userInfo.unid,
-										ticketProductId : this.admissionTicket.admissionTicketID,
-										ticketId : 0,
-										ticketContain : this.admissionTicket.ticketContain,
-										
-										companyId : this.admissionTicket.companyId,
-										executeScheduleId : this.admissionTicket.executeScheduleId,
-										
-										addressData : this.addressData,
-										couponID : this.couponColor,
-										
-										orderDateReminder : this.dateReminder,
-										orderDate : this.date,
-										orderInsure : '',
-										orderInsurePrice : '',
-										orderActualPayment : this.actualPayment,
+									url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+									data: {
+										unid: this.userInfo.unid,
+										ticketProductId: this.admissionTicket.admissionTicketID,
+										ticketId: 0,
+										ticketContain: this.admissionTicket.ticketContain,
+
+										companyId: this.admissionTicket.companyId,
+										executeScheduleId: this.admissionTicket.executeScheduleId,
+
+										addressData: this.addressData,
+										couponID: this.couponColor,
+
+										orderDateReminder: this.dateReminder,
+										orderDate: this.date,
+										orderInsure: '',
+										orderInsurePrice: '',
+										orderActualPayment: this.actualPayment,
+										sellerCompanyCode: '南平旅游APP',
+										tppId: 0,
 									},
-									
-									method:'POST',
+
+									method: 'POST',
 									//向服务器发送订单数据，返回订单编号
-									success:(res)=>{
-										console.log(res)
-										if(res.data.msg =='无可售门票！'){
+									success: (res) => {
+										uni.hideLoading()
+										// console.log(res)
+										if (res.data.msg == '无可售门票！') {
 											uni.showToast({
-												title:'该景区无可售门票！',
-												icon:'none',
+												title: '该景区无可售门票！',
+												icon: 'none',
 											})
-										}else if(res.data.msg =='下单失败，联系管理员！'){
+										} else if (res.data.msg == '下单失败，联系管理员！') {
 											uni.showToast({
-												title:'下单失败，联系管理员！',
-												icon:'none',
+												title: '下单失败，联系管理员！',
+												icon: 'none',
 											})
-										}else if(res.data.msg =='下单成功'){
+										} else if (res.data.msg == '下单成功') {
 											uni.redirectTo({
-												url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + JSON.stringify(res.data.orderNumber)
+												url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
 											})
 										}
-										
+
 									}
 								})
-							}else if(a.length>0){
+							} else if (a.length > 0) {
+								uni.hideLoading()
 								uni.showToast({
-									title:'订单中，存在待支付订单，请支付/取消后再下单',
-									icon:'none',
-									duration:2000
+									title: '订单中，存在待支付订单，请支付/取消后再下单',
+									icon: 'none',
+									duration: 2000
+								})
+								uni.switchTab({
+									url: '../../order/OrderList'
 								})
 							}
 						}
 					})
-					
-					
-				} else if(this.addressData.length==0){
+
+
+				} else if (this.addressData.length == 0) {
 					uni.showToast({
 						title: '请添加购票人信息',
 						icon: 'none'
 					})
-				}else {
+				} else {
 					uni.showToast({
 						title: '请同意购买须知',
 						icon: 'none'
 					})
 				}
+
+
+
+
 			},
 
 			//打开选择器
@@ -546,15 +596,16 @@
 		padding: 32upx 30upx;
 		padding-bottom: 180upx;
 	}
-	
+
 	/* #ifdef MP-WEIXIN */
 	//整体容器样式 -微信版
 	.cover-container {
 		top: 64upx;
 	}
+
 	/* #endif */
-	
-	
+
+
 	//公共样式 - 适用多个数据框
 	.MP_information1 {
 		border-radius: 16upx;
@@ -562,12 +613,14 @@
 		padding: 24upx 32upx;
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
+
 		.MP_title {
 			font-size: 34upx;
 			display: flex;
 			font-weight: bold;
 			margin-top: 20upx;
 		}
+
 		.MP_text {
 			color: #3EABFC;
 			font-size: 28upx;
@@ -584,12 +637,14 @@
 		font-size: 32upx;
 		box-shadow: 0px 0.2px 0px #aaa;
 		margin-top: 24upx;
-		.kj{
+
+		.kj {
 			font-size: 34upx;
 			display: flex;
 			font-weight: bold;
 			margin-top: 8upx;
 		}
+
 		.MP_text {
 			font-size: 26upx;
 			margin-top: 20upx;
@@ -604,8 +659,10 @@
 		padding: 16upx 40upx;
 		padding-bottom: 92upx;
 		background: #FFFFFF;
-		.titleView{
+
+		.titleView {
 			margin: 24upx 0;
+
 			//弹框标题
 			.Nb_text1 {
 				position: relative;
@@ -614,6 +671,7 @@
 				top: 8upx;
 				margin-bottom: 16upx;
 			}
+
 			//弹框关闭按钮
 			.Nb_text2 {
 				margin-top: 8upx;
@@ -622,9 +680,11 @@
 				font-size: 32upx;
 			}
 		}
+
 		.noticeBox {
-			height: 800upx; 
+			height: 800upx;
 			line-height: 32upx;
+
 			.Nb_text3 {
 				display: block;
 				margin-top: 32upx;
@@ -649,11 +709,11 @@
 		margin-top: 46upx;
 		border-top: 1px #F5F5F5 dashed;
 
-		.MP_textDate{
+		.MP_textDate {
 			float: right;
 		}
 
-		.MP_textReminder{
+		.MP_textReminder {
 			font-size: 26upx;
 			color: #aaa;
 			float: right;
@@ -702,7 +762,7 @@
 			width: 200upx;
 		}
 
-		.Mp_Selection{
+		.Mp_Selection {
 			font-size: 30upx;
 			margin-right: 64upx;
 			width: 200upx;

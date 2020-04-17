@@ -21,10 +21,11 @@
 				<view class='bg color-ff padding-lr btn border' @click='submit'>确定</view>
 			</view> -->
 		</view>
-		<map id='map' :scale='map.scale' :show-location='map.showLocation' :longitude='map.longitude' :latitude='map.latitude'
-		 :width='map.width' :height='map.height' :controls='map.controls' :markers='map.markers' @regionchange='mapChange' :style="{height:mapHeight}">
+		<map id='map' :scale='map.scale' show-location="true" :longitude='map.longitude' :latitude='map.latitude'
+		 :width='map.width' :height='map.height' :controls='map.controls' :markers='map.markers' @regionchange='mapChange'
+		 :style="{height:mapHeight}" :enable-overlooking="false" :enable-satellite="false" :enable-3D="false">
 			<!-- <cover-view class='icon-position' style="margin-top: 100px;"> -->
-			<cover-image src="/static/icon_position.png" class="icon-img"></cover-image>
+			<cover-image src="../../static/Home/icon_position.png" class="icon-img"></cover-image>
 			<!-- </cover-view> -->
 		</map>
 		<view class='footer bg-ff font-26'>
@@ -42,17 +43,19 @@
 	</view>
 </template>
 <script>
-	const app = getApp({allowDefault: true})
+	const app = getApp({
+		allowDefault: true
+	})
 	var QQMapWX = require('@/libs/qqmap-wx-jssdk.min.js')
 	var qqmapsdk = new QQMapWX({
 		//key: 'LXCBZ-NNIKD-UZ64F-H6AFI-UNJLH-OCFGE'
-		key:'ZURBZ-WWTL6-ZNDSL-M7YHC-L67Q3-HRB7V'
+		key: 'ZURBZ-WWTL6-ZNDSL-M7YHC-L67Q3-HRB7V'
 	})
 	export default {
 		data() {
 			return {
 				detail: '',
-				mapHeight:'',
+				mapHeight: '',
 				map: {
 					longitude: 113.76927057974245,
 					latitude: 34.76670519464811,
@@ -81,9 +84,9 @@
 				},
 				checked: 0,
 				scrollTop: 0,
-				mapStatus: 1 ,// 控制选择地址时 地图不加载附近列表
-				mapCtx:'',
-				Name:'',
+				mapStatus: 1, // 控制选择地址时 地图不加载附近列表
+				mapCtx: '',
+				Name: '',
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -96,8 +99,8 @@
 		},
 		onLoad(option) {
 			let map = this.map;
-			if(option.Name){
-				this.Name=option.Name;
+			if (option.name) {
+				this.Name = option.name;
 			}
 			let that = this;
 			uni.getLocation({
@@ -116,9 +119,7 @@
 			});
 			uni.getSystemInfo({
 				success(res) {
-					console.log(res.screenHeight)
-					console.log(res.windowHeight)
-					that.mapHeight=res.windowHeight-60-210+'px';
+					that.mapHeight = res.windowHeight - 60 - 210 + 'px';
 				}
 			})
 			// this.getWidthHeight(e => {
@@ -201,39 +202,39 @@
 				// console.log(this.mapStatus);
 				clearTimeout(this.timer)
 				this.timer = setTimeout(() => {
-					if (e.type == 'regionchange'||e.type == 'end') {
+					if (e.type == 'regionchange' || e.type == 'end') {
 						//#ifdef APP-PLUS
-							that.setData({
-								position: {
-									latitude: e.detail.center.latitude,
-									longitude: e.detail.center.longitude,
-								},
-							})
-							if (that.mapStatus) { // 防止地图点击时 进行多次加载
-								that.getAddressList(1)
-							} else {
-								that.mapStatus = 1
-							}
-							//#endif
-							//#ifndef APP-PLUS
-							that.mapCtx = uni.createMapContext('map')
-							that.mapCtx.getCenterLocation({
-								success: res => {
-									console.log(res.latitude)
-									that.setData({
-										position: {
-											latitude: res.latitude,
-											longitude: res.longitude,
-										},
-									})
-									if (that.mapStatus) { // 防止地图点击时 进行多次加载
-										that.getAddressList(1)
-									} else {
-										that.mapStatus = 1
-									}
+						that.setData({
+							position: {
+								latitude: e.detail.center.latitude,
+								longitude: e.detail.center.longitude,
+							},
+						})
+						if (that.mapStatus) { // 防止地图点击时 进行多次加载
+							that.getAddressList(1)
+						} else {
+							that.mapStatus = 1
+						}
+						//#endif
+						//#ifndef APP-PLUS
+						that.mapCtx = uni.createMapContext('map')
+						that.mapCtx.getCenterLocation({
+							success: res => {
+								console.log(res.latitude)
+								that.setData({
+									position: {
+										latitude: res.latitude,
+										longitude: res.longitude,
+									},
+								})
+								if (that.mapStatus) { // 防止地图点击时 进行多次加载
+									that.getAddressList(1)
+								} else {
+									that.mapStatus = 1
 								}
-							})
-							//#endif
+							}
+						})
+						//#endif
 					}
 				}, 200)
 			},
@@ -248,6 +249,7 @@
 					address: list[index],
 					mapStatus: 0
 				})
+				this.submit();
 			},
 			setData(obj) {
 				Object.assign(this, obj)
@@ -261,26 +263,49 @@
 				let that = this
 				let detail = that.detail || ''
 				let address = that.address
-				console.log(address)
+				// console.log(address)
 				let AddressData = {
 					addressName: address.title + detail,
-					address:address.address,
+					address: address.address,
 					lat: address.location.lat,
 					lng: address.location.lng,
-					adcode:address.ad_info.adcode,
-					district:address.ad_info.district,
-					city:address.ad_info.city,
+					adcode: address.ad_info.adcode,
+					district: address.ad_info.district,
+					city: address.ad_info.city,
 				}
-				uni.navigateTo({
-					url:'../map/map',
-					success() {
-						uni.setStorage({
-							key:that.AddressData,
-							data:a,
-						})
-					}
-				})
-				
+				console.log(this.Name)
+				if (this.Name == "qidian") {
+					uni.setStorage({
+						key: "StartPoint",
+						data: AddressData,
+						success() {
+							uni.navigateBack({
+								delta: 1
+							})
+						}
+					})
+				}
+				if (this.Name == "zhongdian") {
+					uni.setStorage({
+						key: "EndPoint",
+						data: AddressData,
+						success() {
+							uni.navigateBack({
+								delta: 1
+							})
+						}
+					})
+				}
+				// uni.navigateTo({
+				// 	url:'../map/map',
+				// 	success() {
+				// 		uni.setStorage({
+				// 			key:that.AddressData,
+				// 			data:a,
+				// 		})
+				// 	}
+				// })
+
 				// console.log(a)
 			}
 		}
@@ -556,9 +581,9 @@
 		left: 0;
 		top: 60px;
 		right: 0;
-		bottom: 210px;	
+		bottom: 210px;
 	}
-	
+
 
 	.map {
 		display: flex;
@@ -641,6 +666,7 @@
 	.icon_img_tip {
 		padding: 20rpx 0;
 	}
+
 	.icon-img {
 		width: 36px;
 		height: 36px;

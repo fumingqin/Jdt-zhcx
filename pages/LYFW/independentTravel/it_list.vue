@@ -6,7 +6,7 @@
 			<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
 			<!-- #endif -->
 			<!-- #ifdef APP-PLUS -->
-			<text  class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
+			<text  class="locationTxt" @click="oncity">{{regionApp}}<text class="icon jdticon icon-xia"></text></text>
 			<!-- #endif -->
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
@@ -55,22 +55,49 @@
 				<view class="newDiscoveryTitleView">
 					<text class="newDiscoveryTitle">新发现</text>
 				</view>
-				<view class="newDiscoveryConentView" v-for="(item,index) in itText" :key="index" @click="natTo">
+				<view class="newDiscoveryConentView" v-for="(item,index) in newDiscovery" :key="index" @click="natTo">
 					<image class="newDiscoveryConentImage" mode="aspectFill" :src="item.src"></image>
 					<text class="newDiscoveryConentText1">{{item.title}}</text>
-					<text class="newDiscoveryConentText2">点击量：{{item.conut_1}}</text>
+					<text class="newDiscoveryConentText2">销售量：{{item.salesVolume}}</text>
 				</view>
 			</view>
 		</view>
 		
 		<view :hidden="current==0">
-			<!-- 左边导航栏 -->
-			<view style="width: 100%;display: flex;flex-direction: row;">
-				<scroll-view scroll-y="true" style="width: 200upx; flex: 0 0 200upx; background: #f5f5f5;" >
-					<view>
-						<view  v-for="(item,index) in region" :key="index" style="width: 100%; height: 100upx; display: flex; justify-content: center; align-items: center; font-size: 25upx; border-bottom: 1px solid #dedede; cursor: pointer;"></view>
-					</view>
-				</scroll-view>
+			<!-- 联动列表 -->
+			<view class="list_box">
+				<!-- 左边的列表 -->
+				<view class="left">
+					<scroll-view scroll-y="true" :style="{ 'height':scrollHeight }">
+						<view class="item" v-for="(item,index) in stationArray" :key="index" :class="{ 'active':index==leftIndex }" :data-index="index" @click="leftTap(item,index)">
+							<view class="itemView" :style="{background:index==leftIndex? '#4EB3F7' : ''}"></view>
+							<text class="itemText">{{item}}</text>
+						</view>
+			        </scroll-view>
+				</view>
+				<!-- 右边的列表 -->
+				<view class="main">
+					<scroll-view class="mainScView" scroll-y="true">
+							<!-- 大图样式，命名：big -->
+							<view>
+								<image class="big_image" :src="ifyFirst.src"></image>
+								<view style="margin: 0upx 32upx;">
+									<text class="big_title" >{{ifyFirst.title}}</text>
+									<text class="big_text" >京城上下五千年 历史沉淀</text>
+								</view>
+							</view>
+							
+							<!-- 小图样式，命名:sma -->
+							<view class="sma_view" style="">
+								<view style="float: left;" v-for="(item,index) in ifyList" :key="index" >
+									<image class="sma_image" :src="item.src" ></image>
+									<text class="sma_title">{{item.title}}</text>
+									<text class="sma_text" >销售量：{{item.salesVolume}}</text>
+								</view>
+							</view>
+							
+					</scroll-view>
+				</view>
 			</view>
 		</view>
 		
@@ -90,18 +117,26 @@
 				searchData: '', //搜索后的值
 				regionWeixin: '请选择', //微信地区数值
 				regionApp : '请选择',//APP地区数值
-
+				
 				current: 0, //标题下标
 				tabs: ['推荐', '全部'], //选项标题
 
-				itText: '',
+				itText: '',//六宫格
+				newDiscovery : '',//新发现
+				
+				ifyFirst: '',//分类产品首个
+				ifyList:'',//分类产品列表
 				
 				region : [{
 					id:'0',
 					name:'南平',
 					image : '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
 					label : '',
-				},], //地区
+				}], //地区
+				
+				scrollHeight:'500px',
+				leftIndex:0, //左边列表值
+				stationArray:['南平','泉州','石狮','顺昌'], //左边数据内容
 			}
 		},
 		components: {
@@ -112,12 +147,42 @@
 		onLoad() {
 			this.Getpostion();
 			this.textData();
+			this.classifyList();
 		},
 		methods: {
-			async textData() {
-				let itText = await this.$api.lyfwfmq('itText');
-				this.itText = itText.data;
+			textData:function() {
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
+					method:'POST',
+					success: (res) => {
+						// console.log(res)
+						this.itText = res.data.data;
+					}
+				})
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
+					method:'POST',
+					success: (res) => {
+						var sc = res.data.data;;
+						sc.sort((a, b) => a.id - b.id)
+						this.newDiscovery = sc;
+					}
+				})
 			},
+			classifyList:function(){
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
+					method:'POST',
+					success: (res) => {
+						this.ifyFirst =res.data.data[0];
+						var sc = res.data.data;
+						sc.shift();
+						this.ifyList = sc;
+						uni.hideLoading();
+					}
+				})
+			},
+			
 
 
 			//获取定位数据
@@ -135,9 +200,13 @@
 						key:'app_position',
 						success: (res) => {
 							// console.log(res)
-							this.regionApp = res.data;
+							if(res.data !== undefined){
+								this.regionApp = res.data.city;
+							}
 						}
 					})
+					
+					
 				},500)
 			},
 
@@ -153,7 +222,7 @@
 					this.regionWeixin = e.cityName
 					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
-					this.lyfwData();
+					// this.lyfwData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if(e == 'yes'){
@@ -164,13 +233,18 @@
 							this.regionWeixin = res.data;
 						}
 					}),
+					
 					uni.getStorage({
 						key:'app_position',
 						success: (res) => {
 							// console.log(res)
-							this.regionApp = res.data;
+							if(res.data !== undefined){
+								this.regionApp = res.data.city;
+							}
 						}
 					})
+					
+					
 					this.$refs.popupRef.close();
 				}else{
 					this.$refs.popupRef.close();
@@ -225,7 +299,16 @@
 				uni.navigateTo({
 					url:'/pages/LYFW/ouristRoute/travelArrange'
 				})
-			}
+			},
+			
+			/* 左侧导航点击 */
+			leftTap:function(item,index){
+				this.leftIndex=index;
+				this.classifyList(item);
+				uni.showLoading({
+					title:'正在搜索'+item
+				});
+			},
 		}
 	}
 </script>
@@ -351,6 +434,9 @@
 				display: block;
 				margin-top: 12upx;
 				font-size: 30upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 216upx;
 			}
 
 			.listBarText2 {
@@ -358,6 +444,9 @@
 				font-size: 26upx;
 				color: #999;
 				margin-top: 8upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 216upx;
 			}
 
 		}
@@ -391,6 +480,9 @@
 				display: block;
 				margin-top: 12upx;
 				font-size: 30upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 332upx;
 			}
 
 			.newDiscoveryConentText2 {
@@ -398,6 +490,104 @@
 				font-size: 26upx;
 				color: #999;
 				margin-top: 8upx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 332upx;
+			}
+		}
+	}
+	
+	//联动列表
+	.list_box{
+		display: flex;
+	    flex-direction: row;
+	    flex-wrap: nowrap;
+	    justify-content: flex-start;
+	    align-items: flex-start;
+	    align-content: flex-start;
+		font-size: 28rpx;
+		margin-top: 32upx;
+		//左边
+		.left{
+			width: 200rpx;
+			line-height: 80rpx;
+			// box-sizing: border-box;
+			font-size: 32rpx;
+			border: 1upx #F5F5F5 double;
+			.item{
+				display: flex;
+				position: relative;
+				.itemView{
+					width: 8upx;
+					height: 56upx;
+					margin-top: 16upx;
+				}
+				.itemText{
+					padding-left: 56rpx;
+				}
+				&:not(:first-child) {
+				margin-top: 4px;
+					&::after {
+						content: '';
+						display: block;
+						height: 0;
+						border-top: #ddd solid 1px;
+						width: 620upx;
+						position: absolute;
+						top: -1px;
+						right: 0;
+						transform:scaleY(0.5);	/* 1px像素 */
+					}
+				}
+				&.active,&:active{
+					color: #4EB3F7;
+				}
+			}
+		}
+		//右边
+		.main{
+			width: 556upx;
+			border: 1upx #F5F5F5 double;
+			flex-grow: 1;
+			box-sizing: border-box;
+			.mainScView{
+				padding: 20upx 0 32upx 0;
+				.big_image{
+					margin: 12upx 32upx; 
+					width: 492upx; 
+					height: 240upx; 
+					border-radius:8upx;
+				}
+				.big_title{
+					font-weight: 500;
+				}
+				.big_text{
+					font-size: 26upx; 
+					color: #888;
+					display: block; 
+					margin-top: 16upx;
+				}
+				.sma_view{
+					padding:8upx 20upx;
+					.sma_image{
+						margin: 24upx 12upx 12upx 12upx; 
+						width: 232upx; 
+						height: 190upx; 
+						border-radius:8upx;
+					}
+					.sma_title{
+						margin-left: 12upx; 
+						font-weight: 500;
+						display: block;
+					}
+					.sma_text{
+						margin-left: 12upx; 
+						margin-top: 16upx; 
+						font-size: 26upx; 
+						color: #888;
+						display: block;
+					}
+				}
 			}
 		}
 	}

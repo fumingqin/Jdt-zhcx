@@ -1,14 +1,14 @@
 <template>
 	<scroll-view style="background-color: #F5F7F9;" :style="{height:pageheight}" :scroll-y="true">
 		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;">
-			<view class="status_bar"></view>
+			<!-- <view class="status_bar"></view> -->
 			<view style="background-color: #FFF; ">
 				<view style="padding-bottom: 30rpx;">
 					<view style="flex-direction: row;justify-content: center;">
-						<view style="width: 10%;">
-							<uni-icons type="arrowleft" size="24" @click="goBack"></uni-icons>
+						<view style="width: 60rpx;align-items: flex-start">
+							<uni-icons type="arrowleft" size="26" @click="goBack"></uni-icons>
 						</view>
-						<view style="width: 674rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
+						<view style="width: 634rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
 							<view style="flex-grow:1">
 								<view>
 									<view style="flex-direction: row; align-items: center;padding-top: 15rpx;">
@@ -16,7 +16,7 @@
 											<view class="bluering"></view>
 										</view>
 										<view>
-											<input placeholder="请输入起点" style="width: 470rpx;font-size: 30rpx;" :disabled="true" @click="selectInitial"
+											<input placeholder="请输入起点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectInitial('qidian')"
 											 v-model="initialPoint" />
 										</view>
 									</view>
@@ -27,7 +27,7 @@
 										<view class="redring"></view>
 									</view>
 									<view>
-										<input placeholder="请输入终点" style="width: 500rpx;font-size: 30rpx;" :disabled="true" @click="selectDestination"
+										<input placeholder="请输入终点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectDestination('zhongdian')"
 										 v-model="destination" />
 									</view>
 								</view>
@@ -64,7 +64,7 @@
 									<image src="../../static/CZC/position.png" style="width: 37rpx;height: 37rpx;"></image>
 								</view>
 								<view style="padding-left: 20rpx;width: 560rpx;">
-									<view><text style="font-size: 30rpx;">{{item.name}}</text></view>
+									<view><text style="font-size: 30rpx;">{{item.addressName}}</text></view>
 									<view style="height: 10rpx;"></view>
 									<view><text style="color: #999999;font-size: 30rpx;">{{item.address}}</text></view>
 								</view>
@@ -135,56 +135,67 @@
 				</view>
 			</view>
 		</view>
-		<popup ref="popup" type="center" :maskClick="flase" style="z-index:99999;position: fixed;align-items: center; padding: 10upx;">
-			<image src="../../static/CTKY/tipBackground.png" class="popupClass"></image>
-			<text style="position: absolute;color: #FFFFFF;top: 300rpx;margin-left: 80rpx; font-style: SourceHanSansSC-Bold;font-weight: bold;font-size: 40upx; z-index:9000">传统与定制班车的差异</text>
-			<view style="position: absolute; margin-top: 391upx;margin-left: 50rpx;width: 505upx;text-align:left;flex-direction: column;z-index:9999">
-				<view style="width: 505upx; ">
-					<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">传统：只能在车票的起终点进行上车</text>
-				</view>
-				<view style="width: 505upx;">
-					<text style="color: #FFFFFF;font-size: 30upx;font-style:SourceHanSansSC-Bold ;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详情可见班次详情对应的地图标识</text>
+		<!-- 客运弹框 -->
+		<popup ref="popup" type="center" maskClick="false" style="z-index:99999;">
+			<view style="flex-direction: column;position: relative;display: flex;justify-content: center;">
+				<image src="../../static/CTKY/tipBackground.png" class="popupClass" style="height: 700rpx;width: 600rpx;"></image>
+				<view style="position: absolute; align-items: center;margin-top: 150rpx;">
+					<view class="popupTextContent" style="width: 600rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
+						<text class="popupText" style="text-align: center;font-size: 40rpx;font-weight: bold;">传统与定制班车的差异</text>
+					</view>
+					<view class="popupTextContent" style="width: 500rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
+						<text class="popupText">传统：只能在车票的起终点进行上车</text>
+					</view>
+					<view class="popupTextContent" style="width: 500rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
+						<text class="popupText" style="line-height: 50rpx;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详细可见班次详情对应的地</text>
+					</view>
+					<!-- #ifdef APP-PLUS -->
+					<text style="top: 5rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;"
+						 @click="noPupop">下次不弹出</text>
+					<!-- #endif -->
+					<!-- #ifdef MP-WEIXIN -->
+					<text style="margin-bottom: 80rpx; top: 10rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
+						 @click="noPupop">下次不弹出</text>
+					<!-- #endif -->
+					
 				</view>
 			</view>
-			<text style="position: absolute;border-radius: 18upx;margin-top: 645upx;margin-left: 120rpx;width: 350upx;height: 100upx;line-height:100upx ;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
-			 @click="noPupop">下次不弹出</text>
 			<view style="align-items: center;text-align: center;">
-				
-				
-				
 				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
 		</popup>
-		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运 -->
+		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运开始 -->
 		<view v-if="current == 1" style="margin-top: 10upx;">
-			<view class="ctky_View" v-for="(item,index) in 5" :key="index" @click="queryTickets">
+			<view class="ctky_View" v-for="(item,index) in keYunList" :key="index" @click="queryTickets(keYunList[index])">
 				<view class="ctky_View_Left">
 					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
-						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">客运班车</text>
+						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">{{item.shuttleType}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">{{tcky_selectStartStation}}</text>
+						color: #333333;">{{item.startStaion}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
 						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;">{{tcky_selectEndStation}}</text>
+						color: #333333;">{{item.endStation}}</text>
 					</view>
 					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
-					font-size: 28upx;color: #666666;">共10趟 10:00发车</text>
+					font-size: 28upx;color: #666666;">共{{item.Trips}}趟 {{utils.timeTodate('Y-m-d H:i:s',item.firstDepartureTime)}}发车</text>
 				</view>
 				<view class="ctky_View_Right">
 					<view style="text-align: right;">
 						<text style="margin-right: 28upx;font-size: 36upx;font-style:
-                       SourceHanSansSC-Regular; color: #FC4646;">￥28</text>
+                       SourceHanSansSC-Regular; color: #FC4646;">￥{{item.fare}}</text>
 						<text style="margin-right: 28upx;font-size: 24upx;font-style:
-                       SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余18张</text>
+                       SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余{{item.remainingVotes}}张</text>
 					</view>
 				</view>
 			</view>
+			<empty-data :isShow="keYunList.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 		</view>
+		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运结束 -->
 		<view v-if="current == 2">
 			<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
 			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
@@ -197,7 +208,7 @@
 					</view>
 					<view style="flex-direction: row;justify-content: space-between;margin-top: 30rpx;margin-bottom: 30rpx;" v-if="!IsClick">
 						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;border-right-width: 1px;border-color: #EAEAEA;">
-						 <text style="font-size: 28rpx;">预约时间</text>
+							<!-- <text style="font-size: 28rpx;">预约时间</text> -->
 							<hTimePicker interval="5" @changeTime="changeTime">
 								<view slot="pCon" class="changeTime">
 									<text style="font-size: 28rpx;">{{selecttime}}</text>
@@ -206,13 +217,13 @@
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;" @click="selectPassenger">
-							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
+							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
 					<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
 						<view style="flex-direction: row;justify-content: center;align-items: center;">
-							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
+							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
 					</view>
@@ -220,7 +231,7 @@
 						<view style="align-items: center;justify-content: center;flex-direction: row;">
 							<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
 							<view>
-								<text style="font-size: 28rpx;">出租车</text>
+								<text style="font-size: 28rpx;">{{vehicleType}}</text>
 							</view>
 						</view>
 						<view style="align-items: center;justify-content: center;flex-direction: row;">
@@ -268,20 +279,24 @@
 	import uniIcons from "../../components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "../../components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "../../components/HOME/h-timePicker/h-timePicker.vue";
-	import popup from "../../components/HOME/uni-popup/uni-popup.vue";
+	import popup from "../../components/HOME/uni-popup/uni-popup.vue";//弹框组件
+	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";//时间格式转换
+	import emptyData from "@/components/CTKY/emptyData/emptyData.vue";//无数据时显示内容
 	export default {
 		components: {
 			uniIcons,
 			uniSegmentedControl,
 			hTimePicker,
-			popup
+			popup,
+			emptyData
 		},
 		data() {
 			return {
+				utils: utils,//时间格式转换
 				selecttime: "点击选择时间",
 				county:'',
 				Passenger: [{
-					name: "选择乘车人"
+					userName: "选择乘车人"
 				}],
 				privateTaxi: [{
 						startpoint: '泉金客运码头',
@@ -353,11 +368,18 @@
 				TaxiCost: "",
 				intervalAround: 0,
 				// map: '',
-				tcky_selectStartStation: '泉州客运中心站', //选中班次的起点站
-				tcky_selectEndStation: '漳州客运站', //选中班次的终点站
+				// tcky_selectStartStation: '泉州客运中心站',
+				// tcky_selectEndStation: '漳州客运站',
 				isPupop: true, //是否弹窗
+				keYunList:[],
+				disabled:true,
+				vehicleType:'出租车', //车辆类型
+				destinationArea:'',   //目标区域
+				estimateDistanceTime:0,//预计时长
+				estimateDistance:0//预计里程
 			}
 		},
+		
 		onLoad(options) {
 			var that = this;
 			uni.getStorage({ //获取历史记录
@@ -378,34 +400,76 @@
 			}
 			that.intervalGet();
 		},
+		onUnload() {
+			uni.removeStorage({
+				key:"StartPoint"
+			})
+			uni.removeStorage({
+				key:"EndPoint"
+			})
+		},
 		onShow() {
 			var that = this;
-			// that.map=uni.createMapContext("map555",that);
+			uni.getStorage({ //获取起点
+				key: "StartPoint",
+				success: function(res) {
+				     console.log(res);
+					that.initialPoint = res.data.addressName;
+					that.startLonLat = res.data.lng + "," + res.data.lat;
+					that.startlongitude = res.data.lng;
+					that.startlatitude = res.data.lat;
+					that.startlocation = res.data;
+					// console.log(that.startLonLat);
+				}
+			});
+			uni.getStorage({ //获取终点
+				key: "EndPoint",
+				success: function(res) {
+					that.destination = res.data.addressName;
+					that.endLonLat =res.data.lng + "," + res.data.lat;
+					that.endlongitude = res.data.lng;
+					that.endtlatitude = res.data.lat;
+					that.endlocation = res.data;
+					that.destinationArea = res.data.district;//目标区域
+				}
+			});
 			uni.getStorage({ //获取乘车人
 				key: "passengerList",
 				success: function(res) {
+					// console.log(res);
 					that.Passenger = res.data;
 				}
 			});
 		},
-		onReady: function() {
+		mounted() {
 			//动态设置高度
 			var that = this;
 			// that.map=uni.createMapContext("map555",this);
-			let query = uni.createSelectorQuery().in(that).select("#ceshi");
-			query.fields({
-				size: true,
-				scrollOffset: true
-			}, data => {
-				that.winheight = data.height + 'px';
-				uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
-					success: function(res) {
-						that.historyheight = (res.windowHeight - data.height - 108) + "px";
-						that.pageheight = res.screenHeight + "px";
-						that.mapheight = (res.windowHeight - data.height) + "px";
-					}
-				})
-			}).exec();
+			setTimeout(function(){
+				let query = uni.createSelectorQuery().in(that).select("#ceshi");
+				query.fields({
+					size: true,
+					scrollOffset: true
+				}, data => {
+					that.winheight = data.height + 'px';
+					uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
+						success: function(res) {
+							that.historyheight = (res.windowHeight - data.height - 108) + "px";
+							that.pageheight = res.windowHeight + "px";
+							that.mapheight = (res.windowHeight - data.height) + "px";
+							if(res.platform=="ios"){
+								// that.historyheight = (res.windowHeight - data.height - 130) + "px";
+							    // that.winheight=data.height+25+'px';
+								that.disabled=false;
+							}
+						}
+					})
+				}).exec();
+			},200)
+			
+		},
+		onReady: function() {
+			
 		},
 		methods: {
 			onClickItem(e) { //tab点击事件
@@ -414,11 +478,18 @@
 					that.current = e.currentIndex
 				}
 				if (that.current == 1 && this.isPupop) {
+					uni.clearStorage("StartPoint");
+					uni.clearStorage("EndPoint");
+					that.initialPoint = '';
+					that.destination = '';
+					//客运弹框
 					that.open();
 				}
 			},
 			goBack: function() { //返回上一页
-				uni.navigateBack();
+				uni.switchTab({
+					url:"/pages/Home/Index"
+				});
 				clearInterval(this.intervalAround);
 			},
 			clearHistpry: function() { //清除历史记录
@@ -431,10 +502,10 @@
 					key: 'endlocation',
 					data: that.historyAddress[index],
 					success: function(res) {
-						that.destination = that.historyAddress[index].name;
-						that.endLonLat = that.historyAddress[index].longitude + "," + that.historyAddress[index].latitude;
-						that.endlongitude = that.historyAddress[index].longitude;
-						that.endtlatitude = that.historyAddress[index].latitude;
+						that.destination = that.historyAddress[index].addressName;
+						that.endLonLat = that.historyAddress[index].lng + "," + that.historyAddress[index].lat;
+						that.endlongitude = that.historyAddress[index].lng;
+						that.endtlatitude = that.historyAddress[index].lat;
 						that.endlocation = that.historyAddress[index];
 					}
 				});
@@ -447,6 +518,7 @@
 				});
 			},
 			promptlyCall: function() { //立即呼叫、生成订单
+				let that = this;
 				if (this.selecttime == "点击选择时间" && !this.IsClick) {
 					uni.showToast({
 						title: "请选择时间"
@@ -457,12 +529,52 @@
 							title: "请选择乘车人"
 						})
 					} else {
+						let userInfo = uni.getStorageSync('userInfo') || '';
+						uni.request({
+							url:taxi.Interface.AddExpressOrder_Passenger.value,
+							method:taxi.Interface.AddExpressOrder_Passenger.method,
+							data:{
+								startLon:that.startlongitude,
+								startLat:that.startlatitude,
+								endLon:that.endlongitude,
+								endLat:that.endtlatitude,         
+								startAddress:that.initialPoint, //起点
+								endAddress:that.destination,    //终点
+								orderType: that.IsClick?'实时':'预约',
+								passengers:JSON.stringify(that.Passenger),
+								vehicleType:that.vehicleType,//现在暂时只有出租车
+								appointmentTime:that.selecttime==='点击选择时间'?utils.timeTodate(taxi.dateFormat.dateformat, new Date().getTime()):that.selecttime, //预约时间
+								estimatePrice:that.TaxiCost,     //预估价格
+								userId:userInfo.userId,
+								estimateDistance:that.estimateDistance,			 //预估里程
+								destinationArea:that.destinationArea,//目标区域
+								estimateDistanceTime:that.estimateDistanceTime	 //预估时间
+							},
+							success:function(res){
+								console.log(res);
+							},
+							fail:function(res){
+								console.log(res);
+							}
+						})
+						
+						
+						
+						
 						uni.navigateTo({
 							url: '../CZC/CallAndDrive?orderNo=1',
 							animationType: 'pop-in',
 							animationDuration: 200,
 							success: function() {
-								uni.clearStorage("passengerList");
+								uni.removeStorage({
+									key:"passengerList"
+								})
+								uni.removeStorage({
+									key:"StartPoint"
+								})
+								uni.removeStorage({
+									key:"EndPoint"
+								})
 							}
 						});
 					}
@@ -484,7 +596,28 @@
 			click_btbooking: function() {
 				this.IsClick = false;
 			},
-			selectInitial: function() { //选择起点
+			selectInitial:function(name){
+				//选择起点
+				var that = this;
+				if(that.current == 1) {
+					//当前选择的是客运
+					//监听事件,监听下个页面返回的值
+					uni.$on('startstaionChange', function(data) {
+					    // data即为传过来的值，给上车点赋值
+						that.initialPoint = data.data;
+					    //清除监听，不清除会消耗资源
+					    uni.$off('startstaionChange');
+					});
+					uni.navigateTo({
+						url:'../CTKY/homeSattionPick?&station=' + 'qidian'
+					})
+				}else {
+					uni.navigateTo({
+						url:"./MapIndex?name="+name
+					})
+				}
+			},
+			selectInitial1: function() { //选择起点
 				var that = this;
 				uni.chooseLocation({
 					success: function(res) {
@@ -502,7 +635,28 @@
 					}
 				});
 			},
-			selectDestination: function() { //选择终点
+			selectDestination:function(name){
+				//选择终点
+				var that = this;
+				if(that.current == 1) {
+					//当前选择的是客运
+					//监听事件,监听下个页面返回的值，给下车点赋值
+					uni.$on('endStaionChange', function(data) {
+					    // data即为传过来的值
+						that.destination = data.data;
+					    //清除监听，不清除会消耗资源
+					    uni.$off('endStaionChange');
+					});
+					uni.navigateTo({
+						url:'../CTKY/homeSattionPick?&station=' + 'zhongdian'
+					})
+				}else {
+					uni.navigateTo({
+						url:"./MapIndex?name="+name
+					})
+				}
+			},
+			selectDestination1: function() { //选择终点
 				var that = this;
 				uni.chooseLocation({
 					success: function(res) {
@@ -526,6 +680,9 @@
 				var newstartlocation = that.startlocation;
 				var newstartlatitude = that.startlatitude;
 				var newstartlongitude = that.startlongitude;
+				var newstartLonLat=that.startLonLat;
+				that.startLonLat =that.endLonLat;
+				that.endLonLat=newstartLonLat;
 				uni.setStorage({
 					key: 'startlocation',
 					data: that.endlocation,
@@ -560,7 +717,7 @@
 					})
 				} else {
 					for (var i = 0; i < that.historyAddress.length; i++) {
-						if (that.endlocation.address == that.historyAddress[i].address) {
+						if (that.endlocation.addressName == that.historyAddress[i].addressName) {
 							Isrepeat = false;
 						}
 					}
@@ -578,32 +735,45 @@
 					});
 					//获取数据,传入当前选择的模块index
 					that.getmessengeInfo(that.current);
-					console.log(that.current);
+					// console.log(that.current);
 					that.IsSearch = true;
 				}
 			},
-			//获取数据
+			//------------------------------------------------获取数据----------------------------------------
 			getmessengeInfo(param) {
-				console.log(param)
+				// console.log(param)
 				switch(param){
 					case 0 :{//智能
 						
 						break;
 					}
-					case 1 :{//客运
+					case 1 :{
+					//---------------------------------------获取客运数据----------------------------------------
+					var that = this;
+					var date = that.getTime();
 					uni.showLoading();
 					uni.request({
 						url:'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
 						data: {
-							systemName:'泉运实业综合出行',
+							systemName:'泉运公司综合出行',
 							startPosition:this.initialPoint,
 							endPosition:this.destination,
+							date:date,
 						},
 						method:'POST',
 						header:{'content-type':'application/json'},
 						success: (res) => {
 							uni.hideLoading();
-							console.log(res)
+							//非空判断
+							if(res.data.data.length != 0) {
+								this.keYunList = res.data.data
+							}else {
+								this.keYunList = res.data.data
+								uni.showToast({
+									title:'暂无班次信息',
+									icon:'none'
+								})
+							}
 						},
 						fail(res) {
 							uni.hideLoading();
@@ -626,6 +796,19 @@
 					default:
 						break;
 				}
+			},
+			getTime:function(){
+				var date = new Date(),
+				year = date.getFullYear(),
+				month = date.getMonth() + 1,
+				day = date.getDate(),
+				hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+				minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
+				second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+				month >= 1 && month <= 9 ? (month = "0" + month) : "";
+				day >= 0 && day <= 9 ? (day = "0" + day) : "";
+				var timer = year + '-' + month + '-' + day;
+				return timer;
 			},
 			setMarkers: function() { //设置始末标点
 				var that = this;
@@ -689,6 +872,10 @@
 				that.showlocation = false;
 				that.getDirectionDriving(that.startLonLat, that.endLonLat);
 			},
+			SecondToMinutes:function(time){
+				var that = this;
+				return time / 60;
+			},
 			Timechange: function(time) { //时间转换
 				var that = this;
 				var date = parseInt(time / 3600 / 24);
@@ -740,6 +927,7 @@
 			},
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
+				// console.log(startLonLat);
 				var that = this;
 				uni.request({
 					url: taxi.InterfaceAddress[0],
@@ -761,6 +949,8 @@
 						} else {
 							that.Distance = res.data.Distance + "米";
 						}
+						that.estimateDistance = res.data.Distance / 1000;
+						that.estimateDistanceTime = that.SecondToMinutes(res.data.Duration);
 						that.Timechange(res.data.Duration);
 						polylineArr = res.data.Polyline;
 
@@ -781,10 +971,10 @@
 						}
 						var obj = {
 							points: that.points,
-							width: 10,
+							width: 6,
 							arrowLine: true,
 							// arrowIconPath:'../../static/CZC/jiantou.png',
-							color: "#4BDC27",
+							color:'#4bdc27',
 							borderColor: "#8c918b",
 						};
 						that.polyline.push(obj);
@@ -800,12 +990,15 @@
 					}
 				});
 			},
-			queryTickets: function() {
+			queryTickets: function(param) {
+				//分割时间为数组
+				let dateArray = param.firstDepartureTime.split('T');
+				let date = dateArray[0];
+				//页面传参通过地址后面添加参数 shuttleType="直达班车"是普通购票1是定制班车
+				var params='../CTKY/selectTickets?&startStation=' + param.startStaion +'&endStation=' + param.endStation + '&date=' + date + '&isNormal=' + param.shuttleType;
 				uni.navigateTo({
-					// url: "../CTKY/selectTickets?StartStation=" + this.tcky_selectStartStation + "&EndStation=" + this.tcky_selectEndStation,
-					url: '../CTKY/selectTickets?&startStation=泉州客运中心站' +'&endStation=漳州客运站' +'&date=2020-03-26',
+					url:params
 				})
-
 			},
 			//传统客运弹窗
 			open() {
@@ -857,7 +1050,7 @@
 									that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
 										'../../static/CZC/Car.png');
 								}
-								console.log(carArr.length + '-' + that.markers.length);
+								// console.log(carArr.length + '-' + that.markers.length);
 							},
 						});
 					}
@@ -901,7 +1094,16 @@
 		border-color: #EAEAEA;
 		border-radius: 0;
 	}
-
+	/* 客运弹框 */
+	.popupTextContent {
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+		
+	}
+	.popupText {
+		color: #FFFFFF;
+		font-size: 30upx;
+	}
 	.bt_booking {
 		width: 329rpx;
 		height: 60rpx;

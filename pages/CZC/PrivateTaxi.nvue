@@ -20,13 +20,13 @@
 						<uni-icons type="arrowright" size="19"></uni-icons>
 					</view>
 					<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;" @click="selectPassenger">
-						<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
+						<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
 						<uni-icons type="arrowright" size="19"></uni-icons>
 					</view>
 				</view>
 				<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
 					<view style="flex-direction: row;justify-content: center;align-items: center;">
-						<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.name}}&nbsp;</text>
+						<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
 						<uni-icons type="arrowright" size="19"></uni-icons>
 					</view>
 				</view>
@@ -68,7 +68,7 @@
 				mapheight: '',
 				selecttime: "点击选择时间",
 				Passenger: [{
-					name: "选择乘车人"
+					userName: "选择乘车人"
 				}],
 				TaxiCost: '',
 				Distance: '',
@@ -129,7 +129,7 @@
 			},
 			selectPassenger: function() { //选择乘车人
 				uni.navigateTo({
-					url: '../GRZX/passengerInfo?submitType=1',
+					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=1',
 					animationType: 'pop-in',
 					animationDuration: 200
 				});

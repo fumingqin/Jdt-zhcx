@@ -1,11 +1,17 @@
 <template>
 	<view>
+		<!-- #ifdef MP-WEIXIN -->
 		<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view>
+		<!-- #endif -->
+		<!-- #ifndef MP-WEIXIN -->
+		<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 88upx;">倒计时：{{countDownDate}}秒</view>
+		<!-- #endif -->
+
 		<!-- 顶部背景 -->
 		<view class="ob_background">
 			<image src="../../../static/LYFW/scenicSpotTickets/addOrder/orderBackground.png" mode="aspectFill"></image>
 		</view>
-		
+
 		<view class="cover-container">
 			<view class="MP_information1">
 				<view class="MP_title">{{orderInfo.ticketTitle}}</view>
@@ -100,7 +106,8 @@
 	export default {
 		data() {
 			return {
-				countDownDate : 300,//倒计时时间
+				countDownDate: 300, //倒计时时间
+				returnIndex: false, //页面点击上一页
 				hiddenValues: '0', //隐藏状态值
 				channel: [{
 					name: '微信'
@@ -153,28 +160,35 @@
 
 			}
 		},
-		onLoad(options) {
-			uni.getStorage({
-				key:'countDown',
-				success:(res)=>{
-					this.countDownDate = res.data;
-					this.countDown();
-				},
-				fail:()=>{
-					this.countDown();
+		onLoad: function(options) {
+			uni.showLoading({
+				title:'拉起订单中...'
+			})
+			this.returnIndex = false;
+			uni.setStorage({
+				key: 'returnIndex',
+				data: this.returnIndex,
+			})
+			uni.request({
+				url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + options.orderNumber,
+				method: 'POST',
+				success: (res) => {
+					console.log(res)
+					this.orderInfo = res.data.data;
+					this.screenUser();
+					this.getDate();
+					uni.hideLoading()
 				}
 			})
-			
-			uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + JSON.parse(options.orderNumber),
-					method: 'POST',
-					success: (res) => {
-						// console.log(res)
-						this.orderInfo = res.data.data;
-						this.screenUser();
-					}
-				})
 		},
+		onBackPress: function() {
+			this.returnIndex = true;
+			uni.setStorage({
+				key: 'returnIndex',
+				data: this.returnIndex,
+			})
+		},
+
 		methods: {
 			//隐藏操作
 			hide(e) {
@@ -208,68 +222,253 @@
 				this.adultTotalPrice = adult.length * this.orderInfo.ticketAdultPrice;
 				this.childrenTotalPrice = children.length * this.orderInfo.ticketChildPrice;
 			},
+
+
+			//获取当前时间并格式化
+			getDate: function() {
+				//先提取订单下单时间把空格转换成T
+				var a = this.orderInfo.setOrderTime.replace(' ', 'T')
+				//把时间转换成时间戳
+				var b = new Date(a).getTime();
+
+				//获取当前时间（为什么要先把当前时间戳格式化？）是因为直接获取当前时间戳存在时间误差
+				var date = new Date(),
+					year = date.getFullYear(),
+					month = date.getMonth() + 1,
+					day = date.getDate(),
+					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+					minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
+					second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+				month >= 1 && month <= 9 ? (month = "0" + month) : "";
+				day >= 0 && day <= 9 ? (day = "0" + day) : "";
+				var timer = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
+				//把转换后的时间，转换成时间戳
+				var c = new Date(timer).getTime();
+
+				//用当前时间-下单时间再除于1000就是秒
+				var d = (c - b) / 1000;
+
+				//这里的300秒就是支付倒计时，门票是5分钟
+				var e = 394 - d;
+
+				this.countDownDate = e;
+				this.countDown();
+			},
+
+
 			//支付倒计时
-			countDown:function(){
-				var interval = setInterval(()=>{
+			countDown: function() {
+				uni.hideLoading()
+				var interval = setInterval(() => {
 					--this.countDownDate;
 					uni.setStorage({
-						key:'countDown',
-						data:this.countDownDate,
+						key: 'countDown',
+						data: this.countDownDate,
 					})
-				},1000)
-				setTimeout(()=>{
-					clearInterval(interval)
-					uni.removeStorage({
-						key:'countDown'
-					})
-					uni.request({
-						url:'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' +this.orderInfo.orderNumber,
-						method:'POST',
-						success:(res) => {
-							// console.log(res)
-							if(res.data.data.orderType =='待支付'){
-								uni.request({
-									url:'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' +res.data.data.orderNumber,
-									method:'POST',
-									success() {
-										console.log('取消成功')
-									},
-									fail() {
-										console.log('取消失败')
-									}
-								})
-							}else{
-								return false
-							}
+					if (this.countDownDate <= 0) {
+						clearInterval(interval)
+						this.countDownEnd();
+						uni.removeStorage({
+							key: 'countDown'
+						})
+					}
+				}, 1000)
+			},
+
+			//倒计时结束
+			countDownEnd: function() {
+				uni.request({
+					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + this.orderInfo.orderNumber,
+					method: 'POST',
+					success: (res) => {
+						// console.log(res)
+						if (res.data.data.orderType == '待支付') {
+							uni.request({
+								url: 'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' + res.data.data.orderNumber,
+								method: 'POST',
+								success() {
+									console.log('取消成功')
+									uni.showToast({
+										title: '支付超时，已自动取消订单',
+										icon: 'none',
+										duration: 2000
+									})
+									uni.getStorage({
+										key: 'returnIndex',
+										success:(res)=>{
+											if(res.data == false){
+												uni.switchTab({
+													url:'../../order/OrderList'
+												})
+											}
+										}
+									})
+
+								},
+								fail() {
+									console.log('取消失败')
+									uni.getStorage({
+										key: 'returnIndex',
+										success:(res)=>{
+											if(res.data == false){
+												uni.switchTab({
+													url:'../../order/OrderList'
+												})
+											}
+										}
+									})
+								}
+							})
+						} else {
+							return false
 						}
-					})
-				},300000)
+					}
+				})
+
 			},
 
 			//调起支付
-			payment() {
-				// uni.requestPayment({
-				// 	provider: 'alipay',
-				// 	orderInfo: {
-				// 		"orderNumber": this.orderNumber,
-				// 		"ticket": this.ticket,
-				// 		"date": this.date,
-				// 		"dateReminder": this.dateReminder,
-				// 		"addressData": this.addressData,
-				// 		"actualPayment": this.actualPayment,
-				// 		"coupon": this.coupon,
-				// 		"channe": this.channel[this.channeIndex],
-				// 	},
-				// 	success: function(res) {
-				// 		console.log('success:' + JSON.stringify(res));
-				// 	},
-				// 	fail: function(err) {
-				// 		console.log('fail:' + JSON.stringify(err));
-				// 	}
-				// })
-				uni.redirectTo({
-					url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+			payment: function() {
+				// 查看服务商
+				uni.getProvider({
+					service: 'payment',
+					success: function(res) {
+						console.log(res)
+					}
 				})
+				// #ifdef H5
+				uni.showLoading()
+				// uni.request({
+				// 	url:'http://218.67.107.93:9210/api/app/getPayParam',
+				// 	method:'POST',
+				// 	header: {
+				// 		'content-type': 'application/x-www98-form-urlencoded'
+				// 	},
+				// 	data: {
+				// 		resultStr: 
+				// 		id: 
+				// 	},
+
+
+				// })
+				// #endif
+
+
+				// #ifdef APP-PLUS
+				// uni.showLoading({
+				// 	title:'拉起支付中...'
+				// })
+				if(this.channeIndex == 0){
+					var  payTypeIndex = 3;
+					uni.request({
+						url:'https://api.mch.weixin.qq.com/pay/unifiedorder',
+						data:'',
+						method:'POST',
+						success:function(res){
+							console.log(res)
+						},
+						fail:function(err){
+							console.log(err)
+						}
+					})
+					// uni.request({
+					// 	url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+					// 	data:{
+					// 		payType : payTypeIndex,
+					// 		price : this.orderInfo.orderActualPayment,
+					// 		orderNum : this.orderInfo.orderNumber,
+					// 	},
+					// 	method: 'POST',
+					// 	success: (e) => {
+					// 		uni.hideLoading()
+					// 		uni.requestPayment({
+					// 			provider: 'wxpay',
+					// 			orderInfo: e.data.data.appUrl,
+								
+								
+								
+					// 			success: function(res) {
+					// 				console.log(res)
+					// 				uni.showToast({
+					// 					title:'支付成功',
+					// 				})
+					// 				uni.redirectTo({
+					// 					url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+					// 				})
+					// 			},
+					// 			fail: function(ee) {
+					// 				console.log(ee)
+					// 				uni.showToast({
+					// 					title: '支付失败，请检查手机网络是否正常，如若无问题请联系客服',
+					// 					icon: 'none',
+					// 					duration: 3000
+					// 				})
+					// 			}
+					// 		})
+					// 	},
+					// 	fail: () => {
+					// 		uni.showToast({
+					// 			title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
+					// 			icon: 'none',
+					// 			duration: 3000
+					// 		})
+					// 	}
+					// })
+				}else if(this.channeIndex == 1){
+					var  payTypeIndex = 2;
+					uni.request({
+						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+						data:{
+							payType : payTypeIndex,
+							price : this.orderInfo.orderActualPayment,
+							orderNum : this.orderInfo.orderNumber,
+						},
+						method: 'POST',
+						success: (e) => {
+							console.log(e)
+							uni.hideLoading()
+							uni.requestPayment({
+								provider: 'alipay',
+								orderInfo: e.data.data.appUrl,
+								success:(res)=>{
+									console.log(res)
+									// uni.showToast({
+									// 	title:'支付成功',
+									// })
+									uni.request({
+										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNum='+this.orderInfo.orderTicketNumber,
+										method:'POST',
+										success:function(res){
+											console.log(res)
+											uni.redirectTo({
+												url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+											})
+										}
+									})
+									
+								},
+								fail: function(ee) {
+									console.log(ee)
+									uni.showToast({
+										title: '支付失败，请检查手机网络是否正常，如若无问题请联系客服',
+										icon: 'none',
+										duration: 3000
+									})
+								}
+							})
+						},
+						fail: () => {
+							uni.showToast({
+								title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
+								icon: 'none',
+								duration: 3000
+							})
+						}
+					})
+				}
+				
+				// #endif
+
 
 			}
 

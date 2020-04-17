@@ -131,7 +131,7 @@
 						method: 'POST',
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						success: (e) => {
-							console.log(e)
+							// console.log(e)
 							this.titleNViewBackground = e.data.data[0].background;
 							this.swiperLength = e.data.data.length;
 							this.rotationPicture = e.data.data;
@@ -192,29 +192,64 @@
 			
 			//金刚区各模块入口
 			route1:function() {
+				// #ifdef MP-WEIXIN
+				uni.redirectTo({
+					url: '/pages/LYFW/independentTravel/it_list'
+				})
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/LYFW/independentTravel/it_list'
 				})
+				// #endif
 			},
 			route2:function() {
+				// #ifdef MP-WEIXIN
+				uni.redirectTo({
+					url: '/pages/LYFW/groupTour/groupTourList'
+				})
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/LYFW/groupTour/groupTourList'
 				})
+				// #endif
 			},
 			route3:function() {
+				// #ifdef MP-WEIXIN
+				uni.redirectTo({
+					url: '/pages/GJCX/busIndex'
+				})
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/GJCX/busIndex'
 				})
+				// #endif
 			},
 			route4:function() {
+				// #ifdef MP-WEIXIN
+				uni.redirectTo({
+					url: '/pages/LYFW/scenicSpotTickets/ticketsList'
+				})
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/LYFW/scenicSpotTickets/ticketsList'
 				})
+				// #endif
 			},
 			route5:function() {
+				// #ifdef MP-WEIXIN
+				uni.redirectTo({
+					url: '/pages/CTKY/ctkyIndex'
+				})
+				// #endif
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '/pages/CTKY/ctkyIndex'
-				}) 
+				})
+				// #endif
 			},
 			
 			//小程序-搜索框点击事件
