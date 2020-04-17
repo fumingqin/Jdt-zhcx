@@ -52,11 +52,11 @@
 					</view>
 				</view> -->
 				
-				<view class="itemClass borderTop">
+				<!-- <view class="itemClass borderTop">
 					<picker class="proveClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
 						{{selector}}
 					</picker>
-				</view>
+				</view> -->
 			</view>
 			
 			<!-- 上传证件 -->
