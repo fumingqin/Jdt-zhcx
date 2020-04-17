@@ -265,7 +265,7 @@
 				maskState: 0, //优惠券面板显示状态
 				ticketDate:'',
 				ticketDetail: [],
-				totalPrice:'',//车票总价格
+				totalPrice:0,//车票总价格
 				passengerNum:0,//乘车人数量
 			}
 		},

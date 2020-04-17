@@ -9,14 +9,14 @@
 			<view class="text3">{{price}}  ></view>
 		</view>
 		<!-- 地图 -->
-		
-		<!-- <map id='map' ref="map" class="map" :style="{height:mapHeight,width:mapWidth}" :scale="scale" :longitude="longitude" :latitude="latitude" 
+		<view style="position: relative;z-index: -999;">
+		<map id='map' ref="map" class="map" :style="{height:mapHeight,width:mapWidth}" :scale="scale" :longitude="longitude" :latitude="latitude" 
 		 :show-location="true" :controls="controls" @controltap="controltap">
-		</map> -->
-		
+		</map>
+		</view>
 		<view>
 		<!-- 嵌套弹窗 -->
-		<!-- <uni-popup ref="popup" type="bottom"> -->
+		<uni-popup ref="popup" type="bottom">
 			<!-- 线路信息 -->
 			<view class="box2">
 				<!-- 时间信息左 -->
@@ -60,7 +60,7 @@
 			</scroll-view>
 	      </view>
 			
-			<!-- </uni-popup> -->
+			</uni-popup>
 			
 			
 			
@@ -103,7 +103,7 @@
 						id: 'back',
 						position: {
 							left: 10,
-							top: 445,
+							top: 200,
 							width: 55,
 							height: 55
 						},
@@ -121,6 +121,39 @@
 									iconPath: '../../static/Home/CallPollice.png',
 									clickable: true,
 								}, */
+					// {
+					// 	id: 'Service',
+					// 	position: {
+					// 		left: 300,
+					// 		top: 345,
+					// 		width: 55,
+					// 		height: 55
+					// 	},
+					// 	iconPath: '../../static/Home/Service.png',
+					// 	clickable: true,
+					// },
+					{
+						id: 'Big',
+						position: {
+							left: 300,
+							top: 405,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Big.png',
+						clickable: true,
+					},
+					{
+						id: 'Small',
+						position: {
+							left: 300,
+							top: 440,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Small.png',
+						clickable: true,
+					}
 				],
 				endStation:'',
 				starTime:'',
@@ -132,15 +165,26 @@
 			}
 		},
 		onLoad() {
-			this.busIndex();
-			this.getGaoDeKey();
-			this.getMyLocation();
-			// this.$refs.popup.open();
+			var that = this;
+			that.busIndex();
+			that.getGaoDeKey();
+			that.getMyLocation();
+			that.$refs.popup.open();
 			uni.getSystemInfo({
 				success: function(res) {
 					if (res.screenWidth < 350) {
 						//回到我的位置
-						this.controls[0].position.top = 350;
+						that.controls[0].position.top = 250;
+						//-
+						that.controls[1].position.left = 250;
+						that.controls[1].position.top = 280;
+						//+
+						that.controls[2].position.left = 250;
+						that.controls[2].position.top = 315;
+						// //客服
+						// that.controls[3].position.left = 250;
+						// that.controls[3].position.top = 350;
+					
 					}
 				}
 			})
@@ -228,7 +272,7 @@
 			},
 			//换向 点击后更换接口
 			exchange(){
-				// this.$refs.popup.open();
+				this.$refs.popup.open();
 				if(this.direction==0){
 				this.direction =1;
 				this.list=this.realtimeDynamicback
@@ -266,7 +310,7 @@
 	//     z-index: -1;
 	//   }
   .box1{
-	  background-color: #ff0000;
+	  background-color: #FFFFFF;
 	  height: 160upx;
 	  position: relative;
 	  z-index: 9999;
