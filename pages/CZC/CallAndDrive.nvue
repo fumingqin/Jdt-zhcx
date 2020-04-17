@@ -289,7 +289,10 @@
 					that.hintIndex = 0;
 				} else if (that.orderType == 5) {
 					//如果司机接单，在接旅客的路上
-
+					
+					//开启旅客定位
+					getApp().globalData.orderNumber=1;//更改当前订单号
+					getApp().globalData.constantly();
 					//绘制司机标记点
 					that.setMarker('taxi', that.driverLon, that.driverLat, '../../static/CZC/Car.png');
 
@@ -315,6 +318,7 @@
 					//开启时时规划
 					that.openRealDirection();
 				} else if (that.orderType == 15) {
+					getApp().globalData.closeUpload();
 					uni.showToast({
 						title: '请支付订单',
 						icon: 'none',
@@ -342,6 +346,10 @@
 						//等待司机接单中
 						that.hintIndex = 0;
 					} else if (that.orderType == 5) {
+						
+						//开启旅客定位
+						getApp().globalData.orderNumber=1;//更改当前订单号
+						getApp().globalData.constantly();
 						//司机到达乘客地 
 						if(that.hintIndex == 0){
 							uni.showToast({
@@ -379,6 +387,10 @@
 					} else if (that.orderType == 15) {
 						//到达目的地，但未支付
 						//清除定时器
+						
+						//关闭旅客上传定位
+						getApp().globalData.closeUpload();
+						
 						clearInterval(that.directionInterval);
 						that.directionInterval = 0;
 						clearInterval(that.orderInterval);
@@ -529,7 +541,6 @@
 					},
 					method: "GET",
 					success: function(res) {
-						console.log(res);
 						//日后会加入定时，此处需清空
 						that.points = [];
 						that.polyline = [];
@@ -557,11 +568,12 @@
 						}
 						var obj = {
 							points: that.points,
-							color: "rgba(75,220,39,1)",
+							color: "#4bdc27",
 							arrowLine: true,
 							width: 6
 						};
 						that.polyline.push(obj);
+						console.log(JSON.stringify(that.polyline));
 					},
 					fail: function(res) {
 						console.log(res);

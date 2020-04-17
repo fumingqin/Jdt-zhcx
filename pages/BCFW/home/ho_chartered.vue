@@ -4,18 +4,18 @@
 		<view>
 			<image class="ho_imageTop" src="../../../static/BCFW/home/guanggao.png" mode="aspectFill"></image>
 		</view>
-		
+
 		<!-- 专线/定制 -->
 		<view class="ho_queryTickets">
 			<view class="qt_typePickerView">
-				<view class="qt_typePicker" :class="{'qt_typePickerClick':normalPickerNum == 1}"
-				 style="border-top-right-radius: 0;" @tap="typeSelect('normal')">专线</view>
-				<view class="qt_typePicker" :class="{'qt_typePickerClick':specialPickerNum == 1}" 
-				style="border-top-left-radius: 0;" @tap="typeSelect('special')">定制</view>
+				<view class="qt_typePicker" :class="{'qt_typePickerClick':normalPickerNum == 1}" style="border-top-right-radius: 0;"
+				 @tap="typeSelect('normal')">专线</view>
+				<view class="qt_typePicker" :class="{'qt_typePickerClick':specialPickerNum == 1}" style="border-top-left-radius: 0;"
+				 @tap="typeSelect('special')">定制</view>
 			</view>
-			
-			<view class="ho_ticketView">
-				
+
+			<!-- 专线 -->
+			<view class="ho_ticketView" v-if="normalPickerNum == 1">
 				<!-- 选择专线 -->
 				<view class="tv_dedicatedLine">
 					<view class="dl_choice">专线选择</view>
@@ -37,24 +37,97 @@
 							</view>
 						</uni-popup>
 					</view>
-					
+
 					<!-- 出发时间 -->
 					<view class="dl_selectionTime">选择时间</view>
 					<view class="dl_time">
-						<text style="letter-spacing:1px" @click="onShowDatePicker('datetime')">{{datestring}}    {{Week}}</text>
+						<text style="letter-spacing:1px" @click="onShowDatePicker('datetime')">{{datestring}} {{Week}}</text>
 					</view>
-					<mx-date-picker :show="showPicker" :showSeconds="false" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'" 
-					:show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
-					
+					<mx-date-picker :show="showPicker" :showSeconds="false" :type="type" :value="value" :show-tips="true" :begin-text="'入住'"
+					 :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
+
 					<!-- 上车点 -->
 					<view class="dl_selectionTime">上车点</view>
 					<view class="dl_boardingPoint">
-						<text class="bp_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
-						<text class="bp_text2">仅限专线发车点市内</text>
+						<view class="bp_text">
+							<text class="te_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
+						</view>
+						<text class="te_text2">仅限专线发车点市内</text>
 					</view>
+				</view>
+
+				<!-- 按钮 -->
+				<view class="tv_vehicleSelection">
+					<button class="vs_button" style="width: 640upx;
+					height:94upx;
+					background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
+					box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
+					">选车型</button>
+				</view>
+
+				<!-- 底部 -->
+				<view class="tv_bottom">
+					<text class="bt_view">选车型</text>
+					<text class="bt_view2">></text>
+					<text class="bt_view">下单</text>
+					<text class="bt_view2">></text>
+					<text class="bt_view">确认行程</text>
+					<text class="bt_view2">></text>
+					<text class="bt_view">司机接送</text>
+				</view>
+			</view>
+
+			<!-- 定制 -->
+			<view class="ho_ticketView" v-if="specialPickerNum == 1">
+				<!-- 定制页面 -->
+				<view class="tv_dedicatedLine">
+					<view class="dl_choice">出发地</view>
+					<view class="dl_place">
+						<text class="pl_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
+					</view>
+
+					<!-- 目的地 -->
+					<view class="dl_choice">目的地</view>
+					<view class="dl_place">
+						<text class="pl_text" @click="boardingPointTap2" v-model="destination">{{destination}}</text>
+					</view>
+
+					<!-- 出发时间 -->
+					<view class="dl_selectionTime">出发时间</view>
+					<view class="dl_time">
+						<text style="letter-spacing:1px" @click="onShowDatePicker('datetime')">{{datestring}} {{Week}}</text>
+					</view>
+					<mx-date-picker :show="showPicker" :showSeconds="false" :type="type" :value="value" :show-tips="true" :begin-text="'入住'"
+					 :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
+
+					<!-- 包车天数 -->
+					<view class="dl_choice">包车天数</view>
+					<picker @change="godetail" :value="index" :range="dayContent">
+						<text class="ci_text">{{dayContent[index]}}</text>
+					</picker>
+				</view>
+				<!-- 第二页面按钮 -->
+				<view class="tv_vehicleSelection">
+					<button class="vs_button" style="width: 640upx;
+						height:94upx;
+						background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
+						box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
+						">选车型</button>
+				</view>
+
+				<!-- 底部 -->
+				<view class="tv_bottom">
+					<text class="bt_view">选车型</text>
+					<text class="bt_view2">></text>
+					<text class="bt_view">下单</text>
+					<text class="bt_view2">></text>
+					<text class="bt_view">确认行程</text>
+					<text class="bt_view2">></text>
+					<text class="bt_view">司机接送</text>
 				</view>
 			</view>
 		</view>
+	</view>
 	</view>
 </template>
 
@@ -69,30 +142,35 @@
 		},
 		data() {
 			return {
-				normalPickerNum:1,
-				specialPickerNum:0,
-				index:0,//指数
-				privateSite:'',//专线
-				noticeContent:'',//须知内容
-				datestring:'',//当前日期和时间字符串
+				normalPickerNum: 1, //专线tab
+				specialPickerNum: 0, //定制tab
+				index: 0, //指数
+				privateSite: '', //专线
+				noticeContent: '', //须知内容
+				datestring: '', //当前日期和时间字符串
 				showPicker: false,
 				type: 'rangetime',
-				value:'',
-				Week: '',//周期
-				initialPoint:'',//上车点
-				initialPoint: '',//起始点
+				value: '',
+				Week: '', //周期
+				initialPoint: '', //起始点
 				endLonLat: "", //目的地经度
 				startlongitude: "", //出发点纬度
 				startlatitude: "", //出发点纬度
+				destination: '', //目的地
+				dayContent: [], //选择天数
+				dayContentObject: [], //天数
 			}
 		},
 		onLoad() {
 			var that = this;
-			if(that.privateSite == '') {
+			if (that.privateSite == '') {
 				that.privateSite = '请选择专线'
 			}
-			if(that.initialPoint == ''){
+			if (that.initialPoint == '') {
 				that.initialPoint = '请选择上车点'
+			}
+			if (that.destination == '') {
+				that.destination = '请选择目的点'
 			}
 			that.routeInit();
 			that.getTodayDate();
@@ -102,26 +180,34 @@
 			async routeInit() {
 				let noticeContent = await this.$api.lyfwcwd('noticeContent');
 				this.noticeContent = noticeContent.data;
+				this.dayContent = noticeContent.data.day;
 			},
-			
+
+			//---------------------------------选择天数---------------------------------
+			godetail: function(e) {
+				console.log(e)
+				this.index = e.target.value;
+				this.dayContentObject = this.dayContent[e.target.value];
+			},
+
 			//---------------------------------点击起点站---------------------------------
-			startStationTap(){
+			startStationTap() {
 				var that = this;
 				//监听事件,监听下个页面返回的值
 				uni.$on('startstaionChange', function(data) {
-				    // data即为传过来的值，给上车点赋值
+					// data即为传过来的值，给上车点赋值
 					that.privateSite = data.data;
-				    //清除监听，不清除会消耗资源
-				    uni.$off('startstaionChange');
+					//清除监听，不清除会消耗资源
+					uni.$off('startstaionChange');
 				});
 				uni.navigateTo({
 					//跳转到下个页面的时候加个字段，判断当前点击的是专线点
-					url:'./ho_choice?&station=' + 'dedicatedLine'
+					url: './ho_choice?&station=' + 'dedicatedLine'
 				})
 			},
-			
+
 			//---------------------------------点击上车点---------------------------------
-			boardingPointTap(){
+			boardingPointTap() {
 				var that = this;
 				uni.chooseLocation({
 					success: function(res) {
@@ -138,61 +224,69 @@
 						});
 					}
 				});
-				
-				
-				// var that = this;
-				// //监听事件,监听下个页面返回的值
-				// uni.$on('startstaionChange', function(data) {
-				//     // data即为传过来的值，给上车点赋值
-				// 	that.boardingPoint = data.data;
-				//     //清除监听，不清除会消耗资源
-				//     uni.$off('startstaionChange');
-				// });
-				// uni.navigateTo({
-				// 	//跳转到下个页面的时候加个字段，判断当前点击的是上车点
-				// 	url:"./MapIndex?name=" + name
-				// })
 			},
-			
+
+			//---------------------------------点击目的地---------------------------------
+			boardingPointTap2() {
+				var that = this;
+				uni.chooseLocation({
+					success: function(res) {
+						uni.setStorage({
+							key: 'startlocation',
+							data: res,
+							success: function() {
+								that.destination = res.name;
+								that.startLonLat = res.longitude + "," + res.latitude;
+								that.startlongitude = res.longitude;
+								that.startlatitude = res.latitude;
+								that.startlocation = res;
+							}
+						});
+					}
+				});
+			},
+
 			//------------------------------查看景点按钮弹框事件-----------------------------
-			
+
 			open() {
 				// 需要在 popup 组件，指定 ref 为 popup
 				this.$refs.popup.open()
 			},
-			
+
 			close(e) {
 				if (e == 1) {
 					this.$refs.popup.close()
 				}
 			},
-			
+
 			//---------------------------------获取当前日期---------------------------------
 			getTodayDate() {
-				var date = new Date();
-				var year = date.getFullYear();
-				var month = date.getMonth() + 1;
-				var day = date.getDate();
-				var hour = date.getHours();
-				var minutes = date.getMinutes();
-			    var timer = year + '年' + month + '月' + day + '日' + ' ' + hour + ':' + minutes;
+				var date = new Date(),
+					year = date.getFullYear(),
+					month = date.getMonth() + 1,
+					day = date.getDate(),
+					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+					minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+				month >= 1 && month <= 9 ? (month = "0" + month) : "";
+				day >= 0 && day <= 9 ? (day = "0" + day) : "";
+				var timer = year + '年' + month + '月' + day + '日' + ' ' + hour + ':' + minutes;
 				this.datestring = timer;
 			},
-			
+
 			//---------------------------------时间日期---------------------------------
-			onShowDatePicker(type){//显示
+			onShowDatePicker(type) { //显示
 				this.type = type;
 				this.showPicker = true;
 				this.value = this[type];
 			},
-			onSelected(e) {//选择
+			onSelected(e) { //选择
 				this.showPicker = false;
-				if(e) {
+				if (e) {
 					this[this.type] = e.value;
 					this.datestring = this[this.type];
-					this.queryWeek(e.date.toString().substring(0,3));
+					this.queryWeek(e.date.toString().substring(0, 3));
 					//选择的值
-					console.log('value => '+ e.value);
+					console.log('value => ' + e.value);
 					//原始的Date对象
 					console.log('date => ' + e.date);
 					this.date = e.value;
@@ -203,25 +297,25 @@
 				console.log(e);
 				switch (e) {
 					case "Mon":
-						this.Week='周一';
+						this.Week = '周一';
 						break;
 					case "Tue":
-						this.Week="周二";
+						this.Week = "周二";
 						break;
 					case "Wed":
-						this.Week="周三";
+						this.Week = "周三";
 						break;
 					case "Thu":
-						this.Week="周四";
+						this.Week = "周四";
 						break;
 					case "Fri":
-						this.Week="周五";
+						this.Week = "周五";
 						break;
 					case "Sat":
-						this.Week="周六";
+						this.Week = "周六";
 						break;
 					case "Sun":
-						this.Week="周日";
+						this.Week = "周日";
 						break;
 					default:
 						break;
@@ -229,14 +323,14 @@
 			},
 			//---------------------------------点击选择类型---------------------------------
 			typeSelect(type) {
-				if (type == 'normal') {//点击了普通购票
+				if (type == 'normal') { //点击了普通购票
 					this.normalPickerNum = 1;
 					this.specialPickerNum = 0;
-					this.isNormal = 0;//当前是普通购票
-				}else if (type == 'special') {//点击了定制班车
+					this.isNormal = 0; //当前是普通购票
+				} else if (type == 'special') { //点击了定制班车
 					this.normalPickerNum = 0;
 					this.specialPickerNum = 1;
-					this.isNormal = 1;//当前是定制班车
+					this.isNormal = 1; //当前是定制班车
 				}
 			},
 		}
@@ -251,13 +345,13 @@
 		height: 100%;
 		background: #F1F1F1;
 	}
-	
+
 	// 背景图片
 	.ho_imageTop {
 		width: 100%;
 		height: 390upx;
 	}
-	
+
 	//查询车票整块
 	.ho_queryTickets {
 		// background: #FFFFFF;
@@ -270,14 +364,14 @@
 		top: -90upx;
 		border-radius: 20upx;
 	}
-	
+
 	//选择车票类型 专线/定制
 	.qt_typePickerView {
 		width: 100%;
 		height: 80rpx;
 		display: flex;
 	}
-	
+
 	//专线/定制
 	.qt_typePicker {
 		border-top-left-radius: 20rpx;
@@ -290,7 +384,7 @@
 		color: #FFFFFF;
 		opacity: 0.8;
 	}
-	
+
 	//专线/定制 点击
 	.qt_typePickerClick {
 		opacity: 1;
@@ -303,73 +397,76 @@
 		background-color: #FFFFFF;
 		color: #000000;
 	}
-	
-	.ho_ticketView{
+
+	.ho_ticketView {
 		background-color: #FFFFFF;
 		border-radius: 20rpx;
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
+		margin-bottom: 62upx;
 	}
-	
+
 	//选择专线
-	.tv_dedicatedLine{
+	.tv_dedicatedLine {
 		padding: 0 40upx;
-		
-		.dl_choice{
+
+		.dl_choice {
 			display: flex;
 			font-size: 32upx;
 			color: #5E5E60;
 			padding-top: 41upx;
 		}
-		.dl_choiceAddress{
+
+		.dl_choiceAddress {
 			display: block;
 			padding-top: 39upx;
 			padding-bottom: 41upx;
-			border-bottom: 1px #F5F5F5 dotted;//虚线
-			
-			.ca_text1{
+			border-bottom: 1px #F5F5F5 dotted; //虚线
+
+			.ca_text1 {
 				font-size: 38upx;
 			}
-			.ca_text2{
+
+			.ca_text2 {
 				z-index: 999;
 				float: right;
 				font-size: 28upx;
-				color:rgba(25,160,255,1);
+				color: rgba(25, 160, 255, 1);
 				padding-top: 7upx;
 			}
-			
+
 			//弹框样式
-			.te_boxVlew{
+			.te_boxVlew {
 				width: 90%;
 				padding: 16upx 40upx;
 				padding-bottom: 92upx;
 				background: #FFFFFF;
-				
-				.bv_titleView{
+
+				.bv_titleView {
 					margin: 24upx 0;
-					
+
 					//弹框标题
-					.tv_text1{
+					.tv_text1 {
 						position: relative;
 						font-size: 38upx;
 						font-weight: bold;
 						top: 8upx;
 						margin-bottom: 16upx;
 					}
-					
-					.tv_text2{
+
+					.tv_text2 {
 						margin-top: 8upx;
 						float: right;
 						color: #333;
 						font-size: 32upx;
 					}
 				}
-				
-				.bv_content{
+
+				.bv_content {
 					height: 800upx;
 					line-height: 32upx;
-					
-					.ct_noticeText{
+
+					.ct_noticeText {
 						color: #5E5E60;
 						text-align: justify;
 						line-height: 64upx;
@@ -379,30 +476,96 @@
 				}
 			}
 		}
-		
+
 		//选择时间样式
-		.dl_selectionTime{
+		.dl_selectionTime {
 			font-size: 32upx;
 			color: #5E5E60;
 			padding-top: 41upx;
 		}
-		.dl_time{
-			font-size:32upx;
-			border-bottom: 1px #F5F5F5 dotted;//虚线
+
+		.dl_time {
+			font-size: 32upx;
+			border-bottom: 1px #F5F5F5 dotted; //虚线
 			padding: 39upx 0 40upx 0;
 		}
-		
-		.dl_boardingPoint{
+
+		.dl_boardingPoint {
+			display: flex;
+			position: relative;
 			padding: 33upx 0 42upx 0;
-			.bp_text{
-				font-size:38upx;
+
+			.bp_text {
+				width: 350upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+
+				.te_text {
+					font-size: 38upx;
+				}
 			}
-			.bp_text2{
-				float: right;
+
+			.te_text2 {
+				position: absolute;
+				right: 0;
+				// float: right;
 				font-size: 28upx;
-				color:rgba(25,160,255,1);
+				color: rgba(25, 160, 255, 1);
 				padding-top: 7upx;
 			}
 		}
+	}
+
+	//按钮
+	.tv_vehicleSelection {
+		display: flex;
+		padding: 46upx 30upx 0 30upx;
+
+		.vs_button {
+			font-size: 36upx;
+			color: rgba(255, 255, 255, 1);
+		}
+	}
+
+	//底部
+	.tv_bottom {
+		display: flex;
+		position: relative;
+		margin: 0 auto;
+		z-index: 9;
+		padding: 49upx 28upx;
+
+		.bt_view {
+			position: relative;
+			padding: 17upx 20upx;
+			background: rgba(241, 241, 241, 1);
+			border-radius: 45upx;
+			font-size: 26upx;
+			color: rgba(153, 153, 153, 1);
+		}
+
+		.bt_view2 {
+			font-size: 24upx;
+			color: rgba(153, 153, 153, 1);
+			padding: 18upx 17upx;
+		}
+	}
+
+	//出发地
+	.dl_place {
+		border-bottom: 1px #F5F5F5 dotted; //虚线
+
+		.pl_text {
+			display: flex;
+			padding: 40upx 0;
+			font-size: 38upx;
+		}
+	}
+
+	.ci_text {
+		display: flex;
+		padding: 40upx 0;
+		font-size: 38upx;
 	}
 </style>
