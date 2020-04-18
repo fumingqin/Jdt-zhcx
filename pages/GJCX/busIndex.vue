@@ -388,7 +388,7 @@
 				                };
 				      
 				uni.navigateTo({
-					url: 'detailedBus'
+					url: 'detailed'
 				})
 			},
 			//清除缓存

@@ -472,6 +472,12 @@
 			
 		},
 		methods: {
+			showToast:function(msg,icon='none'){
+				uni.showToast({
+					title:msg,
+					icon:icon
+				})
+			},
 			onClickItem(e) { //tab点击事件
 				var that = this;
 				if (that.current !== e.currentIndex) {
@@ -529,7 +535,11 @@
 							title: "请选择乘车人"
 						})
 					} else {
+						uni.showLoading({
+							title:'加载中'
+						})
 						let userInfo = uni.getStorageSync('userInfo') || '';
+						let orderNumber = '';
 						uni.request({
 							url:taxi.Interface.AddExpressOrder_Passenger.value,
 							method:taxi.Interface.AddExpressOrder_Passenger.method,
@@ -552,31 +562,36 @@
 							},
 							success:function(res){
 								console.log(res);
+								uni.hideLoading();
+								if(res.data.status){
+									that.showToast(res.data.msg);
+									orderNumber = res.data.data.orderNumber;
+									uni.navigateTo({
+										url: '../CZC/CallAndDrive?orderNumber='+orderNumber,
+										animationType: 'pop-in',
+										animationDuration: 200,
+										success: function() {
+											uni.removeStorage({
+												key:"passengerList"
+											})
+											uni.removeStorage({
+												key:"StartPoint"
+											})
+											uni.removeStorage({
+												key:"EndPoint"
+											})
+										}
+									});
+									
+								}else{
+									that.showToast(res.data.msg);
+								}
 							},
 							fail:function(res){
-								console.log(res);
+								that.showToast('网络连接失败');
 							}
 						})
-						
-						
-						
-						
-						uni.navigateTo({
-							url: '../CZC/CallAndDrive?orderNo=1',
-							animationType: 'pop-in',
-							animationDuration: 200,
-							success: function() {
-								uni.removeStorage({
-									key:"passengerList"
-								})
-								uni.removeStorage({
-									key:"StartPoint"
-								})
-								uni.removeStorage({
-									key:"EndPoint"
-								})
-							}
-						});
+					
 					}
 				}
 			},
@@ -1062,7 +1077,7 @@
 					that.selectCarAroung();
 				}, 3000);
 			}
-
+			
 		}
 	}
 </script>
