@@ -2,6 +2,8 @@
 	<view class="ci_view" >
 		<view class="ci_titleView">
 		</view>
+		
+		<!-- 出发信息 -->
 		<view class="ci_siteView">
 			<view class="cs_departureContents1">
 				<view class="cs_depart">出发地 &nbsp;<text class="cs_departName">{{charteredBus.departName}}</text></view>
@@ -12,6 +14,8 @@
 				<view class="cs_days">包车天数 &nbsp;<text class="cs_number">{{charteredBus.number}}天</text></view>
 			</view>
 		</view>
+		
+		<!-- 车型信息 -->
 		<view class="ci_carModelView">
 			<text class="cmv_selected">已选车型</text>
 			<image class="cmv_car" :src="charteredBus.car"></image>
@@ -19,17 +23,26 @@
 			<text class="cmv_carType">{{charteredBus.carType}}</text>
 			<text class="cmv_carMoney">{{charteredBus.carMoney}}元</text>
 		</view>
+		
+		<!-- 包车人信息 -->
 		<view class="ci_charteredBusView">
 			<text class="cbv_charteredBusMessage">包车人信息</text>
 			<text class="cbv_explain">仅需填写一人信息，填写后自动保存至通讯录</text>
-			<text class="cbv_tripMan">出行人</text>
-			<text class="cbv_name">{{charteredBus.tripName}}</text>
-			<image class="cbv_addressBook" src="../../../static/BCFW/choice/tongxun.png"></image>
-			<text class="cbv_idCord">身份证</text>
-			<text class="cbv_id">{{charteredBus.tripId}}</text>
-			<text class="cbv_mobile">联系电话</text>
-			<text class="cbv_phone">{{charteredBus.tripPhone}}</text>
+			<view class="phoneClass">
+				<text class="cbv_tripMan">出行人</text>
+				<input placeholder="请输入姓名" class="cbv_name" name="nickName"  type="type" />
+				<image class="cbv_addressBook" src="../../../static/BCFW/choice/tongxun.png" @click="choiceUser()"></image>
+			</view>
+			<view class="idView">
+				<view class="cbv_idCord">身份证</view>
+				<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId"  type="number" maxlength="18" />
+			</view>			
+			<view class="phoneView">
+				<view class="cbv_mobile">联系电话</view>
+				<input placeholder="常用手机号" class="cbv_phone" name="phoneNum"  type="number" maxlength="11"  />
+			</view>		
 		</view>
+		
 		<view class="ci_couponView" @click="toggleMask('show')">
 			<text class="cv_coupon">优惠券</text>
 			<text class="cv_noUsable">无可用</text>
@@ -63,11 +76,15 @@
 				</view>
 			</view>
 		</view>
+		
+		<!-- 包车须知 -->
 		<view class="ci_noticeView">
 			<text class="nv_charteredBusNotice" >包车须知</text>
 			<text class="nv_all" @click="open()">点击查看全部</text>
 			  <radio class="nv_radio" value="1" :color="'#ffaa7f'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 		</view>
+		
+		<!-- 须知弹窗 -->
 		<uni-popup ref="popup2" type="bottom">
 			<view class="boxVlew">
 			<view class="titleView">
@@ -87,6 +104,18 @@
 				<text class="aov_atOnce">立即包车</text>
 			</view>
 		</view>
+	<!-- 	<view class="footer">
+			<view class="price-content">
+				<text>实付款</text>
+				<text class="price-tip">￥</text>
+				<text class="price">{{actualPayment}}</text>
+				<text class="people">共{{addressData.length}}人</text>
+			</view>
+		
+			<view class="submitChange" :class="{submitColor: selectedValue===1 && addressData.length>0}" @click="submit">
+				<text class="submit">立即预订</text>
+			</view>
+		</view> -->
 		</view>
 	</view>
 </template>
@@ -100,6 +129,10 @@
 		},
 		data() {
 			return {
+				charteredBus:[],
+				nickName:'',//包车人姓名
+				nickId:'',//包车人证件号
+				phone:'',//包车人联系方式
 				maskState: 0, //优惠券面板显示状态
 				couponIndex: '请选择优惠券', //优惠券默认内容
 				couponColor: '', //优惠券couponID
@@ -107,7 +140,7 @@
 				admissionTicket: '', //门票内容
 				notice:'',//须知内容
 				selectedValue: 0, //同意须知的选中值
-				charteredBus:[],
+
 				couponList: [{
 						couponID: '0',
 						title: '新用户专享优惠券',
@@ -139,26 +172,54 @@
 			this.getnotice();
 		},
 		methods: {
-			
+			//获取模拟数据
 			async getcharteredBus() {
 			 let charteredBus = await this.$api.bcfwzyx('charteredBus');
 			 this.charteredBus = charteredBus.data;
+			 let notice = await this.$api.bcfwzyx('notice');
+			 this.notice = notice.data;
 			 console.log(charteredBus)
 			},
-			async getnotice() {
-			let notice = await this.$api.bcfwzyx('notice');
-			this.notice = notice.data;
-			 console.log(notice)
+			// async getnotice() {
+			// let notice = await this.$api.bcfwzyx('notice');
+			// this.notice = notice.data;
+			//  console.log(notice)
+			// },
+			
+			//查看是否登入
+			choiceUser:function() {
+					uni.getStorage({		
+						key:'userInfo',
+						fail(){
+							uni.showToast({
+								icon:'none',
+								title:'未登录无法添加乘车人,请先登录'
+							})
+							setTimeout(function(){
+								uni.navigateTo({	
+									//loginType=1,泉运登录界面
+									//loginType=2,今点通登录界面
+									//loginType=3,武夷股份登录界面
+									url  : '/pages/GRZX/userLogin?loginType=1'
+								}) 
+							},500);
+						},
+						success() {
+							uni.navigateTo({
+								url: '/pages/GRZX/addPassenger?type=add',
+							})
+						}
+					})
 			},
 			
+			//打开弹窗
 			open() {
 					this.$refs.popup2.open()
-
 			},
-			
 			close() {
 					this.$refs.popup2.close()
 			},
+			
 			//显示优惠券面板
 			toggleMask(type) {
 				let timer = type === 'show' ? 10 : 300;
@@ -235,8 +296,10 @@
 	}
 	.ci_view {
 			width:100%;
-			height:1620upx;
+			height:1720upx;
 	}
+	
+	//顶部背景
 	.ci_titleView{
 		width:100%;
 		height: 253upx;
@@ -331,21 +394,21 @@
 		}
 	}
 	
-	
+	//包车车型信息
 	.ci_carModelView{
 		width: 700upx;
 		height: 440upx;
 		background: #FFFFFF;
 		position: absolute;
-		border-radius: 15upx;
-		left: 25upx;
+		border-radius: 13upx;
+		left:25upx;
 		top: 400upx;
 		.cmv_selected{
 			font-size: 36upx;
 			color: #333333;
 			font-weight: 800;
 			position: absolute;
-			left: 70upx;
+			left: 40upx;
 			top: 30upx;
 		}
 		.cmv_car{
@@ -381,20 +444,21 @@
 		}
 	}
 	
+	//包车人信息
 	.ci_charteredBusView{
 		width: 700upx;
-		height: 430upx;
+		height: 520upx;
 		background: #FFFFFF;
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
-		top: 840upx;
+		top: 860upx;
 		.cbv_charteredBusMessage{
 			font-size: 32upx;
 			color: #333333;
 			font-weight: 400;
 			position: absolute;
-			left: 33upx;
+			left: 40upx;
 			top: 20upx;
 		}
 		.cbv_explain{
@@ -402,7 +466,7 @@
 			color: #808080;
 			font-weight:300;
 			position: absolute;
-			left: 33upx;
+			left: 40upx;
 			top:80upx;
 		}
 		.cbv_tripMan{
@@ -410,7 +474,7 @@
 			color: #333333;
 			font-weight: 400;
 			position: absolute;
-			left: 33upx;
+			left: 40upx;
 			top: 170upx;
 		}
 		.cbv_name{
@@ -434,8 +498,8 @@
 			color: #333333;
 			font-weight: 400;
 			position: absolute;
-			left: 33upx;
-			top: 270upx;
+			left: 40upx;
+			top: 300upx;
 		}
 		.cbv_id{
 			font-size: 30upx;
@@ -443,15 +507,15 @@
 			font-weight: 300;
 			position: absolute;
 			left: 200upx;
-			top: 270upx;
+			top: 300upx;
 		}
 		.cbv_mobile{
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 400;
 			position: absolute;
-			left:33upx;
-			top: 370upx;
+			left:40upx;
+			top: 430upx;
 		}
 		.cbv_phone{
 			font-size: 30upx;
@@ -459,11 +523,12 @@
 			font-weight: 300;
 			position: absolute;
 			left:200upx;
-			top:370upx;
+			top:430upx;
 		}
 		
 	}
 	
+	//优惠券信息
 	.ci_couponView{
 		width: 700upx;
 		height: 100upx;
@@ -471,13 +536,13 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
-		top: 1290upx;
+		top: 1400upx;
 		.cv_coupon{
 			font-size:30upx;
 			color: #333333;
 			font-weight: 400;
 			position: absolute;
-			left: 33upx;
+			left: 40upx;
 			top: 28upx;
 		}
 		.cv_noUsable{
@@ -497,6 +562,7 @@
 		}
 	}
 	
+	//包车须知信息
 	.ci_noticeView{
 		width: 700upx;
 		height: 100upx;
@@ -504,13 +570,13 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
-		top: 1410upx;
+		top: 1520upx;
 		.nv_charteredBusNotice{
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 400;
 			position: absolute;
-			left: 33upx;
+			left: 40upx;
 			top: 28upx;
 		}
 		.nv_all{
@@ -530,12 +596,22 @@
 		}
 	}
 	
+	//底部信息
 	.ci_affirmView{
-		width: 750upx;
-		height: 100upx;
-		background: #FFFFFF;
-		position: absolute;
-		top: 1540upx;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	z-index: 995;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 90upx;
+	justify-content: space-between;
+	font-size: 30upx;
+	background: #fff;
+	z-index: 998;
+	color: #f85e52;
+	box-shadow: 0 -1px 5px rgba(0, 0, 0, .1);
 		.av_money{
 			font-size: 26upx;
 			color: #FC4646;
@@ -560,6 +636,62 @@
 			left: 80upx;
 		}
 	}
+	
+	.footer {
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		z-index: 995;
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 90upx;
+		justify-content: space-between;
+		font-size: 30upx;
+		background: #fff;
+		z-index: 998;
+		color: #f85e52;
+		box-shadow: 0 -1px 5px rgba(0, 0, 0, .1);
+	
+		.price-content {
+			padding-left: 30upx;
+		}
+	
+		.price-tip {
+			color: #f85e52;
+			margin-left: 8upx;
+		}
+	
+		.price {
+			font-size: 36upx;
+			color: #f85e52;
+		}
+	
+		.people {
+			font-size: 28upx;
+			margin-left: 24upx;
+			color: #999999;
+		}
+	
+		.submitChange {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 280upx;
+			height: 100%;
+			background: #aaa; 
+	
+			.submit {
+				color: #fff;
+				font-size: 32upx;
+			}
+	
+			&.submitColor {
+				background: #06B4FD;
+			}
+		}
+	}
+	
 	.boxVlew {
 		width: 90%;
 		padding: 16upx 40upx;

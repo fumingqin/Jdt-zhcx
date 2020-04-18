@@ -200,9 +200,13 @@
 						key:'app_position',
 						success: (res) => {
 							// console.log(res)
-							this.regionApp = res.data.city;
+							if(res.data !== undefined){
+								this.regionApp = res.data.city;
+							}
 						}
 					})
+					
+					
 				},500)
 			},
 
@@ -234,9 +238,12 @@
 						key:'app_position',
 						success: (res) => {
 							// console.log(res)
-							this.regionApp = res.data.city;
+							if(res.data !== undefined){
+								this.regionApp = res.data.city;
+							}
 						}
 					})
+					
 					
 					this.$refs.popupRef.close();
 				}else{

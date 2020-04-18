@@ -224,9 +224,12 @@
 						key:'app_position',
 						success: (res) => {
 							// console.log(res)
-							this.regionApp = res.data.city;
-						},
+							if(res.data !== undefined){
+								this.regionApp = res.data.city;
+							}
+						}
 					})
+					
 				},500)
 				
 			},
@@ -259,7 +262,9 @@
 						key:'app_position',
 						success: (res) => {
 							// console.log(res)
-							this.regionApp = res.data.city;
+							if(res.data !== undefined){
+								this.regionApp = res.data.city;
+							}
 						}
 					})
 					this.$refs.popupRef.close();
@@ -310,7 +315,7 @@
 							uni.showToast({
 								title: '查不到相关景区！如:武夷/武夷山',
 								icon: 'none',
-								duration: 1500
+								duration: 2000
 							});
 							this.searchValue = ''
 							
