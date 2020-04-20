@@ -157,7 +157,7 @@
 		  this.loadData();
 		},
 		onShow(){
-			uni.startPullDownRefresh();
+			//uni.startPullDownRefresh();
 			this.loadData();
 		},
 	    methods: {	

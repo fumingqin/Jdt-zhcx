@@ -551,6 +551,14 @@
 		{
 			"path":"pages/BCFW/choice/ci_information",
 			"style": {
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				},
 				"navigationBarTitleText": "用车信息"
 			}
 		}

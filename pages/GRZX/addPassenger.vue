@@ -180,7 +180,7 @@
 		},
 		methods:{
 			//----------加载账号id--------
-			async loadUnid(){
+			loadUnid(){
 				var the=this;
 				uni.getStorage({
 					key:'userInfo',
@@ -190,7 +190,10 @@
 				})
 			},
 			//----------加载乘车人信息--------
-			async loadData(type){
+			loadData(type){
+				uni.showLoading({
+					title:'加载中...'
+				})
 				var that=this;
 				uni.getStorage({
 					key:'editPassenger',
@@ -226,38 +229,27 @@
 								},
 								method:'POST',
 								success(res1) {
-									console.log(res1,"res1")
-									var front= res1.data.data.userfrontImg;
-									if(that.isBase64(front)){
-										base64ToPath(front)
-										  .then(path => {
-										    that.user.userfrontImg=path;
-											console.log(that.user.userfrontImg,"235")
-										})
-									}else{
-										that.user.userfrontImg=front;
-									}
-									var back= res1.data.data.userbackImg;
-									if(that.isBase64(back)){
-										base64ToPath(back)
-										  .then(path2 => {
-										    that.user.userbackImg=path2;
-											console.log(that.user.userbackImg,"245")
-										})
-									}
-									else{
-										that.user.userbackImg=back;
-									}
-									that.auditState1=res1.data.data.userauditState;
-									that.auditState2=res1.data.data.userauditState;
+									that.fImg= res1.data.data[0].userfrontImg;
+									that.bImg= res1.data.data[0].userbackImg;
+									//---------base64转图片-----------
+									var front= res1.data.data[0].userfrontImg;
+									base64ToPath(front)
+									  .then(path => {
+									    that.user.userfrontImg=path;
+									})
+									var back= res1.data.data[0].userbackImg;
+									base64ToPath(back)
+									  .then(path2 => {
+										that.user.userbackImg=path2;
+										uni.hideLoading();
+									})
+									that.auditState1=res1.data.data[0].userauditState;
+									that.auditState2=res1.data.data[0].userauditState;
 								}
 							})
-							// that.user.userfrontImg=res.data.userfrontImg;
-							// that.user.userbackImg=res.data.userbackImg;
-							// that.auditState1=res.data.userauditState;
-							// that.auditState2=res.data.userauditState;
+						}else{
+							uni.hideLoading();
 						}
-						
 					}
 				})
 			}, 
@@ -267,6 +259,9 @@
 			},
 			//----------上传乘车人信息--------
 			formSubmit(e){
+				uni.showLoading({
+					title:'保存中...'
+				})
 				var data1=e.target.value;
 				var that=this;
 				data1.userId=that.userId;
@@ -524,7 +519,7 @@
 								that.auditState1="待审核";
 								pathToBase64(res1.savedFilePath)
 									.then(base64 => {
-									that.fImg=JSON.stringify(base64);	
+									that.fImg=base64;	
 								})
 							}
 						});
@@ -547,21 +542,12 @@
 								that.auditState2="待审核";
 								pathToBase64(res1.savedFilePath)
 									.then(base64 => {
-									that.bImg=JSON.stringify(base64);	
+									that.bImg=base64;	
 								})
 							}
 						});
 					}
 				})
-			},
-			//------------判断是否为base64格式-----------
-			isBase64:function(str) {
-			    if (str ===''){ return false; }
-			    try {
-			        return btoa(atob(str)) == str;
-			    } catch (err) {
-			        return false;
-			    }
 			},
 		}
 	}
