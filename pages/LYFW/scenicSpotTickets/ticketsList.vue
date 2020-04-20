@@ -187,7 +187,7 @@
 					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=' +this.regionWeixin,
 					method:'POST',
 					success:(res) => { 
-						// console.log(res)
+						console.log(res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
@@ -197,7 +197,7 @@
 					url:'http://218.67.107.93:9210/api/app/getScenicspotList?requestArea=' +this.regionWeixin,
 					method:'POST',
 					success:(res) => {
-						// console.log(res)
+						console.log(res)
 						this.scenicList = res.data.data;
 					}
 				})
@@ -305,6 +305,7 @@
 					url:'http://218.67.107.93:9210/api/app/searchScenicspotList?searchValue='+this.searchValue,
 					method: 'POST',
 					success : (res) => {
+						console.log(res)
 						if(res.data.msg =='搜索景区信息成功！'){
 							this.searchData = res.data.data;
 							this.searchValue = '' 
