@@ -128,6 +128,9 @@
 				this[key] = e.detail.value;
 			},
 			loginClick(){	 //登录按钮
+				uni.showLoading({
+					title:'登录中...'
+				})
 				this.logining=true;
 				var that=this;
 				const {phoneNumber, captchaCode} = this;		
@@ -184,6 +187,7 @@
 													}else{
 														that.login(user.data);
 													}
+													uni.hideLoading();
 													uni.showToast({
 														title:"登录成功!",
 														icon:"none"
