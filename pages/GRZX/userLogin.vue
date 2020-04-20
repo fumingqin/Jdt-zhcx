@@ -157,9 +157,8 @@
 										method:"POST",
 										success(res) {
 											console.log(res)
-											uni.showToast({
-												title:"登录成功!",
-												icon:"none"
+											uni.removeStorage({
+												key:'captchaCode',
 											})
 											uni.setStorage({
 												key:'userInfo',
@@ -185,6 +184,10 @@
 													}else{
 														that.login(user.data);
 													}
+													uni.showToast({
+														title:"登录成功!",
+														icon:"none"
+													})
 													if(that.urlData==1){
 														uni.switchTab({  //返回首页
 															url:'/pages/Home/Index',
@@ -351,6 +354,10 @@
 										//code:'1234',
 										phone:self.phoneNumber,
 									}
+								})
+								uni.showToast({
+									title:"验证码已发送，仅在5分钟内有效!",
+									icon:"none"
 								})
 								setTimeout(function(){
 									uni.removeStorage({
