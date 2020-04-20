@@ -940,23 +940,25 @@
 						uni.stopPullDownRefresh();
 						//由于界面是遍历info数组，所以需要把客运数据加入info中
 						//注意！！！---出租车也要将数据加入到info中---------------------出租车看这里------------------
-						for(var i = 0; i < res.data.data.length; i++) {
-							that.info.push(res.data.data[i]);
-						}
-						
-						that.finishArr = [];
-						that.goingArr = [];
-						that.unfinishArr = [];
-						that.cancelArr = [];
-						for (var i = 0; i < res.data.data.length; i++) {
-							if (res.data.data[i].orderState == '已完成' || res.data.data[i].orderState == '已使用') {
-								that.finishArr.push(res.data.data[i]);
-							} else if (res.data.data[i].orderState == '进行中' || res.data.data[i].orderState == '待使用') {
-								that.goingArr.push(res.data.data[i]);
-							} else if (res.data.data[i].orderState == '未支付' || res.data.data[i].orderState == '待支付') {
-								that.unfinishArr.push(res.data.data[i]);
-							} else if (res.data.data[i].orderState == '已取消' || res.data.data[i].orderState == '已退票') {
-								that.cancelArr.push(res.data.data[i]);
+						if(res.data.data) {
+							for(var i = 0; i < res.data.data.length; i++) {
+								that.info.push(res.data.data[i]);
+							}
+							
+							that.finishArr = [];
+							that.goingArr = [];
+							that.unfinishArr = [];
+							that.cancelArr = [];
+							for (var i = 0; i < res.data.data.length; i++) {
+								if (res.data.data[i].orderState == '已完成' || res.data.data[i].orderState == '已使用') {
+									that.finishArr.push(res.data.data[i]);
+								} else if (res.data.data[i].orderState == '进行中' || res.data.data[i].orderState == '待使用') {
+									that.goingArr.push(res.data.data[i]);
+								} else if (res.data.data[i].orderState == '未支付' || res.data.data[i].orderState == '待支付') {
+									that.unfinishArr.push(res.data.data[i]);
+								} else if (res.data.data[i].orderState == '已取消' || res.data.data[i].orderState == '已退票') {
+									that.cancelArr.push(res.data.data[i]);
+								}
 							}
 						}
 					},
@@ -976,6 +978,7 @@
 			},
 			// -------------------------客运取消-------------------------
 			cancelTap:function(param){
+				//param：订单id
 				var that = this;
 				console.log('param',param);
 				uni.request({
@@ -1150,7 +1153,7 @@
 								that.goingArr = [];
 								that.unfinishArr = [];
 								that.cancelArr = [];
-								if(that.info !== ''){
+								if(that.info){
 									for (var i = 0; i < that.info.length; i++) {
 										if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
 											that.finishArr.push(that.info[i]);
