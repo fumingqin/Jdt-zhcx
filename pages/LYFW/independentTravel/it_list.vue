@@ -79,7 +79,7 @@
 				<view class="main">
 					<scroll-view class="mainScView" scroll-y="true">
 							<!-- 大图样式，命名：big -->
-							<view>
+							<view @click="natTo">
 								<image class="big_image" :src="ifyFirst.src"></image>
 								<view style="margin: 0upx 32upx;">
 									<text class="big_title" >{{ifyFirst.title}}</text>
@@ -88,8 +88,8 @@
 							</view>
 							
 							<!-- 小图样式，命名:sma -->
-							<view class="sma_view" style="">
-								<view style="float: left;" v-for="(item,index) in ifyList" :key="index" >
+							<view class="sma_view" >
+								<view style="float: left;" v-for="(item,index) in ifyList" :key="index" @click="natTo">
 									<image class="sma_image" :src="item.src" ></image>
 									<text class="sma_title">{{item.title}}</text>
 									<text class="sma_text" >销售量：{{item.salesVolume}}</text>
@@ -297,7 +297,7 @@
 			//跳转
 			natTo(){
 				uni.navigateTo({
-					url:'/pages/LYFW/ouristRoute/travelArrange'
+					url:'../currency/travelDetails'
 				})
 			},
 			

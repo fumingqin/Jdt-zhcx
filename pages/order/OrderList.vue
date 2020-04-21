@@ -107,6 +107,64 @@
 					</view>
 				</view>
 				
+				<!-- 包车定制 -->
+				<!-- 标签class命名：pd;全称：Purchase Date -->
+				<!-- 内容class命名：cm;全称：custom made -->
+				<view v-if="item.title=='包车定制'">
+					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="at_view">
+						<view class="at_titleView">
+							<image class="at_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+							<text class="at_title">{{item.ticketTitle}}</text>
+							<text class="at_status">{{item.orderType}}</text>
+						</view>
+						<view class="at_contentView" style="display: flex;">
+							<view class="at_contentFrame">{{item.ticketComment_s1}}</view>	
+							<view class="at_contentFrame">{{item.ticketComment_s2}}</view>
+							<view class="at_contentFrame" v-if="item.ticketComment_s3 !== 'null'">{{item.ticketComment_s3}}</view>
+							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+						</view>
+				
+						<view class="at_contentView">
+							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+						</view>
+				
+						<!-- 已使用 -->
+						<view class="at_buttonView" v-if="item.orderType=='已使用'">
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+						</view>
+				
+						<!-- 待使用 -->
+						<view class="at_buttonView" v-if="item.orderType=='待使用'">
+							<view class="at_button at_btDelete" @click="open2(item.orderNumber)">退票</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="open(item)">二维码</view>
+						</view>
+				
+						<!-- 待支付 -->
+						<view class="at_buttonView" v-if="item.orderType=='待支付'">
+							<view class="at_button at_btDelete" @click="open3(item.orderNumber)">取消</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+						</view>
+				
+						<!-- 已退票 -->
+						<view class="at_buttonView" v-if="item.orderType=='已退票'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
+				
+						<!-- 已取消 -->
+						<view class="at_buttonView" v-if="item.orderType=='已取消'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
+					</view>
+				</view>
+				
 				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					
@@ -631,7 +689,7 @@
 						<text class="box_icon jdticon icon-fork " @click="close"></text>
 					</view>
 					<view class="box_qrCodeView">
-						<image class="box_qrCodeImage" :src="orderIndexData.orderQrCode" mode="aspectFill"></image>
+						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; margin-top: 24upx;"  />
 						<view class="box_qrCodeTextView">
 							<text class="box_qrCodeText">取票码：{{orderIndexData.orderTicketNumber}}</text>
 							<text class="box_qrCodeText">预订人数：{{orderIndexData.orderUserIndex}}人</text>
@@ -780,6 +838,7 @@
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
 	import emptyData from "@/components/CTKY/emptyData/emptyData.vue";//无数据时显示内容
+	import uQRCode from "@/common/uqrcode.js"
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1188,6 +1247,7 @@
 			//-------------------------景区门票-打开二维码弹框-------------------------
 			open(e) {
 					this.orderIndexData = e;
+					this.make(e);
 					this.$refs.popup.open()
 			},
 			//-------------------------景区门票-关闭二维码弹框-------------------------
@@ -1313,7 +1373,23 @@
 					})
 				}
 			})
-			}
+			},
+			
+			//生成二维码
+			make:function(e) {
+				console.log(e)
+			      uQRCode.make({
+			        canvasId: 'qrcode',
+			        componentInstance: this,
+			        text: e,
+			        size: 160,
+			        margin: 10,
+			        backgroundColor: '#ffffff',
+			        foregroundColor: '#000000',
+			        fileType: 'jpg',
+			        correctLevel: uQRCode.defaults.correctLevel,
+			      })
+			    }
 
 
 		}
