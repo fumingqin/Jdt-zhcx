@@ -233,13 +233,16 @@
 					this.information.carName = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carName;
 					console.log(this.information.carName)
 				}
-				// let data = this.information;
-				
-				// console.log(this.vehicleSelection[this.value])
-				// uni.setStorage({
-				// 	key:'vehicleInformation',
-				// 	data:this.information,
-				// })
+				console.log(this.vehicleSelection[this.value])
+				uni.setStorage({
+					key:'vehicleInformation',
+					data:this.information,
+					success:()=>{
+						uni.navigateTo({
+							url:'../choice/ci_information?isNormal='+this.isNormal
+						})
+					}
+				})
 			}
 			
 		}
