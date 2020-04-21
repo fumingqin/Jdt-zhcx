@@ -576,6 +576,10 @@
 				"navigationBarTitleText": "选择车型"
 			}
         }
+        ,{
+            "path" : "pages/BCFW/choice/charterMap",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

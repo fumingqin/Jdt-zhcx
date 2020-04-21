@@ -119,7 +119,7 @@
 			});
 			uni.getSystemInfo({
 				success(res) {
-					that.mapHeight = res.windowHeight - 60 - 210 + 'px';
+					that.mapHeight = res.windowHeight - (res.windowWidth*120)/750 - 210 + 'px';
 				}
 			})
 			// this.getWidthHeight(e => {
@@ -131,6 +131,14 @@
 			//   })
 			// })
 
+		},
+		mounted() {
+			let that = this
+			uni.getSystemInfo({
+				success(res) {
+					that.mapHeight = res.windowHeight - (res.windowWidth*120)/750 - 210 + 'px';
+				}
+			})
 		},
 		methods: {
 			getAddress() {
@@ -273,7 +281,6 @@
 					district: address.ad_info.district,
 					city: address.ad_info.city,
 				}
-				console.log(this.Name)
 				if (this.Name == "qidian") {
 					uni.setStorage({
 						key: "StartPoint",
@@ -579,7 +586,7 @@
 		// height: 424px;
 		position: absolute;
 		left: 0;
-		top: 60px;
+		top: 120rpx;
 		right: 0;
 		bottom: 210px;
 	}
@@ -596,7 +603,7 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		height: 60px;
+		height: 120rpx;
 		overflow: hidden;
 	}
 
