@@ -3,14 +3,24 @@
 		<!-- 红色背底 -->
 		<view class="cvt_background"></view>
 		<!-- 出发内容 -->
-		<view class="cvt_content">
+		<view class="cvt_content" :hidden="startingContent==1">
 			<view class="ct_departureContents1">
-				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{addressContent.address}}</text></view>
+				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{addressContent.privateSite}}</text></view>
+				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{addressContent.initialPoint}}</text></view>
+			</view>
+			<view class="ct_departureContents2">
+				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
+			</view>
+		</view>
+		
+		<view class="cvt_content" :hidden="startingContent==0">
+			<view class="ct_departureContents1">
+				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{addressContent.initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{addressContent.destination}}</text></view>
 			</view>
 			<view class="ct_departureContents2">
-				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.time}}</text></view>
-				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.day}}</text></view>
+				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
+				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.dayContentObject}}</text></view>
 			</view>
 		</view>
 		<!-- 车型选择 -->
@@ -38,6 +48,42 @@
 					</uni-popup>
 				</view>
 			</view>
+
+			<!-- 滑动区域 -->
+			<scroll-view class="sr_scroll" scroll-x="true">
+				<!-- 顶部滑动 -->
+				<view class="sc_topSlide">
+					<view v-for="(item,index) in vehicleSelection" :key="index">
+						<view class="ts_tab" :class="{current: value===index}" @click="tabClick(index)">{{item.tabName}}</view>
+					</view>
+				</view>
+			</scroll-view>
+
+			<!-- 选择按钮  :hidden="status==false"-隐藏 -->
+			<scroll-view class="sr_scroll" scroll-x="true">
+				<view class="sc_selectButton">
+					<view v-for="(item,index) in vehicleSelection[value].cost" :key="index">
+						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.price}}</view>
+					</view>
+				</view>
+			</scroll-view>
+
+			<!-- 选择车 -->
+			<scroll-view class="sr_scroll" scroll-x="true">
+				<view class="sc_choiceCar">
+					<view v-for="(item,index) in vehicleSelection[value].cost[value2].vehicle" :key="index" @click="carClick(index)">
+						<view class="cc_button">
+							<text class="cc_text" :class="{current3: value3===index}">{{item.carName}}</text>
+							<image class="cc_image" :src="item.car" />
+						</view>
+					</view>
+				</view>
+			</scroll-view>
+			
+			<!-- 按钮 -->
+			<view class="cvt_button">
+				<button class="bt_button" :class="{submitColor:value3!==''}" @click="subit">确认用车</button>
+			</view>
 		</view>
 	</view>
 </template>
@@ -46,38 +92,156 @@
 	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	export default {
 		components: {
-			uniPopup,//加载多方弹框组件
+			uniPopup, //加载多方弹框组件
 		},
 		data() {
 			return {
-				addressContent:[],//地址内容
-				priceExplain:[],//价格须知
+				startingContent:0,//0不显示,1显示
+				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
+				value: 0, //默认值
+				value2: 0,
+				value3: '',
+				selectedValue: 0, //同意须知的选中值
+				// status: false, //隐藏状态
+				addressContent: {
+					initialPoint: '', //出发地
+					destination: '', //目的地
+					datestring: '', //出发时间
+					dayContentObject: '', //选择天数
+					privateSite: '', //专线
+				}, //地址内容
+				priceExplain: [], //价格须知
+				siteWidth: '',
+				// carIndex: '', //车的值
+				// addressContent:'',
+
+				vehicleSelection: [{
+					tabId: '',
+					tabName: '',
+
+					cost: [{
+						btId: '',
+						price: '',
+
+						vehicle: [{
+							carId: '',
+							car: '',
+							carName: '',
+						}],
+					}],
+				}], //车辆选择
+				
+				information:{
+					tabId: '',
+					btId: '',
+					carId: '',
+					tabName:'',
+					price: '',
+					carName: '',
+					car:'',
+				},
+				
+				
+				
 			}
 		},
-		onLoad() {
+
+		onLoad(options) {
+			this.isNormal = options.isNormal;
 			this.routeInit();
 		},
+		
+		onShow() {
+			this.readData();
+		},
+		
 		methods: {
 			//---------------------------------模拟接口数据---------------------------------
 			async routeInit() {
-				let choiceVehicle = await this.$api.lyfwcwd('choiceVehicle');
-				this.addressContent = choiceVehicle.data;
+				// let choiceVehicle = await this.$api.lyfwcwd('choiceVehicle');
+				// this.addressContent = choiceVehicle.data;
 				let priceExplain = await this.$api.lyfwcwd('priceExplain');
 				this.priceExplain = priceExplain.data;
+				let vehicleSelection = await this.$api.lyfwcwd('vehicleSelection');
+				this.vehicleSelection = vehicleSelection.data;
 			},
-			
+
 			//------------------------------弹框事件-----------------------------------------
-			
+
 			open() {
 				// 需要在 popup 组件，指定 ref 为 popup
 				this.$refs.popup.open()
 			},
-			
+
 			close(e) {
 				if (e == 1) {
 					this.$refs.popup.close()
 				}
 			},
+
+			//------------------------------tab点击事件---------------------------------------
+			tabClick: function(e) {
+				console.log(e)
+				// console.log(vehicleSelection[e])
+				// let that = this;
+				// this.value = vehicleSelection[e];
+				this.value = e;
+				// this.status = true;
+			},
+
+			buttonClick: function(item, index) {
+				// console.log(a)
+				console.log(index)
+				this.value2 = index;
+				// var test = item;
+				// this.carIndex = test.vehicle;
+
+			},
+
+			carClick: function(res) {
+				console.log(res)
+				// var test = res;
+				// this.carIndex = test.vehicle;
+				this.value3 = res;
+			},
+			
+			//---------------------读取数据-----------------
+			readData:function(){
+				uni.getStorage({
+					key:'homePageInfo',
+					success:(res)=>{
+						this.addressContent = res.data;
+						console.log(res)
+						if(this.isNormal == 0){
+							this.startingContent = 0;
+						}else{
+							this.startingContent = 1;
+						}
+					}
+				},500)
+			},
+			
+			//------------------------------提交数据-------------------------------------
+			subit:function(){
+				if(this.value3!==''){
+					this.information.tabId = this.vehicleSelection[this.value].tabId;
+					this.information.tabName = this.vehicleSelection[this.value].tabName;
+					this.information.btId = this.vehicleSelection[this.value].cost[this.value2].btId;
+					this.information.price = this.vehicleSelection[this.value].cost[this.value2].price;
+					this.information.carId = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carId;
+					this.information.car = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].car;
+					this.information.carName = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carName;
+					console.log(this.information.carName)
+				}
+				// let data = this.information;
+				
+				// console.log(this.vehicleSelection[this.value])
+				// uni.setStorage({
+				// 	key:'vehicleInformation',
+				// 	data:this.information,
+				// })
+			}
+			
 		}
 	}
 </script>
@@ -90,129 +254,140 @@
 		height: 100%;
 		background: #F1F1F1;
 	}
-	
+
 	//红色背景
-	.cvt_background{
+	.cvt_background {
 		text-align: center;
-		width:100%;
-		height:253upx;
-		background:rgba(252,70,70,1);
+		width: 100%;
+		height: 253upx;
+		background: rgba(252, 70, 70, 1);
 		padding-top: 34upx;
 	}
-	
+
 	//出发内容
-	.cvt_content{
+	.cvt_content {
 		position: absolute;
 		top: 197upx;
 		width: 698upx;
-		margin:0 26upx;
-		background:rgba(255,255,255,1);
-		box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);
-		border-radius:13px;
-		
+		margin: 0 26upx;
+		background: rgba(255, 255, 255, 1);
+		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+		border-radius: 13px;
+
 		//内容样式
-		.ct_departureContents1{
+		.ct_departureContents1 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
-			.ct_content1{
-				color:rgba(102,102,102,1);
+
+			.ct_content1 {
+				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
 				width: 320upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-				.ct_content2{
+
+				.ct_content2 {
 					width: 200upx;
 					font-size: 30upx;
-					color:rgba(44,45,45,1);
+					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
 					font-weight: bold;
 				}
 			}
-			.ct_content3{
-				color:rgba(102,102,102,1);
+
+			.ct_content3 {
+				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
 				width: 240upx;
 				padding-left: 68upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-				.ct_content4{
+
+				.ct_content4 {
 					width: 200upx;
 					font-size: 30upx;
-					color:rgba(44,45,45,1);
+					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
 					font-weight: bold;
 				}
 			}
 		}
+
 		//内容样式
-		.ct_departureContents2{
+		.ct_departureContents2 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
 			padding-bottom: 40upx;
-			.ct_content5{
-				color:rgba(102,102,102,1);
+
+			.ct_content5 {
+				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 320upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-				.ct_content6{
+
+				.ct_content6 {
 					width: 200upx;
 					font-size: 30upx;
-					color:rgba(44,45,45,1);
+					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
 					font-weight: bold;
 				}
 			}
-			.ct_content7{
-				color:rgba(102,102,102,1);
+
+			.ct_content7 {
+				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
 				width: 225upx;
 				padding-left: 68upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-				.ct_content8{
+
+				.ct_content8 {
 					width: 200upx;
 					font-size: 30upx;
-					color:rgba(44,45,45,1);
+					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
 					font-weight: bold;
 				}
 			}
 		}
 	}
-	
+
 	//车型选择样式
-	.cvt_vehicleSelection{
+	.cvt_vehicleSelection {
 		width: 698upx;
-		margin:135upx 26upx;
-		background:rgba(255,255,255,1);
-		box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);
-		border-radius:13px;
-		
-		.vs_topContent{
+		margin: 135upx 26upx;
+		background: rgba(255, 255, 255, 1);
+		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+		border-radius: 13px;
+
+		.vs_topContent {
 			position: relative;
 			display: flex;
 			padding: 31upx 41upx 0 41upx;
-			.tc_text1{
+
+			.tc_text1 {
 				font-size: 32upx;
 				font-weight: bold;
 			}
 		}
-		
-		.tc_text2{
+
+		.tc_text2 {
 			position: absolute;
 			display: flex;
 			right: 41upx;
-			.tc_text3{
+
+			.tc_text3 {
 				font-size: 28upx;
-				color: rgba(153,153,153,1);
+				color: rgba(153, 153, 153, 1);
 			}
+
 			//弹框样式
 			.te_boxVlew {
 				width: 87%;
@@ -222,10 +397,10 @@
 				border-radius: 30rpx;
 				border-bottom-left-radius: 0;
 				border-bottom-right-radius: 0;
-			
+
 				.bv_titleView {
 					margin: 24upx 0;
-			
+
 					//弹框标题
 					.tv_text1 {
 						position: relative;
@@ -234,7 +409,7 @@
 						top: 8upx;
 						margin-bottom: 16upx;
 					}
-			
+
 					.tv_text2 {
 						margin-top: 8upx;
 						float: right;
@@ -242,18 +417,18 @@
 						font-size: 32upx;
 					}
 				}
-			
+
 				.bv_content {
 					height: 800upx;
 					line-height: 32upx;
-					
-					.ct_text{
+
+					.ct_text {
 						display: flex;
 						margin-top: 26upx;
-						font-size:32upx;
+						font-size: 32upx;
 						font-weight: bold;
 					}
-					
+
 					.ct_noticeText {
 						color: #5E5E60;
 						text-align: justify;
@@ -262,6 +437,138 @@
 						font-size: 28upx;
 					}
 				}
+			}
+		}
+
+		//滑动区域样式
+		.sr_scroll {
+			padding: 28upx 41upx 0 41upx;
+			display: flex;
+			width: 89%;
+			height: 100%;
+
+			//筛选样式
+			.sc_topSlide {
+				display: flex;
+
+				.ts_tab {
+					flex: 1;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					height: 88upx;
+					width: 230upx;
+					font-size: 30upx;
+					color: #888;
+					z-index: 9;
+					position: relative;
+
+					&.current {
+						z-index: 10;
+						color: #ff0000;
+						
+						&:after {
+							content: '';
+							position: absolute;
+							left: 50%;
+							bottom: 0;
+							transform: translateX(-50%);
+							width: 104upx;
+							height: 0;
+							border-bottom: 2upx solid #ff0000;
+						}
+					}
+				}
+
+			}
+
+			//按钮样式
+			.sc_selectButton {
+				display: flex;
+
+				.sb_button {
+					flex: 1;
+					border: 1px solid #888;
+					border-radius: 12rpx;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					font-size: 30upx;
+					height: 72upx;
+					width: 212upx;
+					color: #888;
+					z-index: 20;
+					position: relative;
+					margin-right: 32upx;
+					margin-top: 37upx;
+
+					&.current2 {
+						z-index: 30;
+						color: #ff0000;
+						border: 1px solid #ff0000;
+						border-radius: 12rpx;
+					}
+				}
+			}
+			
+			.sc_choiceCar{
+				display: flex;
+				
+				.cc_button{
+					flex: 1;
+					display: flex;
+					// border: 1px solid #888;
+					// border-radius: 12rpx;
+					height: 165upx;
+					width: 226upx;
+					justify-content: center;
+					color: #888;
+					position: relative;
+					margin-right: 32upx;
+					margin-top: 30upx;
+					z-index: 21;
+					
+					.cc_image{
+						width: 226upx;
+						height: 103upx;
+						padding-top: 12upx;
+						z-index: 22;
+					}
+					
+					.cc_text{
+						position: absolute;
+						bottom: 0;
+						font-size: 28upx;
+						color: #888;
+						z-index: 23;
+						
+						&.current3 {
+							z-index: 24;
+							color: #ff0000;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//按钮
+	.cvt_button {
+		display: flex;
+		padding: 46upx 41upx 60upx 41upx;
+	
+		.bt_button {
+			position: relative;
+			width: 640upx;
+			height:94upx;
+			background-color: #aaa; 
+			z-index: 25;
+			font-size: 36upx;
+			color: #FFFFFF;
+			
+			&.submitColor {
+				z-index: 26;
+				background-color:#f95c75;
 			}
 		}
 	}

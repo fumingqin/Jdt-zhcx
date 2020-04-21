@@ -1057,6 +1057,179 @@ const priceExplain={
 	msg: '提示'
 }
 
+const vehicleSelection={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		tabId:0,
+		tabName:'轿车(5座)',
+		cost:[{
+			btId:0,
+			price:'100-200元',
+			vehicle:[{
+				carId:0,
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				carId:1,
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:1,
+			price:'200-300元',
+			vehicle:[{
+				carId:0,
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				carId:1,
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:2,
+			price:'250-350元',
+			vehicle:[{
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:3,
+			price:'400-500元',
+			vehicle:[{
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		}],
+	},
+	{
+		tabId:1,
+		tabName:'SUV(7座)',
+		cost:[{
+			btId:0,
+			price:'10-200元',
+			vehicle:[{
+				carId:0,
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				carId:1,
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:1,
+			price:'20-300元',
+			vehicle:[{
+				carId:0,
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				carId:1,
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:2,
+			price:'250-350元',
+			vehicle:[{
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:3,
+			price:'400-500元',
+			vehicle:[{
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		}],
+	},
+	{
+		tabId:2,
+		tabName:'商务车(7座)',
+		cost:[{
+			btId:0,
+			price:'100-200元',
+			vehicle:[{
+				carId:0,
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				carId:1,
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:1,
+			price:'200-300元',
+			vehicle:[{
+				carId:0,
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				carId:1,
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:2,
+			price:'250-350元',
+			vehicle:[{
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		},
+		{
+			btId:3,
+			price:'400-500元',
+			vehicle:[{
+				car:'../../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+			},
+			{
+				car:'../../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+			}],
+		}],
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -1086,4 +1259,5 @@ export default {
 	noticeContent,
 	choiceVehicle,
 	priceExplain,
+	vehicleSelection,
 }
