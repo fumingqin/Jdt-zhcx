@@ -70,10 +70,8 @@
 
 				</view>
 
-				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)"
-				 :hidden="hiddenValues==1"></view>
-				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)"
-				 :hidden="hiddenValues==0"></view>
+				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)" :hidden="hiddenValues==1"></view>
+				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)" :hidden="hiddenValues==0"></view>
 
 			</view>
 
@@ -169,7 +167,6 @@
 					timestamp: '1587219759',
 					sign: 'D5586D098021D6F1EE883F1A4CF897D2'
 				}
-
 
 			}
 		},
@@ -463,22 +460,73 @@
 				if (this.channeIndex == 0) {
 					var payTypeIndex = 3;
 					uni.hideLoading()
-					uni.requestPayment({
-						provider: 'wxpay',
-						orderInfo: this.testOrderInfo,
-						success: function(res) {
-							// console.log(res)
-							uni.showToast({
-								title: '支付成功',
-							})
-							uni.redirectTo({
-								url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+					
+					uni.request({
+						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+						data: {
+							payType: payTypeIndex,
+							price: this.orderInfo.orderActualPayment,
+							orderNum: this.orderInfo.orderNumber,
+						},
+						method: 'POST',
+						success:function(e){
+							// console.log(e)
+							let wxData = {
+								appid: e.data.data.appId,
+								partnerid: e.data.data.partnerId, 
+								prepayid: e.data.data.prepayId,
+								package: 'Sign=WXPay',
+								noncestr: e.data.data.nonceStr,
+								timestamp: e.data.data.timeStamp,
+								sign: e.data.data.paySign,
+							}
+							uni.hideLoading()
+							uni.requestPayment({
+								provider: 'wxpay',
+								orderInfo: wxData,
+								success:function(res){
+									console.log(res)
+									uni.request({
+										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber='+that.orderInfo.orderNumber,
+										method:'POST',
+										success:function(res){
+											if(res.data.msg == '出票成功'){
+												uni.redirectTo({
+													url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+												})
+											}else{
+												uni.showToast({
+													title:'出票失败，联系客服出示订单编号',
+													icon:'none',
+													duration:3000
+												})
+											}
+										},
+										fail:function(){
+											uni.showToast({
+												title:'出票失败，请联系客服出示订单编号',
+												icon:'none',
+												duration:3000
+											})
+										}
+									})
+								},
+						
+								fail: function(ee) {
+									console.log(ee)
+									uni.showToast({
+										title: '拉起支付失败，请检查网络后重试',
+										icon: 'none',
+										duration: 3000
+									})
+								}
 							})
 						},
-						fail: function(ee) {
-							// console.log(ee)
+						fail: () => {
+							uni.hideLoading()
 							uni.showToast({
-								title: '支付失败，请检查手机网络是否正常，如若无问题请联系客服',
+								// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
+								title: '请求支付参数失败，请检查网络后重试',
 								icon: 'none',
 								duration: 3000
 							})
@@ -532,7 +580,7 @@
 								fail: function(ee) {
 									console.log(ee)
 									uni.showToast({
-										title: '拉起支付失败，请检查网络后重试',
+										title: '取消支付',
 										icon: 'none',
 										duration: 3000
 									})
