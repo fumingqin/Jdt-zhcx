@@ -966,7 +966,7 @@
 
 						var polylineArr = [];
 						var points = [];
-						that.estimatePrice = res.data.estimatePrice;
+						that.estimatePrice = res.data.TaxiCost;
 						if ((res.data.Distance / 1000) > 1) {
 							that.Distance = res.data.Distance / 1000 + "公里";
 						} else {
