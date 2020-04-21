@@ -68,8 +68,13 @@
 				<text class="Xx_titleIcon"> > </text>
 			</view>
 			<view class="Xx_contentView"> 
-					<text class="Xx_contentTitle" >使用日期</text>
-					<text class="Xx_contentTitle2">{{orderInfo.orderDate}}&nbsp;当天可用</text>
+					<text class="Xx_contentTitle" >下单时间</text>
+					<text class="Xx_contentTitle2">{{orderInfo.setOrderTime}}</text>
+					<view class="Xx_contentBlock">
+						<text class="Xx_contentTitle" >使用日期</text>
+						<text class="Xx_contentTitle2">{{orderInfo.orderDate}}&nbsp;当天可用</text>
+					</view>
+					
 				<view class="Xx_contentBlock">
 					<text class="Xx_contentTitle" >入园时间</text>
 					<text class="Xx_contentTitle2">{{orderInfo.ticketOpenUp}}</text>
@@ -167,12 +172,13 @@
 			this.lyfwData(JSON.parse(options.orderNumber));
 		},
 		methods: {
-			//访问模拟数据
+			//访问接口数据
 			lyfwData(e) {
 				uni.request({
 					url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber='+e,
 					method:'POST',
 					success:(res) => {
+						console.log(res)
 						this.orderInfo = res.data.data;
 						this.screenUser();
 					}

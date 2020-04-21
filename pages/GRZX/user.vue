@@ -265,7 +265,7 @@
 		height: 29upx;
 		position: absolute;
 		left:82%;
-		top:-1upx;
+		top:-3upx;
 	}
 	.typeBox{  //普通用户
 		width: 126upx;
@@ -356,7 +356,7 @@
 	}
 	.advertClass{		//广告
 		width: 91.47%;
-		height: 142upx;
+		height: 160upx;
 		margin-top: 42upx;
 		margin-left: 4.27%;
 	}

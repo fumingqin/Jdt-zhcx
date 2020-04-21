@@ -26,15 +26,27 @@ const Interface = {
 	//GET-POST
 	addPassengerPosition : {
 		value: Url + '/api/zhcx/addPassengerPosition',
-		name:'旅客端定时实时上报位置',
+		name:'旅客端-定时实时上报位置',
 		method:'GET',
 		pages:[]
 	},
 	AddExpressOrder_Passenger:{
 		value: Url + '/api/taxi/AddExpressOrder_Passenger',
-		name:'旅客端出租车下单',
+		name:'旅客端-出租车下单',
 		method:'POST',
 		pages:[]
+	},
+	SearchExpressOrderByOrderNum_Passenger:{
+		value:Url + '/api/taxi/SearchExpressOrderByOrderNum_Passenger',
+		name:'旅客端-等车时候根据订单号查询出租车快车订单',
+		method:'POST',
+		page:[]
+	},
+	CancelExpressOrderByOrderNum_Passenger:{
+		value:Url + '/api/taxi/CancelExpressOrderByOrderNum_Passenger',
+		name:'旅客端-根据订单号取消订单',
+		method:'POST',
+		page:[]
 	}
 	
 }

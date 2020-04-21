@@ -93,7 +93,7 @@
 			
 		},
 		methods: {
-			//加载班次列表数据
+			//-------------------------------加载班次列表数据-------------------------------
 			getTicketInfo:function(date){
 				
 				uni.showLoading();
@@ -136,7 +136,9 @@
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
-				return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
+				var setTime = date.replace('T',' ');
+				return setTime;
+				// return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------显示日期-------------------------------
 			onShowDatePicker(type) { //显示
