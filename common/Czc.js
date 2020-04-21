@@ -24,29 +24,23 @@ const Url = 'http://111.231.109.113:8002';
 //接口对象
 const Interface = {
 	//GET-POST
-	addPassengerPosition : {
-		value: Url + '/api/zhcx/addPassengerPosition',
-		name:'旅客端-定时实时上报位置',
-		method:'GET',
-		pages:[]
-	},
 	AddExpressOrder_Passenger:{
 		value: Url + '/api/taxi/AddExpressOrder_Passenger',
 		name:'旅客端-出租车下单',
 		method:'POST',
-		pages:[]
+		pages:["Home/ChooseSite.nvue"]
 	},
 	SearchExpressOrderByOrderNum_Passenger:{
 		value:Url + '/api/taxi/SearchExpressOrderByOrderNum_Passenger',
 		name:'旅客端-等车时候根据订单号查询出租车快车订单',
 		method:'POST',
-		page:[]
+		page:["CZC/CallAndDrive.nvue"]
 	},
 	CancelExpressOrderByOrderNum_Passenger:{
 		value:Url + '/api/taxi/CancelExpressOrderByOrderNum_Passenger',
 		name:'旅客端-根据订单号取消订单',
 		method:'POST',
-		page:[]
+		page:["CZC/CallAndDrive.nvue"]
 	}
 	
 }
@@ -54,7 +48,6 @@ const Interface = {
 const dateFormat = {
 	dateformat : 'Y-m-d H:i:s'
 }
-
 // 接口声明区
 export default {
 	GaoDeWebKey,
