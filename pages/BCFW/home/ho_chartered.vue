@@ -62,7 +62,8 @@
 					height:94upx;
 					background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
 					box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
-					">选车型</button>
+					"
+					 @click="subit">选车型</button>
 				</view>
 
 				<!-- 底部 -->
@@ -112,7 +113,7 @@
 						height:94upx;
 						background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
 						box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
-						">选车型</button>
+						" @click="subit">选车型</button>
 				</view>
 
 				<!-- 底部 -->
@@ -144,7 +145,7 @@
 			return {
 				normalPickerNum: 1, //专线tab
 				specialPickerNum: 0, //定制tab
-				index: 0, //指数
+				index:0, //指数
 				privateSite: '', //专线
 				noticeContent: '', //须知内容
 				datestring: '', //当前日期和时间字符串
@@ -158,7 +159,15 @@
 				startlatitude: "", //出发点纬度
 				destination: '', //目的地
 				dayContent: [], //选择天数
-				dayContentObject: [], //天数
+				isNormal:0,//判断是普通购票还是定制班车默认是普通购票
+				homePageInfo: {
+					initialPoint: '', //出发地
+					destination: '', //目的地
+					datestring: '', //出发时间
+					dayContentObject: '', //选择天数
+					privateSite: '', //专线
+
+				},
 			}
 		},
 		onLoad() {
@@ -187,7 +196,7 @@
 			godetail: function(e) {
 				console.log(e)
 				this.index = e.target.value;
-				this.dayContentObject = this.dayContent[e.target.value];
+				this.homePageInfo.dayContentObject = this.dayContent[e.target.value];
 			},
 
 			//---------------------------------点击起点站---------------------------------
@@ -246,7 +255,7 @@
 				});
 			},
 
-			//------------------------------查看景点按钮弹框事件-----------------------------
+			//------------------------------弹框事件-----------------------------------------
 
 			open() {
 				// 需要在 popup 组件，指定 ref 为 popup
@@ -333,7 +342,30 @@
 					this.isNormal = 1; //当前是定制班车
 				}
 			},
-		}
+
+			//------------------------------提交数据-------------------------------------
+			subit: function() {
+				if(this.isNormal == 0 || this.isNormal == 1){
+					this.homePageInfo.privateSite = this.privateSite;
+					this.homePageInfo.initialPoint = this.initialPoint;
+					this.homePageInfo.destination = this.destination;
+					this.homePageInfo.datestring = this.datestring;
+					this.homePageInfo.dayContentObject = this.dayContent[this.index];
+					// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+					// console.log(this.vehicleSelection[this.value])
+					uni.setStorage({
+						key:'homePageInfo',
+						data:this.homePageInfo,
+						success:()=>{
+							uni.navigateTo({
+								url:'../choice/ci_choiceVehicleType?isNormal='+this.isNormal
+							})
+						}
+					})
+				}
+				// console.log(this.homePageInfo)
+		},
+	}
 	}
 </script>
 

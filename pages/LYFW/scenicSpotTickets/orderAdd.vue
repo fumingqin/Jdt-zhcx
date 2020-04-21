@@ -403,6 +403,7 @@
 								return item.orderType == '待支付';
 							})
 							if (a == '') {
+								// #ifdef H5
 								uni.request({
 									url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
 									data: {
@@ -410,13 +411,69 @@
 										ticketProductId: this.admissionTicket.admissionTicketID,
 										ticketId: 0,
 										ticketContain: this.admissionTicket.ticketContain,
-
+								
 										companyId: this.admissionTicket.companyId,
 										executeScheduleId: this.admissionTicket.executeScheduleId,
-
+								
 										addressData: this.addressData,
 										couponID: this.couponColor,
-
+								
+										orderDateReminder: this.dateReminder,
+										orderDate: this.date,
+										orderInsure: '',
+										orderInsurePrice: '',
+										orderActualPayment: this.actualPayment,
+										sellerCompanyCode: '南平旅游H5',
+										tppId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
+									},
+								
+									method: 'POST',
+									//向服务器发送订单数据，返回订单编号
+									success: (res) => {
+										uni.hideLoading()
+										console.log(res)
+										if (res.data.msg == '无可售门票！') {
+											uni.showToast({
+												title: '该景区无可售门票！',
+												icon: 'none',
+											})
+										} else if (res.data.msg == '下单失败，联系管理员！') {
+											uni.showToast({
+												title: '下单失败，联系管理员！',
+												icon: 'none',
+											})
+										} else if (res.data.msg == '下单成功') {
+											uni.setStorage({
+												key:'submitH5Data',
+												data:res.data.data,
+												success:function(){
+													uni.redirectTo({
+														url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+													})
+												}
+											})
+											
+										}
+								
+									}
+								})
+								// #endif
+								
+								// #ifdef APP-PLUS
+								uni.request({
+									url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+									data: {
+										unid: this.userInfo.unid,
+										ticketProductId: this.admissionTicket.admissionTicketID,
+										ticketId: 0,
+										ticketContain: this.admissionTicket.ticketContain,
+								
+										companyId: this.admissionTicket.companyId,
+										executeScheduleId: this.admissionTicket.executeScheduleId,
+								
+										addressData: this.addressData,
+										couponID: this.couponColor,
+								
 										orderDateReminder: this.dateReminder,
 										orderDate: this.date,
 										orderInsure: '',
@@ -425,7 +482,7 @@
 										sellerCompanyCode: '南平旅游APP',
 										tppId: 0,
 									},
-
+								
 									method: 'POST',
 									//向服务器发送订单数据，返回订单编号
 									success: (res) => {
@@ -446,9 +503,12 @@
 												url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
 											})
 										}
-
+								
 									}
 								})
+								// #endif
+								
+								
 							} else if (a.length > 0) {
 								uni.hideLoading()
 								uni.showToast({

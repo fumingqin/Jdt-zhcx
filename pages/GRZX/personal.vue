@@ -91,6 +91,9 @@
 		methods:{
 			...mapMutations(['login']),
 			async loadUserInfo(){
+				uni.showLoading({
+					title:'加载中...'
+				})
 				var theself=this;
 				uni.getStorage({
 					key:'backUrl',
@@ -166,6 +169,7 @@
 								theself.openId_wx=res1.data.data.openId_wx;
 								// ------------10.手机号-------------
 								theself.phoneNumber=res1.data.data.phoneNumber;
+								uni.hideLoading();
 							}
 						})
 					}
@@ -396,6 +400,7 @@
 		.an{
 			width: 90%;
 			height: 104upx;
+			line-height: 104upx;
 			padding-top: 12upx;
 			font-size: 40upx;
 			margin-top: 48upx; 
