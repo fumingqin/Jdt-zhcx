@@ -231,7 +231,7 @@
 						<view style="align-items: center;justify-content: center;flex-direction: row;">
 							<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
 							<view>
-								<text style="font-size: 28rpx;">出租车</text>
+								<text style="font-size: 28rpx;">{{vehicleType}}</text>
 							</view>
 						</view>
 						<view style="align-items: center;justify-content: center;flex-direction: row;">
@@ -373,6 +373,10 @@
 				isPupop: true, //是否弹窗
 				keYunList:[],
 				disabled:true,
+				vehicleType:'出租车', //车辆类型
+				destinationArea:'',   //目标区域
+				estimateDistanceTime:0,//预计时长
+				estimateDistance:0//预计里程
 			}
 		},
 		
@@ -409,7 +413,7 @@
 			uni.getStorage({ //获取起点
 				key: "StartPoint",
 				success: function(res) {
-					// console.log(res);
+				     console.log(res);
 					that.initialPoint = res.data.addressName;
 					that.startLonLat = res.data.lng + "," + res.data.lat;
 					that.startlongitude = res.data.lng;
@@ -426,6 +430,7 @@
 					that.endlongitude = res.data.lng;
 					that.endtlatitude = res.data.lat;
 					that.endlocation = res.data;
+					that.destinationArea = res.data.district;//目标区域
 				}
 			});
 			uni.getStorage({ //获取乘车人
@@ -467,6 +472,12 @@
 			
 		},
 		methods: {
+			showToast:function(msg,icon='none'){
+				uni.showToast({
+					title:msg,
+					icon:icon
+				})
+			},
 			onClickItem(e) { //tab点击事件
 				var that = this;
 				if (that.current !== e.currentIndex) {
@@ -513,6 +524,7 @@
 				});
 			},
 			promptlyCall: function() { //立即呼叫、生成订单
+				let that = this;
 				if (this.selecttime == "点击选择时间" && !this.IsClick) {
 					uni.showToast({
 						title: "请选择时间"
@@ -523,22 +535,63 @@
 							title: "请选择乘车人"
 						})
 					} else {
-						uni.navigateTo({
-							url: '../CZC/CallAndDrive?orderNo=1',
-							animationType: 'pop-in',
-							animationDuration: 200,
-							success: function() {
-								uni.removeStorage({
-									key:"passengerList"
-								})
-								uni.removeStorage({
-									key:"StartPoint"
-								})
-								uni.removeStorage({
-									key:"EndPoint"
-								})
+						uni.showLoading({
+							title:'加载中'
+						})
+						let userInfo = uni.getStorageSync('userInfo') || '';
+						let orderNumber = '';
+						uni.request({
+							url:taxi.Interface.AddExpressOrder_Passenger.value,
+							method:taxi.Interface.AddExpressOrder_Passenger.method,
+							data:{
+								startLon:that.startlongitude,
+								startLat:that.startlatitude,
+								endLon:that.endlongitude,
+								endLat:that.endtlatitude,         
+								startAddress:that.initialPoint, //起点
+								endAddress:that.destination,    //终点
+								orderType: that.IsClick?'实时':'预约',
+								passengers:JSON.stringify(that.Passenger),
+								vehicleType:that.vehicleType,//现在暂时只有出租车
+								appointmentTime:that.selecttime==='点击选择时间'?utils.timeTodate(taxi.dateFormat.dateformat, new Date().getTime()):that.selecttime, //预约时间
+								estimatePrice:that.TaxiCost,     //预估价格
+								userId:userInfo.userId,
+								estimateDistance:that.estimateDistance,			 //预估里程
+								destinationArea:that.destinationArea,//目标区域
+								estimateDistanceTime:that.estimateDistanceTime	 //预估时间
+							},
+							success:function(res){
+								console.log(res);
+								uni.hideLoading();
+								if(res.data.status){
+									that.showToast(res.data.msg);
+									orderNumber = res.data.data.orderNumber;
+									uni.navigateTo({
+										url: '../CZC/CallAndDrive?orderNumber='+orderNumber,
+										animationType: 'pop-in',
+										animationDuration: 200,
+										success: function() {
+											uni.removeStorage({
+												key:"passengerList"
+											})
+											uni.removeStorage({
+												key:"StartPoint"
+											})
+											uni.removeStorage({
+												key:"EndPoint"
+											})
+										}
+									});
+									
+								}else{
+									that.showToast(res.data.msg);
+								}
+							},
+							fail:function(res){
+								that.showToast('网络连接失败');
 							}
-						});
+						})
+					
 					}
 				}
 			},
@@ -834,6 +887,10 @@
 				that.showlocation = false;
 				that.getDirectionDriving(that.startLonLat, that.endLonLat);
 			},
+			SecondToMinutes:function(time){
+				var that = this;
+				return time / 60;
+			},
 			Timechange: function(time) { //时间转换
 				var that = this;
 				var date = parseInt(time / 3600 / 24);
@@ -907,6 +964,8 @@
 						} else {
 							that.Distance = res.data.Distance + "米";
 						}
+						that.estimateDistance = res.data.Distance / 1000;
+						that.estimateDistanceTime = that.SecondToMinutes(res.data.Duration);
 						that.Timechange(res.data.Duration);
 						polylineArr = res.data.Polyline;
 
@@ -930,7 +989,7 @@
 							width: 6,
 							arrowLine: true,
 							// arrowIconPath:'../../static/CZC/jiantou.png',
-							color: "rgba(75,220,39,1)",
+							color:'#4bdc27',
 							borderColor: "#8c918b",
 						};
 						that.polyline.push(obj);
@@ -1018,7 +1077,7 @@
 					that.selectCarAroung();
 				}, 3000);
 			}
-
+			
 		}
 	}
 </script>

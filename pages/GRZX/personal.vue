@@ -68,6 +68,7 @@
 				openId_qq:'',
 				openId_wx:'',
 				phoneNumber:'',
+				port:'',
 			};
 		},
 		onLoad:function(){
@@ -90,6 +91,9 @@
 		methods:{
 			...mapMutations(['login']),
 			async loadUserInfo(){
+				uni.showLoading({
+					title:'加载中...'
+				})
 				var theself=this;
 				uni.getStorage({
 					key:'backUrl',
@@ -114,6 +118,7 @@
 								})
 								// ------------1.头像-------------
 								var base64=res1.data.data.portrait;
+								theself.port=res1.data.data.portrait;
 								if(theself.isBase64(base64)){
 									base64ToPath(base64)
 									  .then(path => {
@@ -122,7 +127,10 @@
 									  .catch(error => {
 									    console.error(error)
 									  })
+								}else{
+									theself.portrait=base64;
 								}
+								console.log(theself.portrait,"128")
 								// ------------2.昵称-------------
 								if(res1.data.data.nickname==null||res1.data.data.nickname==""){
 									theself.nickname="";
@@ -161,6 +169,7 @@
 								theself.openId_wx=res1.data.data.openId_wx;
 								// ------------10.手机号-------------
 								theself.phoneNumber=res1.data.data.phoneNumber;
+								uni.hideLoading();
 							}
 						})
 					}
@@ -251,52 +260,26 @@
 				console.log(this.nickname)
 				console.log(this.birthday)
 				var that=this;
-				var port=this.portrait;
-				if(!this.isBase64(port)){
-					pathToBase64(this.portrait)
-					.then(base64 => {
-						that.portrait=JSON.stringify(base64);
-						uni.request({
-							url:'http://111.231.109.113:8002/api/person/changeInfo',
-							data:{
-								portrait:this.portrait,
-								userId:this.userId,
-								gender:this.gender,
-								openId_qq:this.openId_qq,
-								openId_wx:this.openId_wx,
-								address:this.address,
-								nickname:this.nickname,
-								birthday:this.birthday,
-								autograph:this.autograph,
-							},
-							method:'POST',
-							success(res) {
-								console.log(res,"286")
-							}
-						})
-					})//结束
-				}else{
-					uni.request({
-						url:'http://111.231.109.113:8002/api/person/changeInfo',
-						data:{
-							portrait:this.portrait,
-							userId:this.userId,
-							gender:this.gender,
-							openId_qq:this.openId_qq,
-							openId_wx:this.openId_wx,
-							address:this.address,
-							nickname:this.nickname,
-							birthday:this.birthday,
-							autograph:this.autograph,
-						},
-						method:'POST',
-						success(res) {
-							console.log(res,"286")
-						}
-					})
-				}
+				uni.request({
+					url:'http://111.231.109.113:8002/api/person/changeInfo',
+					data:{
+						portrait:this.port,
+						userId:this.userId,
+						gender:this.gender,
+						openId_qq:this.openId_qq,
+						openId_wx:this.openId_wx,
+						address:this.address,
+						nickname:this.nickname,
+						birthday:this.birthday,
+						autograph:this.autograph,
+					},
+					method:'POST',
+					success(res) {
+						console.log(res,"286")
+					}
+				})
 				var list={
-						portrait:port,
+						portrait:this.portrait,
 						userId:this.userId,
 						openId_qq:this.openId_qq,
 						openId_wx:this.openId_wx,
@@ -322,12 +305,14 @@
 					//sourceType:['album'],
 					success(res) {
 						var tempFilePaths = res.tempFilePaths;
-						that.port=res.tempFiles;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
 						  success: function (res1) {
-							var savedFilePath = res1.savedFilePath;
 							 that.portrait=res1.savedFilePath;
+							 pathToBase64(res1.savedFilePath)
+							 .then(base64 => {
+								 that.port=base64;
+							 })
 						  }
 						}); 
 					}
@@ -415,6 +400,7 @@
 		.an{
 			width: 90%;
 			height: 104upx;
+			line-height: 104upx;
 			padding-top: 12upx;
 			font-size: 40upx;
 			margin-top: 48upx; 
