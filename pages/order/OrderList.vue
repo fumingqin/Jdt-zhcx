@@ -631,7 +631,7 @@
 						<text class="box_icon jdticon icon-fork " @click="close"></text>
 					</view>
 					<view class="box_qrCodeView">
-						<image class="box_qrCodeImage" :src="orderIndexData.orderQrCode" mode="aspectFill"></image>
+						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; margin-top: 24upx;"  />
 						<view class="box_qrCodeTextView">
 							<text class="box_qrCodeText">取票码：{{orderIndexData.orderTicketNumber}}</text>
 							<text class="box_qrCodeText">预订人数：{{orderIndexData.orderUserIndex}}人</text>
@@ -780,6 +780,7 @@
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
 	import emptyData from "@/components/CTKY/emptyData/emptyData.vue";//无数据时显示内容
+	import uQRCode from "@/common/uqrcode.js"
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1186,6 +1187,7 @@
 			//-------------------------景区门票-打开二维码弹框-------------------------
 			open(e) {
 					this.orderIndexData = e;
+					this.make(e);
 					this.$refs.popup.open()
 			},
 			//-------------------------景区门票-关闭二维码弹框-------------------------
@@ -1311,7 +1313,23 @@
 					})
 				}
 			})
-			}
+			},
+			
+			//生成二维码
+			make:function(e) {
+				console.log(e)
+			      uQRCode.make({
+			        canvasId: 'qrcode',
+			        componentInstance: this,
+			        text: e,
+			        size: 160,
+			        margin: 10,
+			        backgroundColor: '#ffffff',
+			        foregroundColor: '#000000',
+			        fileType: 'jpg',
+			        correctLevel: uQRCode.defaults.correctLevel,
+			      })
+			    }
 
 
 		}
