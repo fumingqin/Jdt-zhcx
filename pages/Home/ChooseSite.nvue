@@ -413,7 +413,6 @@
 			uni.getStorage({ //获取起点
 				key: "StartPoint",
 				success: function(res) {
-				     console.log(res);
 					that.startAddress = res.data.addressName;
 					that.startLonLat = res.data.lng + "," + res.data.lat;
 					that.startLon = res.data.lng;
@@ -546,7 +545,6 @@
 						})
 						let userInfo = uni.getStorageSync('userInfo') || '';
 						let orderNumber = '';
-						console.log("区域"+that.destinationArea);
 						uni.request({							
 							url:taxi.Interface.AddExpressOrder_Passenger.value,
 							method:taxi.Interface.AddExpressOrder_Passenger.method,
@@ -568,8 +566,6 @@
 								estimateTime:that.estimateTime	 //预估时间
 							},
 							success:function(res){
-								console.log(res);
-								console.log("区域1"+that.destinationArea);
 								uni.hideLoading();
 								if(res.data.status){
 									that.showToast(res.data.msg);

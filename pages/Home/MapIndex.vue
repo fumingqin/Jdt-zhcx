@@ -281,7 +281,6 @@
 					district: address.ad_info.district,
 					city: address.ad_info.city,
 				}
-				console.log(this.Name)
 				if (this.Name == "qidian") {
 					uni.setStorage({
 						key: "StartPoint",

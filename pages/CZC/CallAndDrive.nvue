@@ -230,14 +230,13 @@
 		onReady() {
 			let that = this;
 			that.mapContext = uni.createMapContext("map", this);
-			uni.setKeepScreenOn({
-				keepScreenOn: true,
-			});
 		},
 		onHide() {
-			uni.setKeepScreenOn({
-				keepScreenOn: false,
-			});
+			let that = this;
+			console.log('onHide');
+			clearInterval(that.orderInterval);
+			clearInterval(that.directionInterval);
+			clearInterval(that.comingInterval);
 		},
 		methods: {
 			openBottomPopup: function() {
@@ -403,7 +402,7 @@
 									getApp().globalData.constantly();
 									if (that.hintIndex == 0) {
 										uni.showToast({
-											title: '已有司机接单中',
+											title: '已有司机接单',
 											icon: 'none'
 										});
 										that.hintIndex = 1;
