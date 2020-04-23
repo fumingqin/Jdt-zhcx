@@ -86,13 +86,13 @@
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
 					</view>
-
+					
 					<!-- 目的地 -->
 					<view class="dl_choice">目的地</view>
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap2" v-model="destination">{{destination}}</text>
 					</view>
-
+					
 					<!-- 出发时间 -->
 					<view class="dl_selectionTime">出发时间</view>
 					<view class="dl_time">

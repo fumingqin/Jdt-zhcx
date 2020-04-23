@@ -33,7 +33,7 @@
 					<uni-popup ref="popup" type="bottom">
 						<view class="te_boxVlew">
 							<view class="bv_titleView">
-								<text class="tv_text1">专线须知</text>
+								<text class="tv_text1">包车须知</text>
 								<text class="tv_text2 jdticon icon-fork " @click="close(1)"></text>
 							</view>
 							<scroll-view class="bv_content" scroll-y="ture">

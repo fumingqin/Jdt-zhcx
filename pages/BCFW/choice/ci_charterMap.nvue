@@ -122,42 +122,42 @@
 				reason:'请选择报警原因',
 				pickerValue:-1,
 				remark:'',
-				orderType:'进行中',
-				licensePlate:'闽A88888',
-				vehicleType:'豪华车型',
-				name:'张三丰',
-				age:'6年',
-				telephone:'134566456126',
-				day:'3天',
-				duration:'47:00',
-				cost:'200元',
-				overtimeCharge:'50元',
-				totalCost:'250元',
-				boardingPoint:'泉州客运中心',
-				destination:'泉州动车站',
-				totalLi:'150km',
-				totalDuration:'02:00:00',
-				// driverInformation:{
-				// 	licensePlate:'',
-				// 	vehicleType:'',
-				// 	name:'',
-				// 	age:'',
-				// 	telephone:'',
-				// 	day:'',
-				// 	duration:'',
-				// 	cost:'',
-				// 	overtimeCharge:'',
-				// 	totalCost:'',
-				// 	boardingPoint:'',
-				// 	destination:'',
-				// 	totalLi:'',
-				// 	totalDuration:'',
-				// },
+				// orderType:'进行中',
+				// licensePlate:'闽A88888',
+				// vehicleType:'豪华车型',
+				// name:'张三丰',
+				// age:'6年',
+				// telephone:'134566456126',
+				// day:'3天',
+				// duration:'47:00',
+				// cost:'200元',
+				// overtimeCharge:'50元',
+				// totalCost:'250元',
+				// boardingPoint:'泉州客运中心',
+				// destination:'泉州动车站',
+				// totalLi:'150km',
+				// totalDuration:'02:00:00',
+				driverInformation:{
+					licensePlate:'',
+					vehicleType:'',
+					name:'',
+					age:'',
+					telephone:'',
+					day:'',
+					duration:'',
+					cost:'',
+					overtimeCharge:'',
+					totalCost:'',
+					boardingPoint:'',
+					destination:'',
+					totalLi:'',
+					totalDuration:'',
+				},
 			}
 		},
 		onLoad() {
 			var that = this;
-			// that.routeInit();
+			that.routeInit();
 			that.setMarker(1, 118.600608, 24.889217, '../../../static/CTKY/start.png');
 			that.setMarker(2, 118.613688, 24.912702, '../../../static/CZC/End.png');
 			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
@@ -172,11 +172,11 @@
 		},
 		methods: {
 			//---------------------------------模拟接口数据---------------------------------
-			// async routeInit() {
-			// 	let driverInformation = await this.$api.lyfwcwd('driverInformation');
-			// 	this.driverInformation = driverInformation.data;
-			// 	// console.log(driverInformation.data)
-			// },
+			async routeInit() {
+				let driverInformation = await this.$api.lyfwcwd('driverInformation');
+				this.driverInformation = driverInformation.data;
+				// console.log(driverInformation.data)
+			},
 			
 			//订单查询方法，第一次进入时调用。
 			getOrderDetail:function(){
