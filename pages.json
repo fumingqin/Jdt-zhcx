@@ -576,6 +576,10 @@
 				"navigationBarTitleText": "选择车型"
 			}
         }
+        ,{
+            "path" : "pages/CTKY/SpecialBus/Home/specialBusHome",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
