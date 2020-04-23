@@ -544,7 +544,7 @@
 			"style": {}
 		}, 
 		{
-			"path": "pages/BCFW/home/ho_chartered",
+			"path": "pages/BCFW/bf_chartered",
 			"style": {
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
@@ -556,11 +556,11 @@
 				}
 			}
 		}, {
-			"path": "pages/BCFW/home/ho_choice",
+			"path": "pages/BCFW/bf_choice",
 			"style": {}
 		},
 		{
-			"path":"pages/BCFW/choice/ci_information",
+			"path":"pages/BCFW/bf_information",
 			"style": {
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
@@ -574,7 +574,7 @@
 			}
 		}
 	    ,{
-            "path" : "pages/BCFW/choice/ci_choiceVehicleType",
+            "path" : "pages/BCFW/bf_choiceVehicleType",
             "style" : {
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
@@ -587,13 +587,13 @@
 				"navigationBarTitleText": "选择车型"
 			}
         },{
-            "path" : "pages/BCFW/choice/charterMap",
+            "path" : "pages/BCFW/charterMap",
             "style" : {
 				"navigationStyle": "custom"
 			}
         }
         ,{
-            "path" : "pages/BCFW/choice/ci_charterMap",
+            "path" : "pages/BCFW/bf_charterMap",
             "style" : {
 				"navigationStyle": "custom"
 			}
@@ -637,7 +637,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/BCFW/choice/ci_charterMap", //启动页面，必选
+			"path": "", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

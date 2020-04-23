@@ -3,29 +3,29 @@
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
 		 :polyline="polyline" :markers="markers" :show-location="true">
 		</map>
-		<image @click="back" src="../../../static/BCFW/choice/charterMap/back1.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 40px;left: 1px;"></image>
+		<image @click="back" src="../../static/BCFW/choice/charterMap/back1.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 40px;left: 1px;"></image>
 		<view style="position: fixed;bottom: 0upx; ">
-			<image src="../../../static/BCFW/choice/charterMap/police.png" style="width: 120rpx;height: 120rpx;margin-left: 10rpx;" @click="callPolice"></image>
+			<image src="../../static/BCFW/choice/charterMap/police.png" style="width: 120rpx;height: 120rpx;margin-left: 10rpx;" @click="callPolice"></image>
 			<!-- 行程信息   -->
 			<scroll-view class="cm_content" scroll-y="true">
 				<view class="ct_state">
-					<text class="sa_text">{{orderType}}</text>
+					<text class="sa_text">{{driverInformation.orderType}}</text>
 				</view>
 				<!-- 司机信息 -->
 				<view class="ct_information" >
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
-						<text class="te_text">车牌号:{{licensePlate}}</text>
-						<text class="te_text">车型:{{vehicleType}}</text>
+						<text class="te_text">车牌号:{{driverInformation.licensePlate}}</text>
+						<text class="te_text">车型:{{driverInformation.vehicleType}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">姓名:{{name}}</text>
-						<text class="te_text">驾龄:{{age}}</text>
+						<text class="te_text">姓名:{{driverInformation.name}}</text>
+						<text class="te_text">驾龄:{{driverInformation.age}}年</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">电话:{{telephone}}</text>
+						<text class="te_text">电话:{{driverInformation.telephone}}</text>
 					</view>
-					<view class="if_button" v-if="orderType == '进行中' || orderType == '待发车'">
+					<view class="if_button" v-if="driverInformation.orderType == '进行中' || driverInformation.orderType == '待发车'">
 						<button class="bt_remind3" type="warn">联系司机</button>
 					</view>
 				</view>
@@ -35,27 +35,27 @@
 				<view class="ct_feeDetails">
 					<text class="if_topTitle2">费用详情</text>
 					<view class="if_text">
-						<text class="te_text">包车天数:{{day}}</text>
-						<text class="te_text">已包时长:{{duration}}</text>
+						<text class="te_text">包车天数:{{driverInformation.day}}天</text>
+						<text class="te_text">已包时长:{{driverInformation.duration}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">包车费用:{{cost}}</text>
-						<text class="te_text">超时费用:{{overtimeCharge}}</text>
+						<text class="te_text">包车费用:{{driverInformation.cost}}元</text>
+						<text class="te_text">超时费用:{{driverInformation.overtimeCharge}}元</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">总计:{{totalCost}}</text>
+						<text class="te_text">总计:{{driverInformation.totalCost}}元</text>
 					</view>
 				</view>
 				<!-- 路线信息 -->
 				<view class="ct_routeInformation">
 					<text class="if_topTitle3">路线信息</text>
 					<view class="if_text">
-						<text class="te_text">上车点:{{boardingPoint}}</text>
-						<text class="te_text">目的地:{{destination}}</text>
+						<text class="te_text">上车点:{{driverInformation.boardingPoint}}</text>
+						<text class="te_text">目的地:{{driverInformation.destination}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">总里程:{{totalLi}}</text>
-						<text class="te_text">总时长:{{totalDuration}}</text>
+						<text class="te_text">总里程:{{driverInformation.totalLi}}</text>
+						<text class="te_text">总时长:{{driverInformation.totalDuration}}</text>
 					</view>
 				</view>
 			</scroll-view>
@@ -83,10 +83,10 @@
 </template>
 
 <script>
-	import taxi from '../../../components/BCFW/Czc.js';
-	import uniIcons from "../../../components/BCFW/uni-icons/uni-icons.vue";
-	import Map from '../../../components/BCFW/my-openMap/openMap.js';
-	import uniPopup from "../../../components/BCFW/choice/uni-popup/uni-popup.vue"
+	import taxi from '../../components/BCFW/Czc.js';
+	import uniIcons from "../../components/BCFW/uni-icons/uni-icons.vue";
+	import Map from '../../components/BCFW/my-openMap/openMap.js';
+	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
 	export default {
 		components: {
 			uniIcons,
@@ -138,6 +138,7 @@
 				// totalLi:'150km',
 				// totalDuration:'02:00:00',
 				driverInformation:{
+					orderType:'',
 					licensePlate:'',
 					vehicleType:'',
 					name:'',
@@ -158,8 +159,8 @@
 		onLoad() {
 			var that = this;
 			that.routeInit();
-			that.setMarker(1, 118.600608, 24.889217, '../../../static/CTKY/start.png');
-			that.setMarker(2, 118.613688, 24.912702, '../../../static/CZC/End.png');
+			that.setMarker(1, 118.600608, 24.889217, '../../static/CTKY/start.png');
+			that.setMarker(2, 118.613688, 24.912702, '../../static/CZC/End.png');
 			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
