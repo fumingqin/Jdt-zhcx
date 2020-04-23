@@ -31,7 +31,7 @@
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
+						<text class="Tk_text3">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
 					</view>
 				</view>
 			</view>
@@ -129,10 +129,20 @@
 					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
 				})
 			},
+			
 			replaceKey: function(e) {
 				this.ipt = e;
 				this.searchNow(e);
-			}
+			},
+			
+			//价格转换
+			priceConversion:function(data){
+				if(data =='暂无门票价格信息！'){
+					return 0
+				}else{
+					return data
+				}
+			},
 		}
 	}
 </script>

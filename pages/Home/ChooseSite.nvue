@@ -17,7 +17,7 @@
 										</view>
 										<view>
 											<input placeholder="请输入起点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectInitial('qidian')"
-											 v-model="initialPoint" />
+											 v-model="startAddress" />
 										</view>
 									</view>
 								</view>
@@ -28,7 +28,7 @@
 									</view>
 									<view>
 										<input placeholder="请输入终点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectDestination('zhongdian')"
-										 v-model="destination" />
+										 v-model="endAddress" />
 									</view>
 								</view>
 							</view>
@@ -105,7 +105,7 @@
 								<view style="border-width: 1px;border-color: #007AFF;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; "><text
 									 style="font-size: 18rpx;color: #007AFF;">最快</text></view>
 							</view>
-							<view><text style="font-size: 28rpx;"> 约{{TaxiCost}}元</text></view>
+							<view><text style="font-size: 28rpx;"> 约{{estimatePrice}}元</text></view>
 							<view><text style="font-size: 28rpx;"> {{Duration}}</text></view>
 						</view>
 						<view>
@@ -197,7 +197,7 @@
 		</view>
 		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运结束 -->
 		<view v-if="current == 2">
-			<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
+			<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startLon" :latitude="startLat"
 			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
 			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
 			 v-if="IsSearch">
@@ -236,7 +236,7 @@
 						</view>
 						<view style="align-items: center;justify-content: center;flex-direction: row;">
 							<text style="font-size: 30rpx;font-weight: 300;">预估&nbsp;&nbsp;</text>
-							<text style="font-size: 36rpx;padding-right: 20rpx;font-weight: 300;">{{TaxiCost}}&nbsp;元</text>
+							<text style="font-size: 36rpx;padding-right: 20rpx;font-weight: 300;">{{estimatePrice}}&nbsp;元</text>
 						</view>
 					</view>
 					<view style="margin-top: 40rpx;align-items: center;">
@@ -338,8 +338,8 @@
 				polyline: [],
 				tabIndex: 0,
 				index: 1,
-				initialPoint: "",
-				destination: "",
+				startAddress: "",//起点
+				endAddress: "",//终点
 				startlocation: {},
 				endlocation: {},
 				IsClick: true,
@@ -348,24 +348,24 @@
 				IsSearch: false,
 				markers: [],
 				showlocation: true,
-				Distance: '',
-				Duration: '',
+				Distance: '',//距离
+				Duration: '',//时间
 				historyAddress: [],
 				// query: '',
 				winheight: "",
 				current: 0,
-				mapheight: "",
-				historyheight: "",
-				pageheight: "",
+				mapheight: "",//地图高度
+				historyheight: "",//历史记录高度
+				pageheight: "",//页面高度
 				points: [],
 				polyline: [],
-				startLonLat: "",
-				endLonLat: "",
-				startlongitude: "",
-				startlatitude: "",
-				endlongitude: "",
-				endtlatitude: "",
-				TaxiCost: "",
+				startLonLat: "",//起点经纬度组合(路线规划用到)
+				endLonLat: "",//终点点经纬度组合(路线规划用到)
+				startLon: "",//起点经度
+				startLat: "",//起点纬度
+				endLon: "",//终点经度
+				endLat: "",//终点纬度
+				estimatePrice: "",//预估价格
 				intervalAround: 0,
 				// map: '',
 				// tcky_selectStartStation: '泉州客运中心站',
@@ -375,7 +375,7 @@
 				disabled:true,
 				vehicleType:'出租车', //车辆类型
 				destinationArea:'',   //目标区域
-				estimateDistanceTime:0,//预计时长
+				estimateTime:0,//预计时长
 				estimateDistance:0//预计里程
 			}
 		},
@@ -391,8 +391,8 @@
 			uni.getLocation({ //获取当前定位
 				type: 'wgs84',
 				success: function(res) {
-					that.startlongitude = res.longitude;
-					that.startlatitude = res.latitude;
+					that.startLon = res.longitude;
+					that.startLat = res.latitude;
 				}
 			});
 			if (options.current) {
@@ -413,11 +413,10 @@
 			uni.getStorage({ //获取起点
 				key: "StartPoint",
 				success: function(res) {
-				     console.log(res);
-					that.initialPoint = res.data.addressName;
+					that.startAddress = res.data.addressName;
 					that.startLonLat = res.data.lng + "," + res.data.lat;
-					that.startlongitude = res.data.lng;
-					that.startlatitude = res.data.lat;
+					that.startLon = res.data.lng;
+					that.startLat = res.data.lat;
 					that.startlocation = res.data;
 					// console.log(that.startLonLat);
 				}
@@ -425,10 +424,10 @@
 			uni.getStorage({ //获取终点
 				key: "EndPoint",
 				success: function(res) {
-					that.destination = res.data.addressName;
+					that.endAddress = res.data.addressName;
 					that.endLonLat =res.data.lng + "," + res.data.lat;
-					that.endlongitude = res.data.lng;
-					that.endtlatitude = res.data.lat;
+					that.endLon = res.data.lng;
+					that.endLat = res.data.lat;
 					that.endlocation = res.data;
 					that.destinationArea = res.data.district;//目标区域
 				}
@@ -440,32 +439,13 @@
 					that.Passenger = res.data;
 				}
 			});
+				that.setHeight();
 		},
 		mounted() {
 			//动态设置高度
 			var that = this;
 			// that.map=uni.createMapContext("map555",this);
-			setTimeout(function(){
-				let query = uni.createSelectorQuery().in(that).select("#ceshi");
-				query.fields({
-					size: true,
-					scrollOffset: true
-				}, data => {
-					that.winheight = data.height + 'px';
-					uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
-						success: function(res) {
-							that.historyheight = (res.windowHeight - data.height - 108) + "px";
-							that.pageheight = res.windowHeight + "px";
-							that.mapheight = (res.windowHeight - data.height) + "px";
-							if(res.platform=="ios"){
-								// that.historyheight = (res.windowHeight - data.height - 130) + "px";
-							    // that.winheight=data.height+25+'px';
-								that.disabled=false;
-							}
-						}
-					})
-				}).exec();
-			},200)
+			that.setHeight();
 			
 		},
 		onReady: function() {
@@ -478,6 +458,30 @@
 					icon:icon
 				})
 			},
+			setHeight:function(){
+				var that=this;
+				setTimeout(function(){
+					let query = uni.createSelectorQuery().in(that).select("#ceshi");
+					query.fields({
+						size: true,
+						scrollOffset: true
+					}, data => {
+						that.winheight = data.height + 'px';
+						uni.getSystemInfo({ //设置地图高度为屏幕可使用的高度
+							success: function(res) {
+								that.historyheight = (res.windowHeight - data.height - 108) + "px";
+								that.pageheight = res.windowHeight + "px";
+								that.mapheight = (res.windowHeight - data.height) + "px";
+								if(res.platform=="ios"){
+									// that.historyheight = (res.windowHeight - data.height - 130) + "px";
+								    // that.winheight=data.height+25+'px';
+									that.disabled=false;
+								}
+							}
+						})
+					}).exec();
+				},200)
+			},
 			onClickItem(e) { //tab点击事件
 				var that = this;
 				if (that.current !== e.currentIndex) {
@@ -486,8 +490,8 @@
 				if (that.current == 1 && this.isPupop) {
 					uni.clearStorage("StartPoint");
 					uni.clearStorage("EndPoint");
-					that.initialPoint = '';
-					that.destination = '';
+					that.startAddress = '';
+					that.endAddress = '';
 					//客运弹框
 					that.open();
 				}
@@ -508,11 +512,12 @@
 					key: 'endlocation',
 					data: that.historyAddress[index],
 					success: function(res) {
-						that.destination = that.historyAddress[index].addressName;
+						that.endAddress = that.historyAddress[index].addressName;
 						that.endLonLat = that.historyAddress[index].lng + "," + that.historyAddress[index].lat;
-						that.endlongitude = that.historyAddress[index].lng;
-						that.endtlatitude = that.historyAddress[index].lat;
+						that.endLon = that.historyAddress[index].lng;
+						that.endLat = that.historyAddress[index].lat;
 						that.endlocation = that.historyAddress[index];
+						that.destinationArea = that.historyAddress[index].district;
 					}
 				});
 			},
@@ -536,32 +541,32 @@
 						})
 					} else {
 						uni.showLoading({
-							title:'加载中'
+							title:'加载中',
+							mask:true
 						})
 						let userInfo = uni.getStorageSync('userInfo') || '';
 						let orderNumber = '';
-						uni.request({
+						uni.request({							
 							url:taxi.Interface.AddExpressOrder_Passenger.value,
 							method:taxi.Interface.AddExpressOrder_Passenger.method,
 							data:{
-								startLon:that.startlongitude,
-								startLat:that.startlatitude,
-								endLon:that.endlongitude,
-								endLat:that.endtlatitude,         
-								startAddress:that.initialPoint, //起点
-								endAddress:that.destination,    //终点
+								startLon:that.startLon,
+								startLat:that.startLat,
+								endLon:that.endLon,
+								endLat:that.endLat,         
+								startAddress:that.startAddress, //起点
+								endAddress:that.endAddress,    //终点
 								orderType: that.IsClick?'实时':'预约',
 								passengers:JSON.stringify(that.Passenger),
 								vehicleType:that.vehicleType,//现在暂时只有出租车
 								appointmentTime:that.selecttime==='点击选择时间'?utils.timeTodate(taxi.dateFormat.dateformat, new Date().getTime()):that.selecttime, //预约时间
-								estimatePrice:that.TaxiCost,     //预估价格
+								estimatePrice:that.estimatePrice,     //预估价格
 								userId:userInfo.userId,
 								estimateDistance:that.estimateDistance,			 //预估里程
 								destinationArea:that.destinationArea,//目标区域
-								estimateDistanceTime:that.estimateDistanceTime	 //预估时间
+								estimateTime:that.estimateTime	 //预估时间
 							},
 							success:function(res){
-								console.log(res);
 								uni.hideLoading();
 								if(res.data.status){
 									that.showToast(res.data.msg);
@@ -600,7 +605,7 @@
 			},
 			selectPassenger: function() { //选择乘车人
 				uni.navigateTo({
-					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=1',
+					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=4',
 					animationType: 'pop-in',
 					animationDuration: 200
 				});
@@ -619,12 +624,12 @@
 					//监听事件,监听下个页面返回的值
 					uni.$on('startstaionChange', function(data) {
 					    // data即为传过来的值，给上车点赋值
-						that.initialPoint = data.data;
+						that.startAddress = data.data;
 					    //清除监听，不清除会消耗资源
 					    uni.$off('startstaionChange');
 					});
 					uni.navigateTo({
-						url:'../CTKY/homeSattionPick?&station=' + 'qidian'
+						url:'../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian'
 					})
 				}else {
 					uni.navigateTo({
@@ -640,10 +645,10 @@
 							key: 'startlocation',
 							data: res,
 							success: function() {
-								that.initialPoint = res.name;
+								that.startAddress = res.name;
 								that.startLonLat = res.longitude + "," + res.latitude;
-								that.startlongitude = res.longitude;
-								that.startlatitude = res.latitude;
+								that.startLon = res.longitude;
+								that.startLat = res.latitude;
 								that.startlocation = res;
 							}
 						});
@@ -658,12 +663,12 @@
 					//监听事件,监听下个页面返回的值，给下车点赋值
 					uni.$on('endStaionChange', function(data) {
 					    // data即为传过来的值
-						that.destination = data.data;
+						that.endAddress = data.data;
 					    //清除监听，不清除会消耗资源
 					    uni.$off('endStaionChange');
 					});
 					uni.navigateTo({
-						url:'../CTKY/homeSattionPick?&station=' + 'zhongdian'
+						url:'../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'zhongdian'
 					})
 				}else {
 					uni.navigateTo({
@@ -679,10 +684,10 @@
 							key: 'endlocation',
 							data: res,
 							success: function() {
-								that.destination = res.name;
+								that.endAddress = res.name;
 								that.endLonLat = res.longitude + "," + res.latitude;
-								that.endlongitude = res.longitude;
-								that.endtlatitude = res.latitude;
+								that.endLon = res.longitude;
+								that.endLat = res.latitude;
 								that.endlocation = res;
 							}
 						});
@@ -691,10 +696,10 @@
 			},
 			exchange: function() { //始末位置交换
 				var that = this;
-				var newinitialPoint = that.initialPoint;
+				var newstartAddress = that.startAddress;
 				var newstartlocation = that.startlocation;
-				var newstartlatitude = that.startlatitude;
-				var newstartlongitude = that.startlongitude;
+				var newstartLat = that.startLat;
+				var newstartLon = that.startLon;
 				var newstartLonLat=that.startLonLat;
 				that.startLonLat =that.endLonLat;
 				that.endLonLat=newstartLonLat;
@@ -702,20 +707,20 @@
 					key: 'startlocation',
 					data: that.endlocation,
 					success: function() {
-						that.initialPoint = that.destination;
+						that.startAddress = that.endAddress;
 						that.startlocation = that.endlocation;
-						that.startlatitude = that.endtlatitude;
-						that.startlongitude = that.endlongitude;
+						that.startLat = that.endLat;
+						that.startLon = that.endLon;
 					}
 				});
 				uni.setStorage({
 					key: 'endlocation',
 					data: newstartlocation,
 					success: function() {
-						that.destination = newinitialPoint;
+						that.endAddress = newstartAddress;
 						that.endlocation = newstartlocation;
-						that.endtlatitude = newstartlatitude;
-						that.endlongitude = newstartlongitude;
+						that.endLat = newstartLat;
+						that.endLon = newstartLon
 					}
 				});
 			},
@@ -724,7 +729,7 @@
 				that.markers = [];
 				clearInterval(that.intervalAround);
 				var Isrepeat = true;
-				if (that.initialPoint == '' || that.destination == '') {
+				if (that.startAddress == '' || that.endAddress == '') {
 					uni.showToast({
 						title: "请输入起点或终点",
 						icon: 'none',
@@ -746,7 +751,7 @@
 					that.setMarkers();
 					uni.showLoading({
 						title: "正在查询",
-						// mask:true,
+						mask:true,
 					});
 					//获取数据,传入当前选择的模块index
 					that.getmessengeInfo(that.current);
@@ -771,8 +776,8 @@
 						url:'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
 						data: {
 							systemName:'泉运公司综合出行',
-							startPosition:this.initialPoint,
-							endPosition:this.destination,
+							startPosition:this.startAddress,
+							endPosition:this.endAddress,
 							date:date,
 						},
 						method:'POST',
@@ -829,8 +834,8 @@
 				var that = this;
 				var startmarker = { //起点
 					id: 0,
-					latitude: that.startlatitude,
-					longitude: that.startlongitude,
+					latitude: that.startLat,
+					longitude: that.startLon,
 					title: '在这上车',
 					zIndex: '1',
 					iconPath: '../../static/CZC/Start.png',
@@ -855,8 +860,8 @@
 				};
 				var endmarker = {
 					id: 1,
-					latitude: that.endtlatitude,
-					longitude: that.endlongitude,
+					latitude: that.endLat,
+					longitude: that.endLon,
 					title: '在这下车',
 					zIndex: '1',
 					iconPath: '../../static/CZC/End.png',
@@ -889,7 +894,7 @@
 			},
 			SecondToMinutes:function(time){
 				var that = this;
-				return time / 60;
+				return Math.ceil(time / 60);
 			},
 			Timechange: function(time) { //时间转换
 				var that = this;
@@ -958,14 +963,14 @@
 
 						var polylineArr = [];
 						var points = [];
-						that.TaxiCost = res.data.TaxiCost;
+						that.estimatePrice = res.data.TaxiCost;
 						if ((res.data.Distance / 1000) > 1) {
 							that.Distance = res.data.Distance / 1000 + "公里";
 						} else {
 							that.Distance = res.data.Distance + "米";
 						}
 						that.estimateDistance = res.data.Distance / 1000;
-						that.estimateDistanceTime = that.SecondToMinutes(res.data.Duration);
+						that.estimateTime = that.SecondToMinutes(res.data.Duration);
 						that.Timechange(res.data.Duration);
 						polylineArr = res.data.Polyline;
 
@@ -1010,7 +1015,7 @@
 				let dateArray = param.firstDepartureTime.split('T');
 				let date = dateArray[0];
 				//页面传参通过地址后面添加参数 shuttleType="直达班车"是普通购票1是定制班车
-				var params='../CTKY/selectTickets?&startStation=' + param.startStaion +'&endStation=' + param.endStation + '&date=' + date + '&isNormal=' + param.shuttleType;
+				var params='../CTKY/TraditionSpecial/Order/selectTickets?&startStation=' + param.startStaion +'&endStation=' + param.endStation + '&date=' + date + '&isNormal=' + param.shuttleType;
 				uni.navigateTo({
 					url:params
 				})

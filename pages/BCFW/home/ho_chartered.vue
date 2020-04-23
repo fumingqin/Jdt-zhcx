@@ -62,7 +62,8 @@
 					height:94upx;
 					background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
 					box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
-					">选车型</button>
+					"
+					 @click="subit">选车型</button>
 				</view>
 
 				<!-- 底部 -->
@@ -85,13 +86,13 @@
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
 					</view>
-
+					
 					<!-- 目的地 -->
 					<view class="dl_choice">目的地</view>
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap2" v-model="destination">{{destination}}</text>
 					</view>
-
+					
 					<!-- 出发时间 -->
 					<view class="dl_selectionTime">出发时间</view>
 					<view class="dl_time">
@@ -112,7 +113,8 @@
 						height:94upx;
 						background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
 						box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
-						">选车型</button>
+						"
+					 @click="subit">选车型</button>
 				</view>
 
 				<!-- 底部 -->
@@ -158,7 +160,15 @@
 				startlatitude: "", //出发点纬度
 				destination: '', //目的地
 				dayContent: [], //选择天数
-				dayContentObject: [], //天数
+				isNormal: 0, //判断是普通购票还是定制班车默认是普通购票
+				homePageInfo: {
+					initialPoint: '', //出发地
+					destination: '', //目的地
+					datestring: '', //出发时间
+					dayContentObject: '', //选择天数
+					privateSite: '', //专线
+
+				},
 			}
 		},
 		onLoad() {
@@ -187,7 +197,7 @@
 			godetail: function(e) {
 				console.log(e)
 				this.index = e.target.value;
-				this.dayContentObject = this.dayContent[e.target.value];
+				this.homePageInfo.dayContentObject = this.dayContent[e.target.value];
 			},
 
 			//---------------------------------点击起点站---------------------------------
@@ -246,7 +256,7 @@
 				});
 			},
 
-			//------------------------------查看景点按钮弹框事件-----------------------------
+			//------------------------------弹框事件-----------------------------------------
 
 			open() {
 				// 需要在 popup 组件，指定 ref 为 popup
@@ -331,6 +341,69 @@
 					this.normalPickerNum = 0;
 					this.specialPickerNum = 1;
 					this.isNormal = 1; //当前是定制班车
+				}
+			},
+
+			//------------------------------提交数据-------------------------------------
+			subit: function() {
+				if(this.isNormal == 0){
+					if(this.privateSite == '请选择专线'){
+						uni.showToast({
+							title: '请选择专线',
+							icon: 'none'
+						})
+					}else if(this.initialPoint == '请选择上车点'){
+						uni.showToast({
+							title: '请选择上车点',
+							icon: 'none'
+						})
+					}else{
+						this.homePageInfo.privateSite = this.privateSite;
+						this.homePageInfo.initialPoint = this.initialPoint;
+						this.homePageInfo.destination = this.destination;
+						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.dayContentObject = this.dayContent[this.index];
+						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+						// console.log(this.vehicleSelection[this.value])
+						uni.setStorage({
+							key: 'homePageInfo',
+							data: this.homePageInfo,
+							success: () => {
+								uni.navigateTo({
+									url: '../choice/ci_choiceVehicleType?isNormal=' + this.isNormal
+								})
+							}
+						})
+					}
+				}else if(this.isNormal == 1){
+					if(this.initialPoint == '请选择上车点'){
+						uni.showToast({
+							title: '请选择上车点',
+							icon: 'none'
+						})
+					}else if(this.destination == '请选择目的点'){
+						uni.showToast({
+							title: '请选择目的点',
+							icon: 'none'
+						})
+					} else{
+						this.homePageInfo.privateSite = this.privateSite;
+						this.homePageInfo.initialPoint = this.initialPoint;
+						this.homePageInfo.destination = this.destination;
+						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.dayContentObject = this.dayContent[this.index];
+						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+						// console.log(this.vehicleSelection[this.value])
+						uni.setStorage({
+							key: 'homePageInfo',
+							data: this.homePageInfo,
+							success: () => {
+								uni.navigateTo({
+									url: '../choice/ci_choiceVehicleType?isNormal=' + this.isNormal
+								})
+							}
+						})
+					}
 				}
 			},
 		}

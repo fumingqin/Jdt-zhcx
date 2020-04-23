@@ -32,7 +32,7 @@
 		</view>
 
 		<!-- 消息通告 -->
-		<view class="notice">
+		<!-- <view class="notice">
 			<view class="zl_content">
 				<image class="zl_noImage" src="../../static/Home/ho_zhly/xiaoxitonggao.png" mode="aspectFill"></image>
 				<view class="zl_noContent">
@@ -44,45 +44,45 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 
 		<!-- 旅游推荐 -->
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
 					<text class="zl_reTitle">旅游推荐</text>
-					<text class="zl_reMore">更多></text>
+					<!-- <text class="zl_reMore">更多></text> -->
 				</view>
 			</view>
 			<view class="zl_reContent2">
 				<view class="zl_contentImage1">
 					<!-- 泉州小西埕 -->
 					<view class="ct_content1">
-						<image class="ct_image1" :src="recommendedContent[0].rc_image" mode="aspectFill"></image>
-						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{recommendedContent[0].rc_text}}</text>
+						<image class="ct_image1" :src="sixPalaceList[0].ticketImage" mode="aspectFill"></image>
+						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketName}}</text>
 					</view>
 					<!-- 稻田摸鱼 -->
 					<view class="ct_content2">
-						<image class="ct_image2" :src="recommendedContent[1].rc_image" mode="aspectFill"></image>
-						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{recommendedContent[1].rc_text}}</text>
+						<image class="ct_image2" :src="sixPalaceList[1].ticketImage" mode="aspectFill"></image>
+						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketName}}</text>
 					</view>
 				</view>
 
 				<view class="zl_contentImage2">
 					<!-- 泉州钟楼 -->
 					<view class="ct_content3">
-						<image class="ct_image3" :src="recommendedContent[2].rc_image" mode="aspectFill"></image>
-						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{recommendedContent[2].rc_text}}</text>
+						<image class="ct_image3" :src="sixPalaceList[2].ticketImage" mode="aspectFill"></image>
+						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketName}}</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
 					<view class="ct_content4">
-						<image class="ct_image4" :src="recommendedContent[3].rc_image" mode="aspectFill"></image>
-						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{recommendedContent[3].rc_text}}</text>
+						<image class="ct_image4" :src="sixPalaceList[3].ticketImage" mode="aspectFill"></image>
+						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketName}}</text>
 					</view>
 					<!-- 七彩官畲 -->
 					<view class="ct_content5">
-						<image class="ct_image5" :src="recommendedContent[4].rc_image" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{recommendedContent[4].rc_text}}</text>
+						<image class="ct_image5" :src="sixPalaceList[4].ticketImage" mode="aspectFill"></image>
+						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketName}}</text>
 					</view>
 				</view>
 			</view>
@@ -122,6 +122,27 @@
 				},{
 					rc_image : ''
 				}], //推荐内容
+				
+				sixPalaceList: [{
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}, {
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}, {
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}, {
+					ticketId: '',
+					ticketName: '',
+					ticketImage: '',
+				}],
+				
+				
+				
 				goodsList: [],
 			}
 		},
@@ -160,6 +181,15 @@
 				setTimeout(()=>{
 					uni.stopPullDownRefresh();
 				},1000)
+				
+				uni.request({
+					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=' +this.regionWeixin,
+					method:'POST',
+					success:(res) => { 
+						console.log(res)
+						this.sixPalaceList = res.data.data;
+					}
+				})
 			},
 			
 			//资讯详情页
@@ -366,7 +396,7 @@
 	// 旅游推荐
 	.zl_recommend {
 		background: #fff;
-		margin-top: 20upx;
+		margin-top: 147upx;
 		padding: 0 31upx;
 
 		.zl_reContent {
@@ -436,6 +466,9 @@
 						bottom: 0;
 						padding: 11upx 15upx;
 						color: #fff;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
 					}
 				}
 			}
@@ -462,6 +495,9 @@
 						bottom: 0;
 						padding: 11upx 15upx;
 						color: #fff;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
 					}
 				}
 				// 泉州洛阳桥
@@ -483,6 +519,9 @@
 						bottom: 0;
 						padding: 11upx 15upx;
 						color: #fff;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
 					}
 				}
 				// 七彩官畲
@@ -504,6 +543,9 @@
 						bottom: 0;
 						padding: 11upx 15upx;
 						color: #fff;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
 					}
 				}
 			}
