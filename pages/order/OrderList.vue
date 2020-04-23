@@ -261,7 +261,7 @@
 					
 							<view class="CTKYBtnView">
 								<button class="allBtn">删除</button>
-								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.state=='已使用'">投诉</button>
 							</view>
 						</view>
@@ -374,7 +374,7 @@
 								
 							<view class="CTKYBtnView" v-if="item.orderState=='待使用'">
 								<button class="allBtn">车辆位置</button>
-								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn QRCode">二维码</button>
 								<button class="allBtn">选座</button>
 								<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
@@ -492,7 +492,7 @@
 								
 							<view class="CTKYBtnView" v-if="item.state=='7'">
 								<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
-								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
 								
 							</view>
@@ -614,7 +614,7 @@
 							</view>
 								
 							<view class="CTKYBtnView" v-if="item.state=='已取消'">
-								<button class="allBtn" @tap="detail(item.titleIndex)">详情</button>
+								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
 								<button class="allBtn" @tap="del(index)">删除</button>
 							</view>
 						</view>

@@ -17,7 +17,7 @@
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
 			</view> -->
 			<view class="tabBlock">
-				<view class="tabItem" @click="godetail('/pages/CTKY/ctkyIndex')">
+				<view class="tabItem" @click="godetail('/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<text class="tabItem-font">车票订购</text>
 				</view>
