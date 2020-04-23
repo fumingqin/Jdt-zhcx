@@ -196,7 +196,12 @@
 														uni.switchTab({  //返回首页
 															url:'/pages/Home/Index',
 														}) 
+													}else if(that.urlData==2){
+														uni.switchTab({  //返回订单页
+															url:'/pages/order/OrderList',
+														}) 
 													}else{
+														console.log("返回上一页")
 														uni.navigateBack();//返回上一页
 													}
 												}
@@ -384,7 +389,13 @@
 				// uni.switchTab({
 				// 	url:'/pages/GRZX/user'
 				// })
-				uni.navigateBack();
+				if(that.urlData==2){
+					uni.switchTab({  //返回订单页
+						url:'/pages/order/OrderList',
+					}) 
+				}else{
+					uni.navigateBack();
+				}
 			},
 			//------------判断是否为base64格式-----------
 			isBase64:function(str) {
