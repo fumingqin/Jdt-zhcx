@@ -465,17 +465,17 @@
 						// location.href = "/Order/BaseCallback/" + flowID;
 						alert("支付成功");
 						uni.redirectTo({
-							url: '/pages/CTKY/CTKYPaySuccess?&orderNum=' + that.orderNum,
+							url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
 						})
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						alert("您取消了支付，请重新支付");
 						uni.redirectTo({
-							url: '/pages/CTKY/CTKYPayFail?&orderNum=' + that.orderNum,
+							url:'./CTKYPayFail?&orderNum=' + that.orderNum,
 						})
 					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
 						alert("支付失败，请重新支付");
 						uni.redirectTo({
-							url: '/pages/CTKY/CTKYPayFail?&orderNum=' + that.orderNum,
+							url:'./CTKYPayFail?&orderNum=' + that.orderNum,
 						})
 					} else {
 						// location.href = "/Coach/GetCoach";

@@ -629,7 +629,7 @@
 					    uni.$off('startstaionChange');
 					});
 					uni.navigateTo({
-						url:'../CTKY/homeSattionPick?&station=' + 'qidian'
+						url:'../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian'
 					})
 				}else {
 					uni.navigateTo({
@@ -668,7 +668,7 @@
 					    uni.$off('endStaionChange');
 					});
 					uni.navigateTo({
-						url:'../CTKY/homeSattionPick?&station=' + 'zhongdian'
+						url:'../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'zhongdian'
 					})
 				}else {
 					uni.navigateTo({
@@ -1015,7 +1015,7 @@
 				let dateArray = param.firstDepartureTime.split('T');
 				let date = dateArray[0];
 				//页面传参通过地址后面添加参数 shuttleType="直达班车"是普通购票1是定制班车
-				var params='../CTKY/selectTickets?&startStation=' + param.startStaion +'&endStation=' + param.endStation + '&date=' + date + '&isNormal=' + param.shuttleType;
+				var params='../CTKY/TraditionSpecial/Order/selectTickets?&startStation=' + param.startStaion +'&endStation=' + param.endStation + '&date=' + date + '&isNormal=' + param.shuttleType;
 				uni.navigateTo({
 					url:params
 				})
