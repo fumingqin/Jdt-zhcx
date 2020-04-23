@@ -4,24 +4,34 @@
 		</view>
 
 		<!-- 出发信息 -->
-		<view class="ci_siteView">
-			<view class="cs_departureContents1">
-				<view class="cs_depart">出发地 &nbsp;<text class="cs_departName">{{charteredBus.departName}}</text></view>
-				<view class="cs_borun">目的地 &nbsp;<text class="cs_borunName">{{charteredBus.borunName}}</text></view>
+		<view class="cvt_content" :hidden="startingContent==1">
+			<view class="ct_departureContents1">
+				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
+				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{privateSite}}</text></view>
 			</view>
-			<view class="cs_departureContents2">
-				<view class="cs_go">出发时间 &nbsp;<text class="cs_date">{{charteredBus.date}}</text></view>
-				<view class="cs_days">包车天数 &nbsp;<text class="cs_number">{{charteredBus.number}}天</text></view>
+			<view class="ct_departureContents2">
+				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
+			</view>
+		</view>
+		
+		<view class="cvt_content" :hidden="startingContent==0">
+			<view class="ct_departureContents1">
+				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
+				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{destination}}</text></view>
+			</view>
+			<view class="ct_departureContents2">
+				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
+				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{dayContentObject}}</text></view>
 			</view>
 		</view>
 
 		<!-- 车型信息 -->
 		<view class="ci_carModelView">
 			<text class="cmv_selected">已选车型</text>
-			<image class="cmv_car" :src="charteredBus.car"></image>
-			<text class="cmv_carName">{{charteredBus.carName}}</text>
-			<text class="cmv_carType">{{charteredBus.carType}}</text>
-			<text class="cmv_carMoney">{{charteredBus.carMoney}}元</text>
+			<image class="cmv_car" :src="car"></image>
+			<text class="cmv_carName">{{tabName}}</text>
+			<text class="cmv_carType">{{carName}}</text>
+			<text class="cmv_carMoney">{{price}}</text>
 		</view>
 
 		<!-- 包车人信息 -->
@@ -99,7 +109,7 @@
 			</view>
 		</uni-popup>
 		<view class="ci_affirmView">
-			<text class="av_money">￥{{charteredBus.carMoney}}</text>
+			<text class="av_money">￥{{price}}</text>
 			<view class="av_atOnceView">
 				<text class="aov_atOnce">立即包车</text>
 			</view>
@@ -130,6 +140,17 @@
 		},
 		data() {
 			return {
+				startingContent:0,//0不显示,1显示
+				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
+				destination:'',
+				initialPoint:'',
+				datestring:'',
+				privateSite:'',
+				dayContentObject:'',
+				car:'',
+				tabName:'',
+				carName:'',
+				price:'',
 				charteredBus: [],
 				nickName: '', //包车人姓名
 				nickId: '', //包车人证件号
@@ -169,40 +190,15 @@
 				],
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.isNormal = options.isNormal;
 			this.getcharteredBus();
 		},
-		onShow : function() {
-			uni.getStorage({
-				key: 'userInfo',
-				fail() {
-					uni.showToast({
-						icon: 'none',
-						title: '未登录无法添加乘车人,请先登录'
-					})
-					setTimeout(function() {
-						uni.navigateTo({
-							//loginType=1,泉运登录界面
-							//loginType=2,今点通登录界面
-							//loginType=3,武夷股份登录界面
-							url: '../../GRZX/userLogin?loginType=1'
-						})
-					}, 500);
-				},
-				success :() =>{
-					uni.getStorage({
-						key: 'passengerList',
-						success: (res) =>{
-							this.nickName=res.data[0].userName;
-							this.nickId=res.data[0].userCodeNum;
-							this.nickPhone=res.data[0].userPhoneNum;
-							 console.log(res.data[0]);						
-						}
-					})
-				}
-			})
-			
+		onShow() {
+			this.readData();
+			this.getSt();
 		},
+		
 		methods: {
 			//获取模拟数据
 			async getcharteredBus() {
@@ -210,11 +206,72 @@
 				this.charteredBus = charteredBus.data;
 				// console.log(charteredBus)
 			},
-			// async getnotice() {
-			// let notice = await this.$api.bcfwzyx('notice');
-			// this.notice = notice.data;
-			//  console.log(notice)
-			// },
+			readData:function(){
+				uni.getStorage({
+					key:'homePageInfo',
+					success:(res)=>{
+						this.addressContent = res.data;
+						console.log(res)
+						if(this.isNormal == 0){
+							this.startingContent = 0;
+						}else{
+							this.startingContent = 1;
+						}
+						
+					}
+				},500)
+			},
+			getSt:function(){
+				uni.getStorage({
+					key: 'userInfo',
+					fail() {
+						uni.showToast({
+							icon: 'none',
+							title: '未登录无法添加乘车人,请先登录'
+						})
+						setTimeout(function() {
+							uni.navigateTo({
+								//loginType=1,泉运登录界面
+								//loginType=2,今点通登录界面
+								//loginType=3,武夷股份登录界面
+								url: '../../GRZX/userLogin?loginType=1'
+							})
+						}, 500);
+					},
+					success :() =>{
+						uni.getStorage({
+							key: 'homePageInfo',
+							success: (res) =>{					
+								this.privateSite=res.data.privateSite;
+								this.destination=res.data.destination;
+								this.initialPoint=res.data.initialPoint;
+								this.datestring=res.data.datestring;
+								this.dayContentObject=res.data.dayContentObject;
+								 console.log(res.data);						
+							}
+						});
+						uni.getStorage({
+							key: 'vehicleInformation',
+							success: (res) =>{
+								this.car=res.data.car;
+								this.tabName=res.data.tabName;
+								this.carName=res.data.carName;
+								this.price=res.data.price;
+								 console.log(res.data);						
+							}
+						});
+						uni.getStorage({
+							key: 'passengerList',
+							success: (res) =>{
+								this.nickName=res.data[0].userName;
+								this.nickId=res.data[0].userCodeNum;
+								this.nickPhone=res.data[0].userPhoneNum;
+								 console.log(res.data[0]);						
+							}
+						})
+					}
+				})
+			},
 
 			//查看是否登入
 			choiceUser: function(e) {
@@ -336,7 +393,7 @@
 
 	.ci_view {
 		width: 100%;
-		height: 1720upx;
+		height: 1740upx;
 	}
 
 	//顶部背景
@@ -348,30 +405,30 @@
 	}
 
 	//出发内容
-	.ci_siteView {
+	.cvt_content {
 		position: absolute;
-		top: 180upx;
+		top: 197upx;
 		width: 698upx;
 		margin: 0 26upx;
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 		border-radius: 13px;
-
+	
 		//内容样式
-		.cs_departureContents1 {
+		.ct_departureContents1 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
-
-			.cs_depart {
+	
+			.ct_content1 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
 				width: 320upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
-				.cs_departName {
+	
+				.ct_content2 {
 					width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
@@ -379,8 +436,8 @@
 					font-weight: bold;
 				}
 			}
-
-			.cs_borun {
+	
+			.ct_content3 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
 				width: 240upx;
@@ -388,8 +445,8 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
-				.cs_borunName {
+	
+				.ct_content4 {
 					width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
@@ -398,23 +455,22 @@
 				}
 			}
 		}
-
+	
 		//内容样式
-		.cs_departureContents2 {
+		.ct_departureContents2 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
 			padding-bottom: 40upx;
-
-			.cs_go {
+	
+			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 320upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
-				.cs_date {
+	
+				.ct_content6 {
 					width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
@@ -422,8 +478,8 @@
 					font-weight: bold;
 				}
 			}
-
-			.cs_days {
+	
+			.ct_content7 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
 				width: 225upx;
@@ -431,8 +487,8 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
-				.cs_number {
+	
+				.ct_content8 {
 					width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
@@ -451,7 +507,7 @@
 		position: absolute;
 		border-radius: 13upx;
 		left: 25upx;
-		top: 400upx;
+		top: 420upx;
 
 		.cmv_selected {
 			font-size: 36upx;
@@ -506,7 +562,7 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
-		top: 860upx;
+		top: 880upx;
 
 		.cbv_charteredBusMessage {
 			font-size: 32upx;
@@ -599,7 +655,7 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
-		top: 1400upx;
+		top: 1420upx;
 
 		.cv_coupon {
 			font-size: 30upx;
@@ -636,7 +692,7 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
-		top: 1520upx;
+		top: 1540upx;
 
 		.nv_charteredBusNotice {
 			font-size: 30upx;

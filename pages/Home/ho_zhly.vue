@@ -51,6 +51,7 @@
 			<view>
 				<view class="zl_reContent">
 					<text class="zl_reTitle">旅游推荐</text>
+					<!-- <text class="zl_reMore">更多></text> -->
 				</view>
 			</view>
 			<view class="zl_reContent2">
