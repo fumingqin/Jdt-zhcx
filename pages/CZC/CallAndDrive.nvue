@@ -9,8 +9,9 @@
 			<!-- 司机未接单 -->
 			<view class="waitContent" elevation='5px'>
 				<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
-				<view style="margin-top: 50rpx;">
+				<view style="margin-top: 50rpx;align-items: center;">
 					<text class="isWaitText">正在等待司机接单...</text>
+					<text style="color: #999999;font-size: 32rpx;padding-top: 10rpx;" @click="cancleOrder">取消订单</text>
 				</view>
 			</view>
 		</view>
@@ -171,7 +172,7 @@
 				lat: "", //用户位置纬度
 				//接口数据
 				orderNumber: '',
-				vehicleNumber: '闽C1063',
+				vehicleNumber: '',
 				state: '', //订单状态
 				startLon: "", //开始
 				startLat: "",
@@ -182,6 +183,7 @@
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				driverPhone: '0', //司机电话号码
+				userInfo:[],
 				priceArr: [{
 						key: '起步价',
 						value: '10.0'
@@ -208,12 +210,13 @@
 						iconPath: '../../static/CZC/Alipay.png',
 						value: 'alipay',
 						checked: false
-					}
+					},
 				]
 			}
 		},
 		onLoad(option) {
 			let that = this;
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 			that.orderNumber = option.orderNumber;
 			getApp().globalData.orderNumber = that.orderNumber; //更改当前订单号
 			uni.getSystemInfo({
@@ -230,14 +233,13 @@
 		onReady() {
 			let that = this;
 			that.mapContext = uni.createMapContext("map", this);
-			uni.setKeepScreenOn({
-				keepScreenOn: true,
-			});
 		},
 		onHide() {
-			uni.setKeepScreenOn({
-				keepScreenOn: false,
-			});
+			let that = this;
+			console.log('onHide');
+			clearInterval(that.orderInterval);
+			clearInterval(that.directionInterval);
+			clearInterval(that.comingInterval);
 		},
 		methods: {
 			openBottomPopup: function() {
@@ -285,6 +287,7 @@
 							that.driverPhone = data.driverPhone; //司机电话
 							that.driverName = data.driverName;
 							that.vehicleNumber=data.vehicleNumber;//车牌号
+							console.log(data.vehicleNumber);
 							that.state = data.state; //订单状态
 							//绘制起终点标记
 							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
@@ -403,7 +406,7 @@
 									getApp().globalData.constantly();
 									if (that.hintIndex == 0) {
 										uni.showToast({
-											title: '已有司机接单中',
+											title: '已有司机接单',
 											icon: 'none'
 										});
 										that.hintIndex = 1;
@@ -531,7 +534,8 @@
 								url: taxi.Interface.CancelExpressOrderByOrderNum_Passenger.value,
 								method: taxi.Interface.CancelExpressOrderByOrderNum_Passenger.method,
 								data: {
-									OrderNumber: that.orderNumber
+									OrderNumber: that.orderNumber,
+									userId:that.userInfo.userId,
 								},
 								success: function(res) {
 									let data = res.data.data;

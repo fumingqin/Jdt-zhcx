@@ -28,7 +28,7 @@
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
+						<text class="Tk_text3">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
 					</view>
 				</view>
 			</view>
@@ -76,7 +76,7 @@
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
+						<text class="Tk_text3">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
 					</view>
 				</view>
 			</view>
@@ -93,7 +93,7 @@
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
+						<text class="Tk_text3">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
 					</view>
 				</view>
 			</view>
@@ -204,7 +204,7 @@
 				setTimeout(()=>{
 					uni.stopPullDownRefresh();
 				},1000)
-			},
+			},	
 			
 			//获取定位数据
 			Getpostion:function(){
@@ -411,6 +411,15 @@
 				}
 				
 				this.scenicList = this.scenicList.concat(sc);
+			},
+			 
+			//价格转换
+			priceConversion:function(data){
+				if(data =='暂无门票价格信息！'){
+					return 0
+				}else{
+					return data
+				}
 			},
 			 
 

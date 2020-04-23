@@ -413,7 +413,6 @@
 			uni.getStorage({ //获取起点
 				key: "StartPoint",
 				success: function(res) {
-				     console.log(res);
 					that.startAddress = res.data.addressName;
 					that.startLonLat = res.data.lng + "," + res.data.lat;
 					that.startLon = res.data.lng;
@@ -542,11 +541,11 @@
 						})
 					} else {
 						uni.showLoading({
-							title:'加载中'
+							title:'加载中',
+							mask:true
 						})
 						let userInfo = uni.getStorageSync('userInfo') || '';
 						let orderNumber = '';
-						console.log("区域"+that.destinationArea);
 						uni.request({							
 							url:taxi.Interface.AddExpressOrder_Passenger.value,
 							method:taxi.Interface.AddExpressOrder_Passenger.method,
@@ -568,8 +567,6 @@
 								estimateTime:that.estimateTime	 //预估时间
 							},
 							success:function(res){
-								console.log(res);
-								console.log("区域1"+that.destinationArea);
 								uni.hideLoading();
 								if(res.data.status){
 									that.showToast(res.data.msg);
@@ -608,7 +605,7 @@
 			},
 			selectPassenger: function() { //选择乘车人
 				uni.navigateTo({
-					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=1',
+					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=4',
 					animationType: 'pop-in',
 					animationDuration: 200
 				});
@@ -754,7 +751,7 @@
 					that.setMarkers();
 					uni.showLoading({
 						title: "正在查询",
-						// mask:true,
+						mask:true,
 					});
 					//获取数据,传入当前选择的模块index
 					that.getmessengeInfo(that.current);

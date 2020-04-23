@@ -221,8 +221,8 @@
 				title: '',
 				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
 				count: 1,
-				startStation:'',//上车点
-				endStation:'',//下车点
+				startStation:'',//定制班车上车点
+				endStation:'',//定制班车下车点
 				indexArray:[],//下标数组
 				startStaionIndex:'',
 				endStationIndex:'',
@@ -232,30 +232,6 @@
 						title: '新用户专享优惠券',
 						price: 5,
 						condition: 10,
-					},
-					{
-						couponID: '1',
-						title: '春节限时限量优惠券',
-						price: 50,
-						condition: 400,
-					},
-					{
-						couponID: '1',
-						title: '春节限时限量优惠券',
-						price: 50,
-						condition: 400,
-					},
-					{
-						couponID: '2',
-						title: '大型团购优惠券-今点通限量版',
-						price: 100,
-						condition: 800,
-					},
-					{
-						couponID: '3',
-						title: '大型团购优惠券-今点通限量版',
-						price: 200,
-						condition: 1000,
 					}],
 				couponIndex: '请选择优惠券', //优惠券默认内容
 				couponColor: '', //优惠券couponID，大于等于0触发价格判断事件
@@ -267,13 +243,14 @@
 				ticketDetail: [],
 				totalPrice:0,//车票总价格
 				passengerNum:0,//乘车人数量
+				shuttleType:'',//班车类型'定制班车''普通班车'
 			}
 		},
 		
 		onLoad(e) {
 			var that = this;
 			//给车票类型赋值，0：普通购票，不显示上下车点选择 1:定制班车，显示上下车点选择
-			this.isNormal = e.isNormal;
+			// this.isNormal = e.isNormal;
 			
 			uni.setNavigationBarTitle({
 				title: '填写订单'
@@ -282,9 +259,10 @@
 			uni.getStorage({
 				key: 'ticketDate',
 				success:function(data){
-					that.ticketDetail = data.data
-					that.totalPrice = data.data.fare
-					console.log(that.ticketDetail)
+					that.ticketDetail = data.data;//车票数组
+					that.totalPrice = data.data.fare;//价格
+					that.shuttleType = data.data.shuttleType;//班车类型
+					console.log('车票数据',that.ticketDetail)
 					if(data.data.insurePrice == 0) {
 						that.isInsurance = 0;
 					}else {
@@ -504,8 +482,15 @@
 					//计算价格
 					that.calculateTotalPrice();
 					//请求成功之后跳转到支付页面,传是否选择保险1:选择 0:未选择
+					var array = {
+						isInsurance : that.isInsurance,
+						totalPrice : that.totalPrice,
+						shuttleType : that.shuttleType,
+						getOnPoint : that.startStation,
+						getOffPoint : that.endStation
+					}
 					uni.navigateTo({
-						url:'/pages/CTKY/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice
+						url:'/pages/CTKY/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' + JSON.stringify(array)
 					})
 				}
 

@@ -107,70 +107,12 @@
 					</view>
 				</view>
 				
-				<!-- 包车定制 -->
-				<!-- 标签class命名：pd;全称：Purchase Date -->
-				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.title=='包车定制'">
-					<view class="pd_view">{{item.orderDate}}</view>
-					<view class="at_view">
-						<view class="at_titleView">
-							<image class="at_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="at_title">{{item.ticketTitle}}</text>
-							<text class="at_status">{{item.orderType}}</text>
-						</view>
-						<view class="at_contentView" style="display: flex;">
-							<view class="at_contentFrame">{{item.ticketComment_s1}}</view>	
-							<view class="at_contentFrame">{{item.ticketComment_s2}}</view>
-							<view class="at_contentFrame" v-if="item.ticketComment_s3 !== 'null'">{{item.ticketComment_s3}}</view>
-							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
-						</view>
-				
-						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
-				
-						<!-- 已使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='已使用'">
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
-						</view>
-				
-						<!-- 待使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='待使用'">
-							<view class="at_button at_btDelete" @click="open2(item.orderNumber)">退票</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="open(item)">二维码</view>
-						</view>
-				
-						<!-- 待支付 -->
-						<view class="at_buttonView" v-if="item.orderType=='待支付'">
-							<view class="at_button at_btDelete" @click="open3(item.orderNumber)">取消</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
-						</view>
-				
-						<!-- 已退票 -->
-						<view class="at_buttonView" v-if="item.orderType=='已退票'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-				
-						<!-- 已取消 -->
-						<view class="at_buttonView" v-if="item.orderType=='已取消'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-					</view>
-				</view>
-				
 				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.setTime}}</view>
+						<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
 					</view>
 					
 					<view class="whiteBg">
@@ -178,42 +120,42 @@
 						<view class="u-f-ac">
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
-								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{item.orderState}}</view>
+								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{item.state}}</view>
 							</view>
 						</view>
 						<!-- 时间-价格 -->
 						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
 							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
 							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
-								<view>{{item.setTime}}</view>
-								<view style="margin-right: 20rpx;">¥{{item.price}}</view>
+								<view>{{item.setOutTime}}</view>
+								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
 							</view>
 						</view>
 						<!-- 上车点 -->
 						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="bluering"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startStation}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
 						</view>
 						<!-- 下车点 -->
 						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="redring"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endStation}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
 				
 						<view class="CTKYBtnView">
-							<button class="allBtn" v-if="item.orderState=='待支付'" @tap="cancelTap(item.orderId)">取消</button>
+							<button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button>
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn" v-if="item.orderState=='已完成'" >投诉</button>
-							<button class="allBtn payBtn" v-if="item.orderState=='待支付'" @tap="keYunPay(index)" >去支付</button>
-							<button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.orderState=='已取消'" >删除</button>
-							<button class="allBtn" v-if="item.orderState=='待使用'" @tap="QRCodeTap">二维码</button>
-							<!-- <button class="allBtn" v-if="item.orderState=='待使用'"@tap="">选座</button> -->
+							<button class="allBtn" v-if="item.state=='已完成'" >投诉</button>
+							<button class="allBtn payBtn" v-if="item.state=='订单未支付'" @tap="keYunPay(index)" >去支付</button>
+							<button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'" >删除</button>
+							<button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button>
+							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
 						</view>
 					</view>
 				</view>
-				<empty-data :isShow="info.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
+			<empty-data :isShow="info.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 		</view>
 
 
@@ -291,41 +233,41 @@
 					<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 					<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 						<!-- 预定日期 -->
-						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-							<view class="reserveDate">预定日期：03-05</view>
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
+							<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
 						</view>
 						<view class="whiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderState}}</view>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
 							</view>
 					
 							<view style="display: flex; margin-top: -72rpx;">
 								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.price}}</view>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
 							</view>
 					
 							<view style="display: flex; margin-top: -16rpx;">
 								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
 							</view>
 					
 							<view style="display: flex; margin-top: 36rpx;">
 								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
 							</view>
 					
 							<view class="CTKYBtnView">
 								<button class="allBtn">删除</button>
 								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
-								<button class="allBtn" v-if="item.orderState=='已使用'">投诉</button>
+								<button class="allBtn" v-if="item.state=='已使用'">投诉</button>
 							</view>
 						</view>
 					</view>
 				</view>
-				<empty-data :isShow="finishArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+				<empty-data :isShow="finishArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 
 			<!-- 进行中 -->
@@ -405,29 +347,29 @@
 					<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 						<!-- 预定日期 -->
 						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-							<view class="reserveDate">预定日期：03-05</view>
+							<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
 						</view>
 						<view class="whiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderState}}</view>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -72rpx;">
 								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.price}}</view>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -16rpx;">
 								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: 36rpx;">
 								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
 							</view>
 								
 							<view class="CTKYBtnView" v-if="item.orderState=='待使用'">
@@ -435,13 +377,13 @@
 								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
 								<button class="allBtn QRCode">二维码</button>
 								<button class="allBtn">选座</button>
-								<button class="allBtn">退票</button>
+								<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
 								<button class="allBtn">联系司机</button>
 							</view>
 						</view>
 					</view>
 				</view>
-				<empty-data :isShow="goingArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+				<empty-data :isShow="goingArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 			
 
@@ -523,33 +465,33 @@
 					<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 						<!-- 预定日期 -->
 						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-							<view class="reserveDate">预定日期：{{item.setTime}}</view>
+							<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
 						</view>
 						<view class="whiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderState}}</view>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -72rpx;">
 								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.price}}</view>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -16rpx;">
 								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: 36rpx;">
 								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
 							</view>
 								
-							<view class="CTKYBtnView" v-if="item.orderState=='待支付'">
-								<button class="allBtn" @tap="cancelTap(item.orderId)">取消</button>
+							<view class="CTKYBtnView" v-if="item.state=='7'">
+								<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
 								<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
 								<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
 								
@@ -557,7 +499,7 @@
 						</view>
 					</view>
 				</view>
-				<empty-data :isShow="unfinishArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+				<empty-data :isShow="unfinishArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 			
 			
@@ -646,39 +588,39 @@
 					<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 						<!-- 预定日期 -->
 						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-							<view class="reserveDate">预定日期：03-05</view>
+							<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
 						</view>
 						<view class="whiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startStation}}-{{item.endStation}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.orderState}}</view>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -72rpx;">
 								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.price}}</view>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: -16rpx;">
 								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
 							</view>
 								
 							<view style="display: flex; margin-top: 36rpx;">
 								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endStation}}</view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
 							</view>
 								
-							<view class="CTKYBtnView" v-if="item.orderState=='已取消'">
+							<view class="CTKYBtnView" v-if="item.state=='已取消'">
 								<button class="allBtn" @tap="detail(item.titleIndex)">详情</button>
 								<button class="allBtn" @tap="del(index)">删除</button>
 							</view>
 						</view>
 					</view>
 				</view>
-				<empty-data :isShow="cancelArr.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+				<empty-data :isShow="cancelArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
 			</view>
 
 			<!-- 二维码弹框 -->
@@ -689,7 +631,7 @@
 						<text class="box_icon jdticon icon-fork " @click="close"></text>
 					</view>
 					<view class="box_qrCodeView">
-						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; margin-top: 24upx;"  />
+						<image class="box_qrCodeImage" :src="orderIndexData.orderQrCode" mode="aspectFill"></image>
 						<view class="box_qrCodeTextView">
 							<text class="box_qrCodeText">取票码：{{orderIndexData.orderTicketNumber}}</text>
 							<text class="box_qrCodeText">预订人数：{{orderIndexData.orderUserIndex}}人</text>
@@ -838,7 +780,6 @@
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
 	import emptyData from "@/components/CTKY/emptyData/emptyData.vue";//无数据时显示内容
-	import uQRCode from "@/common/uqrcode.js"
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -894,23 +835,15 @@
 		},
 		onLoad() {
 			var that = this;
+			//请求景区门票数据
+			that.toFinished();
 		},
 		onShow:function(){
-			//开始刷新---请求数据方法写在刷新的代理方法中
-			uni.startPullDownRefresh();
+			
 		},
 		onPullDownRefresh:function(){
 			var that = this;
-			//-------注意！！！！！-----出租车请求接口数据写在延时方法里-----出租车请求接口数据写在延时方法里-----出租车请求接口数据写在延时方法里
-			//景区请求接口数据-----景区----
 			that.toFinished();
-			//延时操作，避免异步加载造成数据不同步
-			setTimeout(function () {
-				//读取用户信息，请求客运订单数据----客运-------由于客运订单数据是加在info数组中，所以需要在获取景区门票数据时再请求一次，否则数据会被覆盖
-				that.getUserInfo();
-			 }, 1500);
-			
-			
 		},
 		methods: {
 			//-------------------------支付页面-------------------------
@@ -988,37 +921,32 @@
 			getKeYunOrderInfo:function() {
 				var that = this;
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getcpxsOrderList',
-					method:'POST',
-					header:{'content-type':'application/x-www-form-urlencoded'},
+					url:'http://111.231.109.113:8002/api/ky/searchOrder',
+					method:'GET',
+					header:{'content-type':'application/json'},
 					data: {
-						unid : that.userInfo.unid
+						clientID : that.userInfo.userId
 					},
 					success: (res) => {
-						//请求数据成功，停止刷新
 						uni.stopPullDownRefresh();
-						//由于界面是遍历info数组，所以需要把客运数据加入info中
-						//注意！！！---出租车也要将数据加入到info中---------------------出租车看这里------------------
-						if(res.data.data) {
+						console.log('11111',res.data);
+						if(res.data.status == true) {
 							for(var i = 0; i < res.data.data.length; i++) {
 								that.info.push(res.data.data[i]);
 							}
-							
-							that.finishArr = [];
-							that.goingArr = [];
-							that.unfinishArr = [];
-							that.cancelArr = [];
 							for (var i = 0; i < res.data.data.length; i++) {
-								if (res.data.data[i].orderState == '已完成' || res.data.data[i].orderState == '已使用') {
+								if (res.data.data[i].orderState == '已完成') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderState == '进行中' || res.data.data[i].orderState == '待使用') {
+								} else if (res.data.data[i].orderState == '进行中') {
 									that.goingArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderState == '未支付' || res.data.data[i].orderState == '待支付') {
+								} else if (res.data.data[i].orderState == '订单未支付') {
 									that.unfinishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderState == '已取消' || res.data.data[i].orderState == '已退票') {
+								} else if (res.data.data[i].orderState == '已取消') {
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
+						}else if(res.data.status == false) {
+							console.log('无客运车票数据');
 						}
 					},
 					fail(res) {
@@ -1035,65 +963,32 @@
 					url: '/pages/CTKY/orderDetail?&orderInfo=' + JSON.stringify(res)
 				})
 			},
-			// -------------------------客运取消-------------------------
-			cancelTap:function(param){
-				//param：订单id
-				var that = this;
-				console.log('param',param);
-				uni.request({
-					url:'http://218.67.107.93:9210/api/app/returnCpxsOrder',
-					method:'POST',
-					header:{'content-type':'application/x-www-form-urlencoded'},
-					data:{
-						id : param
-					},
-					success: (res) => {
-						uni.showToast({
-							title:res.data.msg,
-							icon:'none'
-						})
-						//刷新
-						this.info = [];
-						//景区订单数据
-						this.toFinished(); 
-						//客运订单数据
-						this.getUserInfo();
-					},
-					fail(res) {
-						console.log('错误',res);
-					}
-				})
-			},
-			// -------------------------客运删除-------------------------
-			keYunDel:function(param){
+			// -------------------------客运退票-------------------------
+			keYunRefundTicket: function(){
 				var that = this;
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/delCpxsOrder',
-					method:'POST',
-					header:{'content-type':'application/x-www-form-urlencoded'},
+					url:'http://111.231.109.113:8002/api/ky/RefundTicket_Flow',
+					method: 'GET',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
 					data:{
-						id : param
+						orderNumber: that.userInfo.userId,
+						clientID: that.userInfo.userId,
+						clientName: that.userInfo.nickname,
 					},
-					success: (res) => {
-						uni.showToast({
-							title:res.data.msg,
-							icon:'none'
-						})
-						//刷新
-						this.info = [];
-						//景区订单数据
-						this.toFinished(); 
-						//客运订单数据
-						this.getUserInfo();
+					success: (respones) => {
+						console.log('删除结果',respones)
 					},
-					fail(res) {
-						console.log('错误',res);
+					fail: (respones) => {
+						console.log(respones)
 					}
 				})
 			},
 			// -------------------------客运支付-------------------------
 			keYunPay: function(index){
 				var orderInfo = this.info[index];
+				console.log(orderInfo);
 				this.getTicketPaymentInfo(orderInfo);
 			},
 			//--------------------------获取车票支付参数--------------------------
@@ -1105,30 +1000,33 @@
 				uni.showLoading();
 				timer=setInterval(function(){
 					uni.request({
-						url: 'http://218.67.107.93:9210/api/app/getPayParam',
-						method: 'POST',
+						url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
+						method: 'GET',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
 						},
 						data: {
-							resultStr: res.resultStr,
-							id: res.orderId
+							orderNumber: res.orderNumber,
 						},
 						success: (res) => {
 							console.log('支付参数返回数据', res);
 							if(res.data.data != null) {
-								
-								that.keYunPaymentData = JSON.parse(res.data.data);
+								var info = JSON.parse(res.data.msg);
+								if(info.oldState == '结束') {
+									uni.showToast({
+										title:'订单已结束',
+										icon:'none',
+									})
+									clearInterval(timer);
+								}else {
+									that.keYunPaymentData = JSON.parse(res.data.data);
+									clearInterval(timer);
+								}
 								uni.hideLoading();
-								clearInterval(timer);
 							}
 							if (res.data.msg != null) {
 								//调起支付
 								// that.keYunPayment();
-								uni.showToast({
-									title: '请在2分钟内完成支付',
-									icon: 'none'
-								})
 								uni.hideLoading();
 								clearInterval(timer);
 							}
@@ -1194,36 +1092,45 @@
 			
 			toFinished: function() {
 				var that = this;
-				//请求数据之前清空之前所有数据
-				that.info = [];
 				uni.getStorage({
 					key:'userInfo',
 					success:(res) =>{
 						this.userInfo = res.data;
-						// console.log(res)
+						console.log(res)
 						uni.request({
 							url:'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' +that.userInfo.unid,
 							method:'POST',
 							success:(res)=>{
-								// console.log(res)
-								// console.log(that.info)
-								that.info = res.data.data;
-								that.finishArr = [];
-								that.goingArr = [];
-								that.unfinishArr = [];
-								that.cancelArr = [];
-								if(that.info){
-									for (var i = 0; i < that.info.length; i++) {
-										if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
-											that.finishArr.push(that.info[i]);
-										} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待使用') {
-											that.goingArr.push(that.info[i]);
-										} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
-											that.unfinishArr.push(that.info[i]);
-										} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票') {
-											that.cancelArr.push(that.info[i]);
+								if(res.data.msg == '获取订单列表成功！'){
+									that.info = res.data.data;
+									that.finishArr = [];
+									that.goingArr = [];
+									that.unfinishArr = [];
+									that.cancelArr = [];
+									if(that.info){
+										for (var i = 0; i < that.info.length; i++) {
+											if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
+												that.finishArr.push(that.info[i]);
+											} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待使用') {
+												that.goingArr.push(that.info[i]);
+											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
+												that.unfinishArr.push(that.info[i]);
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票') {
+												that.cancelArr.push(that.info[i]);
+											}
 										}
 									}
+									//客运
+									//获取用户信息
+									that.getUserInfo();
+									console.log('123');
+								}else {
+									that.info = [];
+									that.finishArr = [];
+									that.goingArr = [];
+									that.unfinishArr = [];
+									that.cancelArr = [];
+									that.getUserInfo();
 								}
 							}
 						})
@@ -1247,7 +1154,6 @@
 			//-------------------------景区门票-打开二维码弹框-------------------------
 			open(e) {
 					this.orderIndexData = e;
-					this.make(e);
 					this.$refs.popup.open()
 			},
 			//-------------------------景区门票-关闭二维码弹框-------------------------
@@ -1373,23 +1279,7 @@
 					})
 				}
 			})
-			},
-			
-			//生成二维码
-			make:function(e) {
-				console.log(e)
-			      uQRCode.make({
-			        canvasId: 'qrcode',
-			        componentInstance: this,
-			        text: e,
-			        size: 160,
-			        margin: 10,
-			        backgroundColor: '#ffffff',
-			        foregroundColor: '#000000',
-			        fileType: 'jpg',
-			        correctLevel: uQRCode.defaults.correctLevel,
-			      })
-			    }
+			}
 
 
 		}
