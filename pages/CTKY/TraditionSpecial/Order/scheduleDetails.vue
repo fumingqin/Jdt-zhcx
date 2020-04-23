@@ -29,7 +29,7 @@
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<view @tap="checkLocation" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>
-					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+					<image src="/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 				</view>
 			</view>
 			
@@ -39,14 +39,14 @@
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">
 						<view @tap="startStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{startStation}}</view>
-						<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+						<image src="/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 					</view>
 				</view>
 				<view class="boarding" @tap="endStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">下车点</view>
 					<view style="display: flex;align-items: center;">
 						<view @tap="endStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{endStation}}</view>
-						<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+						<image src="/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 					</view>
 				</view>
 			</view>
@@ -62,7 +62,7 @@
 					<view class="passengerInfoDetail">
 						<view style="display: flex;text-align: center;align-items: center;">
 							<view style="width: 73upx;">
-								<image src="../../static/CTKY/delete.png" style="width: 34upx;height: 34upx;" @click="deleteInfo(index)"></image>
+								<image src="/static/CTKY/delete.png" style="width: 34upx;height: 34upx;" @click="deleteInfo(index)"></image>
 							</view>
 							<view style="height: 100%;">
 								<view style="display: flex;margin-top: 18upx;margin-bottom: 18upx;">
@@ -75,7 +75,7 @@
 							</view>
 						</view>
 						<view>
-							<image src="../../static/CTKY/right.png" style="width:12upx ;height: 21upx;"></image>
+							<image src="/static/CTKY/right.png" style="width:12upx ;height: 21upx;"></image>
 						</view>
 					</view>
 				</view>
@@ -86,7 +86,7 @@
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">优惠券</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">{{couponIndex}}</view>
-					<image src="../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+					<image src="../../../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 				</view>
 			</view>
 			
@@ -209,7 +209,7 @@
 </template>
 
 <script>
-	import popup from "../../components/CTKY/uni-popup/uni-popup.vue";
+	import popup from "../../../../components/CTKY/uni-popup/uni-popup.vue";
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components:{
@@ -324,7 +324,7 @@
 				var that = this;
 				//跳转到选择上车点页面
 				uni.navigateTo({
-					url:'/pages/CTKY/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+					url:'../stationPicker/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
 				})
 			},
 			//-------------------------------点击下车点-----------------------------
@@ -332,7 +332,7 @@
 				var that = this;
 				//跳转到选择下车点页面
 				uni.navigateTo({
-					url:'/pages/CTKY/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+					url:'../stationPicker/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
 				})
 			},
 			//-------------------------------删除乘车人-----------------------------
@@ -392,11 +392,11 @@
 			checkLocation() {
 				if (this.ticketDetail.shuttleType == '普通班车') {
 					uni.navigateTo({
-						url:'/pages/CTKY/traditionCarMark'
+						url:'../MapMark/traditionCarMark'
 					})
 				}else if (this.ticketDetail.shuttleType == '定制班车') {
 					uni.navigateTo({
-						url:'/pages/CTKY/specialMark'
+						url:'../MapMark/specialMark'
 					})
 				}
 			},

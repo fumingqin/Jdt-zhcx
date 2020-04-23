@@ -215,11 +215,34 @@
 							<view class="at_contentFrame" v-if="item.ticketComment_s3 !== 'null'">{{item.ticketComment_s3}}</view>
 							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 						</view>
-
-						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
+<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
+							</view>
+					
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
+							</view>
+					
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							</view>
+					
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							</view>
+					
+							<view class="CTKYBtnView">
+								<button class="allBtn">删除</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn" v-if="item.state=='已使用'">投诉</button>
+							</view></view>
 
 						<!-- 已使用 -->
 						<view class="at_buttonView" v-if="item.orderType=='已使用'">
@@ -258,12 +281,37 @@
 							<view class="redring"></view>
 							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
 						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn">删除</button>
-							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
-							<button class="allBtn" v-if="item.state=='已使用'">投诉</button>
-						</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							</view>
+								
+							<view class="CTKYBtnView" v-if="item.orderState=='待使用'">
+								<button class="allBtn">车辆位置</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn QRCode">二维码</button>
+								<button class="allBtn">选座</button>
+								<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
+								<button class="allBtn">联系司机</button>
+							</view>						</view>
 					</view>
 				</view>
 			</view>
@@ -355,12 +403,35 @@
 							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
 							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
 						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-							<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
-						</view>
+	<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							</view>
+								
+							<view class="CTKYBtnView" v-if="item.state=='7'">
+								<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
+								
+							</view>						</view>
 
 						<view style="display: flex; margin-top: -16rpx;">
 							<view class="bluering"></view>
@@ -473,12 +544,33 @@
 							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
 							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
 						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-							<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
-						</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
+								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							</view>
+								
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							</view>
+								
+							<view class="CTKYBtnView" v-if="item.state=='已取消'">
+								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
+								<button class="allBtn" @tap="del(index)">删除</button>
+							</view>						</view>
 
 						<view style="display: flex; margin-top: -16rpx;">
 							<view class="bluering"></view>
