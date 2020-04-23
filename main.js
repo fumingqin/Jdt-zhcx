@@ -15,6 +15,7 @@ import Sceniclist from 'common/scenicSpotDistribution.js' //旅游服务-景区�
 Vue.config.productionTip = false
 
 Vue.prototype.$store=store;  //登录
+Vue.prototype.$Czc=Czc;  //登录
 
 App.mpType = 'app'
 

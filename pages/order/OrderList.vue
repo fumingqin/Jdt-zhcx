@@ -931,11 +931,9 @@
 						uni.stopPullDownRefresh();
 						console.log('11111',res.data);
 						if(res.data.status == true) {
-							console.log('11111',res.data.data);
 							for(var i = 0; i < res.data.data.length; i++) {
 								that.info.push(res.data.data[i]);
 							}
-							console.log('length',that.info.length);
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].orderState == '已完成') {
 									that.finishArr.push(res.data.data[i]);
@@ -950,7 +948,6 @@
 						}else if(res.data.status == false) {
 							console.log('无客运车票数据');
 						}
-							
 					},
 					fail(res) {
 						//请求数据失败，停止刷新
@@ -979,6 +976,12 @@
 						orderNumber: that.userInfo.userId,
 						clientID: that.userInfo.userId,
 						clientName: that.userInfo.nickname,
+					},
+					success: (respones) => {
+						console.log('删除结果',respones)
+					},
+					fail: (respones) => {
+						console.log(respones)
 					}
 				})
 			},

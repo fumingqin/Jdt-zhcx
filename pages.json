@@ -575,9 +575,12 @@
 				},
 				"navigationBarTitleText": "选择车型"
 			}
+        },{
+            "path" : "pages/CTKY/SpecialBus/Home/specialBusHome",
+            "style" : {}
         }
         ,{
-            "path" : "pages/CTKY/SpecialBus/Home/specialBusHome",
+            "path" : "pages/BCFW/choice/charterMap",
             "style" : {}
         }
     ],
