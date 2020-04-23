@@ -29,9 +29,9 @@
 		<view class="ci_carModelView">
 			<text class="cmv_selected">已选车型</text>
 			<image class="cmv_car" :src="car"></image>
-			<text class="cmv_carName">{{tabName}}</text>
+			<text class="cmv_carName">{{carNumberSeats}}</text>
 			<text class="cmv_carType">{{carName}}</text>
-			<text class="cmv_carMoney">{{price}}</text>
+			<text class="cmv_carMoney">{{carprice}}元</text>
 		</view>
 
 		<!-- 包车人信息 -->
@@ -109,7 +109,7 @@
 			</view>
 		</uni-popup>
 		<view class="ci_affirmView">
-			<text class="av_money">￥{{price}}</text>
+			<text class="av_money">￥{{carprice}}</text>
 			<view class="av_atOnceView">
 				<text class="aov_atOnce">立即包车</text>
 			</view>
@@ -148,9 +148,9 @@
 				privateSite:'',
 				dayContentObject:'',
 				car:'',
-				tabName:'',
+				carNumberSeats:'',
 				carName:'',
-				price:'',
+				carprice:'',
 				charteredBus: [],
 				nickName: '', //包车人姓名
 				nickId: '', //包车人证件号
@@ -254,9 +254,9 @@
 							key: 'vehicleInformation',
 							success: (res) =>{
 								this.car=res.data.car;
-								this.tabName=res.data.tabName;
+								this.carNumberSeats=res.data.carNumberSeats;
 								this.carName=res.data.carName;
-								this.price=res.data.price;
+								this.carprice=res.data.carprice;
 								 console.log(res.data);						
 							}
 						});
