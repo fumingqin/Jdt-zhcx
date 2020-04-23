@@ -63,7 +63,7 @@
 			<scroll-view class="sr_scroll" scroll-x="true">
 				<view class="sc_selectButton">
 					<view v-for="(item,index) in vehicleSelection[value].cost" :key="index">
-						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.price}}</view>
+						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.price}}元</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -127,6 +127,8 @@
 							carId: '',
 							car: '',
 							carName: '',
+							carNumberSeats:'',
+							carprice:'',
 						}],
 					}],
 				}], //车辆选择
@@ -224,14 +226,12 @@
 			//------------------------------提交数据-------------------------------------
 			subit:function(){
 				if(this.value3!==''){
-					this.information.tabId = this.vehicleSelection[this.value].tabId;
-					this.information.tabName = this.vehicleSelection[this.value].tabName;
-					this.information.btId = this.vehicleSelection[this.value].cost[this.value2].btId;
-					this.information.price = this.vehicleSelection[this.value].cost[this.value2].price;
 					this.information.carId = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carId;
 					this.information.car = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].car;
 					this.information.carName = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carName;
-					console.log(this.information.carName)
+					this.information.carNumberSeats = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carNumberSeats;
+					this.information.carprice = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carprice;
+					console.log(this.information.carNumberSeats)
 				}
 				console.log(this.vehicleSelection[this.value])
 				uni.setStorage({
@@ -548,6 +548,9 @@
 						&.current3 {
 							z-index: 24;
 							color: #ff0000;
+							border: 1px solid #ff0000;
+							border-radius: 12rpx;
+							padding: 5upx;
 						}
 					}
 				}
