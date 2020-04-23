@@ -113,7 +113,8 @@
 						height:94upx;
 						background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
 						box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
-						" @click="subit">选车型</button>
+						"
+					 @click="subit">选车型</button>
 				</view>
 
 				<!-- 底部 -->
@@ -145,7 +146,7 @@
 			return {
 				normalPickerNum: 1, //专线tab
 				specialPickerNum: 0, //定制tab
-				index:0, //指数
+				index: 0, //指数
 				privateSite: '', //专线
 				noticeContent: '', //须知内容
 				datestring: '', //当前日期和时间字符串
@@ -159,7 +160,7 @@
 				startlatitude: "", //出发点纬度
 				destination: '', //目的地
 				dayContent: [], //选择天数
-				isNormal:0,//判断是普通购票还是定制班车默认是普通购票
+				isNormal: 0, //判断是普通购票还是定制班车默认是普通购票
 				homePageInfo: {
 					initialPoint: '', //出发地
 					destination: '', //目的地
@@ -345,27 +346,67 @@
 
 			//------------------------------提交数据-------------------------------------
 			subit: function() {
-				if(this.isNormal == 0 || this.isNormal == 1){
-					this.homePageInfo.privateSite = this.privateSite;
-					this.homePageInfo.initialPoint = this.initialPoint;
-					this.homePageInfo.destination = this.destination;
-					this.homePageInfo.datestring = this.datestring;
-					this.homePageInfo.dayContentObject = this.dayContent[this.index];
-					// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
-					// console.log(this.vehicleSelection[this.value])
-					uni.setStorage({
-						key:'homePageInfo',
-						data:this.homePageInfo,
-						success:()=>{
-							uni.navigateTo({
-								url:'../choice/ci_choiceVehicleType?isNormal='+this.isNormal
-							})
-						}
-					})
+				if(this.isNormal == 0){
+					if(this.privateSite == '请选择专线'){
+						uni.showToast({
+							title: '请选择专线',
+							icon: 'none'
+						})
+					}else if(this.initialPoint == '请选择上车点'){
+						uni.showToast({
+							title: '请选择上车点',
+							icon: 'none'
+						})
+					}else{
+						this.homePageInfo.privateSite = this.privateSite;
+						this.homePageInfo.initialPoint = this.initialPoint;
+						this.homePageInfo.destination = this.destination;
+						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.dayContentObject = this.dayContent[this.index];
+						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+						// console.log(this.vehicleSelection[this.value])
+						uni.setStorage({
+							key: 'homePageInfo',
+							data: this.homePageInfo,
+							success: () => {
+								uni.navigateTo({
+									url: '../choice/ci_choiceVehicleType?isNormal=' + this.isNormal
+								})
+							}
+						})
+					}
+				}else if(this.isNormal == 1){
+					if(this.initialPoint == '请选择上车点'){
+						uni.showToast({
+							title: '请选择上车点',
+							icon: 'none'
+						})
+					}else if(this.destination == '请选择目的点'){
+						uni.showToast({
+							title: '请选择目的点',
+							icon: 'none'
+						})
+					} else{
+						this.homePageInfo.privateSite = this.privateSite;
+						this.homePageInfo.initialPoint = this.initialPoint;
+						this.homePageInfo.destination = this.destination;
+						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.dayContentObject = this.dayContent[this.index];
+						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+						// console.log(this.vehicleSelection[this.value])
+						uni.setStorage({
+							key: 'homePageInfo',
+							data: this.homePageInfo,
+							success: () => {
+								uni.navigateTo({
+									url: '../choice/ci_choiceVehicleType?isNormal=' + this.isNormal
+								})
+							}
+						})
+					}
 				}
-				// console.log(this.homePageInfo)
-		},
-	}
+			},
+		}
 	}
 </script>
 

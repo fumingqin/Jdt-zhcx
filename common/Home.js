@@ -10,7 +10,7 @@ const Interface = {
 		value: Url + '/api/zhcx/addPassengerPosition',
 		name:'旅客端定时实时上报位置',
 		method:'GET',//GET-POST
-		pages:[]
+		pages:["Jdt-zhcx/App.vue"]
 	},
 }
 

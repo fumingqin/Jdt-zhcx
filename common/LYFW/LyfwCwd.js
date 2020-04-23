@@ -1230,6 +1230,28 @@ const vehicleSelection={
 	msg: '提示'
 }
 
+const driverInformation = {
+	status: 1, //1成功,0失败提示返回值
+	data:{
+		orderType:'进行中',
+		licensePlate:'闽A88888',
+		vehicleType:'豪华车型',
+		name:'张三丰',
+		age:'6年',
+		telephone:'134566456126',
+		day:'3天',
+		duration:'47:00',
+		cost:'200元',
+		overtimeCharge:'50元',
+		totalCost:'250元',
+		boardingPoint:'泉州客运中心',
+		destination:'泉州动车站',
+		totalLi:'150km',
+		totalDuration:'02:00:00',
+	},
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -1260,4 +1282,5 @@ export default {
 	choiceVehicle,
 	priceExplain,
 	vehicleSelection,
+	driverInformation,
 }

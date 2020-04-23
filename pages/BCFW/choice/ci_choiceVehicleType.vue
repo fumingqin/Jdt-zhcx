@@ -5,8 +5,8 @@
 		<!-- 出发内容 -->
 		<view class="cvt_content" :hidden="startingContent==1">
 			<view class="ct_departureContents1">
-				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{addressContent.privateSite}}</text></view>
-				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{addressContent.initialPoint}}</text></view>
+				<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{addressContent.privateSite}}</text></view>
+				<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{addressContent.initialPoint}}</text></view>
 			</view>
 			<view class="ct_departureContents2">
 				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
@@ -15,7 +15,7 @@
 		
 		<view class="cvt_content" :hidden="startingContent==0">
 			<view class="ct_departureContents1">
-				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{addressContent.initialPoint}}</text></view>
+				<view class="ct_content1">上车点 &nbsp;<text class="ct_content2">{{addressContent.initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{addressContent.destination}}</text></view>
 			</view>
 			<view class="ct_departureContents2">

@@ -29,7 +29,9 @@
 	export default {
 		data() {
 			return {
-				list: []
+				list: [],
+				city:"泉州市",
+				pageStatus:false
 			}
 		},
 		created() {
@@ -37,11 +39,22 @@
 				title: '搜索地址'
 			})
 		},
+		onShow() {
+			uni.getLocation({ //获取当前定位
+				type: 'gcj02',
+				geocode:true,
+				success: function(res) {
+					this.city=res.altitude.city;
+				}
+			});
+		},
 		methods: {
 			searchList(n) {
 				let that = this
 				qqmapsdk.getSuggestion({
-					keyword: n,
+					keyword:   n,
+					region:that.city,
+					region_fix:0,
 					success: res => {
 						console.log(res)
 						that.setData({
@@ -55,11 +68,15 @@
 			},
 			bindInput(e) {
 				let val = e.detail.value
-				this.searchList(val)
+				if(val!=""){
+					this.searchList(val)
+				}
 			},
 			bindConfirm(e) {
 				let val = e.detail.value
-				this.searchList(val)
+				if(val!=""){
+					this.searchList(val)
+				}
 			},
 			address(item) {
 				console.log(item);
