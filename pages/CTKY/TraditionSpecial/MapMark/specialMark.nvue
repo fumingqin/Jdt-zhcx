@@ -37,9 +37,7 @@
 			return {
 				//站点照片数组
 				imageArray:[
-					{image:'../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner2.jpg'},
-					{image:'../../static/LYFW/ouristRoute/SceneryTable/lunBo/banner2.jpg'},
-					{image:'../../static/GRZX/banner3.jpg'},
+					
 				],
 				//订单详情
 				orderInfo:{

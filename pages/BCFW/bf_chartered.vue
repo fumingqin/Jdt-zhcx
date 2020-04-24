@@ -2,7 +2,7 @@
 	<view class="ho_view">
 		<!-- 照片背景图 -->
 		<view>
-			<image class="ho_imageTop" src="../../../static/BCFW/home/guanggao.png" mode="aspectFill"></image>
+			<image class="ho_imageTop" src="../../static/BCFW/home/guanggao.png" mode="aspectFill"></image>
 		</view>
 
 		<!-- 专线/定制 -->
@@ -86,13 +86,13 @@
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
 					</view>
-
+					
 					<!-- 目的地 -->
 					<view class="dl_choice">目的地</view>
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap2" v-model="destination">{{destination}}</text>
 					</view>
-
+					
 					<!-- 出发时间 -->
 					<view class="dl_selectionTime">出发时间</view>
 					<view class="dl_time">
@@ -134,8 +134,8 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
-	import MxDatePicker from "../../../components/BCFW/mx-datepicker/mx-datepicker.vue";
+	import uniPopup from "../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import MxDatePicker from "../../components/BCFW/mx-datepicker/mx-datepicker.vue";
 	export default {
 		components: {
 			//加载多方弹框组件
@@ -212,7 +212,7 @@
 				});
 				uni.navigateTo({
 					//跳转到下个页面的时候加个字段，判断当前点击的是专线点
-					url: './ho_choice?&station=' + 'dedicatedLine'
+					url: './bf_choice?&station=' + 'dedicatedLine'
 				})
 			},
 
@@ -370,7 +370,7 @@
 							data: this.homePageInfo,
 							success: () => {
 								uni.navigateTo({
-									url: '../choice/ci_choiceVehicleType?isNormal=' + this.isNormal
+									url: './bf_choiceVehicleType?isNormal=' + this.isNormal
 								})
 							}
 						})
@@ -399,7 +399,7 @@
 							data: this.homePageInfo,
 							success: () => {
 								uni.navigateTo({
-									url: '../choice/ci_choiceVehicleType?isNormal=' + this.isNormal
+									url: './bf_choiceVehicleType?isNormal=' + this.isNormal
 								})
 							}
 						})
