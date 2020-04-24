@@ -892,12 +892,13 @@
 				]
 			}
 		},
-		onLoad() {
-			var that = this;
+		onLoad:function() {
+			this.toFinished(); 
 		},
 		onShow:function(){
 			//开始刷新---请求数据方法写在刷新的代理方法中
 			uni.startPullDownRefresh();
+			this.toFinished(); 
 		},
 		onPullDownRefresh:function(){
 			var that = this;
