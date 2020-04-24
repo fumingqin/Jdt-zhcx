@@ -32,16 +32,16 @@
 
 						<view style="display: flex; margin-top: -16rpx;">
 							<view class="bluering"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.starAddress}}</view>
+							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
 						</view>
 
 						<view style="display: flex; margin-top: 36rpx;">
 							<view class="redring"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endAddress}}</view>
+							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+							<button class="allBtn" @click="going(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成' || item.orderType=='未支付'">详情</button>
 							<button class="allBtn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button>
 							<button class="allBtn payBtn" @click="openBottomPopup" v-if="item.orderType=='未支付'">去支付</button>
 							<button class="allBtn" @tap="del(index)" v-if="item.orderType=='已取消'">删除</button>
@@ -112,7 +112,7 @@
 
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
+						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 
 					<view class="whiteBg">
@@ -258,7 +258,7 @@
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
+						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
@@ -397,7 +397,7 @@
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-						<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
+						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
@@ -539,7 +539,7 @@
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-						<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
+						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
@@ -684,7 +684,7 @@
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
-						<view class="reserveDate">预定日期：{{item.setOutTime}}</view>
+						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
@@ -1251,7 +1251,6 @@
 					key: 'userInfo',
 					success: (res1) => {
 						this.userInfo = res1.data;
-						console.log('出租车数据', res1)
 						uni.request({
 							url: 'http://111.231.109.113:8002/api/taxi/GetAllExpressOrder_Passenger',
 							data: {
@@ -1259,22 +1258,41 @@
 							},
 							method: 'POST',
 							success: (res) => {
-								console.log(res)
 								uni.stopPullDownRefresh();
+								console.log('出租车数据', res.data);
 								if (res.data.status) {
 									for (var i = 0; i < res.data.data.length; i++) {
-										that.info.push(res.data.data[i]);
-										if (that.info[i].orderType == '已完成') {
-											that.finishArr.push(that.info[i]);
-										} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待上车') {
-											that.goingArr.push(that.info[i]);
-										} else if (that.info[i].orderType == '未支付') {
-											that.unfinishArr.push(that.info[i]);
-										} else if (that.info[i].orderType == '已取消') {
-											that.cancelArr.push(that.info[i]);
+										var data = res.data.data[i];
+										var orderType1 = '';
+										if(data.state == 0 || data.state == 1){
+											orderType1 = '进行中';
 										}
+										console.log(orderType1);
+										var obj = {
+											title: '出租车',
+											titleIndex: '1',
+											time: data.orderTime,
+											orderType: orderType1,
+											money:'',
+											startAddress:data.startAddress,
+											endAddress:data.endAddress,
+											orderNumber:data.orderNumber,
+
+										}
+										that.info.push(obj);
+
+
+
+										// if (that.info[i].orderType == '已完成') {
+										// 	that.finishArr.push(that.info[i]);
+										// } else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待上车') {
+										// 	that.goingArr.push(that.info[i]);
+										// } else if (that.info[i].orderType == '未支付') {
+										// 	that.unfinishArr.push(that.info[i]);
+										// } else if (that.info[i].orderType == '已取消') {
+										// 	that.cancelArr.push(that.info[i]);
+										// }
 									}
-									console.log(that.info.length);
 								} else {
 
 								}
@@ -1374,6 +1392,21 @@
 					uni.navigateTo({
 						url: '/pages/order/OrderDetail',
 					})
+				}
+			},
+			
+			going: function(item) {
+				console.log(item)
+				if (item.titleIndex == 1) {
+					if(item.orderType=='进行中'){
+						uni.navigateTo({
+							url: '/pages/CZC/CallAndDrive?orderNumber=' + item.orderNumber,
+						})
+					}else{
+						uni.navigateTo({
+							url: '/pages/order/OrderDetail?orderNumber=' + item.orderNumber,
+						})
+					}
 				}
 			},
 			//-------------------------景区门票-取消-------------------------
