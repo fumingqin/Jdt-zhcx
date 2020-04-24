@@ -41,7 +41,7 @@
 			<view class="phoneClass">
 				<text class="cbv_tripMan">出行人</text>
 				<input placeholder="请输入姓名" class="cbv_name" name="nickName" maxlength="4" v-model="nickName" />
-				<image class="cbv_addressBook" src="../../../static/BCFW/choice/tongxun.png" @click="choiceUser(1)"></image>
+				<image class="cbv_addressBook" src="../../static/BCFW/choice/tongxun.png" @click="choiceUser(1)"></image>
 			</view>
 			<view class="idView">
 				<view class="cbv_idCord">身份证</view>
@@ -131,7 +131,7 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/BCFW/choice/uni-popup/uni-popup.vue"
+	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
 	var name;
 	export default {
 		components: {
