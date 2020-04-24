@@ -6,7 +6,7 @@
 		<image @click="back" src="../../../static/BCFW/choice/charterMap/back1.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 40px;left: 1px;"></image>
 		<view style="position: fixed;bottom: 0upx; ">
 			<image src="../../../static/BCFW/choice/charterMap/police.png" style="width: 120rpx;height: 120rpx;margin-left: 10rpx;" @click="callPolice"></image>
-			<!-- 行程信息 -->
+			<!-- 行程信息  v-if="status === 0" -->
 			<scroll-view class="cm_content" scroll-y="true">
 				<view class="ct_state">
 					<text class="sa_text">待发车</text>
@@ -149,10 +149,10 @@
 </template>
 
 <script>
-	import taxi from '../../../components/BCFW/Czc.js';
-	import uniIcons from "../../../components/BCFW/uni-icons/uni-icons.vue";
-	import Map from '../../../components/BCFW/my-openMap/openMap.js';
-	import uniPopup from "../../../components/BCFW/choice/uni-popup/uni-popup.vue"
+	import taxi from '../../components/BCFW/Czc.js';
+	import uniIcons from "../../components/BCFW/uni-icons/icons.js";
+	import Map from '../../components/BCFW/my-openMap/openMap.js';
+	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
 	export default {
 		components: {
 			uniIcons,
