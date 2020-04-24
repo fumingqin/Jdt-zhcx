@@ -95,22 +95,19 @@
 		data() {
 			return {
 				scale: 14,
-				longitude: "118.600608", //地图中心点经度
-				latitude: "24.889217", //地图中心点纬度
+				// longitude: "118.600608", //地图中心点经度
+				// latitude: "24.889217", //地图中心点纬度
 				points: [],
 				polyline: [],
 				markers: [],
+				startLonLat: "",//起点经纬度组合(路线规划用到)
+				endLonLat: "",//终点点经纬度组合(路线规划用到)
+				startLon: "",//起点经度
+				startLat: "",//起点纬度
+				endLon: "",//终点经度
+				endLat: "",//终点纬度
 				mapHeight: '',
 				viewHeight: '',
-				estimateMileage: '44 km',
-				alreadyMileage: '44 km',
-				estimateHour: '2小时',
-				alreadyHour: '2.5小时',
-				waitHour: '5分钟',
-				beginAddress: '茶叶大厦',
-				endAddress: '晋江机场',
-				passengerPhone: '15255066261',
-				totalCost: '32.05',
 				resultData: {},
 				status: 0,
 				directionInterval: 0,
@@ -169,7 +166,6 @@
 					that.viewHeight = (res.windowHeight * 0.4) + 'px'
 				}
 			});
-			that.getOrderDetail();
 		},
 		methods: {
 			//---------------------------------模拟接口数据---------------------------------
@@ -178,75 +174,6 @@
 				this.driverInformation = driverInformation.data;
 				// console.log(driverInformation.data)
 			},
-			
-			//订单查询方法，第一次进入时调用。
-			getOrderDetail:function(){
-				
-				let that = this;
-				that.status = 0;
-				if(that.status == 0){
-					/* Map.openMap(24.943068, 118.609035, '清源山', 'gcj02'); */
-				}else if(that.status == 1){
-					
-					
-					
-				}else if(that.status == 2){
-					
-				}
-			},
-			realGetOrderDetail:function(){
-				let that = this;
-				that.orderInterval = setInterval(function(){
-					that.status = 0;
-					if(that.status == -1){
-						clearInterval(that.orderInterval);
-						uni.showToast({
-							title:'用户已取消订单',
-							icon:'none'
-						})
-					}
-				},10000);
-			},
-			
-			confirmgetonCar:function() { //确认乘客上车
-				this.status = 1;
-				var that = this;
-				that.markers = [];
-				that.polyline = [];
-				that.setMarker(1, 118.613688, 24.912702, '../../static/driver/Start.png');
-				that.setMarker(2, 118.611339, 24.885683, '../../static/driver/End.png');
-				that.getDirectionDriving('118.613688, 24.912702', '118.611339, 24.885683');
-				that.directionInterval = setInterval(function() { //获取司机的实时位置并规划到终点的路线
-					that.markers = [];
-					that.polyline = [];
-					uni.getLocation({
-						type: 'gcj02',
-						success: function(res) {
-							that.longitude = res.longitude;
-							that.latitude = res.latitude;
-						}
-					})
-					that.setMarker(1, that.longitude, that.latitude, '../../static/driver/Start.png');
-					that.setMarker(2, 118.611339, 24.885683, '../../static/driver/End.png');
-					that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.611339, 24.885683');
-				}, 10000);
-				Map.openMap(24.943068, 118.609035, '清源山', 'gcj02');
-			},
-			confirmGetToDestination:function() {
-				//取消由 setInterval 设置的定时器
-				clearInterval(this.directionInterval);
-				uni.redirectTo({
-					url: '/pages/driver/otherExpenses',
-				})
-			},
-			call: function() {
-				//呼叫乘客
-				let that = this;
-				uni.makePhoneCall({
-					phoneNumber: that.passengerPhone
-				});
-			},
-			
 			//picker相关
 			callPolice: function() {
 				let that = this;
@@ -286,6 +213,69 @@
 			back: function() {
 				var that = this;
 				uni.navigateBack({});
+			},
+			
+			setMarkers: function() { //设置始末标点
+				var that = this;
+				var startmarker = { //起点
+					id: 0,
+					latitude: that.startLat,
+					longitude: that.startLon,
+					title: '在这上车',
+					zIndex: '1',
+					iconPath: '../../static/CZC/Start.png',
+					rotate: 0,
+					width: 20,
+					height: 20,
+					anchor: {
+						x: 0.5,
+						y: 1
+					},
+					callout: {
+						content: '在这上车',
+						color: '#000000',
+						fontSize: 10,
+						borderRadius: 4,
+						borderWidth: 1,
+						borderColor: '#333300',
+						bgColor: '#FFFFFF',
+						padding: '5',
+						display: 'ALWAYS'
+					}
+				};
+				var endmarker = {
+					id: 1,
+					latitude: that.endLat,
+					longitude: that.endLon,
+					title: '在这下车',
+					zIndex: '1',
+					iconPath: '../../static/CZC/End.png',
+					rotate: 0,
+					width: 20,
+					height: 20,
+					anchor: {
+						x: 0.5,
+						y: 1
+					},
+					callout: {
+						content: '在这下车',
+						color: '#000000',
+						fontSize: 10,
+						borderRadius: 4,
+						borderWidth: 1,
+						borderColor: '#333300',
+						bgColor: '#FFFFFF',
+						padding: '5',
+						display: 'ALWAYS'
+					}
+				};
+				that.markers = [];
+				that.startmarker = [];
+				that.endmarker = [];
+				that.markers.push(startmarker);
+				that.markers.push(endmarker);
+				that.showlocation = false;
+				that.getDirectionDriving(that.startLonLat, that.endLonLat);
 			},
 			
 			setMarker: function(id, lon, lat, iconPath) {

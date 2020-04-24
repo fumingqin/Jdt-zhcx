@@ -2,7 +2,7 @@
     <view class="myView">
 		<!-- 照片背景图 -->
 		<view>
-			<image src="../../../../static/CTKY/background.png" class="imageTop" mode="aspectFill"></image>
+			<image src="../../../../static/CTKY/kangYi.png" class="imageTop" mode="aspectFill"></image>
 			<!-- <image src="../../static/index/左-箭头.png" class="imageReturn"></image> -->
 		</view>
 		<!-- 车票查询 -->
