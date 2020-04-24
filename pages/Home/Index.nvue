@@ -56,7 +56,7 @@
 				key: [],
 				scale: 16,
 				mapHeight: '',
-				QQ:'450906905',
+				QQ: '450906905',
 				controls: [{
 						id: 'back',
 						position: {
@@ -121,20 +121,18 @@
 			that.getMyLocation();
 			uni.getSystemInfo({
 				success: function(res) {
-					if (res.screenWidth < 350) {
-						//回到我的位置
-						that.controls[0].position.top = 350;
-						//-
-						that.controls[1].position.left = 250;
-						that.controls[1].position.top = 260;
-						//+
-						that.controls[2].position.left = 250;
-						that.controls[2].position.top = 315;
-						//客服
-						that.controls[3].position.left = 250;
-						that.controls[3].position.top = 350;
+					// that.controls[0].position.top = 845 * res.windowWidth / 750;
+					//-
+					that.controls[1].position.left = 640 * res.windowWidth / 750;
+					// that.controls[1].position.top = 655 * res.windowWidth / 750;
+					//+
+					that.controls[2].position.left = 640 * res.windowWidth / 750;
+					// that.controls[2].position.top = 770 * res.windowWidth / 750;
+					//客服
+					that.controls[3].position.left = 640 * res.windowWidth / 750;
+					// that.controls[3].position.top = 835 * res.windowWidth / 750;
+					
 
-					}
 				}
 			})
 		},
@@ -188,9 +186,9 @@
 					that.mapContext.moveToLocation();
 				} else if (controlId === 'Service') {
 					//客服
-					
-					plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + that.QQ + '&version=1&src_type=web ');  
-					
+
+					plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + that.QQ + '&version=1&src_type=web ');
+
 				} else if (controlId === 'CallPollice') {
 					//一键报警
 					uni.showToast({
@@ -226,7 +224,7 @@
 			message: function() {
 				uni.navigateTo({
 					url: '../GRZX/notice'
-					
+
 				})
 			},
 			camera: function(e) {
@@ -245,7 +243,7 @@
 					success: function(res) {
 						console.log(res);
 						uni.navigateTo({
-							url:res
+							url: res
 						});
 					}
 				})
@@ -260,16 +258,16 @@
 			//旅游服务专属路由
 			godetail2: function(url) {
 				// #ifdef MP-WEIXIN
-					uni.redirectTo({
-						url: url
-					});
+				uni.redirectTo({
+					url: url
+				});
 				// #endif
 				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: url
 				});
 				// #endif
-				
+
 			},
 		}
 	}
@@ -297,7 +295,8 @@
 		border-top-left-radius: 28rpx;
 		border-top-right-radius: 28rpx;
 	}
-	.SearchBarBlock{
+
+	.SearchBarBlock {
 		width: 750rpx;
 		position: fixed;
 		top: 60px;
@@ -320,13 +319,15 @@
 	.map {
 		width: 750rpx;
 	}
-	.tabBlock{
+
+	.tabBlock {
 		flex-direction: row;
 		width: 750rpx;
 		text-align: center;
-		margin-top:50rpx;
-		margin-bottom: 50rpx ;
+		margin-top: 50rpx;
+		margin-bottom: 50rpx;
 	}
+
 	.tabItem {
 		width: 150rpx;
 		text-align: center;
