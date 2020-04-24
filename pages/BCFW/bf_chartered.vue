@@ -147,26 +147,38 @@
 				normalPickerNum: 1, //专线tab
 				specialPickerNum: 0, //定制tab
 				index: 0, //指数
-				privateSite: '', //专线
 				noticeContent: '', //须知内容
 				datestring: '', //当前日期和时间字符串
+				privateSite: '', //专线
+				initialPoint: '', //起始点
+				destination: '', //目的地
 				showPicker: false,
 				type: 'rangetime',
 				value: '',
 				Week: '', //周期
-				initialPoint: '', //起始点
-				endLonLat: "", //目的地经度
-				startlongitude: "", //出发点纬度
-				startlatitude: "", //出发点纬度
-				destination: '', //目的地
+				
+				st_Longitude: '', //出发点纬度
+				st_Latitude: '', //出发点纬度
+				de_Longitude:'',//目的地经度
+				de_Latitude:'',//目的地纬度
+				dl_Longitude:'',//专线经度
+				dl_Latitude:'',//专线经度
 				dayContent: [], //选择天数
+				
 				isNormal: 0, //判断是普通购票还是定制班车默认是普通购票
+				
 				homePageInfo: {
 					initialPoint: '', //出发地
 					destination: '', //目的地
 					datestring: '', //出发时间
 					dayContentObject: '', //选择天数
 					privateSite: '', //专线
+					st_Longitude: '', //出发点纬度
+					st_Latitude: '', //出发点纬度
+					de_Longitude:'',//目的地经度
+					de_Latitude:'',//目的地纬度
+					dl_Longitude:'',//专线经度
+					dl_Latitude:'',//专线经度
 
 				},
 			}
@@ -227,9 +239,10 @@
 							success: function() {
 								that.initialPoint = res.name;
 								that.startLonLat = res.longitude + "," + res.latitude;
-								that.startlongitude = res.longitude;
-								that.startlatitude = res.latitude;
+								that.st_Longitude = res.longitude;
+								that.st_Latitude = res.latitude;
 								that.startlocation = res;
+								console.log(that.startlongitude + "," + that.startlatitude)
 							}
 						});
 					}
@@ -246,10 +259,10 @@
 							data: res,
 							success: function() {
 								that.destination = res.name;
-								that.startLonLat = res.longitude + "," + res.latitude;
-								that.startlongitude = res.longitude;
-								that.startlatitude = res.latitude;
-								that.startlocation = res;
+								that.destinationLonLat = res.longitude + "," + res.latitude;
+								that.de_Longitude = res.longitude;
+								that.de_Latitude = res.latitude;
+								that.destinationLocation = res;
 							}
 						});
 					}
@@ -362,6 +375,12 @@
 						this.homePageInfo.initialPoint = this.initialPoint;
 						this.homePageInfo.destination = this.destination;
 						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.st_Longitude = this.st_Longitude;
+						this.homePageInfo.st_Latitude = this.st_Latitude;
+						this.homePageInfo.de_Longitude = this.de_Longitude;
+						this.homePageInfo.de_Latitude = this.de_Latitude;
+						this.homePageInfo.dl_Longitude = this.dl_Longitude;
+						this.homePageInfo.dl_Latitude = this.dl_Latitude;
 						this.homePageInfo.dayContentObject = this.dayContent[this.index];
 						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
 						// console.log(this.vehicleSelection[this.value])
@@ -391,6 +410,12 @@
 						this.homePageInfo.initialPoint = this.initialPoint;
 						this.homePageInfo.destination = this.destination;
 						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.st_Longitude = this.st_Longitude;
+						this.homePageInfo.st_Latitude = this.st_Latitude;
+						this.homePageInfo.de_Longitude = this.de_Longitude;
+						this.homePageInfo.de_Latitude = this.de_Latitude;
+						this.homePageInfo.dl_Longitude = this.dl_Longitude;
+						this.homePageInfo.dl_Latitude = this.dl_Latitude;
 						this.homePageInfo.dayContentObject = this.dayContent[this.index];
 						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
 						// console.log(this.vehicleSelection[this.value])

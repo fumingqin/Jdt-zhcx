@@ -29,9 +29,9 @@
 		<view class="ci_carModelView">
 			<text class="cmv_selected">已选车型</text>
 			<image class="cmv_car" :src="car"></image>
-			<text class="cmv_carName">{{tabName}}</text>
+			<text class="cmv_carName">{{cvt_Name}}</text>
 			<text class="cmv_carType">{{carName}}</text>
-			<text class="cmv_carMoney">{{price}}</text>
+			<text class="cmv_carMoney">{{carprice}}元</text>
 		</view>
 
 		<!-- 包车人信息 -->
@@ -109,23 +109,12 @@
 			</view>
 		</uni-popup>
 		<view class="ci_affirmView">
-			<text class="av_money">￥{{price}}</text>
-			<view class="av_atOnceView">
+			<text class="av_money">￥{{carprice}}</text>
+			<view class="av_atOnceView" enabl :class="{submitColor: selectedValue===1 && nickName!==''}" @click="submitState">
 				<text class="aov_atOnce">立即包车</text>
 			</view>
 		</view>
-		<!-- 	<view class="footer">
-			<view class="price-content">
-				<text>实付款</text>
-				<text class="price-tip">￥</text>
-				<text class="price">{{actualPayment}}</text>
-				<text class="people">共{{addressData.length}}人</text>
-			</view>
-		
-			<view class="submitChange" :class="{submitColor: selectedValue===1 && addressData.length>0}" @click="submit">
-				<text class="submit">立即预订</text>
-			</view>
-		</view> -->
+
 	</view>
 	</view>
 </template>
@@ -139,18 +128,22 @@
 			uniPopup,
 		},
 		data() {
+			// const currentDate = this.getDate({
+			// 	format: true
+			// })
 			return {
 				startingContent:0,//0不显示,1显示
 				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
+				submissionState:false,//提交状态
 				destination:'',
 				initialPoint:'',
 				datestring:'',
 				privateSite:'',
 				dayContentObject:'',
 				car:'',
-				tabName:'',
+				carNumberSeats:'',
 				carName:'',
-				price:'',
+				carprice:'',
 				charteredBus: [],
 				nickName: '', //包车人姓名
 				nickId: '', //包车人证件号
@@ -254,9 +247,9 @@
 							key: 'vehicleInformation',
 							success: (res) =>{
 								this.car=res.data.car;
-								this.tabName=res.data.tabName;
+								this.carNumberSeats=res.data.carNumberSeats;
 								this.carName=res.data.carName;
-								this.price=res.data.price;
+								this.carprice=res.data.carprice;
 								 console.log(res.data);						
 							}
 						});
@@ -352,7 +345,8 @@
 
 			//仿穿透事件
 			stopPrevent() {},
-
+			
+			//数量+计价
 			numberChange() {
 				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this
 					.childrenIndex);
@@ -373,6 +367,169 @@
 					this.actualPayment = a;
 				}
 			},
+			//提交按钮状态赋值
+			submitState: function() {
+				//这边还得加上是否选择人数和勾选同意的判断
+				if (this.selectedValue == 1 && this.nickName!=='') {
+					
+					if (this.submissionState == false) {
+						this.submissionState = true;
+						this.submit();
+					} else if (this.submissionState == true) {
+						uni.showToast({
+							title: '请勿重复点击提交',
+							icon: 'none',
+							duration: 2000
+						})
+					}
+			
+				} else if (this.nickName == '') {
+					uni.showToast({
+						title: '请添加包车人信息',
+						icon: 'none'
+					})
+				} else {
+					uni.showToast({
+						title: '请同意购买须知',
+						icon: 'none'
+					})
+				}
+			},
+			
+			//提交表单
+			submit: function() {
+				uni.showLoading({
+					title: '提交订单中...'
+				})
+			// 	uni.request({
+			// 		url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' + this.userInfo.unid,
+			// 		method: 'POST',
+			// 		success: (res) => {
+			// 			// console.log(res)
+			// 			var a = '';
+			// 			if(res.data.msg =='获取订单列表成功！'){
+			// 				a = res.data.data.filter(item => {
+			// 					return item.orderType == '待支付';
+			// 				})
+			// 			}
+			// 			if (a == '') {
+			// 				// #ifdef H5
+			// 				uni.request({
+			// 					url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+			// 					data: {
+			// 						// unid: this.userInfo.unid,
+									// destination:destination,
+									// initialPoint:initialPoint,
+									// datestring:datestring,//定制目的地
+									// privateSite:privateSite,//专线目的地
+									// dayContentObject:dayContentObject,
+									// carNumberSeats:carNumberSeats,
+									// carName:carName,
+									// carprice:carprice,
+									// nickName: nickName, 
+									// nickId: nickId, 
+									// nickPhone: nickPhone, 
+									// couponID: this.couponColor,
+			// 					},
+			
+			// 					method: 'POST',
+			// 					//向服务器发送订单数据，返回订单编号
+			// 					success: (res) => {
+			// 						uni.hideLoading()
+			// 						console.log(res)
+			// 						if (res.data.msg == '无可售门票！') {
+			// 							uni.showToast({
+			// 								title: '该景区无可售门票！',
+			// 								icon: 'none',
+			// 							})
+			// 						} else if (res.data.msg == '下单失败，联系管理员！') {
+			// 							uni.showToast({
+			// 								title: '下单失败，联系管理员！',
+			// 								icon: 'none',
+			// 							})
+			// 						} else if (res.data.msg == '下单成功') {
+			// 							uni.setStorage({
+			// 								key: 'submitH5Data',
+			// 								data: res.data.data,
+			// 								success: function() {
+			// 									uni.redirectTo({
+			// 										url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+			// 									})
+			// 								}
+			// 							})
+			
+			// 						}
+			
+			// 					}
+			// 				})
+			// 				// #endif
+			
+			// 				// #ifdef APP-PLUS
+			// 				uni.request({
+			// 					url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+			// 					data: {
+									// unid: this.userInfo.unid,
+									// destination:destination,
+									// initialPoint:initialPoint,
+									// datestring:datestring,//定制目的地
+									// privateSite:privateSite,//专线目的地
+									// dayContentObject:dayContentObject,
+									// carNumberSeats:carNumberSeats,
+									// carName:carName,
+									// carprice:carprice,
+									// nickName: nickName, 
+									// nickId: nickId, 
+									// nickPhone: nickPhone, 
+									// couponID: this.couponColor,
+									
+			// 					},
+			
+			// 					method: 'POST',
+			// 					//向服务器发送订单数据，返回订单编号
+			// 					success: (res) => {
+			// 						uni.hideLoading()
+			// 						// console.log(res)
+			// 						if (res.data.msg == '无可售门票！') {
+			// 							uni.showToast({
+			// 								title: '该景区无可售门票！',
+			// 								icon: 'none',
+			// 							})
+			// 						} else if (res.data.msg == '下单失败，联系管理员！') {
+			// 							uni.showToast({
+			// 								title: '下单失败，联系管理员！',
+			// 								icon: 'none',
+			// 							})
+			// 						} else if (res.data.msg == '下单成功') {
+			// 							uni.redirectTo({
+			// 								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+			// 							})
+			// 						}
+			
+			// 					}
+			// 				})
+							// #endif
+			
+			
+						// } else if (a.length > 0) {
+						// 	uni.hideLoading()
+						// 	uni.showToast({
+						// 		title: '订单中，存在待支付订单，请支付/取消后再下单',
+						// 		icon: 'none',
+						// 		duration: 2000
+						// 	})
+			// 				uni.switchTab({
+			// 					url: '../../order/OrderList'
+			// 				})
+			// 			}
+			// 		},
+			// 		fail:function(ee){
+			// 			console.log(ee)
+			// 		}
+			// 	})
+			
+			
+			},
+			
 			//同意购买-点击事件
 			Selection: function() {
 				console.log(this.selectedValue);

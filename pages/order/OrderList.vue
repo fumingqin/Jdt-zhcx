@@ -106,6 +106,62 @@
 						</view>
 					</view>
 				</view>
+				
+				<!-- 包车订单 -->
+				<!-- 标签class命名：;全称：Purchase Date -->
+				<!-- 内容class命名：cm;全称：custom made -->
+				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
+					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="cm_view">
+						<view class="cm_titleView">
+							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.title}}</text>
+							<text class="cm_status">{{item.orderType}}</text>
+						</view>
+				<view class="cm_contentView" style="display: flex;">
+					<text class="cm_contentPrice">¥{{item.cost}}</text>
+				</view>
+						<view class="cm_contentView">
+							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
+							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+						</view>
+						
+				
+						<!-- 已完成 -->
+						<view class="cm_buttonView" v-if="item.orderType=='已完成'">
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+						</view>
+				
+						<!-- 待发车 -->
+						<view class="cm_buttonView"  v-if="item.orderType=='待发车'">
+							<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>	
+						</view>
+						<!-- 进行中 -->
+						<view class="cm_buttonView"  v-if="item.orderType=='进行中'">
+							<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+						</view>
+				
+						<!-- 待支付 -->
+						<view class="cm_buttonView"  v-if="item.orderType=='待支付'" >
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+							<view class="cm_button cm_btToPay" @click="topay(item.orderNumber)">去支付</view>
+						</view>
+				
+						<!-- 已取消 -->
+						<view class="cm_buttonView"  v-if="item.orderType=='已取消'">
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open4(item.orderNumber)">删除</view>
+						</view>
+					</view>
+				</view>
+				
 
 				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
@@ -252,6 +308,33 @@
 
 					</view>
 				</view>
+				
+				<!-- 包车订单 -->
+				<!-- 标签class命名：;全称：Purchase Date -->
+				<!-- 内容class命名：cm;全称：custom made -->
+				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
+					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="cm_view">
+						<view class="cm_titleView">
+							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.title}}</text>
+							<text class="cm_status">{{item.orderType}}</text>
+						</view>
+				<view class="cm_contentView" style="display: flex;">
+					<text class="cm_contentPrice">¥{{item.cost}}</text>
+				</view>
+						<view class="cm_contentView">
+							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
+							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+						</view>
+						<!-- 已完成 -->
+						<view class="cm_buttonView" v-if="item.orderType=='已完成'">
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+						</view>	
+					</view>
+				</view>
 
 
 				<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
@@ -390,6 +473,44 @@
 							<view class="at_button at_btQrCode" @click="open(item)">二维码</view>
 						</view>
 
+					</view>
+				</view>
+				
+				<!-- 包车订单 -->
+				<!-- 标签class命名：;全称：Purchase Date -->
+				<!-- 内容class命名：cm;全称：custom made -->
+				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
+					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="cm_view">
+						<view class="cm_titleView">
+							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.title}}</text>
+							<text class="cm_status">{{item.orderType}}</text>
+						</view>
+				<view class="cm_contentView" style="display: flex;">
+					<text class="cm_contentPrice">¥{{item.cost}}</text>
+				</view>
+						<view class="cm_contentView">
+							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
+							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+						</view>
+				
+				
+				<!-- 待发车 -->
+				<view class="cm_buttonView" v-if="item.orderType=='待发车'">
+					<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
+					<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+					<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+				</view>
+						<!-- 进行中 -->
+						<view class="cm_buttonView" v-if="item.orderType=='进行中'">
+							<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+						</view>
+				
 					</view>
 				</view>
 
@@ -532,6 +653,39 @@
 						</view>
 
 
+					</view>
+				</view>
+				
+				<!-- 包车订单 -->
+				<!-- 标签class命名：;全称：Purchase Date -->
+				<!-- 内容class命名：cm;全称：custom made -->
+				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
+					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="cm_view">
+						<view class="cm_titleView">
+							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.title}}</text>
+							<text class="cm_status">{{item.orderType}}</text>
+						</view>
+				<view class="cm_contentView" style="display: flex;">
+					<text class="cm_contentPrice">¥{{item.cost}}</text>
+				</view>
+						<view class="cm_contentView">
+							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
+							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+						</view>
+				
+				
+						<!-- 待支付 -->
+						<view class="cm_buttonView" v-if="item.orderType=='待支付'" >
+							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="cm_button cm_btToPay" @click="topay(item.orderNumber)">去支付</view>
+						</view>
+				
+						
 					</view>
 				</view>
 
@@ -679,7 +833,39 @@
 						</view>
 					</view>
 				</view>
-
+				
+				<!-- 包车定制 -->
+				<!-- 标签class命名：;全称：Purchase Date -->
+				<!-- 内容class命名：cm;全称：custom made -->
+				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
+					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="cm_view">
+						<view class="cm_titleView">
+							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.title}}</text>
+							<text class="cm_status">{{item.orderType}}</text>
+						</view>
+				<view class="cm_contentView" style="display: flex;">
+					<text class="cm_contentPrice">¥{{item.cost}}</text>
+				</view>
+						<view class="cm_contentView">
+							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
+							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+						</view>
+				
+				
+						<!-- 已取消 -->
+						<view class="cm_buttonView" v-if="item.orderType=='已取消'">
+							<view class="cm_button cm_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+							
+						</view>
+					</view>
+				</view>
+				
+				
 				<!-- (已取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
@@ -889,6 +1075,7 @@
 				items: ['全部', '已完成', '进行中', '未支付', '已取消'],
 				current: 0,
 				index: 1,
+				exitindex:0,//订单判断值
 				ticketOrderNumber: '', //门票订单编号
 				orderIndex: 0, //订单调用数值
 				orderIndexData: '', //二维码订单数据
@@ -1045,6 +1232,7 @@
 							console.log('无客运车票数据');
 							that.loadczcData();
 						}
+						this.getArrayInfo();
 					},
 					fail(res) {
 						//请求数据失败，停止刷新
@@ -1333,7 +1521,7 @@
 				this.$refs.popup2.close()
 			},
 			//-------------------------景区门票-打开取消弹框-------------------------
-			open3(e) {
+			open3(e,exitindex) {
 				this.ticketOrderNumber = e;
 				this.$refs.popup3.open()
 			},
@@ -1342,7 +1530,7 @@
 				this.$refs.popup3.close()
 			},
 			//-------------------------景区门票-打开删除弹框-------------------------
-			open4(e) {
+			open4(e,exitindex) {
 				this.ticketOrderNumber = e;
 				this.$refs.popup4.open()
 			},
@@ -1457,6 +1645,43 @@
 						})
 					}
 				})
+			},
+			//-------------------包车订单添加-------------------------
+			//获取模拟数据
+			async getArrayInfo() {
+				var that=this;
+				let ArrayInfo = await this.$api.bcfwzyx('ArrayInfo');
+				console.log('1235',ArrayInfo)
+				
+				if (ArrayInfo.data){
+					for(var i = 0; i < ArrayInfo.data.length; i++) {
+						that.info.push(ArrayInfo.data[i]);
+					}
+					console.log('1',ArrayInfo)
+					
+				if(ArrayInfo.data !==''){
+					for (var i = 0; i < ArrayInfo.data.length; i++) {
+						if (ArrayInfo.data[i].orderType == '已完成') {
+							that.finishArr.push(ArrayInfo.data[i]);
+						} else if (ArrayInfo.data[i].orderType == '进行中' || ArrayInfo.data[i].orderType == '待发车') {
+							that.goingArr.push(ArrayInfo.data[i]);
+						} else if (ArrayInfo.data[i].orderType == '待支付') {
+							that.unfinishArr.push(ArrayInfo.data[i]);
+						} else if (ArrayInfo.data[i].orderType == '已取消') {
+							that.cancelArr.push(ArrayInfo.data[i]);
+						}
+					}
+				}
+				}
+				console.log('2',that.info)
+			},
+			//-------------------------拨打电话-------------------------
+			tel:function(e){
+				console.log(e)
+					uni.makePhoneCall({
+					    phoneNumber:e
+						
+					})
 			}
 
 
@@ -1834,6 +2059,121 @@
 					background: #FF6600;
 					padding: 24upx 160upx;
 				}
+			}
+		}
+	}
+	//包车定制内容
+	.cm_view {
+		margin: 0rpx 28rpx;
+		margin: 24upx;
+		background: #FFFFFF;
+		border-radius: 12rpx;
+		padding: 40rpx 32upx;
+		padding-bottom: 132upx;
+	
+		.cm_titleView {
+			position: relative;
+	
+			.cm_icon {
+				position: relative;
+				top: 4upx;
+				width: 34upx;
+				height: 38upx;
+			}
+	
+			.cm_title {
+				margin-left: 24upx;
+			}
+	
+			.cm_status {
+				position: absolute;
+				right: 0;
+				font-size: 30upx;
+				top: 6upx;
+			}
+		}
+	
+		//内容区
+		.cm_contentView {
+			position: relative;
+			margin: 24upx 0;
+			margin-left: 60upx;
+			
+			.cm_contentFrame {
+				padding: 8upx 20upx;
+				margin-right: 16upx;
+				text-align: center;
+				font-size: 20upx;
+				color: #3AC596;
+				border-radius: 8upx;
+				border: 1upx solid #3AC596;
+			}
+	
+			.cm_contentPrice {
+				position: absolute;
+				right: 0;
+				font-size: 30upx;
+				color: #f85e52;
+				position: absolute;
+				top:25upx;
+			}
+	
+			.cm_contentText {
+				display: block;
+				margin-top: 24upx;
+				font-size: 28upx;
+				color: #888;
+			}
+		}
+	
+		//按钮区
+		.cm_buttonView {
+			margin-top: 16upx;
+			display: flex;
+			float: right;
+			.cm_omit{
+				display: flex;
+				position: relative;
+				top: 10upx;
+				width: 50upx;
+				height: 50upx;
+				margin-right: 16upx;
+			}
+			// 按钮
+			.cm_button {
+				padding: 18upx 48upx;
+				padding-top: 22upx;
+				font-size: 22upx;
+				border-radius: 80upx;
+			}
+	
+			// 详情 - 空心灰
+			.cm_btDetails {
+			border: 1upx solid #888;
+			color: #888;
+			margin-right: 16upx;
+			}
+			// 联系司机 - 实心橙
+			.cm_contact{
+				background: #FF6600;
+				border: 1upx solid #FF6600;
+				color: #FFFFFF;
+				margin-right: 16upx;
+			}
+	
+	
+			//取消- 空心灰
+			.cm_btDelete {
+				border: 1upx solid #888;
+				color: #888;
+				margin-right: 16upx;
+			}
+	
+			//去支付 - 实心橙
+			.cm_btToPay {
+				background: #FF6600;
+				border: 1upx solid #FF6600;
+				color: #FFFFFF;
 			}
 		}
 	}
