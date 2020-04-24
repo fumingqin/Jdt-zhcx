@@ -149,10 +149,10 @@
 </template>
 
 <script>
-	import taxi from '../../../components/BCFW/Czc.js';
-	import uniIcons from "../../../components/BCFW/uni-icons/uni-icons.vue";
-	import Map from '../../../components/BCFW/my-openMap/openMap.js';
-	import uniPopup from "../../../components/BCFW/choice/uni-popup/uni-popup.vue"
+	import taxi from '../../components/BCFW/Czc.js';
+	import uniIcons from "../../components/BCFW/uni-icons/icons.js";
+	import Map from '../../components/BCFW/my-openMap/openMap.js';
+	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
 	export default {
 		components: {
 			uniIcons,
