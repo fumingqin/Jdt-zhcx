@@ -598,6 +598,15 @@
 				"navigationStyle": "custom"
 			}
         }
+        ,{
+            "path" : "pages/BCFW/BCsuccessfulPayment",
+            "style" : {}
+        },
+		{
+		    "path" : "pages/BCFW/charteredBusPayment",
+		    "style" : {}
+		}
+		
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
