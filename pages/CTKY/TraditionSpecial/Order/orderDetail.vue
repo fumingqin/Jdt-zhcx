@@ -68,29 +68,7 @@
 				orderID:'',
 				role:'暂不支持在线退票',
 				orderInfo:[],//订单数据
-				passageInfo:[
-					{
-						name:'张小娴  (成人票)',
-						IDCard:'129097475652621',
-						phoneNum:'1234567890',
-						role:'当前时间申请退款  损失为32.5元',
-						insurance:'中国人寿意外保险  经济款 x1'
-					},
-					{
-						name:'张小娴  (成人票)',
-						IDCard:'129097475652621',
-						phoneNum:'1234567890',
-						role:'当前时间申请退款  损失为32.5元',
-						insurance:'中国人寿意外保险  经济款 x1'
-					},
-					{
-						name:'张小娴  (成人票)',
-						IDCard:'129097475652621',
-						phoneNum:'1234567890',
-						role:'当前时间申请退款  损失为32.5元',
-						insurance:'中国人寿意外保险  经济款 x1'
-					}
-				]
+				passageInfo:[]
 			}
 		},
 		onLoad(res) {
