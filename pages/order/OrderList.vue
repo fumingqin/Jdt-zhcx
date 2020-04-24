@@ -1233,7 +1233,7 @@
 							icon: 'none',
 							success: function() {
 								uni.redirectTo({
-									url: '../GRZX/userLogin?loginType=3'
+									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
 							}
 						})
@@ -1288,7 +1288,7 @@
 							icon: 'none',
 							success: function() {
 								uni.redirectTo({
-									url: '../GRZX/userLogin?loginType=3'
+									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
 							}
 						})

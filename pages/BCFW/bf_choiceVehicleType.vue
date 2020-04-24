@@ -28,7 +28,7 @@
 			<view class="vs_topContent">
 				<text class="tc_text1">车型选择</text>
 				<view class="tc_text2">
-					<image class="tc_image" src="../../../static/BCFW/choice/zhuyi.png" style="wbackground-color: rgba(231,231,231,0.53);width: 40upx;height: 40upx;"></image>
+					<image class="tc_image" src="../../static/BCFW/choice/zhuyi.png" style="wbackground-color: rgba(231,231,231,0.53);width: 40upx;height: 40upx;"></image>
 					<text class="tc_text3" @click="open">价格说明</text>
 					<uni-popup ref="popup" type="bottom">
 						<view class="te_boxVlew">
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniPopup from "../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	export default {
 		components: {
 			uniPopup, //加载多方弹框组件
@@ -125,7 +125,7 @@
 
 						vehicle: [{
 							carId: '',
-							car: '',
+							car:'',
 							carName: '',
 							carNumberSeats:'',
 							carprice:'',
@@ -134,13 +134,11 @@
 				}], //车辆选择
 				
 				information:{
-					tabId: '',
-					btId: '',
 					carId: '',
-					tabName:'',
-					price: '',
 					carName: '',
 					car:'',
+					carNumberSeats:'',
+					carprice:'',
 				},
 				
 				
@@ -225,24 +223,29 @@
 			
 			//------------------------------提交数据-------------------------------------
 			subit:function(){
-				if(this.value3!==''){
+				if(this.value3==''){
+					uni.showToast({
+						title: '请选择包车',
+						icon: 'none'
+					})
+				}else if(this.value3!==''){
 					this.information.carId = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carId;
 					this.information.car = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].car;
 					this.information.carName = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carName;
 					this.information.carNumberSeats = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carNumberSeats;
 					this.information.carprice = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carprice;
-					console.log(this.information.carNumberSeats)
+					
+					console.log(this.vehicleSelection[this.value])
+					uni.setStorage({
+						key:'vehicleInformation',
+						data:this.information,
+						success:()=>{
+							uni.navigateTo({
+								url:'./bf_information?isNormal='+this.isNormal
+							})
+						}
+					})
 				}
-				console.log(this.vehicleSelection[this.value])
-				uni.setStorage({
-					key:'vehicleInformation',
-					data:this.information,
-					success:()=>{
-						uni.navigateTo({
-							url:'../choice/ci_information?isNormal='+this.isNormal
-						})
-					}
-				})
 			}
 			
 		}
