@@ -41,8 +41,13 @@ const Interface = {
 		name:'旅客端-根据订单号取消订单',
 		method:'POST',
 		page:["CZC/CallAndDrive.nvue"]
+	},
+	addPassengerOneTouchAlarm:{
+		value:Url + '/api/taxi/addPassengerOneTouchAlarm',
+		name:'旅客端-一键报警',
+		method:'POST',
+		page:["CZC/CallAndDrive.nvue"]
 	}
-	
 }
 
 const dateFormat = {
