@@ -9,8 +9,9 @@
 			<!-- 司机未接单 -->
 			<view class="waitContent" elevation='5px'>
 				<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
-				<view style="margin-top: 50rpx;">
+				<view style="margin-top: 50rpx;align-items: center;">
 					<text class="isWaitText">正在等待司机接单...</text>
+					<text style="color: #999999;font-size: 32rpx;padding-top: 10rpx;" @click="cancleOrder">取消订单</text>
 				</view>
 			</view>
 		</view>
@@ -135,7 +136,7 @@
 </template>
 
 <script>
-	import taxi from '../../common/Czc.js';
+	import $taxi from '../../common/Czc.js';
 	import uniPopup from "@/components/CZC/uni-popup/uni-popup.vue";
 	import uniIcons from "@/components/CZC/uni-icons/uni-icons.vue";
 
@@ -171,7 +172,7 @@
 				lat: "", //用户位置纬度
 				//接口数据
 				orderNumber: '',
-				vehicleNumber: '闽C1063',
+				vehicleNumber: '',
 				state: '', //订单状态
 				startLon: "", //开始
 				startLat: "",
@@ -182,6 +183,7 @@
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				driverPhone: '0', //司机电话号码
+				userInfo: [],
 				priceArr: [{
 						key: '起步价',
 						value: '10.0'
@@ -208,12 +210,13 @@
 						iconPath: '../../static/CZC/Alipay.png',
 						value: 'alipay',
 						checked: false
-					}
+					},
 				]
 			}
 		},
 		onLoad(option) {
 			let that = this;
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 			that.orderNumber = option.orderNumber;
 			getApp().globalData.orderNumber = that.orderNumber; //更改当前订单号
 			uni.getSystemInfo({
@@ -231,9 +234,9 @@
 			let that = this;
 			that.mapContext = uni.createMapContext("map", this);
 		},
-		onHide() {
+		onUnload() {
 			let that = this;
-			console.log('onHide');
+			console.log('onUnload');
 			clearInterval(that.orderInterval);
 			clearInterval(that.directionInterval);
 			clearInterval(that.comingInterval);
@@ -260,19 +263,18 @@
 				uni.showLoading({
 					title: '加载中'
 				})
-
 				uni.request({
-					url: taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
-					method: taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
+					url: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
+					method: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber
 					},
 					success: function(res) {
 						uni.hideLoading();
-						console.log(res.data);
+						// console.log(res.data);
 						let data = res.data.data;
 						//成功
-						console.log(res);
+						// console.log(res);
 						if (res.data.status) {
 							//赋值结束点经纬度
 							that.startLon = data.startLon; //起点
@@ -283,7 +285,7 @@
 							that.thisDriverLat = data.thisDriverLat;
 							that.driverPhone = data.driverPhone; //司机电话
 							that.driverName = data.driverName;
-							that.vehicleNumber=data.vehicleNumber;//车牌号
+							that.vehicleNumber = data.vehicleNumber; //车牌号
 							that.state = data.state; //订单状态
 							//绘制起终点标记
 							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
@@ -331,14 +333,20 @@
 							} else if (that.state == 5) {
 								//state == 15
 								getApp().globalData.closeUpload();
-								uni.showToast({
-									title: '请支付订单',
-									icon: 'none'
+								// uni.showToast({
+								// 	title: '请支付订单',
+								// 	icon: 'none'
+								// })
+								uni.redirectTo({
+									url:"./PaymentSuccess"
 								})
 							} else if (that.state == 6) {
 								//支付完成
 								//关闭旅客上传定位
 								getApp().globalData.closeUpload();
+								uni.redirectTo({
+									url:"./PaymentSuccess"
+								})
 							} else if (that.state == 7) {
 								//司机取消订单
 								//关闭旅客上传定位
@@ -374,8 +382,8 @@
 				let that = this;
 				that.orderInterval = setInterval(function() {
 					uni.request({
-						url: taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
-						method: taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
+						url: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
+						method: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
 						data: {
 							OrderNumber: that.orderNumber
 						},
@@ -387,9 +395,10 @@
 								that.driverPhone = data.driverPhone; //司机电话
 								that.driverName = data.driverName;
 								that.state = data.state; //订单状态
-								console.log(res)
-								console.log(data.thisDriverLon);
-								console.log(data.thisDriverLat);
+								that.vehicleNumber = data.vehicleNumber; //车牌号
+								// console.log(res)
+								// console.log(data.thisDriverLon);
+								// console.log(data.thisDriverLat);
 								if (that.state == 0) {
 									//等待司机接单中
 									that.hintIndex = 0;
@@ -449,13 +458,19 @@
 									that.orderInterval = 0;
 									that.polyline = [];
 									if (!that.isShow) {
-										that.openBottomPopup();
+										// that.openBottomPopup();
 									}
 									that.isShow = true;
+									uni.redirectTo({
+										url:"./PaymentSuccess"
+									})
 								} else if (that.state == 6) {
 									//支付完成
 									//关闭旅客上传定位
 									getApp().globalData.closeUpload();
+									uni.redirectTo({
+										url:"./PaymentSuccess"
+									})
 								} else if (that.state == 7) {
 									//司机取消订单
 									//关闭旅客上传定位
@@ -498,18 +513,86 @@
 			callPolice: function() {
 				//一键报警
 				let that = this;
-				uni.showToast({
-					title: 'callPolice'
-				});
-				uni.getLocation({
-					type: 'gcj02',
-					geocode: true,
-					success: function(res) {
-						console.log(res.address);
-						console.log(res.latitude);
-						console.log(res.longitude);
+				uni.showModal({
+					title: "一键报警",
+					content: "注意：恶意报警将承担相关法律责任",
+					confirmText: "报警",
+					confirmColor: "#E74246",
+					success(res) {
+						if (res.confirm) {
+							uni.getLocation({
+								type: 'gcj02',
+								geocode: true,
+								success: function(res) {
+									console.log(res)
+									uni.request({
+										url: $taxi.Interface.addPassengerOneTouchAlarm.value,
+										method: $taxi.Interface.addPassengerOneTouchAlarm.method,
+										data: {
+											orderNumber: that.orderNumber,
+											passengerNumber: that.userInfo.userId,
+											Lon: res.longitude,
+											Lat: res.latitude,
+											Address: that.packAddress(res.address),
+										},
+										success(res) {
+											console.log(res);
+											if (res.data.status) {
+												uni.showToast({
+													title: res.data.msg,
+													icon: "none"
+												})
+											} else {
+												uni.showToast({
+													title: res.data.msg,
+													icon: "none"
+												})
+											}
+										},
+										fail() {
+											uni.showToast({
+												title: "网络连接失败",
+												icon: "none"
+											})
+										}
+									})
+
+								}
+							});
+						}
 					}
-				});
+				})
+			},
+			packAddress: function(value) { //组装地址
+				var country = '';
+				var province = '';
+				var city = '';
+				var district = '';
+				var street = '';
+				var streetNum = '';
+				var poiName = '';
+				if (value.country != "undefined") {
+					country = value.country;
+				}
+				if (value.province != "undefined") {
+					province = value.province;
+				}
+				if (value.city != "undefined") {
+					city = value.city;
+				}
+				if (value.district != "undefined") {
+					district = value.district;
+				}
+				if (value.street != "undefined") {
+					street = value.street;
+				}
+				if (value.streetNum != "undefined") {
+					streetNum = value.streetNum;
+				}
+				if (value.poiName != "undefined") {
+					poiName = value.poiName;
+				}
+				return country + province + city + district + street + streetNum + poiName;
 			},
 			cancleOrder: function() {
 				//取消订单
@@ -520,17 +603,17 @@
 					content: "您是否取消订单",
 					success(res) {
 						if (res.confirm) {
-
 							clearInterval(that.directionInterval);
 							that.directionInterval = 0;
 							clearInterval(that.orderInterval);
 							that.orderInterval = 0;
 							getApp().globalData.closeUpload();
 							uni.request({
-								url: taxi.Interface.CancelExpressOrderByOrderNum_Passenger.value,
-								method: taxi.Interface.CancelExpressOrderByOrderNum_Passenger.method,
+								url: $taxi.Interface.CancelExpressOrderByOrderNum_Passenger.value,
+								method: $taxi.Interface.CancelExpressOrderByOrderNum_Passenger.method,
 								data: {
-									OrderNumber: that.orderNumber
+									OrderNumber: that.orderNumber,
+									userId: that.userInfo.userId,
 								},
 								success: function(res) {
 									let data = res.data.data;
@@ -665,7 +748,7 @@
 				//调用高德api取得路径规划并绘制线路
 				let that = this;
 				uni.request({
-					url: taxi.InterfaceAddress[0],
+					url: $taxi.InterfaceAddress[0],
 					data: {
 						startLonLat: startLonLat,
 						endLonLat: endLonLat,

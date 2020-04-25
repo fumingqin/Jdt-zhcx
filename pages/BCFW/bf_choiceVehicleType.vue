@@ -28,12 +28,12 @@
 			<view class="vs_topContent">
 				<text class="tc_text1">车型选择</text>
 				<view class="tc_text2">
-					<image class="tc_image" src="../../../static/BCFW/choice/zhuyi.png" style="wbackground-color: rgba(231,231,231,0.53);width: 40upx;height: 40upx;"></image>
+					<image class="tc_image" src="../../static/BCFW/choice/zhuyi.png" style="wbackground-color: rgba(231,231,231,0.53);width: 40upx;height: 40upx;"></image>
 					<text class="tc_text3" @click="open">价格说明</text>
 					<uni-popup ref="popup" type="bottom">
 						<view class="te_boxVlew">
 							<view class="bv_titleView">
-								<text class="tv_text1">专线须知</text>
+								<text class="tv_text1">包车须知</text>
 								<text class="tv_text2 jdticon icon-fork " @click="close(1)"></text>
 							</view>
 							<scroll-view class="bv_content" scroll-y="ture">
@@ -63,7 +63,7 @@
 			<scroll-view class="sr_scroll" scroll-x="true">
 				<view class="sc_selectButton">
 					<view v-for="(item,index) in vehicleSelection[value].cost" :key="index">
-						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.price}}</view>
+						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.price}}元</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniPopup from "../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	export default {
 		components: {
 			uniPopup, //加载多方弹框组件
@@ -125,20 +125,20 @@
 
 						vehicle: [{
 							carId: '',
-							car: '',
+							car:'',
 							carName: '',
+							carNumberSeats:'',
+							carprice:'',
 						}],
 					}],
 				}], //车辆选择
 				
 				information:{
-					tabId: '',
-					btId: '',
 					carId: '',
-					tabName:'',
-					price: '',
 					carName: '',
 					car:'',
+					carNumberSeats:'',
+					carprice:'',
 				},
 				
 				
@@ -224,25 +224,28 @@
 			//------------------------------提交数据-------------------------------------
 			subit:function(){
 				if(this.value3!==''){
-					this.information.tabId = this.vehicleSelection[this.value].tabId;
-					this.information.tabName = this.vehicleSelection[this.value].tabName;
-					this.information.btId = this.vehicleSelection[this.value].cost[this.value2].btId;
-					this.information.price = this.vehicleSelection[this.value].cost[this.value2].price;
 					this.information.carId = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carId;
 					this.information.car = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].car;
 					this.information.carName = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carName;
-					console.log(this.information.carName)
+					this.information.carNumberSeats = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carNumberSeats;
+					this.information.carprice = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carprice;
+					
+					console.log(this.vehicleSelection[this.value])
+					uni.setStorage({
+						key:'vehicleInformation',	
+						data:this.information,
+						success:()=>{
+							uni.navigateTo({
+								url:'./bf_information?isNormal='+this.isNormal
+							})
+						}
+					})
+				}else{
+					uni.showToast({
+						title: '请选择包车',
+						icon: 'none'
+					})
 				}
-				console.log(this.vehicleSelection[this.value])
-				uni.setStorage({
-					key:'vehicleInformation',
-					data:this.information,
-					success:()=>{
-						uni.navigateTo({
-							url:'../choice/ci_information?isNormal='+this.isNormal
-						})
-					}
-				})
 			}
 			
 		}
@@ -548,6 +551,9 @@
 						&.current3 {
 							z-index: 24;
 							color: #ff0000;
+							border: 1px solid #ff0000;
+							border-radius: 12rpx;
+							padding: 5upx;
 						}
 					}
 				}

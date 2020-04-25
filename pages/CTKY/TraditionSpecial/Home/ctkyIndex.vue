@@ -2,7 +2,7 @@
     <view class="myView">
 		<!-- 照片背景图 -->
 		<view>
-			<image src="../../static/CTKY/background.png" class="imageTop" mode="aspectFill"></image>
+			<image src="../../../../static/CTKY/kangYi.png" class="imageTop" mode="aspectFill"></image>
 			<!-- <image src="../../static/index/左-箭头.png" class="imageReturn"></image> -->
 		</view>
 		<!-- 车票查询 -->
@@ -20,7 +20,7 @@
 					<!-- <navigator url="homeSattionPick" hover-class="hover"> -->
 						<view class="start" @tap="startStationTap">{{departure}}</view>
 					<!-- </navigator> -->
-					<image src="../../static/CTKY/change.png" mode="aspectFill" class="changeImage" @click="changeClick"></image>
+					<image src="../../../../static/CTKY/change.png" mode="aspectFill" class="changeImage" @click="changeClick"></image>
 					<!-- 终点站 -->
 					<!-- <navigator url="homeSattionPick" hover-class="hover"> -->
 						<view class="start" style="text-align: right;" @tap="endStationTap">{{destination}}</view>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue";
+import MxDatePicker from "../../../../components/CTKY/mx-datepicker/mx-datepicker.vue";
 	export default {
 		components: {
 			MxDatePicker
@@ -109,7 +109,7 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 				});
 				uni.navigateTo({
 					//跳转到下个页面的时候加个字段，判断当前点击的是上车点
-					url:'./homeSattionPick?&station=' + 'qidian'
+					url:'../stationPicker/homeSattionPick?&station=' + 'qidian'
 				})
 			},
 			//---------------------------------点击终点站---------------------------------
@@ -124,7 +124,7 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 				});
 				uni.navigateTo({
 					//跳转到下个页面的时候加个字段，判断当前点击的是下车点
-					url:'./homeSattionPick?&station=' + 'zhongdian'
+					url:'../stationPicker/homeSattionPick?&station=' + 'zhongdian',
 				})
 			},
 			//---------------------------------点击车票类型---------------------------------
@@ -185,7 +185,8 @@ import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue"
 						data:this.historyLines,
 					})
 					//页面传参通过地址后面添加参数 this.isNormal=0是普通购票1是定制班车
-					var params='./selectTickets?&startStation=' + this.departure +'&endStation=' + this.destination + '&date=' + this.datestring + '&isNormal=' + this.isNormal;
+					
+					var params='../Order/selectTickets?&startStation=' + this.departure +'&endStation=' + this.destination + '&date=' + this.datestring + '&isNormal=' + this.isNormal;
 					uni.navigateTo({ 
 						url:params
 					})

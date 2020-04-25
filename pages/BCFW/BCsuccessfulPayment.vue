@@ -2,11 +2,12 @@
 	<view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
+			<image src="../../static/BCFW/choice/red.png" mode="aspectFill"></image>
 		</view>
 
 		<view class="cover-container">
-			<image class="okImage" mode="aspectFill" src='../../static/CZC/Fail.png'></image>
-			<text class="title">支付失败</text>
+			<image class="okImage" mode="aspectFill" src="../../../static/LYFW/scenicSpotTickets/successfulPayment/ok.png"></image>
+			<text class="title">购票成功</text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
 				<view class="orderButton" @click="godetail(0)">查看订单</view>
@@ -19,7 +20,9 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				godetailIndex:'',//跳转参数
+			}
 		},
 		onReady() {
 			this.backHome();
@@ -27,22 +30,27 @@
 		methods: {
 			//路由统一事件
 			godetail: function(e) {
-				if(e==0){
+				if(e==0){ 
+					this.godetailIndex=1;
 					uni.switchTab({
-						url: ''
+						url: '../../order/OrderList'	
 					});
 				}else if(e==1){
+					this.godetailIndex=2;
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url: '/pages/Home/indexZhly'
 					});
 				}
 			},
-			backHome : function() {
+			backHome(){
 				setTimeout(() => {
-					uni.switchTab({
-						url: '/pages/Home/Index'
-					});
-				}, 10000);
+					if(this.godetailIndex == ''){
+						uni.switchTab({
+							url: '/pages/Home/indexZhly'
+						});
+					}
+				}, 10000)
+				
 			}
 
 		}
@@ -60,18 +68,23 @@
 		position: absolute;
 		width: 100%;
 		height: 320upx;
-		background-color: #FC4646;
-	
-	}
 
+		image {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	
+	
+	
 	//整体容器样式
 	.cover-container {
 		position: absolute;
 		margin: 0 24upx;
-		margin-top: 88upx;
+		margin-top: 180upx;
 		margin-bottom: 52upx;
 		width: 702upx;
-		height: 90%;
+		height: 85%;
 		background: #FFFFFF;
 		box-shadow: 0px 0.2px 0px #aaa;
 		border-radius: 16upx;
@@ -107,7 +120,7 @@
 				width: 280upx;
 				height: 104upx;
 				font-size: 34upx;
-				background: #FC4646;
+				background: #3EABFC;
 				border-radius: 16upx;
 				color: #fff;
 			}
@@ -118,10 +131,17 @@
 				height: 104upx;
 				font-size: 34upx;
 				border-radius: 16upx;
-				color: #FC4646;
-				border: 1px solid #FC4646;
+				color: #3EABFC;
+				border: 1px solid #3EABFC;
 			}
 		}
 
 	}
+	
+	/* #ifdef MP-WEIXIN */
+	//整体容器样式 -微信版
+	.cover-container {
+		margin-top: 64upx;
+	}
+	/* #endif */
 </style>

@@ -98,8 +98,9 @@
 		position: absolute;
 		top:360upx;
 		width: 100%;
-		font-size: 36upx;
+		font-size: 30upx;
 		text-align: center;
+		margin-top: 10upx;
 	}
 	.boxClass1{
 		position: absolute;

@@ -13,7 +13,7 @@
 				</view>
 			</scroll-view>
 			<view style="width: 14%;height: 100%; align-items: center; justify-content: center;display: flex;">
-				<image src="../../static/CTKY/calendar.png" class="calendarImage" @click="onShowDatePicker('date')"></image>
+				<image src="../../../../static/CTKY/calendar.png" class="calendarImage" @click="onShowDatePicker('date')"></image>
 			</view>
 			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'"
 			 :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
@@ -28,12 +28,12 @@
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{turnDate(item.setTime)}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+					<image src="../../../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
 					color: #333333;">{{item.startStaion}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+					<image src="../../../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
 					color: #333333;">{{item.endStation}}</view>
 				</view>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-	import MxDatePicker from "../../components/CTKY/mx-datepicker/mx-datepicker.vue";
+	import MxDatePicker from "../../../../components/CTKY/mx-datepicker/mx-datepicker.vue";
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components: {
@@ -111,7 +111,7 @@
 					header:{'content-type':'application/x-www-form-urlencoded'},
 					success: (res) => {6
 						uni.hideLoading();
-						// console.log(res.data.data);
+						console.log(res.data.data);
 						let that = this;
 						//非空判断
 						if(res.data.data.length != 0) {
@@ -206,7 +206,7 @@
 					data: item,
 					success() {
 						uni.navigateTo({
-							url: '/pages/CTKY/scheduleDetails'
+							url: './scheduleDetails'
 						})
 					},
 					fail() {
