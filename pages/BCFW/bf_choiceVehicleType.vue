@@ -223,12 +223,7 @@
 			
 			//------------------------------提交数据-------------------------------------
 			subit:function(){
-				if(this.value3==''){
-					uni.showToast({
-						title: '请选择包车',
-						icon: 'none'
-					})
-				}else if(this.value3!==''){
+				if(this.value3!==''){
 					this.information.carId = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carId;
 					this.information.car = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].car;
 					this.information.carName = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carName;
@@ -237,13 +232,18 @@
 					
 					console.log(this.vehicleSelection[this.value])
 					uni.setStorage({
-						key:'vehicleInformation',
+						key:'vehicleInformation',	
 						data:this.information,
 						success:()=>{
 							uni.navigateTo({
 								url:'./bf_information?isNormal='+this.isNormal
 							})
 						}
+					})
+				}else{
+					uni.showToast({
+						title: '请选择包车',
+						icon: 'none'
 					})
 				}
 			}

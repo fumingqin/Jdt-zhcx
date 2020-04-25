@@ -1301,6 +1301,41 @@ const driverInformation = {
 	msg: '提示'
 }
 
+
+const selectSpecialLine={
+	status: 1, //1成功,0失败提示返回值
+	data:{
+		ci_countyCount:0,
+		ci_cityName:'泉州',
+		countys:[{
+			ct_countys:'晋江专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'惠安专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'福州专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'安溪专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'安海专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'东石专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		}]
+	},
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -1332,4 +1367,5 @@ export default {
 	priceExplain,
 	vehicleSelection,
 	driverInformation,
+	selectSpecialLine,
 }

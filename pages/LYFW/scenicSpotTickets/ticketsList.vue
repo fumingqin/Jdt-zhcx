@@ -28,7 +28,7 @@
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
+						<text class="Tk_text3" v-if="item.ticketAdultPrice !=='暂无门票价格信息！'">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
 					</view>
 				</view>
 			</view>
@@ -76,7 +76,7 @@
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
+						<text class="Tk_text3" v-if="item.ticketAdultPrice!=='暂无门票价格信息！'">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
 					</view>
 				</view>
 			</view>
@@ -93,7 +93,7 @@
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
+						<text class="Tk_text3" v-if="item.ticketAdultPrice!=='暂无门票价格信息！'">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
 					</view>
 				</view>
 			</view>

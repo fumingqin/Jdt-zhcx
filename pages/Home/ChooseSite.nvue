@@ -151,13 +151,13 @@
 					</view>
 					<!-- #ifdef APP-PLUS -->
 					<text style="top: 5rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;"
-						 @click="noPupop">下次不弹出</text>
+					 @click="noPupop">下次不弹出</text>
 					<!-- #endif -->
 					<!-- #ifdef MP-WEIXIN -->
 					<text style="margin-bottom: 80rpx; top: 10rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
-						 @click="noPupop">下次不弹出</text>
+					 @click="noPupop">下次不弹出</text>
 					<!-- #endif -->
-					
+
 				</view>
 			</view>
 			<view style="align-items: center;text-align: center;">
@@ -182,7 +182,8 @@
 						color: #333333;">{{item.endStation}}</text>
 					</view>
 					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
-					font-size: 28upx;color: #666666;">共{{item.Trips}}趟 {{utils.timeTodate('Y-m-d H:i:s',item.firstDepartureTime)}}发车</text>
+					font-size: 28upx;color: #666666;">共{{item.Trips}}趟
+						{{utils.timeTodate('Y-m-d H:i:s',item.firstDepartureTime)}}发车</text>
 				</view>
 				<view class="ctky_View_Right">
 					<view style="text-align: right;">
@@ -216,7 +217,8 @@
 							</hTimePicker>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
-						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;" @click="selectPassenger">
+						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;"
+						 @click="selectPassenger">
 							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
 							<uni-icons type="arrowright" size="19"></uni-icons>
 						</view>
@@ -249,25 +251,25 @@
 		</view>
 		<view v-if="current == 3">我是公交</view>
 		<view v-if="current == 4" style="margin-top: 10rpx;">
-			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick">
-				<text style="font-size: 36rpx;font-weight: bold;">专线出租</text>
+			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick(index)">
+				<text style="font-size: 36rpx;font-weight: bold;">{{item.SpecialLineName}}</text>
 				<view style="justify-content: space-between;padding-top: 20rpx;">
 					<view style="flex-direction: row;justify-content: space-between;">
 						<view style="flex-direction: row;align-items: center;">
 							<view style="border-radius: 100px;background-color: #309FF7;width: 10rpx;height: 10rpx;"></view>
-							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.startpoint}}</text>
+							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.StartSiteName}}</text>
 						</view>
 						<text style="font-size: 36rpx;color: #FC4646;">￥{{item.cost}}</text>
 					</view>
 					<view style="flex-direction: row;justify-content: space-between;padding-top: 10rpx;">
 						<view style=" flex-direction: row;align-items:center;">
 							<view style="border-radius: 100px;background-color: #E3424B;width: 10rpx;height: 10rpx;"></view>
-							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.endpoint}}</text>
+							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.EndSiteName}}</text>
 						</view>
 					</view>
 				</view>
 				<view style="padding-top: 20rpx;">
-					<text style="font-size: 28rpx;color: #666666;">约{{item.distance}}公里，预计{{item.time}}</text>
+					<text style="font-size: 28rpx;color: #666666;">约{{item.Distance}}公里，预计{{item.EstimatedTime}}</text>
 				</view>
 			</view>
 		</view>
@@ -275,13 +277,14 @@
 </template>
 
 <script>
-	import taxi from "../../common/Czc.js";
+	import $taxi from "../../common/Czc.js";
+	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
 	import uniIcons from "../../components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "../../components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "../../components/HOME/h-timePicker/h-timePicker.vue";
-	import popup from "../../components/HOME/uni-popup/uni-popup.vue";//弹框组件
-	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";//时间格式转换
-	import emptyData from "@/components/CTKY/emptyData/emptyData.vue";//无数据时显示内容
+	import popup from "../../components/HOME/uni-popup/uni-popup.vue"; //弹框组件
+	import utils from "@/components/CTKY/shoyu-date/utils.filter.js"; //时间格式转换
+	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
 	export default {
 		components: {
 			uniIcons,
@@ -292,54 +295,18 @@
 		},
 		data() {
 			return {
-				utils: utils,//时间格式转换
+				utils: utils, //时间格式转换
 				selecttime: "点击选择时间",
-				county:'',
+				county: '',
 				Passenger: [{
 					userName: "选择乘车人"
 				}],
-				privateTaxi: [{
-						startpoint: '泉金客运码头',
-						endpoint: '晋江机场',
-						cost: 100,
-						distance: 50.6,
-						time: '50分钟'
-					},
-					{
-						startpoint: '泉州客运中心站',
-						endpoint: '安溪',
-						cost: 50,
-						distance: 50.6,
-						time: '3小时50分钟'
-					},
-
-					{
-						startpoint: '泉州客运中心站',
-						endpoint: '安溪',
-						cost: 50,
-						distance: 50.6,
-						time: '3小时50分钟'
-					},
-					{
-						startpoint: '泉州客运中心站',
-						endpoint: '安溪',
-						cost: 50,
-						distance: 50.6,
-						time: '3小时50分钟'
-					},
-					{
-						startpoint: '泉州客运中心站',
-						endpoint: '安溪',
-						cost: 50,
-						distance: 50.6,
-						time: '3小时50分钟'
-					}
-				],
+				privateTaxi: [],
 				polyline: [],
 				tabIndex: 0,
 				index: 1,
-				startAddress: "",//起点
-				endAddress: "",//终点
+				startAddress: "", //起点
+				endAddress: "", //终点
 				startlocation: {},
 				endlocation: {},
 				IsClick: true,
@@ -348,38 +315,38 @@
 				IsSearch: false,
 				markers: [],
 				showlocation: true,
-				Distance: '',//距离
-				Duration: '',//时间
+				Distance: '', //距离
+				Duration: '', //时间
 				historyAddress: [],
 				// query: '',
 				winheight: "",
 				current: 0,
-				mapheight: "",//地图高度
-				historyheight: "",//历史记录高度
-				pageheight: "",//页面高度
+				mapheight: "", //地图高度
+				historyheight: "", //历史记录高度
+				pageheight: "", //页面高度
 				points: [],
 				polyline: [],
-				startLonLat: "",//起点经纬度组合(路线规划用到)
-				endLonLat: "",//终点点经纬度组合(路线规划用到)
-				startLon: "",//起点经度
-				startLat: "",//起点纬度
-				endLon: "",//终点经度
-				endLat: "",//终点纬度
-				estimatePrice: "",//预估价格
+				startLonLat: "", //起点经纬度组合(路线规划用到)
+				endLonLat: "", //终点点经纬度组合(路线规划用到)
+				startLon: "", //起点经度
+				startLat: "", //起点纬度
+				endLon: "", //终点经度
+				endLat: "", //终点纬度
+				estimatePrice: "", //预估价格
 				intervalAround: 0,
 				// map: '',
 				// tcky_selectStartStation: '泉州客运中心站',
 				// tcky_selectEndStation: '漳州客运站',
 				isPupop: true, //是否弹窗
-				keYunList:[],
-				disabled:true,
-				vehicleType:'出租车', //车辆类型
-				destinationArea:'',   //目标区域
-				estimateTime:0,//预计时长
-				estimateDistance:0//预计里程
+				keYunList: [],
+				disabled: true,
+				vehicleType: '出租车', //车辆类型
+				destinationArea: '', //目标区域
+				estimateTime: 0, //预计时长
+				estimateDistance: 0 //预计里程
 			}
 		},
-		
+
 		onLoad(options) {
 			var that = this;
 			uni.getStorage({ //获取历史记录
@@ -402,10 +369,10 @@
 		},
 		onUnload() {
 			uni.removeStorage({
-				key:"StartPoint"
+				key: "StartPoint"
 			})
 			uni.removeStorage({
-				key:"EndPoint"
+				key: "EndPoint"
 			})
 		},
 		onShow() {
@@ -425,11 +392,11 @@
 				key: "EndPoint",
 				success: function(res) {
 					that.endAddress = res.data.addressName;
-					that.endLonLat =res.data.lng + "," + res.data.lat;
+					that.endLonLat = res.data.lng + "," + res.data.lat;
 					that.endLon = res.data.lng;
 					that.endLat = res.data.lat;
 					that.endlocation = res.data;
-					that.destinationArea = res.data.district;//目标区域
+					that.destinationArea = res.data.district; //目标区域
 				}
 			});
 			uni.getStorage({ //获取乘车人
@@ -439,28 +406,28 @@
 					that.Passenger = res.data;
 				}
 			});
-				that.setHeight();
+			that.setHeight();
 		},
 		mounted() {
 			//动态设置高度
 			var that = this;
 			// that.map=uni.createMapContext("map555",this);
 			that.setHeight();
-			
+
 		},
 		onReady: function() {
-			
+
 		},
 		methods: {
-			showToast:function(msg,icon='none'){
+			showToast: function(msg, icon = 'none') {
 				uni.showToast({
-					title:msg,
-					icon:icon
+					title: msg,
+					icon: icon
 				})
 			},
-			setHeight:function(){
-				var that=this;
-				setTimeout(function(){
+			setHeight: function() {
+				var that = this;
+				setTimeout(function() {
 					let query = uni.createSelectorQuery().in(that).select("#ceshi");
 					query.fields({
 						size: true,
@@ -472,15 +439,15 @@
 								that.historyheight = (res.windowHeight - data.height - 108) + "px";
 								that.pageheight = res.windowHeight + "px";
 								that.mapheight = (res.windowHeight - data.height) + "px";
-								if(res.platform=="ios"){
+								if (res.platform == "ios") {
 									// that.historyheight = (res.windowHeight - data.height - 130) + "px";
-								    // that.winheight=data.height+25+'px';
-									that.disabled=false;
+									// that.winheight=data.height+25+'px';
+									that.disabled = false;
 								}
 							}
 						})
 					}).exec();
-				},200)
+				}, 200)
 			},
 			onClickItem(e) { //tab点击事件
 				var that = this;
@@ -495,10 +462,13 @@
 					//客运弹框
 					that.open();
 				}
+				if (that.current == 4) {
+					that.getprivateTaxiLine();
+				}
 			},
 			goBack: function() { //返回上一页
 				uni.switchTab({
-					url:"/pages/Home/Index"
+					url: "/pages/Home/Index"
 				});
 				clearInterval(this.intervalAround);
 			},
@@ -521,13 +491,6 @@
 					}
 				});
 			},
-			privateTaxiClick: function() {
-				uni.navigateTo({
-					url: '../CZC/PrivateTaxi',
-					animationType: 'pop-in',
-					animationDuration: 200,
-				});
-			},
 			promptlyCall: function() { //立即呼叫、生成订单
 				let that = this;
 				if (this.selecttime == "点击选择时间" && !this.IsClick) {
@@ -541,67 +504,76 @@
 						})
 					} else {
 						uni.showLoading({
-							title:'加载中',
-							mask:true
+							title: '加载中',
+							mask: true
 						})
 						let userInfo = uni.getStorageSync('userInfo') || '';
 						let orderNumber = '';
-						uni.request({							
-							url:taxi.Interface.AddExpressOrder_Passenger.value,
-							method:taxi.Interface.AddExpressOrder_Passenger.method,
-							data:{
-								startLon:that.startLon,
-								startLat:that.startLat,
-								endLon:that.endLon,
-								endLat:that.endLat,         
-								startAddress:that.startAddress, //起点
-								endAddress:that.endAddress,    //终点
-								orderType: that.IsClick?'实时':'预约',
-								passengers:JSON.stringify(that.Passenger),
-								vehicleType:that.vehicleType,//现在暂时只有出租车
-								appointmentTime:that.selecttime==='点击选择时间'?utils.timeTodate(taxi.dateFormat.dateformat, new Date().getTime()):that.selecttime, //预约时间
-								estimatePrice:that.estimatePrice,     //预估价格
-								userId:userInfo.userId,
-								estimateDistance:that.estimateDistance,			 //预估里程
-								destinationArea:that.destinationArea,//目标区域
-								estimateTime:that.estimateTime	 //预估时间
+						console.log(userInfo);
+						uni.request({
+							url: $taxi.Interface.AddExpressOrder_Passenger.value,
+							method: $taxi.Interface.AddExpressOrder_Passenger.method,
+							data: {
+								startLon: that.startLon,
+								startLat: that.startLat,
+								endLon: that.endLon,
+								endLat: that.endLat,
+								startAddress: that.startAddress, //起点
+								endAddress: that.endAddress, //终点
+								orderType: that.IsClick ? '实时' : '预约',
+								passengers: JSON.stringify(that.Passenger),
+								vehicleType: that.vehicleType, //现在暂时只有出租车
+								appointmentTime: that.selecttime === '点击选择时间' ? utils.timeTodate($taxi.dateFormat.dateformat, new Date().getTime()) :
+									that.selecttime, //预约时间
+								estimatePrice: that.estimatePrice, //预估价格
+								userId: userInfo.userId,
+								estimateDistance: that.estimateDistance, //预估里程
+								destinationArea: that.destinationArea, //目标区域
+								estimateTime: that.estimateTime, //预估时间
+								PassengersPhone: userInfo.phoneNumber,
+								userType: 0,
 							},
-							success:function(res){
+							success: function(res) {
+								console.log(res)
 								uni.hideLoading();
-								if(res.data.status){
+								if (res.data.status) {
 									that.showToast(res.data.msg);
 									orderNumber = res.data.data.orderNumber;
 									uni.navigateTo({
-										url: '../CZC/CallAndDrive?orderNumber='+orderNumber,
+										url: '../CZC/CallAndDrive?orderNumber=' + orderNumber,
 										animationType: 'pop-in',
 										animationDuration: 200,
 										success: function() {
 											uni.removeStorage({
-												key:"passengerList"
+												key: "passengerList"
 											})
 											uni.removeStorage({
-												key:"StartPoint"
+												key: "StartPoint"
 											})
 											uni.removeStorage({
-												key:"EndPoint"
+												key: "EndPoint"
 											})
 										}
 									});
-									
-								}else{
+								} else if (!res.data.status && res.data.msg == "抱歉!下单失败,您当前有未完成的订单") {
 									that.showToast(res.data.msg);
+									setTimeout(function() {
+										uni.switchTab({
+											url: "../order/OrderList"
+										})
+									}, 1000)
 								}
 							},
-							fail:function(res){
+							fail: function(res) {
 								that.showToast('网络连接失败');
 							}
 						})
-					
+
 					}
 				}
 			},
-			changeTime: function(e) { //选择预约时间
-				this.selecttime = e;
+			changeTime: function(e) { //选择预约时间 
+				this.selecttime = e; //预约时间 
 			},
 			selectPassenger: function() { //选择乘车人
 				uni.navigateTo({
@@ -616,24 +588,25 @@
 			click_btbooking: function() {
 				this.IsClick = false;
 			},
-			selectInitial:function(name){
+			selectInitial: function(name) {
 				//选择起点
 				var that = this;
-				if(that.current == 1) {
+				if (that.current == 1) {
 					//当前选择的是客运
 					//监听事件,监听下个页面返回的值
 					uni.$on('startstaionChange', function(data) {
-					    // data即为传过来的值，给上车点赋值
+						// data即为传过来的值，给上车点赋值
 						that.startAddress = data.data;
-					    //清除监听，不清除会消耗资源
-					    uni.$off('startstaionChange');
+						//清除监听，不清除会消耗资源
+						uni.$off('startstaionChange');
 					});
 					uni.navigateTo({
-						url:'../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian'
+
+						url: '../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian'
 					})
-				}else {
+				} else {
 					uni.navigateTo({
-						url:"./MapIndex?name="+name
+						url: "./MapIndex?name=" + name
 					})
 				}
 			},
@@ -655,24 +628,25 @@
 					}
 				});
 			},
-			selectDestination:function(name){
+			selectDestination: function(name) {
 				//选择终点
 				var that = this;
-				if(that.current == 1) {
+				if (that.current == 1) {
 					//当前选择的是客运
 					//监听事件,监听下个页面返回的值，给下车点赋值
 					uni.$on('endStaionChange', function(data) {
-					    // data即为传过来的值
+						// data即为传过来的值
 						that.endAddress = data.data;
-					    //清除监听，不清除会消耗资源
-					    uni.$off('endStaionChange');
+						//清除监听，不清除会消耗资源
+						uni.$off('endStaionChange');
 					});
 					uni.navigateTo({
-						url:'../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'zhongdian'
+
+						url: '../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'zhongdian'
 					})
-				}else {
+				} else {
 					uni.navigateTo({
-						url:"./MapIndex?name="+name
+						url: "./MapIndex?name=" + name
 					})
 				}
 			},
@@ -700,9 +674,9 @@
 				var newstartlocation = that.startlocation;
 				var newstartLat = that.startLat;
 				var newstartLon = that.startLon;
-				var newstartLonLat=that.startLonLat;
-				that.startLonLat =that.endLonLat;
-				that.endLonLat=newstartLonLat;
+				var newstartLonLat = that.startLonLat;
+				that.startLonLat = that.endLonLat;
+				that.endLonLat = newstartLonLat;
 				uni.setStorage({
 					key: 'startlocation',
 					data: that.endlocation,
@@ -751,7 +725,7 @@
 					that.setMarkers();
 					uni.showLoading({
 						title: "正在查询",
-						mask:true,
+						mask: true,
 					});
 					//获取数据,传入当前选择的模块index
 					that.getmessengeInfo(that.current);
@@ -762,69 +736,76 @@
 			//------------------------------------------------获取数据----------------------------------------
 			getmessengeInfo(param) {
 				// console.log(param)
-				switch(param){
-					case 0 :{//智能
-						
-						break;
-					}
-					case 1 :{
-					//---------------------------------------获取客运数据----------------------------------------
-					var that = this;
-					var date = that.getTime();
-					uni.showLoading();
-					uni.request({
-						url:'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
-						data: {
-							systemName:'泉运公司综合出行',
-							startPosition:this.startAddress,
-							endPosition:this.endAddress,
-							date:date,
-						},
-						method:'POST',
-						header:{'content-type':'application/json'},
-						success: (res) => {
-							uni.hideLoading();
-							//非空判断
-							if(res.data.data.length != 0) {
-								this.keYunList = res.data.data
-							}else {
-								this.keYunList = res.data.data
-								uni.showToast({
-									title:'暂无班次信息',
-									icon:'none'
-								})
-							}
-						},
-						fail(res) {
-							uni.hideLoading();
+				switch (param) {
+					case 0:
+						{ //智能
+
+							break;
 						}
-					})
-						break;
-					}
-					case 2 :{//出租车
-						
-						break;
-					}
-					case 3 :{//公交
-						
-						break;
-					}
-					case 4 :{//专线车
-						
-						break;
-					}
+					case 1:
+						{
+							//---------------------------------------获取客运数据----------------------------------------
+							var that = this;
+							var date = that.getTime();
+							uni.showLoading();
+							uni.request({
+								url: 'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
+								data: {
+									systemName: '泉运公司综合出行',
+									startPosition: this.startAddress,
+									endPosition: this.endAddress,
+									date: date,
+								},
+								method: 'POST',
+								header: {
+									'content-type': 'application/json'
+								},
+								success: (res) => {
+									uni.hideLoading();
+									//非空判断
+									if (res.data.data.length != 0) {
+										this.keYunList = res.data.data
+									} else {
+										this.keYunList = res.data.data
+										uni.showToast({
+											title: '暂无班次信息',
+											icon: 'none'
+										})
+									}
+								},
+								fail(res) {
+									uni.hideLoading();
+								}
+							})
+							break;
+						}
+					case 2:
+						{ //出租车
+
+							break;
+						}
+					case 3:
+						{ //公交
+
+							break;
+						}
+					case 4:
+						{ //专线车
+
+							break;
+						}
 					default:
 						break;
 				}
 			},
-			getTime:function(){
+			getTime: function() {
 				var date = new Date(),
-				year = date.getFullYear(),
-				month = date.getMonth() + 1,
-				day = date.getDate(),
-				hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-				minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
-				second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+					year = date.getFullYear(),
+					month = date.getMonth() + 1,
+					day = date.getDate(),
+					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+					minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
+					second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 				month >= 1 && month <= 9 ? (month = "0" + month) : "";
 				day >= 0 && day <= 9 ? (day = "0" + day) : "";
 				var timer = year + '-' + month + '-' + day;
@@ -892,7 +873,7 @@
 				that.showlocation = false;
 				that.getDirectionDriving(that.startLonLat, that.endLonLat);
 			},
-			SecondToMinutes:function(time){
+			SecondToMinutes: function(time) {
 				var that = this;
 				return Math.ceil(time / 60);
 			},
@@ -908,18 +889,18 @@
 						minutes = Math.ceil((time - date * 24 * 3600 - hours * 3600) / 60);
 						if (minutes >= 1) {
 							// seconds = time -date*24*3600-  hours * 3600 - minutes * 60
-							that.Duration = date + "天" + hours + "小时" + minutes + "分钟";
+							return date + "天" + hours + "小时" + minutes + "分钟";
 						} else {
-							that.Duration = date + "天" + hours + "小时";
+							return date + "天" + hours + "小时";
 							// seconds = time -date*24*3600-  hours * 3600;
 						}
 					} else {
 						minutes = Math.ceil(time / 60);
 						if (minutes >= 1) {
-							that.Duration = date + "天" + minutes + "分钟";
+							return date + "天" + minutes + "分钟";
 							// seconds = time -date*24*3600-minutes * 60
 						} else {
-							that.Duration = date + "天";
+							return date + "天";
 							// seconds = time-date*24*3600;
 						}
 					}
@@ -929,15 +910,15 @@
 						minutes = Math.ceil((time - hours * 3600) / 60);
 						if (minutes >= 1) {
 							// seconds = time - hours * 3600 - minutes * 60
-							that.Duration = hours + "小时" + minutes + "分钟";
+							return hours + "小时" + minutes + "分钟";
 						} else {
-							that.Duration = hours + "小时";
+							return hours + "小时";
 							// seconds = time - hours * 3600;
 						}
 					} else {
 						minutes = Math.ceil(time / 60);
 						if (minutes >= 1) {
-							that.Duration = minutes + "分钟";
+							return minutes + "分钟";
 							// seconds = time - minutes * 60
 						} else {
 							// seconds = time;
@@ -950,7 +931,7 @@
 				// console.log(startLonLat);
 				var that = this;
 				uni.request({
-					url: taxi.InterfaceAddress[0],
+					url: $taxi.InterfaceAddress[0],
 					data: {
 						startLonLat: startLonLat,
 						endLonLat: endLonLat,
@@ -971,7 +952,7 @@
 						}
 						that.estimateDistance = res.data.Distance / 1000;
 						that.estimateTime = that.SecondToMinutes(res.data.Duration);
-						that.Timechange(res.data.Duration);
+						that.Duration = that.Timechange(res.data.Duration);
 						polylineArr = res.data.Polyline;
 
 						for (var i = 0; i < polylineArr.length; i++) {
@@ -994,7 +975,7 @@
 							width: 6,
 							arrowLine: true,
 							// arrowIconPath:'../../static/CZC/jiantou.png',
-							color:'#4bdc27',
+							color: '#4bdc27',
 							borderColor: "#8c918b",
 						};
 						that.polyline.push(obj);
@@ -1015,9 +996,10 @@
 				let dateArray = param.firstDepartureTime.split('T');
 				let date = dateArray[0];
 				//页面传参通过地址后面添加参数 shuttleType="直达班车"是普通购票1是定制班车
-				var params='../CTKY/TraditionSpecial/Order/selectTickets?&startStation=' + param.startStaion +'&endStation=' + param.endStation + '&date=' + date + '&isNormal=' + param.shuttleType;
+				var params = '../CTKY/TraditionSpecial/Order/selectTickets?&startStation=' + param.startStaion + '&endStation=' +
+					param.endStation + '&date=' + date + '&isNormal=' + param.shuttleType;
 				uni.navigateTo({
-					url:params
+					url: params
 				})
 			},
 			//传统客运弹窗
@@ -1057,7 +1039,7 @@
 					type: 'gcj02',
 					success: function(res) {
 						uni.request({
-							url: taxi.InterfaceAddress[2],
+							url: $taxi.InterfaceAddress[2],
 							data: {
 								lon: res.longitude,
 								lat: res.latitude,
@@ -1081,8 +1063,30 @@
 				that.intervalAround = setInterval(function() {
 					that.selectCarAroung();
 				}, 3000);
+			},
+			///////////////////////////专线出租车代码开始/////////////////////////////////////////////////////
+			getprivateTaxiLine: function() {
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.GetCityLine.value,
+					method: $privateTaxi.Interface.GetCityLine.method,
+					success(res) {
+						console.log(res);
+						if (res.status) {
+							that.privateTaxi = res.data;
+						}
+					}
+				})
+			},
+			privateTaxiClick: function(index) { //点击专线车 
+				//this.privateTaxi[index].SpecialLineID//线路ID
+				uni.navigateTo({
+					url: '../CZC/PrivateTaxi',
+					animationType: 'pop-in',
+					animationDuration: 200,
+				});
 			}
-			
+			///////////////////////////专线出租车代码结束/////////////////////////////////////////////////////
 		}
 	}
 </script>
@@ -1114,16 +1118,19 @@
 		border-color: #EAEAEA;
 		border-radius: 0;
 	}
+
 	/* 客运弹框 */
 	.popupTextContent {
 		margin-left: 20rpx;
 		margin-right: 20rpx;
-		
+
 	}
+
 	.popupText {
 		color: #FFFFFF;
 		font-size: 30upx;
 	}
+
 	.bt_booking {
 		width: 329rpx;
 		height: 60rpx;
