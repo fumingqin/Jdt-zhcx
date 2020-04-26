@@ -3,7 +3,7 @@
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
 			<swiper-item class="swi-item" v-for="(item,index) in piclist" :key="index">
-				<image :src="item.ticketImage" @click="goImgList" />
+				<image :src="item.ticketImage" mode="aspectFill" @click="goImgList" />
 				<view class="view">1张图片</view>
 			</swiper-item>
 		</swiper>

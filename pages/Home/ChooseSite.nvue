@@ -466,7 +466,7 @@
 					that.endAddress = '';
 					//客运弹框
 					that.open();
-				} 
+				}
 				if (that.current == 4) {
 					that.getprivateTaxiLine();
 				}
@@ -1053,10 +1053,12 @@
 							method: 'GET',
 							success: function(res) {
 								var carArr = res.data;
+								//console.log(res.data);
 								for (var i = 0; i < carArr.length; i++) {
-									that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
+									that.setMarker('car_' + i, carArr[i].longitude, carArr[i].latitude,
 										'../../static/CZC/Car.png');
 								}
+								console.log(that.markers);
 								// console.log(carArr.length + '-' + that.markers.length);
 							},
 						});
@@ -1071,13 +1073,12 @@
 			},
 			///////////////////////////专线出租车代码开始/////////////////////////////////////////////////////
 			getprivateTaxiLine: function() {
-				let that = this;
+				let that=this;
 				uni.showLoading({
 					mask:true
 				})
 				uni.request({
-					url: $privateTaxi.Interface.GetSpecialLine.value,
-					method: $privateTaxi.Interface.GetSpecialLine.method,
+					method: $privateTaxi.Interface.GetCityLine.method,
 					success(res) {
 						if (res.data.status) {
 							uni.hideLoading();

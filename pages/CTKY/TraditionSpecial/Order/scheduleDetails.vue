@@ -490,7 +490,7 @@
 						getOffPoint : that.endStation
 					}
 					uni.navigateTo({
-						url:'/pages/CTKY/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' + JSON.stringify(array)
+						url:'../PayMent/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' + JSON.stringify(array)
 					})
 				}
 

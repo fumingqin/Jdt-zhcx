@@ -111,7 +111,7 @@
 					header:{'content-type':'application/x-www-form-urlencoded'},
 					success: (res) => {6
 						uni.hideLoading();
-						// console.log(res.data.data);
+						console.log(res.data.data);
 						let that = this;
 						//非空判断
 						if(res.data.data.length != 0) {
