@@ -607,6 +607,15 @@
 		    "style" : {}
 		}
 		
+        ,{
+            "path" : "pages/CTKY/SpecialBus/Home/specialLinePicker",
+            "style" : {}
+        }
+        
+        ,{
+            "path" : "pages/CTKY/SpecialBus/Home/specialReserve",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
