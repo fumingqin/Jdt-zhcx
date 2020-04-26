@@ -44,7 +44,8 @@
 							<button class="allBtn" @click="going(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成' || item.orderType=='未支付'">详情</button>
 							<button class="allBtn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button>
 							<button class="allBtn payBtn" @click="openBottomPopup" v-if="item.orderType=='未支付'">去支付</button>
-							<button class="allBtn" @tap="del(index)" v-if="item.orderType=='已取消'">删除</button>
+							<button class="allBtn" @tap="del(index)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+							<button class="allBtn" @click="cancleOrder(item)" v-if="item.orderType=='进行中'">取消</button>
 						</view>
 					</view>
 				</view>
@@ -1061,6 +1062,7 @@
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
 	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
+	import $taxi from '../../common/Czc.js';
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1452,8 +1454,17 @@
 									for (var i = 0; i < res.data.data.length; i++) {
 										var data = res.data.data[i];
 										var orderType1 = '';
-										if(data.state == 0 || data.state == 1){
+										if(data.state == 0 || data.state == 1|| data.state == 2|| data.state == 3|| data.state == 4){
 											orderType1 = '进行中';
+										}
+										if(data.state == 5 || data.state == 9){
+											orderType1 = '未支付';
+										}
+										if(data.state == 7 || data.state == 8){
+											orderType1 = '已取消';
+										}
+										if(data.state == 6){
+											orderType1 = '已完成';
 										}
 										console.log(orderType1);
 										var obj = {
@@ -1499,6 +1510,55 @@
 								})
 							}
 						})
+					}
+				})
+			},
+			//-------------------------出租车订单取消-------------------------
+			cancleOrder: function(item) {
+				//取消订单
+				let that = this;
+				//关闭所有的定时器
+				uni.showModal({
+					title: "取消订单",
+					content: "您是否取消订单",
+					success(res) {
+						if (res.confirm) {
+							getApp().globalData.closeUpload();
+							uni.request({
+								url: $taxi.Interface.CancelExpressOrderByOrderNum_Passenger.value,
+								method: $taxi.Interface.CancelExpressOrderByOrderNum_Passenger.method,
+								data: {
+									OrderNumber: item.orderNumber,
+									userId: that.userInfo.userId,
+								},
+								success: function(res) {
+									let data = res.data.data;
+									if (res.data.status) {
+										uni.showToast({
+											title: '取消成功',
+											icon: 'none',
+											success: function() {}
+										});
+										setTimeout(function() {
+											uni.startPullDownRefresh();
+										}, 1500)
+									} else {
+										uni.showToast({
+											title: res.data.msg,
+											icon: 'none'
+										})
+									}
+								},
+								fail: function(res) {
+									uni.showToast({
+										title: '网络连接失败',
+										icon: 'none'
+									})
+									console.log(res);
+								}
+							});
+						}
+			
 					}
 				})
 			},
