@@ -605,7 +605,7 @@
 					})
 				} else {
 					uni.navigateTo({
-					
+						url: "./MapIndex?name=" + name
 					})
 				}
 			},
@@ -1046,10 +1046,12 @@
 							method: 'GET',
 							success: function(res) {
 								var carArr = res.data;
+								//console.log(res.data);
 								for (var i = 0; i < carArr.length; i++) {
-									that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
+									that.setMarker('car_' + i, carArr[i].longitude, carArr[i].latitude,
 										'../../static/CZC/Car.png');
 								}
+								console.log(that.markers);
 								// console.log(carArr.length + '-' + that.markers.length);
 							},
 						});
