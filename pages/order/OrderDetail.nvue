@@ -13,13 +13,13 @@
 					</view>
 					<view style="margin-left: 10rpx;">
 						<view>
-							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">张师傅</text>
+							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{orderInfo.driverName}}</text>
 						</view>
 						<view style="flex-direction: row;margin-top: 10rpx;">
 							<view>
-								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">闽C1063</text>
+								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">{{orderInfo.vehicleNumber}}</text>
 							</view>
-							<view style="margin-left: 30rpx;">
+							<view style="margin-left: 18rpx;">
 								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text>
 							</view>
 						</view>
@@ -28,12 +28,12 @@
 
 				<view style="flex-direction: row;background-color: #FFFFFF;justify-content: space-between;align-items: center;padding: 20rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
 					<view style="flex-direction: row;align-items: center;">
-						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">32.5</text>
-						<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">元（已优惠9.45元）</text>
+						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">{{orderInfo.factPayPrice}}元</text>
+						<!-- <text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">元（已优惠9.45元）</text> -->
 					</view>
-					<view>
+					<!-- <view>
 						<text @click="payDetail" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用明细></text>
-					</view>
+					</view> -->
 				</view>
 
 				<view style="background-color: #FFFFFF;padding: 40rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
@@ -50,32 +50,34 @@
 		<!-- 满意弹出框 -->
 		<uni-popup ref="bottomPopup" type="bottom">
 			<form @submit="submit">
-			<view style="height: 780rpx; background-color: #FFFFFF; border-top-left-radius: 20rpx; border-top-right-radius: 20rpx;">
-				<view style="flex-direction: row;justify-content: space-between; margin-top: 20rpx;">
+				<view style="height: 780rpx; background-color: #FFFFFF; border-top-left-radius: 20rpx; border-top-right-radius: 20rpx;">
+					<view style="flex-direction: row;justify-content: space-between; margin-top: 20rpx;">
+						<view>
+							<!-- 请勿删除 -->
+						</view>
+						<view>
+							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
+						</view>
+						<view style="right: 30rpx;">
+							<uni-icons @click="close" type="closeempty" size="19"></uni-icons>
+						</view>
+					</view>
+					<!-- 五角星 -->
+					<view style="margin-top: 60rpx; margin-left: 92rpx;">
+						<uni-rate size="28" margin="20" :value="num" @change="onchange" />
+					</view>
+					<!-- 评价框 -->
+					<view style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
+						<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate"
+						 :key="index">
+							<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
+						</view>
+					</view>
+					<!-- 文本框 -->
 					<view>
-						<!-- 请勿删除 -->
-					</view>
-					<view>
-						<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
-					</view>
-					<view style="right: 30rpx;">
-						<uni-icons @click="close" type="closeempty" size="19"></uni-icons>
-					</view>
-				</view>
-				<!-- 五角星 -->
-				<view style="margin-top: 60rpx; margin-left: 92rpx;">
-					<uni-rate size="28" margin="20" value="5" @change="onchange" />
-				</view>
-                <!-- 评价框 -->
-				<view  style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;"> 
-					<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate" :key="index">
-						<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
-					</view>
-				</view>
-				<!-- 文本框 -->
-				<view>
-					<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;" name="textareaValue" />
-				</view>
+						<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;"
+						 name="textareaValue" />
+						</view>
 				<!-- 提交按钮 -->
 				<view>
 					<button form-type="submit" style="width:648rpx;height:84rpx; border-radius:12rpx; background-color: #FC4646;border-color: #AAAAAA; margin-top: 30rpx; margin-left: 40rpx;">
@@ -102,7 +104,7 @@
 				</view>
 				<!-- 五角星 -->
 				<view style="margin-top: 60rpx; margin-left: 92rpx;">
-					<uni-rate size="28" margin="20" value="2" @change="onchange" />
+					<uni-rate size="28" margin="20" :value="num" @change="onchange"/>
 				</view>
 		        <!-- 评价框 -->
 				<view  style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;"> 
@@ -112,7 +114,7 @@
 				</view>
 				<!-- 文本框 -->
 				<view>
-					<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;" name="textareaValue1" />
+					<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;" name="textareaValue" />
 				</view>
 				<!-- 提交按钮 -->
 				<view>
@@ -153,13 +155,22 @@
 				textareaValue:"",
 				rSelect:[],
 				rSelect1:[],
+				orderInfo:[],//订单数据
+				userInfo:'',
+				num:'5',
+				orderNumber:'',
 			}
 		},
-		onLoad() {
-			var that = this;
-			that.setMarker(1, 118.600608, 24.889217, '../../static/CZC/Start.png');
-			that.setMarker(2, 118.613688, 24.912702, '../../static/CZC/End.png');
-			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
+		onLoad(option) {
+			let that=this;
+			that.userInfo = uni.getStorageSync('userInfo') || '';
+			console.log(that.userInfo)
+			that.getOrderDetailInfo(option.orderNumber);
+			that.orderNumber=option.orderNumber;
+		
+		},
+		mounted() {
+			let that=this;
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
@@ -169,6 +180,62 @@
 			});
 		},
 		methods: {
+			//-------------------------------请求订单详情数据-------------------------------
+			getOrderDetailInfo:function(param){
+				var that = this;
+				console.log(param)
+				uni.request({
+					url:'http://111.231.109.113:8002/api/taxi/SearchExpressOrderByOrderNum_Passenger',
+					method:'POST',
+					data: {
+						orderNumber:param,
+						userId: that.userInfo.userId,
+					},
+					success(res) {
+						that.orderInfo = res.data.data
+						console.log(that.orderInfo.startLon)
+						console.log(that.orderInfo.startLat)
+						that.setMarker(1, that.orderInfo.startLon, that.orderInfo.startLat, '../../static/CZC/Start.png');
+						that.setMarker(2, that.orderInfo.endLon, that.orderInfo.endLat, '../../static/CZC/End.png');
+						// that.getDirectionDriving(that.orderInfo.startLon + ',' + that.orderInfo.startLat, that.orderInfo.endtLon + ',' + that.orderInfo.endLat);
+						console.log(that.userInfo.userId)
+						console.log(res)
+					},
+					fail(res) {
+						console.log(res.data.msg)
+					}
+				})
+			},
+			//-------------------------------订单评价-------------------------------
+			getOrderValuate:function(param,manyi){
+				var that = this;
+				console.log(param)
+				console.log(manyi)
+				console.log(that.num)
+				console.log(that.rSelect)
+				console.log(that.textareaValue)
+				uni.request({
+					url:'http://111.231.109.113:8002/api/taxi/addPassengerEvaluate_Passenger',
+					method:'POST',
+					data: {
+						orderNumber:param,
+						satisfied :manyi,
+						starClass:that.num,
+					    selectionTags:JSON.stringify(that.rSelect),
+						evaluateContent:that.textareaValue
+					},
+					success(res) {
+						console.log(res)
+					},
+					fail(res) {
+						console.log(res.data.msg)
+					}
+				})
+			},
+			onchange(e){
+				this.num = e.value;
+				console.log(this.num);
+			},
 			 tapInfo(e) {
 				        if (this.rSelect.indexOf(e) == -1) {
 				    	    console.log(e)//打印下标
@@ -192,6 +259,7 @@
 				var that = this;
 				this.textareaValue = e.detail.value.textareaValue;
 				that.closeBottomPopup();
+				that.getOrderValuate(that.orderNumber,true);
 				uni.showToast({
 					title:'评价成功'
 				})
@@ -202,8 +270,9 @@
 			 */
 			submit1(e){
 				var that = this;
-				this.textareaValue1 = e.detail.value.textareaValue1;
+				this.textareaValue = e.detail.value.textareaValue;
 				that.closeBottomPopup1();
+				that.getOrderValuate(that.orderNumber,false);
 				uni.showToast({
 					title:'评价成功'
 				})
@@ -268,54 +337,53 @@
 					this.$refs['bottomPopup1'].close();
 				});
 			},
-			getDirectionDriving: function(startLonLat, endLonLat) {
-				//调用高德api取得路径规划并绘制线路 
-				var that = this;
-				uni.request({
-					url: taxi.InterfaceAddress[0],
-					data: {
-						startLonLat: startLonLat,
-						endLonLat: endLonLat,
-					},
-					method: "GET",
-					success: function(res) {
-						//日后会加入定时，此处需清空
-						that.points = [];
-						that.polyline = [];
+			// getDirectionDriving: function(startLonLat, endLonLat) {
+			// 	//调用高德api取得路径规划并绘制线路 
+			// 	var that = this;
+			// 	uni.request({
+			// 		url: taxi.InterfaceAddress[0],
+			// 		data: {
+			// 			startLonLat: startLonLat,
+			// 			endLonLat: endLonLat,
+			// 		},
+			// 		method: "GET",
+			// 		success: function(res) {
+			// 			//日后会加入定时，此处需清空
+			// 			that.points = [];
+			// 			that.polyline = [];
 
-						var polylineArr = [];
-						var points = [];
+			// 			var polylineArr = [];
+			// 			var points = [];
 
-						polylineArr = res.data.Polyline;
-
-						for (var i = 0; i < polylineArr.length; i++) {
-							var arr = polylineArr[i].split(';');
-							for (var j = 0; j < arr.length; j++) {
-								points.push(arr[j]);
-							}
-						}
-						//根据文件建设对象经纬度数组
-						for (var i = 0; i < points.length; i++) {
-							var arr = points[i].split(',');
-							var obj = {
-								longitude: arr[0],
-								latitude: arr[1]
-							}
-							that.points.push(obj);
-						}
-						var obj = {
-							points: that.points,
-							color: "#4BDD25",
-							arrowLine: true,
-							width: 5
-						};
-						that.polyline.push(obj);
-					},
-					fail: function(res) {
-						console.log(res);
-					}
-				});
-			},
+			// 			polylineArr = res.data.Polyline;
+			// 			for (var i = 0; i < polylineArr.length; i++) {
+			// 				var arr = polylineArr[i].split(';');
+			// 				for (var j = 0; j < arr.length; j++) {
+			// 					points.push(arr[j]);
+			// 				}
+			// 			}
+			// 			//根据文件建设对象经纬度数组
+			// 			for (var i = 0; i < points.length; i++) {
+			// 				var arr = points[i].split(',');
+			// 				var obj = {
+			// 					longitude: arr[0],
+			// 					latitude: arr[1]
+			// 				}
+			// 				that.points.push(obj);
+			// 			}
+			// 			var obj = {
+			// 				points: that.points,
+			// 				color: "#4BDD25",
+			// 				arrowLine: true,
+			// 				width: 5
+			// 			};
+			// 			that.polyline.push(obj);
+			// 		},
+			// 		fail: function(res) {
+			// 			console.log(res);
+			// 		}
+			// 	});
+			// },
 
 		}
 	}

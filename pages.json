@@ -526,7 +526,7 @@
 		{
 			"path": "pages/Home/MapIndex",
 			"style": {
-				"navigationBarTitleText": "hello",
+				"navigationBarTitleText": "搜索地址",
 				"app-plus": {
 					"titleNView": {
 						"buttons": [{
@@ -608,15 +608,28 @@
 		}
 		
         ,{
-            "path" : "pages/Home/serve",
+            "path" : "pages/GJCX/busH5",
+			"style" : {}
+		},
+		{
+            "path" : "pages/CTKY/SpecialBus/Home/specialLinePicker",
             "style" : {}
         }
+        
         ,{
-            "path" : "pages/GRZX/feedback",
-            "style" : {
+            "path" : "pages/CTKY/SpecialBus/Home/specialReserve",
+            "style" : {}
+        },
+		{
+		    "path" : "pages/Home/serve",
+		    "style" : {}
+		}
+		,{
+		    "path" : "pages/GRZX/feedback",
+		    "style" : {
 				"navigationBarTitleText": "意见反馈"
 			}
-        }
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -641,7 +654,7 @@
 				"text": "通知"
 			},
 			{
-				"pagePath": "pages/Home/serve",
+				"pagePath": "pages/GRZX/feedback",
 				"text": "服务"
 			},
 			{
