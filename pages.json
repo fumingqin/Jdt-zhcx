@@ -314,23 +314,24 @@
 			}
 		},
 		//----------------------------客运模块开始----------------------------
+		
 		{
-			"path": "pages/CTKY/ctkyIndex",
+			"path": "pages/CTKY/TraditionSpecial/Home/ctkyIndex",
 			"style": {
 				"navigationBarTitleText": "客运"
 			}
 		}, {
-			"path": "pages/CTKY/homeSattionPick",
+			"path": "pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick",
 			"style": {
 				"navigationBarTitleText": "选择站点"
 			}
 		}, {
-			"path": "pages/CTKY/selectTickets",
+			"path": "pages/CTKY/TraditionSpecial/Order/selectTickets",
 			"style": {
 				"navigationBarTitleText": "班次列表"
 			}
 		}, {
-			"path": "pages/CTKY/scheduleDetails",
+			"path": "pages/CTKY/TraditionSpecial/Order/scheduleDetails",
 			"style": {
 				"backgroundColor": "#F1F1F1",
 				"navigationBarBackgroundColor": "#FC4646",
@@ -339,7 +340,7 @@
 			}
 		},
 		{
-			"path": "pages/CTKY/seatSelection",
+			"path": "pages/CTKY/TraditionSpecial/seatSelection",
 			"style": {
 				"backgroundColor": "#F1F1F1",
 				"navigationBarBackgroundColor": "#FC4646",
@@ -347,52 +348,68 @@
 				"navigationBarTitleText": "选择座位"
 			}
 		}, {
-			"path": "pages/CTKY/oederList",
+			"path": "pages/CTKY/TraditionSpecial/Order/oederList",
 			"style": {
 				"navigationBarTitleText": "订单列表"
 			}
 		},
 		{
-			"path": "pages/CTKY/orderDetail",
+			"path": "pages/CTKY/TraditionSpecial/Order/orderDetail",
 			"style": {
 				"navigationBarTitleText": "订单详情"
 			}
 		},
 		{
-			"path": "pages/CTKY/issueView",
+			"path": "pages/CTKY/TraditionSpecial/issueView",
 			"style": {
 				"navigationBarTitleText": "订单评价"
 			}
 		},
 		{
-			"path": "pages/CTKY/traditionCarMark",
+			"path": "pages/CTKY/TraditionSpecial/MapMark/traditionCarMark",
 			"style": {
 				"navigationBarTitleText": "传统地图标识"
 			}
 		},
 		{
-			"path": "pages/CTKY/specialMark",
+			"path": "pages/CTKY/TraditionSpecial/MapMark/specialMark",
 			"style": {
 				"navigationBarTitleText": "定制标识"
 			}
 		}, {
-			"path": "pages/CTKY/checkBusLocation",
+			"path": "pages/CTKY/TraditionSpecial/MapMark/checkBusLocation",
 			"style": {
 				"navigationBarTitleText": "查看班车位置"
 			}
 		}, {
-			"path": "pages/CTKY/orderPayment", //推文详情
+			"path": "pages/CTKY/TraditionSpecial/PayMent/orderPayment",
 			"style": {
-				"navigationBarTitleText": "订单支付"
+
 			}
 		}, {
-			"path": "pages/CTKY/selectStation", //上下车点选择
+			"path": "pages/CTKY/TraditionSpecial/stationPicker/selectStation", //上下车点选择
 			// #ifdef APP-PLUS
 			"navigationStyle": "custom",
 			// #endif
 			"style": {
 				"navigationBarTitleText": "上下车点选择",
 				"navigationBarBackgroundColor": "#FE6C66"
+			}
+		},
+		{
+			"path": "pages/CTKY/TraditionSpecial/PayMent/CTKYPaySuccess",
+			"style": {
+
+			}
+		}, {
+			"path": "pages/CTKY/TraditionSpecial/PayMent/CTKYPayFail",
+			"style": {
+
+			}
+		},{
+		    "path" : "pages/CTKY/SpecialBus/Home/specialBusHome",
+		    "style" : {
+
 			}
 		},
 		//----------------------------客运模块结束----------------------------
@@ -525,15 +542,9 @@
 		{
 			"path": "pages/Home/MapSearch",
 			"style": {}
-		}, {
-			"path": "pages/CTKY/CTKYPaySuccess",
-			"style": {}
-		}, {
-			"path": "pages/CTKY/CTKYPayFail",
-			"style": {}
-		},
+		}, 
 		{
-			"path": "pages/BCFW/home/ho_chartered",
+			"path": "pages/BCFW/bf_chartered",
 			"style": {
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
@@ -545,17 +556,25 @@
 				}
 			}
 		}, {
-			"path": "pages/BCFW/home/ho_choice",
+			"path": "pages/BCFW/bf_choice",
 			"style": {}
 		},
 		{
-			"path":"pages/BCFW/choice/ci_information",
+			"path":"pages/BCFW/bf_information",
 			"style": {
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				},
 				"navigationBarTitleText": "用车信息"
 			}
 		}
 	    ,{
-            "path" : "pages/BCFW/choice/ci_choiceVehicleType",
+            "path" : "pages/BCFW/bf_choiceVehicleType",
             "style" : {
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
@@ -567,6 +586,30 @@
 				},
 				"navigationBarTitleText": "选择车型"
 			}
+        },{
+            "path" : "pages/BCFW/charterMap",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/BCFW/bf_charterMap",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/BCFW/BCsuccessfulPayment",
+            "style" : {}
+        },
+		{
+		    "path" : "pages/BCFW/charteredBusPayment",
+		    "style" : {}
+		}
+		
+        ,{
+            "path" : "pages/GJCX/busH5",
+            "style" : {}
         }
     ],
 	"globalStyle": {

@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="ShowPage">
 		<view class="box1">
 			<text class="text1"> 方向:   {{nList1.endName}}</text>
 			<view class="butter"><text class="shoumo">首末时间</text></view>
@@ -32,11 +32,14 @@
 			<view style="background-color: #F5F5F5;height: 1290rpx;">
 				<!-- 到达信息 -->
 			<view style="width: 690rpx;background-color: #ffffff;border-radius: 11rpx;margin-left: 32rpx;padding-top: 42rpx;padding-bottom: 42rpx;margin-top: 32rpx;">
-				<view style="text-align: center;">
+				<view v-if="carSta!=='等待发车'" style="text-align: center;">
 			            <text style="color: #FF7D43;font-size: 30rpx;text-align: center;">预计到达</text>
-						<text style="color: #FF7D43;font-size: 30rpx;top: 42rpx;margin-bottom: 42rpx;text-align: center;">{{nList1.carSta}}站 {{nList1.distance}}米</text>
+						<text style="color: #FF7D43;font-size: 30rpx;top: 42rpx;margin-bottom: 42rpx;text-align: center;">{{carSta}}站 {{carDistance}}米</text>
 						
 						</view>
+						<view v-if="carSta=='等待发车'" style="text-align: center;">
+						        <text style="color: #FF7D43;font-size: 30rpx;text-align: center;">等待发车</text>
+								</view>
 						<!-- <view style="width: 345rpx;position: absolute;right: 32rpx;">
 						        <text style="color: #FF7D43;font-size: 30rpx;text-align: center;">预计到达</text>
 								<text style="color: #FF7D43;font-size: 30rpx;top: 42rpx;margin-bottom: 42rpx;text-align: center;">{{nList1.carSta}}站 {{nList1.distance}}米</text>
@@ -46,7 +49,6 @@
 					<view style="width: 690rpx;background-color: #ffffff;margin-left: 32upx;border-radius: 11rpx;margin-top: 32upx;height: 600upx;">
 							<scroll-view :show-scrollbar="false" scroll-x="true" style="height: 600upx;" >
 								<image style="width: 36upx;height: 36rpx;margin-top: 76rpx;margin-left: 43rpx;"  src="../../static/GCJX/detailedBus/star.png"></image> 
-										<!-- v-if="item1.stationIndex==index+1"height: 27rpx;width: 54rpx;top: 40rpx;position: absolute;flex: block; -->
 										<!-- 循环前判断公交方向 -->
 										<view style=" flex-wrap: nowrap;flex-direction: row;position: absolute;left: 37px;height: 600upx;">  <!-- top: 88rpx; -->
 										<block v-for="(item,index) in list1" :key="index">
@@ -103,7 +105,11 @@
 		data() {
 			return {
 				Encryption: "XMJDTzzbusxmjdt", //接口校验码
+				// distance:9999999999,
+				stationIndex:0,
+				carDistance:'',
 				inStation:'',
+				carSta:999,
 				nList1:[],
 				polyline: [],
 				points:[],
@@ -115,7 +121,7 @@
 				startlongitude: 118,
 				endtlatitude: 25.33,
 				endlongitude: 118,
-				nearStastion:'',
+				nearStastion:99999,
 				arriveTime:'',
 				direction:0,
 				list:'',      //线路接口
@@ -134,6 +140,7 @@
 				key: [],
 				scale: 16,
 				scale1:16,
+				ShowPage:false,
 				mapHeight: '',
 				mapWidth:'319px',
 				popupStatu:0, //弹窗状态
@@ -175,8 +182,13 @@
 			that.inStation=options.nearstaion1;
 			// console.log(that.inStation);
 			// console.log(options.nearstaion1);
-			that.lineDetaile();
-			 
+				that.carInfo();
+				that.getNearstation();  //获取最近站点
+				that.lineDetaile();
+				
+			
+			
+			
 			that.getGaoDeKey();
 			that.getMyLocation();
 			uni.getSystemInfo({
@@ -195,6 +207,7 @@
 				}
 			});
 			// that.setMarkers();
+			that.ShowPage=true;
 		},
 		onReady() {
 			var that = this;
@@ -297,13 +310,127 @@
 				if(that.direction==0){
 				that.direction =1;
 				that.list1=that.reverseDirection;
-				that.carList=that.reverseCar;
+				that.carList=JSON.stringify(that.reverseCar);
+				console.log(JSON.stringify(that.carList));
 				}
 				else{
 					that.direction =0;
 					that.list1=that.forwardDirection;
 					that.carList=that.forwardCar; 
+					
 				}
+			},
+			getNearstation:function(){            //获取该线路最近站点
+			var that = this;
+			uni.getLocation({
+				type: 'wgs84',
+				success: function(res) {
+					var s=0;
+					var b;
+					var lat;
+					var lon;
+					var myLocation=res.longitude +','+res.latitude;
+					// console.log(myLocation);
+					// console.log(JSON.stringify(that.list1));
+					for(let i in that.list1){
+						s=that.distance(res.latitude,res.longitude,that.list1[i].lat,that.list1[i].lon);
+						 // console.log(s);
+						 if(that.nearStastion>s){
+							 
+							 that.nearStastion=s;
+							 that.inStation=that.list1[i].stationName;
+							 b=that.list1[i].stationIndex;
+							 lat=that.list1[i].lat;
+							 lon=that.list1[i].lon;
+							 // console.log(that.inStation);
+						 }
+					}
+					that.getCarDetaile(b,lat,lon);
+				}
+			});
+				
+			},
+			getCarDetaile:function(stationIndex,lat,lon){
+				var that=this;
+				var s;
+				console.log(stationIndex,lat,lon);
+				if(that.carList.length>0){
+					console.log(JSON.stringify(that.carList));
+					for(let i in that.carList){
+						if(stationIndex>that.carList[i].stationIndex){
+							s=stationIndex-that.carList[i].stationIndex;
+							console.log(s<that.carSta);
+							if(s<that.carSta){
+								that.carSta=s;
+								console.log(that.carSta);
+								if(that.carSta<=0){
+									that.carSta='即将到站';
+									that.carDistance=that.distance(lat,lon,that.carList[i].lat,that.carList[i].lon);
+									break;
+								}
+								else{
+									that.carDistance=that.distance(lat,lon,that.carList[i].lat,that.carList[i].lon)*1000;
+									console.log(that.carDistance);
+									break;
+								}
+							}
+						}
+						else{
+							that.carSta='等待发车';
+						}
+					}
+				}
+				else{
+					that.carSta='等待发车';
+				}
+				console.log(that.carSta);
+			},
+			distance: function (la1, lo1, la2, lo2) {
+			    var La1 = la1 * Math.PI / 180.0;
+			    var La2 = la2 * Math.PI / 180.0;
+			    var La3 = La1 - La2;
+			    var Lb3 = lo1 * Math.PI / 180.0 - lo2 * Math.PI / 180.0;
+			    var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(La3 / 2), 2) + Math.cos(La1) * Math.cos(La2) * Math.pow(Math.sin(Lb3 / 2), 2)));
+			    s = s * 6378.137;
+			    s = Math.round(s * 10000) / 10000;
+			    s = s.toFixed(2);
+			    return s;
+			},
+			carInfo:function(){
+				var that=this;
+				uni.request({
+					url:gjcx.InterfaceAddress[3],           //车辆实时到站信息
+					data:{
+						lineID:that.nList1.lineID,
+						direction:0,
+						Encryption:that.Encryption,
+					},
+					success:function(res){
+						// console.log(res);
+						that.setCarmarkers(res.data);
+						that.carList=JSON.parse(JSON.stringify(res.data));
+						that.forwardCar=res.data;
+						// console.log(that.carList);
+						
+					},
+					fail:function(info){
+						console.log(info);
+					}
+				});
+				uni.request({
+					url:gjcx.InterfaceAddress[3],           //车辆实时到站信息
+					data:{
+						lineID:that.nList1.lineID,
+						direction:1,
+						Encryption:that.Encryption,
+					},
+					success:function(res){
+						that.carList1=res.data;
+						that.reverseCar=res.data;
+						// console.log(that.reverseCar);
+						// console.log(res);
+					}
+				});
 			},
 			lineDetaile:function(){
 				var that=this;
@@ -376,39 +503,7 @@
 						
 					}
 				});
-				uni.request({
-					url:gjcx.InterfaceAddress[3],           //车辆实时到站信息
-					data:{
-						lineID:that.nList1.lineID,
-						direction:0,
-						Encryption:that.Encryption,
-					},
-					success:function(res){
-						// console.log(res);
-						that.setCarmarkers(res.data);
-						that.carList=JSON.parse(JSON.stringify(res.data));
-						that.forwardCar=res.data;
-						// console.log(that.carList);
-						
-					},
-					fail:function(info){
-						console.log(info);
-					}
-				});
-				uni.request({
-					url:gjcx.InterfaceAddress[3],           //车辆实时到站信息
-					data:{
-						lineID:that.nList1.lineID,
-						direction:1,
-						Encryption:that.Encryption,
-					},
-					success:function(res){
-						that.carList1=res.data;
-						that.reverseCar=res.data;
-					}
-				});
-				
-				
+
 			},
 			// carNum:function(stationIndex,index){
 			// 	if(stationIndex==index+1){

@@ -7,7 +7,7 @@
 			<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
 			<!-- #endif -->
 			<!-- #ifdef APP-PLUS -->
-			<text  class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
+			<text  class="locationTxt" @click="oncity">{{regionApp}}<text class="icon jdticon icon-xia"></text></text>
 			<!-- #endif -->
 			<view class="searchBoxRadius">
 				<!-- <input class="inputIocale" type="search" v-model="ipt" @confirm="searchNow" placeholder="查线路/站点/地点" /> -->
@@ -76,11 +76,12 @@
 			</view>
 		</view>
 		<view v-if="current_2===1">
+			
 			<view  class="box3">
+				<view v-if="historyList.length==0" class="area5" >
+				<text class="text8">暂时没有历史记录哦</text>
+				</view>
 						   <view v-for="(item,index) in historyList" :key="index">
-							   <!-- <view v-if="historyList.length=0" class="area5" >
-							   <text class="text8">暂时没有历史记录哦</text>
-							   </view> -->
 							   <view  class="area4" @click="historyLine(index)">
 							   <image class="image2" src="../../static/GCJX/busIndex/bus.png"></image>
 							   <text class="text7">{{item.lineName}}     方向     {{item.endName}}</text>
@@ -112,6 +113,7 @@
 		data() {
 			return {
 				dataSource: [],
+				disNum:'',
 				btustatu: true, //展开收起状态
 				statusBarHeight: this.statusBarHeight, //状态栏高度，在main.js里
 				regionWeixin: '请选择', //微信地区数值
@@ -151,7 +153,7 @@
 				busDistance: '', //线路距离
 				carSta1:'',
 				successNum: 0,
-				successNum1:-1,
+				successNum1:0,
 				historyList:[],
 				timer:'',
 			}
@@ -202,7 +204,7 @@
 			// else{
 			// 	this.timer =setInterval(()=>{
 			// 		this.getNearbysites();
-			// 		// console.log('ok!!!!')
+			// 		console.log('ok!!!!')
 			// 	},10000);
 			// }
 		},
@@ -214,9 +216,10 @@
 			},
 			back_city(e) {
 				if (e !== 'no' && e !== 'yes') {
-					// console.log(e)
-					this.regionWeixin = e.cityName
-					this.regionApp = e.cityName
+					// console.log(e);
+					this.regionWeixin = e.cityName;
+					this.regionApp = e.cityName;
+					// console.log(this.regionApp);
 					this.$refs.popupRef.close();
 					// this.lyfwData();
 					this.screenIndex = 0;
@@ -233,8 +236,8 @@
 					uni.getStorage({
 						key:'app_position',
 						success: (res) => {
-							// console.log(res)
-							this.regionApp = res.data;
+							console.log(res);
+							this.regionApp = res.data.city;
 						}
 					})
 					this.$refs.popupRef.close();
@@ -251,33 +254,46 @@
 			handleChange(data) {
 			                // console.log(data.endName);
 							var that=this;
+							var Isrepeat=true;
 							// that.nList=that.dataSource[i];
-							// // console.log(that.nList);
+							// console.log(data);
 							var list={
 								lineName:data.name,
-								endName:data.endName
-							};
-							console.log(that.historyList.includes(list.lineName));
-							if (!that.historyList.includes(list,0)) {
-							     that.historyList.unshift(list);
+								endName:data.endName,
+								lineID:data.lineID
+							}; 
+							// console.log(that.historyList.includes(list.lineName));
+							// if (!that.historyList.includes(list,0)) {
+							//      that.historyList.unshift(list);
 								 
-								 uni.setStorage({
-								 	key:'history',
-									data:that.historyList
-								 })
-							     // localStorage.setItem("that.historyList", JSON.stringify(that.historyList));
-							     }else{
-							          //有搜索记录，删除之前的旧记录，将新搜索值重新push到数组首位
-							          let i =that.historyList.indexOf(list);
-									  console.log(i);
-							          that.historyList.splice(i,1)
-							          that.historyList.unshift(list);
-							          uni.setStorage({
-								 	key:'history',
-									data:that.historyList
-								 })
-							                };
-							      
+							// 	 uni.setStorage({
+							// 	 	key:'history',
+							// 		data:that.historyList
+							// 	 })
+							//      // localStorage.setItem("that.historyList", JSON.stringify(that.historyList));
+							//      }else{
+							//           //有搜索记录，删除之前的旧记录，将新搜索值重新push到数组首位
+							//           let i =that.historyList.indexOf(list);
+							// 		  console.log(i);
+							//           that.historyList.splice(i,1)
+							//           that.historyList.unshift(list);
+							//           uni.setStorage({
+							// 	 	key:'history',
+							// 		data:that.historyList
+							// 	 })
+							//                 };
+							      for (var i = 0; i < that.historyList.length; i++) {
+							      	if (list.lineName == that.historyList[i].lineName) {
+							      		Isrepeat = false;
+							      	}
+							      }
+							      if (Isrepeat) {
+							      	that.historyList.unshift(list);
+							      	uni.setStorage({
+							      		key: "history",
+							      		data: that.historyList,
+							      	})
+							      }
 							uni.navigateTo({url:'detailed?nList='+JSON.stringify(data)+'&nearstaion1='+that.nearstaion1})
 			            },
 			getAllLine(){
@@ -314,7 +330,7 @@
 						key:'wx_position',
 						success:(res)=>{
 							// console.log(res)
-							this.regionWeixin = res.data;
+							this.regionWeixin = res.data.city;
 						},
 						complete: () => {
 							// this.lyfwData(); //请求接口数据
@@ -325,7 +341,7 @@
 						key:'app_position',
 						success: (res) => {
 							// console.log(res)
-							this.regionApp = res.data;
+							this.regionApp = res.data.city;
 						},
 					})
 				},500)
@@ -464,29 +480,9 @@
 						data:that.historyList
 					 })
 				                };
-				// var list=[{
-				// 	lineName,
-				// 	endName
-				// }];
-				// if (!that.historyList.includes(list)) {
-				//      that.historyList.unshift(list);
-				// 	 uni.setStorage({ 
-				// 	 	key:'history',
-				// 		data:that.historyList
-				// 	 })
-				//      // localStorage.setItem("that.historyList", JSON.stringify(that.historyList));
-				//      }else{
-				//           //有搜索记录，删除之前的旧记录，将新搜索值重新push到数组首位
-				//           let i =that.historyList.indexOf(list);
-				//           that.historyList.splice(i,1)
-				//           that.historyList.unshift(list);
-				//           uni.setStorage({
-				// 	 	key:'history',
-				// 		data:that.historyList
-				// 	 })
-				//                 };
-				      
+
 				uni.navigateTo({url:'detailed?nList='+JSON.stringify(that.nList)+'&nearstaion1='+that.nearstaion1})
+				
 			},
 			//清除缓存
 			clearHistory:function(){
@@ -527,7 +523,7 @@
 						Encryption: that.Encryption,
 					},
 					success: function(dis) {
-						
+						// that.carList=[];
 						that.linedata1=dis.data;
 						// console.log(that.linedata1);
 						const res = new Map();
@@ -544,12 +540,13 @@
 								distance:'/',
 								firstLastTime:that.linedata1[i].firstLastTime,
 								arriveTime:'/',
+								
 							};
 							that.carList.push(obj)
 						}
-						that.carList= that.unique(that.carList);        //过滤重复车辆
+						that.carList= that.unique(that.carList);        //过滤重复线路
 						
-						for (var i = 0; i < that.carList.length; i++) { //循环线路信息
+						for (let i in that.carList) { //循环线路信息
 							uni.request({
 								url: gjcx.InterfaceAddress[4], //根据线路请求距离当前车站最近的车辆
 								data: {
@@ -560,15 +557,11 @@
 								},
 							success:function(res){
 								that.lineInfo=res.data;
-								// console.log(that.lineInfo.constructor==Array);
-								// console.log(that.lineInfo instanceof Array)
-								that.successNum1++;
-								  // if(res.data.constructor===Array){              //判断是否有车
+								  // console.log(i);
 								  if(Array.isArray(res.data)){
 								  // console.log(res.data);
-								  that.getDistance(res.data[0].lon + ',' + res.data[0].lat,that.successNum1);
-								 
-								    if(res.data[0].needCount<1){                        //判断是否少于一站
+								  that.getDistance(res.data[0].lon + ',' + res.data[0].lat,that.successNum);
+								    if(res.data[0].needCount==1){                        //判断是否少于一站
 										that.carSta1='即将到站';
 										
 										that.pushsta(that.carSta1,that.successNum);
@@ -580,9 +573,16 @@
 									  }
 								  }
 								  else{
-									                                        //判断是否在运营时间
+									   that.carSta1='等待发车';
+										that.pushsta(that.carSta1,that.successNum);									
+																			//判断是否在运营时间
 								  }
+								  if(that.successNum<that.carList.length-1){
 								  that.successNum++;
+								  }
+								  else{
+									  that.successNum=0;
+								  }
 								},
 								fail: function(info) {
 									console.log(info)
@@ -593,10 +593,17 @@
 					}
 				})
 			},
+			// pushIndex:function(index,i){
+			// 	var that=this;
+			// 	console.log(index,i);
+			// 	that.carList[i].stationIndex=index;
+			// },
 			pushsta:function(carSta1,i){
 				var that=this;
-				// console.log('carsta'+i);
+				console.log('站点序号'+i); 
+				// console.log(JSON.stringify(that.carList)); 
 				that.carList[i].carSta=carSta1;
+				
 			},
 			unique(arr){
 				const res = new Map();  //定义常量 res,值为一个Map对象实例
@@ -619,12 +626,14 @@
 							},
 							fail:function(info){
 								console.log(info)
-							}
+							} 
 				});
 			},
 			getDistance1: function(dis,i){
 				var that=this;
-				// console.log('distance'+i+dis)
+				
+				// console.log('距离序号'+i); 
+				
 				that.carList[i].distance=dis;
 				that.carList[i].arriveTime=Math.ceil(dis/400);
 				// console.log(that.carList[i].arriveTime);

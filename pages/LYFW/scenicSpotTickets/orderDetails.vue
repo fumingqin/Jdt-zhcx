@@ -68,8 +68,13 @@
 				<text class="Xx_titleIcon"> > </text>
 			</view>
 			<view class="Xx_contentView"> 
-					<text class="Xx_contentTitle" >使用日期</text>
-					<text class="Xx_contentTitle2">{{orderInfo.orderDate}}&nbsp;当天可用</text>
+					<text class="Xx_contentTitle" >下单时间</text>
+					<text class="Xx_contentTitle2">{{orderInfo.setOrderTime}}</text>
+					<view class="Xx_contentBlock">
+						<text class="Xx_contentTitle" >使用日期</text>
+						<text class="Xx_contentTitle2">{{orderInfo.orderDate}}&nbsp;当天可用</text>
+					</view>
+					
 				<view class="Xx_contentBlock">
 					<text class="Xx_contentTitle" >入园时间</text>
 					<text class="Xx_contentTitle2">{{orderInfo.ticketOpenUp}}</text>
@@ -87,11 +92,11 @@
 					<view class="Xx_QRcodeBlock1"> 
 						<text class="Xx_QRcodeContentTitle">入园辅助码</text>
 					</view>
-					<view class="Xx_QRcodeBlock2">
+					<view class="Xx_QRcodeBlock2"> 
 						<text class="Xx_QRcodeContent">{{orderInfo.orderTicketNumber}}</text>
 					</view>
 					<view class="Xx_QRcodeBlock2">
-						<image class="Xx_QRcodeImage" :src="orderInfo.orderQrCode" mode="aspectFill"></image>
+						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx;"  />
 					</view>
 					<view class="Xx_QRcodeBlock2">
 						<text class="Xx_QRcodeTips">出示二维码，检票入园</text>
@@ -125,6 +130,7 @@
 
 <script>
 	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uQRCode from "@/common/uqrcode.js"
 	export default {
 		data() {
 			return {
@@ -165,16 +171,19 @@
 		},
 		onLoad(options) {
 			this.lyfwData(JSON.parse(options.orderNumber));
+			
 		},
 		methods: {
-			//访问模拟数据
+			//访问接口数据
 			lyfwData(e) {
 				uni.request({
 					url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber='+e,
 					method:'POST',
 					success:(res) => {
+						console.log(res)
 						this.orderInfo = res.data.data;
 						this.screenUser();
+						this.make()
 					}
 				})
 				
@@ -207,7 +216,24 @@
 				uni.navigateTo({
 					url: '../../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.orderInfo.ticketId)
 				})
-			}
+			},
+			
+			//生成二维码
+			make:function() {
+			      uQRCode.make({
+			        canvasId: 'qrcode',
+			        componentInstance: this,
+			        text: this.orderInfo.orderTicketNumber,
+			        size: 160,
+			        margin: 10,
+			        backgroundColor: '#ffffff',
+			        foregroundColor: '#000000',
+			        fileType: 'jpg',
+			        correctLevel: uQRCode.defaults.correctLevel,
+			      })
+			    }
+			
+			
 		}
 	}
 </script>

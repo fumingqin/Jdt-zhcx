@@ -85,6 +85,7 @@
 				</view>
 			</view>
 
+			<!-- #ifndef H5 -->
 			<view class="MP_information2">
 				<view class="MP_optionBar">
 					<text class="Mp-icon jdticon icon-alipay"></text>
@@ -92,8 +93,10 @@
 					<radio class="Mp_box" :checked="channeIndex===1" :color="'#01aaef'" @click="Selection"></radio>
 				</view>
 			</view>
+			<!-- #endif -->
 
-			<view class="MP_information3" @click="payment">
+
+			<view class="MP_information3" @click="paymentSatas">
 				支付{{orderInfo.orderActualPayment}}元
 			</view>
 
@@ -107,7 +110,6 @@
 		data() {
 			return {
 				countDownDate: 300, //倒计时时间
-				returnIndex: false, //页面点击上一页
 				hiddenValues: '0', //隐藏状态值
 				channel: [{
 					name: '微信'
@@ -115,6 +117,10 @@
 					name: '支付宝'
 				}],
 				channeIndex: 0, //选择支付方式
+				paymentValue: false, //默认未拉起状态
+
+				cancelStatus: false, //取消状态
+
 				orderInfo: [{
 					orderNumber: '',
 					orderType: '',
@@ -157,18 +163,25 @@
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
 
+				submitH5Data: '', //公众号H5支付参数
+
+				testOrderInfo: {
+					appid: 'wxefe31fcc2fba222e',
+					partnerid: '1583195951',
+					prepayid: 'wx18222142102675887d734e111119533100',
+					package: 'Sign=WXPay',
+					noncestr: 'xZtDRvJXIjVWYssG',
+					timestamp: '1587219759',
+					sign: 'D5586D098021D6F1EE883F1A4CF897D2'
+				}
 
 			}
 		},
 		onLoad: function(options) {
 			uni.showLoading({
-				title:'拉起订单中...'
+				title: '拉起订单中...'
 			})
-			this.returnIndex = false;
-			uni.setStorage({
-				key: 'returnIndex',
-				data: this.returnIndex,
-			})
+
 			uni.request({
 				url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + options.orderNumber,
 				method: 'POST',
@@ -180,14 +193,18 @@
 					uni.hideLoading()
 				}
 			})
-		},
-		onBackPress: function() {
-			this.returnIndex = true;
-			uni.setStorage({
-				key: 'returnIndex',
-				data: this.returnIndex,
+
+			// #ifdef H5
+			uni.getStorage({
+				key: 'submitH5Data',
+				success: function(res) {
+					this.submitH5Data = res.data;
+				}
 			})
+			// #endif
+
 		},
+
 
 		methods: {
 			//隐藏操作
@@ -230,7 +247,8 @@
 				var a = this.orderInfo.setOrderTime.replace(' ', 'T')
 				//把时间转换成时间戳
 				var b = new Date(a).getTime();
-
+				// console.log(a)
+				// console.log(b)
 				//获取当前时间（为什么要先把当前时间戳格式化？）是因为直接获取当前时间戳存在时间误差
 				var date = new Date(),
 					year = date.getFullYear(),
@@ -243,16 +261,33 @@
 				day >= 0 && day <= 9 ? (day = "0" + day) : "";
 				var timer = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
 				//把转换后的时间，转换成时间戳
+				// console.log(timer)
 				var c = new Date(timer).getTime();
+
+				// console.log(c)
 
 				//用当前时间-下单时间再除于1000就是秒
 				var d = (c - b) / 1000;
-
+				// console.log(d)
 				//这里的300秒就是支付倒计时，门票是5分钟
-				var e = 394 - d;
+				var e = 86 - d;
+				// 46
 
 				this.countDownDate = e;
-				this.countDown();
+				
+				
+				if(e <= 0){
+					uni.showToast({
+						title:'订单已取消',
+						icon:'none',
+						success:function(){
+							uni.navigateBack()
+						}
+					})
+					
+				}else{
+					this.countDown();
+				}
 			},
 
 
@@ -281,40 +316,34 @@
 					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + this.orderInfo.orderNumber,
 					method: 'POST',
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						if (res.data.data.orderType == '待支付') {
 							uni.request({
 								url: 'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' + res.data.data.orderNumber,
 								method: 'POST',
-								success() {
-									console.log('取消成功')
+								success(res) {
+									console.log(res)
 									uni.showToast({
 										title: '支付超时，已自动取消订单',
 										icon: 'none',
-										duration: 2000
-									})
-									uni.getStorage({
-										key: 'returnIndex',
-										success:(res)=>{
-											if(res.data == false){
-												uni.switchTab({
-													url:'../../order/OrderList'
-												})
-											}
+										duration: 2000,
+										success: ()=>{
+											uni.switchTab({
+												url: '../../order/OrderList'
+											})
 										}
 									})
 
 								},
 								fail() {
-									console.log('取消失败')
-									uni.getStorage({
-										key: 'returnIndex',
-										success:(res)=>{
-											if(res.data == false){
-												uni.switchTab({
-													url:'../../order/OrderList'
-												})
-											}
+									uni.showToast({
+										title: '支付超时，取消订单失败，请手动取消',
+										icon: 'none',
+										duration: 2000,
+										success: function() {
+											uni.switchTab({
+												url: '../../order/OrderList'
+											})
 										}
 									})
 								}
@@ -327,148 +356,270 @@
 
 			},
 
-			//调起支付
-			payment: function() {
-				// 查看服务商
-				uni.getProvider({
-					service: 'payment',
-					success: function(res) {
-						console.log(res)
-					}
-				})
-				// #ifdef H5
-				uni.showLoading()
-				// uni.request({
-				// 	url:'http://218.67.107.93:9210/api/app/getPayParam',
-				// 	method:'POST',
-				// 	header: {
-				// 		'content-type': 'application/x-www98-form-urlencoded'
-				// 	},
-				// 	data: {
-				// 		resultStr: 
-				// 		id: 
-				// 	},
-
-
-				// })
-				// #endif
-
-
-				// #ifdef APP-PLUS
-				// uni.showLoading({
-				// 	title:'拉起支付中...'
-				// })
-				if(this.channeIndex == 0){
-					var  payTypeIndex = 3;
-					uni.request({
-						url:'https://api.mch.weixin.qq.com/pay/unifiedorder',
-						data:'',
-						method:'POST',
-						success:function(res){
-							console.log(res)
-						},
-						fail:function(err){
-							console.log(err)
-						}
-					})
-					// uni.request({
-					// 	url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
-					// 	data:{
-					// 		payType : payTypeIndex,
-					// 		price : this.orderInfo.orderActualPayment,
-					// 		orderNum : this.orderInfo.orderNumber,
-					// 	},
-					// 	method: 'POST',
-					// 	success: (e) => {
-					// 		uni.hideLoading()
-					// 		uni.requestPayment({
-					// 			provider: 'wxpay',
-					// 			orderInfo: e.data.data.appUrl,
-								
-								
-								
-					// 			success: function(res) {
-					// 				console.log(res)
-					// 				uni.showToast({
-					// 					title:'支付成功',
-					// 				})
-					// 				uni.redirectTo({
-					// 					url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
-					// 				})
-					// 			},
-					// 			fail: function(ee) {
-					// 				console.log(ee)
-					// 				uni.showToast({
-					// 					title: '支付失败，请检查手机网络是否正常，如若无问题请联系客服',
-					// 					icon: 'none',
-					// 					duration: 3000
-					// 				})
-					// 			}
-					// 		})
-					// 	},
-					// 	fail: () => {
-					// 		uni.showToast({
-					// 			title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
-					// 			icon: 'none',
-					// 			duration: 3000
-					// 		})
-					// 	}
-					// })
-				}else if(this.channeIndex == 1){
-					var  payTypeIndex = 2;
-					uni.request({
-						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
-						data:{
-							payType : payTypeIndex,
-							price : this.orderInfo.orderActualPayment,
-							orderNum : this.orderInfo.orderNumber,
-						},
-						method: 'POST',
-						success: (e) => {
-							console.log(e)
-							uni.hideLoading()
-							uni.requestPayment({
-								provider: 'alipay',
-								orderInfo: e.data.data.appUrl,
-								success:(res)=>{
-									console.log(res)
-									// uni.showToast({
-									// 	title:'支付成功',
-									// })
-									uni.request({
-										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNum='+this.orderInfo.orderTicketNumber,
-										method:'POST',
-										success:function(res){
-											console.log(res)
-											uni.redirectTo({
-												url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
-											})
-										}
-									})
-									
-								},
-								fail: function(ee) {
-									console.log(ee)
-									uni.showToast({
-										title: '支付失败，请检查手机网络是否正常，如若无问题请联系客服',
-										icon: 'none',
-										duration: 3000
-									})
-								}
-							})
-						},
-						fail: () => {
-							uni.showToast({
-								title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
-								icon: 'none',
-								duration: 3000
-							})
-						}
+			//禁止重复提交操作
+			paymentSatas: function() {
+				if (this.paymentValue == false) {
+					this.paymentValue == true
+					this.payment()
+				} else if (this.paymentValue == true) {
+					uni.showToast({
+						title: '请勿重复点击支付'
 					})
 				}
-				
-				// #endif
+			},
 
+			//调起支付
+			payment: function() {
+				var that = this;
+				uni.showLoading({
+					title: '拉起支付中...'
+				})
+				// 查看服务商
+				// uni.getProvider({
+				// 	service: 'payment',
+				// 	success: function(res) {
+				// 		console.log(res)
+				// 	}
+				// })
+				
+					// #ifdef H5
+					if (that.channeIndex == 0) {
+						uni.request({
+							url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+							data: {
+								payType: 3,
+								price: this.orderInfo.orderActualPayment,
+								orderNum: this.orderInfo.orderNumber,
+							},
+							method: 'POST',
+							success: function(res) {
+								// console.log(res)
+								WeixinJSBridge.invoke('getBrandWCPayRequest', {
+									"appId": res.data.data.appId, //公众号名称，由商户传入
+									"timeStamp": res.data.data.timeStamp, //时间戳
+									"nonceStr": res.data.data.nonceStr, //随机串
+									"package": res.data.data.package, //扩展包
+									"signType": 'MD5', //微信签名方式:MD5
+									"paySign": res.data.data.paySign, //微信签名
+								}, function(res) {
+									if (res.err_msg == "get_brand_wcpay_request:ok") {
+										//支付成功再进计时器查询状态
+										// location.href = "/Order/BaseCallback/" + flowID;
+										// alert("支付成功");
+										uni.request({
+											url: 'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber=' + that.orderInfo.orderNumber,
+											method: 'POST',
+											success: function(res) {
+												if (res.data.msg == '出票成功') {
+													uni.redirectTo({
+														url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+													})
+												} else {
+													uni.showToast({
+														title: '出票失败，联系客服出示订单编号',
+														icon: 'none',
+														duration: 3000
+													})
+												}
+											},
+											fail: function() {
+												uni.showToast({
+													title: '出票失败，请联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
+												})
+											}
+										})
+
+									} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+										// alert("您取消了支付，请重新支付");
+										uni.showToast({
+											title: '您取消了支付，请重新支付',
+											icon: 'none'
+										})
+									} else if (res.err_msg == "get_brand_wcpay_request:faile") {
+										// alert("支付失败，请重新支付"); 
+										uni.showToast({
+											title: '支付失败，请重新支付',
+											icon: 'none',
+											success: function() {
+												uni.switchTab({
+													url: '../../order/OrderList'
+												})
+											}
+										})
+
+									} else {
+										// location.href = "/Coach/GetCoach";
+									}
+								});
+							},
+							fail: function() {
+								uni.showToast({
+									title: '请求支付参数失败，请查看网络状态'
+								})
+							}
+						})
+					} else {
+						uni.showToast({
+							title: '请选择微信支付',
+							icon: 'none'
+						})
+					}
+					// #endif
+
+
+					// #ifdef APP-PLUS
+					if (this.channeIndex == 0) {
+						var payTypeIndex = 3;
+						uni.request({
+							url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+							data: {
+								payType: payTypeIndex,
+								price: this.orderInfo.orderActualPayment,
+								orderNum: this.orderInfo.orderNumber,
+							},
+							method: 'POST',
+							success: function(e) {
+								console.log(e)
+								let wxData = {
+									appid: e.data.data.appId,
+									partnerid: e.data.data.partnerId,
+									prepayid: e.data.data.prepayId,
+									package: 'Sign=WXPay',
+									noncestr: e.data.data.nonceStr,
+									timestamp: e.data.data.timeStamp,
+									sign: e.data.data.paySign,
+								}
+								uni.hideLoading()
+								uni.requestPayment({
+									provider: 'wxpay',
+									orderInfo: wxData,
+									success: function(res) {
+										console.log(res)
+										uni.request({
+											url: 'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber=' + that.orderInfo.orderNumber,
+											method: 'POST',
+											success: function(res) {
+												if (res.data.msg == '出票成功') {
+													uni.redirectTo({
+														url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+													})
+												} else {
+													uni.showToast({
+														title: '出票失败，联系客服出示订单编号',
+														icon: 'none',
+														duration: 3000
+													})
+												}
+											},
+											fail: function() {
+												uni.showToast({
+													title: '出票失败，请联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
+												})
+											}
+										})
+									},
+
+									fail: function(e) {
+										console.log(e)
+										if (e.errMsg == 'requestPayment:fail canceled') {
+											uni.showToast({
+												title: '您放弃了支付',
+												icon: 'none',
+												duration: 3000
+											})
+										} else {
+											uni.showToast({
+												title: '拉起支付失败，请检查网络后重试',
+												icon: 'none',
+												duration: 3000
+											})
+										}
+
+									}
+								})
+							},
+							fail: () => {
+								uni.hideLoading()
+								uni.showToast({
+									// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
+									title: '请求支付参数失败，请检查网络后重试',
+									icon: 'none',
+									duration: 3000
+								})
+							}
+						})
+					} else if (this.channeIndex == 1) {
+						var payTypeIndex = 2;
+						uni.request({
+							url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+							data: {
+								payType: payTypeIndex,
+								price: this.orderInfo.orderActualPayment,
+								orderNum: this.orderInfo.orderNumber,
+							},
+							method: 'POST',
+							success: function(e) {
+								console.log(e)
+								uni.hideLoading()
+								uni.requestPayment({
+									provider: 'alipay',
+									orderInfo: e.data.data.appUrl,
+									success: function(res) {
+										console.log(res)
+										uni.request({
+											url: 'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber=' + that.orderInfo.orderNumber,
+											method: 'POST',
+											success: function(res) {
+												if (res.data.msg == '出票成功') {
+													uni.redirectTo({
+														url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+													})
+												} else {
+													uni.showToast({
+														title: '出票失败，联系客服出示订单编号',
+														icon: 'none',
+														duration: 3000
+													})
+												}
+											},
+											fail: function() {
+												uni.showToast({
+													title: '出票失败，请联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
+												})
+											}
+										})
+									},
+
+									fail: function(ee) {
+										console.log(ee)
+										uni.showToast({
+											title: '取消支付',
+											icon: 'none',
+											duration: 3000
+										})
+									}
+								})
+							},
+							fail: () => {
+								uni.hideLoading()
+								uni.showToast({
+									// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
+									title: '请求支付参数失败，请检查网络后重试',
+									icon: 'none',
+									duration: 3000
+								})
+							}
+						})
+					}
+
+					// #endif
+				
 
 			}
 

@@ -1057,6 +1057,285 @@ const priceExplain={
 	msg: '提示'
 }
 
+const vehicleSelection={
+	status: 1, //1成功,0失败提示返回值
+	data:[{
+		tabId:0,
+		tabName:'轿车(5座)',
+		cost:[{
+			btId:0,
+			price:'100-200',
+			vehicle:[{
+				carId:0,
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'110',
+				
+			},
+			{
+				carId:1,
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:1,
+			price:'200-300',
+			vehicle:[{
+				carId:0,
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				carId:1,
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:2,
+			price:'250-350',
+			vehicle:[{
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:3,
+			price:'400-500',
+			vehicle:[{
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		}],
+	},
+	{
+		tabId:1,
+		tabName:'SUV(7座)',
+		cost:[{
+			btId:0,
+			price:'10-200',
+			vehicle:[{
+				carId:0,
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				carId:1,
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:1,
+			price:'20-300',
+			vehicle:[{
+				carId:0,
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				carId:1,
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:2,
+			price:'250-350',
+			vehicle:[{
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:3,
+			price:'400-500',
+			vehicle:[{
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		}],
+	},
+	{
+		tabId:2,
+		tabName:'商务车(7座)',
+		cost:[{
+			btId:0,
+			price:'100-200',
+			vehicle:[{
+				carId:0,
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				carId:1,
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:1,
+			price:'200-300',
+			vehicle:[{
+				carId:0,
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				carId:1,
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:2,
+			price:'250-350',
+			vehicle:[{
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		},
+		{
+			btId:3,
+			price:'400-500',
+			vehicle:[{
+				car:'../../static/BCFW/choice/che1.png',
+				carName:'比亚迪  54',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			},
+			{
+				car:'../../static/BCFW/choice/che2.png',
+				carName:'奥迪  888',
+				carNumberSeats:'轿车(5座)',
+				carprice:'120',
+			}],
+		}],
+	}],
+	msg: '提示'
+}
+
+const driverInformation = {
+	status: 1, //1成功,0失败提示返回值
+	data:{
+		orderType:'进行中',
+		licensePlate:'闽A88888',
+		vehicleType:'豪华车型',
+		name:'张三丰',
+		age:'6年',
+		telephone:'134566456126',
+		day:'3天',
+		duration:'47:00',
+		cost:'200元',
+		overtimeCharge:'50元',
+		totalCost:'250元',
+		boardingPoint:'泉州客运中心',
+		destination:'泉州动车站',
+		totalLi:'150km',
+		totalDuration:'02:00:00',
+	},
+	msg: '提示'
+}
+
+
+const selectSpecialLine={
+	status: 1, //1成功,0失败提示返回值
+	data:{
+		ci_countyCount:0,
+		ci_cityName:'泉州',
+		countys:[{
+			ct_countys:'晋江专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'惠安专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'福州专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'安溪专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'安海专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		},{
+			ct_countys:'东石专线',
+			ct_longitude:'118.600608',
+			ct_latitude:'24.889217',
+		}]
+	},
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	routeComment2,
@@ -1086,4 +1365,7 @@ export default {
 	noticeContent,
 	choiceVehicle,
 	priceExplain,
+	vehicleSelection,
+	driverInformation,
+	selectSpecialLine,
 }

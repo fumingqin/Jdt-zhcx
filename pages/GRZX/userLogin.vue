@@ -128,6 +128,9 @@
 				this[key] = e.detail.value;
 			},
 			loginClick(){	 //登录按钮
+				uni.showLoading({
+					title:'登录中...'
+				})
 				this.logining=true;
 				var that=this;
 				const {phoneNumber, captchaCode} = this;		
@@ -157,9 +160,8 @@
 										method:"POST",
 										success(res) {
 											console.log(res)
-											uni.showToast({
-												title:"登录成功!",
-												icon:"none"
+											uni.removeStorage({
+												key:'captchaCode',
 											})
 											uni.setStorage({
 												key:'userInfo',
@@ -185,11 +187,21 @@
 													}else{
 														that.login(user.data);
 													}
+													uni.hideLoading();
+													uni.showToast({
+														title:"登录成功!",
+														icon:"none"
+													})
 													if(that.urlData==1){
 														uni.switchTab({  //返回首页
 															url:'/pages/Home/Index',
 														}) 
+													}else if(that.urlData==2){
+														uni.switchTab({  //返回订单页
+															url:'/pages/order/OrderList',
+														}) 
 													}else{
+														console.log("返回上一页")
 														uni.navigateBack();//返回上一页
 													}
 												}
@@ -352,6 +364,10 @@
 										phone:self.phoneNumber,
 									}
 								})
+								uni.showToast({
+									title:"验证码已发送，仅在5分钟内有效!",
+									icon:"none"
+								})
 								setTimeout(function(){
 									uni.removeStorage({
 										key:'captchaCode',
@@ -373,7 +389,13 @@
 				// uni.switchTab({
 				// 	url:'/pages/GRZX/user'
 				// })
-				uni.navigateBack();
+				if(that.urlData==2){
+					uni.switchTab({  //返回订单页
+						url:'/pages/order/OrderList',
+					}) 
+				}else{
+					uni.navigateBack();
+				}
 			},
 			//------------判断是否为base64格式-----------
 			isBase64:function(str) {

@@ -91,8 +91,8 @@
 		  this.loadData();
 		},
 		onShow() {
-			//uni.startPullDownRefresh();
-			this.loadData();
+			uni.startPullDownRefresh();
+			//this.loadData();
 		},
 		methods:{
 			async loadData(){
@@ -102,45 +102,49 @@
 				uni.getStorage({
 					key:"passengerList",
 					success(res2) {
-						console.log("6666")
 						for(var j=0;j<res2.data.length;j++){
-							// console.log(data1.userID,"5555")
-							// console.log(res2.data[j].userID,"4444")
-							list.push(res2.data[j].userID);
+							list.push(res2.data[j].passengerId);
 						}
 					}
 				})
-				console.log(list,"list")
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
-						uni.request({
-							url:'http://111.231.109.113:8002/api/person/userInfoList',
-							data:{
-								userId:res.data.userId
-							},
-							method:'POST',
-							success(res1) {
-								console.log(res1,'111')
-								for(var i=0;i<res1.data.data.length;i++){
-									if(res1.data.data[i].userSex==0){
-										res1.data.data[i].userSex="男";
-									}else{
-										res1.data.data[i].userSex="女";
-									}
-									var data1=res1.data.data[i];
-									//console.log(data1,"data1")
-									data1.hiddenIndex=0;
-									for(var q=0;q<list.length;q++){
-										if(data1.userID==list[q]){
-											data1.hiddenIndex=1;
+						if(res.data.userId==""||res.data.userId==null){
+							uni.showToast({
+								icon:'none',
+								title:'暂未登录,请先登录'
+							})
+						}else{
+							uni.request({
+								url:'http://111.231.109.113:8002/api/person/userInfoList',
+								data:{
+									userId:res.data.userId
+								},
+								method:'POST',
+								success(res1) {
+									console.log(res1,'111')
+									for(var i=0;i<res1.data.data.length;i++){
+										if(res1.data.data[i].userSex==0){
+											res1.data.data[i].userSex="男";
+										}else{
+											res1.data.data[i].userSex="女";
 										}
+										var data1=res1.data.data[i];
+										//console.log(data1,"data1")
+										data1.hiddenIndex=0;
+										for(var q=0;q<list.length;q++){
+											if(data1.passengerId==list[q]){
+												data1.hiddenIndex=1;
+											}
+										}
+										array.push(data1);
+										uni.stopPullDownRefresh();
 									}
-									array.push(data1);
-									uni.stopPullDownRefresh();
 								}
-							}
-						})
+							})
+						}
+						
 					}
 				})
 				this.passengerList=array;

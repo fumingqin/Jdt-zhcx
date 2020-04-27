@@ -34,7 +34,7 @@
 				checkVersion:'检查新版本',
 				agreement:'《软件许可及服务协议》',
 				privacy:'《隐私保护指引》',
-				copyright1:'车联网络科技 版权所有',
+				copyright1:'途游信息科技 版权所有',
 				copyright2:'Copyright©2020 Journey',
 				copyright3:'All Rights Reserved',
 				version:'1.0.0',
@@ -98,8 +98,9 @@
 		position: absolute;
 		top:360upx;
 		width: 100%;
-		font-size: 36upx;
+		font-size: 30upx;
 		text-align: center;
+		margin-top: 10upx;
 	}
 	.boxClass1{
 		position: absolute;

@@ -2,7 +2,7 @@
 	<view class="ho_view">
 		<!-- 照片背景图 -->
 		<view>
-			<image class="ho_imageTop" src="../../../static/BCFW/home/guanggao.png" mode="aspectFill"></image>
+			<image class="ho_imageTop" src="../../static/BCFW/home/guanggao.png" mode="aspectFill"></image>
 		</view>
 
 		<!-- 专线/定制 -->
@@ -62,7 +62,8 @@
 					height:94upx;
 					background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
 					box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
-					">选车型</button>
+					"
+					 @click="subit">选车型</button>
 				</view>
 
 				<!-- 底部 -->
@@ -85,13 +86,13 @@
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
 					</view>
-
+					
 					<!-- 目的地 -->
 					<view class="dl_choice">目的地</view>
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap2" v-model="destination">{{destination}}</text>
 					</view>
-
+					
 					<!-- 出发时间 -->
 					<view class="dl_selectionTime">出发时间</view>
 					<view class="dl_time">
@@ -112,7 +113,8 @@
 						height:94upx;
 						background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
 						box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
-						">选车型</button>
+						"
+					 @click="subit">选车型</button>
 				</view>
 
 				<!-- 底部 -->
@@ -132,8 +134,8 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
-	import MxDatePicker from "../../../components/BCFW/mx-datepicker/mx-datepicker.vue";
+	import uniPopup from "../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import MxDatePicker from "../../components/BCFW/mx-datepicker/mx-datepicker.vue";
 	export default {
 		components: {
 			//加载多方弹框组件
@@ -145,20 +147,40 @@
 				normalPickerNum: 1, //专线tab
 				specialPickerNum: 0, //定制tab
 				index: 0, //指数
-				privateSite: '', //专线
 				noticeContent: '', //须知内容
 				datestring: '', //当前日期和时间字符串
+				privateSite: '', //专线
+				initialPoint: '', //起始点
+				destination: '', //目的地
 				showPicker: false,
 				type: 'rangetime',
 				value: '',
 				Week: '', //周期
-				initialPoint: '', //起始点
-				endLonLat: "", //目的地经度
-				startlongitude: "", //出发点纬度
-				startlatitude: "", //出发点纬度
-				destination: '', //目的地
+				
+				st_Longitude: '', //出发点纬度
+				st_Latitude: '', //出发点纬度
+				de_Longitude:'',//目的地经度
+				de_Latitude:'',//目的地纬度
+				dl_Longitude:'',//专线经度
+				dl_Latitude:'',//专线经度
 				dayContent: [], //选择天数
-				dayContentObject: [], //天数
+				
+				isNormal: 0, //判断是普通购票还是定制班车默认是普通购票
+				
+				homePageInfo: {
+					initialPoint: '', //出发地
+					destination: '', //目的地
+					datestring: '', //出发时间
+					dayContentObject: '', //选择天数
+					privateSite: '', //专线
+					st_Longitude: '', //出发点纬度
+					st_Latitude: '', //出发点纬度
+					de_Longitude:'',//目的地经度
+					de_Latitude:'',//目的地纬度
+					dl_Longitude:'',//专线经度
+					dl_Latitude:'',//专线经度
+
+				},
 			}
 		},
 		onLoad() {
@@ -187,7 +209,7 @@
 			godetail: function(e) {
 				console.log(e)
 				this.index = e.target.value;
-				this.dayContentObject = this.dayContent[e.target.value];
+				this.homePageInfo.dayContentObject = this.dayContent[e.target.value];
 			},
 
 			//---------------------------------点击起点站---------------------------------
@@ -202,7 +224,7 @@
 				});
 				uni.navigateTo({
 					//跳转到下个页面的时候加个字段，判断当前点击的是专线点
-					url: './ho_choice?&station=' + 'dedicatedLine'
+					url: './bf_choice?&station=' + 'dedicatedLine'
 				})
 			},
 
@@ -217,9 +239,10 @@
 							success: function() {
 								that.initialPoint = res.name;
 								that.startLonLat = res.longitude + "," + res.latitude;
-								that.startlongitude = res.longitude;
-								that.startlatitude = res.latitude;
+								that.st_Longitude = res.longitude;
+								that.st_Latitude = res.latitude;
 								that.startlocation = res;
+								console.log(that.startlongitude + "," + that.startlatitude)
 							}
 						});
 					}
@@ -236,17 +259,17 @@
 							data: res,
 							success: function() {
 								that.destination = res.name;
-								that.startLonLat = res.longitude + "," + res.latitude;
-								that.startlongitude = res.longitude;
-								that.startlatitude = res.latitude;
-								that.startlocation = res;
+								that.destinationLonLat = res.longitude + "," + res.latitude;
+								that.de_Longitude = res.longitude;
+								that.de_Latitude = res.latitude;
+								that.destinationLocation = res;
 							}
 						});
 					}
 				});
 			},
 
-			//------------------------------查看景点按钮弹框事件-----------------------------
+			//------------------------------弹框事件-----------------------------------------
 
 			open() {
 				// 需要在 popup 组件，指定 ref 为 popup
@@ -331,6 +354,81 @@
 					this.normalPickerNum = 0;
 					this.specialPickerNum = 1;
 					this.isNormal = 1; //当前是定制班车
+				}
+			},
+
+			//------------------------------提交数据-------------------------------------
+			subit: function() {
+				if(this.isNormal == 0){
+					if(this.privateSite == '请选择专线'){
+						uni.showToast({
+							title: '请选择专线',
+							icon: 'none'
+						})
+					}else if(this.initialPoint == '请选择上车点'){
+						uni.showToast({
+							title: '请选择上车点',
+							icon: 'none'
+						})
+					}else{
+						this.homePageInfo.privateSite = this.privateSite;
+						this.homePageInfo.initialPoint = this.initialPoint;
+						this.homePageInfo.destination = this.destination;
+						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.st_Longitude = this.st_Longitude;
+						this.homePageInfo.st_Latitude = this.st_Latitude;
+						this.homePageInfo.de_Longitude = this.de_Longitude;
+						this.homePageInfo.de_Latitude = this.de_Latitude;
+						this.homePageInfo.dl_Longitude = this.dl_Longitude;
+						this.homePageInfo.dl_Latitude = this.dl_Latitude;
+						this.homePageInfo.dayContentObject = this.dayContent[this.index];
+						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+						// console.log(this.vehicleSelection[this.value])
+						uni.setStorage({
+							key: 'homePageInfo',
+							data: this.homePageInfo,
+							success: () => {
+								uni.navigateTo({
+									url: './bf_choiceVehicleType?isNormal=' + this.isNormal
+								})
+							}
+						})
+					}
+				}else if(this.isNormal == 1){
+					if(this.initialPoint == '请选择上车点'){
+						uni.showToast({
+							title: '请选择上车点',
+							icon: 'none'
+						})
+					}else if(this.destination == '请选择目的点'){
+						uni.showToast({
+							title: '请选择目的点',
+							icon: 'none'
+						})
+					} else{
+						this.homePageInfo.privateSite = this.privateSite;
+						this.homePageInfo.initialPoint = this.initialPoint;
+						this.homePageInfo.destination = this.destination;
+						this.homePageInfo.datestring = this.datestring;
+						this.homePageInfo.st_Longitude = this.st_Longitude;
+						this.homePageInfo.st_Latitude = this.st_Latitude;
+						this.homePageInfo.de_Longitude = this.de_Longitude;
+						this.homePageInfo.de_Latitude = this.de_Latitude;
+						this.homePageInfo.dl_Longitude = this.dl_Longitude;
+						this.homePageInfo.dl_Latitude = this.dl_Latitude;
+						this.homePageInfo.dayContentObject = this.dayContent[this.index];
+						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+						// console.log(this.vehicleSelection[this.value])
+						uni.setStorage({
+							key: 'homePageInfo',
+							data: this.homePageInfo,
+							success: () => {
+								uni.navigateTo({
+									url: './bf_choiceVehicleType?isNormal=' + this.isNormal
+								})
+							}
+						})
+					}
 				}
 			},
 		}

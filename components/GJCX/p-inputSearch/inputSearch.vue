@@ -21,7 +21,7 @@
 	<view class="input-group">
 		<input :placeholder="placeholder" @input="search" @blur="hideList" v-model="name" />
 		<view class="ul">
-			<view class="li" v-for="(item,index) in list" :key="index" @tap="select(item)">{{item.name}}</view>
+			<view class="li" v-for="(item,index) in list" :key="index" @tap="select(item,index)">{{item.name}}</view>
 		</view>
 	</view>
 </template>
@@ -65,14 +65,18 @@
 				if (!val) {
 					this.list = [];
 				} else {
+					
 					this.list = arr;
 					
 				}
 
 			},
-			select(item) {
-				// console.log(item);
-				this.backName = item.name;
+			select(item,index) {
+				// this.$set(this.list,index, {lineID: this.list.lineID, name: this.list.name, lineDirection: this.list.lineDirection,endName:this.list.endName,startName:this.list.endName,firstLastTime:this.list.firstLastTime});
+				// console.log(JSON.stringify(this.list));
+				
+				item=this.list[index];
+				this.backName = '';
 				this.list = [];
 				this.$emit('select', item);
 			},
