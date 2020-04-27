@@ -76,6 +76,7 @@
 						icon:'none',
 						title:'暂未登录,请登录后查看'
 					})
+					uni.stopPullDownRefresh();
 					setTimeout(function(){
 						uni.navigateTo({	
 							//loginType=1,泉运登录界面
@@ -91,8 +92,8 @@
 		  this.loadData();
 		},
 		onShow() {
-			uni.startPullDownRefresh();
-			//this.loadData();
+			//uni.startPullDownRefresh();
+			this.loadData();
 		},
 		methods:{
 			async loadData(){
