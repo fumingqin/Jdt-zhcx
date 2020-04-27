@@ -5,14 +5,58 @@
 		</map>
 		<image @click="back" src="../../static/BCFW/choice/charterMap/back1.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 40px;left: 1px;"></image>
 		<view style="position: fixed;bottom: 0upx; ">
-			<image src="../../static/BCFW/choice/charterMap/police.png" style="width: 120rpx;height: 120rpx;margin-left: 10rpx;" @click="callPolice"></image>
+			<image src="../../static/BCFW/choice/charterMap/police.png" style="width: 120rpx;height: 120rpx;margin-left: 10rpx;"
+			 @click="callPolice"></image>
 			<!-- 行程信息   -->
 			<scroll-view class="cm_content" scroll-y="true">
-				<view class="ct_state">
+				<view class="ct_state" v-if="driverInformation.orderType == '进行中' || driverInformation.orderType == '待发车'">
 					<text class="sa_text">{{driverInformation.orderType}}</text>
 				</view>
+				<view class="ct_state" v-if="driverInformation.orderType == '待支付'">
+					<text class="sa_text">{{driverInformation.orderType}}</text>
+					<text class="sa_popu" @click="open">去支付></text>
+				</view>
+				<uni-popup ref="popup" type="bottom">
+					<view class="po_boxVlew">
+						<view class="bv_topText">
+							<view></view>
+							<text class="tt_text">支付{{driverInformation.name}}师傅车费</text>
+							<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
+						</view>
+						<view class="bv_cost">
+							<text class="cs_text">{{driverInformation.overtimeCharge}}</text>
+							<text class="cs_text2">元</text>
+						</view>
+						<text class="bv_detailed">费用明细></text>
+						<view class="bv_coupon">
+							<text class="cp_text">优惠券</text>
+							<text class="cp_text2">请选择优惠券></text>
+						</view>
+						<view class="bv_paymentMethod">
+							<view class="pm_choice">
+								<view style="flex-direction: row;">
+									<image class="pm_image" src="../../static/BCFW/choice/charterMap/weixin.png"></image>
+									<text class="pm_text">微信</text>
+								</view>
+								<radio-group class="labelClass">
+									<radio style="color:#00c700;" :value="weixinId" :checked="choiceIndex ===1 ? true : false" @click="Selection" />
+								</radio-group>
+							</view>
+							<view class="pm_choice2">
+								<view style="flex-direction: row;">
+									<image class="pm_image" src="../../static/BCFW/choice/charterMap/zhifubao.png"></image>
+									<text class="pm_text">支付宝</text>
+								</view>
+								<radio-group class="labelClass">
+									<radio :color="'#01aaef'" :value="zhifubaoId" :checked="choiceIndex2 ===1 ? true : false" @click="Selection2" />
+								</radio-group>
+							</view>
+							<button class="bt_remind4" type="warn">确定支付{{driverInformation.overtimeCharge}}元</button>
+						</view>
+					</view>
+				</uni-popup>
 				<!-- 司机信息 -->
-				<view class="ct_information" >
+				<view class="ct_information">
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
 						<text class="te_text">车牌号:{{driverInformation.licensePlate}}</text>
@@ -29,7 +73,7 @@
 						<button class="bt_remind3" type="warn">联系司机</button>
 					</view>
 				</view>
-				
+
 
 				<!-- 费用详情 -->
 				<view class="ct_feeDetails">
@@ -69,7 +113,7 @@
 					<uni-icons @click="cancle" color='#999999' size='24' type='closeempty'></uni-icons>
 				</view>
 				<view>
-					<picker @change='pickerChange' mode="selector" :value="pickerValue"  :range='callPoliceArr' style="align-items: center;">
+					<picker @change='pickerChange' mode="selector" :value="pickerValue" :range='callPoliceArr' style="align-items: center;">
 						<text class="popupTitleFont">{{reason}}</text>
 					</picker>
 					<textarea name='remark' v-model="remark" placeholder="备注,可不填"></textarea>
@@ -95,30 +139,24 @@
 		data() {
 			return {
 				scale: 14,
-				// longitude: "118.600608", //地图中心点经度
-				// latitude: "24.889217", //地图中心点纬度
+				longitude: "118.600608", //地图中心点经度
+				latitude: "24.889217", //地图中心点纬度
 				points: [],
 				polyline: [],
 				markers: [],
-				startLonLat: "",//起点经纬度组合(路线规划用到)
-				endLonLat: "",//终点点经纬度组合(路线规划用到)
-				startLon: "",//起点经度
-				startLat: "",//起点纬度
-				endLon: "",//终点经度
-				endLat: "",//终点纬度
 				mapHeight: '',
 				viewHeight: '',
 				resultData: {},
 				status: 0,
 				directionInterval: 0,
-				orderInterval:0,
-				callPoliceArr:[
+				orderInterval: 0,
+				callPoliceArr: [
 					'车辆损坏',
 					'身体不适'
 				],
-				reason:'请选择报警原因',
-				pickerValue:-1,
-				remark:'',
+				reason: '请选择报警原因',
+				pickerValue: -1,
+				remark: '',
 				// orderType:'进行中',
 				// licensePlate:'闽A88888',
 				// vehicleType:'豪华车型',
@@ -134,23 +172,28 @@
 				// destination:'泉州动车站',
 				// totalLi:'150km',
 				// totalDuration:'02:00:00',
-				driverInformation:{
-					orderType:'',
-					licensePlate:'',
-					vehicleType:'',
-					name:'',
-					age:'',
-					telephone:'',
-					day:'',
-					duration:'',
-					cost:'',
-					overtimeCharge:'',
-					totalCost:'',
-					boardingPoint:'',
-					destination:'',
-					totalLi:'',
-					totalDuration:'',
+				driverInformation: {
+					orderType: '',
+					licensePlate: '',
+					vehicleType: '',
+					name: '',
+					age: '',
+					telephone: '',
+					day: '',
+					duration: '',
+					cost: '',
+					overtimeCharge: '',
+					totalCost: '',
+					boardingPoint: '',
+					destination: '',
+					totalLi: '',
+					totalDuration: '',
 				},
+
+				weixinId: 1,
+				zhifubaoId: 2,
+				choiceIndex: 0,
+				choiceIndex2: 0,
 			}
 		},
 		onLoad() {
@@ -172,29 +215,49 @@
 			async routeInit() {
 				let driverInformation = await this.$api.lyfwcwd('driverInformation');
 				this.driverInformation = driverInformation.data;
+				
+				if(this.driverInformation.overtimeCharge>0){
+					this.$refs.popup.open();
+				}else{
+					
+				}
 				// console.log(driverInformation.data)
 			},
+
+			//------------------------------弹框事件-----------------------------------------
+
+			open() {
+				// 需要在 popup 组件，指定 ref 为 popup
+				this.$refs.popup.open()
+			},
+			//关闭
+			close(e) {
+				if (e == 1) {
+					this.$refs.popup.close()
+				}
+			},
+
 			//picker相关
 			callPolice: function() {
 				let that = this;
 				that.$refs.callPolice.open();
 			},
-			cancle:function(){
+			cancle: function() {
 				let that = this;
 				that.$refs.callPolice.close();
 			},
-			pickerChange:function(e){
+			pickerChange: function(e) {
 				let that = this;
 				console.log(e);
 				that.pickerValue = e.detail.value;
 				that.reason = that.callPoliceArr[e.detail.value];
 			},
-			sendCall:function(){
+			sendCall: function() {
 				let that = this;
-				if(that.pickerValue < 0){
+				if (that.pickerValue < 0) {
 					uni.showToast({
-						title:'请选择一个原因',
-						icon:'none'
+						title: '请选择一个原因',
+						icon: 'none'
 					});
 					return;
 				}
@@ -202,82 +265,98 @@
 				console.log(that.reason);
 				console.log(that.remark);
 				uni.showToast({
-					title:'发送成功',
-					icon:'none',
-					success:function(){
+					title: '发送成功',
+					icon: 'none',
+					success: function() {
 						that.cancle();
 					}
 				})
 			},
-			
+
 			back: function() {
 				var that = this;
 				uni.navigateBack({});
 			},
-			
-			setMarkers: function() { //设置始末标点
-				var that = this;
-				var startmarker = { //起点
-					id: 0,
-					latitude: that.startLat,
-					longitude: that.startLon,
-					title: '在这上车',
-					zIndex: '1',
-					iconPath: '../../static/CZC/Start.png',
-					rotate: 0,
-					width: 20,
-					height: 20,
-					anchor: {
-						x: 0.5,
-						y: 1
-					},
-					callout: {
-						content: '在这上车',
-						color: '#000000',
-						fontSize: 10,
-						borderRadius: 4,
-						borderWidth: 1,
-						borderColor: '#333300',
-						bgColor: '#FFFFFF',
-						padding: '5',
-						display: 'ALWAYS'
-					}
-				};
-				var endmarker = {
-					id: 1,
-					latitude: that.endLat,
-					longitude: that.endLon,
-					title: '在这下车',
-					zIndex: '1',
-					iconPath: '../../static/CZC/End.png',
-					rotate: 0,
-					width: 20,
-					height: 20,
-					anchor: {
-						x: 0.5,
-						y: 1
-					},
-					callout: {
-						content: '在这下车',
-						color: '#000000',
-						fontSize: 10,
-						borderRadius: 4,
-						borderWidth: 1,
-						borderColor: '#333300',
-						bgColor: '#FFFFFF',
-						padding: '5',
-						display: 'ALWAYS'
-					}
-				};
-				that.markers = [];
-				that.startmarker = [];
-				that.endmarker = [];
-				that.markers.push(startmarker);
-				that.markers.push(endmarker);
-				that.showlocation = false;
-				that.getDirectionDriving(that.startLonLat, that.endLonLat);
+
+			Selection: function() {
+				if (this.choiceIndex == 0) {
+					this.choiceIndex = 1;
+				} else {
+					this.choiceIndex = 0;
+				}
 			},
 			
+			Selection2: function() {
+				if (this.choiceIndex2 == 0) {
+					this.choiceIndex2 = 1;
+				} else {
+					this.choiceIndex2 = 0;
+				}
+			},
+
+			// setMarkers: function() { //设置始末标点
+			// 	var that = this;
+			// 	var startmarker = { //起点
+			// 		id: 0,
+			// 		latitude: that.startLat,
+			// 		longitude: that.startLon,
+			// 		title: '在这上车',
+			// 		zIndex: '1',
+			// 		iconPath: '../../static/CZC/Start.png',
+			// 		rotate: 0,
+			// 		width: 20,
+			// 		height: 20,
+			// 		anchor: {
+			// 			x: 0.5,
+			// 			y: 1
+			// 		},
+			// 		callout: {
+			// 			content: '在这上车',
+			// 			color: '#000000',
+			// 			fontSize: 10,
+			// 			borderRadius: 4,
+			// 			borderWidth: 1,
+			// 			borderColor: '#333300',
+			// 			bgColor: '#FFFFFF',
+			// 			padding: '5',
+			// 			display: 'ALWAYS'
+			// 		}
+			// 	};
+			// 	var endmarker = {
+			// 		id: 1,
+			// 		latitude: that.endLat,
+			// 		longitude: that.endLon,
+			// 		title: '在这下车',
+			// 		zIndex: '1',
+			// 		iconPath: '../../static/CZC/End.png',
+			// 		rotate: 0,
+			// 		width: 20,
+			// 		height: 20,
+			// 		anchor: {
+			// 			x: 0.5,
+			// 			y: 1
+			// 		},
+			// 		callout: {
+			// 			content: '在这下车',
+			// 			color: '#000000',
+			// 			fontSize: 10,
+			// 			borderRadius: 4,
+			// 			borderWidth: 1,
+			// 			borderColor: '#333300',
+			// 			bgColor: '#FFFFFF',
+			// 			padding: '5',
+			// 			display: 'ALWAYS'
+			// 		}
+			// 	};
+			// 	that.markers = [];
+			// 	that.startmarker = [];
+			// 	that.endmarker = [];
+			// 	that.markers.push(startmarker);
+			// 	that.markers.push(endmarker);
+			// 	that.showlocation = false;
+			// 	that.getDirectionDriving(that.startLonLat, that.endLonLat);
+			// },
+
 			setMarker: function(id, lon, lat, iconPath) {
 				var width = 20;
 				var height = 20;
@@ -351,28 +430,28 @@
 	.map {
 		width: 750rpx;
 	}
-	
+
 	.popupBlock {
 		width: 650rpx;
 		padding: 30rpx;
 		background-color: #FFFFFF;
 		border-radius: 12rpx;
 	}
-	
+
 	.popupTitle {
 		margin-bottom: 50rpx;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
 	}
-	
+
 	.popupTitleFont {
 		font-size: 38rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 400;
 		color: #333333;
 	}
-	
+
 	.popupButtonChoose {
 		flex-direction: row;
 		align-items: center;
@@ -383,14 +462,14 @@
 		border-width: 1rpx;
 		border-radius: 12rpx;
 	}
-	
+
 	.popupButtonChooseFont {
 		font-size: 36rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 400;
 		color: #333333;
 	}
-	
+
 	.popupButtonOk {
 		margin-top: 50rpx;
 		padding: 30rpx;
@@ -398,115 +477,234 @@
 		box-shadow: 0px 7px 38px 8px rgba(216, 48, 75, 0.15);
 		border-radius: 12rpx;
 	}
-	
+
 	.popupButtonOkFont {
 		font-size: 36rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 400;
 		color: #FFFFFF;
 	}
-	
-	.cm_content{
+
+	.cm_content {
 		margin: 28upx 25upx 28upx 25upx;
 		width: 698upx;
 		height: 600upx;
 	}
-	
-	.ct_state{
+
+	.ct_state {
+		flex-direction: row;
+		justify-content: space-between;
 		width: 698upx;
-		border-radius:10px;
-		background-color:#fff;
+		border-radius: 10px;
+		padding: 30upx;
+		background-color: #fff;
 	}
-	
-	.sa_text{
+
+	.sa_text {
 		font-size: 30upx;
 		text-align: left;
-		padding-top: 30upx;
-		padding-bottom: 30upx;
-		padding-left: 31upx;
 	}
-	
-	
-	.ct_information{
+
+	.sa_popu {
+		font-size: 30upx;
+		color: #06b4fd;
+	}
+
+	.ct_information {
 		width: 698upx;
-		border-radius:10px;
-		background-color:#fff;
+		border-radius: 10px;
+		background-color: #fff;
 		padding: 30upx 0;
 		margin: 20upx 0;
 	}
-	.if_topTitle{
+
+	.if_topTitle {
 		padding-left: 31upx;
-		font-size:36upx;
+		font-size: 36upx;
 		font-weight: bold;
 	}
-	.if_button{
+
+	.if_button {
 		// flex-direction: row;
 		// justify-content: space-between;
 		padding-top: 37upx;
 	}
-	.bt_remind{
+
+	.bt_remind {
 		flex-direction: row;
 		justify-content: space-between;
 		margin-left: 31upx;
-		width:305upx;
-		font-size:34upx;
+		width: 305upx;
+		font-size: 34upx;
 	}
-	.bt_remind2{
+
+	.bt_remind2 {
 		flex-direction: row;
 		justify-content: space-between;
 		margin-right: 31upx;
-		width:305upx;
-		font-size:34upx;
+		width: 305upx;
+		font-size: 34upx;
 	}
-	.bt_remind3{
+
+	.bt_remind3 {
 		flex-direction: row;
 		justify-content: center;
-		margin:0 31upx;
-		width:639upx;
-		font-size:34upx;
+		margin: 0 31upx;
+		width: 639upx;
+		font-size: 34upx;
 	}
-	
-	.ct_feeDetails{
+
+	.ct_feeDetails {
 		width: 698upx;
-		border-radius:10px;
-		background-color:#fff;
+		border-radius: 10px;
+		background-color: #fff;
 		margin-bottom: 20upx;
 		padding: 30upx 0;
 	}
-	.if_topTitle2{
+
+	.if_topTitle2 {
 		padding-left: 31upx;
-		font-size:36upx;
+		font-size: 36upx;
 		font-weight: bold;
 	}
-	
-	.ct_routeInformation{
+
+	.ct_routeInformation {
 		width: 698upx;
-		border-radius:10px;
-		background-color:#fff;
+		border-radius: 10px;
+		background-color: #fff;
 		margin-bottom: 40upx;
 		padding: 30upx 0;
-		
+
 	}
-	.if_topTitle3{
+
+	.if_topTitle3 {
 		padding-left: 31upx;
-		font-size:36upx;
+		font-size: 36upx;
 		font-weight: bold;
 		padding-bottom: 20upx;
 	}
-	
+
 	//内容公共样式
-	.if_text{
+	.if_text {
 		flex-direction: row;
 		justify-content: space-between;
 		padding-left: 31upx;
 		padding-top: 33upx;
-		
+
 	}
-	.te_text{
+
+	.te_text {
 		flex-direction: row;
 		justify-content: space-between;
-		font-size:30upx;
+		font-size: 30upx;
 		width: 320upx;
 	}
+
+	//---支付弹框样式-----
+	//顶部
+	.po_boxVlew {
+		background-color: #FFFFFF;
+		border-radius: 30rpx;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.bv_topText {
+		flex-direction: row;
+		justify-content: space-between;
+		padding-top: 48upx;
+		padding-left: 42upx;
+		padding-right: 42upx;
+	}
+
+	.tt_text {
+		font-size: 38upx;
+		font-weight: bold;
+	}
+
+	.tt_icon {
+		font-size: 32upx;
+	}
+
+	//价格
+	.bv_cost {
+		flex-direction: row;
+		justify-content: center;
+		padding-top: 117upx;
+	}
+
+	.cs_text {
+		font-size: 60upx;
+		font-weight: bold;
+	}
+
+	.cs_text2 {
+		top: 24upx;
+		left: 5upx;
+		font-size: 37upx;
+	}
+
+	//费用明细
+	.bv_detailed {
+		text-align: center;
+		font-size: 32upx;
+		color: #aaa;
+	}
+
+	//优惠券
+	.bv_coupon {
+		flex-direction: row;
+		justify-content: space-between;
+		margin-top: 70upx;
+		margin-left: 58upx;
+		margin-right: 58upx;
+		padding-bottom: 32upx;
+		border-bottom-style: dotted;
+		border-bottom-color: #F5F5F5;
+		border-bottom-width: 1px;
+	}
+
+	.cp_text {
+		font-size: 32upx;
+	}
+
+	.cp_text2 {
+		font-size: 32upx;
+		color: #aaa;
+	}
+
+	//选择付款方式
+	.bv_paymentMethod {
+		padding-top: 43upx;
+		padding-left: 58upx;
+		padding-right: 58upx;
+	}
+
+	.pm_choice {
+		flex-direction: row;
+		justify-content: space-between;
+	}
 	
+	.pm_choice2{
+		flex-direction: row;
+		justify-content: space-between;
+		padding-top: 63upx;
+	}
+
+	.pm_image {
+		width: 42upx;
+		height: 42upx;
+	}
+	.pm_text{
+		font-size: 32upx;
+		padding-left: 20upx;
+	}
+	.bt_remind4{
+		flex-direction: row;
+		justify-content: center;
+		margin-top: 90upx;
+		margin-bottom: 76upx;
+		width: 639upx;
+		font-size: 34upx;
+	}
 </style>
