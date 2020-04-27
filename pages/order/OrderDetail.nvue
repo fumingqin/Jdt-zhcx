@@ -218,12 +218,13 @@
 				console.log(that.num)
 				console.log(str);
 				console.log(that.textareaValue);
-				return;
+				console.log(that.userInfo.userId);
 				uni.request({
 					url:'http://111.231.109.113:8002/api/taxi/addPassengerEvaluate_Passenger',
 					method:'POST',
 					data: {
 						orderNumber:param,
+						userId: that.userInfo.userId,
 						satisfied :manyi,
 						starClass:that.num,
 					    selectionTags:str,
@@ -264,7 +265,7 @@
 				var that = this;
 				this.textareaValue = e.detail.value.textareaValue;
 				that.closeBottomPopup();
-				that.getOrderValuate(that.orderNumber,true);
+				that.getOrderValuate(that.orderNumber,'是');
 				uni.showToast({
 					title:'评价成功'
 				})
@@ -277,7 +278,7 @@
 				var that = this;
 				this.textareaValue = e.detail.value.textareaValue;
 				that.closeBottomPopup1();
-				that.getOrderValuate(that.orderNumber,false);
+				that.getOrderValuate(that.orderNumber,'否');
 				uni.showToast({
 					title:'评价成功'
 				})
