@@ -12,22 +12,21 @@
 		<view v-if="current === 0" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in info" :key="index">
 				<!-- 出租车 -->
-				<view v-if="item.title=='出租车'">
+				<view v-if="item.vehicleType=='出租车'">
 					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
 						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{item.appointmentTime}}</text>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
 							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 						</view>
 
 						<view style="display: flex; margin-top: -72rpx;">
 							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.orderTime}}</view>
+							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
 						</view>
 
 						<view style="display: flex; margin-top: -16rpx;">
@@ -178,7 +177,7 @@
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
 								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{item.state}}</view>
+								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
 						<!-- 时间-价格 -->
@@ -201,12 +200,12 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button>
+							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn" v-if="item.state=='已完成'">投诉</button>
+							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
 							<button class="allBtn payBtn" v-if="item.state=='订单未支付'" @tap="keYunPay(index)">去支付</button>
-							<button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button>
-							<button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button>
+							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
+							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
 						</view>
 					</view>
@@ -220,22 +219,21 @@
 		<view v-if="current === 1" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in finishArr" :key="index">
 				<!-- 出租车 -->
-				<view v-if="item.title=='出租车'">
+				<view v-if="item.vehicleType=='出租车'">
 					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
 						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{item.appointmentTime}}</text>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
 							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 						</view>
 				
 						<view style="display: flex; margin-top: -72rpx;">
 							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.orderTime}}</view>
+							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
 						</view>
 				
 						<view style="display: flex; margin-top: -16rpx;">
@@ -348,58 +346,40 @@
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
+						<!-- 站点-状态 -->
+						<view class="u-f-ac">
+							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+							</view>
 						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-							<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
+						<!-- 时间-价格 -->
+						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+								<view>{{item.setOutTime}}</view>
+								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+							</view>
 						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
+						<!-- 上车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="bluering"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
 						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
+						<!-- 下车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="redring"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
-						<view class="whiteBg">
-							<view style="display: flex; margin-top: -40rpx;">
-								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -72rpx;">
-								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -16rpx;">
-								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: 36rpx;">
-								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
-							</view>
-
-							<view class="CTKYBtnView" v-if="item.orderState=='待使用'">
-								<button class="allBtn">车辆位置</button>
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn QRCode">二维码</button>
-								<button class="allBtn">选座</button>
-								<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
-								<button class="allBtn">联系司机</button>
-							</view>
+						
+						<view class="CTKYBtnView">
+							<button class="allBtn">车辆位置</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn QRCode">二维码</button>
+							<button class="allBtn">选座</button>
+							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
+							<button class="allBtn">联系司机</button>
 						</view>
 					</view>
 				</view>
@@ -411,22 +391,21 @@
 		<view v-if="current === 2" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in goingArr" :key="index">
 				<!-- 出租车 -->
-				<view v-if="item.title=='出租车'">
+				<view v-if="item.vehicleType=='出租车'">
 					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
 						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{item.appointmentTime}}</text>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
 							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 						</view>
 				
 						<view style="display: flex; margin-top: -72rpx;">
 							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.orderTime}}</view>
+							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
 						</view>
 				
 						<view style="display: flex; margin-top: -16rpx;">
@@ -525,63 +504,44 @@
 				<!-- (进行中)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
-						</view>
-						<view class="whiteBg">
-							<view style="display: flex; margin-top: -40rpx;">
-								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -72rpx;">
-								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -16rpx;">
-								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: 36rpx;">
-								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
-							</view>
-
-							<view class="CTKYBtnView" v-if="item.state=='7'">
-								<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
-
+						<!-- 站点-状态 -->
+						<view class="u-f-ac">
+							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
+						<!-- 时间-价格 -->
+						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+								<view>{{item.setOutTime}}</view>
+								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+							</view>
+						</view>
+						<!-- 上车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="bluering"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
 						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
+						<!-- 下车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="redring"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
 
-						<view class="CTKYBtnView" v-if="item.orderState=='待使用'">
-							<button class="allBtn">车辆位置</button>
+						<view class="CTKYBtnView">
+							<!-- <button class="allBtn">车辆位置</button> -->
 							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
-							<button class="allBtn QRCode">二维码</button>
-							<button class="allBtn">选座</button>
+							<!-- <button class="allBtn QRCode">二维码</button> -->
+							<!-- <button class="allBtn">选座</button> -->
 							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
-							<button class="allBtn">联系司机</button>
+							<!-- <button class="allBtn">联系司机</button> -->
 						</view>
 					</view>
 				</view>
@@ -594,22 +554,21 @@
 		<view v-if="current === 3" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in unfinishArr" :key="index">
 				<!-- 出租车 -->
-				<view v-if="item.title=='出租车'">
+				<view v-if="item.vehicleType=='出租车'">
 					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
 						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{item.appointmentTime}}</text>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
 							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 						</view>
 				
 						<view style="display: flex; margin-top: -72rpx;">
 							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.orderTime}}</view>
+							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
 						</view>
 				
 						<view style="display: flex; margin-top: -16rpx;">
@@ -703,59 +662,40 @@
 				<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
-						</view>
-						<view class="whiteBg">
-							<view style="display: flex; margin-top: -40rpx;">
-								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -72rpx;">
-								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -16rpx;">
-								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: 36rpx;">
-								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
-							</view>
-
-							<view class="CTKYBtnView" v-if="item.state=='已取消'">
-								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
-								<button class="allBtn" @tap="del(index)">删除</button>
+						<!-- 站点-状态 -->
+						<view class="u-f-ac">
+							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
+						<!-- 时间-价格 -->
+						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+								<view>{{item.setOutTime}}</view>
+								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+							</view>
+						</view>
+						<!-- 上车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="bluering"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
 						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
+						<!-- 下车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="redring"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
-
-						<view class="CTKYBtnView" v-if="item.state=='7'">
+						<view class="CTKYBtnView">
 							<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
 							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
 							<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
-
 						</view>
 					</view>
 				</view>
@@ -770,22 +710,21 @@
 		<view v-if="current === 4" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in cancelArr" :key="index">
 				<!-- 出租车 -->
-				<view v-if="item.title=='出租车'">
+				<view v-if="item.vehicleType=='出租车'">
 					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
 						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{item.appointmentTime}}</text>
 					</view>
 					<view class="whiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
-							<image v-if='item.titleIndex == 1' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.title}}</view>
+							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
 							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 						</view>
 				
 						<view style="display: flex; margin-top: -72rpx;">
 							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.time}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view>
+							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.orderTime}}</view>
+							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
 						</view>
 				
 						<view style="display: flex; margin-top: -16rpx;">
@@ -871,7 +810,7 @@
 
 
 						<!-- 已取消 -->
-						<view class="cm_buttonView" v-if="item.orderType=='已取消'">
+						<view class="cm_buttonView">
 							<view class="cm_button cm_btDelete" @click="open4(item.orderNumber)">删除</view>
 							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
 
@@ -883,30 +822,35 @@
 				<!-- (已取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
 					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;" v-if="item.appointment">
+					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 					</view>
 					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
+						<!-- 站点-状态 -->
+						<view class="u-f-ac">
+							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+							</view>
 						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-							<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
+						<!-- 时间-价格 -->
+						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+								<view>{{item.setOutTime}}</view>
+								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+							</view>
 						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
+						<!-- 上车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="bluering"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
 						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
+						<!-- 下车点 -->
+						<view class="u-f-ac" style="margin-top: 20rpx;">
 							<view class="redring"></view>
-							<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
+							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
 
 						<view class="CTKYBtnView" v-if="item.state=='已取消'">
@@ -1228,18 +1172,19 @@
 					success: (res) => {
 						uni.stopPullDownRefresh();
 						console.log('11111', res.data);
+						
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								that.info.push(res.data.data[i]);
 							}
 							for (var i = 0; i < res.data.data.length; i++) {
-								if (res.data.data[i].state == '已完成') {
+								if (res.data.data[i].state == '5') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].state == '进行中') {
+								} else if (res.data.data[i].state == '4') {
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].state == '订单未支付') {
 									that.unfinishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].state == '已取消') {
+								} else if (res.data.data[i].state == '9') {
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
@@ -1257,6 +1202,22 @@
 						console.log('错误', res);
 					}
 				})
+			},
+			//-------------------------判断订单状态-------------------------
+			getCtkyOrderStatus(param){
+				if(param == 4) {
+					return '进行中'
+				}else if(param == 5) {
+					return '已完成'
+				}else if(param == 6) {
+					return '已退票'
+				}else if(param == 7) {
+					return '未支付'
+				}else if(param == 9) {
+					return '已撤销'
+				}else if(param == 22) {
+					return '已改签'
+				}
 			},
 			//-------------------------跳转到详情页-------------------------
 			keYunDetail: function(res) {
@@ -1467,29 +1428,29 @@
 								console.log('出租车数据', res.data);
 								if (res.data.status) {
 									for (var i = 0; i < res.data.data.length; i++) {
-										var data = res.data.data[i];
-										var obj = {
-											title: '出租车',
-											titleIndex: '1',
-											time: data.orderTime,
-											state: data.state,
-											money: '',
-											startAddress: data.startAddress,
-											endAddress: data.endAddress,
-											orderNumber: data.orderNumber,
-										}
-										var orderType1 = '';
-										that.info.push(obj);
-										if (that.info[i].state == "0" || that.info[i].state == "1" || that.info[i].state == "2" || that.info[i].state == "3" || that.info[i].state == "4") {
-											that.goingArr.push(that.info[i]);
-											console.log('进行中',that.info[i]);
-										}else if (that.info[i].state == "5" || that.info[i].state == "9") {
-											that.unfinishArr.push(that.info[i]);
-										}else if (that.info[i].state == "7" || that.info[i].state == "8") {
-											that.cancelArr.push(that.info[i]);
-										}else if (that.info[i].state == 6) {
-											console.log(that.info[i]);
-											that.finishArr.push(that.info[i]);
+										// var data = res.data.data[i];
+										// var obj = {
+										// 	title: '出租车',
+										// 	titleIndex: '1',
+										// 	time: data.orderTime,
+										// 	state: data.state,
+										// 	money: '',
+										// 	startAddress: data.startAddress,
+										// 	endAddress: data.endAddress,
+										// 	orderNumber: data.orderNumber,
+										// }
+										
+										that.info.push(res.data.data[i]);
+										if (res.data.data[i].state == "0" || res.data.data[i].state == "1" || res.data.data[i].state == "2" || res.data.data[i].state == "3" || res.data.data[i].state == "4") {
+											that.goingArr.push(res.data.data[i]);
+											console.log('进行中',res.data.data[i]);
+										}else if (res.data.data[i].state == "5" || res.data.data[i].state == "9") {
+											that.unfinishArr.push(res.data.data[i]);
+										}else if (res.data.data[i].state == "7" || res.data.data[i].state == "8") {
+											that.cancelArr.push(res.data.data[i]);
+										}else if (res.data.data[i].state == 6) {
+											console.log(res.data.data[i]);
+											that.finishArr.push(res.data.data[i]);
 											console.log('已完成',that.finishArr);
 										}
 									}
