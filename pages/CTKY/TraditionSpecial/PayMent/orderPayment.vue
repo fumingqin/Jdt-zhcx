@@ -385,6 +385,18 @@
 								// console.log('订单编号', res.data.data);
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
+							}else if(res.data.status == false) {
+								uni.hideLoading();
+								uni.showModal({
+									content:res.data.msg,
+									success: (res) => {
+										if(res.confirm) {
+											uni.switchTab({
+												url:'../../../order/OrderList'
+											})
+										}
+									}
+								})
 							}
 						}
 					},

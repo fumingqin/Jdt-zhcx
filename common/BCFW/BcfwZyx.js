@@ -18,7 +18,105 @@ const charteredBus = {
 	},
 	msg:'提示'
 }
-
+const ArrayInfo={
+	status: 1, //1成功/0失败提示返回值
+	data: [{
+			title:'包车-定制',
+			orderDate:'2020-03-04',
+			orderType: '待发车',
+			cost: 100,
+			datestring:'2020-03-04 20:20',
+			boardingPoint:'厦门',
+			destination:'晋江',
+			day:'3天',
+			telephone:'123',
+			orderNumber:'0000'
+		},
+		{
+			title:'包车-定制',
+			orderDate: '2020-03-04',
+			orderType: '进行中',
+			cost: 200,
+			datestring:'2020-03-04 20:20',
+			boardingPoint:'厦门',
+			destination:'安溪',
+			day:'3天',
+			telephone:'123',
+			orderNumber:'0000'
+		},
+		{
+			title:'包车-定制',
+			orderDate: '2020-03-04',
+			orderType: '已完成',
+			cost: 50,
+			datestring:'2020-03-04 20:20',
+			boardingPoint:'厦门',
+			destination:'晋江',
+			day:'3天',
+			telephone:'123',
+			orderNumber:'0000'
+		},
+		{
+			title:'包车-定制',
+			orderDate:'2020-03-04',
+			orderType: '待发车',
+			cost: 100,
+			datestring:'2020-03-04 20:20',
+			boardingPoint:'泉州',
+			destination:'晋江',
+			day:'3天',
+			telephone:'123',
+			orderNumber:'0000',
+			},
+		{
+			title:'包车-定制',
+			orderDate:'2020-03-04',
+			orderType: '待支付',
+			cost: 100,
+			datestring:'2020-03-04 20:20',
+			boardingPoint:'厦门',
+			destination:'晋江',
+			day:'3天',
+			telephone:'123',
+			orderNumber:'0000'
+		},
+		{
+			title:'包车-专线',//标题
+			orderDate:'2020-03-04',//预定时间
+			orderType: '已取消',//状态
+			cost: 100,//价格
+			datestring:'2020-03-04 20:20',//发车时间
+			boardingPoint:'厦门',//出发地
+			destination:'晋江',//目的地
+			day:'3天',//包车天数
+			telephone:'123',//司机电话
+			orderNumber:'0000'//订单号
+		}
+	],
+	msg: '提示'
+}
+const orderInfo={
+	status: 1, //1成功/0失败提示返回值
+	data: {
+			ticketTitle:'包车-定制',
+			orderType: '待发车',
+			username:'张三丰',
+			userId:'350583199909010022',
+			userphone:'13235912326',
+			timeout:30,
+			cm_money:70,
+			cost: 100,
+			datestring:'2020-03-04 20:20',
+			boardingPoint:'厦门',
+			destination:'晋江',
+			day:3,
+			telephone:'123',
+			orderNumber:'0000'
+		}
+}
+// 接口声明区
 export default {
+	ArrayInfo,
+	orderInfo,
 	charteredBus,
-	}
+}

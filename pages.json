@@ -598,6 +598,24 @@
 				"navigationStyle": "custom"
 			}
         }
+        ,{
+            "path" : "pages/BCFW/BCsuccessfulPayment",
+            "style" : {}
+        },
+		{
+		    "path" : "pages/BCFW/charteredBusPayment",
+		    "style" : {}
+		}
+		
+        ,{
+            "path" : "pages/CTKY/SpecialBus/Home/specialLinePicker",
+            "style" : {}
+        }
+        
+        ,{
+            "path" : "pages/CTKY/SpecialBus/Home/specialReserve",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
