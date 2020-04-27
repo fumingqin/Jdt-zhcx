@@ -180,6 +180,7 @@
 					that.endLonLat = res.data.EndLon + ',' + res.data.EndLat;
 					that.TaxiCost = res.data.EstimatePrice; //价格
 					that.SpecialLineInf = res.data;
+					console.log(that.SpecialLineInf)
 					that.setMarkers();
 				}
 			});
@@ -303,10 +304,15 @@
 								VehicleType: that.vehicleType, //现在暂时只有出租车
 								AppointmentTime: that.selecttime === '点击选择时间' ? utils.timeTodate($taxi.dateFormat.dateformat, new Date().getTime()) :
 									that.selecttime, //预约时间
-								EstimatePrice: that.estimatePrice, //价格
+								EstimatePrice: that.SpecialLineInf.EstimatePrice, //价格
+								FactPrice: that.SpecialLineInf.EstimatePrice, //价格
+								FactPayPrice:that.SpecialLineInf.EstimatePrice, //价格
+								CouponPrice:that.SpecialLineInf.EstimatePrice, //价格
 								UserId: that.userInfo.userId,
 								PassengersPhone: that.userInfo.phoneNumber,
 								userType: 0,
+								EstimateDistance:that.SpecialLineInf.Distance,//预计里程
+								EstimateTime:that.SpecialLineInf.EstimatedTime,//预计时间分钟
 							},
 							success: function(res) {
 								uni.hideLoading();

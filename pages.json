@@ -526,7 +526,7 @@
 		{
 			"path": "pages/Home/MapIndex",
 			"style": {
-				"navigationBarTitleText": "hello",
+				"navigationBarTitleText": "搜索地址",
 				"app-plus": {
 					"titleNView": {
 						"buttons": [{
