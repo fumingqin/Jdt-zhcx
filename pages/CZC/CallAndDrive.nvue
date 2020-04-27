@@ -823,25 +823,6 @@
 				arr.push(marker);
 				that.markers = arr;
 			},
-
-
-
-
-			test: function() {
-				let that = this;
-				setTimeout(function() {
-					that.state = 5;
-				}, 10000);
-				setTimeout(function() {
-					that.state = 10;
-				}, 20000);
-				setTimeout(function() {
-					that.state = 15;
-				}, 30000);
-				setInterval(function() {
-					console.log(1);
-				}, 1000);
-			},
 		}
 	}
 </script>

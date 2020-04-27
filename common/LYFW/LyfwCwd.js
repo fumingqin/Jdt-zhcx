@@ -1282,17 +1282,17 @@ const vehicleSelection={
 const driverInformation = {
 	status: 1, //1成功,0失败提示返回值
 	data:{
-		orderType:'进行中',
+		orderType:'待支付',
 		licensePlate:'闽A88888',
 		vehicleType:'豪华车型',
 		name:'张三丰',
-		age:'6年',
+		age:'6',
 		telephone:'134566456126',
-		day:'3天',
+		day:'3',
 		duration:'47:00',
-		cost:'200元',
-		overtimeCharge:'50元',
-		totalCost:'250元',
+		cost:'200',
+		overtimeCharge:'50',
+		totalCost:'250',
 		boardingPoint:'泉州客运中心',
 		destination:'泉州动车站',
 		totalLi:'150km',

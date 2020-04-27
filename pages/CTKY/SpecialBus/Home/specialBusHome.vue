@@ -10,12 +10,12 @@
 			<!-- 标题 -->
 			<view class="title">专线名称</view>
 			<!-- 专线名称 -->
-			<view class="textContent" @tap="lineTap">厦门国际机场</view>
+			<view class="textContent" @tap="lineTap">{{lineName}}</view>
 			
 			<!-- 标题 -->
 			<view class="title">时间</view>
 			<!-- 时间 -->
-			<view class="textContent" @tap="timeTap">3月20日    周五    14:30</view>
+			<view class="textContent" @tap="timeTap">{{date}}</view>
 			
 			<!-- 下一步按钮 -->
 			<view class="nextView">
@@ -25,32 +25,80 @@
 			<view>
 				<image class="tip" src="../../../../static/CTKY/specialBusTip.png" lazy-load mode="aspectFit"></image>
 			</view>
+			<!-- <min-popup size="height" v-if="show" @close='close'>
+			  <date-picker  @cancel="cancel" @sure="sure"></date-picker>
+			</min-popup> -->
+			<popup ref="popup" type="bottom">
+				<date-picker class="popupTextContent" @cancel="cancel" @sure="sure"></date-picker>
+		    </popup>
 		</view>
-		
 	</view>
 </template>
 
 <script>
+	import datePicker from '@/components/CTKY/mx-datepicker/ctkyDatePicker.vue'
+	import Popup from '@/components/CTKY/uni-popup/uni-popup.vue'
 	export default {
+		components:{
+			datePicker,
+			Popup
+			},
 		data() {
 			return {
-				
+				lineName:'',//线路名称
+				date:'选择出发时间',//时间
+				// show:false,
 			}
+		},
+		onLoad() {
+			var that = this;
+			if(that.lineName == '') {
+				that.lineName = '请选择线路'
+			}
+			//监听事件,监听下个页面返回的值
+			uni.$on('specialLineName', function(data) {
+			    // data即为传过来的值，给上车点赋值
+				that.lineName = data.data;
+			    //清除监听，不清除会消耗资源
+			    uni.$off('specialLineName');
+			});
 		},
 		methods: {
 			//------------------------------线路点击------------------------------
 			lineTap() {
 				console.log('点击了线路');
+				uni.navigateTo({
+					url:'./specialLinePicker'
+				})
 			},
 			//------------------------------时间点击------------------------------
 			timeTap() {
 				console.log('点击了时间');
+				// this.showPop();
+				this.$refs.popup.open()
 			},
 			//------------------------------下一步点击------------------------------
 			nextTap() {
 				console.log('点击了下一步');
-			}
-			
+			},
+			// 取消事件
+			cancel(){
+			    this.close()
+			},
+			// 确认事件
+			sure(e){
+			    console.log(e)
+			    // 输出 { year: 2020,month: 3,day: 23}
+				this.date = e.month + '月' + e.day + '日' + '  ' + e.hour + ':' + e.minute
+			},
+			// picker显示
+			showPop(){
+			    this.show = true
+			},
+			// 关闭picker
+			close(){
+			    this.show = false
+			},
 		}
 	}
 </script>
@@ -61,6 +109,10 @@
 		background-color: #F4F9FC;
 		width: 100%;
 		height: 100%;
+	}
+	/* 客运弹框 */
+	.popupTextContent {
+		width: 100%;
 	}
 	.banner {
 		width: 100%;
@@ -110,6 +162,7 @@
 		border-radius: 10upx;
 	}
 	.tip {
+		width: 100%;
 		height: 60rpx;
 		margin-top: 40rpx;
 		margin-bottom: 60rpx;

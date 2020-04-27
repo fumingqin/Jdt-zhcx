@@ -14,10 +14,10 @@
 				let that = this;
 				let userInfo = uni.getStorageSync('userInfo') || '';
 				if(userInfo == ''){
-					uni.showToast({
-						title:'未登录',
-						icon:'none'
-					});
+					// uni.showToast({
+					// 	title:'未登录',
+					// 	icon:'none'
+					// });
 					return ;
 				}
 				uni.getLocation({
