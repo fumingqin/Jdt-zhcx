@@ -38,6 +38,24 @@ const Interface = {
 		method:'POST', 
 		pages:["CZC/PrivateTaxi.nvue"]
 	},
+	QuerySpecialLineOrderByUserID_Passenger:{
+		value: Url + '/api/SpecialLine/QuerySpecialLineOrderByUserID_Passenger',
+		name:'旅客端-根据用户ID查询订单',
+		method:'POST',
+		pages:["CZC/PrivateTaxi.nvue"]
+	},
+	QuerySpecialLineOrder_Passenger:{
+		value: Url + '/api/SpecialLine/QuerySpecialLineOrder_Passenger',
+		name:'旅客端-根据订单ID查询订单',
+		method:'POST',
+		pages:["CZC/PrivateTaxi.nvue"]
+	},
+	SpecialLineOrderPay_Passenger:{
+		value: Url + '/api/SpecialLine/SpecialLineOrderPay_Passenger',
+		name:'旅客端-支付完成',
+		method:'POST',
+		pages:["CZC/PrivateTaxi.nvue"]
+	},
 }
 
 
