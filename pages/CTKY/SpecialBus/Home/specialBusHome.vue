@@ -37,10 +37,12 @@
 
 <script>
 	import datePicker from '@/components/CTKY/mx-datepicker/ctkyDatePicker.vue'
+	import datePopup from '@/components/CTKY/mx-datepicker/min-popup.vue'
 	import Popup from '@/components/CTKY/uni-popup/uni-popup.vue'
 	export default {
 		components:{
 			datePicker,
+			datePopup,
 			Popup
 			},
 		data() {
