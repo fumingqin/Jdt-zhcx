@@ -251,7 +251,7 @@
 		</view>
 		<view v-if="current == 3">我是公交</view>
 		<view v-if="current == 4" style="margin-top: 10rpx;">
-			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick(index)">
+			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick(item)">
 				<text style="font-size: 36rpx;font-weight: bold;">{{item.SpecialLineName}}</text>
 				<view style="justify-content: space-between;padding-top: 20rpx;">
 					<view style="flex-direction: row;justify-content: space-between;">
@@ -259,7 +259,7 @@
 							<view style="border-radius: 100px;background-color: #309FF7;width: 10rpx;height: 10rpx;"></view>
 							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.StartSiteName}}</text>
 						</view>
-						<text style="font-size: 36rpx;color: #FC4646;">￥{{item.cost}}</text>
+						<text style="font-size: 36rpx;color: #FC4646;">￥{{item.EstimatePrice}}</text>
 					</view>
 					<view style="flex-direction: row;justify-content: space-between;padding-top: 10rpx;">
 						<view style=" flex-direction: row;align-items:center;">
@@ -268,8 +268,9 @@
 						</view>
 					</view>
 				</view>
-				<view style="padding-top: 20rpx;">
-					<text style="font-size: 28rpx;color: #666666;">约{{item.Distance}}公里，预计{{item.EstimatedTime}}</text>
+				<view style="padding-top: 20rpx;flex-direction: row;">
+					<text style="font-size: 28rpx;color: #666666;" v-if="item.Distance>0">约{{item.Distance}}公里</text>
+					<text style="font-size: 28rpx;color: #666666;" v-if="item.EstimatedTime>0">，预计{{item.EstimatedTime}}分钟</text>
 				</view>
 			</view>
 		</view>
@@ -374,6 +375,10 @@
 			uni.removeStorage({
 				key: "EndPoint"
 			})
+			uni.removeStorage({
+				key: "passengerList"
+			})
+			clearInterval(that.intervalAround);
 		},
 		onShow() {
 			var that = this;
@@ -416,7 +421,7 @@
 
 		},
 		onReady: function() {
-
+			
 		},
 		methods: {
 			showToast: function(msg, icon = 'none') {
@@ -495,12 +500,14 @@
 				let that = this;
 				if (this.selecttime == "点击选择时间" && !this.IsClick) {
 					uni.showToast({
-						title: "请选择时间"
+						title: "请选择时间",
+						icon:"none"
 					})
 				} else {
-					if (this.Passenger[0].name == '选择乘车人') {
+					if (this.Passenger[0].userName  == '选择乘车人'||this.Passenger[0].userName  == '') {
 						uni.showToast({
-							title: "请选择乘车人"
+							title: "请选择乘车人",
+							icon:"none"
 						})
 					} else {
 						uni.showLoading({
@@ -601,7 +608,6 @@
 						uni.$off('startstaionChange');
 					});
 					uni.navigateTo({
-
 						url: '../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian'
 					})
 				} else {
@@ -641,7 +647,6 @@
 						uni.$off('endStaionChange');
 					});
 					uni.navigateTo({
-
 						url: '../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'zhongdian'
 					})
 				} else {
@@ -1048,10 +1053,12 @@
 							method: 'GET',
 							success: function(res) {
 								var carArr = res.data;
+								//console.log(res.data);
 								for (var i = 0; i < carArr.length; i++) {
-									that.setMarker('car_' + i, carArr[i].Longitude, carArr[i].Latitude,
+									that.setMarker('car_' + i, carArr[i].longitude, carArr[i].latitude,
 										'../../static/CZC/Car.png');
 								}
+								// console.log(that.markers);
 								// console.log(carArr.length + '-' + that.markers.length);
 							},
 						});
@@ -1062,29 +1069,47 @@
 				var that = this;
 				that.intervalAround = setInterval(function() {
 					that.selectCarAroung();
-				}, 3000);
+				}, 10000);
 			},
 			///////////////////////////专线出租车代码开始/////////////////////////////////////////////////////
 			getprivateTaxiLine: function() {
-				let that = this;
+				let that=this;
+				uni.showLoading({
+					mask:true
+				})
 				uni.request({
-					url: $privateTaxi.Interface.GetCityLine.value,
-					method: $privateTaxi.Interface.GetCityLine.method,
+					url:$privateTaxi.Interface.GetSpecialLine.value,
+					method: $privateTaxi.Interface.GetSpecialLine.method,
 					success(res) {
-						console.log(res);
-						if (res.status) {
-							that.privateTaxi = res.data;
+						if (res.data.status) {
+							uni.hideLoading();
+							that.privateTaxi = res.data.data;
+						}else{
+							uni.hideLoading();
+							console.log(res)
 						}
+					},
+					fail() {
+						uni.hideLoading();
+						that.showToast('网络连接失败');
 					}
 				})
 			},
-			privateTaxiClick: function(index) { //点击专线车 
-				//this.privateTaxi[index].SpecialLineID//线路ID
-				uni.navigateTo({
-					url: '../CZC/PrivateTaxi',
-					animationType: 'pop-in',
-					animationDuration: 200,
-				});
+			privateTaxiClick: function(value) { //点击专线车 
+			    uni.setStorage({//专线车信息
+			    	key:"SpecialLineInf",
+					data:value,
+					success() {
+						uni.removeStorage({
+							key: "passengerList"
+						})
+						uni.navigateTo({
+							url: '../CZC/PrivateTaxi',
+							animationType: 'pop-in',
+							animationDuration: 200,
+						});
+					}
+			    })
 			}
 			///////////////////////////专线出租车代码结束/////////////////////////////////////////////////////
 		}

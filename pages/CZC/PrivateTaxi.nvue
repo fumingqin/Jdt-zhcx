@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view>
-			<map id="map1" ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startlongitude" :latitude="startlatitude"
+			<map id="map1" ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="StartLon" :latitude="StartLat"
 			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map></view>
 		<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;">
 			<view style="margin:20rpx;">
@@ -34,7 +34,7 @@
 					<view style="align-items: center;justify-content: center;flex-direction: row;">
 						<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
 						<view>
-							<text style="font-size: 28rpx;">出租车</text>
+							<text style="font-size: 28rpx;">{{VehicleType}}</text>
 						</view>
 					</view>
 					<view style="align-items: center;justify-content: center;flex-direction: row;">
@@ -44,75 +44,157 @@
 				</view>
 				<view style="margin-top: 40rpx;align-items: center;">
 					<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;line-height: 84rpx;">
-						<text style="color: #FFFFFF;font-size: 34rpx;">立即呼叫</text>
+						<text style="color: #FFFFFF;font-size: 34rpx;">立即预约</text>
 					</button>
 				</view>
 			</view>
 		</view>
+		<uni-popup ref="bottomPopup" :maskClick='false' type="bottom">
+			<!-- <form @submit="payment"> -->
+			<view style="background-color: #FFFFFF;padding: 20px;box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);border-top-left-radius: 9px;border-top-right-radius: 9px;">
+				<!--<view style="flex-direction: row;justify-content: flex-end;	">
+						</view> -->
+				<view style="flex-direction: row;justify-content: space-between;">
+					<view>
+						<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">{{countdown}}</text>
+					</view>
+					<view>
+						<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">支付车费</text>
+					</view>
+					<view>
+						<uni-icons @click="closeBottomPopup" type="closeempty" size="19"></uni-icons>
+					</view>
+				</view>
+				<view style="margin-top: 30px;flex-direction: row;justify-content: center;align-items: center;">
+					<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{TaxiCost}}</text><text
+					 style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:Light;color:#2C2D2D;">元</text>
+				</view>
+				<!-- <view style="flex-direction: row;justify-content: center;align-items: center;">
+						<text @click="payDetail" style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#727272;">费用明细</text>
+						<uni-icons @click="payDetail" type="arrowright" size="15" color="#727272"></uni-icons>
+					</view> -->
+				<!-- 	<view style="flex-direction: row;justify-content: space-between;margin-top: 20px;">
+						<view>
+							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000">优惠券</text>
+						</view>
+						<view style="flex-direction: row;align-items: center;" @click="choosEcoupon">
+							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#666666;">请选择优惠券</text>
+							<uni-icons type="arrowright" size="15" color="#666666"></uni-icons>
+						</view>
+					</view> -->
+				<view style="border-top-width: 1px;border-color: #EAEAEA;margin-top: 20px;padding-top: 20px;">
+					<radio-group name='chooseType'>
+						<view v-for='item in payType' :key='item.typeName' style="flex-direction: row;justify-content: space-between;padding-bottom: 20px;">
+							<view style="flex-direction: row;justify-content: center;align-items: center;">
+								<image :src='item.iconPath' style="height: 42rpx;width: 42rpx;"></image>
+								<text style="margin-left: 5rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000;">{{item.typeName}}</text>
+							</view>
+							<view>
+								<radio :value="item.value" :checked="item.checked" :color="item.typeColor" />
+							</view>
+						</view>
+					</radio-group>
+				</view>
+				<view>
+					<button form-type="submit" style="width: 100%;height: 100rpx;background-color: #FE4644;color: #FFFFFF;" @click="payment">
+						<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">确定支付{{TaxiCost}}元</text>
+					</button>
+				</view>
+			</view>
+			<!-- </form> -->
+		</uni-popup>
+
 	</view>
 </template>
 
 <script>
-	import taxi from "../../common/Czc.js";
+	import $taxi from "../../common/Czc.js";
+	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
 	import uniIcons from "../../components/CZC/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "../../components/CZC/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "../../components/CZC/h-timePicker/h-timePicker.vue";
+	import utils from "@/components/CTKY/shoyu-date/utils.filter.js"; //时间格式转换
+	import uniPopup from "@/components/CZC/uni-popup/uni-popup.vue";
 	export default {
 		components: {
 			uniIcons,
 			uniSegmentedControl,
-			hTimePicker
+			hTimePicker,
+			uniPopup
 		},
 		data() {
 			return {
+				countDownInterval: '', //倒计时定时器
+				SpecialLineInf: '', //线路信息
 				mapheight: '',
 				selecttime: "点击选择时间",
 				Passenger: [{
 					userName: "选择乘车人"
 				}],
-				TaxiCost: '',
+				countdown: '', //倒计时
+				TaxiCost: 0,
 				Distance: '',
 				markers: [],
 				startmarker: [],
 				endmarker: [],
-				startlatitude: 25.1,
-				startlongitude: 118,
-				endtlatitude: 25.33,
-				endlongitude: 118,
+				StartLat: 25.1,
+				StartLon: 118,
+				EndLat: 25.33,
+				EndLon: 118,
 				polyline: [],
 				map: '',
-				includePoints: [{
-						latitude: 25.1,
-						longitude: 118,
-					},
-					{
-						latitude: 25.33,
-						longitude: 118,
+				startLonLat: '',
+				endLonLat: '',
+				VehicleType: "出租车",
+				orderNumber: '', //订单号
+				userInfo: '', //用户信息
+				payType: [{
+						typeName: '微信',
+						typeColor: '#00C805',
+						iconPath: '../../static/CZC/Wechatpay.png',
+						value: 'wxpay',
+						checked: true,
 					}
+					// {
+					// 	typeName: '支付宝',
+					// 	typeColor: '#0EBDFF',
+					// 	iconPath: '../../static/CZC/Alipay.png',
+					// 	value: 'alipay',
+					// 	checked: false
+					// }
 				],
-				startLonLat: '118,25.1',
-				endLonLat: '118,25.33',
+				payInformation: '',
 			}
 		},
 		onLoad() {
 			//动态设置高度
 			var that = this;
-			that.setMarkers();
+			uni.getStorage({ //获取专线信息
+				key: "SpecialLineInf",
+				success: function(res) {
+					that.StartLat = res.data.StartLat;
+					that.StartLon = res.data.StartLon;
+					that.EndLat = res.data.EndLat;
+					that.EndLon = res.data.EndLon;
+					that.startLonLat = res.data.StartLon + ',' + res.data.StartLat;
+					that.endLonLat = res.data.EndLon + ',' + res.data.EndLat;
+					that.TaxiCost = res.data.EstimatePrice; //价格
+					that.SpecialLineInf = res.data;
+					console.log(that.SpecialLineInf)
+					that.setMarkers();
+				}
+			});
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
 					that.mapheight = res.windowHeight + 'px';
 				}
 			});
-
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		onReady() {
 			var that = this;
 			this.map = uni.createMapContext('map1', this);
-			// console.log(map.length);
-
-			// console.log(map[0])
-			// console.log(map);
 		},
 		onShow() {
 			var that = this;
@@ -124,6 +206,26 @@
 			});
 		},
 		methods: {
+			showToast: function(msg, icon = 'none') {
+				uni.showToast({
+					title: msg,
+					icon: icon
+				})
+			},
+			countDown: function(value) { //支付倒计时
+				let that = this;
+				that.countdown = value;
+				that.countDownInterval = setInterval(function() {
+					if (that.countdown > 0) {
+						that.countdown--;
+					} else {
+						that.cancelOrder();
+						clearInterval(that.countDownInterval);
+						that.countdown = '';
+					}
+				}, 1000);
+
+			},
 			changeTime: function(e) { //选择预约时间
 				this.selecttime = e;
 			},
@@ -134,39 +236,186 @@
 					animationDuration: 200
 				});
 			},
+			openBottomPopup: function() { //开启弹出层
+				this.$nextTick(function() {
+					this.$refs['bottomPopup'].open();
+				});
+			},
+			closeBottomPopup: function() { //关闭弹出层
+				uni.switchTab({
+					url: '../order/OrderList'
+				});
+			},
+			cancelOrder: function() { //取消订单
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
+					method: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.method,
+					data: {
+						OrderNumber: that.orderNumber,
+						UserId: that.userInfo.userId,
+					},
+					success: function(res) {
+						if (res.data.status) {
+							that.showToast("超时未支付，订单自动取消");
+							that.$nextTick(function() {//关闭弹出层
+								that.$refs['bottomPopup'].close();
+							});
+						} else {
+							that.showToast(res.data.msg);
+						}
+					},
+					fail: function(res) {
+						that.showToast('网络连接失败');
+					}
+				})
 
-			promptlyCall: function() { //立即呼叫、生成订单
+			},
+			promptlyCall: function() { //立即预约、生成订单
+				let that = this;
 				if (this.selecttime == "点击选择时间") {
 					uni.showToast({
-						title: "请选择时间"
+						title: "请选择时间",
+						icon: "none"
 					})
 				} else {
-					if (this.Passenger[0].name == '选择乘车人') {
+					if (this.Passenger[0].userName == '选择乘车人' || this.Passenger[0].userName == '') {
 						uni.showToast({
-							title: "请选择乘车人"
+							title: "请选择乘车人",
+							icon: "none"
 						})
 					} else {
-						uni.navigateTo({
-							url: '../CZC/WaitTakeOrder?orderNo=1',
-							animationType: 'pop-in',
-							animationDuration: 200,
-							success: function() {
-								try {
-								    uni.removeStorageSync('passengerList');
-								} catch (e) {
-								    // error
+						uni.showLoading({
+							title: '加载中',
+							mask: true
+						})
+						uni.request({
+							url: $privateTaxi.Interface.AddSpecialLineOrder_Passenger.value,
+							method: $privateTaxi.Interface.AddSpecialLineOrder_Passenger.method,
+							data: {
+								SpecialLineID: that.SpecialLineInf.SpecialLineID,
+								StartLon: that.StartLon,
+								StartLat: that.StartLat,
+								EndLon: that.EndLon,
+								EndLat: that.EndLat,
+								StartAddress: that.SpecialLineInf.StartSiteName, //起点
+								EndAddress: that.SpecialLineInf.EndSiteName, //终点
+								Passengers: JSON.stringify(that.Passenger),
+								VehicleType: that.vehicleType, //现在暂时只有出租车
+								AppointmentTime: that.selecttime === '点击选择时间' ? utils.timeTodate($taxi.dateFormat.dateformat, new Date().getTime()) :
+									that.selecttime, //预约时间
+								EstimatePrice: that.SpecialLineInf.EstimatePrice, //价格
+								FactPrice: that.SpecialLineInf.EstimatePrice, //价格
+								FactPayPrice:that.SpecialLineInf.EstimatePrice, //价格
+								CouponPrice:that.SpecialLineInf.EstimatePrice, //价格
+								UserId: that.userInfo.userId,
+								PassengersPhone: that.userInfo.phoneNumber,
+								userType: 0,
+								EstimateDistance:that.SpecialLineInf.Distance,//预计里程
+								EstimateTime:that.SpecialLineInf.EstimatedTime,//预计时间分钟
+							},
+							success: function(res) {
+								uni.hideLoading();
+								console.log(res)
+								if (res.data.status) {
+									that.orderNumber = res.data.data.OrderNumber;
+									that.getPaymentInformation();
+									that.openBottomPopup();
+									that.showToast(res.data.msg + "请在3分钟内完成支付");
+									that.countDown(10);
+									uni.removeStorage({
+										key: "passengerList"
+									})
+									// uni.navigateTo({
+									// 	url: '../CZC/WaitTakeOrder?orderNo=' + orderNumber,
+									// 	animationType: 'pop-in',
+									// 	animationDuration: 200, 
+									// 	success: function() {
+									// 		uni.removeStorage({
+									// 			key: "passengerList"
+									// 		})
+									// 	}
+									// });
+								} else if (!res.data.status && res.data.msg == "抱歉!下单失败,您预约的时间已有1笔订单") {
+									that.showToast(res.data.msg);
+									setTimeout(function() {
+										uni.switchTab({
+											// url: "../order/OrderList"
+										})
+									}, 1000)
 								}
+							},
+							fail: function(res) {
+								that.showToast('网络连接失败');
 							}
-						});
+						})
 					}
 				}
+			},
+			payment: function() { //支付
+				let that = this;
+				// console.log('111111',that.paymentData);
+				WeixinJSBridge.invoke('getBrandWCPayRequest', {
+					"appId": that.payInformation.AppId, //公众号名称，由商户传入
+					"timeStamp": that.payInformation.Timestamp, //时间戳
+					"nonceStr": that.payInformation.Noncestr, //随机串
+					"package": 'Sign=WXPay', //扩展包
+					"signType": "MD5", //微信签名方式:MD5
+					"paySign": that.payInformation.Sign //微信签名
+				}, function(res) {
+					if (res.err_msg == "get_brand_wcpay_request:ok") {
+						//支付成功再进计时器查询状态
+						// location.href = "/Order/BaseCallback/" + flowID;
+						uni.showToast({
+							title: "支付成功，等待司机接单",
+							success() {
+								uni.switchTab({
+									url:"../order/OrderList"
+								})
+							}
+						})
+						uni.redirectTo({
+							// url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
+						})
+						clearInterval(that.countDownInterval);
+					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+						uni.showToast({
+							title: "您取消了支付，请重新支付"
+						})
+						alert("您取消了支付，请重新支付");
+					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
+						uni.showToast({
+							title: "支付失败，请重新支付"
+						})
+					} else {
+						// location.href = "/Coach/GetCoach";
+					}
+				});
+			},
+			getPaymentInformation: function() {
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.Pay.value,
+					method: $privateTaxi.Interface.Pay.method,
+					data: {
+						payType: "3",
+						price: 0.01,
+						orderNumber: that.orderNumber,
+						goodsName: that.SpecialLineInf.SpecialLineName,
+						billDescript: "出租车专线车费",
+					},
+					success(res) {
+						that.payInformation = res.data;
+						console.log(res.data);
+					}
+				})
 			},
 			setMarkers: function() { //设置始末标点
 				var that = this;
 				var startmarker = { //起点
 					id: 0,
-					latitude: that.startlatitude,
-					longitude: that.startlongitude,
+					latitude: that.StartLat,
+					longitude: that.StartLon,
 					title: '在这上车',
 					zIndex: '1',
 					iconPath: '../../static/CZC/Start.png',
@@ -191,8 +440,8 @@
 				};
 				var endmarker = {
 					id: 1,
-					latitude: that.endtlatitude,
-					longitude: that.endlongitude,
+					latitude: that.EndLat,
+					longitude: that.EndLon,
 					title: '在这下车',
 					zIndex: '1',
 					iconPath: '../../static/CZC/End.png',
@@ -223,60 +472,11 @@
 				that.showlocation = false;
 				that.getDirectionDriving(that.startLonLat, that.endLonLat);
 			},
-			Timechange: function(time) { //时间转换
-				var that = this;
-				var date = parseInt(time / 3600 / 24);
-				var hours = 0;
-				var minutes = 0;
-				var seconds = 0;
-				if (date >= 1) {
-					hours = parseInt((time - date * 24 * 3600) / 3600);
-					if (hours >= 1) {
-						minutes = Math.ceil((time - date * 24 * 3600 - hours * 3600) / 60);
-						if (minutes >= 1) {
-							// seconds = time -date*24*3600-  hours * 3600 - minutes * 60
-							that.Duration = date + "天" + hours + "小时" + minutes + "分钟";
-						} else {
-							that.Duration = date + "天" + hours + "小时";
-							// seconds = time -date*24*3600-  hours * 3600;
-						}
-					} else {
-						minutes = Math.ceil(time / 60);
-						if (minutes >= 1) {
-							that.Duration = date + "天" + minutes + "分钟";
-							// seconds = time -date*24*3600-minutes * 60
-						} else {
-							that.Duration = date + "天";
-							// seconds = time-date*24*3600;
-						}
-					}
-				} else {
-					hours = parseInt(time / 3600)
-					if (hours >= 1) {
-						minutes = Math.ceil((time - hours * 3600) / 60);
-						if (minutes >= 1) {
-							// seconds = time - hours * 3600 - minutes * 60
-							that.Duration = hours + "小时" + minutes + "分钟";
-						} else {
-							that.Duration = hours + "小时";
-							// seconds = time - hours * 3600;
-						}
-					} else {
-						minutes = Math.ceil(time / 60);
-						if (minutes >= 1) {
-							that.Duration = minutes + "分钟";
-							// seconds = time - minutes * 60
-						} else {
-							// seconds = time;
-						}
-					}
-				}
-			},
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
 				var that = this;
 				uni.request({
-					url: taxi.InterfaceAddress[0],
+					url: $taxi.InterfaceAddress[0],
 					data: {
 						startLonLat: startLonLat,
 						endLonLat: endLonLat,
@@ -286,18 +486,9 @@
 						//日后会加入定时，此处需清空
 						that.points = [];
 						that.polyline = [];
-
 						var polylineArr = [];
 						var points = [];
-						that.TaxiCost = res.data.TaxiCost;
-						if ((res.data.Distance / 1000) > 1) {
-							that.Distance = res.data.Distance / 1000 + "公里";
-						} else {
-							that.Distance = res.data.Distance + "米";
-						}
-						that.Timechange(res.data.Duration);
 						polylineArr = res.data.Polyline;
-
 						for (var i = 0; i < polylineArr.length; i++) {
 							var arr = polylineArr[i].split(';');
 							for (var j = 0; j < arr.length; j++) {
@@ -317,7 +508,6 @@
 							points: that.points,
 							width: 10,
 							arrowLine: true,
-							// arrowIconPath:'../../static/CZC/jiantou.png',
 							color: "#4BDC27",
 							borderColor: "#8c918b",
 						};
@@ -327,12 +517,12 @@
 							that.map.includePoints({
 								padding: [700],
 								points: [{
-										latitude: 25.1,
-										longitude: 118,
+										latitude: that.StartLat,
+										longitude: that.StartLon,
 									},
 									{
-										latitude: 25.33,
-										longitude: 118,
+										latitude: that.EndLat,
+										longitude: that.EndLon,
 									}
 								]
 							});

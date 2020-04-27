@@ -25,7 +25,7 @@
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<text class="tabItem-font">网络约车</text>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/GJCX/busIndex')">
+				<view class="tabItem" @click="godetail('/pages/GJCX/busH5')">
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<text class="tabItem-font">公交查询</text>
 				</view>
