@@ -320,7 +320,7 @@
 			turnDate(date) {
 				return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
-			//-------------------------------点击上车点-----------------------------
+			//-------------------------------点击定制班车上车点-----------------------------
 			startStationTap() {
 				var that = this;
 				//跳转到选择上车点页面
@@ -328,7 +328,7 @@
 					url:'../stationPicker/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
 				})
 			},
-			//-------------------------------点击下车点-----------------------------
+			//-------------------------------点击定制班车下车点-----------------------------
 			endStationTap() {
 				var that = this;
 				//跳转到选择下车点页面
