@@ -389,9 +389,9 @@
 				// uni.switchTab({
 				// 	url:'/pages/GRZX/user'
 				// })
-				if(that.urlData==2){
-					uni.switchTab({  //返回订单页
-						url:'/pages/order/OrderList',
+				if(this.urlData==2){
+					uni.switchTab({  //返回首页
+						url:'/pages/Home/Index',
 					}) 
 				}else{
 					uni.navigateBack();
