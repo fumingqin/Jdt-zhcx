@@ -607,6 +607,16 @@
 		    "style" : {}
 		}
 		
+        ,{
+            "path" : "pages/Home/serve",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/GRZX/feedback",
+            "style" : {
+				"navigationBarTitleText": "意见反馈"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -629,6 +639,10 @@
 			{
 				"pagePath": "pages/GRZX/notice",
 				"text": "通知"
+			},
+			{
+				"pagePath": "pages/Home/serve",
+				"text": "服务"
 			},
 			{
 				"pagePath": "pages/order/OrderList",

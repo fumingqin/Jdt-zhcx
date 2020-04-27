@@ -14,37 +14,33 @@
 
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{orderInfo.ticketTitle}}</view>
-				<text class="MP_text">上车点：{{orderInfo.boardingPoint}}</text>
-				<text class="MP_text">目的地：{{orderInfo.destination}}</text>
-				<view v-if="orderInfo.ticketTitle=='包车-定制'"><text class="MP_text">包车天数：{{orderInfo.day}}天</text></view>
+				<view class="MP_title">{{orderInfo.or_class}}</view>
+				<text class="MP_text">上车点：{{orderInfo.or_boardingPoint}}</text>
+				<text class="MP_text">目的地：{{orderInfo.or_destination}}</text>
+				<view v-if="orderInfo.or_class=='包车-定制'"><text class="MP_text">包车天数：{{orderInfo.cm_day}}天</text></view>
 				
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">出发时间</view>
-					<text class="MP_text">{{orderInfo.datestring}}</text>
+					<text class="MP_text">{{orderInfo.or_dateString}}</text>
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">包车人信息</view>
-					<text class="MP_text">包车人：{{orderInfo.username}}</text>
-					<text class="MP_text">身份证：{{orderInfo.userId}}</text>	
-					<text class="MP_text">手机号：{{orderInfo.userphone}}</text>						
+					<text class="MP_text">包车人：{{orderInfo.userName}}</text>
+					<text class="MP_text">身份证：{{orderInfo.userCID}}</text>	
+					<text class="MP_text">手机号：{{orderInfo.userPhone}}</text>						
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">费用详情</view>
-					<view class="MP_cost" v-if="orderInfo.ticketTitle=='包车-定制'">
+					<view class="MP_cost" v-if="orderInfo.or_class=='包车-定制'">
 						<text>定制费用</text>
-						<text class="MP_userCost">¥{{orderInfo.cm_money}}</text>
+						<text class="MP_userCost">¥{{orderInfo.cm_totalCost}}</text>
 					</view>
-					<view class="MP_cost" v-if="orderInfo.ticketTitle=='包车-定制'">
-						<text>超时费用</text>
-						<text class="MP_userCost">¥{{orderInfo.timeout}}</text>
-					</view>
-					<view class="MP_cost" v-if="orderInfo.ticketTitle=='包车-专线'">
+					<view class="MP_cost" v-if="orderInfo.or_class=='包车-专线'">
 						<text>专线费用</text>
-						<text class="MP_userCost">¥{orderInfo.cm_money}}</text>
+						<text class="MP_userCost">¥{orderInfo.cm_totalCost}}</text>
 					</view>
 
 					<!-- 优惠券 -->
@@ -56,7 +52,7 @@
 
 
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{orderInfo.cost}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo.cm_totalCost}}</text>
 					</view>
 
 				</view>
@@ -86,7 +82,7 @@
 			
 
 			<view class="MP_information3" @click="paymentSatas">
-				支付{{orderInfo.cost}}元
+				支付{{orderInfo.cm_totalCost}}元
 			</view>
 
 		</view>
@@ -110,24 +106,22 @@
 				paymentValue:false,//默认未拉起状态
 				
 				orderInfo: [{
-					orderNumber: '',//订单编号
-					orderType: '',//订单状态
-					ticketTitle: '',//包车类型
+					or_number: '',//订单编号
+					or_type: '',//订单状态
+					or_class: '',//包车类型
 					
-					timeout:'',//超时费用
-					cm_money: '',//包车价格
-					cost:'',//总计
-					datestring:'',//出发时间
-					boardingPoint: '',//出发地
-					destination:'',//目的地
-					day:0,					
-					username:'',//包车人
-					userId:'',//包车人身份证
-					userphone:'',//包车人电话
+					cm_totalCost:'',//总计
+					or_dateString:'',//出发时间
+					or_boardingPoint: '',//出发地
+					or_destination:'',//目的地
+					cm_day:0,					
+					userName:'',//包车人
+					userCID:'',//包车人身份证
+					userPhone:'',//包车人电话
 					
 					
 
-					couponId:'',//优惠券编号
+					couponID:'',//优惠券编号
 					couponTitle: '',//优惠券标题
 					couponPrice: '',//优惠券价格
 					couponCondition: '',//使用门槛

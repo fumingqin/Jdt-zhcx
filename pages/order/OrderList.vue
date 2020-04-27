@@ -110,54 +110,57 @@
 				<!-- 包车订单 -->
 				<!-- 标签class命名：;全称：Purchase Date -->
 				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
-					<view class="pd_view">{{item.orderDate}}</view>
+				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+					<view class="pd_view">{{item.or_time}}</view>
 					<view class="cm_view">
 						<view class="cm_titleView">
 							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.title}}</text>
-							<text class="cm_status">{{item.orderType}}</text>
+							<text class="cm_title">{{item.or_class}}</text>
+							<text class="cm_status">{{item.or_type}}</text>
 						</view>
 				<view class="cm_contentView" style="display: flex;">
-					<text class="cm_contentPrice">¥{{item.cost}}</text>
+					<text class="cm_contentPrice">¥{{item.or_cost}}</text>
 				</view>
 						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
-							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
-						
 				
 						<!-- 已完成 -->
-						<view class="cm_buttonView" v-if="item.orderType=='已完成'">
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+						<view class="cm_buttonView" v-if="item.or_type=='已完成'">
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>
 				
 						<!-- 待发车 -->
-						<view class="cm_buttonView"  v-if="item.orderType=='待发车'">
-							<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>	
+						<view class="cm_buttonView"  v-if="item.or_type=='待发车'">
+							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>	
 						</view>
 						<!-- 进行中 -->
-						<view class="cm_buttonView"  v-if="item.orderType=='进行中'">
-							<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+						<view class="cm_buttonView"  v-if="item.or_type=='进行中'">
+							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view>
-				
+						<!-- 待补款 -->
+						<view class="cm_buttonView"  v-if="item.or_type=='待补款'" >
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btToPay" @click="details2(item.or_number)">去支付</view>
+						</view>
 						<!-- 待支付 -->
-						<view class="cm_buttonView"  v-if="item.orderType=='待支付'" >
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
-							<view class="cm_button cm_btToPay" @click="topay(item.orderNumber)">去支付</view>
+						<view class="cm_buttonView"  v-if="item.or_type=='待支付'" >
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+							<view class="cm_button cm_btToPay" @click="topay2(item.or_number)">去支付</view>
 						</view>
 				
 						<!-- 已取消 -->
-						<view class="cm_buttonView"  v-if="item.orderType=='已取消'">
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open4(item.orderNumber)">删除</view>
+						<view class="cm_buttonView"  v-if="item.or_type=='已取消'">
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
 						</view>
 					</view>
 				</view>
@@ -312,26 +315,26 @@
 				<!-- 包车订单 -->
 				<!-- 标签class命名：;全称：Purchase Date -->
 				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
-					<view class="pd_view">{{item.orderDate}}</view>
+				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+					<view class="pd_view">{{item.or_time}}</view>
 					<view class="cm_view">
 						<view class="cm_titleView">
 							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.title}}</text>
-							<text class="cm_status">{{item.orderType}}</text>
+							<text class="cm_title">{{item.or_class}}</text>
+							<text class="cm_status">{{item.or_type}}</text>
 						</view>
 				<view class="cm_contentView" style="display: flex;">
-					<text class="cm_contentPrice">¥{{item.cost}}</text>
+					<text class="cm_contentPrice">¥{{item.or_cost}}</text>
 				</view>
 						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
-							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
 						<!-- 已完成 -->
-						<view class="cm_buttonView" v-if="item.orderType=='已完成'">
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+						<view class="cm_buttonView" v-if="item.or_type=='已完成'">
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>	
 					</view>
 				</view>
@@ -479,38 +482,42 @@
 				<!-- 包车订单 -->
 				<!-- 标签class命名：;全称：Purchase Date -->
 				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
-					<view class="pd_view">{{item.orderDate}}</view>
+				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+					<view class="pd_view">{{item.or_time}}</view>
 					<view class="cm_view">
 						<view class="cm_titleView">
 							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.title}}</text>
-							<text class="cm_status">{{item.orderType}}</text>
+							<text class="cm_title">{{item.or_class}}</text>
+							<text class="cm_status">{{item.or_type}}</text>
 						</view>
 				<view class="cm_contentView" style="display: flex;">
-					<text class="cm_contentPrice">¥{{item.cost}}</text>
+					<text class="cm_contentPrice">¥{{item.or_cost}}</text>
 				</view>
 						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
-							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
 				
 				
 				<!-- 待发车 -->
-				<view class="cm_buttonView" v-if="item.orderType=='待发车'">
-					<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
-					<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
-					<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+				<view class="cm_buttonView" v-if="item.or_type=='待发车'">
+					<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+					<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+					<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 				</view>
 						<!-- 进行中 -->
-						<view class="cm_buttonView" v-if="item.orderType=='进行中'">
-							<view class="cm_button cm_contact" @click="tel(item.telephone)">联系司机</view>
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
+						<view class="cm_buttonView" v-if="item.or_type=='进行中'">
+							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view>
-				
+				<!-- 待补款 -->
+				<view class="cm_buttonView"  v-if="item.or_type=='待补款'" >
+					<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+					<view class="cm_button cm_btToPay" @click="details2(item.or_number)">去支付</view>
+				</view>
 					</view>
 				</view>
 
@@ -659,30 +666,30 @@
 				<!-- 包车订单 -->
 				<!-- 标签class命名：;全称：Purchase Date -->
 				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
-					<view class="pd_view">{{item.orderDate}}</view>
+				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+					<view class="pd_view">{{item.or_time}}</view>
 					<view class="cm_view">
 						<view class="cm_titleView">
 							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.title}}</text>
-							<text class="cm_status">{{item.orderType}}</text>
+							<text class="cm_title">{{item.or_class}}</text>
+							<text class="cm_status">{{item.or_type}}</text>
 						</view>
 				<view class="cm_contentView" style="display: flex;">
-					<text class="cm_contentPrice">¥{{item.cost}}</text>
+					<text class="cm_contentPrice">¥{{item.or_cost}}</text>
 				</view>
 						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
-							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
 				
 				
 						<!-- 待支付 -->
-						<view class="cm_buttonView" v-if="item.orderType=='待支付'" >
-							<view class="cm_button cm_btDelete" @click="open3(item.orderNumber,'4')">取消</view>
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="cm_button cm_btToPay" @click="topay(item.orderNumber)">去支付</view>
+						<view class="cm_buttonView" v-if="item.or_type=='待支付'" >
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btToPay" @click="topay(item.or_number)">去支付</view>
 						</view>
 				
 						
@@ -799,7 +806,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">{{item.or_time}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -837,29 +844,29 @@
 				<!-- 包车定制 -->
 				<!-- 标签class命名：;全称：Purchase Date -->
 				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.title=='包车-定制' || item.title=='包车-专线'">
+				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
 					<view class="pd_view">{{item.orderDate}}</view>
 					<view class="cm_view">
 						<view class="cm_titleView">
 							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.title}}</text>
-							<text class="cm_status">{{item.orderType}}</text>
+							<text class="cm_title">{{item.or_class}}</text>
+							<text class="cm_status">{{item.or_type}}</text>
 						</view>
 				<view class="cm_contentView" style="display: flex;">
-					<text class="cm_contentPrice">¥{{item.cost}}</text>
+					<text class="cm_contentPrice">¥{{item.or_cost}}</text>
 				</view>
 						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.datestring}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.destination}}</text>
-							<view v-if="item.title=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.day}}</text></view>
+							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
 				
 				
 						<!-- 已取消 -->
-						<view class="cm_buttonView" v-if="item.orderType=='已取消'">
-							<view class="cm_button cm_btDelete" @click="open4(item.orderNumber)">删除</view>
-							<view class="cm_button cm_btDetails" @click="details(item.orderNumber)">详情</view>
+						<view class="cm_buttonView" v-if="item.or_type=='已取消'">
+							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							
 						</view>
 					</view>
@@ -1628,13 +1635,13 @@
 					
 				if(ArrayInfo.data !==''){
 					for (var i = 0; i < ArrayInfo.data.length; i++) {
-						if (ArrayInfo.data[i].orderType == '已完成') {
+						if (ArrayInfo.data[i].or_type == '已完成') {
 							that.finishArr.push(ArrayInfo.data[i]);
-						} else if (ArrayInfo.data[i].orderType == '进行中' || ArrayInfo.data[i].orderType == '待发车') {
+						} else if (ArrayInfo.data[i].or_type == '进行中' || ArrayInfo.data[i].or_type == '待发车'|| ArrayInfo.data[i].or_type == '待补款') {
 							that.goingArr.push(ArrayInfo.data[i]);
-						} else if (ArrayInfo.data[i].orderType == '待支付') {
+						} else if (ArrayInfo.data[i].or_type == '待支付') {
 							that.unfinishArr.push(ArrayInfo.data[i]);
-						} else if (ArrayInfo.data[i].orderType == '已取消') {
+						} else if (ArrayInfo.data[i].or_type == '已取消') {
 							that.cancelArr.push(ArrayInfo.data[i]);
 						}
 					}
@@ -1649,6 +1656,18 @@
 					    phoneNumber:e
 						
 					})
+			},
+			//-------------------------包车服务-详情跳转-------------------------
+			details2(e) {
+				uni.navigateTo({
+					url: '../BCFW/bf_choice?orderNumber' + JSON.stringify(e)
+				})
+			},
+			//-------------------------包车服务-去支付跳转-------------------------
+			topay2(e) {
+				uni.navigateTo({
+					url: '../BCFW/charteredBusPayment?orderNumber=' + JSON.stringify(e)
+				})
 			}
 
 
