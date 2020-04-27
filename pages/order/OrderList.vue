@@ -1233,22 +1233,23 @@
 								that.info.push(res.data.data[i]);
 							}
 							for (var i = 0; i < res.data.data.length; i++) {
-								if (res.data.data[i].orderState == '已完成') {
+								if (res.data.data[i].state == '已完成') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderState == '进行中') {
+								} else if (res.data.data[i].state == '进行中') {
 									that.goingArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderState == '订单未支付') {
+								} else if (res.data.data[i].state == '订单未支付') {
 									that.unfinishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderState == '已取消') {
+								} else if (res.data.data[i].state == '已取消') {
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
+							//出租车请求数据
 							that.loadczcData();
 						} else if (res.data.status == false) {
 							console.log('无客运车票数据');
+							//出租车请求数据
 							that.loadczcData();
 						}
-						this.getArrayInfo();
 					},
 					fail(res) {
 						//请求数据失败，停止刷新
@@ -1479,36 +1480,24 @@
 										}
 										var orderType1 = '';
 										that.info.push(obj);
-										if (data.state == 0 || data.state == 1 || data.state == 2 || data.state == 3 || data.state == 4) {
-											orderType1 = '进行中';
+										if (that.info[i].state == "0" || that.info[i].state == "1" || that.info[i].state == "2" || that.info[i].state == "3" || that.info[i].state == "4") {
 											that.goingArr.push(that.info[i]);
-										}
-										if (data.state == 5 || data.state == 9) {
-											orderType1 = '未支付';
+											console.log('进行中',that.info[i]);
+										}else if (that.info[i].state == "5" || that.info[i].state == "9") {
 											that.unfinishArr.push(that.info[i]);
-										}
-										if (data.state == 7 || data.state == 8) {
-											orderType1 = '已取消';
+										}else if (that.info[i].state == "7" || that.info[i].state == "8") {
 											that.cancelArr.push(that.info[i]);
-										}
-										if (data.state == 6) {
-											orderType1 = '已完成';
+										}else if (that.info[i].state == 6) {
+											console.log(that.info[i]);
 											that.finishArr.push(that.info[i]);
+											console.log('已完成',that.finishArr);
 										}
-										console.log(orderType1);
-										
-										// if (that.info[i].orderType == '已完成') {
-										// 	that.finishArr.push(that.info[i]);
-										// } else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待上车') {
-										// 	that.goingArr.push(that.info[i]);
-										// } else if (that.info[i].orderType == '未支付') {
-										// 	that.unfinishArr.push(that.info[i]);
-										// } else if (that.info[i].orderType == '已取消') {
-										// 	that.cancelArr.push(that.info[i]);
-										// }
 									}
+									//包车请求数据
+									this.getArrayInfo();
 								} else {
-
+									//包车请求数据
+									this.getArrayInfo();
 								}
 							}
 						})
@@ -1530,22 +1519,15 @@
 			},
 			taxiOrderState(param) {
 				if (param == 0 || param == 1 || param == 2 || param == 3 || param == 4) {
-
 					return '进行中';
-
 				}
 				else if (param == 5 || param == 9) {
-
 					return '未支付';
-
 				}
 				else if (param == 7 || param == 8) {
-
 					return '已取消';
-
 				}
 				else if (param == 6) {
-
 					return '已完成';
 				}
 			},
