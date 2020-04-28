@@ -74,7 +74,7 @@
 			<view class="MP_information2">
 				<view class="MP_optionBar">
 					<text class="Mp-icon jdticon icon-alipay"></text>
-					<text class="Mp_title">支付宝</text>
+					<!-- <text class="Mp_title">支付宝</text> -->
 					<radio class="Mp_box" :checked="channeIndex===1" :color="'#01aaef'" @click="Selection"></radio>
 				</view>
 			</view>
