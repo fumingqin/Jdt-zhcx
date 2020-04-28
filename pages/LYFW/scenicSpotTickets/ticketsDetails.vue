@@ -10,8 +10,8 @@
 		<view>
 			<!-- 标题、发布时间、点击量、分享 -->
 			<view class="clicks">
-				<text class="title">{{scSpotContent.ticketName}}</text>
-				<text class="time">开放时间：{{scSpotContent.ticketOpenUp}} </text>
+				<text class="title">{{scSpotContent[0].ticketTitle}}</text>
+				<text class="time">开放时间：{{scSpotContent[0].ticketOpenUp}} </text>
 			</view>
 		</view>
 		<!-- 门票滑块 -->
@@ -24,7 +24,10 @@
 					<text class="Tk_text1">{{item.admissionTicketName}}</text>
 					<text class="Tk_text3">¥{{item.ticketAdultPrice}}元</text>
 					<text class="Tk_text2">包含：{{item.ticketContain}}</text>
-					<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
+					<view style="display: block;">
+						<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}&nbsp;|&nbsp;</text>
+					</view>
+					
 					<view class="Tk_butter">立即预订</view>
 				</view>
 			</view>
@@ -34,7 +37,7 @@
 		<!-- 文章内容 -->
 		<view class="Zj_background">
 			<view class="tweetsTitle">介绍</view>
-			<rich-text class="tweetscontent" :nodes="scSpotContent.ticketScenicContent"></rich-text>
+			<rich-text class="tweetscontent" :nodes="scSpotContent[0].ticketScenicContent"></rich-text>
 		</view>
 	</view>
 </template>
@@ -98,33 +101,19 @@
 			lyfwData: function(e) {
 				// 请求景区图片
 				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getScenicspotDetailImg?ticketId=' + e,
-					method: 'POST',
+					url: 'http://111.231.109.113:8002/api/ly/GetticketDetailByticketId',
+					data:{
+						ticketId : e,
+					},
+					method:'POST',
+					header: {'content-type': 'application/json'},
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						this.piclist = res.data.data;
-
-					}
-				})
-
-				// 请求景区详情
-				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getScenicspotDetail?ticketId=' + e,
-					method: 'POST',
-					success: (res) => {
-						// console.log(res)
 						this.scSpotContent = res.data.data;
-					}
-				})
-				
-				// 请求景区门票
-				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getOneScenicspotTicket?ticketId=' + e,
-					method: 'POST',
-					success: (res) => {
-						// console.log(res)
 						this.admissionTicket = res.data.data;
 						this.admissionTicketStatus = res.data.msg;
+
 					}
 				})
 
@@ -265,22 +254,24 @@
 
 				.Tk_bacg {
 					position: relative;
-					margin: 32upx 32upx;
+					margin: 32upx 20upx;
 
 					.Tk_text1 {
 						font-size: 34upx;
+						margin-left: 12upx;
 						display: flex;
 						font-weight: bold;
 						text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
 						white-space: nowrap;
 						overflow: hidden;
 						width: 480upx; //内容宽度
+						
 					}
 
 					.Tk_text2 {
 						font-size: 26upx;
 						margin-top: 20upx;
-						display: block; // 让字体换行
+						margin-left: 12upx;
 						text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
 						white-space: nowrap;
 						overflow: hidden;
