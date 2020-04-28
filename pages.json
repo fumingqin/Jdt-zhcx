@@ -608,6 +608,10 @@
 		}
 		
         ,{
+            "path" : "pages/GJCX/busH5",
+			"style" : {}
+		},
+		{
             "path" : "pages/CTKY/SpecialBus/Home/specialLinePicker",
             "style" : {}
         }

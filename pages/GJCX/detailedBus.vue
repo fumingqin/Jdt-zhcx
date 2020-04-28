@@ -2,9 +2,9 @@
 	<view>
 		<!-- 顶部基本信息 -->
 		<view class="box1">
-			<view class="text1">方向:   {{endStation}}</view>
+			<view class="text1">方向:   {{nList.lineDirection}}</view>
 			<view class="butter">首末时间</view>
-			<view class="text2">{{starTime}} - {{endTime}}</view>
+			<view class="text2">{{nList.firstLastTime}}</view>
 			<view class="butter2">票价</view>
 			<view class="text3">{{price}}  ></view>
 		</view>
@@ -85,6 +85,7 @@
 	export default {
 		data() {
 			return {
+				Encryption: "XMJDTzzbusxmjdt", //接口校验码
 				detailLine:'',
 				nearStastion:'',
 				arriveTime:'',
@@ -92,6 +93,8 @@
 				realtimeDynamicback:[],
 				direction:0,
 				list:'',      //线路接口
+				list1:[],
+				list2:[],
 				longitude: "", //精度
 				latitude: "", //纬度
 				key: [],
@@ -161,12 +164,18 @@
 				price:'',
 				distance:'',
 				unit:'',
-				departureTime:''
+				departureTime:'',
+				nList:[],
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			
 			var that = this;
+			  console.log("接收到的参数是list="+options.nList);//此处打印出来的是字符串，解析如下   
+			console.log(options)
+			  that.nList = JSON.parse(options.nList);//解析得到集合
 			that.busIndex();
+			that.lineDetaile();
 			that.getGaoDeKey();
 			that.getMyLocation();
 			that.$refs.popup.open();
@@ -294,6 +303,31 @@
 					this.popupStatu=0;
 
 				}
+			},
+			lineDetaile:function(){
+				var that=this;
+				uni.request({
+					url:gjcx.InterfaceAddress[2],
+					data:{
+						lineID:nList.lineID,
+						direction:0,
+						Encryption:that.Encryption,
+					},
+					success:function(res){
+						that.list1=res.data;
+					}
+				});
+				uni.request({
+					url:gjcx.InterfaceAddress[2],
+					data:{
+						lineID:nList.lineID,
+						direction:1,
+						Encryption:that.Encryption,
+					},
+					success:function(res){
+						that.list2=res.data;
+					}
+				});
 			}
 		}
 	}
