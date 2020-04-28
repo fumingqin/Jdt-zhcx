@@ -14,52 +14,6 @@
 		},
 		//--------------------------------------旅游代码开始---------------------------------------
 		{
-			"path": "pages/Home/indexZhly",
-			"style": {
-				"enablePullDownRefresh": true,
-				// #ifdef MP
-				"navigationBarTitleText": "南平智慧旅游APP",
-				//"navigationStyle": "custom",
-				// #endif 
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent",
-						"searchInput": {
-							"backgroundColor": "rgba(231, 231, 231,.7)",
-							"borderRadius": "16px",
-							"placeholder": "请输入内容 如：武夷山",
-							"disabled": true,
-							"placeholderColor": "#606266"
-						},
-						"buttons": [{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
-							},
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue744",
-								"fontSize": "27",
-								"color": "#303133",
-								"background": "rgba(0,0,0,0)",
-								"redDot": true
-							}
-						]
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/Home/navigation",
-			"style": {
-				"navigationBarTitleText": "搜索",
-				"navigationBarBackgroundColor": "#149bf0",
-				"navigationBarTextStyle": "white"
-			}
-		}, {
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
 
 			"style": {
