@@ -4,7 +4,7 @@
 
 //接口域名
 const Url = 'http://111.231.109.113:8004';
-
+const Url1="http://111.231.109.113:8002";
 //接口对象
 const Interface = {
 	//GET-POST
@@ -33,7 +33,7 @@ const Interface = {
 		pages:["CZC/PrivateTaxi.nvue"]
 	},
 	Pay:{ 
-		value: 'http://111.231.109.113:8002/api/ly/Pay',
+		value: Url1+'/api/ly/getCommonPayparameter',
 		name:'旅客端-获取支付信息',
 		method:'POST', 
 		pages:["CZC/PrivateTaxi.nvue"]
@@ -48,10 +48,16 @@ const Interface = {
 		value: Url + '/api/SpecialLine/QuerySpecialLineOrder_Passenger',
 		name:'旅客端-根据订单ID查询订单',
 		method:'POST',
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["CZC/WaitTakeOrder.nvue","CZC/SpecialLineDetail.nvue"]
 	},
 	SpecialLineOrderPay_Passenger:{
 		value: Url + '/api/SpecialLine/SpecialLineOrderPay_Passenger',
+		name:'旅客端-支付完成',
+		method:'POST',
+		pages:["CZC/PrivateTaxi.nvue"]
+	},
+	DeleteSpecialLineOrder_Passenger:{
+		value: Url + '/api/SpecialLine/DeleteSpecialLineOrder_Passenger',
 		name:'旅客端-支付完成',
 		method:'POST',
 		pages:["CZC/PrivateTaxi.nvue"]

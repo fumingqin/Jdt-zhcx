@@ -12,7 +12,54 @@
 				"navigationStyle": "custom"
 			}
 		},
+		//--------------------------------------旅游代码开始---------------------------------------
 		{
+			"path": "pages/Home/indexZhly",
+			"style": {
+				"enablePullDownRefresh": true,
+				// #ifdef MP
+				"navigationBarTitleText": "南平智慧旅游APP",
+				//"navigationStyle": "custom",
+				// #endif 
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent",
+						"searchInput": {
+							"backgroundColor": "rgba(231, 231, 231,.7)",
+							"borderRadius": "16px",
+							"placeholder": "请输入内容 如：武夷山",
+							"disabled": true,
+							"placeholderColor": "#606266"
+						},
+						"buttons": [{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue60d",
+								"fontSize": "26",
+								"color": "#303133",
+								"float": "left",
+								"background": "rgba(0,0,0,0)"
+							},
+							{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue744",
+								"fontSize": "27",
+								"color": "#303133",
+								"background": "rgba(0,0,0,0)",
+								"redDot": true
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/Home/navigation",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"navigationBarBackgroundColor": "#149bf0",
+				"navigationBarTextStyle": "white"
+			}
+		}, {
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
 
 			"style": {
@@ -68,25 +115,6 @@
 			}
 		},
 		{
-			"path": "pages/CZC/CallAndDrive",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/CZC/PrivateTaxi",
-			"style": {
-
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/CZC/WaitTakeOrder",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 			"style": {
 				"navigationBarTitleText": "选择支付 ",
@@ -126,6 +154,69 @@
 				}
 			}
 		},
+		{
+			"path": "pages/LYFW/scenicSpotTickets/orderDetails",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/LYFW/independentTravel/it_list",
+			"style": {}
+		},
+		{
+			"path": "pages/LYFW/groupTour/groupTourList",
+			"style": {
+				"navigationBarTitleText": "跟团游列表"
+			}
+		}, {
+			"path": "pages/LYFW/groupTour/viewMore",
+			"style": {}
+		},
+		{
+			"path": "pages/Home/ho_zhly",
+			"style": {
+				"navigationBarTitleText": "南平智慧旅游APP",
+				// #ifdef APP-PLUS
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		},
+		//--------------------------------------旅游代码结束---------------------------------------
+
+		{
+			"path": "pages/CZC/CallAndDrive",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/CZC/PrivateTaxi",
+			"style": {
+
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/CZC/WaitTakeOrder",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+
 		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
@@ -260,19 +351,6 @@
 		},
 		//个人中心模块结束
 		{
-			"path": "pages/LYFW/scenicSpotTickets/orderDetails",
-			"style": {
-				"navigationBarTitleText": "订单详情",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		}, {
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
@@ -294,12 +372,6 @@
 				"navigationBarTitleText": "费用明细"
 			}
 		}, {
-			"path": "pages/GJCX/busIndex",
-			"style": {
-				"navigationBarTitleText": "公交查询",
-				"navigationBarBackgroundColor": "#FFFFFF"
-			}
-		}, {
 			"path": "pages/CZC/PaymentSuccess",
 			"style": {
 				"navigationStyle": "custom"
@@ -314,7 +386,7 @@
 			}
 		},
 		//----------------------------客运模块开始----------------------------
-		
+
 		{
 			"path": "pages/CTKY/TraditionSpecial/Home/ctkyIndex",
 			"style": {
@@ -406,66 +478,14 @@
 			"style": {
 
 			}
-		},{
-		    "path" : "pages/CTKY/SpecialBus/Home/specialBusHome",
-		    "style" : {
+		}, {
+			"path": "pages/CTKY/SpecialBus/Home/specialBusHome",
+			"style": {
 
 			}
 		},
 		//----------------------------客运模块结束----------------------------
 		{
-			"path": "pages/GJCX/detailedBus",
-			"style": {
-				"navigationBarTitleText": "41路",
-				"navigationBarBackgroundColor": "#FFFFFF"
-			}
-		}, {
-			"path": "pages/Home/indexZhly",
-			"style": {
-				"enablePullDownRefresh": true,
-				// #ifdef MP
-				"navigationBarTitleText": "南平智慧旅游APP",
-				//"navigationStyle": "custom",
-				// #endif 
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent",
-						"searchInput": {
-							"backgroundColor": "rgba(231, 231, 231,.7)",
-							"borderRadius": "16px",
-							"placeholder": "请输入内容 如：武夷山",
-							"disabled": true,
-							"placeholderColor": "#606266"
-						},
-						"buttons": [{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
-							},
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue744",
-								"fontSize": "27",
-								"color": "#303133",
-								"background": "rgba(0,0,0,0)",
-								"redDot": true
-							}
-						]
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/Home/navigation",
-			"style": {
-				"navigationBarTitleText": "搜索",
-				"navigationBarBackgroundColor": "#149bf0",
-				"navigationBarTextStyle": "white"
-			}
-		}, {
 			"path": "pages/GRZX/collection",
 			"style": {
 				"navigationBarTitleText": "我的收藏"
@@ -494,36 +514,6 @@
 			}
 		},
 		{
-			"path": "pages/GJCX/detailed",
-			"style": {}
-		}, {
-			"path": "pages/LYFW/independentTravel/it_list",
-			"style": {}
-		},
-		{
-			"path": "pages/LYFW/groupTour/groupTourList",
-			"style": {
-				"navigationBarTitleText": "跟团游列表"
-			}
-		}, {
-			"path": "pages/LYFW/groupTour/viewMore",
-			"style": {}
-		},
-		{
-			"path": "pages/Home/ho_zhly",
-			"style": {
-				"navigationBarTitleText": "南平智慧旅游APP",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		},
-		{
 			"path": "pages/Home/MapIndex",
 			"style": {
 				"navigationBarTitleText": "搜索地址",
@@ -542,7 +532,7 @@
 		{
 			"path": "pages/Home/MapSearch",
 			"style": {}
-		}, 
+		},
 		{
 			"path": "pages/BCFW/bf_chartered",
 			"style": {
@@ -560,7 +550,7 @@
 			"style": {}
 		},
 		{
-			"path":"pages/BCFW/bf_information",
+			"path": "pages/BCFW/bf_information",
 			"style": {
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
@@ -572,10 +562,9 @@
 				},
 				"navigationBarTitleText": "用车信息"
 			}
-		}
-	    ,{
-            "path" : "pages/BCFW/bf_choiceVehicleType",
-            "style" : {
+		}, {
+			"path": "pages/BCFW/bf_choiceVehicleType",
+			"style": {
 				// #ifdef APP-PLUS
 				"navigationStyle": "custom",
 				// #endif
@@ -586,41 +575,45 @@
 				},
 				"navigationBarTitleText": "选择车型"
 			}
-        },{
-            "path" : "pages/BCFW/charterMap",
-            "style" : {
+		}, {
+			"path": "pages/BCFW/charterMap",
+			"style": {
 				"navigationStyle": "custom"
 			}
-        }
-        ,{
-            "path" : "pages/BCFW/bf_charterMap",
-            "style" : {
+		}, {
+			"path": "pages/BCFW/bf_charterMap",
+			"style": {
 				"navigationStyle": "custom"
 			}
-        }
-        ,{
-            "path" : "pages/BCFW/BCsuccessfulPayment",
-            "style" : {}
-        },
-		{
-		    "path" : "pages/BCFW/charteredBusPayment",
-		    "style" : {}
-		}
-		
-        ,{
-            "path" : "pages/GJCX/busH5",
-			"style" : {}
+		}, {
+			"path": "pages/BCFW/BCsuccessfulPayment",
+			"style": {}
 		},
 		{
-            "path" : "pages/CTKY/SpecialBus/Home/specialLinePicker",
-            "style" : {}
-        }
-        
-        ,{
-            "path" : "pages/CTKY/SpecialBus/Home/specialReserve",
-            "style" : {}
-        }
-    ],
+			"path": "pages/BCFW/charteredBusPayment",
+			"style": {}
+		}, {
+			"path": "pages/GJCX/busH5",
+			"style": {}
+		},
+		{
+			"path": "pages/CTKY/SpecialBus/Home/specialLinePicker",
+			"style": {}
+		}
+
+		, {
+			"path": "pages/CTKY/SpecialBus/Home/specialReserve",
+			"style": {}
+		}, {
+			"path": "pages/order/SpecialLineDetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/Home/guidePage",
+			"style": {}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -659,7 +652,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/BCFW/bf_charterMap", //启动页面，必选
+			"path": "pages/Home/Index", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
