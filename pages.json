@@ -599,6 +599,12 @@
 				"style": {
 					"navigationBarTitleText": "推送详情"
 				}
+			},
+			{
+				"path": "pages/GRZX/feedback", //意见反馈
+				"style": {
+					"navigationBarTitleText": "意见反馈"
+				}
 			}
 			//--------------------------个人中心结束---------------------------
 		]
@@ -625,6 +631,10 @@
 			{
 				"pagePath": "pages/GRZX/notice",
 				"text": "通知"
+			},
+			{
+				"pagePath": "pages/Home/serve",
+				"text": "服务"
 			},
 			{
 				"pagePath": "pages/order/OrderList",
