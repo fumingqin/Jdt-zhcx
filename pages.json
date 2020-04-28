@@ -612,6 +612,14 @@
 		}, {
 			"path": "pages/Home/guidePage",
 			"style": {}
+		},
+		{
+			"path": "pages/Home/serve",
+			"style": {}
+		},
+		{
+			"path": "pages/GRZX/feedback",
+			"style": {}
 		}
 	],
 	"globalStyle": {
@@ -635,6 +643,10 @@
 			{
 				"pagePath": "pages/GRZX/notice",
 				"text": "通知"
+			},
+			{
+				"pagePath": "pages/Home/serve",
+				"text": "服务"
 			},
 			{
 				"pagePath": "pages/order/OrderList",
