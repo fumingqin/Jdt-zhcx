@@ -176,6 +176,7 @@ const realtimeDynamicback ={
 	msg: '提示'	
 }
 const InterfaceAddress = [
+
 	//获取线路信息，根据站点名称
 	'http://111.231.109.113:8002/api/bus/getBusLineInfoByStationName',
 	//获取离某个经纬度最近的一个站点信息，根据经纬度信息
@@ -187,7 +188,15 @@ const InterfaceAddress = [
 	//获取距离某站最近车辆信息 根据线路编号，方向，站点名称 
 	'http://111.231.109.113:8002/api/bus/getBusLineArriveLeaveStationInfoByLineIdDirectionStationName',
 	//根据起始点经纬度获取距离
-	'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat'
+	'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat',
+	//获取线路轨迹定位信息，根据线路编号，线路方向
+	'http://111.231.109.113:8002/api/bus/getBusLineTrajectoryByLineIdDirection',
+	//获取所有线路信息
+	'http://111.231.109.113:8002/api/bus/getBusLineInfo'
+]
+const GaoDeWebKey = [
+	"2348ba1d476b5e44917533b65583f969", 
+	"1df2cef2c0e71acc0ed1e90d5bf6431a"
 ]
 // 接口声明区
 export default {
@@ -197,5 +206,6 @@ export default {
 	detailLine,
 	realtimeDynamic,
 	realtimeDynamicback,
-	InterfaceAddress
+	InterfaceAddress,
+	GaoDeWebKey
 }
