@@ -29,8 +29,8 @@
 		<view class="ci_carModelView">
 			<text class="cmv_selected">已选车型</text>
 			<image class="cmv_car" :src="car"></image>
-			<text class="cmv_carName">{{cvt_Name}}</text>
-			<text class="cmv_carType">{{carName}}</text>
+			<text class="cmv_carName">{{carName}}</text>
+			<text class="cmv_carType">{{carNumberSeats}}</text>
 			<text class="cmv_carMoney">{{carprice}}元</text>
 		</view>
 
@@ -155,6 +155,12 @@
 				admissionTicket: '', //门票内容
 				notice: '', //须知内容
 				selectedValue: 0, //同意须知的选中值
+				st_Longitude:'',//出发地经度
+				st_Latitude:'',//出发地纬度
+				de_Longitude:'',//目的地经度
+				de_Latitude:'',//目的地纬度
+				dl_Longitude:'',//专线经度
+				dl_Latitude:'',//专线纬度
 
 				couponList: [{
 						couponID: '0',
@@ -417,7 +423,7 @@
 			// 				uni.request({
 			// 					url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
 			// 					data: {
-			// 						// unid: this.userInfo.unid,
+			// 						// userId: this.userInfo.unid,
 									// destination:destination,
 									// initialPoint:initialPoint,
 									// datestring:datestring,//定制目的地
@@ -430,6 +436,12 @@
 									// nickId: nickId, 
 									// nickPhone: nickPhone, 
 									// couponID: this.couponColor,
+									// st_Longitude:this.st_Longitude,
+									// st_Latitude:this.st_Latitude,
+									// de_Longitude:this.de_Longitude,
+									// de_Latitude:de_Latitude,
+									// dl_Longitude:dl_Longitude,
+									// dl_Latitude:dl_Latitude,
 			// 					},
 			
 			// 					method: 'POST',
