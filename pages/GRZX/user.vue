@@ -64,6 +64,11 @@
 				<text class="fontStyle">我要投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
+			<view class="boxClass borderTop" @click="feedbackClick">
+				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass5"></image>
+				<text class="fontStyle">意见反馈</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
 		</view>
 	</view>
 </template>
@@ -137,6 +142,11 @@
 				uni.navigateTo({
 					url:'/pages/GRZX/complaint'
 				})  
+			},
+			feedbackClick(){
+				uni.navigateTo({
+					url:'/pages/GRZX/feedback'
+				})  				
 			},
 			checkLogin(){
 				// console.log(this.hasLogin,"6666")
@@ -410,6 +420,12 @@
 		margin-left: 8upx;
 	}
 	.iconClass4{  //我的投诉图标
+		width: 36upx;
+		height: 39upx;
+		margin-top: 29upx;
+		margin-left: 13upx;
+	}
+	.iconClass5{  //我的投诉图标
 		width: 36upx;
 		height: 39upx;
 		margin-top: 29upx;

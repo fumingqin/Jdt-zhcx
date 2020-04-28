@@ -86,7 +86,7 @@
 				showLlocation: true, //是否显示当前位置
 			}
 		},
-		onLoad() {
+		onLoad(param) {
 			var that = this;
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
@@ -97,13 +97,8 @@
 			});
 			//获取自身位置
 			that.getMyLocation();
-			//读取车票缓存数据
-			uni.getStorage({
-				key:'ticketDate',
-				success: function (res) {
-					that.info = res.data
-				}
-			});
+			
+			that.info = JSON.parse(param.traditionArray)
 		},
 		methods: {
 			//获取自身位置

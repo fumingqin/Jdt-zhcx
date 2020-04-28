@@ -65,7 +65,11 @@
                 },
                 "ad" : {},
                 "payment" : {
-                    "alipay" : {}
+                    "alipay" : {},
+                    "weixin" : {
+                        "appid" : "wx4394e02214803063",
+                        "UniversalLinks" : ""
+                    }
                 },
                 "push" : {
                     "unipush" : {}

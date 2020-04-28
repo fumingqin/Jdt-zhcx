@@ -27,8 +27,11 @@
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3" v-if="item.ticketAdultPrice !=='暂无门票价格信息！'">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
+						<view style="display: flex;" >
+							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}</text>
+						</view>
+						<text class="Tk_text3" >{{priceConversion(item.ticketAdultPrice)}}</text>
+						
 					</view>
 				</view>
 			</view>
@@ -75,8 +78,10 @@
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3" v-if="item.ticketAdultPrice!=='暂无门票价格信息！'">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
+						<view style="display: flex;" >
+							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}</text>
+						</view>
+						<text class="Tk_text3" >{{priceConversion(item.ticketAdultPrice)}}</text>
 					</view>
 				</view>
 			</view>
@@ -92,8 +97,10 @@
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3" v-if="item.ticketAdultPrice!=='暂无门票价格信息！'">¥{{priceConversion(item.ticketAdultPrice)}}元起</text>
+						<view style="display: flex;" >
+							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}</text>
+						</view>
+						<text class="Tk_text3" >{{priceConversion(item.ticketAdultPrice)}}</text>
 					</view>
 				</view>
 			</view>
@@ -184,8 +191,13 @@
 				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=' +this.regionWeixin,
+					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea_Six',
+					data:{
+						// requestArea : this.regionWeixin,
+						requestArea : '南平市'
+					},
 					method:'POST',
+					header: {'content-type': 'application/json'},
 					success:(res) => { 
 						console.log(res)
 						this.sixPalaceList = res.data.data;
@@ -194,8 +206,13 @@
 				
 				// 请求景区列表
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getScenicspotList?requestArea=' +this.regionWeixin,
+					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea',
+					data:{
+						// requestArea : this.regionWeixin,
+						requestArea : '南平市'
+					},
 					method:'POST',
+					header: {'content-type': 'application/json'},
 					success:(res) => {
 						console.log(res)
 						this.scenicList = res.data.data;
@@ -302,8 +319,13 @@
 					title:'正在搜索',
 				})
 				uni.request ({
-					url:'http://218.67.107.93:9210/api/app/searchScenicspotList?searchValue='+this.searchValue,
-					method: 'POST',
+					url:'http://111.231.109.113:8002/api/ly/GetticketSearchBysearchValue',
+					data:{
+						searchValue : this.searchValue,
+					},
+					method:'POST',
+					header: {'content-type': 'application/json'},
+					
 					success : (res) => {
 						console.log(res)
 						if(res.data.msg =='搜索景区信息成功！'){
@@ -415,10 +437,11 @@
 			 
 			//价格转换
 			priceConversion:function(data){
-				if(data =='暂无门票价格信息！'){
-					return 0
+				// console.log(data)
+				if(data == ''){
+					return '开放景区'
 				}else{
-					return data
+					return '¥'+data+'元起'
 				}
 			},
 			 
@@ -708,7 +731,7 @@
 
 			.Tk_bacg {
 				margin-top: 20upx;
-				margin-left: 24upx;
+				margin-left: 8upx;
 			}
 
 			.Tk_text1 {
@@ -717,13 +740,18 @@
 				white-space: nowrap;
 				overflow: hidden;
 				width: 480upx; //内容宽度
+				margin-left: 16upx;
 			}
 
 			.Tk_text2 {
-				font-size: 26upx;
+				padding: 8upx 12upx;
 				margin-top: 16upx;
-				color: #AAAAAA;
-				display: block; // 让字体换行
+				margin-left: 16upx;
+				text-align: center;
+				font-size: 24upx;
+				color: #3AC596;
+				border-radius: 8upx;
+				border: 1upx solid #3AC596;
 			}
 
 			.Tk_text3 {
