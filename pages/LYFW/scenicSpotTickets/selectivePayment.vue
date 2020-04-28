@@ -401,7 +401,7 @@
 					uni.request({
 						url: 'http://111.231.109.113:8002/api/ly/Pay',
 						data: {
-							payType: 3,
+							payType: 5,
 							price: that.orderInfo.orderActualPayment,
 							orderNumber: that.orderInfo.orderNumber,
 							goodsName: that.orderInfo.title,
