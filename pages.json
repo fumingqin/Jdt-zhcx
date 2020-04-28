@@ -607,6 +607,10 @@
 		    "style" : {}
 		}
 		
+        ,{
+            "path" : "pages/Home/guidePage",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

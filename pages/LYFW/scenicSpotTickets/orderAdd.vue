@@ -10,8 +10,9 @@
 		<!-- 命名：MP -->
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{admissionTicket.admissionTicketName}}</view>
-				<text class="MP_text" @click="open2(1)">{{admissionTicket.ticketComment_s1}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s2}}&nbsp;|&nbsp;{{admissionTicket.ticketComment_s3}}&nbsp; > </text>
+				<view class="MP_title">{{admissionTicket.ticketTitle}}</view>
+				<text class="MP_text" @click="open2(1)">预订须知 > </text>
+
 				<!-- 嵌套弹框组件popup -->
 				<uni-popup ref="popup1" type="bottom">
 					<view class="boxVlew">
@@ -90,13 +91,13 @@
 					<view class="coupon-item" v-for="(item,index) in couponList" :key="index" @click="couponEvent(index)">
 						<view class="con">
 							<view class="left">
-								<text class="title">{{item.title}}</text>
+								<text class="title">{{item.couponTitle}}</text>
 								<text class="time">有效期至2019-06-30</text>
 							</view>
 
 							<view class="right">
-								<text class="price">{{item.price}}</text>
-								<text>满{{couponList[index].condition}}可用</text>
+								<text class="price">{{item.couponPrice}}</text>
+								<text>满{{item.couponCondition}}可用</text>
 							</view>
 
 							<view class="circle l"></view>
@@ -196,11 +197,25 @@
 		},
 		methods: {
 			//读取静态数据
-			async lyfwData(e) {
+			lyfwData(e) {
 				uni.getStorage({
 					key: 'ticketInformation',
 					success: (res) => {
 						this.admissionTicket = res.data;
+						uni.request({
+							url: 'http://111.231.109.113:8002/api/ly/GetticketSecurityByticketId',
+							data: {
+								ticketId: res.data.ticketId
+							},
+							method: 'POST',
+							header: {
+								'content-type': 'application/json'
+							},
+							success: (res) => {
+								console.log(res)
+								this.notice = res.data.data[0];
+							}
+						})
 						// console.log(res)
 					}
 				})
@@ -208,12 +223,26 @@
 					key: 'userInfo',
 					success: (res) => {
 						this.userInfo = res.data;
+						uni.request({
+							url: 'http://111.231.109.113:8002/api/ly/GetcouponByuserId',
+							data: {
+								userId: res.data.userId
+							},
+							method: 'POST',
+							header: {
+								'content-type': 'application/json'
+							},
+							success: (res) => {
+								console.log(res)
+								this.couponList = res.data.data;
+							}
+						})
 						// console.log(res)
 					}
 				})
 
-				let notice = await this.$api.lyfwfmq('notice');
-				this.notice = notice.data;
+
+
 			},
 
 			//删除出行人
@@ -354,7 +383,7 @@
 			submitState: function() {
 				//这边还得加上是否选择人数和勾选同意的判断
 				if (this.selectedValue == 1 && this.addressData.length > 0) {
-					
+
 					if (this.submissionState == false) {
 						this.submissionState = true;
 						this.submit();
@@ -378,172 +407,227 @@
 					})
 				}
 			},
-			
+
 			//提交表单
 			submit: function() {
 				var that = this;
 				uni.showLoading({
 					title: '提交订单中...'
 				})
-				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' + this.userInfo.unid,
-					method: 'POST',
+				// #ifdef H5
+				uni.getStorage({
+					key: 'scenicSpotOpenId',
 					success: (res) => {
-						// console.log(res)
-						var a = '';
-						if(res.data.msg =='获取订单列表成功！'){
-							a = res.data.data.filter(item => {
-								return item.orderType == '待支付';
-							})
-						}
-						console.log(a)
-						if (a == '') {
-							
-							// #ifdef H5
-							uni.getStorage({
-								key:'scenicSpotOpenId',
-								success:(res)=>{
-									uni.request({
-										url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
-										data: {
-											unid: that.userInfo.unid,
-											ticketProductId: that.admissionTicket.admissionTicketID,
-											ticketId: 0,
-											ticketContain: that.admissionTicket.ticketContain,
-									
-											companyId: that.admissionTicket.companyId,
-											executeScheduleId: that.admissionTicket.executeScheduleId,
-									
-											addressData: that.addressData,
-											couponID: that.couponColor,
-									
-											orderDateReminder: that.dateReminder,
-											orderDate: that.date,
-											orderInsure: '',
-											orderInsurePrice: '',
-											orderActualPayment: that.actualPayment,
-											sellerCompanyCode: '南平旅游H5',
-											tppId: res.data,
-										},
-									
-										method: 'POST',
-										//向服务器发送订单数据，返回订单编号
-										success: (res) => {
-											uni.hideLoading()
-											console.log(res)
-											if (res.data.msg == '无可售门票！') {
-												uni.showToast({
-													title: '该景区无可售门票！',
-													icon: 'none',
-												})
-												that.submissionState = false;
-											} else if (res.data.msg == '下单失败，联系管理员！') {
-												uni.showToast({
-													title: '下单失败，联系管理员！',
-													icon: 'none',
-												})
-												that.submissionState = false;
-											} else if (res.data.message == '账号ID不能为空') {
-												uni.showToast({
-													title: '账号ID不能为空，请重新登录账户',
-													icon: 'none',
-												})
-												that.submissionState = false;
-											} else if (res.data.msg == '下单成功') {
-												uni.setStorage({
-													key: 'submitH5Data',
-													data: res.data.data,
-													success: function() {
-														uni.redirectTo({
-															url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
-														})
-													}
-												})
-									
-											}
-									
-										}
-									})
-								},
-								fail:function(){
+						uni.request({
+							url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+							data: {
+								unid: that.userInfo.unid,
+								ticketProductId: that.admissionTicket.admissionTicketID,
+								ticketId: 0,
+								ticketContain: that.admissionTicket.ticketContain,
+
+								companyId: that.admissionTicket.companyId,
+								executeScheduleId: that.admissionTicket.executeScheduleId,
+
+								addressData: that.addressData,
+								couponID: that.couponColor,
+
+								orderDateReminder: that.dateReminder,
+								orderDate: that.date,
+								orderInsure: '',
+								orderInsurePrice: '',
+								orderActualPayment: that.actualPayment,
+								sellerCompanyCode: '南平旅游H5',
+								tppId: res.data,
+							},
+
+							method: 'POST',
+							//向服务器发送订单数据，返回订单编号
+							success: (res) => {
+								console.log(res)
+								if (res.data.msg == '无可售门票！') {
 									uni.showToast({
-										title:'请授权微信公众号！'
+										title: '该景区无可售门票！',
+										icon: 'none',
 									})
 									that.submissionState = false;
-								}
-							})
-							
-							// #endif
-
-							// #ifdef APP-PLUS
-							uni.request({
-								url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
-								data: {
-									unid: this.userInfo.unid,
-									ticketProductId: this.admissionTicket.admissionTicketID,
-									ticketId: 0,
-									ticketContain: this.admissionTicket.ticketContain,
-
-									companyId: this.admissionTicket.companyId,
-									executeScheduleId: this.admissionTicket.executeScheduleId,
-
-									addressData: this.addressData,
-									couponID: this.couponColor,
-
-									orderDateReminder: this.dateReminder,
-									orderDate: this.date,
-									orderInsure: '',
-									orderInsurePrice: '',
-									orderActualPayment: this.actualPayment,
-									sellerCompanyCode: '南平旅游APP',
-									tppId: 0,
-								},
-
-								method: 'POST',
-								//向服务器发送订单数据，返回订单编号
-								success: (res) => {
 									uni.hideLoading()
-									// console.log(res)
-									if (res.data.msg == '无可售门票！') {
-										uni.showToast({
-											title: '该景区无可售门票！',
-											icon: 'none',
-										})
-										that.submissionState = false;
-									} else if (res.data.msg == '下单失败，联系管理员！') {
-										uni.showToast({
-											title: '下单失败，联系管理员！',
-											icon: 'none',
-										})
-										that.submissionState = false;
-									} else if (res.data.msg == '下单成功') {
-										uni.redirectTo({
-											url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
-										})
-									}
+								} else if (res.data.msg == '下单失败，联系管理员！') {
+									uni.showToast({
+										title: '下单失败，联系管理员！',
+										icon: 'none',
+									})
+									that.submissionState = false;
+									uni.hideLoading()
+								} else if (res.data.message == '账号ID不能为空') {
+									uni.showToast({
+										title: '账号ID不能为空，请重新登录账户',
+										icon: 'none',
+									})
+									that.submissionState = false;
+									uni.hideLoading()
+								} else if (res.data.msg == '订单下单成功') {
+									uni.setStorage({
+										key: 'submitH5Data',
+										data: res.data.data,
+										success: function() {
+											uni.redirectTo({
+												url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+											})
+											uni.hideLoading()
+										}
+									})
 
 								}
-							})
-							// #endif
 
-
-						} else if (a.length > 0) {
-							uni.hideLoading()
-							uni.showToast({
-								title: '订单中，存在待支付订单，请支付/取消后再下单',
-								icon: 'none',
-								duration: 2000
-							})
-							uni.switchTab({
-								url: '../../order/OrderList'
-							})
-						}
+							}
+						})
 					},
-					fail:function(ee){
-						console.log(ee)
+					fail: function() {
+						uni.showToast({
+							title: '请授权微信公众号！'
+						})
 						that.submissionState = false;
+						uni.hideLoading()
 					}
 				})
+
+				// #endif
+
+				// #ifdef APP-PLUS
+				uni.request({
+					url: 'http://111.231.109.113:8002/api/ly/AddtouristOrder',
+					data: {
+						userId: this.userInfo.userId,
+						ticketId: this.admissionTicket.ticketId,
+						userPhone: this.userInfo.phoneNumber,
+						ticketProductId: this.admissionTicket.ticketProductId,
+						couponID: this.couponColor,
+						orderDate: this.date,
+						orderInsure: '',
+						orderInsurePrice: '',
+						orderActualPayment: this.actualPayment,
+						ticketContain: this.admissionTicket.ticketContain,
+						sellerCompanyCode: 'APP',
+						tppId: 0,
+						addressData: this.addressData,
+					},
+
+					method: 'POST',
+					header: {
+						'content-type': 'application/json'
+					},
+					//向服务器发送订单数据，返回订单编号
+					success: (res) => {
+						console.log(res)
+						if (res.data.msg == '无可售门票！') {
+							uni.showToast({
+								title: '该景区无可售门票！',
+								icon: 'none',
+							})
+							that.submissionState = false;
+							uni.hideLoading()
+						} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
+							uni.showToast({
+								title: '下单失败,您当前有未支付订单',
+								icon: 'none',
+								duration: 2000,
+								success: function() {
+									uni.switchTab({
+										url: '../../order/OrderList'
+									})
+									that.submissionState = false;
+									uni.hideLoading()
+								}
+							})
+
+						} else if (res.data.msg == '订单下单成功') {
+							uni.redirectTo({
+								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+							})
+							uni.hideLoading()
+						}
+
+					},
+					fail: function(ee) {
+						console.log(ee)
+					}
+				})
+				// #endif
+
+				// #ifdef MP-WEIXIN
+				uni.request({
+					url: 'http://111.231.109.113:8002/api/ly/AddtouristOrder',
+					data: {
+						userId: this.userInfo.userId,
+						ticketId: this.admissionTicket.ticketId,
+						userPhone: this.userInfo.phoneNumber,
+						ticketProductId: this.admissionTicket.ticketProductId,
+						couponID: this.couponColor,
+						orderDate: this.date,
+						orderInsure: '',
+						orderInsurePrice: '',
+						orderActualPayment: this.actualPayment,
+						ticketContain: this.admissionTicket.ticketContain,
+						sellerCompanyCode: 'APP',
+						tppId: 0,
+						addressData: this.addressData,
+					},
+
+					method: 'POST',
+					header: {
+						'content-type': 'application/json'
+					},
+					//向服务器发送订单数据，返回订单编号
+					success: (res) => {
+						console.log(res)
+						if (res.data.msg == '无可售门票！') {
+							uni.showToast({
+								title: '该景区无可售门票！',
+								icon: 'none',
+							})
+							that.submissionState = false;
+							uni.hideLoading()
+						} else if (res.data.msg == '下单失败，联系管理员！') {
+							uni.showToast({
+								title: '下单失败，联系管理员！',
+								icon: 'none',
+							})
+							that.submissionState = false;
+							uni.hideLoading()
+						} else if (res.data.msg == "抱歉!下单失败,您当前有未支付完成的订单") {
+							uni.showToast({
+								title: '下单失败,您当前有未支付订单',
+								icon: 'none',
+								duration: 2000,
+								success: function() {
+									uni.switchTab({
+										url: '../../order/OrderList'
+									})
+									that.submissionState = false;
+									uni.hideLoading()
+								}
+							})
+
+						} else if (res.data.msg == '订单下单成功') {
+							uni.redirectTo({
+								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+							})
+							uni.hideLoading()
+						}
+
+					},
+					fail: function(ee) {
+						if (ee.statusCode == 500) {
+							uni.showToast({
+								title: '服务器出现问题，请联系客服'
+							})
+						}
+					}
+
+				})
+				// #endif
+
 
 
 			},
@@ -689,9 +773,9 @@
 		}
 
 		.MP_text {
+			margin-top: 20upx;
 			color: #3EABFC;
 			font-size: 28upx;
-			margin-top: 20upx;
 			display: block; // 让字体换行
 		}
 	}

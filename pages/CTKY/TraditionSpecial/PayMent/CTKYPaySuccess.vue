@@ -5,7 +5,7 @@
 		</view>
 
 		<view class="cover-container">
-			<image class="okImage" mode="aspectFill" src='../../static/CZC/Success.png'></image>
+			<image class="okImage" mode="aspectFill" src='@/static/CZC/Success.png'></image>
 			<text class="title">支付成功</text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
