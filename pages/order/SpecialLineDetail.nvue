@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
-		 :polyline="polyline" :markers="markers" :show-location="true">
+		 :polyline="polyline" :markers="markers" :show-location="true" :include-points="includepoints">
 		</map>
 		<image @click="back" src="../../static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
 		<scroll-view style="position: fixed;bottom:0;left: 0;right: 0;align-items: center;" class="map" :style="{height:viewHeight}"
@@ -13,14 +13,14 @@
 					</view>
 					<view style="margin-left: 10rpx;">
 						<view>
-							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{orderInfo.driverName}}</text>
+							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{orderInfo.DriverName}}</text>
 						</view>
 						<view style="flex-direction: row;margin-top: 10rpx;">
 							<view>
-								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">{{orderInfo.vehicleNumber}}</text>
+								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">{{orderInfo.VehicleNumber}}</text>
 							</view>
 							<view style="margin-left: 18rpx;">
-								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text>
+								<!-- <text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text> -->
 							</view>
 						</view>
 					</view>
@@ -28,7 +28,7 @@
 
 				<view style="flex-direction: row;background-color: #FFFFFF;justify-content: space-between;align-items: center;padding: 20rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
 					<view style="flex-direction: row;align-items: center;">
-						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">总价：{{orderInfo.estimatePrice}}元</text>
+						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">总价：{{orderInfo.EstimatePrice}}元</text>
 						<!-- <text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">元（已优惠9.45元）</text> -->
 					</view>
 					<!-- <view>
@@ -130,7 +130,7 @@
 </template>
 
 <script>
-	import taxi from '../../common/Czc.js';
+	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
 	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniRate from '@/components/Order/StarJudge/uni-rate/uni-rate.vue';
@@ -159,12 +159,12 @@
 				userInfo:'',
 				num:'5',
 				orderNumber:'',
+				includepoints:[],
 			}
 		},
 		onLoad(option) {
 			let that=this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
-			console.log(that.userInfo)
 			that.getOrderDetailInfo(option.orderNumber);
 			that.orderNumber=option.orderNumber;
 		
@@ -181,25 +181,29 @@
 		},
 		methods: {
 			//-------------------------------请求订单详情数据-------------------------------
-			getOrderDetailInfo:function(param){
+			getOrderDetailInfo:function(orderNumber){
 				var that = this;
-				console.log(param)
 				uni.request({
-					url:'http://111.231.109.113:8002/api/taxi/SearchExpressOrderByOrderNum_Passenger',
-					method:'POST',
+					url: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.value,
+					method: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.method,
 					data: {
-						orderNumber:param,
-						userId: that.userInfo.userId,
+						OrderNumber:orderNumber,
+						UserId: that.userInfo.userId,
 					},
 					success(res) {
 						that.orderInfo = res.data.data
-						console.log(that.orderInfo.startLon)
-						console.log(that.orderInfo.startLat)
-						that.setMarker(1, that.orderInfo.startLon, that.orderInfo.startLat, '../../static/CZC/Start.png');
-						that.setMarker(2, that.orderInfo.endLon, that.orderInfo.endLat, '../../static/CZC/End.png');
+						that.includepoints=[{
+							longitude: that.orderInfo.StartLon,
+							latitude: that.orderInfo.StartLat,
+						},
+						{ 
+							longitude: that.orderInfo.EndLon,
+							latitude: that.orderInfo.EndLat,
+						}]
+						
+						that.setMarker(1, that.orderInfo.StartLon, that.orderInfo.StartLat, '../../static/CZC/Start.png');
+						that.setMarker(2, that.orderInfo.EndLon, that.orderInfo.EndLat, '../../static/CZC/End.png');
 						// that.getDirectionDriving(that.orderInfo.startLon + ',' + that.orderInfo.startLat, that.orderInfo.endtLon + ',' + that.orderInfo.endLat);
-						console.log(that.userInfo.userId)
-						console.log(res)
 					},
 					fail(res) {
 						console.log(res.data.msg)
@@ -209,25 +213,14 @@
 			//-------------------------------订单评价-------------------------------
 			getOrderValuate:function(param,manyi){
 				var that = this;
-				var str = '';
-				for(let item of that.rSelect){
-					str += item + ',';
-				}
-				console.log(param)
-				console.log(manyi)
-				console.log(that.num)
-				console.log(str);
-				console.log(that.textareaValue);
-				console.log(that.userInfo.userId);
 				uni.request({
 					url:'http://111.231.109.113:8002/api/taxi/addPassengerEvaluate_Passenger',
 					method:'POST',
 					data: {
 						orderNumber:param,
-						userId: that.userInfo.userId,
 						satisfied :manyi,
 						starClass:that.num,
-					    selectionTags:str,
+					    selectionTags:JSON.stringify(that.rSelect),
 						evaluateContent:that.textareaValue
 					},
 					success(res) {
@@ -265,7 +258,7 @@
 				var that = this;
 				this.textareaValue = e.detail.value.textareaValue;
 				that.closeBottomPopup();
-				that.getOrderValuate(that.orderNumber,'是');
+				that.getOrderValuate(that.orderNumber,true);
 				uni.showToast({
 					title:'评价成功'
 				})
@@ -278,7 +271,7 @@
 				var that = this;
 				this.textareaValue = e.detail.value.textareaValue;
 				that.closeBottomPopup1();
-				that.getOrderValuate(that.orderNumber,'否');
+				that.getOrderValuate(that.orderNumber,false);
 				uni.showToast({
 					title:'评价成功'
 				})
@@ -319,7 +312,10 @@
 					width: width,
 					height: height
 				};
-				that.markers.push(marker);
+				var json = JSON.stringify(that.markers);
+				var arr = JSON.parse(json);
+				arr.push(marker);
+			    that.markers = arr;
 			},
 			// 弹出框1
 			openBottomPopup: function() {

@@ -599,12 +599,19 @@ export default {
     "pinyin": "nanning",
     "py": "nn",
     "code": "NNG"
-}, {
+}, 
+{
     "cityName": "南通",
     "pinyin": "nantong",
     "py": "nt",
     "code": "NTG"
-}, {
+},{
+    "cityName": "南平",
+    "pinyin": "nanchang",
+    "py": "np",
+    "code": "NNP"
+},
+{
     "cityName": "南阳",
     "pinyin": "nanyang",
     "py": "ny",

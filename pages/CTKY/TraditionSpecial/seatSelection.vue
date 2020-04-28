@@ -26,19 +26,19 @@
 						<view>A7</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>B7</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>C7</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>D6</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>E6</view>
 					</view>
 					<text>窗</text>
@@ -46,21 +46,21 @@
 				<view style="display: flex;align-items: center;color: #999999;justify-content: space-between;font-size: 28upx;">
 					<text>窗</text>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>A6</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>B6</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;">
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>D5</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>E5</view>
 					</view>
 					<text>窗</text>
@@ -68,7 +68,7 @@
 				<view style="display: flex;align-items: center;color: #999999;justify-content: space-between;font-size: 28upx;">
 					<text>窗</text>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>A5</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;">
@@ -77,11 +77,11 @@
 						过道
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>D4</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>E4</view>
 					</view>
 					<text>窗</text>
@@ -89,7 +89,7 @@
 				<view style="display: flex;align-items: center;color: #999999;justify-content: space-between;font-size: 28upx;">
 					<text>窗</text>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>A4</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;">
@@ -98,11 +98,11 @@
 						过道
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>D3</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>E3</view>
 					</view>
 					<text>窗</text>
@@ -110,7 +110,7 @@
 				<view style="display: flex;align-items: center;color: #999999;justify-content: space-between;font-size: 28upx;">
 					<text>窗</text>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>A3</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;">
@@ -119,11 +119,11 @@
 						过道
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>D2</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/Seat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/Seat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>E2</view>
 					</view>
 					<text>窗</text>
@@ -131,7 +131,7 @@
 				<view style="display: flex;align-items: center;color: #999999;justify-content: space-between;font-size: 28upx;">
 					<text>窗</text>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>A2</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;">
@@ -140,11 +140,11 @@
 						过道
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>D1</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>E1</view>
 					</view>
 					<text>窗</text>
@@ -152,7 +152,7 @@
 				<view style="display: flex;align-items: center;color: #999999;justify-content: space-between;font-size: 28upx;">
 					<text>窗</text>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/unSeat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>A1</view>
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;">
@@ -162,7 +162,7 @@
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;">
 					</view>
 					<view style="display: flex;flex-direction: column;text-align: center;margin-top: 39upx;">
-						<image src="@/static/CTKY/Seat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
+						<image src="../../../static/CTKY/Seat.png" style="width:61.6upx ;height: 71.9upx;margin-left: 18upx;margin-right: 18upx;"></image>
 						<view>驾驶座</view>
 					</view>
 					<text>窗</text>
@@ -172,15 +172,15 @@
 		<view class="toPayClass">
 			<view style="display: flex;align-items: center;justify-content: space-between;color: #999999;width: 55%;font-size: 22upx;">
 				<view style="display: flex;flex-direction: column;text-align: center;margin-left: 30upx;margin-right: 30upx;">
-					<image src="@/static/CTKY/unSeat.png" style="width:47upx ;height: 55upx;margin-left: 18upx;margin-right: 18upx;"></image>
+					<image src="../../../static/CTKY/unSeat.png" style="width:47upx ;height: 55upx;margin-left: 18upx;margin-right: 18upx;"></image>
 					<view>不可选</view>
 				</view>
 				<view style="display: flex;flex-direction: column;text-align: center;margin-left: 30upx;margin-right: 30upx;">
-					<image src="@/static/CTKY/selectSeat.png" style="width:47upx ;height: 55upx;margin-left: 18upx;margin-right: 18upx;"></image>
+					<image src="../../../static/CTKY/selectSeat.png" style="width:47upx ;height: 55upx;margin-left: 18upx;margin-right: 18upx;"></image>
 					<view>已占用</view>
 				</view>
 				<view style="display: flex;flex-direction: column;text-align: center;margin-left: 30upx;margin-right: 30upx;">
-					<image src="@/static/CTKY/Seat.png" style="width:47upx ;height: 55upx;margin-left: 18upx;margin-right: 18upx;"></image>
+					<image src="../../../static/CTKY/Seat.png" style="width:47upx ;height: 55upx;margin-left: 18upx;margin-right: 18upx;"></image>
 					<view>已选择</view>
 				</view>
 			</view>
@@ -194,7 +194,7 @@
 	export default {
 		data() {
 			return {
-				myUrl:'@/static/CTKY/unSeat.png',
+				myUrl:'../../static/CTKY/unSeat.png',
                 isSelect:false,
 			}
 		},
@@ -210,11 +210,11 @@
 		methods: {
 			selectSeat() {
 				if(this.isSelect){
-					this.myUrl='@/static/CTKY/selectSeat.png';
+					this.myUrl='../../static/CTKY/selectSeat.png';
 					this.isSelect=!this.isSelect;
 				}
 				else{
-					this.myUrl='@/static/CTKY/unSeat.png';
+					this.myUrl='../../static/CTKY/unSeat.png';
 					this.isSelect=!this.isSelect;
 				}
 				

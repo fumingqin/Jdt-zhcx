@@ -242,7 +242,7 @@
 								that.st_Longitude = res.longitude;
 								that.st_Latitude = res.latitude;
 								that.startlocation = res;
-								console.log(that.startlongitude + "," + that.startlatitude)
+								console.log(that.st_Longitude + "," + that.st_Latitude)
 							}
 						});
 					}
@@ -405,7 +405,12 @@
 							title: '请选择目的点',
 							icon: 'none'
 						})
-					} else{
+					} else if(this.dayContent[this.index] == '请选择'){
+						uni.showToast({
+							title: '请选择包车天数',
+							icon: 'none'
+						})
+					}else{
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
 						this.homePageInfo.destination = this.destination;
