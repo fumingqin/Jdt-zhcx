@@ -25,7 +25,7 @@
 						:class="{ 'active':index==leftIndex }" 
 						:data-index="index"
 						@tap="leftTap"
-					>{{item.cityName}}</view>
+					>{{item.ci_cityName}}</view>
 		        </scroll-view>
 			</view>
 			<!-- 右边的列表 -->
@@ -38,7 +38,7 @@
 							<view class="item">
 								<view class="goods" v-for="(item2,index2) in mainArray" :key="index2" @tap="detailStationTap(item2)">
 									<view>
-										<view>{{item2.countys}}</view>
+										<view>{{item2.ct_countys}}</view>
 									</view>
 								</view>
 							</view>
@@ -63,6 +63,15 @@
 				isShowAllList:true,//是否显示联动列表
 				isShowList:false,//是否显示站点列表
 				stationType:'',//判断上个页面点击的是上车点还是下车点
+				// selectSpecialLine:[{
+				// 	ci_countyCount:'',
+				// 	ci_cityName:'',
+				// 	countys:[{
+				// 		ct_countys:'',
+				// 		ct_longitude:'',
+				// 		ct_latitude:'',
+				// 	}]
+				// }]
 			}
 		},
 		onLoad(param){
@@ -71,6 +80,7 @@
 			that.stationType = param.station;
 			//获取站点列表
 			that.getBusStationList();
+			// that.routeInit();
 			/* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
 			uni.getSystemInfo({
 				success:(res)=>{
@@ -80,6 +90,27 @@
 		},
 		methods: {
 			//-------------------------获取车站列表数据-------------------------
+			// async routeInit() {
+			// 	let selectSpecialLine = await this.$api.lyfwcwd('selectSpecialLine');
+			// 	this.selectSpecialLine = selectSpecialLine.data;
+				
+			// 	if(selectSpecialLine.data.length != 0){
+			// 		for(var i=0;i<selectSpecialLine.data.length;i++){
+			// 			var cityNameArray = {
+			// 				ci_cityName : selectSpecialLine.data[i].ci_cityName
+			// 			}
+			// 			this.stationArray.push(cityNameArray);
+			// 			for(var j=0;j<selectSpecialLine.data.countys.length;j++){
+			// 				var countysArray = {
+			// 					countys : selectSpecialLine.data[i].countys[j]
+			// 				}
+			// 				this.mainArray.push(countysArray);
+			// 			}
+			// 		}
+			// 	}
+			// },
+			
+			
 			getBusStationList() {
 				uni.showLoading();
 				uni.request({

@@ -16,7 +16,7 @@
 					<text class="sa_text">{{driverInformation.orderType}}</text>
 					<text class="sa_popu" @click="open">去支付></text>
 				</view>
-				<uni-popup ref="popup" type="bottom">
+				<!-- <uni-popup ref="popup" type="bottom">
 					<view class="po_boxVlew">
 						<view class="bv_topText">
 							<view></view>
@@ -54,7 +54,7 @@
 							<button class="bt_remind4" type="warn">确定支付{{driverInformation.overtimeCharge}}元</button>
 						</view>
 					</view>
-				</uni-popup>
+				</uni-popup> -->
 				<!-- 司机信息 -->
 				<view class="ct_information">
 					<text class="if_topTitle">司机信息</text>
@@ -226,16 +226,16 @@
 
 			//------------------------------弹框事件-----------------------------------------
 
-			open() {
-				// 需要在 popup 组件，指定 ref 为 popup
-				this.$refs.popup.open()
-			},
-			//关闭
-			close(e) {
-				if (e == 1) {
-					this.$refs.popup.close()
-				}
-			},
+			// open() {
+			// 	// 需要在 popup 组件，指定 ref 为 popup
+			// 	this.$refs.popup.open()
+			// },
+			// //关闭
+			// close(e) {
+			// 	if (e == 1) {
+			// 		this.$refs.popup.close()
+			// 	}
+			// },
 
 			//picker相关
 			callPolice: function() {
@@ -444,14 +444,14 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-
+	
 	.popupTitleFont {
 		font-size: 38rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 400;
 		color: #333333;
 	}
-
+	
 	.popupButtonChoose {
 		flex-direction: row;
 		align-items: center;
