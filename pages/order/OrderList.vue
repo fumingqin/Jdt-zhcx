@@ -1472,9 +1472,15 @@
 					},
 					success: (respones) => {
 						console.log('删除结果', respones)
+						uni.showModal({
+							content:respones.message,
+						})
 					},
 					fail: (respones) => {
 						console.log(respones)
+						uni.showModal({
+							content:respones.message,
+						})
 					}
 				})
 			},
