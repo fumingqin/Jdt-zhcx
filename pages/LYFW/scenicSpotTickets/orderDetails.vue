@@ -9,9 +9,9 @@
 		<view class="Dx_View">
 			<view class="Dx_viewAndView">
 			<text class="Dx_title">{{orderInfo.orderType}}</text>
-			<text class="Dx_text" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票'" >预订成功，旅途愉快！</text>
+			<text class="Dx_text" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' " >预订成功，旅途愉快！</text>
 			<image class="Dx_image" src="../../../static/LYFW/scenicSpotTickets/orderDetails/gantan.png" @click="open"></image>
-			<text class="Dx_price" @click="open" >{{orderInfo.orderActualPayment}}</text>
+			<text class="Dx_price" @click="open" >{{orderInfo.ticketAdultPrice}}</text>
 			<text class="Dx_priceIcon" @click="open">¥</text>
 			<text class="Dx_remarks">订单编号：{{orderInfo.orderNumber}}</text>
 			</view>
@@ -54,7 +54,7 @@
 					
 					
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{orderInfo.orderActualPayment}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo.ticketAdultPrice}}</text>
 					</view>
 				</view>
 			</view>
@@ -85,12 +85,12 @@
 				</view>
 				
 				<!-- 空白二维码区域 -->
-				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消'">支付后生成二维码及取票码</view>
+				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">支付后生成二维码及取票码</view>
 			
 				<!-- 二维码 -->
-				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消'">
+				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">
 					<view class="Xx_QRcodeBlock1"> 
-						<text class="Xx_QRcodeContentTitle">入园辅助码</text>
+						<text class="Xx_QRcodeContentTitle">取票码</text>
 					</view>
 					<view class="Xx_QRcodeBlock2"> 
 						<text class="Xx_QRcodeContent">{{orderInfo.orderTicketNumber}}</text>
@@ -104,7 +104,7 @@
 				</view>
 				
 				<!-- 出行人+退改+保险 -->
-				<view style="margin-top: 20upx;" v-for="(item,index) in orderInfo.appUserInfoList" :key="index">
+				<view style="margin-top: 20upx;" v-for="(item,index) in orderInfo.addressData" :key="index">
 					<text class="Xx_contentTitle" >出行人</text>
 					<text class="Xx_contentTitle2">{{item.userName}}&nbsp;{{item.userType}}</text>
 					<view></view>
@@ -119,7 +119,7 @@
 				</view>
 				<view class="Xx_contentBlock" v-if="orderInfo.orderInsure == true">
 					<text class="Xx_contentTitle" >附加保险</text>
-					<text class="Xx_contentTitle2">太平洋门票意外险 经济款×{{orderInfo.appUserInfoList.length}}份</text>
+					<text class="Xx_contentTitle2">太平洋门票意外险 经济款×{{orderInfo.addressData.length}}份</text>
 				</view>
 			</view>
 		</view>
@@ -157,7 +157,7 @@
 						couponPrice: '',
 						couponCondition: '',
 						
-						appUserInfoList : '',//用户列表
+						addressData : '',//用户列表
 					},
 				childrenIndex : '', //儿童数量
 				adultIndex : '', //成人数量
@@ -170,18 +170,22 @@
 			uniPopup,
 		},
 		onLoad(options) {
-			this.lyfwData(JSON.parse(options.orderNumber));
+			this.lyfwData(options.orderNumber);
 			
 		},
 		methods: {
 			//访问接口数据
 			lyfwData(e) {
 				uni.request({
-					url : 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber='+e,
+					url : 'http://111.231.109.113:8002/api/ly/RequestTicketsListDetail',
+					data:{
+						orderNumber : e
+					},
 					method:'POST',
+					header: {'content-type': 'application/json'},
 					success:(res) => {
 						console.log(res)
-						this.orderInfo = res.data.data;
+						this.orderInfo = res.data.data[0];
 						this.screenUser();
 						this.make()
 					}
@@ -200,10 +204,10 @@
 			},
 			//数组提取
 			screenUser: function() {
-				let adult = this.orderInfo.appUserInfoList.filter(item => {
+				let adult = this.orderInfo.addressData.filter(item => {
 					return item.userType == '成人';
 				})
-				let children = this.orderInfo.appUserInfoList.filter(item => {
+				let children = this.orderInfo.addressData.filter(item => {
 					return item.userType == '儿童';
 				})
 				this.adultIndex = adult.length;

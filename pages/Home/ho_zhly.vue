@@ -59,12 +59,12 @@
 					<!-- 泉州小西埕 -->
 					<view class="ct_content1">
 						<image class="ct_image1" :src="sixPalaceList[0].ticketImage" mode="aspectFill"></image>
-						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketName}}</text>
+						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text>
 					</view>
 					<!-- 稻田摸鱼 -->
 					<view class="ct_content2">
 						<image class="ct_image2" :src="sixPalaceList[1].ticketImage" mode="aspectFill"></image>
-						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketName}}</text>
+						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text>
 					</view>
 				</view>
 
@@ -72,22 +72,22 @@
 					<!-- 泉州钟楼 -->
 					<view class="ct_content3">
 						<image class="ct_image3" :src="sixPalaceList[2].ticketImage" mode="aspectFill"></image>
-						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketName}}</text>
+						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
 					<view class="ct_content4">
 						<image class="ct_image4" :src="sixPalaceList[3].ticketImage" mode="aspectFill"></image>
-						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketName}}</text>
+						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text>
 					</view>
 					<!-- 七彩官畲 -->
 					<view class="ct_content5">
 						<image class="ct_image5" :src="sixPalaceList[4].ticketImage" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketName}}</text>
+						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text>
 					</view>
 				</view>
 			</view>
 		</view>
-		
+
 		<!-- 新闻资讯 -->
 		<view class="titNp">新闻资讯</view>
 		<view class="guess-section">
@@ -99,7 +99,7 @@
 				<view>
 					<image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
 					<text class="price">{{item.createdTime}}</text>
-					<text class="price-zan">阅读{{item.count+1080}}</text> 
+					<text class="price-zan">阅读{{item.count+1080}}</text>
 				</view>
 			</view>
 		</view>
@@ -112,37 +112,48 @@
 			return {
 				Announcement: '', //通知内容
 				recommendedContent: [{
-					rc_image : ''
-				},{
-					rc_image : ''
-				},{
-					rc_image : ''
-				},{
-					rc_image : ''
-				},{
-					rc_image : ''
+					rc_image: ''
+				}, {
+					rc_image: ''
+				}, {
+					rc_image: ''
+				}, {
+					rc_image: ''
+				}, {
+					rc_image: ''
 				}], //推荐内容
-				
+
 				sixPalaceList: [{
-					ticketId: '',
-					ticketName: '',
-					ticketImage: '',
-				}, {
-					ticketId: '',
-					ticketName: '',
-					ticketImage: '',
-				}, {
-					ticketId: '',
-					ticketName: '',
-					ticketImage: '',
-				}, {
-					ticketId: '',
-					ticketName: '',
-					ticketImage: '',
-				}],
-				
-				
-				
+						ticketEnglishName: '',
+						ticketId: '',
+						ticketTitle: '',
+						ticketImage: '',
+					}, {
+						ticketEnglishName: '',
+						ticketId: '',
+						ticketTitle: '',
+						ticketImage: '',
+					}, {
+						ticketEnglishName: '',
+						ticketId: '',
+						ticketTitle: '',
+						ticketImage: '',
+					}, {
+						ticketEnglishName: '',
+						ticketId: '',
+						ticketTitle: '',
+						ticketImage: '',
+					},
+					{
+						ticketEnglishName: '',
+						ticketId: '',
+						ticketTitle: '',
+						ticketImage: '',
+					}
+				],
+
+
+
 				goodsList: [],
 			}
 		},
@@ -158,17 +169,17 @@
 				let recommendedContent = await this.$api.lyfwcwd('recommendedContent');
 				this.recommendedContent = recommendedContent.data;
 			},
-			
-			routeData : function(){
+
+			routeData: function() {
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getPackageTourList',
-					method:'POST',
+					url: 'http://218.67.107.93:9210/api/app/getPackageTourList',
+					method: 'POST',
 					success: (e) => {
 						console.log(e)
 					}
 				})
 			},
-			
+
 			loadData: function() {
 				uni.request({
 					url: 'http://218.67.107.93:9210/api/app/getInformationList',
@@ -178,50 +189,57 @@
 						// console.log(e)
 					}
 				})
-				setTimeout(()=>{
+				setTimeout(() => {
 					uni.stopPullDownRefresh();
-				},1000)
-				
+				}, 1000)
+
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getSixScenicspotList?requestArea=' +this.regionWeixin,
-					method:'POST',
-					success:(res) => { 
+					url: 'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea',
+					data: {
+						// requestArea : this.regionWeixin,
+						requestArea: '南平市'
+					},
+					method: 'POST',
+					header: {
+						'content-type': 'application/json'
+					},
+					success: (res) => {
 						console.log(res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
 			},
-			
+
 			//资讯详情页
-			informationTo:function(e) {
+			informationTo: function(e) {
 				uni.navigateTo({
-					url: 'InformationDetails?id=' +e
+					url: 'InformationDetails?id=' + e
 				})
 			},
-			
+
 			//金刚区各模块入口
-			route1:function() {
+			route1: function() {
 				uni.navigateTo({
 					url: '/pages/LYFW/independentTravel/it_list'
 				})
 			},
-			route2:function() {
+			route2: function() {
 				uni.navigateTo({
 					url: '/pages/LYFW/groupTour/groupTourList'
 				})
 			},
-			route3:function() {
+			route3: function() {
 				uni.navigateTo({
 					url: '/pages/LYFW/scenicSpotTickets/ticketsList'
 				})
 			},
-			route4:function() {
+			route4: function() {
 				// uni.navigateTo({
 				// 	url: '/pages/CTKY/ctkyIndex'
 				// })
 				uni.showToast({
-					title:'正在开发中...',
-					icon:'none'
+					title: '正在开发中...',
+					icon: 'none'
 				})
 			},
 		}
@@ -260,7 +278,7 @@
 		height: 178upx;
 		top: 355upx;
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
-		border-radius:12px;
+		border-radius: 12px;
 		margin: 0 20upx;
 
 		.zl_topClick {
@@ -271,6 +289,7 @@
 				width: 25%;
 				height: 178upx;
 				text-align: center;
+
 				.zl_itImage {
 					width: 44upx;
 					height: 44upx;
@@ -425,7 +444,7 @@
 
 			.zl_contentImage1 {
 				display: flex;
-				
+
 				// 泉州小西埕
 				.ct_content1 {
 					display: flex;
@@ -447,7 +466,7 @@
 						color: #fff;
 					}
 				}
-				
+
 				// 稻田摸鱼
 				.ct_content2 {
 					display: flex;
@@ -472,23 +491,23 @@
 					}
 				}
 			}
-			
-			.zl_contentImage2{
+
+			.zl_contentImage2 {
 				display: flex;
 				margin-top: 20upx;
-				
+
 				// 泉州钟楼
 				.ct_content3 {
 					display: flex;
 					position: relative;
-				
+
 					.ct_image3 {
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
-				
+
 					}
-				
+
 					.ct_text3 {
 						position: absolute;
 						font-size: 22upx;
@@ -500,19 +519,20 @@
 						overflow: hidden;
 					}
 				}
+
 				// 泉州洛阳桥
 				.ct_content4 {
 					display: flex;
 					position: relative;
 					margin-left: 10upx;
-				
+
 					.ct_image4 {
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
-				
+
 					}
-				
+
 					.ct_text4 {
 						position: absolute;
 						font-size: 22upx;
@@ -524,19 +544,20 @@
 						overflow: hidden;
 					}
 				}
+
 				// 七彩官畲
 				.ct_content5 {
 					display: flex;
 					position: relative;
 					margin-left: 10upx;
-				
+
 					.ct_image5 {
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
-				
+
 					}
-				
+
 					.ct_text5 {
 						position: absolute;
 						font-size: 22upx;
@@ -551,38 +572,38 @@
 			}
 		}
 	}
-	
+
 	/* 南平周边-样式*/
 	.guess-section {
 		display: flex;
 		flex-wrap: wrap;
 		padding: 0 30upx;
 		background: #fff;
-	
+
 		.guess-item {
 			display: flex;
 			flex-direction: column;
 			width: 48%;
 			padding-bottom: 40upx;
-	
+
 			&:nth-child(2n+1) {
 				margin-right: 4%;
 			}
 		}
-	
+
 		.image-wrapper {
 			width: 100%;
 			height: 360upx;
 			border-radius: 3px;
 			overflow: hidden;
-	
+
 			image {
 				width: 100%;
 				height: 100%;
 				opacity: 1;
 			}
 		}
-	
+
 		.title {
 			font-size: 32upx;
 			color: #333;
@@ -593,13 +614,13 @@
 			overflow: hidden;
 			width: 160px;
 		}
-	
+
 		.Portrait {
 			width: 40upx;
 			height: 40upx;
 			opacity: 1;
 		}
-	
+
 		.price {
 			position: relative;
 			font-size: 26upx;
@@ -614,7 +635,7 @@
 			width: 76px;
 			margin-top: -80upx;
 		}
-	
+
 		.price-zan {
 			font-size: 24upx;
 			color: #666;
@@ -622,7 +643,7 @@
 			margin-top: 3upx;
 		}
 	}
-	
+
 	/*通用字体样式*/
 	.titNp {
 		margin-top: 20upx;
@@ -631,6 +652,6 @@
 		font-size: 34upx;
 		font-weight: bold;
 		background: #fff;
-	
+
 	}
 </style>

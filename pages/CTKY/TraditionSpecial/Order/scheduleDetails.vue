@@ -243,8 +243,8 @@
 				totalPrice:0,//车票总价格
 				passengerNum:0,//乘车人数量
 				shuttleType:'',//班车类型'定制班车''普通班车'
-				sepecialStartStationArray:[],//定制班车起点数组
-				specialEndStationArray:[],//定制班车终点数组
+				sepecialStartArray:[],//定制班车起点数组
+				specialEndArray:[],//定制班车终点数组
 			}
 		},
 		
@@ -263,6 +263,12 @@
 					that.ticketDetail = data.data;//车票数组
 					that.totalPrice = data.data.fare;//价格
 					that.shuttleType = data.data.shuttleType;//班车类型
+					
+					//定制班车起点数组
+					that.sepecialStartArray = data.data.starSiteArr;
+					//定制班车终点数组
+					that.specialEndArray = data.data.endSiteArr
+					
 					console.log('车票数据',that.ticketDetail)
 					if(data.data.insurePrice == 0) {
 						that.isInsurance = 0;
@@ -323,17 +329,29 @@
 			//-------------------------------点击定制班车上车点-----------------------------
 			startStationTap() {
 				var that = this;
+				var stationArray = {
+					startStaionIndex : that.startStaionIndex,
+					endStationIndex : that.endStationIndex,
+					specialStartArray : that.sepecialStartArray,
+					specialEndArray : that.specialEndArray
+				}
 				//跳转到选择上车点页面
 				uni.navigateTo({
-					url:'../stationPicker/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+					url:'../stationPicker/selectStation?stationArray=' + JSON.stringify(stationArray)
 				})
 			},
 			//-------------------------------点击定制班车下车点-----------------------------
 			endStationTap() {
 				var that = this;
+				var stationArray = {
+					startStaionIndex : that.startStaionIndex,
+					endStationIndex : that.endStationIndex,
+					specialStartArray : that.sepecialStartArray,
+					specialEndArray : that.specialEndArray
+				}
 				//跳转到选择下车点页面
 				uni.navigateTo({
-					url:'../stationPicker/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+					url:'../stationPicker/selectStation?stationArray=' + JSON.stringify(stationArray)
 				})
 			},
 			//-------------------------------删除乘车人-----------------------------
@@ -391,13 +409,14 @@
 			},
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
+				
 				if (this.ticketDetail.shuttleType == '普通班车') {
 					uni.navigateTo({
-						url:'../MapMark/traditionCarMark'
+						url:'../MapMark/traditionCarMark?traditionArray=' + JSON.stringify(this.ticketDetail)
 					})
 				}else if (this.ticketDetail.shuttleType == '定制班车') {
 					uni.navigateTo({
-						url:'../MapMark/specialMark'
+						url:'../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
 					})
 				}
 			},

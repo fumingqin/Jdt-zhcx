@@ -46,7 +46,7 @@
 					</view>
 					<!-- 二维码 -->
 					<view class="QRImage">
-						<image style="width: 300rpx; height: 300rpx;" src="../../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png" lazy-load mode="aspectFill"></image>
+						<image style="width: 300rpx; height: 300rpx;" src="@/static/LYFW/scenicSpotTickets/orderDetails/erweima.png" lazy-load mode="aspectFill"></image>
 					</view>
 					<view style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
 						  取票号 16565446
