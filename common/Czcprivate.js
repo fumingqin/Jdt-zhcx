@@ -38,6 +38,12 @@ const Interface = {
 		method:'POST', 
 		pages:["CZC/PrivateTaxi.nvue"]
 	},
+	Pay1:{
+		value: Url1+'/api/ly/getCommonPayparameter1',
+		name:'旅客端-获取支付信息',
+		method:'POST', 
+		pages:["CZC/PrivateTaxi.nvue"]
+	},
 	QuerySpecialLineOrderByUserID_Passenger:{
 		value: Url + '/api/SpecialLine/QuerySpecialLineOrderByUserID_Passenger',
 		name:'旅客端-根据用户ID查询订单',
