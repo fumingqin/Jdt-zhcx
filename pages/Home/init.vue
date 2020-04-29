@@ -12,6 +12,12 @@
 			}
 		},
 		onLoad() {
+			// #ifndef APP-PLUS
+			uni.switchTab({
+				url:'Index'
+			});
+			// #endif
+			// #ifdef APP-PLUS
 			const value = uni.getStorageSync('launchFlag');
 			if(value){
 				uni.switchTab({
@@ -20,12 +26,17 @@
 			}else{
 				uni.setStorage({
 					key:'launchFlag',
-					data:true
+					data:true,
+					success:function(){
+						uni.redirectTo({
+							url:'guidePage'
+						})
+					}
 				})
-				uni.redirectTo({
-					url:'guidePage'
-				})
+				
 			}
+			// #endif
+			
 		},
 		methods: {
 			
