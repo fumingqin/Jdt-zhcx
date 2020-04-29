@@ -577,7 +577,19 @@
 				"navigationBarTitleText": "意见反馈"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/CZC/PrivateTaxiPayment",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/CZC/PrivatePaySuccess",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
