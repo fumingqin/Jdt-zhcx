@@ -41,7 +41,7 @@
 
 			<!-- 城市列表 -->
 			<view v-if="searchValue == ''" v-for="(item, index) in list" :key="index" :id="getId(index)" >
-				<view class="letter-header">{{ getId(index) }}</view>
+				<!-- <view class="letter-header">{{ getId(index) }}</view> -->
 				<view class="city-div" v-for="(city, i) in item" :key="i" @click="back_city(city)">
 					<text class="city">{{ city.cityName }}</text>
 				</view>
