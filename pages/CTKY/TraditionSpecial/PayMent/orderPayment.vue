@@ -382,7 +382,7 @@
 						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
-								console.log('订单编号', res.data.data);
+								// console.log('订单编号', res.data.data);
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							}else if(res.data.status == false) {
@@ -512,8 +512,8 @@
 						prepayid: that.paymentData.jsapi.PrepayId,
 					},
 					success:function(res){
-						console.log(response)
-						if(response.errCode == 0) {//成功
+						console.log(res)
+						if(res.errCode == 0) {//成功
 							uni.showToast({
 								title: '支付成功',
 								icon: 'none'
@@ -521,7 +521,7 @@
 							uni.redirectTo({
 								url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
 							})
-						}else if(response.errCode == -1) {//错误
+						}else if(res.errCode == -1) {//错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
@@ -529,7 +529,7 @@
 							uni.redirectTo({
 								url:'./CTKYPayFail?&orderNum=' + that.orderNum,
 							})
-						}else if(response.errCode == -2) {//用户取消
+						}else if(res.errCode == -2) {//用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'

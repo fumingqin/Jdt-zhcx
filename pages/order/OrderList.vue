@@ -246,7 +246,7 @@
 							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" v-if="item.state=='订单未支付'" @tap="keYunPay(index)">去支付</button>
+							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(index)">去支付</button>
 							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
@@ -816,7 +816,7 @@
 				</view>
 
 				<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
+				<view v-if="item.carType=='普通班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -1257,6 +1257,7 @@
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				orderType1: '',
+				ctkyOrderNum:'',//传统客运订单号（退票需要）
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
@@ -1378,6 +1379,7 @@
 					key: 'userInfo',
 					success: function(data) {
 						that.userInfo = data.data;
+						console.log('错误', that.userInfo);
 						that.getKeYunOrderInfo();
 					},
 					fail(res) {
@@ -1399,8 +1401,8 @@
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
-						// console.log('11111', res.data);
-
+						console.log('11111', res.data);
+						that.ctkyOrderNum = res.data.orderNumber;
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								that.info.push(res.data.data[i]);
@@ -1464,9 +1466,9 @@
 						'content-type': 'application/x-www-form-urlencoded'
 					},
 					data: {
-						orderNumber: that.userInfo.userId,
-						clientID: that.userInfo.userId,
-						clientName: that.userInfo.nickname,
+						orderNumber: that.ctkyOrderNum,
+						// clientID: that.userInfo.userId,
+						// clientName: that.userInfo.nickname,
 					},
 					success: (respones) => {
 						console.log('删除结果', respones)
