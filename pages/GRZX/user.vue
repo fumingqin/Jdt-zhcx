@@ -372,8 +372,8 @@
 	}
 	.serviceBox{		//更多服务
 		width:91.47%;
-		//height: 510upx;
-		height: 390upx;
+		height: 510upx;
+		//height: 390upx;
 		background-color: #FFFFFF;
 		border-radius: 12upx;
 		margin-top: 10upx;
