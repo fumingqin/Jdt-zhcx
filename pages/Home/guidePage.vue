@@ -35,6 +35,11 @@
 				}
 			})
 		},
+		onBackPress:function(){
+			uni.switchTab({
+				url:'Index'
+			})
+		},
 		methods: {
 			//跳转路由
 			natTo: function() {
