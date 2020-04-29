@@ -37,13 +37,14 @@
 				<view class="queryView">
 					<button class="queryButton" @click="queryClick">查 询</button>
 				</view>
-				<!-- <view>
-					<label class="historyText" v-for="(i,index) in historyLines" :key=index v-if="index<3">{{i}}</label>
-					<label class="clearHistory" @click="clickHistory">清除历史</label>
-				</view> -->
 			</view>
 			<view class="historyView">
-				<label class="historyTitle">历史记录</label>
+				
+				<view style="justify-content: space-between; align-items: center;display: flex;">
+					<label class="historyTitle">历史记录</label>
+					<!-- <label class="historyText" v-for="(i,index) in historyLines" :key=index v-if="index<3">{{i}}</label> -->
+					<label class="clearHistory" @click="clickHistory">清除历史</label>
+				</view>
 				<view class="historyListView">
 					<view class="historyText" @tap="historyItemTap(index)" v-for="(i,index) in historyLines" :key=index v-if="index<10">{{i}}</view>
 				</view>
@@ -410,6 +411,9 @@ import MxDatePicker from "../../../../components/CTKY/mx-datepicker/mx-datepicke
 	}
 
 	.clearHistory {
+		font-size: 25rpx;
+		color: #2C2D2D;
+		margin-right: 20rpx;
 		float: right;
 	}
 

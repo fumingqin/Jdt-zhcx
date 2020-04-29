@@ -1507,10 +1507,10 @@
 						clientName: that.userInfo.nickname,
 					},
 					success: (respones) => {
-						// console.log('删除结果', respones)
+						console.log('删除结果', respones)
 					},
 					fail: (respones) => {
-						// console.log(respones)
+						console.log(respones)
 					}
 				})
 			},

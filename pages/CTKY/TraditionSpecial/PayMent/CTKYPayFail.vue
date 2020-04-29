@@ -22,7 +22,7 @@
 			return {}
 		},
 		onLoad(res) {
-			this.getTicketPaymentInfo(res);
+			this.getTicketPaymentInfo(res.orderNum);
 		},
 		onReady() {
 			this.backHome();

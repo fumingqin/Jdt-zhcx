@@ -1,7 +1,7 @@
 <template>
 	<view class="contentView">
 		<view class="top u-f-jsb" style="background-color: #FC4646; width: 100%; height: 180rpx;">
-			<view style="color: #FFFFFF; font-size: 35rpx; margin-left: 20rpx;">{{orderInfo.state}}</view>
+			<view style="color: #FFFFFF; font-size: 35rpx; margin-left: 20rpx;">{{getCtkyOrderStatus(orderInfo.state)}}</view>
 			<view style="color: #FFFFFF; font-size: 30rpx; margin-right: 20rpx;">￥{{orderInfo.totalPrice}}</view>
 		</view>
 		<!-- 头部视图 -->
@@ -133,6 +133,22 @@
 			//-------------------------------计算车票数量-------------------------------
 			getTicketNum(param) {
 				return Number(param.fullTicket) + Number(param.halfTicket) + Number(param.carryChild)
+			},
+			//-------------------------判断订单状态-------------------------
+			getCtkyOrderStatus(param) {
+				if (param == 4) {
+					return '进行中'
+				} else if (param == 5) {
+					return '已完成'
+				} else if (param == 6) {
+					return '已退票'
+				} else if (param == 7) {
+					return '未支付'
+				} else if (param == 9) {
+					return '已撤销'
+				} else if (param == 22) {
+					return '已改签'
+				}
 			},
 		}
 	}

@@ -97,7 +97,7 @@
 			getTicketInfo:function(date){
 				
 				uni.showLoading();
-				console.log(this.startStation,this.endStation,date);
+				// console.log(this.startStation,this.endStation,date);
 				uni.request({
 					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
 					data: {
@@ -111,7 +111,7 @@
 					header:{'content-type':'application/x-www-form-urlencoded'},
 					success: (res) => {6
 						uni.hideLoading();
-						console.log(res.data.data);
+						// console.log(res.data.data);
 						let that = this;
 						//非空判断
 						if(res.data.data.length != 0) {
@@ -199,8 +199,6 @@
 			ticketDetail(item) {
 				var that = this;
 				
-				let date = utils.timeTodate('Y-m-d H:i:s',item.setTime)
-				// console.log(item);
 				uni.setStorage({
 					key: 'ticketDate',
 					data: item,
@@ -210,6 +208,7 @@
 						})
 					},
 					fail() {
+						console.log('123');
 					}
 				});
 			},
