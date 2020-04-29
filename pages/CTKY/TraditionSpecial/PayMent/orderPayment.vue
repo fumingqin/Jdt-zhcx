@@ -148,7 +148,7 @@
 			}
 
 			setTimeout(function() {
-				that.countDown();
+				// that.countDown();
 			}, 3000);
 
 
@@ -161,17 +161,6 @@
 			//读取乘车人信息
 			this.getPassengerInfo();
 			//--------------------------计时器--------------------------
-
-			uni.getStorage({
-				key: 'keYunCountDown',
-				success: (res) => {
-					this.countDownDate = res.data;
-					// this.countDown();
-				},
-				fail: () => {
-					// this.countDown();
-				}
-			})
 		},
 		onUnload() {
 			clearInterval(this.timer);
@@ -254,17 +243,14 @@
 					key: 'passengerList',
 					success: function(data) {
 						that.passengerInfo = data.data;
-
 						if (that.passengerInfo.length > 0) {
 							for (let i = 0; i < that.passengerInfo.length; i++) {
-
 								var type = '';
 								if (data.data[i].userType == '儿童') {
 									type = 0;
 								} else if (data.data[i].userType == '成人') {
 									type = 2;
 								}
-
 								//拼接id name type
 								that.idNameTypeStr += data.data[i].userCodeNum + ',' + data.data[i].userName + ',' + type + '|';
 
@@ -289,6 +275,7 @@
 							icon: 'none'
 						})
 					}
+					
 				})
 			},
 			//--------------------------读取公众号openid--------------------------
@@ -348,6 +335,13 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
+				var companyCode = '';
+				// #ifdef H5
+				companyCode = '泉运公司综合出行H5';
+				// #endif
+				// #ifdef APP-PLUS
+				companyCode = '泉运公司综合出行APP';
+				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
@@ -356,7 +350,7 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						companyCode: '泉运公司综合出行',
+						companyCode: companyCode,
 						clientID: that.userInfo.userId, //用户ID
 						clientName: that.userInfo.nickname, //用户名
 						phoneNumber: that.userInfo.phoneNumber, //手机号码
@@ -385,7 +379,7 @@
 						getOffPoint: that.specialEndStation,//定制班车下车点
 					},
 					success: (res) => {
-						console.log('res', res);
+						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
 								console.log('订单编号', res.data.data);
@@ -400,6 +394,8 @@
 											uni.switchTab({
 												url:'../../../order/OrderList'
 											})
+										}else if(res.cancel) {
+											uni.navigateBack()
 										}
 									}
 								})
@@ -407,9 +403,8 @@
 						}
 					},
 					fail(res) {
+						console.log('失败', res);
 						uni.hideLoading();
-						//回调失败，取消定时器
-						clearInterval(timer);
 					}
 				})
 			},
@@ -420,6 +415,7 @@
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
+					
 				// uni.showLoading();
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
