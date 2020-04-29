@@ -378,7 +378,7 @@
 			uni.removeStorage({
 				key: "passengerList"
 			})
-			clearInterval(that.intervalAround);
+			clearInterval(this.intervalAround);
 		},
 		onShow() {
 			var that = this;
