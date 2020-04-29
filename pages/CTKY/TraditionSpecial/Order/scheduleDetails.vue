@@ -34,7 +34,8 @@
 			</view>
 			
 			<!-- 上下车点选择,0是普通购票不显示上下车点选择 -->
-			<view class="stationContentView" v-if="ticketDetail.shuttleType == '定制班车'">
+			<!-- v-if="ticketDetail.shuttleType == '定制班车'" -->
+			<view class="stationContentView" v-if="ticketDetail.starSiteArr.length > 2 || ticketDetail.endSiteArr.length > 2">
 				<view class="boarding" style="border-bottom:#EAEAEA solid 1px;" @tap="startStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">
@@ -409,12 +410,11 @@
 			},
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
-				
-				if (this.ticketDetail.shuttleType == '普通班车') {
+				if (this.ticketDetail.starSiteArr.length <= 2 && this.ticketDetail.endSiteArr.length <= 2) {//普通班车
 					uni.navigateTo({
 						url:'../MapMark/traditionCarMark?traditionArray=' + JSON.stringify(this.ticketDetail)
 					})
-				}else if (this.ticketDetail.shuttleType == '定制班车') {
+				}else if (this.ticketDetail.starSiteArr.length > 2 || this.ticketDetail.endSiteArr.length > 2) {//定制班车
 					uni.navigateTo({
 						url:'../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
 					})

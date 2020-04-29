@@ -398,7 +398,7 @@ import MxDatePicker from "../../../../components/CTKY/mx-datepicker/mx-datepicke
 		flex-wrap: wrap;
 		justify-content: flex-start;
 		color: #999999;
-		font-size: 20rpx;
+		font-size: 26rpx;
 		font-weight: 300;
 		margin-left: 20rpx;
 		margin-right: 20rpx;

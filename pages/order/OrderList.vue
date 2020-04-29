@@ -1486,9 +1486,9 @@
 			},
 			//-------------------------跳转到详情页-------------------------
 			keYunDetail: function(res) {
-				// console.log(res)
+				console.log(res)
 				uni.navigateTo({
-					url: '/pages/CTKY/orderDetail?&orderInfo=' + JSON.stringify(res)
+					url:'../CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
 				})
 			},
 			// -------------------------客运退票-------------------------

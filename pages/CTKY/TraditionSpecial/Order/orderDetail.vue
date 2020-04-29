@@ -1,17 +1,17 @@
 <template>
 	<view class="contentView">
 		<view class="top u-f-jsb" style="background-color: #FC4646; width: 100%; height: 180rpx;">
-			<view style="color: #FFFFFF; font-size: 35rpx; margin-left: 20rpx;">{{orderInfo.orderState}}</view>
-			<view style="color: #FFFFFF; font-size: 30rpx; margin-right: 20rpx;">￥{{orderInfo.price}}</view>
+			<view style="color: #FFFFFF; font-size: 35rpx; margin-left: 20rpx;">{{orderInfo.state}}</view>
+			<view style="color: #FFFFFF; font-size: 30rpx; margin-right: 20rpx;">￥{{orderInfo.totalPrice}}</view>
 		</view>
 		<!-- 头部视图 -->
 		<view class="head">
 			<!-- 起始站/价格 -->
 			<view class="u-f-jsb">
-				<view>{{orderInfo.startStation}} — {{orderInfo.endStation}}  x{{passageInfo.length}}</view>
+				<view>{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
 			</view>
 			<!-- 发车时间 -->
-			<view> 发车时间：{{orderInfo.setTime}}</view>
+			<view> 发车时间：{{orderInfo.setOutTime}}</view>
 		</view>
 		<!-- 乘客信息 -->
 		<scroll-view class="scrollBox" scroll-y="true">
@@ -37,7 +37,7 @@
 							<!-- 身份证 -->
 							<view>{{item.userCodeNum}}</view>
 							<!-- 联系电话 -->
-							<view>{{item.userPhoneNum}}</view>
+							<view>{{orderInfo.phoneNumber}}</view>
 							<!-- 退改规则 -->
 							<view>{{role}}</view>
 							<!-- 附加保险 -->
@@ -46,10 +46,11 @@
 					</view>
 					<!-- 二维码 -->
 					<view class="QRImage">
-						<image style="width: 300rpx; height: 300rpx;" src="@/static/LYFW/scenicSpotTickets/orderDetails/erweima.png" lazy-load mode="aspectFill"></image>
+						<canvas canvas-id="ctkyQrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+						<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
 					</view>
 					<view style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
-						  取票号 16565446
+						  取票号 {{orderInfo.orderNumber}}
 					</view>
 					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
 						出示二维码，检票上车
@@ -62,47 +63,77 @@
 </template>
 
 <script>
+	import uQRCode from '../../../../components/CTKY/uni-qrcode/uqrcode.js'
 	export default {
+		
 		data() {
 			return {
 				orderID:'',
 				role:'暂不支持在线退票',
 				orderInfo:[],//订单数据
-				passageInfo:[]
+				passageInfo:[],
+				ticketNum:0,
+				qrcodeSrc: '',//二维码
+				qrcodeText: 'uQRCode',
+				qrcodeSize: 150,
 			}
 		},
 		onLoad(res) {
 			var that = this;
 			var orderInfo = JSON.parse(res.orderInfo);
-			// that.orderID = orderInfo.orderId;
+			that.orderInfo = orderInfo;
 			console.log(orderInfo);
-			that.getOrderDetailInfo(orderInfo.orderId);
+			that.stringTurnArray(orderInfo.iDNameType);
+			that.getTicketNum(orderInfo);
+			that.make(this.orderInfo.orderNumber);
 		},
 		methods: {
-			//-------------------------------请求数据-------------------------------
-			getOrderDetailInfo:function(param){
+			//-------------------------------生成二维码-------------------------------
+			make(param) {
+				if(param) {
+					console.log(param);
+					uQRCode.make({
+						canvasId: 'ctkyQrcode',
+						text: param,
+						size: this.qrcodeSize,
+						margin: 10,
+						success: res => {
+							console.log('完成')
+							this.qrcodeSrc = res
+						},
+						complete: () => {
+							// uni.hideLoading()
+							console.log('完成')
+						}
+					})
+				}
+			},
+			//-------------------------------获取乘车人信息-------------------------------
+			stringTurnArray(param){
 				var that = this;
-				console.log(param)
-				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getCpxsOrderDetail',
-					method:'POST',
-					// header:{'content-type':'application/json'},
-					header:{'content-type':'application/x-www-form-urlencoded'},
-					data: {
-						orderId:param
-					},
-					success: (res) => {
-						console.log('详情数据',res)
-						//订单数据
-						that.orderInfo = res.data.data
-						//乘车人信息
-						that.passageInfo = res.data.data.appUserInfoList
-					},
-					fail: (res) => {
-						console.log(res)
+				let a = param.indexOf('|')
+				if(a == -1) {//不存在'|'
+					var array = param.split(',');
+					var passenger = {
+						userName:array[1],
+						userCodeNum:array[0],
 					}
-				})
-			}
+					that.passageInfo.push(passenger);
+				}else {//存在'|'
+					var array = param.split('|');
+					for(let i = 0;i < array.length; i++) {
+						var passenger = {
+							userName:array[i][1],
+							userCodeNum:array[i][0],
+						}
+						that.passageInfo.push(passenger);
+					}
+				}
+			},
+			//-------------------------------计算车票数量-------------------------------
+			getTicketNum(param) {
+				return Number(param.fullTicket) + Number(param.halfTicket) + Number(param.carryChild)
+			},
 		}
 	}
 </script>
@@ -203,4 +234,5 @@
 		justify-content: center;
 		margin-bottom: 20rpx;
 	}
+	
 </style>
