@@ -115,7 +115,7 @@
 				],
 			}
 		},
-		onLoad() {
+		onLoad:function() {
 			var that = this;
 			that.getGaoDeKey();
 			that.getMyLocation();
@@ -280,7 +280,7 @@
 			    let Appid = "wx14af28006f937f6e";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
-				let local = "http://zntc.145u.net/";
+				let local = "http://zntc.145u.net/#/";
 				if (code == null || code === "") {
 				  //不存在就打开上面的地址进行授权
 					window.location.href =
