@@ -153,11 +153,12 @@
 							success(res) {
 								if(captcha==res.data.code&&phone==res.data.phone){
 									uni.request({
-										url:'http://111.231.109.113:8002/api/person/login',
+										// url:'http://111.231.109.113:8002/api/person/login',
+										url:that.$GrzxInter.Interface.login.value,
 										data:{
 											phoneNumber:phone,
 										},
-										method:"POST",
+										method:that.$GrzxInter.Interface.login.method,
 										success(res) {
 											console.log(res)
 											uni.removeStorage({
@@ -348,11 +349,12 @@
 						  }},1000)
 						 uni.request({
 							// url:'http://218.67.107.93:9210/api/app/getLoginCode?phoneNumber='+self.phoneNumber,
-							url:'http://111.231.109.113:8002/api/person/getLoginCode',
+							//url:'http://111.231.109.113:8002/api/person/getLoginCode',
+							url:self.$GrzxInter.Interface.getLoginCode.value,
 						    data:{
 								phoneNumber:self.phoneNumber,
 							},
-							method:"POST",
+							method:self.$GrzxInter.Interface.getLoginCode.method,
 							success:(res)=>{
 								console.log(res,"340");
 						 		console.log(res.data.data);
