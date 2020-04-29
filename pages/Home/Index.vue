@@ -135,6 +135,9 @@
 
 				}
 			})
+			// #ifdef  H5
+			this.getCode();
+			//#endif
 		},
 		onReady() {
 			var that = this;
@@ -270,6 +273,87 @@
 				// #endif
 
 			},
+			// #ifdef  H5
+			//获取openid
+			getCode() {
+				let that=this;
+			    let Appid = "wx14af28006f937f6e";//appid
+				let code = this.getUrlParam('code'); //是否存在code
+				console.log(code);
+				let local = "http://zntc.145u.net/";
+				if (code == null || code === "") {
+				  //不存在就打开上面的地址进行授权
+					window.location.href =
+						"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+						Appid +
+						"&redirect_uri=" +
+						encodeURIComponent(local) +
+						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"; 
+				} else {
+				  存在则通过code传向后台调用接口返回微信的个人信息
+					uni.request({
+						url:'http://27.148.155.9:9056/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=9cda28b050341aca1f674d2043b01358',
+						header: {'content-type': 'application/x-www-form-urlencoded'},
+						method:'POST',
+						success(res) {
+							console.log(res,"res")
+							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
+							uni.setStorageSync('res',res.data)
+							let user=res.data;
+							uni.request({
+								url:'http://111.231.109.113:8002/api/person/changeInfo',
+								data:{
+									nickname:user.nickname,
+									openId_wx:user.openid,
+									portrait:user.headimgurl,
+									userId:'',
+									openId_qq:'',
+									gender:'',
+									address:user.province+user.city,
+									birthday:'',
+									phoneNumber:'',
+								},
+								method:'POST',
+								success(res1) {
+									if(res1.data.msg=="信息保存成功！"){
+										uni.setStorageSync('userInfo',res1.data.data)
+										if(res1.data.data.phoneNumber==null){
+											uni.navigateTo({
+												url:'/pages/GRZX/wxLogin',
+											})
+										}else{
+											that.logining=true;
+											that.login(res1.data.data)
+										}
+									}
+									console.log(res1,'res1')
+								}
+							})
+						},
+						fail(err){
+							console.log(err)
+							uni.showToast({
+								title:"err是"+err.errMsg,
+								icon:'none'
+							})
+						}
+					})
+				}
+			},
+			//判断code信息是否存在
+			getUrlParam(name) {
+				  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')  
+				  let url = window.location.href.split('#')[0]   
+				  let search = url.split('?')[1]  
+				  if (search) {  
+				    var r = search.substr(0).match(reg)  
+				    if (r !== null) return unescape(r[2])  
+				    return null  
+				  } else {  
+				    return null  
+				  }  
+			},
+			 //#endif  
 		}
 	}
 </script>
