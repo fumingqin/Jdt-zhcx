@@ -4,7 +4,7 @@ import Ctky from './common/Ctky.js' //传统客运-测试用数据
 import Czc from './common/Czc.js'   //出租车-测试用数据
 import Dd from './common/Dd.js' 	 //订单-测试用数据
 import Gjcx from './common/Gjcx.js' //公交查询-测试用数据
-import Grzx from './common/Grzx.js' //个人中心-测试用数据
+import GrzxInter from './common/Grzx.js' //个人中心-测试用数据
 import Lyfwfmq from './common/LYFW/LyfwFmq.js' //旅游服务-测试用数据-傅洺钦
 import Lyfwcwd from './common/LYFW/LyfwCwd.js' //旅游服务-测试用数据-蔡伟达
 import store from './common/login.js' //登录
@@ -16,11 +16,13 @@ Vue.config.productionTip = false
 
 Vue.prototype.$store=store;  //登录
 Vue.prototype.$Czc=Czc;  //登录
+Vue.prototype.$GrzxInter=GrzxInter;  //个人中心
 
 App.mpType = 'app'
 
 const app = new Vue({
 	store,	//登录
+	GrzxInter,//个人中心
     ...App
 })
 
@@ -64,7 +66,7 @@ const gjcx = type=>{
 const grzx = type=>{
 	return new Promise(resolve=>{
 		setTimeout(()=>{
-			resolve(Grzx[type]);
+			resolve(GrzxInter[type]);
 		}, 500)
 	})
 }

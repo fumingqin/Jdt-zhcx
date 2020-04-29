@@ -2,7 +2,9 @@
 	<view>
 		<view>
 			<map id="map1" ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="StartLon" :latitude="StartLat"
-			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map></view>
+			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
+			<image @click="back" src="../../static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
+		</view>
 		<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;">
 			<view style="margin:20rpx;">
 				<!-- <view style="height: 80rpx;flex-direction: row;border-bottom-width: 1px;border-color: #EAEAEA;">
@@ -180,7 +182,6 @@
 					that.endLonLat = res.data.EndLon + ',' + res.data.EndLat;
 					that.TaxiCost = res.data.EstimatePrice; //价格
 					that.SpecialLineInf = res.data;
-					console.log(that.SpecialLineInf)
 					that.setMarkers();
 				}
 			});
@@ -211,6 +212,10 @@
 					title: msg,
 					icon: icon
 				})
+			},
+			back: function() {
+				var that = this;
+				uni.navigateBack();
 			},
 			countDown: function(value) { //支付倒计时
 				let that = this;
@@ -258,7 +263,7 @@
 					success: function(res) {
 						if (res.data.status) {
 							that.showToast("超时未支付，订单自动取消");
-							that.$nextTick(function() {//关闭弹出层
+							that.$nextTick(function() { //关闭弹出层
 								that.$refs['bottomPopup'].close();
 							});
 						} else {
@@ -306,13 +311,13 @@
 									that.selecttime, //预约时间
 								EstimatePrice: that.SpecialLineInf.EstimatePrice, //价格
 								FactPrice: that.SpecialLineInf.EstimatePrice, //价格
-								FactPayPrice:that.SpecialLineInf.EstimatePrice, //价格
-								CouponPrice:that.SpecialLineInf.EstimatePrice, //价格
+								FactPayPrice: that.SpecialLineInf.EstimatePrice, //价格
+								CouponPrice: that.SpecialLineInf.EstimatePrice, //价格
 								UserId: that.userInfo.userId,
 								PassengersPhone: that.userInfo.phoneNumber,
 								userType: 0,
-								EstimateDistance:that.SpecialLineInf.Distance,//预计里程
-								EstimateTime:that.SpecialLineInf.EstimatedTime,//预计时间分钟
+								EstimateDistance: that.SpecialLineInf.Distance, //预计里程
+								EstimateTime: that.SpecialLineInf.EstimatedTime, //预计时间分钟
 							},
 							success: function(res) {
 								uni.hideLoading();
@@ -322,7 +327,7 @@
 									that.getPaymentInformation();
 									that.openBottomPopup();
 									that.showToast(res.data.msg + "请在3分钟内完成支付");
-									that.countDown(10);
+									that.countDown(180);
 									uni.removeStorage({
 										key: "passengerList"
 									})
@@ -354,59 +359,77 @@
 			},
 			payment: function() { //支付
 				let that = this;
-				// console.log('111111',that.paymentData);
-				WeixinJSBridge.invoke('getBrandWCPayRequest', {
-					"appId": that.payInformation.AppId, //公众号名称，由商户传入
-					"timeStamp": that.payInformation.Timestamp, //时间戳
-					"nonceStr": that.payInformation.Noncestr, //随机串
-					"package": 'Sign=WXPay', //扩展包
-					"signType": "MD5", //微信签名方式:MD5
-					"paySign": that.payInformation.Sign //微信签名
-				}, function(res) {
-					if (res.err_msg == "get_brand_wcpay_request:ok") {
-						//支付成功再进计时器查询状态
-						// location.href = "/Order/BaseCallback/" + flowID;
-						uni.showToast({
-							title: "支付成功，等待司机接单",
-							success() {
-								uni.switchTab({
-									url:"../order/OrderList"
-								})
-							}
-						})
-						uni.redirectTo({
-							// url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
-						})
-						clearInterval(that.countDownInterval);
-					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-						uni.showToast({
-							title: "您取消了支付，请重新支付"
-						})
-						alert("您取消了支付，请重新支付");
-					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-						uni.showToast({
-							title: "支付失败，请重新支付"
-						})
-					} else {
-						// location.href = "/Coach/GetCoach";
+				console.log(that.payInformation);
+				uni.requestPayment({
+					provider: "wxpay",
+					orderInfo: that.payInformation,
+					success(res) {
+						console.log(res)
+					},
+					fail(e) {
+						console.log(JSON.stringify(e));
+					},
+					ErrorCallback(e){
+						console.log(JSON.stringify(e))
 					}
-				});
+					
+				})
+
+				// 	// console.log('111111',that.paymentData);
+				// 	WeixinJSBridge.invoke('getBrandWCPayRequest', {
+				// 		"appId": that.payInformation.AppId, //公众号名称，由商户传入
+				// 		"timeStamp": that.payInformation.Timestamp, //时间戳
+				// 		"nonceStr": that.payInformation.Noncestr, //随机串
+				// 		"package": 'Sign=WXPay', //扩展包
+				// 		"signType": "MD5", //微信签名方式:MD5
+				// 		"paySign": that.payInformation.Sign //微信签名
+				// 	}, function(res) {
+				// 		if (res.err_msg == "get_brand_wcpay_request:ok") {
+				// 			//支付成功再进计时器查询状态
+				// 			// location.href = "/Order/BaseCallback/" + flowID;
+				// 			uni.showToast({
+				// 				title: "支付成功，等待司机接单",
+				// 				success() {
+				// 					uni.switchTab({
+				// 						url: "../order/OrderList"
+				// 					})
+				// 				}
+				// 			})
+				// 			uni.redirectTo({
+				// 				// url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
+				// 			})
+				// 			clearInterval(that.countDownInterval);
+				// 		} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+				// 			uni.showToast({
+				// 				title: "您取消了支付，请重新支付"
+				// 			})
+				// 			alert("您取消了支付，请重新支付");
+				// 		} else if (res.err_msg == "get_brand_wcpay_request:faile") {
+				// 			uni.showToast({
+				// 				title: "支付失败，请重新支付"
+				// 			})
+				// 		} else {
+				// 			// location.href = "/Coach/GetCoach";
+				// 		}
+				// 	});
 			},
 			getPaymentInformation: function() {
 				let that = this;
+				console.log(that.TaxiCost)
+				console.log(that.orderNumber)
 				uni.request({
 					url: $privateTaxi.Interface.Pay.value,
 					method: $privateTaxi.Interface.Pay.method,
 					data: {
-						payType: "3",
-						price: 0.01,
+						payType: 3,
+						price: that.TaxiCost,
 						orderNumber: that.orderNumber,
 						goodsName: that.SpecialLineInf.SpecialLineName,
-						billDescript: "出租车专线车费",
+						billDescript: "出租车专车费",
 					},
 					success(res) {
-						that.payInformation = res.data;
-						console.log(res.data);
+						that.payInformation=res.data.data;
+						console.log(that.payInformation);
 					}
 				})
 			},

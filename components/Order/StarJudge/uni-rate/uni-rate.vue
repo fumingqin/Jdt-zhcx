@@ -93,7 +93,6 @@
 						});
 					}
 				}
-				console.log("starList[4]: " + starList[4].activeWitch);
 				return starList;
 			}
 		},
