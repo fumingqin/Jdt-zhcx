@@ -45,7 +45,55 @@ const userInfo = {
 	msg: '用户信息'
 }
 
+const Url='http://111.231.109.113:8002';
+
+const Interface={
+	login:{
+		value:Url+'/api/person/login',
+		name:'用户登录',
+		method:'POST',
+		pages: [],
+	},
+	changeInfo:{
+		value:Url+'/api/person/changeInfo',
+		name:'修改个人信息',
+		method:'POST',
+		pages: [],
+	},
+	userInfoList:{
+		value:Url+'/api/person/userInfoList',
+		name:'获取乘车人信息',
+		method:'POST',
+		pages: [],
+	},
+	changeUserInfo:{
+		value:Url+'/api/person/changeUserInfo',
+		name:'修改乘车人信息',
+		method:'POST',
+		pages: [],
+	},
+	deletuserInfoList:{
+		value:Url+'/api/person/deletuserInfoList',
+		name:'删除乘车人信息',
+		method:'POST',
+		pages: [],
+	},
+	getLoginCode:{
+		value:Url+'/api/person/getLoginCode',
+		name:'获取手机验证码',
+		method:'POST',
+		pages: [],
+	},
+	userInfoListDetail:{
+		value:Url+'/api/person/userInfoListDetail',
+		name:'获取详细信息',
+		method:'POST',
+		pages: [],
+	}
+}
+
+
 // 接口声明区
 export default {
-	userInfo,addressInfo, user, 
+	userInfo,addressInfo, user, Interface,
 }

@@ -77,7 +77,7 @@
 
 						<view class="CTKYBtnView">
 							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
-							<button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
 							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
 							<button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
 							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
@@ -122,28 +122,28 @@
 
 						<!-- 待支付 -->
 						<view class="at_buttonView" v-if="item.orderType=='待支付'">
-							<view class="at_button at_btDelete" @click="open3(item.orderNumber)">取消</view>
+							<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
 						</view>
 
 						<!-- 已退票 -->
 						<view class="at_buttonView" v-if="item.orderType=='已退票'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
 
 						<!-- 已取消 -->
 						<view class="at_buttonView" v-if="item.orderType=='已取消'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
 
 						<!-- 支付超时 -->
 						<view class="at_buttonView" v-if="item.orderType=='支付超时'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
@@ -575,7 +575,7 @@
 						<view class="at_buttonView" v-if="item.orderType=='待使用'">
 							<view class="at_button at_btDelete" @click="open2(item.orderNumber)">退票</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
+							<!-- <view class="at_button at_btQrCode" @click="open5(item)">二维码</view> -->
 						</view>
 
 					</view>
@@ -773,7 +773,7 @@
 
 						<!-- 待支付 -->
 						<view class="at_buttonView" v-if="item.orderType=='待支付'">
-							<view class="at_button at_btDelete" @click="open3(item.orderNumber)">取消</view>
+							<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
 						</view>
@@ -963,21 +963,21 @@
 
 						<!-- 已退票 -->
 						<view class="at_buttonView" v-if="item.orderType=='已退票'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
 
 						<!-- 已取消 -->
 						<view class="at_buttonView" v-if="item.orderType=='已取消'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
 
 						<!-- 支付超时 -->
 						<view class="at_buttonView" v-if="item.orderType=='支付超时'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber)">删除</view>
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
@@ -1070,6 +1070,7 @@
 				<view class="box_qrCodeView">
 					<canvas canvas-id="qrcode2" style="width: 160px; height: 160px; left: 174upx; margin-top: 24upx;" />
 					<view class="box_qrCodeTextView">
+						<text class="box_qrCodeText" style="font-size: 26upx; color: #AAAAAA;">若无出现二维码，请重复打开弹框</text>
 						<text class="box_qrCodeText">取票码：{{orderIndexData.orderTicketNumber}}</text>
 						<text class="box_qrCodeText">预订人数：{{orderIndexData.orderUserIndex}}人</text>
 					</view>
@@ -1739,7 +1740,7 @@
 					data: {
 						UserID: that.userInfo.userId,
 					},
-					success: (res) => {
+					success:function(res){
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -1961,6 +1962,7 @@
 			//-------------------------景区门票-打开取消弹框-------------------------
 			open3(e, exitindex) {
 				this.ticketOrderNumber = e;
+				this.exitindex = exitindex;
 				this.$refs.popup3.open()
 			},
 			//-------------------------景区门票-关闭取消弹框-------------------------
@@ -1970,6 +1972,7 @@
 			//-------------------------景区门票-打开删除弹框-------------------------
 			open4(e, exitindex) {
 				this.ticketOrderNumber = e;
+				this.exitindex = exitindex;
 				this.$refs.popup4.open()
 			},
 			//-------------------------景区门票-关闭删除弹框-------------------------
@@ -2022,73 +2025,83 @@
 
 			//-------------------------景区门票-取消-------------------------
 			cancel: function() {
-				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/CancelTickets',
-					data: {
-						orderNumber: this.ticketOrderNumber
-					},
-					method: 'POST',
-					header: {
-						'content-type': 'application/json'
-					},
-					success: (e) => {
-						// console.log(e)
-						if (e.data.msg == '订单取消成功') {
+				if(this.exitindex == '3'){
+					uni.request({
+						url: 'http://111.231.109.113:8002/api/ly/CancelTickets',
+						data: {
+							orderNumber: this.ticketOrderNumber
+						},
+						method: 'POST',
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							if (e.data.msg == '订单取消成功') {
+								uni.showToast({
+									title: '订单取消成功',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							} else if (e.data.msg == '订单取消失败') {
+								uni.showToast({
+									title: '订单取消失败',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							}
+						},
+						fail() {
 							uni.showToast({
-								title: '订单取消成功',
-								icon: 'none'
+								title: '取消失败！请检查网络状态',
+								icon: 'none',
+								duration: 1500,
 							})
-							this.close3();
-							this.toFinished();
-						} else if (e.data.msg == '订单取消失败') {
-							uni.showToast({
-								title: '订单取消失败',
-								icon: 'none'
-							})
-							this.close3();
-							this.toFinished();
 						}
-					},
-					fail() {
-						uni.showToast({
-							title: '取消失败！请检查网络状态',
-							icon: 'none',
-							duration: 1500,
-						})
-					}
-				})
+					})
+				}else if(this.exitindex == '4'){
+					
+				}
+				
 
 			},
 
 			//-------------------------景区门票-删除-------------------------
 			del: function() {
-				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/DeleteTickets',
-					data: {
-						orderNumber: this.ticketOrderNumber
-					},
-					method: 'POST',
-					header: {
-						'content-type': 'application/json'
-					},
-					success: (e) => {
-						// console.log(e)
-						uni.showToast({
-							title: '删除成功',
-							icon: 'success',
-							duration: 1500,
-						})
-						this.close4();
-						this.toFinished();
-					},
-					fail() {
-						uni.showToast({
-							title: '删除失败！订单已删除',
-							icon: 'none',
-							duration: 1500,
-						})
-					}
-				})
+				if(this.exitindex == '3'){
+					uni.request({
+						url: 'http://111.231.109.113:8002/api/ly/DeleteTickets',
+						data: {
+							orderNumber: this.ticketOrderNumber
+						},
+						method: 'POST',
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.showToast({
+								title: '删除成功',
+								icon: 'success',
+								duration: 1500,
+							})
+							this.close4();
+							this.toFinished();
+						},
+						fail() {
+							uni.showToast({
+								title: '删除失败！订单已删除',
+								icon: 'none',
+								duration: 1500,
+							})
+						}
+					})
+				}else if(this.exitindex == '4'){
+					
+				}
+				
 			},
 			
 			//-------------------------生成二维码-------------------------

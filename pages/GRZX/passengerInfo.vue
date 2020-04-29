@@ -13,8 +13,8 @@
 					<image v-if="item.hiddenIndex == 1"  class="checkClass" src="../../static/GRZX/checked.png"></image>
 				</view>
 				<view class="redBox">
-					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
+					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
+					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
 					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
 					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
@@ -118,11 +118,12 @@
 							})
 						}else{
 							uni.request({
-								url:'http://111.231.109.113:8002/api/person/userInfoList',
+								//url:'http://111.231.109.113:8002/api/person/userInfoList',
+								url:that.$GrzxInter.Interface.userInfoList.value,
 								data:{
 									userId:res.data.userId
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.userInfoList.method,
 								success(res1) {
 									console.log(res1,'111')
 									for(var i=0;i<res1.data.data.length;i++){
