@@ -23,8 +23,8 @@
 		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(departureData[index])">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType=='普通班车'">传统</view>
-					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.shuttleType=='定制班车'">定制</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.starSiteArr.length <= 2 && item.endSiteArr.length <= 2">传统</view>
+					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.starSiteArr.length > 2 || item.endSiteArr.length > 2">定制</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{turnDate(item.setTime)}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
@@ -38,9 +38,9 @@
 					color: #333333;">{{item.endStation}}</view>
 				</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;" v-if="item.shuttleType=='普通班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票</view>
+				font-size: 28upx;color: #666666;" v-if="item.starSiteArr.length <= 2 && item.endSiteArr.length <= 2">{{item.carType}}/约{{item.duration}}分钟/儿童半票</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;" v-if="item.shuttleType=='定制班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票/站外上车</view>
+				font-size: 28upx;color: #666666;" v-if="item.starSiteArr.length > 2 || item.endSiteArr.length > 2">{{item.carType}}/约{{item.duration}}分钟/儿童半票/站外上车</view>
 			</view>
 			<view class="ctky_View_Right">
 				<view>
@@ -97,7 +97,7 @@
 			getTicketInfo:function(date){
 				
 				uni.showLoading();
-				console.log(this.startStation,this.endStation,date);
+				// console.log(this.startStation,this.endStation,date);
 				uni.request({
 					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
 					data: {
@@ -111,7 +111,7 @@
 					header:{'content-type':'application/x-www-form-urlencoded'},
 					success: (res) => {6
 						uni.hideLoading();
-						console.log(res.data.data);
+						// console.log(res.data.data);
 						let that = this;
 						//非空判断
 						if(res.data.data.length != 0) {
@@ -199,8 +199,6 @@
 			ticketDetail(item) {
 				var that = this;
 				
-				let date = utils.timeTodate('Y-m-d H:i:s',item.setTime)
-				// console.log(item);
 				uni.setStorage({
 					key: 'ticketDate',
 					data: item,
@@ -210,6 +208,7 @@
 						})
 					},
 					fail() {
+						console.log('123');
 					}
 				});
 			},
