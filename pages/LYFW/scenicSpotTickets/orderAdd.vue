@@ -208,14 +208,13 @@
 								ticketId: res.data.ticketId
 							},
 							method: 'POST',
-							header: {
-								'content-type': 'application/json'
-							},
+							header: {'content-type': 'application/json'},
 							success: (res) => {
 								console.log(res)
 								this.notice = res.data.data[0];
 							}
 						})
+						
 						// console.log(res)
 					}
 				})
@@ -445,16 +444,9 @@
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
 								console.log(res)
-								if (res.data.msg == '无可售门票！') {
+								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.showToast({
-										title: '该景区无可售门票！',
-										icon: 'none',
-									})
-									that.submissionState = false;
-									uni.hideLoading()
-								} else if (res.data.msg == '下单失败，联系管理员！') {
-									uni.showToast({
-										title: '下单失败，联系管理员！',
+										title: '当日已取消订单次数超过限额',
 										icon: 'none',
 									})
 									that.submissionState = false;
@@ -477,7 +469,13 @@
 											uni.hideLoading()
 										}
 									})
-
+								} else {
+									uni.showToast({
+										title: '网络延迟，请重试！',
+										icon: 'none',
+									})
+									that.submissionState = false;
+									uni.hideLoading()
 								}
 
 							}
@@ -520,9 +518,9 @@
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
 						console.log(res)
-						if (res.data.msg == '无可售门票！') {
+						if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 							uni.showToast({
-								title: '该景区无可售门票！',
+								title: '当日已取消订单次数超过限额',
 								icon: 'none',
 							})
 							that.submissionState = false;
@@ -545,6 +543,13 @@
 							uni.redirectTo({
 								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
 							})
+							uni.hideLoading()
+						} else {
+							uni.showToast({
+								title: '网络延迟，请重试！',
+								icon: 'none',
+							})
+							that.submissionState = false;
 							uni.hideLoading()
 						}
 

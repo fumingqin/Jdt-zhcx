@@ -193,14 +193,26 @@
 				uni.request({
 					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea_Six',
 					data:{
-						// requestArea : this.regionWeixin,
-						requestArea : '南平市'
+						requestArea : this.regionWeixin,
+						// requestArea : '南平市'
 					},
 					method:'POST',
 					header: {'content-type': 'application/json'},
 					success:(res) => { 
 						console.log(res)
-						this.sixPalaceList = res.data.data;
+						
+						if(res.data.msg == '搜索景区信息成功！'){
+							this.sixPalaceList = res.data.data; 
+						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
+							uni.showToast({
+								title:'该地区暂无景点信息',
+								icon:'none'
+							})
+						}
+						
+					},
+					fail:function(ee){
+						console.log(ee)
 					}
 				})
 				
@@ -208,14 +220,21 @@
 				uni.request({
 					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea',
 					data:{
-						// requestArea : this.regionWeixin,
-						requestArea : '南平市'
+						requestArea : this.regionWeixin,
+						// requestArea : '南平市'
 					},
 					method:'POST',
 					header: {'content-type': 'application/json'},
 					success:(res) => {
-						console.log(res)
-						this.scenicList = res.data.data;
+						// console.log(res)
+						if(res.data.msg == '搜索景区信息成功'){
+							this.scenicList = res.data.data;
+						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
+							uni.showToast({
+								title:'该地区暂无景点信息',
+								icon:'none'
+							})
+						}
 					}
 				})
 				setTimeout(()=>{
