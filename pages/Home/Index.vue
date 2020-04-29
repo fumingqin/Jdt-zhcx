@@ -19,23 +19,23 @@
 			<view class="tabBlock">
 				<view class="tabItem" @click="godetail('/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
-					<text class="tabItem-font">车票订购</text>
+					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
 				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
-					<text class="tabItem-font">网络约车</text>
+					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
 				<view class="tabItem" @click="godetail('/pages/GJCX/busH5')">
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
-					<text class="tabItem-font">公交查询</text>
+					<view class="tabItem-font"><text >公交查询</text></view>
 				</view>
 				<view class="tabItem" @click="godetail('/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
-					<text class="tabItem-font">包车服务</text>
+					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
 				<view class="tabItem" @click="godetail2('/pages/Home/ho_zhly')">
 					<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
-					<text class="tabItem-font">旅游服务</text>
+					<view class="tabItem-font"><text >旅游服务</text></view>
 				</view>
 			</view>
 		</view>
@@ -49,8 +49,8 @@
 	export default {
 		data() {
 			return {
-				longitude: "", //精度
-				latitude: "", //纬度
+				longitude: "118.599705", //精度
+				latitude: "24.889993", //纬度
 				Address: '搜索您要去的地方',
 				mapContext: '',
 				key: [],
@@ -166,9 +166,10 @@
 					success: function(res) {
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
+						console.log(that.longitude)
 					},
 					fail: function() {
-
+					console.log(0)
 					},
 				}
 				uni.getLocation(ojb);
@@ -272,7 +273,6 @@
 				// #endif
 
 			},
-			
 			// #ifdef  H5
 			//获取openid
 			getCode() {
@@ -371,7 +371,7 @@
 
 	.bottomContent {
 		position: fixed;
-		bottom: 0;
+		bottom: 50px;
 		left: 0;
 		right: 0;
 		background-color: #FFFFFF;
@@ -394,7 +394,7 @@
 		background-color: #FFFFFF;
 		width: 700rpx;
 		box-shadow: 0px 4px 9px 1px rgba(204, 204, 204, 1);
-		flex-direction: row;
+		display: flex;
 		border-radius: 9px;
 		padding: 20rpx;
 		align-items: center;
@@ -406,17 +406,19 @@
 	}
 
 	.tabBlock {
-		flex-direction: row;
+		display: flex;
 		width: 750rpx;
+		margin: 10rpx 0;
 		text-align: center;
-		margin-top: 50rpx;
-		margin-bottom: 50rpx;
+		align-items: center;
+		/* margin-top: 50rpx;
+		margin-bottom: 50rpx; */
 	}
 
 	.tabItem {
 		width: 150rpx;
 		text-align: center;
-		align-items: center;
+		/* align-items: center; */
 	}
 
 	.tabItem-image {
@@ -425,7 +427,7 @@
 	}
 
 	.tabItem-font {
-		margin-top: 10rpx;
+		margin-top: -10rpx;
 		font-size: 24rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 400;

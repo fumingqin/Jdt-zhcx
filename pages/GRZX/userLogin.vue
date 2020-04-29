@@ -347,6 +347,7 @@
 						  else{			
 						  	self.textCode = second+"秒后重发";
 						  }},1000)
+						  console.log(self.phoneNumber)
 						 uni.request({
 							// url:'http://218.67.107.93:9210/api/app/getLoginCode?phoneNumber='+self.phoneNumber,
 							//url:'http://111.231.109.113:8002/api/person/getLoginCode',
