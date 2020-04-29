@@ -95,7 +95,6 @@
 		methods: {
 			//-------------------------------加载班次列表数据-------------------------------
 			getTicketInfo:function(date){
-				
 				uni.showLoading();
 				// console.log(this.startStation,this.endStation,date);
 				uni.request({
