@@ -1739,7 +1739,7 @@
 					data: {
 						UserID: that.userInfo.userId,
 					},
-					success: (res) => {
+					success:function(res){
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];

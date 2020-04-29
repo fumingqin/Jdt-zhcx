@@ -36,13 +36,24 @@
 					</view> -->
 				</view>
 
-				<view style="background-color: #FFFFFF;padding: 40rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
+				<view v-if="!IsEvaluate" style="background-color: #FFFFFF;padding: 40rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
 					<view style="align-items: center;">
 						<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">请对本次路程进行评价！</text>
 					</view>
 					<view style="flex-direction: row;margin-left: 30px;margin-right: 30px;justify-content: space-between;margin-top: 20rpx;">
-						<image src="../../static/Order/Satisfy.png" @click="openBottomPopup" style="width: 180rpx;height: 70rpx;"></image>
-						<image src="../../static/Order/Unsatisfy.png" @click="openBottomPopup1" style="width: 215rpx;height: 70rpx;"></image>
+						<image src="../../static/Order/Satisfy.png" @click="openPopup('bottomPopup')" style="width: 180rpx;height: 70rpx;"></image>
+						<image src="../../static/Order/Unsatisfy.png" @click="openPopup('bottomPopup1')" style="width: 215rpx;height: 70rpx;"></image>
+					</view>
+				</view>
+				<view v-if="IsEvaluate" style="background-color: #FFFFFF;padding: 40rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
+					<view style="align-items: center;">
+						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">感谢您的评价！</text>
+					</view>
+					<view style="margin-top:20rpx;align-items: center;margin-right: 20px;">
+						<uni-rate size="30" margin="20" :value="starNum" disabled="true" />
+						<view style="margin-top: 40rpx;">
+							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;" @click="openPopup('evaluatePopup')">评价详情</text>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -59,7 +70,7 @@
 							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
 						</view>
 						<view style="right: 30rpx;">
-							<uni-icons @click="close" type="closeempty" size="19"></uni-icons>
+							<uni-icons @click="closePopup('bottomPopup')" type="closeempty" size="30"></uni-icons>
 						</view>
 					</view>
 					<!-- 五角星 -->
@@ -99,7 +110,7 @@
 						<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
 					</view>
 					<view style="right: 30rpx;">
-						<uni-icons @click="close1" type="closeempty" size="19"></uni-icons>
+						<uni-icons @click="closePopup('bottomPopup1')" type="closeempty" size="30"></uni-icons>
 					</view>
 				</view>
 				<!-- 五角星 -->
@@ -125,12 +136,40 @@
 			</view>
 		    </form>
 		</uni-popup>
-		
+		<uni-popup ref="evaluatePopup" type="bottom">
+				<view style="background-color: #FFFFFF; border-top-left-radius: 20rpx; border-top-right-radius: 20rpx;padding: 40rpx;">
+					<view style="flex-direction: row;justify-content: space-between; margin-top: 20rpx;">
+						<view>
+							<!-- 请勿删除 -->
+						</view>
+						<view>
+							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
+						</view>
+						<view style="right: 30rpx;">
+							<uni-icons @click="closePopup('evaluatePopup')" type="closeempty" size="30"></uni-icons>
+						</view>
+					</view>
+					<!-- 五角星 -->
+					<view style="margin-top: 20rpx; align-items: center;margin-right: 20px;">
+						<uni-rate size="28" margin="20" :value="starNum" disabled="true"/>
+					</view>
+			        <!-- 评价框 -->
+					<view  style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-top: 20rpx; "> 
+						<view class="unCur" v-for="(item,index) in evaluateArr" :key="index">
+							<text class="unColor">{{item}}</text>
+						</view>
+					</view>
+					<!-- 文本框 -->
+					<view style="margin-bottom: 20rpx;"> 
+						<textarea placeholder="您未填写评价" class="textArea" :disabled="true" :value="evaluateContent"/>
+					</view>
+				</view>
+			</uni-popup>
 	</view>
 </template>
 
 <script>
-	import taxi from '../../common/Czc.js';
+	import $taxi from '../../common/Czc.js';//出租车
 	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniRate from '@/components/Order/StarJudge/uni-rate/uni-rate.vue';
@@ -142,6 +181,10 @@
 		},
 		data() {
 			return {
+				IsEvaluate:false,//是否已经评价
+				starNum:1,//评价星数
+				evaluateArr:[],//评价内容
+				evaluateContent:"",
 				scale: 14,
 				longitude: "118.600608", //地图中心点经度
 				latitude: "24.889217", //地图中心点纬度
@@ -164,10 +207,8 @@
 		onLoad(option) {
 			let that=this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
-			console.log(that.userInfo)
 			that.getOrderDetailInfo(option.orderNumber);
 			that.orderNumber=option.orderNumber;
-		
 		},
 		mounted() {
 			let that=this;
@@ -183,26 +224,54 @@
 			//-------------------------------请求订单详情数据-------------------------------
 			getOrderDetailInfo:function(param){
 				var that = this;
-				console.log(param)
 				uni.request({
-					url:'http://111.231.109.113:8002/api/taxi/SearchExpressOrderByOrderNum_Passenger',
-					method:'POST',
+					url: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
+					method: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
 					data: {
 						orderNumber:param,
 						userId: that.userInfo.userId,
 					},
 					success(res) {
-						that.orderInfo = res.data.data
-						console.log(that.orderInfo.startLon)
-						console.log(that.orderInfo.startLat)
-						that.setMarker(1, that.orderInfo.startLon, that.orderInfo.startLat, '../../static/CZC/Start.png');
-						that.setMarker(2, that.orderInfo.endLon, that.orderInfo.endLat, '../../static/CZC/End.png');
-						// that.getDirectionDriving(that.orderInfo.startLon + ',' + that.orderInfo.startLat, that.orderInfo.endtLon + ',' + that.orderInfo.endLat);
-						console.log(that.userInfo.userId)
-						console.log(res)
+						if(res.data.status){
+							that.orderInfo = res.data.data
+							that.setMarker(1, that.orderInfo.startLon, that.orderInfo.startLat, '../../static/CZC/Start.png');
+							that.setMarker(2, that.orderInfo.endLon, that.orderInfo.endLat, '../../static/CZC/End.png');
+							// that.getDirectionDriving(that.orderInfo.startLon + ',' + that.orderInfo.startLat, that.orderInfo.endtLon + ',' + that.orderInfo.endLat);
+							if(that.orderInfo.satisfied!="null"){
+									var arr=[]
+									var str=that.orderInfo.selectionTags;
+									if(str.length>0){
+										str=str.substr(0,str.length-1);
+										arr=str.split(",");
+									}
+									that.starNum=that.orderInfo.starClass;
+									that.evaluateContent=that.orderInfo.evaluateContent;
+									if(that.orderInfo.satisfied=="是"){
+										for(var i=0;i< arr.length;i++){
+											var s=arr[i];
+											that.evaluateArr.push(that.evaluate[s])
+										}
+									}else if(that.orderInfo.satisfied=="否"){
+										for(var i=0;i< arr.length;i++){
+											var s=arr[i];
+											that.evaluateArr.push(that.badevaluate[s])
+										}
+									}
+									that.IsEvaluate=true;//位置必须在最后
+								}
+							
+						}else{
+							uni.showToast({
+								title:res.data.msg,
+								icon:"none"
+							})
+						}
 					},
 					fail(res) {
-						console.log(res.data.msg)
+						uni.showToast({
+							title:"网络连接失败",
+							icon:"none"
+						})
 					}
 				})
 			},
@@ -210,18 +279,18 @@
 			getOrderValuate:function(param,manyi){
 				var that = this;
 				var str = '';
-				for(let item of that.rSelect){
-					str += item + ',';
+				if(manyi=="是"){
+					for(let item of that.rSelect){
+						str += item + ',';
+					}
+				}else{
+					for(let item of that.rSelect1){
+						str += item + ',';
+					}
 				}
-				console.log(param)
-				console.log(manyi)
-				console.log(that.num)
-				console.log(str);
-				console.log(that.textareaValue);
-				console.log(that.userInfo.userId);
 				uni.request({
-					url:'http://111.231.109.113:8002/api/taxi/addPassengerEvaluate_Passenger',
-					method:'POST',
+					url: $taxi.Interface.addPassengerEvaluate_Passenger.value,
+					method: $taxi.Interface.addPassengerEvaluate_Passenger.method,
 					data: {
 						orderNumber:param,
 						userId: that.userInfo.userId,
@@ -231,20 +300,25 @@
 						evaluateContent:that.textareaValue
 					},
 					success(res) {
-						console.log(res)
+						uni.showToast({
+							title:res.data.msg,
+							icon:"none"
+						})
+						that.getOrderDetailInfo();
 					},
 					fail(res) {
-						console.log(res.data.msg)
+						uni.showToast({
+							title:"网络连接失败",
+							icon:"none"
+						})
 					}
 				})
 			},
 			onchange(e){
 				this.num = e.value;
-				console.log(this.num);
 			},
 			 tapInfo(e) {
 				        if (this.rSelect.indexOf(e) == -1) {
-				    	    console.log(e)//打印下标
 					        this.rSelect.push(e);//选中添加到数组里
 				        } else {
 					        this.rSelect.splice(this.rSelect.indexOf(e), 1); //取消
@@ -252,7 +326,6 @@
 			        },
 			tapInfo1(e) {
 						 if (this.rSelect1.indexOf(e) == -1) {
-							console.log(e)//打印下标
 							this.rSelect1.push(e);//选中添加到数组里
 							} else {
 								this.rSelect1.splice(this.rSelect1.indexOf(e), 1); //取消
@@ -264,39 +337,32 @@
 			submit(e){
 				var that = this;
 				this.textareaValue = e.detail.value.textareaValue;
-				that.closeBottomPopup();
+				that.closePopup("bottomPopup");
 				that.getOrderValuate(that.orderNumber,'是');
-				uni.showToast({
-					title:'评价成功'
-				})
-				console.log('提交',e);
 			},
 			/**
 			 * @name 不满意评价提交
 			 */
 			submit1(e){
 				var that = this;
+				console.log(e);
 				this.textareaValue = e.detail.value.textareaValue;
-				that.closeBottomPopup1();
+				that.closePopup("bottomPopup1");
 				that.getOrderValuate(that.orderNumber,'否');
-				uni.showToast({
-					title:'评价成功'
-				})
-				console.log('提交',e);
 			},
 			back: function() {
 				var that = this;
 				uni.navigateBack({});
 			},
-			close: function() {
-				//关闭
-				var that = this;
-				that.closeBottomPopup();
+			closePopup: function(value) {//关闭弹窗
+				this.$nextTick(function() {
+					this.$refs[value].close();
+				});
 			},
-			close1: function() {
-				//关闭
-				var that = this;
-				that.closeBottomPopup1();
+			openPopup: function(value) {//开启弹窗
+				this.$nextTick(function() {
+					this.$refs[value].open();
+				});
 			},
 			payDetail: function() {
 				//支付详情
@@ -319,29 +385,10 @@
 					width: width,
 					height: height
 				};
-				that.markers.push(marker);
-			},
-			// 弹出框1
-			openBottomPopup: function() {
-				this.$nextTick(function() {
-					this.$refs['bottomPopup'].open();
-				});
-			},
-			// 弹出框2
-			openBottomPopup1: function() {
-				this.$nextTick(function() {
-					this.$refs['bottomPopup1'].open();
-				});
-			},
-			closeBottomPopup: function() {
-				this.$nextTick(function() {
-					this.$refs['bottomPopup'].close();
-				});
-			},
-			closeBottomPopup1: function() {
-				this.$nextTick(function() {
-					this.$refs['bottomPopup1'].close();
-				});
+				var json = JSON.stringify(that.markers);
+				var arr = JSON.parse(json);
+				arr.push(marker);
+				that.markers = arr;
 			},
 			// getDirectionDriving: function(startLonLat, endLonLat) {
 			// 	//调用高德api取得路径规划并绘制线路 
@@ -433,5 +480,17 @@
 		font-size:28rpx;
 		font-family:Source Han Sans SC;
 		font-weight:300;
+	}
+	.textArea{
+		height:164rpx;
+		border-width: 1px;
+		padding: 10rpx;
+		border-color: #AAAAAA;
+		border-radius:6rpx;
+		margin-top: 30rpx;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+		color:#999999;
 	}
 </style>
