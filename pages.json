@@ -586,7 +586,6 @@
 				"navigationBarTitleText": "意见反馈"
 			}
 		}
-<<<<<<< HEAD
 	    ,{
             "path" : "pages/CZC/PrivateTaxiPayment",
             "style" : {
@@ -599,8 +598,6 @@
 				"navigationStyle": "custom"
 			}
         }
-=======
->>>>>>> b58f4b4882ca37f2ddaf8eff1f4daeabba578a3b
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
