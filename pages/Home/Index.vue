@@ -295,7 +295,7 @@
 
 			//路由统一事件
 			godetail: function(url) {
-				if(url != '/pages/CTKY/TraditionSpecial/Home/ctkyIndex'){
+				if(url != '/pages/CTKY/TraditionSpecial/Home/ctkyIndex'|| url != '/pages/GJCX/busH5' ){
 					uni.showToast({
 						title:'正在测试中，敬请期待...',
 						icon:'none'
