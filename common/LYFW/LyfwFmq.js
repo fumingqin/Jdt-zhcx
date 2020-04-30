@@ -14,7 +14,7 @@ const notice = {
 
 
 //接口域名
-const Url = 'http://111.231.109.113:8006';
+const Url = 'http://zntc.145u.net';
 
 //引入模板
 	// url:$lyfw.Interface.spt_tl_six.value,
