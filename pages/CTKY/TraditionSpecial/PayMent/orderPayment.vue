@@ -264,11 +264,11 @@
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						// that.getOpenID();
+						that.getOpenID();
 						
 						
 						//-------------------------------下单-------------------------------
-						that.getOrder();
+						// that.getOrder();
 					},
 					fail() {
 						uni.showToast({
@@ -292,10 +292,10 @@
 					},
 					fail:function(fail){
 						console.log(fail);
-						// uni.showModal({
-						// 	content:'用户未授权',
-						// })
-						that.getOrder();
+						uni.showModal({
+							content:'用户未授权',
+						})
+						// that.getOrder();
 					}
 				})
 			},
@@ -385,6 +385,10 @@
 						if (res.data) {
 							if (res.data.status == true) {
 								// console.log('订单编号', res.data.data);
+								uni.showToast({
+									title:res.data.status,
+									icon:'none'
+								})
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							}else if(res.data.status == false) {
@@ -417,7 +421,6 @@
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
-					
 				// uni.showLoading();
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
