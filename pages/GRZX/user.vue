@@ -392,7 +392,7 @@
 		width: 620upx;
 		height: 104upx;
 		margin-top: 0upx;
-		margin-left: 4.27%;
+		margin-left: 4.27%;	
 		position: relative;
 	}
 	.marginTop{
