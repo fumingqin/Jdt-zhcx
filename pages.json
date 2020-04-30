@@ -1,6 +1,18 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/Home/init",
+			"style": {}
+		}, {
+			"path": "pages/Home/guidePage",
+			"style": {
+				"navigationStyle": "custom"
+				// "app-plus": {
+				// 	"titleNView": false //禁用原生导航栏
+				// }
+			}
+		},
+		{
 			"path": "pages/Home/Index",
 			"style": {
 				"navigationStyle": "custom"
@@ -14,52 +26,6 @@
 		},
 		//--------------------------------------旅游代码开始---------------------------------------
 		{
-			"path": "pages/Home/indexZhly",
-			"style": {
-				"enablePullDownRefresh": true,
-				// #ifdef MP
-				"navigationBarTitleText": "南平智慧旅游APP",
-				//"navigationStyle": "custom",
-				// #endif 
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent",
-						"searchInput": {
-							"backgroundColor": "rgba(231, 231, 231,.7)",
-							"borderRadius": "16px",
-							"placeholder": "请输入内容 如：武夷山",
-							"disabled": true,
-							"placeholderColor": "#606266"
-						},
-						"buttons": [{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
-							},
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue744",
-								"fontSize": "27",
-								"color": "#303133",
-								"background": "rgba(0,0,0,0)",
-								"redDot": true
-							}
-						]
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/Home/navigation",
-			"style": {
-				"navigationBarTitleText": "搜索",
-				"navigationBarBackgroundColor": "#149bf0",
-				"navigationBarTextStyle": "white"
-			}
-		}, {
 			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
 
 			"style": {
@@ -609,10 +575,28 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
-		}, {
-			"path": "pages/Home/guidePage",
+		},
+		{
+			"path": "pages/Home/serve",
 			"style": {}
+		},
+		{
+			"path": "pages/GRZX/feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈"
+			}
+		}, {
+			"path": "pages/CZC/PrivateTaxiPayment",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
+        ,{
+            "path" : "pages/CZC/PrivatePaySuccess",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -637,6 +621,10 @@
 				"text": "通知"
 			},
 			{
+				"pagePath": "pages/Home/serve",
+				"text": "服务"
+			},
+			{
 				"pagePath": "pages/order/OrderList",
 				"text": "订单"
 			},
@@ -652,7 +640,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/Home/Index", //启动页面，必选
+			"path": "", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

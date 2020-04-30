@@ -86,9 +86,12 @@
 				
 				<!-- 空白二维码区域 -->
 				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">支付后生成二维码及取票码</view>
-			
+				
+				<!-- 空白二维码区域 -->
+				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '已退票'">二维码已失效</view>
+				
 				<!-- 二维码 -->
-				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">
+				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' ">
 					<view class="Xx_QRcodeBlock1"> 
 						<text class="Xx_QRcodeContentTitle">取票码</text>
 					</view>
@@ -131,6 +134,7 @@
 <script>
 	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	import uQRCode from "@/common/uqrcode.js"
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
@@ -177,11 +181,11 @@
 			//访问接口数据
 			lyfwData(e) {
 				uni.request({
-					url : 'http://111.231.109.113:8002/api/ly/RequestTicketsListDetail',
+					url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
+					method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
 					data:{
 						orderNumber : e
 					},
-					method:'POST',
 					header: {'content-type': 'application/json'},
 					success:(res) => {
 						console.log(res)

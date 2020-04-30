@@ -1,7 +1,7 @@
 <template>
 	<view class="Cr_background">
 		<form @submit="formSubmit" >
-			<image class="bg" :src="backImg||'/static/GRZX/banner3.jpg'" mode="aspectFill" name="backImg"></image>
+			<image class="bg" :src="backImg||'/static/GRZX/login1.png'" mode="aspectFill" name="backImg"></image>
 			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait" @click="getPhoto"></image>
 			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
 			<view class="Cr_slk1">
@@ -105,20 +105,18 @@
 					key:'userInfo',
 					success(res){
 						uni.request({
-							url:'http://111.231.109.113:8002/api/person/login',
+							//url:'http://111.231.109.113:8002/api/person/login',
+							url:theself.$GrzxInter.Interface.login.value,
 							data:{
 								phoneNumber:res.data.phoneNumber,
 							},
-							method:"POST",
+							method:theself.$GrzxInter.Interface.login.method,
 							success(res1) {
 								console.log(res1,"108")
-								uni.setStorage({
-									key:'userInfo',
-									data:res1.data.data,
-								})
+								uni.setStorageSync('userInfo',res1.data.data)
 								// ------------1.头像-------------
 								var base64=res1.data.data.portrait;
-								theself.port=res1.data.data.portrait;
+								//theself.port=res1.data.data.portrait;
 								if(theself.isBase64(base64)){
 									base64ToPath(base64)
 									  .then(path => {
@@ -247,6 +245,7 @@
 				console.log(this.userId)
 				console.log(this.nickname)
 				console.log(this.portrait)
+				console.log(this.port,"port")
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
 				if(this.selector=='男'){
@@ -259,9 +258,10 @@
 				console.log(this.address)
 				console.log(this.nickname)
 				console.log(this.birthday)
-				var that=this;
+				console.log(this.phoneNumber)
 				uni.request({
-					url:'http://111.231.109.113:8002/api/person/changeInfo',
+					//url:'http://111.231.109.113:8002/api/person/changeInfo',
+					url:this.$GrzxInter.Interface.changeInfo.value,
 					data:{
 						portrait:this.port,
 						userId:this.userId,
@@ -272,8 +272,9 @@
 						nickname:this.nickname,
 						birthday:this.birthday,
 						autograph:this.autograph,
+						phoneNumber:this.phoneNumber,
 					},
-					method:'POST',
+					method:this.$GrzxInter.Interface.changeInfo.method,
 					success(res) {
 						console.log(res,"286")
 					}
@@ -290,12 +291,9 @@
 						autograph:this.autograph,
 						phoneNumber:this.phoneNumber,
 					};
-				uni.setStorage({
-					key:'userInfo',
-					data:list,
-				})
-				 this.login(list);
-				 uni.navigateBack();
+				uni.setStorageSync('userInfo',list)
+				this.login(list);
+				uni.navigateBack();
 			},
 			// --------获得头像---------
 			getPhoto(){

@@ -1,7 +1,7 @@
 <template>
 	<!-- 订单支付页面 -->
 	<view>
-		<view style="color: #000000; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view>
+		<!-- <view style="color: #000000; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view> -->
 		<view class="cover-container">
 			<view class="MP_information1">
 				<view class="MP_title">{{orderInfo.startStaion}} - {{orderInfo.endStation}}</view>
@@ -124,6 +124,7 @@
 				specialStartStation:'',//定制班车上车点
 				specialEndStation:'',//定制班车下车点
 				tickettype :'',//班车类型
+				ctkyOpenID :'',
 			}
 		},
 		onLoad: function(param) {
@@ -145,33 +146,19 @@
 				that.insurance = '';
 				that.isInsurance = false;
 			}
-			// console.log('是否有保险', that.isInsurance)
 
 			setTimeout(function() {
-				that.countDown();
+				// that.countDown();
 			}, 3000);
-
-
-		},
-		onShow() {
 			//读取车票信息
 			this.getTickerInfo();
 			//读取用户信息
 			this.getUserInfo();
 			//读取乘车人信息
 			this.getPassengerInfo();
-			//--------------------------计时器--------------------------
-
-			uni.getStorage({
-				key: 'keYunCountDown',
-				success: (res) => {
-					this.countDownDate = res.data;
-					// this.countDown();
-				},
-				fail: () => {
-					// this.countDown();
-				}
-			})
+		},
+		onShow() {
+			
 		},
 		onUnload() {
 			clearInterval(this.timer);
@@ -179,10 +166,9 @@
 		//--------------------------监听页面返回--------------------------
 		onBackPress(options) {
 			var that = this;
-			console.log('from:' + options.from);
+			// console.log('from:' + options.from);
 			clearInterval(that.timer);
 			if (options.from == 'backbutton') {
-				console.log('页面返回');
 				console.log('that.timer', that.timer);
 				if (that.timer) {
 					clearInterval(that.timer);
@@ -226,7 +212,7 @@
 					key: 'ticketDate',
 					success: function(data) {
 						that.orderInfo = data.data;
-						console.log('订单数据', that.orderInfo)
+						// console.log('订单数据', that.orderInfo)
 					},
 					fail() {
 						uni.showToast({
@@ -255,17 +241,14 @@
 					key: 'passengerList',
 					success: function(data) {
 						that.passengerInfo = data.data;
-
 						if (that.passengerInfo.length > 0) {
 							for (let i = 0; i < that.passengerInfo.length; i++) {
-
 								var type = '';
 								if (data.data[i].userType == '儿童') {
 									type = 0;
 								} else if (data.data[i].userType == '成人') {
 									type = 2;
 								}
-
 								//拼接id name type
 								that.idNameTypeStr += data.data[i].userCodeNum + ',' + data.data[i].userName + ',' + type + '|';
 
@@ -280,6 +263,12 @@
 							//把最后面的'｜'去掉
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
+						//-------------------------------读取用户openID-------------------------------
+						// that.getOpenID();
+						
+						
+						//-------------------------------下单-------------------------------
+						that.getOrder();
 					},
 					fail() {
 						uni.showToast({
@@ -287,9 +276,29 @@
 							icon: 'none'
 						})
 					}
+					
 				})
 			},
-
+			//--------------------------读取公众号openid--------------------------
+			getOpenID() {
+				var that = this;
+				uni.getStorage({
+					key:'ctkyOpenId',
+					success:function(response){
+						console.log(response);
+						that.ctkyOpenID = response.data
+						//等待读取用户缓存成功之后再请求接口数据
+						that.getOrder();
+					},
+					fail:function(fail){
+						console.log(fail);
+						// uni.showModal({
+						// 	content:'用户未授权',
+						// })
+						that.getOrder();
+					}
+				})
+			},
 			//--------------------------隐藏操作--------------------------
 			hide(e) {
 				if (e == 0) {
@@ -323,26 +332,18 @@
 				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
 			},
 			//--------------------------计时器--------------------------
-			countDown: function() {
-				// var interval = setInterval(() => {
-				// 	--this.countDownDate;
-				// 	uni.setStorage({
-				// 		key: 'keYunCountDown',
-				// 		data: this.countDownDate,
-				// 	})
-				// }, 1000)
+			getOrder: function() {
 				var that = this;
 				var timer = null;
-				that.timer = timer;
-				// clearInterval(interval)
-				uni.removeStorage({
-					key: 'keYunCountDown',
-					data: this.countDownDate,
-				})
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
+				var companyCode = '';
+				// #ifdef H5
+				companyCode = '泉运公司综合出行H5';
+				// #endif
+				// #ifdef APP-PLUS
+				companyCode = '泉运公司综合出行APP';
+				// #endif
 				//--------------------------发起下单请求-----------------------
-				// uni.showLoading();
-				// timer = setInterval(function() {
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
 					method: 'GET',
@@ -350,7 +351,7 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						companyCode: '泉运公司综合出行',
+						companyCode: companyCode,
 						clientID: that.userInfo.userId, //用户ID
 						clientName: that.userInfo.nickname, //用户名
 						phoneNumber: that.userInfo.phoneNumber, //手机号码
@@ -378,8 +379,9 @@
 						getOnPoint: that.specialStartStation,//定制班车上车点
 						getOffPoint: that.specialEndStation,//定制班车下车点
 					},
+					
 					success: (res) => {
-						console.log('res', res);
+						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
 								// console.log('订单编号', res.data.data);
@@ -394,6 +396,8 @@
 											uni.switchTab({
 												url:'../../../order/OrderList'
 											})
+										}else if(res.cancel) {
+											uni.navigateBack()
 										}
 									}
 								})
@@ -401,12 +405,10 @@
 						}
 					},
 					fail(res) {
+						console.log('失败', res);
 						uni.hideLoading();
-						//回调失败，取消定时器
-						clearInterval(timer);
 					}
 				})
-				// }, 3000)
 			},
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(res) {
@@ -415,6 +417,7 @@
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
+					
 				// uni.showLoading();
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
@@ -428,11 +431,12 @@
 					},
 					success: (res) => {
 						console.log(res.data);
-						if (res.data != null) {
-							if (res.data) {
+						if (res.data) {
+							if (res.data.status == true) {
 								var msgArray = JSON.parse(res.data.msg);
 								console.log('msgArray', msgArray);
 								if(msgArray.oldState == '结束') {
+									uni.hideLoading();
 									uni.showToast({
 										title: msgArray.message,
 										icon: 'none'
@@ -440,14 +444,25 @@
 									clearInterval(timer);
 								} else if (msgArray.oldState == '支付系统申请支付订单') {
 									that.paymentData = msgArray;
-									console.log('paymentData', that.paymentData);
-									uni.showToast({
-										title: '请在2分钟内完成支付',
-										icon: 'none'
+									// console.log('paymentData', that.paymentData);
+									uni.hideLoading();
+									uni.showModal({
+										content:'请在2分钟内完成支付',
+										showCancel:false
 									})
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
+								
+							}else if(res.data.status == false) {
+								var msgArray = JSON.parse(res.data.msg);
+								uni.hideLoading();
+								uni.showToast({
+									title: msgArray.message,
+									icon: 'none'
+								})
+								//回调失败，取消定时器
+								clearInterval(timer);
 							}
 						}
 					},
@@ -463,7 +478,8 @@
 			//--------------------------调起支付--------------------------
 			payment: function() {
 				var that = this;
-				// console.log('111111',that.paymentData);
+				console.log('111111',that.paymentData);
+				// #ifdef H5
 				WeixinJSBridge.invoke('getBrandWCPayRequest', {
 					"appId": that.paymentData.jsapi.AppId, //公众号名称，由商户传入
 					"timeStamp": that.paymentData.jsapi.TimeStamp, //时间戳
@@ -493,31 +509,69 @@
 						// location.href = "/Coach/GetCoach";
 					}
 				});
-
-				// 	uni.requestPayment({
-				// 		provider: 'alipay',
-				// 		orderInfo: {
-				// 			"orderNumber": res.data.data.orderNumber,
-				// 			"ticket": this.ticket,
-				// 			"date": this.date,
-				// 			"dateReminder": this.dateReminder,
-				// 			"addressData": this.addressData,
-				// 			"actualPayment": this.actualPayment,
-				// 			"coupon": this.coupon,
-				// 			"channe": this.channel[this.channeIndex],
-				// 		},
-				// 		success: function(res) {
-				// 			console.log('success:' + JSON.stringify(res));
-				// 		},
-				// 		fail: function(err) {
-				// 			console.log('fail:' + JSON.stringify(err));
-				// 		}
-				// 	})
-
-				// 	uni.redirectTo({
-				// 		url: '/pages/LYFW/scenicSpotTickets/successfulPayment?orderNumber='+JSON.stringify(this.orderInfo[0].orderNumber)
-				// 	})
-
+				// #endif
+				
+				
+				// #ifdef APP-PLUS
+				console.log('进入app支付',that.paymentData);
+				uni.hideLoading()
+				uni.requestPayment({
+					provider: 'wxpay',
+					orderInfo: {
+						appid: that.paymentData.jsapi.AppId,
+						timestamp: that.paymentData.jsapi.TimeStamp,
+						noncestr: that.paymentData.jsapi.NonceStr,
+						package: 'Sign=WXPay',
+						sign: that.paymentData.jsapi.PaySign,
+						partnerid: that.paymentData.jsapi.PartnerId, 
+						prepayid: that.paymentData.jsapi.PrepayId,
+					},
+					success:function(res){
+						console.log(res)
+						uni.showModal({
+							title:'提示',
+							content:res,
+							showCancel:false
+						})
+						if(res.errCode == 0) {//成功
+							uni.showToast({
+								title: '支付成功',
+								icon: 'none'
+							})
+							uni.redirectTo({
+								url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
+							})
+						}else if(res.errCode == -1) {//错误
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none'
+							})
+							uni.redirectTo({
+								url:'./CTKYPayFail?&orderNum=' + that.orderNum,
+							})
+						}else if(res.errCode == -2) {//用户取消
+							uni.showToast({
+								title: '您取消了支付',
+								icon: 'none'
+							})
+						}
+					},
+										
+					fail: function(ee) {
+						console.log(ee)
+						uni.showModal({
+							title:'提示',
+							content:ee,
+							showCancel:false
+						})
+						uni.showToast({
+							title: '拉起支付失败，请检查网络后重试',
+							icon: 'none',
+							duration: 3000
+						})
+					}
+				})
+				// #endif
 			},
 		}
 	}

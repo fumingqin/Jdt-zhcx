@@ -47,6 +47,12 @@ const Interface = {
 		name:'旅客端-一键报警',
 		method:'POST',
 		page:["CZC/CallAndDrive.nvue"]
+	},
+	addPassengerEvaluate_Passenger:{
+		value:Url + '/api/taxi/addPassengerEvaluate_Passenger',
+		name:'旅客端-添加评价',
+		method:'POST',
+		page:["CZC/OrderDetail.nvue","CZC/SpecialLineDetail.nvue"]
 	}
 }
 

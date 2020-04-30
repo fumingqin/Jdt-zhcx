@@ -4,12 +4,12 @@
 		<view v-if="loginType==1">
 			<image src="../../static/GRZX/login1.png" class="backClass"></image>
 		</view>
-		<view v-if="loginType==2">
+		<!-- <view v-if="loginType==2">
 			<image src="../../static/GRZX/login2.png" class="backClass"></image>	
 		</view>
 		<view v-if="loginType==3">
 			<image src="../../static/GRZX/login3.png" class="backClass"></image>			
-		</view>
+		</view> -->
 		
 		<image src="../../static/GRZX/loginReturn.png" class="returnClass" @click="returnClick"></image>
 		<view class="inputContent">
@@ -19,7 +19,7 @@
 			</view>
 			<view class="inputItem Captcha">
 				<image src="../../static/GRZX/yanzhengma.png" class="iconClass2"></image>
-				<input type="number" placeholder="输入验证码" maxlength="6" class="inputClass" data-key="captchaCode" @input="inputChange2" />
+				<input type="number" placeholder="输入验证码" maxlength="4" class="inputClass" data-key="captchaCode" @input="inputChange2" />
 			</view>
 			
 			<!-- 按钮颜色和发送验证码的样式 -->
@@ -27,14 +27,14 @@
 				<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
 				<image src="../../static/GRZX/btnLogin1.png" class="btnLogin" ></image>
 			</view>
-			<view v-if="loginType==2">
+			<!-- <view v-if="loginType==2">
 				<view class="getCode style2" @click="getCodeClick" id="Code">{{textCode}}</view>
 				<image src="../../static/GRZX/btnLogin2.png" class="btnLogin"></image>
 			</view>
 			<view v-if="loginType==3">
 				<view class="getCode style3" @click="getCodeClick" id="Code">{{textCode}}</view>
 				<image src="../../static/GRZX/btnLogin3.png" class="btnLogin"></image>
-			</view>
+			</view> -->
 			
 			<text class="fontStyle" @click="loginClick">确定</text>
 		</view>
@@ -43,12 +43,12 @@
 		<view v-if="loginType==1">
 			<image src="../../static/GRZX/logo1.png" class="logoClass"></image>
 		</view>
-		<view v-if="loginType==2">
+		<!-- <view v-if="loginType==2">
 			<image src="../../static/GRZX/logo2.png" class="logoClass"></image>
 		</view>
 		<view v-if="loginType==3">
 			<image src="../../static/GRZX/logo3.png" class="logoClass"></image>	
-		</view>
+		</view> -->
 		
 		<!-- <view class="loginMode">第三方登录</view>
 		<view class="leftLine"></view>
@@ -153,11 +153,12 @@
 							success(res) {
 								if(captcha==res.data.code&&phone==res.data.phone){
 									uni.request({
-										url:'http://111.231.109.113:8002/api/person/login',
+										// url:'http://111.231.109.113:8002/api/person/login',
+										url:that.$GrzxInter.Interface.login.value,
 										data:{
 											phoneNumber:phone,
 										},
-										method:"POST",
+										method:that.$GrzxInter.Interface.login.method,
 										success(res) {
 											console.log(res)
 											uni.removeStorage({
@@ -215,6 +216,12 @@
 										icon:"none"
 									})
 								}
+							},
+							fail(){
+								uni.showToast({
+									title:"验证码已过期，请重新获取",
+									icon:"none"
+								})	
 							}
 						})
 					}
@@ -346,13 +353,15 @@
 						  else{			
 						  	self.textCode = second+"秒后重发";
 						  }},1000)
+						  console.log(self.phoneNumber)
 						 uni.request({
 							// url:'http://218.67.107.93:9210/api/app/getLoginCode?phoneNumber='+self.phoneNumber,
-							url:'http://111.231.109.113:8002/api/person/getLoginCode',
+							//url:'http://111.231.109.113:8002/api/person/getLoginCode',
+							url:self.$GrzxInter.Interface.getLoginCode.value,
 						    data:{
 								phoneNumber:self.phoneNumber,
 							},
-							method:"POST",
+							method:self.$GrzxInter.Interface.getLoginCode.method,
 							success:(res)=>{
 								console.log(res,"340");
 						 		console.log(res.data.data);

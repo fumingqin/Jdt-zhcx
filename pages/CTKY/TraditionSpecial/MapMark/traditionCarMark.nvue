@@ -16,12 +16,13 @@
 </template>
 
 <script>
+	import $taxi from '../../../../common/Czc.js';
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		data() {
 			return {
 				utils: utils,
-				info: {},
+				info: [],
 				mapHeight: '', //地图高度
 				longitude: "", //地图中心点经度
 				latitude: "", //地图中心点纬度
@@ -30,7 +31,7 @@
 						id: 0,
 						latitude: '24.8906763700',
 						longitude: '118.5991555300',
-						iconPath: '../../static/CTKY/Start.png',
+						iconPath: '../../../../static/CTKY/Start.png',
 						callout: { //自定义标记点上方的气泡窗口 点击有效
 							content: '丰泽区', //文本
 							color: '#FC4646', //文字颜色
@@ -45,7 +46,7 @@
 						id: 0,
 						latitude: '24.9102214500',
 						longitude: '118.6143540000',
-						iconPath: '../../static/CTKY/end.png',
+						iconPath: '../../../../static/CTKY/end.png',
 						callout: { //自定义标记点上方的气泡窗口 点击有效
 							content: '丰泽区', //文本
 							color: '#FC4646', //文字颜色
@@ -58,32 +59,14 @@
 					},
 				], //标记点
 				polyline: [{
-					points: [{
-							latitude: 24.8906763700,
-							longitude: 118.5991555300
-						},
-						{
-							latitude: 24.8956956900,
-							longitude: 118.6019855900
-						},
-						{
-							latitude: 24.8937906600,
-							longitude: 118.6079971900
-						},
-						{
-							latitude: 24.9014643600,
-							longitude: 118.6111359200
-						},
-						{
-							latitude: 24.9102214500,
-							longitude: 118.6143540000
-						},
-					],
+					points: [],
 					color: "#669253",
 					width: 2,
 					arrowLine: true,
 				}], //规划的线
 				showLlocation: true, //是否显示当前位置
+				startArray:[],
+				endArray:[],
 			}
 		},
 		onLoad(param) {
@@ -92,16 +75,21 @@
 				//设置地图高度为可使用的高度
 				success: function(res) {
 					that.mapHeight = res.windowHeight + 'px';
-					console.log(that.mapHeight)
 				}
 			});
 			//获取自身位置
 			that.getMyLocation();
 			
 			that.info = JSON.parse(param.traditionArray)
+			
+			that.startArray = that.info.starSiteArr[0]
+			that.endArray = that.info.endSiteArr[0]
+			var startLonLat = that.startArray.Longitude + ',' + that.startArray.Latitude
+			var endLonLat = that.endArray.Longitude + ',' + that.endArray.Latitude
+			that.getDirectionDriving(startLonLat,endLonLat);
 		},
 		methods: {
-			//获取自身位置
+			//--------------------------------------获取自身位置--------------------------------------
 			getMyLocation: function() {
 				var that = this;
 				uni.getLocation({
@@ -115,6 +103,58 @@
 						}
 					}
 				})
+			},
+			//--------------------------------------规划路线--------------------------------------
+			//传进经纬度，规划路线
+			getDirectionDriving: function(startLonLat, endLonLat) {
+				//调用高德api取得路径规划并绘制线路
+				let that = this;
+				uni.request({
+					url: $taxi.InterfaceAddress[0],
+					data: {
+						startLonLat: startLonLat,
+						endLonLat: endLonLat,
+					},
+					method: "GET",
+					success: function(res) {
+						// console.log(startLonLat,endLonLat)
+						//日后会加入定时，此处需清空
+						that.points = [];
+						that.polyline = [];
+						that.distance = (res.data.Distance / 1000).toFixed(1);
+						that.duration = (res.data.Duration / 60).toFixed(0);
+						var polylineArr = [];
+						var points = [];
+			
+						polylineArr = res.data.Polyline;
+			
+						for (var i = 0; i < polylineArr.length; i++) {
+							var arr = polylineArr[i].split(';');
+							for (var j = 0; j < arr.length; j++) {
+								points.push(arr[j]);
+							}
+						}
+						//根据文件建设对象经纬度数组
+						for (var i = 0; i < points.length; i++) {
+							var arr = points[i].split(',');
+							var obj = {
+								longitude: arr[0],
+								latitude: arr[1]
+							}
+							that.points.push(obj);
+						}
+						var obj = {
+							points: that.points,
+							color: "#4bdc27",
+							arrowLine: true,
+							width: 6
+						};
+						that.polyline.push(obj);
+					},
+					fail: function(res) {
+						console.log(res);
+					}
+				});
 			}
 		}
 	}

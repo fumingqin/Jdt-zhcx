@@ -13,7 +13,7 @@
 				<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
 			</view>
 		</view>
-		
+		 
 		<popup-layer ref="popupRef" :direction="'right'">
 			<view style="width:750upx;height: 100%;">
 				<citySelect @back_city="backCity"></citySelect>
@@ -130,6 +130,7 @@
 <script>
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
@@ -191,31 +192,50 @@
 				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
-					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea_Six',
-					data:{
+					url:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
+					method:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
+					data:{ 
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
 					},
-					method:'POST',
 					header: {'content-type': 'application/json'},
 					success:(res) => { 
 						console.log(res)
-						this.sixPalaceList = res.data.data;
+						
+						if(res.data.msg == '搜索景区信息成功！'){
+							this.sixPalaceList = res.data.data; 
+						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
+							uni.showToast({
+								title:'该地区暂无景点信息', 
+								icon:'none'
+							})
+						}
+						
+					},
+					fail:function(ee){
+						console.log(ee)
 					}
 				})
 				
 				// 请求景区列表
 				uni.request({
-					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea',
+					url:$lyfw.Interface.spt_GetticketSearchByrequestArea.value,
+					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data:{
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
 					},
-					method:'POST',
 					header: {'content-type': 'application/json'},
 					success:(res) => {
-						console.log(res)
-						this.scenicList = res.data.data;
+						// console.log(res)
+						if(res.data.msg == '搜索景区信息成功'){
+							this.scenicList = res.data.data;
+						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
+							uni.showToast({
+								title:'该地区暂无景点信息',
+								icon:'none'
+							})
+						}
 					}
 				})
 				setTimeout(()=>{
@@ -319,11 +339,11 @@
 					title:'正在搜索',
 				})
 				uni.request ({
-					url:'http://111.231.109.113:8002/api/ly/GetticketSearchBysearchValue',
+					url:$lyfw.Interface.GetticketSearchBysearchValue.value,
+					method:$lyfw.Interface.GetticketSearchBysearchValue.method,
 					data:{
 						searchValue : this.searchValue,
 					},
-					method:'POST',
 					header: {'content-type': 'application/json'},
 					
 					success : (res) => {
@@ -487,7 +507,12 @@
 			margin-left: 15upx;
 		}
 		.searchBoxRadius {
-			width: 76%;
+			/* #ifdef H5 */
+				width: 100%;
+			/* #endif */
+			/* #ifndef H5 */
+				width: 76%;
+			/* #endif */
 			height: 78upx;
 			background-color: #fff;
 			border-radius: 46upx;

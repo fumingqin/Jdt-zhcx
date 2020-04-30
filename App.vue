@@ -35,7 +35,7 @@
 								reportTime: utils.timeTodate(homeJS.dateFormat.dateformat, new Date().getTime())
 							},
 							success:function(res){
-								console.log(res);
+								// console.log(res);
 								if(res.data.status){
 								}
 							},

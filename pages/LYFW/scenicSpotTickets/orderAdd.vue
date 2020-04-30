@@ -153,6 +153,7 @@
 <script>
 	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	import uniCalendar from '../../../components/LYFW/scenicSpotTickets/uni-calendar/uni-calendar.vue'
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			const currentDate = this.getDate({
@@ -203,19 +204,18 @@
 					success: (res) => {
 						this.admissionTicket = res.data;
 						uni.request({
-							url: 'http://111.231.109.113:8002/api/ly/GetticketSecurityByticketId',
+							url:$lyfw.Interface.spt_GetticketSecurityByticketIde.value,
+							method:$lyfw.Interface.spt_GetticketSecurityByticketIde.method,
 							data: {
 								ticketId: res.data.ticketId
 							},
-							method: 'POST',
-							header: {
-								'content-type': 'application/json'
-							},
+							header: {'content-type': 'application/json'},
 							success: (res) => {
 								console.log(res)
 								this.notice = res.data.data[0];
 							}
 						})
+						
 						// console.log(res)
 					}
 				})
@@ -223,15 +223,14 @@
 					key: 'userInfo',
 					success: (res) => {
 						this.userInfo = res.data;
+						
 						uni.request({
-							url: 'http://111.231.109.113:8002/api/ly/GetcouponByuserId',
+							url:$lyfw.Interface.spt_GetcouponByuserId.value,
+							method:$lyfw.Interface.spt_GetcouponByuserId.method,
 							data: {
 								userId: res.data.userId
 							},
-							method: 'POST',
-							header: {
-								'content-type': 'application/json'
-							},
+							header: {'content-type': 'application/json'},
 							success: (res) => {
 								console.log(res)
 								this.couponList = res.data.data;
@@ -419,7 +418,8 @@
 					key: 'scenicSpotOpenId',
 					success: (res) => {
 						uni.request({
-							url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+							url:$lyfw.Interface.spt_scenicSpotSetOrder.value,
+							method:$lyfw.Interface.spt_scenicSpotSetOrder.method,
 							data: {
 								unid: that.userInfo.unid,
 								ticketProductId: that.admissionTicket.admissionTicketID,
@@ -440,21 +440,12 @@
 								sellerCompanyCode: '南平旅游H5',
 								tppId: res.data,
 							},
-
-							method: 'POST',
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
 								console.log(res)
-								if (res.data.msg == '无可售门票！') {
+								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.showToast({
-										title: '该景区无可售门票！',
-										icon: 'none',
-									})
-									that.submissionState = false;
-									uni.hideLoading()
-								} else if (res.data.msg == '下单失败，联系管理员！') {
-									uni.showToast({
-										title: '下单失败，联系管理员！',
+										title: '当日已取消订单次数超过限额',
 										icon: 'none',
 									})
 									that.submissionState = false;
@@ -477,7 +468,13 @@
 											uni.hideLoading()
 										}
 									})
-
+								} else {
+									uni.showToast({
+										title: '网络延迟，请重试！',
+										icon: 'none',
+									})
+									that.submissionState = false;
+									uni.hideLoading()
 								}
 
 							}
@@ -496,7 +493,8 @@
 
 				// #ifdef APP-PLUS
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/AddtouristOrder',
+					url:$lyfw.Interface.spt_AddtouristOrder.value,
+					method:$lyfw.Interface.spt_AddtouristOrder.method,
 					data: {
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
@@ -512,17 +510,13 @@
 						tppId: 0,
 						addressData: this.addressData,
 					},
-
-					method: 'POST',
-					header: {
-						'content-type': 'application/json'
-					},
+					header: {'content-type': 'application/json'},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
 						console.log(res)
-						if (res.data.msg == '无可售门票！') {
+						if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 							uni.showToast({
-								title: '该景区无可售门票！',
+								title: '当日已取消订单次数超过限额',
 								icon: 'none',
 							})
 							that.submissionState = false;
@@ -546,6 +540,13 @@
 								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
 							})
 							uni.hideLoading()
+						} else {
+							uni.showToast({
+								title: '网络延迟，请重试！',
+								icon: 'none',
+							})
+							that.submissionState = false;
+							uni.hideLoading()
 						}
 
 					},
@@ -557,7 +558,8 @@
 
 				// #ifdef MP-WEIXIN
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/AddtouristOrder',
+					url:$lyfw.Interface.spt_AddtouristOrder.value,
+					method:$lyfw.Interface.spt_AddtouristOrder.method,
 					data: {
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
@@ -573,11 +575,7 @@
 						tppId: 0,
 						addressData: this.addressData,
 					},
-
-					method: 'POST',
-					header: {
-						'content-type': 'application/json'
-					},
+					header: {'content-type': 'application/json'},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
 						console.log(res)
