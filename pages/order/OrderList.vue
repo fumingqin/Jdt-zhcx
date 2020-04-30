@@ -246,7 +246,7 @@
 							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(index)">去支付</button>
+							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
 							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
@@ -454,12 +454,12 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn">车辆位置</button>
+							<!-- <button class="allBtn">车辆位置</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn QRCode">二维码</button>
+							<!-- <button class="allBtn QRCode">二维码</button>
 							<button class="allBtn">选座</button>
 							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
-							<button class="allBtn">联系司机</button>
+							<button class="allBtn">联系司机</button> -->
 						</view>
 					</view>
 				</view>
@@ -620,7 +620,7 @@
 				</view>
 
 				<!-- (进行中)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
+				<view v-if="item.carType=='普通班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -655,10 +655,10 @@
 
 						<view class="CTKYBtnView">
 							<!-- <button class="allBtn">车辆位置</button> -->
-							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<!-- <button class="allBtn QRCode">二维码</button> -->
 							<!-- <button class="allBtn">选座</button> -->
-							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
+							<button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button>
 							<!-- <button class="allBtn">联系司机</button> -->
 						</view>
 					</view>
@@ -850,8 +850,8 @@
 						</view>
 						<view class="CTKYBtnView">
 							<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
-							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
-							<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn payBtn" @tap="keYunPay()">去支付</button>
 						</view>
 					</view>
 				</view>
@@ -1050,9 +1050,9 @@
 							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
 
-						<view class="CTKYBtnView" v-if="item.state=='已取消'">
-							<button class="allBtn" @tap="detail(item.titleIndex)">详情</button>
-							<button class="allBtn" @tap="del(index)">删除</button>
+						<view class="CTKYBtnView">
+							<button class="allBtn" @tap="keYunDetail(item)">详情</button>
+							<!-- <button class="allBtn" @tap="del(index)">删除</button> -->
 						</view>
 					</view>
 				</view>
@@ -1412,9 +1412,9 @@
 									that.finishArr.push(res.data.data[i]);
 								} else if (res.data.data[i].state == '4') {
 									that.goingArr.push(res.data.data[i]);
-								} else if (res.data.data[i].state == '订单未支付') {
+								} else if (res.data.data[i].state == '7') {
 									that.unfinishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].state == '9') {
+								} else if (res.data.data[i].state == '6') {
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
@@ -1457,7 +1457,7 @@
 				})
 			},
 			// -------------------------客运退票-------------------------
-			keYunRefundTicket: function() {
+			keYunRefundTicket: function(orderNumber) {
 				var that = this;
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/RefundTicket_Flow',
@@ -1466,9 +1466,7 @@
 						'content-type': 'application/x-www-form-urlencoded'
 					},
 					data: {
-						orderNumber: that.ctkyOrderNum,
-						// clientID: that.userInfo.userId,
-						// clientName: that.userInfo.nickname,
+						orderNumber: orderNumber,
 					},
 					success: (respones) => {
 						console.log('删除结果', respones)
@@ -1485,13 +1483,13 @@
 				})
 			},
 			// -------------------------客运支付-------------------------
-			keYunPay: function(index) {
-				var orderInfo = this.info[index];
+			keYunPay: function(orderNumber) {
+				// var orderInfo = this.info[index];
 				// console.log(orderInfo);
-				this.getTicketPaymentInfo(orderInfo);
+				this.getTicketPaymentInfo(orderNumber);
 			},
 			//--------------------------获取车票支付参数--------------------------
-			getTicketPaymentInfo: function(res) {
+			getTicketPaymentInfo: function(orderNumber) {
 				// console.log('支付参数', res);
 				var that = this;
 				var timer = null;
@@ -1505,7 +1503,7 @@
 							'content-type': 'application/x-www-form-urlencoded'
 						},
 						data: {
-							orderNumber: res.orderNumber,
+							orderNumber: orderNumber,
 						},
 						success: (res) => {
 							// console.log('支付参数返回数据', res);
