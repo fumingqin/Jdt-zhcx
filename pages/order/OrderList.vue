@@ -1582,12 +1582,21 @@
 						if (res.err_msg == "get_brand_wcpay_request:ok") {
 							//支付成功再进计时器查询状态
 							// location.href = "/Order/BaseCallback/" + flowID;
-							alert("支付成功");
+							uni.showToast({
+								title: '支付成功',
+								icon: 'none',
+							})
 							uni.startPullDownRefresh();
 						} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-							alert("您取消了支付，请重新支付");
+							uni.showToast({
+								title: '您取消了支付，请重新支付',
+								icon: 'none',
+							})
 						} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-							alert("支付失败，请重新支付");
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none',
+							})
 						} else {
 							// location.href = "/Coach/GetCoach";
 						}
