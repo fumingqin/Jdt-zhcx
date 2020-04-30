@@ -279,26 +279,24 @@
 							icon: 'none'
 						})
 					}
-					
 				})
 			},
 			//--------------------------读取公众号openid--------------------------
 			getOpenID() {
 				var that = this;
-				uni.getStorageSync({
+				uni.getStorage({
 					key:'scenicSpotOpenId',
 					success:function(response){
-						alert('获取id成功');
+						// alert('获取id成功');
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail:function(fail){
-						// alert(fail);
+						uni.hideLoading();
 						uni.showModal({
 							content:'用户未授权',
 						})
-						// that.getOrder();
 					}
 				})
 			},
@@ -349,7 +347,7 @@
 				alert(that.ctkyOpenID);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
+					url: 'http://zntc.145u.net/api/ky/SellTicket_NoBill_Booking',
 					method: 'GET',
 					header: {
 						'content-type': 'application/json'
@@ -386,10 +384,8 @@
 					
 					success: (res) => {
 						alert(res);
-						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
-								// console.log('订单编号', res.data.data);
 								uni.showToast({
 									title:res.data.status,
 									icon:'none'
@@ -421,14 +417,12 @@
 			},
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(res) {
-				// console.log(res);
 				var that = this;
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
-				// uni.showLoading();
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
+					url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
 					method: 'GET',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -442,7 +436,7 @@
 						if (res.data) {
 							if (res.data.status == true) {
 								var msgArray = JSON.parse(res.data.msg);
-								console.log('msgArray', msgArray);
+								// console.log('msgArray', msgArray);
 								if(msgArray.oldState == '结束') {
 									uni.hideLoading();
 									uni.showToast({
@@ -485,7 +479,7 @@
 			//--------------------------调起支付--------------------------
 			payment: function() {
 				var that = this;
-				console.log('111111',that.paymentData);
+				// console.log('111111',that.paymentData);
 				// #ifdef H5
 				WeixinJSBridge.invoke('getBrandWCPayRequest', {
 					"appId": that.paymentData.jsapi.AppId, //公众号名称，由商户传入
