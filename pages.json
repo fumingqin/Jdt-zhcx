@@ -195,7 +195,18 @@
 					"bounce": "none",
 					"titleNView": {
 						"type": "transparent",
-						"buttons": [{
+						"buttons": [
+							// #ifndef	H5
+							{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue60d",
+								"fontSize": "26",
+								"color": "#303133",
+								"float": "left",
+								"background": "rgba(0,0,0,0)"
+							},
+							// #endif
+							{
 								"fontSrc": "/static/GRZX/jdticon.ttf",
 								"text": "\ue60f",
 								"fontSize": "24",
@@ -211,17 +222,8 @@
 								"color": "#303133",
 								"background": "rgba(0,0,0,0)",
 								"redDot": true
-							},
-							// #ifndef	H5
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
 							}
-							// #endif
+							
 						]
 					}
 				}
@@ -464,7 +466,9 @@
 		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
+				// #ifdef H5
 				"navigationStyle": "custom",
+				// #endif
 				"navigationBarTitleText": "通知"
 			}
 		},
@@ -538,7 +542,7 @@
 					"titleNView": {
 						"type": "transparent"
 					}
-				},
+				}, 
 				"navigationBarTitleText": "选择车型"
 			}
 		}, {
@@ -579,9 +583,9 @@
 		{
 			"path": "pages/Home/serve",
 			"style": {
-
+				// #ifdef H5
 				"navigationStyle": "custom",
-
+				// #endif
 				"navigationBarTitleText": "服务"
 				
 				

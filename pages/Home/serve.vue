@@ -45,7 +45,7 @@
 				<image class="sv_print" src="../../static/Home/serve/gentuanyou.png" mode="aspectFit"></image>
 				<text class="sv_text">跟团游</text>
 			</view>
-			<view class="sv_view3" @click="natTo2('/pages/LYFW/scenicSpotTickets/ticketsList')">
+			<view class="sv_view3" @click="natTo3('/pages/LYFW/scenicSpotTickets/ticketsList')">
 				<image class="sv_print" src="../../static/Home/serve/jqgoupiao.png" mode="aspectFit"></image>
 				<text class="sv_text">景区购票</text>
 			</view>
@@ -93,7 +93,20 @@
 					title:'正在测试中，敬请期待...',
 					icon:'none'
 				})
-			}
+			},
+			natTo3: function(url) {
+				// #ifndef H5
+				uni.navigateTo({
+					url
+				})
+				// #endif
+				// #ifdef H5
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				})
+				// #endif
+			},
 		}
 	}
 </script>

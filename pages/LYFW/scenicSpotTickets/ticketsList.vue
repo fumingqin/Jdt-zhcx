@@ -340,8 +340,8 @@
 					title:'正在搜索',
 				})
 				uni.request ({
-					url:$lyfw.Interface.GetticketSearchBysearchValue.value,
-					method:$lyfw.Interface.GetticketSearchBysearchValue.method,
+					url:$lyfw.Interface.spt_GetticketSearchBysearchValue.value,
+					method:$lyfw.Interface.spt_GetticketSearchBysearchValue.method,
 					data:{
 						searchValue : this.searchValue,
 					},
