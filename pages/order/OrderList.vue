@@ -2335,7 +2335,7 @@
 		// margin-top: -20rpx;
 		padding: 20rpx 0;
 		width: 698rpx;
-		height: 340rpx;
+		// height: 340rpx;
 		background: #FFFFFF;
 		border-radius: 12rpx;
 		box-shadow: 0 0 5rpx 0rpx #aaa;
@@ -2544,7 +2544,7 @@
 		margin-top: 30upx;
 		display: flex;
 		float: right;
-
+		margin-bottom: 20rpx;
 		.allBtn {
 			padding: 0 20upx;
 			// padding-top: 32upx;
