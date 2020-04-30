@@ -83,7 +83,7 @@
 			getBusStationList() {
 				uni.showLoading();
 				uni.request({
-					url:'http://27.148.155.9:9055/CTKY/getStations',
+					url:'http://27.148.155.9:9056/CTKY/getStations',
 					method:'POST',
 					header:{'content-type':'application/x-www-form-urlencoded'},
 					data:{
@@ -128,7 +128,7 @@
 				//以下示例截取淘宝的关键字，请替换成你的接口
 				uni.showLoading();
 				uni.request({
-					url: 'http://27.148.155.9:9055/CTKY/getSatartSite',
+					url: 'http://27.148.155.9:9056/CTKY/getSatartSite',
 					method:'POST',
 					header:{'content-type':'application/x-www-form-urlencoded'},
 					data:{
