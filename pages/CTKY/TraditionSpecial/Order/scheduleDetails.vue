@@ -332,7 +332,11 @@
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
-				return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
+				if(date) {
+					var setTime = date.replace('T',' ');
+					return setTime;
+				}
+				// return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------点击定制班车上车点-----------------------------
 			startStationTap() {
