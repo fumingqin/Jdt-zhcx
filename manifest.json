@@ -149,7 +149,7 @@
     },
     "h5" : {
         "title" : "泉运出行综合平台",
-        "domain" : "",
+        "domain" : "http://zntc.145u.net",
         "router" : {
             "base" : ""
         },

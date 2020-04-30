@@ -81,7 +81,7 @@
 									iconPath: '../../static/Home/CallPollice.png',
 									clickable: true,
 								}, */
-					/* {
+					{
 						id: 'Service',
 						position: {
 							left: 300,
@@ -91,7 +91,7 @@
 						},
 						iconPath: '../../static/Home/Service.png',
 						clickable: true,
-					}, */
+					},
 					{
 						id: 'Big',
 						position: {
@@ -202,7 +202,7 @@
 				uni.getLocation({
 					type: 'gcj02',
 					success: (res) => {
-						// alert(10)
+						alert(10)
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
 						console.log(res);
@@ -214,8 +214,6 @@
 			},
 			//地图控件调用方法
 			controltap: function(e) {
-				// alert(controltap)
-				console.log(e)
 				var that = this;
 				var controlId = ''
 				// #ifdef APP-PLUS
@@ -232,7 +230,8 @@
 					that.mapContext.moveToLocation();
 				} else if (controlId === 'Service') {
 					//客服
-					//openURL('mqq://im/chat?chat_type=wpa&uin=' + that.QQ + '&version=1&src_type=web ');
+
+					plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + that.QQ + '&version=1&src_type=web ');
 
 				} else if (controlId === 'CallPollice') {
 					//一键报警
