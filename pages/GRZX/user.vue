@@ -59,11 +59,11 @@
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="complaintClick">
+			<!-- <view class="boxClass borderTop" @click="complaintClick">
 				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
 				<text class="fontStyle">我要投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
+			</view> -->
 			<view class="boxClass borderTop" @click="feedbackClick">
 				<image src="../../static/GRZX/tubiao_fankui.png" class="iconClass5"></image>
 				<text class="fontStyle">意见反馈</text>

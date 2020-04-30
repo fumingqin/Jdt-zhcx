@@ -118,7 +118,7 @@
 							that.login(res.data.data)
 							setTimeout(function(){
 								uni.switchTab({
-									url:'/pages/Home/index'
+									url:'/pages/Home/Index'
 								})
 							},500);
 						}

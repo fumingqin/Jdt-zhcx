@@ -45,7 +45,10 @@
 
 <script>
 	import taxi from '../../common/Czc.js'
-
+	import {
+			mapState,
+			mapMutations  
+		} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -152,6 +155,7 @@
 			});
 		},
 		methods: {
+			...mapMutations(['login']),
 			getGaoDeKey: function() {
 				//获取高德key
 				var that = this;
