@@ -101,12 +101,16 @@
 					//调用绑定手机号接口
 					uni.request({
 						//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
-						url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
+						//url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
+						url:that.$GrzxInter.Interface.changeInfo.value,
 						data:{
 							phoneNumber:phone,
-							wxOpenid:openid,
+							nickname:userInfo.nickname,
+							address:userInfo.province+userInfo.city,
+							openId_wx:userInfo.openid,
+							//wxOpenid:openid,
 						},
-						method:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.method,
+						method:that.$GrzxInter.Interface.changeInfo.method,
 						success(res) {
 							console.log(res,"res")
 							uni.showToast({
