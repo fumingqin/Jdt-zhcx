@@ -17,7 +17,7 @@
 			// 	url:'Index'
 			// });
 			uni.reLaunch({
-				// url:'../LYFW/scenicSpotTickets/ticketsList'
+				url:'../LYFW/scenicSpotTickets/ticketsList'
 			})
 			// #endif
 			// #ifdef APP-PLUS

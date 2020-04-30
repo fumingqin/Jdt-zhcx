@@ -149,12 +149,12 @@
     },
     "h5" : {
         "title" : "泉运出行综合平台",
-        "domain" : "",
-        "router" : {
-            "base" : ""
-        },
         "devServer" : {
-            "https" : true
-        }
+            "https" : false
+        },
+        "router" : {
+            "base" : "/h5/"
+        },
+        "domain" : "http://111.231.109.113:8006"
     }
 }
