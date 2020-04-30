@@ -19,7 +19,7 @@
 			</view>
 			<view class="inputItem Captcha">
 				<image src="../../static/GRZX/yanzhengma.png" class="iconClass2"></image>
-				<input type="number" placeholder="输入验证码" maxlength="6" class="inputClass" data-key="captchaCode" @input="inputChange2" />
+				<input type="number" placeholder="输入验证码" maxlength="4" class="inputClass" data-key="captchaCode" @input="inputChange2" />
 			</view>
 			
 			<!-- 按钮颜色和发送验证码的样式 -->
@@ -216,6 +216,12 @@
 										icon:"none"
 									})
 								}
+							},
+							fail(){
+								uni.showToast({
+									title:"验证码已过期，请重新获取",
+									icon:"none"
+								})	
 							}
 						})
 					}

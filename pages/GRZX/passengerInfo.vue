@@ -15,9 +15,9 @@
 				<view class="redBox">
 					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
 					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
-					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
-					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+					<text v-if="item.userauditState=='待审核'" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.userauditState=='审核通过'" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.userauditState=='审核未通过'" class="fontClass" style="width: 120upx;">审核未通过</text>	
 				</view>
 			</view>
 			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
@@ -32,9 +32,9 @@
 				<view class="redBox">
 					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
 					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
-					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
-					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+					<text v-if="item.userauditState==1" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.userauditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.userauditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
 				</view>
 			</view>
 		</view>	
@@ -190,7 +190,7 @@
 						count++;
 					}
 				}
-				if(e.auditState==2||e.userType=="儿童"||e.userType=="成人"||e.userType=="老人"){
+				if(e.userauditState==2||e.userType=="儿童"||e.userType=="成人"||e.userType=="老人"){
 					if(e.hiddenIndex==1){
 						e.hiddenIndex=0;
 					}else if(count>(this.limit-1) && this.submitType==2){
