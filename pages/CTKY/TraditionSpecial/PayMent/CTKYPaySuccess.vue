@@ -19,9 +19,14 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				
+			}
 		},
 		onLoad(res) {
+			
+		},
+		onShow(res) {
 			this.getTicketPaymentInfo(res.orderNum);
 		},
 		onReady() {

@@ -22,6 +22,8 @@
 			return {}
 		},
 		onLoad(res) {
+		},
+		onShow(res) {
 			this.getTicketPaymentInfo(res.orderNum);
 		},
 		onReady() {
