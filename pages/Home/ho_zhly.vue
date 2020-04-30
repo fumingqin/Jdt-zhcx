@@ -2,7 +2,7 @@
 	<view>
 		<!-- 顶部图片 -->
 		<view class="zl_topPicture">
-			<image class="zl_image" src="../../static/Home/ho_zhly/kaiyuanshi.png" mode="aspectFill"></image>
+			<image class="zl_image" src="../../static/Home/ho_zhly/kaiyuanshi.jpg" mode="aspectFill"></image>
 		</view>
 
 		<!-- 顶部点击跳转栏 -->

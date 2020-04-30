@@ -38,7 +38,7 @@
 							<view class="item">
 								<view class="goods" v-for="(item2,index2) in mainArray" :key="index2" @tap="detailStationTap(item2)">
 									<view>
-										<view>{{item2.ct_countys}}</view>
+										<view>{{item2.ct_dedicatedLine}}</view>
 									</view>
 								</view>
 							</view>
@@ -63,15 +63,6 @@
 				isShowAllList:true,//是否显示联动列表
 				isShowList:false,//是否显示站点列表
 				stationType:'',//判断上个页面点击的是上车点还是下车点
-				// selectSpecialLine:[{
-				// 	ci_countyCount:'',
-				// 	ci_cityName:'',
-				// 	countys:[{
-				// 		ct_countys:'',
-				// 		ct_longitude:'',
-				// 		ct_latitude:'',
-				// 	}]
-				// }]
 			}
 		},
 		onLoad(param){
@@ -90,50 +81,28 @@
 		},
 		methods: {
 			//-------------------------获取车站列表数据-------------------------
-			// async routeInit() {
-			// 	let selectSpecialLine = await this.$api.lyfwcwd('selectSpecialLine');
-			// 	this.selectSpecialLine = selectSpecialLine.data;
-				
-			// 	if(selectSpecialLine.data.length != 0){
-			// 		for(var i=0;i<selectSpecialLine.data.length;i++){
-			// 			var cityNameArray = {
-			// 				ci_cityName : selectSpecialLine.data[i].ci_cityName
-			// 			}
-			// 			this.stationArray.push(cityNameArray);
-			// 			for(var j=0;j<selectSpecialLine.data.countys.length;j++){
-			// 				var countysArray = {
-			// 					countys : selectSpecialLine.data[i].countys[j]
-			// 				}
-			// 				this.mainArray.push(countysArray);
-			// 			}
-			// 		}
-			// 	}
-			// },
-			
-			
 			getBusStationList() {
 				uni.showLoading();
 				uni.request({
-					url:'http://27.148.155.9:9055/CTKY/getStations',
+					url:'http://111.231.109.113:8004/api/Chartered/GetCharteredAllLine_Passenger',
 					method:'POST',
-					header:{'content-type':'application/x-www-form-urlencoded'},
-					data:{
-						systemName:'泉运公司综合出行'
-					},
+					header:{'content-type': 'application/json'},
 					success: (res) => {
 						console.log(res)
 						uni.hideLoading();
 						let that = this;
 						// console.log(res.data);
 						if (res.data.length != 0) {
-							for (var i = 0; i < res.data.length; i++) {
+							for (var i = 0; i < res.data.data.length; i++) {
 								var cityNameArray = {
-									cityName : res.data[i].cityName
+									ci_cityName : res.data.data[i].ci_cityName
 								}
 								this.stationArray.push(cityNameArray);
-								for (var j = 0; j < res.data[i].countys.length;j++) {
+								for (var j = 0; j < res.data.data[i].Countys.length;j++) {
 									var countysArray = {
-										countys : res.data[i].countys[j]
+										ct_dedicatedLine : res.data.data[i].Countys[j].ct_dedicatedLine,
+										ct_latitude : res.data.data[i].Countys[j].ct_latitude,
+										ct_longitude : res.data.data[i].Countys[j].ct_longitude,
 									}
 									this.mainArray.push(countysArray);
 								}
@@ -159,18 +128,20 @@
 				//以下示例截取淘宝的关键字，请替换成你的接口
 				uni.showLoading();
 				uni.request({
-					url: 'http://27.148.155.9:9055/BCFW/home/ho_chartered',
+					url: 'http://111.231.109.113:8004/api/Chartered/GetCharteredLineByLineName_Passenger',
 					method:'POST',
-					header:{'content-type':'application/x-www-form-urlencoded'},
+					header:{'content-type': 'application/json'},
 					data:{
-						systemName:'泉运公司综合出行',
+						linename:keyword,
 						keyword:keyword
 					},
 					success: (res) => {
 						uni.hideLoading();
-						console.log(res);
+						// console.log(res);
 						this.keywordList = [];
-						this.keywordList = this.drawCorrelativeKeyword(res.data, keyword);
+						console.log(res.data.data)
+						this.keywordList = this.drawCorrelativeKeyword(res.data.data, keyword);
+						
 					},
 					fail(res) {
 						uni.hideLoading();
@@ -180,18 +151,29 @@
 			//-------------------------高亮关键字-------------------------
 			drawCorrelativeKeyword(keywords, keyword) {
 				// console.log(keywords);
-				var len = keywords.length,
-					keywordArr = [];
-				for (var i = 0; i < len; i++) {
-					var row = keywords[i].siteName;
-					//定义高亮#9f9f9f
-					var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
-					html = '<div>' + html + '</div>';
-					var tmpObj = {
-						keyword: row,
-						htmlStr: html
-					};
-					keywordArr.push(tmpObj)
+				// var len = keywords.length;
+				// console.log(len2);
+				var	keywordArr = [];
+				for (var i = 0; i < keywords.length; i++) {
+					for(var j = 0; j < keywords[i].Countys.length; j++){
+						// var row = keywords[i].Countys[i].ct_dedicatedLine;
+					
+						var row = {
+							ct_dedicatedLine :keywords[i].Countys[j].ct_dedicatedLine,
+							ct_latitude :keywords[i].Countys[j].ct_latitude,
+							ct_longitude :keywords[i].Countys[j].ct_longitude,
+						}
+						//定义高亮#9f9f9f
+						// console.log(row);
+						 var html = row.ct_dedicatedLine.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
+						html = '<div>' + html + '</div>';
+						var tmpObj = {
+							keyword: row,
+							htmlStr: html
+						};
+						keywordArr.push(tmpObj)
+						console.log(keywordArr)
+					}
 				}
 				return keywordArr;
 			},
@@ -199,23 +181,16 @@
 			itemClick(index){
 				var that = this;
 				//获取点击选项的文字
-				var key = this.keywordList[index].keyword;
-				
-				if (that.stationType == 'qidian') {
+				var key = that.keywordList[index].keyword;
+				if (that.stationType == 'dedicatedLine') {
 					//当前是上车点
 					uni.$emit('startstaionChange', {
 					    data: key
 					});
 					uni.navigateBack({ });
-				}else if(that.stationType == 'zhongdian') {
-					//当前是下车点
-					uni.$emit('endStaionChange', {
-					    data: key
-					});
-					uni.navigateBack({ });
 				}
 			},
-			//-------------------------点击专线-------------------------			detailStationTap(item){				// console.log(item.countys);				var that = this;				if (that.stationType == 'dedicatedLine') {					//当前是专线					uni.$emit('startstaionChange', {					    data: item.countys					});					uni.navigateBack({											});				}			},
+			//-------------------------点击专线-------------------------			detailStationTap(item){				// console.log(item.countys);				var that = this;				if (that.stationType == 'dedicatedLine') {					//当前是专线					uni.$emit('startstaionChange', {					    data:item					});					uni.navigateBack({											});				}			},
 			
 			//-------------------------左侧导航点击-------------------------
 			leftTap(e){
