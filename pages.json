@@ -7,9 +7,6 @@
 			"path": "pages/Home/guidePage",
 			"style": {
 				"navigationStyle": "custom"
-				// "app-plus": {
-				// 	"titleNView": false //禁用原生导航栏
-				// }
 			}
 		},
 		{
@@ -465,7 +462,8 @@
 		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
-				"navigationBarTitleText": "通知"
+				"navigationBarTitleText": "通知",
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -579,7 +577,8 @@
 		{
 			"path": "pages/Home/serve",
 			"style": {
-				"navigationBarTitleText": "服务"
+				"navigationBarTitleText": "服务",
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -599,7 +598,7 @@
 				"navigationStyle": "custom"
 			}
         }
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",

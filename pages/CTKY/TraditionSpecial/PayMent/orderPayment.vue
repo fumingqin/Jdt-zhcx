@@ -9,7 +9,7 @@
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{utils.timeTodate('Y-m-d H:i',orderInfo.setTime)}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{turnDate(orderInfo.setTime)}} &nbsp; 仅限当天</text>
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
@@ -146,10 +146,6 @@
 				that.insurance = '';
 				that.isInsurance = false;
 			}
-
-			setTimeout(function() {
-				// that.countDown();
-			}, 3000);
 			//读取车票信息
 			this.getTickerInfo();
 			//读取用户信息
@@ -233,6 +229,13 @@
 					}
 				})
 			},
+			//-------------------------------时间转换-------------------------------
+			turnDate(date) {
+				if(date) {
+					var setTime = date.replace('T',' ');
+					return setTime;
+				}
+			},
 			//--------------------------读取乘车人信息--------------------------
 			getPassengerInfo() {
 				var that = this;
@@ -264,11 +267,11 @@
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						// that.getOpenID();
+						that.getOpenID();
 						
 						
 						//-------------------------------下单-------------------------------
-						that.getOrder();
+						// that.getOrder();
 					},
 					fail() {
 						uni.showToast({
@@ -282,20 +285,20 @@
 			//--------------------------读取公众号openid--------------------------
 			getOpenID() {
 				var that = this;
-				uni.getStorage({
-					key:'ctkyOpenId',
+				uni.getStorageSync({
+					key:'scenicSpotOpenId',
 					success:function(response){
-						console.log(response);
+						alert(response);
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail:function(fail){
-						console.log(fail);
-						// uni.showModal({
-						// 	content:'用户未授权',
-						// })
-						that.getOrder();
+						alert(fail);
+						uni.showModal({
+							content:'用户未授权',
+						})
+						// that.getOrder();
 					}
 				})
 			},
@@ -343,6 +346,7 @@
 				// #ifdef APP-PLUS
 				companyCode = '泉运公司综合出行APP';
 				// #endif
+				alert(that.ctkyOpenID);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
@@ -372,7 +376,7 @@
 						carryChild: that.childrenNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
-						openId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
+						openId: that.ctkyOpenID,
 						totalPrice: that.totalPrice, //总价格
 						payParameter: '', //不需要的参数，传空
 						
@@ -381,10 +385,15 @@
 					},
 					
 					success: (res) => {
+						alert(res);
 						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
 								// console.log('订单编号', res.data.data);
+								uni.showToast({
+									title:res.data.status,
+									icon:'none'
+								})
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							}else if(res.data.status == false) {
@@ -417,7 +426,6 @@
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
-					
 				// uni.showLoading();
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
@@ -453,7 +461,6 @@
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
-								
 							}else if(res.data.status == false) {
 								var msgArray = JSON.parse(res.data.msg);
 								uni.hideLoading();

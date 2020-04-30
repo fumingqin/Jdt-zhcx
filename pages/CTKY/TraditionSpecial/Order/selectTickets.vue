@@ -98,7 +98,7 @@
 				uni.showLoading();
 				// console.log(this.startStation,this.endStation,date);
 				uni.request({
-					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
+					url: "http://27.148.155.9:9056/CTKY/getListSchedulesInfo",
 					data: {
 						systemName:'泉运公司综合出行',
 						startPosition:this.startStation,
