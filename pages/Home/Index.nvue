@@ -296,17 +296,18 @@
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
-							uni.showToast({
-								title:res.data.openid,
-								icon:'none',
-								duration:100000
-							})
+							// uni.showToast({
+							// 	title:res.data.openid,
+							// 	icon:'none',
+							// 	duration:100000
+							// })
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
 							uni.setStorageSync('res',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://zntc.145u.net/api/person/changeInfo',
+								//url:'http://zntc.145u.net/api/person/changeInfo',
+								url:that.$GrzxInter.Interface.changeInfo.value,
 								data:{
 									nickname:user.nickname,
 									openId_wx:user.openid,
@@ -318,7 +319,7 @@
 									birthday:'',
 									phoneNumber:'',
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.changeInfo.method,
 								success(res1) {
 									if(res1.data.msg=="信息保存成功！"){
 										uni.setStorageSync('userInfo',res1.data.data)

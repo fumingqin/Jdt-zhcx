@@ -100,12 +100,13 @@
 				}else if(phone==list.phone&&code==list.code){
 					//调用绑定手机号接口
 					uni.request({
-						url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+						//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+						url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
 						data:{
 							phoneNumber:phone,
-							wxOpenid:'openid',
+							wxOpenid:openid,
 						},
-						method:'POST',
+						method:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.method,
 						success(res) {
 							console.log(res,"res")
 							uni.showToast({

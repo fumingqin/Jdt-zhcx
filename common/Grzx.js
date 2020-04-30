@@ -45,8 +45,8 @@ const userInfo = {
 	msg: '用户信息'
 }
 
-const Url='http://111.231.109.113:8002';
-
+//const Url='http://111.231.109.113:8002';
+const Url='http://zntc.145u.net';
 const Interface={
 	login:{
 		value:Url+'/api/person/login',
@@ -87,6 +87,12 @@ const Interface={
 	userInfoListDetail:{
 		value:Url+'/api/person/userInfoListDetail',
 		name:'获取详细信息',
+		method:'POST',
+		pages: [],
+	},
+	BindPersonInfoOpenID_wxAndPhoneNumber:{
+		value:Url+'/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+		name:'微信openid，绑定手机号',
 		method:'POST',
 		pages: [],
 	}
