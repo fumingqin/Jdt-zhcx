@@ -1394,7 +1394,7 @@
 			getKeYunOrderInfo: function() {
 				var that = this;
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/searchOrder',
+					url: 'http://zntc.145u.net/api/ky/searchOrder',
 					method: 'GET',
 					header: {
 						'content-type': 'application/json'
@@ -1464,7 +1464,7 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/RefundTicket_Flow',
+					url: 'http://zntc.145u.net/api/ky/RefundTicket_Flow',
 					method: 'GET',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -1510,7 +1510,7 @@
 				uni.showLoading();
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
+						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
 						method: 'GET',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
@@ -1682,7 +1682,7 @@
 					success: (res1) => {
 						this.userInfo = res1.data;
 						uni.request({
-							url: 'http://111.231.109.113:8002/api/taxi/GetAllExpressOrder_Passenger',
+							url: 'http://zntc.145u.net/api/taxi/GetAllExpressOrder_Passenger',
 							data: {
 								userId: that.userInfo.userId,
 							},
