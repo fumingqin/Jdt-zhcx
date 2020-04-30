@@ -59,7 +59,7 @@
 						</view>
 					</view>
 				</scroll-view>
-			
+				
 				<!-- 选择按钮  :hidden="status==false"-隐藏 -->
 				<scroll-view class="sr_scroll" scroll-x="true">
 					<view class="sc_selectButton">
@@ -68,7 +68,7 @@
 						</view>
 					</view>
 				</scroll-view>
-			
+				
 				<!-- 选择车 -->
 				<scroll-view class="sr_scroll" scroll-x="true">
 					<view class="sc_choiceCar">
