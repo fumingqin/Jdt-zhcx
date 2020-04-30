@@ -78,7 +78,7 @@
 				console.log(list,"list")
 				var openid=uni.getStorageSync('scenicSpotOpenId')	//openid
 				console.log(openid,"openid")
-				var userInfo=uni.getStorageSync('userInfo') //微信授权获取到的微信的个人信息
+				var userInfo=uni.getStorageSync('wxuserInfo') //微信授权获取到的微信的个人信息
 				console.log(userInfo,"userInfo")
 				var phone=this.phoneNumber;
 				var code=this.captchaCode;
@@ -100,12 +100,13 @@
 				}else if(phone==list.phone&&code==list.code){
 					//调用绑定手机号接口
 					uni.request({
-						url:'http://111.231.109.113:8006/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+						//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+						url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
 						data:{
 							phoneNumber:phone,
-							wxOpenid:'openid',
+							wxOpenid:openid,
 						},
-						method:'POST',
+						method:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.method,
 						success(res) {
 							console.log(res,"res")
 							uni.showToast({

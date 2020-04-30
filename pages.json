@@ -465,7 +465,10 @@
 		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
-				"navigationBarTitleText": "通知"
+				"navigationBarTitleText": "通知",
+				//#ifdef H5
+				"navigationStyle": "custom"
+				//#endif
 			}
 		},
 		{
@@ -579,7 +582,10 @@
 		{
 			"path": "pages/Home/serve",
 			"style": {
-				"navigationBarTitleText": "服务"
+				"navigationBarTitleText": "服务",
+				//#ifdef H5
+				"navigationStyle": "custom"
+				//#endif
 			}
 		},
 		{

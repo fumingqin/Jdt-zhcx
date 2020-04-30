@@ -280,7 +280,7 @@
 			    let Appid = "wx14af28006f937f6e";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
-				let local = "http://zntc.145u.net/#/";
+				let local = "http://zntc.145u.net/h5/#/";
 				if (code == null || code === "") {
 				  //不存在就打开上面的地址进行授权
 					window.location.href =
@@ -296,42 +296,38 @@
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
-							uni.showToast({
-								title:res.data.openid,
-								icon:'none',
-								duration:100000
-							})
+							// uni.showToast({
+							// 	title:res.data.openid,
+							// 	icon:'none',
+							// 	duration:100000
+							// })
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
-							uni.setStorageSync('res',res.data)
+							uni.setStorageSync('wxuserInfo',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://111.231.109.113:8006/api/person/changeInfo',
+								//url:'http://zntc.145u.net/api/person/changeInfo',
+								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
 								data:{
-									nickname:user.nickname,
 									openId_wx:user.openid,
-									portrait:user.headimgurl,
-									userId:'',
-									openId_qq:'',
-									gender:'',
-									address:user.province+user.city,
-									birthday:'',
-									phoneNumber:'',
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									if(res1.data.msg=="信息保存成功！"){
-										uni.setStorageSync('userInfo',res1.data.data)
-										if(res1.data.data.phoneNumber==null){
-											uni.navigateTo({
-												url:'/pages/GRZX/wxLogin',
-											})
-										}else{
-											that.logining=true;
-											that.login(res1.data.data)
-										}
-									}
 									console.log(res1,'res1')
+									console.log(res1.data.msg,'res2')
+									console.log(res1.data.data.msg,'res3')
+									//判断是否有绑定手机号
+									if(res1.data.msg=="不存在该用户"){
+										console.log('res4')
+										uni.navigateTo({
+											url:'/pages/GRZX/wxLogin'
+										})
+									}else{
+										console.log('res5')
+										uni.setStorageSync('userInfo',res1.data.data)
+										that.logining=true;
+										that.login(res1.data.data)
+									}	
 								}
 							})
 						},

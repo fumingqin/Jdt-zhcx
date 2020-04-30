@@ -1287,10 +1287,9 @@
 					that.userInfo = data.data;
 				}
 			})
-			//请求景区门票数据
-			// this.toFinished();
 		},
 		onShow: function() {
+			//请求景区门票数据
 			this.toFinished();
 		},
 		onPullDownRefresh: function() {
@@ -1504,11 +1503,7 @@
 			},
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(orderNumber) {
-				console.log('支付参数', orderNumber);
-				uni.showToast({
-					title: orderNumber,
-					icon: 'none'
-				})
+				// console.log('支付参数', orderNumber);
 				var that = this;
 				var timer = null;
 				that.timer = timer;
@@ -1537,7 +1532,7 @@
 								} else {
 									clearInterval(timer);
 									that.keYunPaymentData = JSON.parse(res.data.msg);
-									console.log('支付参数返回数据', that.keYunPaymentData);
+									// console.log('支付参数返回数据', that.keYunPaymentData);
 									that.keYunPayment();
 								}
 							} else if (res.data.status == false) {
@@ -1556,16 +1551,9 @@
 									})
 								}
 							}
-							// if (res.data.msg != null) {
-							// 	//调起支付
-							// 	// that.keYunPayment();
-							// 	uni.hideLoading();
-							// 	clearInterval(timer);
-							// }
 						},
 						fail(res) {
 							uni.hideLoading();
-							// console.log('失败');
 							//回调失败，取消定时器
 							clearInterval(timer);
 						}
@@ -1582,9 +1570,7 @@
 						icon: 'none'
 					})
 				} else {
-
 					// #ifdef H5
-					// console.log('点击了支付', that.keYunPaymentData);
 					WeixinJSBridge.invoke('getBrandWCPayRequest', {
 						"appId": that.keYunPaymentData.jsapi.AppId, //公众号名称，由商户传入
 						"timeStamp": that.keYunPaymentData.jsapi.TimeStamp, //时间戳
@@ -1596,14 +1582,21 @@
 						if (res.err_msg == "get_brand_wcpay_request:ok") {
 							//支付成功再进计时器查询状态
 							// location.href = "/Order/BaseCallback/" + flowID;
-							alert("支付成功");
-							uni.navigateTo({
-								url: '../LYFW/scenicSpotTickets/successfulPayment'
+							uni.showToast({
+								title: '支付成功',
+								icon: 'none',
 							})
+							uni.startPullDownRefresh();
 						} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-							alert("您取消了支付，请重新支付");
+							uni.showToast({
+								title: '您取消了支付，请重新支付',
+								icon: 'none',
+							})
 						} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-							alert("支付失败，请重新支付");
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none',
+							})
 						} else {
 							// location.href = "/Coach/GetCoach";
 						}
@@ -1637,7 +1630,7 @@
 									title: '支付成功',
 									icon: 'none',
 									success:function(){
-										that.getTicketPaymentInfo()
+										uni.startPullDownRefresh();
 									}
 								})
 								
@@ -1645,11 +1638,6 @@
 								uni.showToast({
 									title: '支付失败，请重新支付',
 									icon: 'none',
-									success:function(){
-										uni.redirectTo({
-											url: './CTKYPayFail?&orderNum=' + that.orderNum,
-										})
-									}
 								})
 								
 							}
@@ -1809,6 +1797,7 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
+						uni.stopPullDownRefresh();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -1847,6 +1836,9 @@
 								}
 							}
 						}
+					},
+					fail() {
+						uni.stopPullDownRefresh();
 					}
 				})
 			},
@@ -1949,6 +1941,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
+								uni.stopPullDownRefresh();
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
 									that.finishArr = [];
@@ -1972,7 +1965,6 @@
 									//客运
 									//获取用户信息
 									that.getUserInfo();
-									// console.log('123');
 								} else {
 									that.info = [];
 									that.finishArr = [];
