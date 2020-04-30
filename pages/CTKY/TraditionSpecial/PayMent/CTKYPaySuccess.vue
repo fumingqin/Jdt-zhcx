@@ -69,20 +69,20 @@
 			},
 			//路由统一事件
 			godetail: function(e) {
-				if(e==0){
+				if(e==0){//查看订单
 					uni.switchTab({
-						url: '../Order/oederList'
+						url: '../../../order/OrderList',
 					});
-				}else if(e==1){
+				}else if(e==1){//返回首页
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url:'../../../Home/Index'
 					});
 				}
 			},
 			backHome : function() {
 				setTimeout(() => { 
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url: '../../../Home/Index'
 					});
 				}, 10000)
 			}

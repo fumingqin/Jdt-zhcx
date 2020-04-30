@@ -71,18 +71,18 @@
 			godetail: function(e) {
 				if(e==0){
 					uni.switchTab({
-						url: '../Order/oederList'
+						url: '../../../order/OrderList'
 					});
 				}else if(e==1){
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url: '../../../Home/Index'
 					});
 				}
 			},
 			backHome : function() {
 				setTimeout(() => {
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url: '../../../Home/Index'
 					});
 				}, 10000);
 			}

@@ -384,10 +384,8 @@
 					
 					success: (res) => {
 						alert(res);
-						// console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
-								// console.log('订单编号', res.data.data);
 								uni.showToast({
 									title:res.data.status,
 									icon:'none'
@@ -419,12 +417,10 @@
 			},
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(res) {
-				// console.log(res);
 				var that = this;
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
-				// uni.showLoading();
 				uni.request({
 					url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
 					method: 'GET',
@@ -440,7 +436,7 @@
 						if (res.data) {
 							if (res.data.status == true) {
 								var msgArray = JSON.parse(res.data.msg);
-								console.log('msgArray', msgArray);
+								// console.log('msgArray', msgArray);
 								if(msgArray.oldState == '结束') {
 									uni.hideLoading();
 									uni.showToast({
@@ -483,7 +479,7 @@
 			//--------------------------调起支付--------------------------
 			payment: function() {
 				var that = this;
-				console.log('111111',that.paymentData);
+				// console.log('111111',that.paymentData);
 				// #ifdef H5
 				WeixinJSBridge.invoke('getBrandWCPayRequest', {
 					"appId": that.paymentData.jsapi.AppId, //公众号名称，由商户传入
