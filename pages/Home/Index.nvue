@@ -313,7 +313,7 @@
 								},
 								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									console.log(res1,'res2')
+									console.log(res1,'res1')
 									console.log(res1.data.msg,'res2')
 									console.log(res1.data.data.msg,'res3')
 									//判断是否有绑定手机号
