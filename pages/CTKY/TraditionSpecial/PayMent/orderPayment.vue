@@ -146,10 +146,6 @@
 				that.insurance = '';
 				that.isInsurance = false;
 			}
-
-			setTimeout(function() {
-				// that.countDown();
-			}, 3000);
 			//读取车票信息
 			this.getTickerInfo();
 			//读取用户信息
@@ -235,8 +231,10 @@
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
-				var setTime = date.replace('T',' ');
-				return setTime;
+				if(date) {
+					var setTime = date.replace('T',' ');
+					return setTime;
+				}
 			},
 			//--------------------------读取乘车人信息--------------------------
 			getPassengerInfo() {
@@ -287,16 +285,16 @@
 			//--------------------------读取公众号openid--------------------------
 			getOpenID() {
 				var that = this;
-				uni.getStorage({
+				uni.getStorageSync({
 					key:'scenicSpotOpenId',
 					success:function(response){
-						console.log(response);
+						alert(response);
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail:function(fail){
-						console.log(fail);
+						alert(fail);
 						uni.showModal({
 							content:'用户未授权',
 						})
@@ -348,6 +346,7 @@
 				// #ifdef APP-PLUS
 				companyCode = '泉运公司综合出行APP';
 				// #endif
+				alert(that.ctkyOpenID);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
@@ -386,6 +385,7 @@
 					},
 					
 					success: (res) => {
+						alert(res);
 						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
@@ -461,7 +461,6 @@
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
-								
 							}else if(res.data.status == false) {
 								var msgArray = JSON.parse(res.data.msg);
 								uni.hideLoading();

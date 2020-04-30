@@ -5,13 +5,13 @@
 
 		</map>
 
-		<view class="SearchBarBlock">
+		<!-- <view class="SearchBarBlock">
 			<view class="SearchBar" elevation='5px' style="">
 				<image class="topContent-image" src="../../static/Home/Search.png"></image>
 				<text @click="chooseSite" style="width: 500rpx;line-height: 45rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:400; color:rgba(153,153,153,1);">{{Address}}</text>
 				<image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image>
 			</view>
-		</view>
+		</view> -->
 
 		<view class="bottomContent" elevation='5px' style="width: 100%;">
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
@@ -85,7 +85,7 @@
 									iconPath: '../../static/Home/CallPollice.png',
 									clickable: true,
 								}, */
-					/* {
+					{
 						id: 'Service',
 						position: {
 							left: 300,
@@ -95,7 +95,7 @@
 						},
 						iconPath: '../../static/Home/Service.png',
 						clickable: true,
-					}, */
+					},
 					{
 						id: 'Big',
 						position: {
@@ -164,7 +164,7 @@
 				}
 			})
 			// #ifdef  H5
-			this.getCode();
+			// this.getCode();
 			//#endif
 		},
 		onReady() {
@@ -207,7 +207,7 @@
 				uni.getLocation({
 					type: 'gcj02',
 					success: (res) => {
-						// alert(10)
+						alert(10)
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
 						console.log(res);
@@ -219,8 +219,6 @@
 			},
 			//地图控件调用方法
 			controltap: function(e) {
-				// alert(controltap)
-				console.log(e)
 				var that = this;
 				var controlId = ''
 				// #ifdef APP-PLUS
@@ -237,7 +235,8 @@
 					that.mapContext.moveToLocation();
 				} else if (controlId === 'Service') {
 					//客服
-					openURL('mqq://im/chat?chat_type=wpa&uin=' + that.QQ + '&version=1&src_type=web ');
+
+					plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + that.QQ + '&version=1&src_type=web ');
 
 				} else if (controlId === 'CallPollice') {
 					//一键报警
@@ -301,12 +300,24 @@
 
 			//路由统一事件
 			godetail: function(url) {
+				if(url != '/pages/CTKY/TraditionSpecial/Home/ctkyIndex'){
+					uni.showToast({
+						title:'正在测试中，敬请期待...',
+						icon:'none'
+					});
+					return;
+				}
 				uni.navigateTo({
 					url: url
 				});
 			},
 			//旅游服务专属路由
 			godetail2: function(url) {
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				});
+				return;
 				// #ifdef MP-WEIXIN
 				uni.redirectTo({
 					url: url
