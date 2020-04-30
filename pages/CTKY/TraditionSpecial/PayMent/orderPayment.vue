@@ -285,16 +285,16 @@
 			//--------------------------读取公众号openid--------------------------
 			getOpenID() {
 				var that = this;
-				uni.getStorage({
+				uni.getStorageSync({
 					key:'scenicSpotOpenId',
 					success:function(response){
-						console.log(response);
+						alert(response);
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail:function(fail){
-						console.log(fail);
+						alert(fail);
 						uni.showModal({
 							content:'用户未授权',
 						})
@@ -346,6 +346,7 @@
 				// #ifdef APP-PLUS
 				companyCode = '泉运公司综合出行APP';
 				// #endif
+				alert(that.ctkyOpenID);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
