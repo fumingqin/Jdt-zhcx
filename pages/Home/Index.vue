@@ -379,9 +379,11 @@
 											title:'您未绑定手机号，请绑定手机号！',
 											icon:'none',
 										})
-										uni.navigateTo({
-											url:'/pages/GRZX/wxLogin'
-										})
+										setTimeout(function(){
+											uni.navigateTo({
+												url:'/pages/GRZX/wxLogin'
+											})
+										},1000);
 									}else{
 										uni.setStorageSync('userInfo',res1.data.data)
 										that.logining=true;
