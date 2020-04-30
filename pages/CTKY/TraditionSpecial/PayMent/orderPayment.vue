@@ -372,7 +372,7 @@
 						carryChild: that.childrenNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
-						openId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
+						openId: that.ctkyOpenID,
 						totalPrice: that.totalPrice, //总价格
 						payParameter: '', //不需要的参数，传空
 						
@@ -563,6 +563,11 @@
 							title:'提示',
 							content:ee,
 							showCancel:false
+						})
+						uni.showToast({
+							title: '拉起支付失败，请检查网络后重试',
+							icon: 'none',
+							duration: 3000
 						})
 					}
 				})
