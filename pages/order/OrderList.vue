@@ -115,7 +115,7 @@
 
 						<!-- 待使用 -->
 						<view class="at_buttonView" v-if="item.orderType=='待使用'">
-							<view class="at_button at_btDelete" @click="open2(item.orderNumber)">退票</view>
+							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 						</view>
@@ -573,7 +573,7 @@
 
 						<!-- 待使用 -->
 						<view class="at_buttonView" v-if="item.orderType=='待使用'">
-							<view class="at_button at_btDelete" @click="open2(item.orderNumber)">退票</view>
+							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<!-- <view class="at_button at_btQrCode" @click="open5(item)">二维码</view> -->
 						</view>
@@ -658,7 +658,8 @@
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<!-- <button class="allBtn QRCode">二维码</button> -->
 							<!-- <button class="allBtn">选座</button> -->
-							<button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button>
+							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
+							<!-- <button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button> -->
 							<!-- <button class="allBtn">联系司机</button> -->
 						</view>
 					</view>
@@ -851,7 +852,7 @@
 						<view class="CTKYBtnView">
 							<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn payBtn" @tap="keYunPay()">去支付</button>
+							<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>
 						</view>
 					</view>
 				</view>
@@ -1110,7 +1111,7 @@
 					<text class="box_icon jdticon icon-fork " @click="close2"></text>
 				</view>
 				<view class="box_refundView">
-					<text class="box_refundText">您可以在2019年11月04日18:00前免费取消或变更订单 ；在2019年11月04日18:00之后变更或取消，将收取全 额费用作为罚金。</text>
+					<!-- <text class="box_refundText">您可以在2019年11月04日18:00前免费取消或变更订单 ；在2019年11月04日18:00之后变更或取消，将收取全 额费用作为罚金。</text> -->
 					<view class="box_refundContentView">
 						<text class="box_refundContentTitle">您还确定退票吗?</text>
 						<text class="box_refundContentText">如若需退票，请点击确认</text>
@@ -1258,7 +1259,7 @@
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				orderType1: '',
-				ctkyOrderNum:'',//传统客运订单号（退票需要）
+				ctkyOrderNum: '', //传统客运订单号（退票需要）
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
@@ -1277,7 +1278,7 @@
 				specialLineInfo: ''
 			}
 		},
-		onLoad:function() {
+		onLoad: function() {
 			var that = this;
 			//读取用户ID
 			uni.getStorage({
@@ -1287,7 +1288,7 @@
 				}
 			})
 			//请求景区门票数据
-			this.toFinished();
+			// this.toFinished();
 		},
 		onShow: function() {
 			this.toFinished();
@@ -1388,7 +1389,7 @@
 					}
 				})
 			},
-			
+
 			//-------------------------请求客运订单数据-------------------------
 			getKeYunOrderInfo: function() {
 				var that = this;
@@ -1455,11 +1456,12 @@
 			keYunDetail: function(res) {
 				console.log(res)
 				uni.navigateTo({
-					url:'../CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
+					url: '../CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
 				})
 			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
+				console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/RefundTicket_Flow',
@@ -1472,14 +1474,23 @@
 					},
 					success: (respones) => {
 						console.log('删除结果', respones)
-						uni.showModal({
-							content:respones.message,
-						})
+						if(respones.data.status == true){
+							uni.showToast({
+								title:'退票成功'
+							})
+							this.$refs.popup2.close()
+						}else {
+							uni.showToast({
+								title:'退票失败',
+								icon:'none'
+							})
+						}
+						
 					},
 					fail: (respones) => {
 						console.log(respones)
-						uni.showModal({
-							content:respones.message,
+						uni.showToast({
+							title:'服务器异常，请联系客服'
 						})
 					}
 				})
@@ -1494,8 +1505,8 @@
 			getTicketPaymentInfo: function(orderNumber) {
 				console.log('支付参数', orderNumber);
 				uni.showToast({
-					title:orderNumber,
-					icon:'none'
+					title: orderNumber,
+					icon: 'none'
 				})
 				var that = this;
 				var timer = null;
@@ -1518,28 +1529,29 @@
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									uni.showModal({
-										content:'订单已结束',
-										showCancel:false
+										content: '订单已结束',
+										showCancel: false
 									})
 									clearInterval(timer);
 								} else {
-									that.keYunPayment();
-									that.keYunPaymentData = JSON.parse(res.data.data);
 									clearInterval(timer);
-									
+									that.keYunPaymentData = JSON.parse(res.data.msg);
+									console.log('支付参数返回数据', that.keYunPaymentData);
+									that.keYunPayment();
 								}
-							}else if(res.data.status == false) {
+							} else if (res.data.status == false) {
 								uni.hideLoading();
 								var info = JSON.parse(res.data.msg);
-								if(info.oldState == '结束') {
+								if (info.oldState == '结束') {
 									uni.showModal({
-										content:'订单已结束',
-										showCancel:false
+										content: '订单已结束',
+										showCancel: false
 									})
-								}else {
+									clearInterval(timer);
+								} else {
 									uni.showModal({
-										content:info.oldState,
-										showCancel:false
+										content: info.oldState,
+										showCancel: false
 									})
 								}
 							}
@@ -1569,18 +1581,16 @@
 						icon: 'none'
 					})
 				} else {
-					uni.showModal({
-						content:that.keYunPaymentData,
-						showCancel:false
-					})
+
+					// #ifdef H5
 					// console.log('点击了支付', that.keYunPaymentData);
 					WeixinJSBridge.invoke('getBrandWCPayRequest', {
-						"appId": that.keYunPaymentData.AppId, //公众号名称，由商户传入
-						"timeStamp": that.keYunPaymentData.TimeStamp, //时间戳
-						"nonceStr": that.keYunPaymentData.NonceStr, //随机串
-						"package": that.keYunPaymentData.Package, //扩展包
-						"signType": that.keYunPaymentData.SignType, //微信签名方式:MD5
-						"paySign": that.keYunPaymentData.PaySign //微信签名
+						"appId": that.keYunPaymentData.jsapi.AppId, //公众号名称，由商户传入
+						"timeStamp": that.keYunPaymentData.jsapi.TimeStamp, //时间戳
+						"nonceStr": that.keYunPaymentData.jsapi.NonceStr, //随机串
+						"package": that.keYunPaymentData.jsapi.Package, //扩展包
+						"signType": that.keYunPaymentData.jsapi.SignType, //微信签名方式:MD5
+						"paySign": that.keYunPaymentData.jsapi.PaySign //微信签名
 					}, function(res) {
 						if (res.err_msg == "get_brand_wcpay_request:ok") {
 							//支付成功再进计时器查询状态
@@ -1597,6 +1607,70 @@
 							// location.href = "/Coach/GetCoach";
 						}
 					});
+					// #endif
+
+
+					// #ifdef APP-PLUS
+					console.log('进入app支付', that.paymentData);
+					uni.hideLoading()
+					uni.requestPayment({
+						provider: 'wxpay',
+						orderInfo: {
+							appid: that.keYunPaymentData.jsapi.AppId,
+							timestamp: that.keYunPaymentData.jsapi.TimeStamp,
+							noncestr: that.keYunPaymentData.jsapi.NonceStr,
+							package: 'Sign=WXPay',
+							sign: that.keYunPaymentData.jsapi.PaySign,
+							partnerid: that.keYunPaymentData.jsapi.PartnerId,
+							prepayid: that.keYunPaymentData.jsapi.PrepayId,
+						},
+						success: function(res) {
+							console.log('支付结果', res)
+							uni.showModal({
+								title: '提示',
+								content: res,
+								showCancel: false
+							})
+							if (res.errMsg == 'requestPayment:ok') { //成功
+								uni.showToast({
+									title: '支付成功',
+									icon: 'none',
+									success:function(){
+										that.getTicketPaymentInfo()
+									}
+								})
+								
+							} else if (res.errMsg == 'requestPayment:fail') { //错误
+								uni.showToast({
+									title: '支付失败，请重新支付',
+									icon: 'none',
+									success:function(){
+										uni.redirectTo({
+											url: './CTKYPayFail?&orderNum=' + that.orderNum,
+										})
+									}
+								})
+								
+							}
+						},
+
+						fail: function(ee) {
+							console.log(ee)
+							if (ee.errMsg == 'requestPayment:fail canceled') { //用户取消
+								uni.showToast({
+									title: '您取消了支付',
+									icon: 'none'
+								})
+							} else {
+								uni.showToast({
+									title: ee.errMsg,
+									icon: 'none',
+									duration: 3000
+								})
+							}
+						}
+					})
+					// #endif
 				}
 			},
 			//-------------------------客运二维码弹框-------------------------
@@ -1609,7 +1683,7 @@
 					this.current = e.currentIndex
 				}
 			},
-			
+
 			//-------------------------出租车开始-------------------------
 			loadczcData: function() {
 				var that = this;
@@ -1732,7 +1806,7 @@
 					data: {
 						UserID: that.userInfo.userId,
 					},
-					success:function(res){
+					success: function(res) {
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -1847,14 +1921,14 @@
 					}
 				})
 			},
-			GotoPay:function(value){
+			GotoPay: function(value) {
 				uni.navigateTo({
-					url:"../CZC/PrivateTaxiPayment?orderNumber="+value
+					url: "../CZC/PrivateTaxiPayment?orderNumber=" + value
 				})
 			},
 			//-------------------------出租车专线代码结束-------------------------
-			
-			
+
+
 			//-------------------------景区门票代码开始-------------------------
 			//-------------------------请求订单列表-------------------------
 			toFinished: function() {
@@ -1864,12 +1938,14 @@
 					success: (res) => {
 						this.userInfo = res.data;
 						uni.request({
-							url:$lyfw.Interface.spt_RequestTicketsList.value,
-							method:$lyfw.Interface.spt_RequestTicketsList.method,
+							url: $lyfw.Interface.spt_RequestTicketsList.value,
+							method: $lyfw.Interface.spt_RequestTicketsList.method,
 							data: {
 								userId: this.userInfo.userId
 							},
-							header: {'content-type': 'application/json'},
+							header: {
+								'content-type': 'application/json'
+							},
 							success: (res) => {
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
@@ -1885,7 +1961,8 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType == '支付超时') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
+												'支付超时') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}
@@ -1933,8 +2010,9 @@
 				this.$refs.popup5.close()
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
-			open2(e) {
+			open2(e,exitindex) {
 				this.ticketOrderNumber = e;
+				this.exitindex = exitindex;
 				this.$refs.popup2.open()
 			},
 			//-------------------------景区门票-关闭退票弹框-------------------------
@@ -1983,34 +2061,41 @@
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
-				uni.request({
-					url:$lyfw.Interface.spt_BounceTickets.value,
-					method:$lyfw.Interface.spt_BounceTickets.method,
-					data: {
-						orderNumber: this.ticketOrderNumber,
-					},
-					header: {
-						'content-type': 'application/json'
-					},
-					success: (e) => {
-						// console.log(e)
-						uni.showToast({
-							title: '退票成功',
-							icon: 'success',
-							duration: 1500,
-						})
-						this.close2()
-						this.toFinished();
-					}
-				})
+				var that =this
+				if(this.exitindex=='2'){
+					this.keYunRefundTicket(that.ticketOrderNumber)
+				}else if(this.exitindex=='3'){
+					uni.request({
+						url: $lyfw.Interface.spt_BounceTickets.value,
+						method: $lyfw.Interface.spt_BounceTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber,
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.showToast({
+								title: '退票成功',
+								icon: 'success',
+								duration: 1500,
+							})
+							this.close2()
+							this.toFinished();
+						}
+					})
+				}
+				
+				
 			},
 
 			//-------------------------景区门票-取消-------------------------
 			cancel: function() {
-				if(this.exitindex == '3'){
+				if (this.exitindex == '3') {
 					uni.request({
-						url:$lyfw.Interface.spt_CancelTickets.value,
-						method:$lyfw.Interface.spt_CancelTickets.method,
+						url: $lyfw.Interface.spt_CancelTickets.value,
+						method: $lyfw.Interface.spt_CancelTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
@@ -2043,19 +2128,19 @@
 							})
 						}
 					})
-				}else if(this.exitindex == '4'){
-					
+				} else if (this.exitindex == '4') {
+
 				}
-				
+
 
 			},
 
 			//-------------------------景区门票-删除-------------------------
 			del: function() {
-				if(this.exitindex == '3'){
+				if (this.exitindex == '3') {
 					uni.request({
-						url:$lyfw.Interface.spt_DeleteTickets.value,
-						method:$lyfw.Interface.spt_DeleteTickets.method,
+						url: $lyfw.Interface.spt_DeleteTickets.value,
+						method: $lyfw.Interface.spt_DeleteTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
@@ -2080,12 +2165,12 @@
 							})
 						}
 					})
-				}else if(this.exitindex == '4'){
-					
+				} else if (this.exitindex == '4') {
+
 				}
-				
+
 			},
-			
+
 			//-------------------------生成二维码-------------------------
 			make: function(e) {
 				console.log(e)
@@ -2103,7 +2188,7 @@
 				this.$refs.popup5.open()
 			},
 			//-------------------------景区门票代码结束-------------------------
-			
+
 			detail: function(item) {
 				if (item == 1) {
 					uni.navigateTo({
@@ -2111,7 +2196,7 @@
 					})
 				}
 			},
-			
+
 			going: function(item) {
 				// console.log(item)
 				var state = this.taxiOrderState(item.state)
@@ -2128,7 +2213,7 @@
 					}
 				}
 			},
-			
+
 			//-------------------包车订单添加-------------------------
 			//获取模拟数据
 			async getArrayInfo() {
