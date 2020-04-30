@@ -21,7 +21,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<text class="tabItem-font">车票订购</text>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail2('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<text class="tabItem-font">网络约车</text>
 				</view>
@@ -29,11 +29,11 @@
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<text class="tabItem-font">公交查询</text>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/BCFW/bf_chartered')">
+				<view class="tabItem" @click="godetail2('/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<text class="tabItem-font">包车服务</text>
 				</view>
-				<view class="tabItem" @click="godetail2('/pages/Home/ho_zhly')">
+				<view class="tabItem" @click="godetail('/pages/Home/ho_zhly')">
 					<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
 					<text class="tabItem-font">旅游服务</text>
 				</view>
@@ -262,6 +262,15 @@
 					url: url
 				});
 			},
+			
+			//路由统一事件
+			godetail2: function(url) {
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				})
+			},
+			
 			//旅游服务专属路由
 			godetail2: function(url) {
 				// #ifdef MP-WEIXIN
