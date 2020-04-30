@@ -191,8 +191,8 @@
 				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
-					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea_Six',
-					data:{
+					url:'http://111.231.109.113:8006/api/ly/GetticketSearchByrequestArea_Six',
+					data:{ 
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
 					},
@@ -218,7 +218,7 @@
 				
 				// 请求景区列表
 				uni.request({
-					url:'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea',
+					url:'http://111.231.109.113:8006/api/ly/GetticketSearchByrequestArea',
 					data:{
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
