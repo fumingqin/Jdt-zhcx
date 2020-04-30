@@ -250,6 +250,7 @@
 							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
+							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
 						</view>
 					</view>
 				</view>
