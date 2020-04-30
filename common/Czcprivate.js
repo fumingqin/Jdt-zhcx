@@ -11,7 +11,7 @@ const Interface = {
 	GetSpecialLine:{
 		value: Url + '/api/SpecialLine/GetSpecialLine_Passenger',
 		name:'旅客端-获取专线车线路信息',
-		method:'POST',
+		method:'GET',
 		pages:["Home/ChooseSite.nvue"]
 	},
 	GetSpecialLineByLineID:{
@@ -32,15 +32,15 @@ const Interface = {
 		method:'POST',
 		pages:["CZC/PrivateTaxi.nvue"]
 	},
-	Pay:{ 
+	getCommonPayparameter:{ 
 		value: Url1+'/api/ly/getCommonPayparameter',
 		name:'旅客端-获取支付信息',
 		method:'POST', 
 		pages:["CZC/PrivateTaxi.nvue"]
 	},
-	Pay1:{
-		value: Url1+'/api/ly/getCommonPayparameter1',
-		name:'旅客端-获取支付信息',
+	SpecialLineOrderPay_Passenger:{
+		value: Url1+'/api/ly/SpecialLineOrderPay_Passenger',
+		name:'旅客端-订单支付完成',
 		method:'POST', 
 		pages:["CZC/PrivateTaxi.nvue"]
 	},

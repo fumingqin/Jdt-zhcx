@@ -5,8 +5,8 @@
 		</view>
 
 		<view class="cover-container">
-			<image class="okImage" mode="aspectFill" src='../../../../static/CZC/Fail.png'></image>
-			<text class="title">支付失败</text>
+			<image class="okImage" mode="aspectFill" src='../../static/CZC/Success.png'></image>
+			<text class="title">支付成功</text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
 				<view class="orderButton" @click="godetail(0)">查看订单</view>
@@ -19,59 +19,20 @@
 <script>
 	export default {
 		data() {
-			return {}
-		},
-		onLoad(res) {
-			this.getTicketPaymentInfo(res.orderNum);
+			return {
+				timeout:"",
+			}
 		},
 		onReady() {
 			this.backHome();
 		},
 		methods: {
-			//--------------------------获取车票支付参数--------------------------
-			getTicketPaymentInfo: function(res) {
-				var that = this;
-				var timer=null;
-				that.timer = timer;
-				timer=setInterval(function(){
-					uni.request({
-						url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
-						data: {
-							orderNumber: res.orderNum
-						},
-						success: (res) => {
-							console.log(res.data);
-							if (res.data != null) {
-								if (res.data) {
-									var msgArray = JSON.parse(res.data.msg);
-									if(msgArray.msg == '订票失败') {
-										uni.showToast({
-											title: msgArray.msg,
-											icon: 'none'
-										})
-										clearInterval(timer);
-									}
-								}
-							}
-						},
-						fail(res) {
-							uni.hideLoading();
-							console.log('失败');
-							//回调失败，取消定时器
-							clearInterval(timer);
-						}
-					})
-				}, 3000)
-			},
 			//路由统一事件
 			godetail: function(e) {
+				clearTimeout(timeout)
 				if(e==0){
 					uni.switchTab({
-						url: ''
+						url: '../order/OrderList'
 					});
 				}else if(e==1){
 					uni.switchTab({
@@ -80,11 +41,11 @@
 				}
 			},
 			backHome : function() {
-				setTimeout(() => {
+				this.timeout=setTimeout(() => { 
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});
-				}, 10000);
+				}, 10000)
 			}
 
 		}

@@ -3,39 +3,70 @@
 		<view class="sv_view">
 			<image class="sv_image" src="../../static/Home/serve/guanggao.png"></image>
 		</view>
+		
 		<view class="sv_view2">
 			<text class="sv_title">出行</text>
-			<image class="sv_fare" src="../../static/Home/serve/cpdinggou.png"></image>
-			<text class="sv_fareText">车票订购</text>
-			<image class="sv_taxi" src="../../static/Home/serve/wlyueche.png"></image>
-			<text class="sv_taxiText">网络约车</text>
-			<image class="sv_bus" src="../../static/Home/serve/gjchaxun.png"></image>
-			<text class="sv_busText">公交查询</text>
-			<image class="sv_charteredBus" src="../../static/Home/serve/bcfuwu.png"></image>
-			<text class="sv_charteredBusText">包车服务</text>
-			<image class="sv_customMade" src="../../static/Home/serve/dzbashi.png"></image>
-			<text class="sv_customMadeText">定制巴士</text>
+			<!-- <view>
+				<image class="sv_fare" src="../../static/Home/serve/cpdinggou.png"></image>
+				<text class="sv_fareText">车票订购</text>
+			</view> -->
+			
+			<!-- <view>
+				<image class="sv_taxi" src="../../static/Home/serve/wlyueche.png"></image>
+				<text class="sv_taxiText">网络约车</text>
+			</view>
+			
+			<view>
+				<image class="sv_bus" src="../../static/Home/serve/gjchaxun.png"></image>
+				<text class="sv_busText">公交查询</text>
+			</view>
+			
+			<view>
+				<image class="sv_charteredBus" src="../../static/Home/serve/bcfuwu.png"></image>
+				<text class="sv_charteredBusText">包车服务</text>
+			</view>
+			
+			<view>
+				<image class="sv_customMade" src="../../static/Home/serve/dzbashi.png"></image>
+				<text class="sv_customMadeText">定制巴士</text>
+			</view> -->
 		</view>
-		<view class="sv_view3">
+		
+		<!-- <view class="sv_view3">
 			<text class="sv_title">旅游</text>
-			<image class="sv_independentTravel" src="../../static/Home/serve/ziyouxing.png"></image>
-			<text class="sv_independentTravelText">自由行</text>
-			<image class="sv_packageTour" src="../../static/Home/serve/gentuanyou.png"></image>
-			<text class="sv_packageTourText">跟团游</text>
-			<image class="sv_ticket" src="../../static/Home/serve/jqgoupiao.png"></image>
-			<text class="sv_ticketText">景区购票</text>
-			<image class="sv_goods" src="../../static/Home/serve/jqshangpun.png"></image>
-			<text class="sv_goodsText">景区商品</text>
-		</view>
-		<view class="sv_view4">
+			<view>
+				<image class="sv_independentTravel" src="../../static/Home/serve/ziyouxing.png"></image>
+				<text class="sv_independentTravelText">自由行</text>
+			</view>
+			<view>
+				<image class="sv_packageTour" src="../../static/Home/serve/gentuanyou.png"></image>
+				<text class="sv_packageTourText">跟团游</text>
+			</view>
+			<view>
+				<image class="sv_ticket" src="../../static/Home/serve/jqgoupiao.png"></image>
+				<text class="sv_ticketText">景区购票</text>
+			</view>
+			<view>
+				<image class="sv_goods" src="../../static/Home/serve/jqshangpun.png"></image>
+				<text class="sv_goodsText">景区商品</text>
+			</view>
+		</view> -->
+		<!-- <view class="sv_view4">
 			<text class="sv_title">防控</text>
-			<image class="sv_applyFor" src="../../static/Home/serve/cxshenqing.png"></image>
-			<text class="sv_applyForText">出行申请</text>
-			<image class="sv_frim" src="../../static/Home/serve/qyrenzheng.png"></image>
-			<text class="sv_frimText">企业认证</text>
-			<image class="sv_query" src="../../static/Home/serve/zfchaxun.png"></image>
-			<text class="sv_queryText">政府查询</text>
-		</view>
+			<view>
+				<image class="sv_applyFor" src="../../static/Home/serve/cxshenqing.png"></image>
+				<text class="sv_applyForText">出行申请</text>
+			</view>
+			<view>
+				<image class="sv_frim" src="../../static/Home/serve/qyrenzheng.png"></image>
+				<text class="sv_frimText">企业认证</text>
+			</view>
+			<view>
+				<image class="sv_query" src="../../static/Home/serve/zfchaxun.png"></image>
+				<text class="sv_queryText">政府查询</text>
+			</view>
+			
+		</view> -->
 	</view>
 </template>
 
@@ -47,7 +78,11 @@
 			}
 		},
 		methods: {
-			
+			natTo:function(url){
+				uni.navigateTo({
+					url
+				})
+			}
 		}
 	}
 </script>
