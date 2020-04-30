@@ -287,7 +287,7 @@
 				uni.getStorage({
 					key:'scenicSpotOpenId',
 					success:function(response){
-						alert('获取id成功');
+						// alert('获取id成功');
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
@@ -384,7 +384,7 @@
 					
 					success: (res) => {
 						alert(res);
-						console.log('成功回调', res);
+						// console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
 								// console.log('订单编号', res.data.data);
