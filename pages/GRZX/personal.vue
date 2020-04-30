@@ -291,12 +291,9 @@
 						autograph:this.autograph,
 						phoneNumber:this.phoneNumber,
 					};
-				uni.setStorage({
-					key:'userInfo',
-					data:list,
-				})
-				 this.login(list);
-				 uni.navigateBack();
+				uni.setStorageSync('userInfo',list)
+				this.login(list);
+				uni.navigateBack();
 			},
 			// --------获得头像---------
 			getPhoto(){
