@@ -212,6 +212,7 @@
 								"background": "rgba(0,0,0,0)",
 								"redDot": true
 							},
+							// #ifndef	H5
 							{
 								"fontSrc": "/static/GRZX/jdticon.ttf",
 								"text": "\ue60d",
@@ -220,6 +221,7 @@
 								"float": "left",
 								"background": "rgba(0,0,0,0)"
 							}
+							// #endif
 						]
 					}
 				}
