@@ -599,7 +599,7 @@
 				"navigationStyle": "custom"
 			}
         }
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
