@@ -151,7 +151,7 @@
         "title" : "泉运出行综合平台",
         "domain" : "",
         "router" : {
-            "base" : "/h5/"
+            "base" : ""
         },
         "devServer" : {
             "https" : false
