@@ -293,6 +293,7 @@
 						that.getOrder();
 					},
 					fail:function(fail){
+						uni.hideLoading();
 						uni.showModal({
 							content:'用户未授权',
 						})
