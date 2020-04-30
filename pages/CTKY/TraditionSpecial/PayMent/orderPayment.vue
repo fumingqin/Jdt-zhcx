@@ -347,7 +347,7 @@
 				alert(that.ctkyOpenID);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
+					url: 'http://zntc.145u.net/api/ky/SellTicket_NoBill_Booking',
 					method: 'GET',
 					header: {
 						'content-type': 'application/json'
@@ -426,7 +426,7 @@
 				timer = setInterval(function() {
 				// uni.showLoading();
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
+					url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
 					method: 'GET',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
