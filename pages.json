@@ -7,9 +7,6 @@
 			"path": "pages/Home/guidePage",
 			"style": {
 				"navigationStyle": "custom"
-				// "app-plus": {
-				// 	"titleNView": false //禁用原生导航栏
-				// }
 			}
 		},
 		{
@@ -466,9 +463,7 @@
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
 				"navigationBarTitleText": "通知",
-				//#ifdef H5
 				"navigationStyle": "custom"
-				//#endif
 			}
 		},
 		{
@@ -583,9 +578,7 @@
 			"path": "pages/Home/serve",
 			"style": {
 				"navigationBarTitleText": "服务",
-				//#ifdef H5
 				"navigationStyle": "custom"
-				//#endif
 			}
 		},
 		{
