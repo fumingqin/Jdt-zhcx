@@ -546,21 +546,34 @@
 						icon: 'none'
 					})
 				}else {
-					if (that.ticketDetail.starSiteArr.length > 2 || hat.ticketDetail.endSiteArr.length > 2  ) {
-						if(that.startStation.length == 0 && that.endStation.length == 0) {
-							uni.showModal({
-								title:'友情提示',
-								content:'未选择上下车点，将设置默认上下车点',
-								success(res) {
-									if(res.confirm) {
-										that.jumpTo();
-									}
-								}
-							})
-						}
-					}else {
-						that.jumpTo();
+					//计算价格
+					that.calculateTotalPrice();
+					//请求成功之后跳转到支付页面,传是否选择保险1:选择 0:未选择
+					var array = {
+						isInsurance : that.isInsurance,
+						totalPrice : that.totalPrice,
+						shuttleType : that.shuttleType,
+						getOnPoint : that.startStation,
+						getOffPoint : that.endStation
 					}
+					uni.navigateTo({
+						url:'../PayMent/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' + JSON.stringify(array)
+					})
+					// if (that.ticketDetail.starSiteArr.length > 2 || hat.ticketDetail.endSiteArr.length > 2  ) {
+					// 	if(that.startStation.length == 0 && that.endStation.length == 0) {
+					// 		uni.showModal({
+					// 			title:'友情提示',
+					// 			content:'未选择上下车点，将设置默认上下车点',
+					// 			success(res) {
+					// 				if(res.confirm) {
+					// 					that.jumpTo();
+					// 				}
+					// 			}
+					// 		})
+					// 	}
+					// }else {
+					// 	that.jumpTo();
+					// }
 					
 				}
 			},
