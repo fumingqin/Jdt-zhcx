@@ -375,6 +375,10 @@
 									console.log(res1,'res1')
 									//判断是否有绑定手机号
 									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+										uni.showToast({
+											title:'您未绑定手机号，请绑定手机号！',
+											icon:'none',
+										})
 										uni.navigateTo({
 											url:'/pages/GRZX/wxLogin'
 										})

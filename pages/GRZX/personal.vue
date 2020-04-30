@@ -263,7 +263,7 @@
 					//url:'http://111.231.109.113:8002/api/person/changeInfo',
 					url:this.$GrzxInter.Interface.changeInfo.value,
 					data:{
-						portrait:this.port,
+						//portrait:this.port,
 						userId:this.userId,
 						gender:this.gender,
 						openId_qq:this.openId_qq,
@@ -279,6 +279,27 @@
 						console.log(res,"286")
 					}
 				})
+				if(this.port!=null||this.port!=""){
+					uni.request({
+						url:this.$GrzxInter.Interface.changeInfoPortrait.value,
+						data:{
+							portrait:this.port,
+							userId:this.userId,
+							gender:this.gender,
+							openId_qq:this.openId_qq,
+							openId_wx:this.openId_wx,
+							address:this.address,
+							nickname:this.nickname,
+							birthday:this.birthday,
+							autograph:this.autograph,
+							phoneNumber:this.phoneNumber,
+						},
+						method:this.$GrzxInter.Interface.changeInfoPortrait.method,
+						success(res1) {
+							console.log(res1,"290")
+						}
+					})
+				}
 				var list={
 						portrait:this.portrait,
 						userId:this.userId,
