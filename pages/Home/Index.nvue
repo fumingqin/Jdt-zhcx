@@ -275,12 +275,12 @@
 			
 			// #ifdef  H5
 			//获取openid
-			getCode() {
+			getCode:function() {
 				let that=this;
 			    let Appid = "wx14af28006f937f6e";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
-				let local = "http://zntc.145u.net/";
+				let local = "http://zntc.145u.net/#/";
 				if (code == null || code === "") {
 				  //不存在就打开上面的地址进行授权
 					window.location.href =
@@ -290,18 +290,23 @@
 						encodeURIComponent(local) +
 						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"; 
 				} else {
-				  存在则通过code传向后台调用接口返回微信的个人信息
+				  // 存在则通过code传向后台调用接口返回微信的个人信息
 					uni.request({
-						url:'http://27.148.155.9:9055/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=9cda28b050341aca1f674d2043b01358',
+						url:'http://27.148.155.9:9056/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=9cda28b050341aca1f674d2043b01358',
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
+							uni.showToast({
+								title:res.data.openid,
+								icon:'none',
+								duration:100000
+							})
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
 							uni.setStorageSync('res',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://111.231.109.113:8002/api/person/changeInfo',
+								url:'http://111.231.109.113:8006/api/person/changeInfo',
 								data:{
 									nickname:user.nickname,
 									openId_wx:user.openid,

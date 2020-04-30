@@ -48,10 +48,9 @@
 							if (res.data != null) {
 								if (res.data) {
 									var msgArray = JSON.parse(res.data.msg);
-									console.log('msgArray', msgArray);
-									if(msgArray.oldState == '结束') {
+									if(msgArray.msg == '订票失败') {
 										uni.showToast({
-											title: msgArray.message,
+											title: msgArray.msg,
 											icon: 'none'
 										})
 										clearInterval(timer);

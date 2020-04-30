@@ -148,30 +148,17 @@
 			}
 
 			setTimeout(function() {
-				that.countDown();
+				// that.countDown();
 			}, 3000);
-
-
-		},
-		onShow() {
 			//读取车票信息
 			this.getTickerInfo();
 			//读取用户信息
 			this.getUserInfo();
 			//读取乘车人信息
 			this.getPassengerInfo();
-			//--------------------------计时器--------------------------
-
-			uni.getStorage({
-				key: 'keYunCountDown',
-				success: (res) => {
-					this.countDownDate = res.data;
-					// this.countDown();
-				},
-				fail: () => {
-					// this.countDown();
-				}
-			})
+		},
+		onShow() {
+			
 		},
 		onUnload() {
 			clearInterval(this.timer);
@@ -254,17 +241,14 @@
 					key: 'passengerList',
 					success: function(data) {
 						that.passengerInfo = data.data;
-
 						if (that.passengerInfo.length > 0) {
 							for (let i = 0; i < that.passengerInfo.length; i++) {
-
 								var type = '';
 								if (data.data[i].userType == '儿童') {
 									type = 0;
 								} else if (data.data[i].userType == '成人') {
 									type = 2;
 								}
-
 								//拼接id name type
 								that.idNameTypeStr += data.data[i].userCodeNum + ',' + data.data[i].userName + ',' + type + '|';
 
@@ -281,6 +265,9 @@
 						}
 						//-------------------------------读取用户openID-------------------------------
 						// that.getOpenID();
+						
+						
+						//-------------------------------下单-------------------------------
 						that.getOrder();
 					},
 					fail() {
@@ -289,6 +276,7 @@
 							icon: 'none'
 						})
 					}
+					
 				})
 			},
 			//--------------------------读取公众号openid--------------------------
@@ -348,6 +336,13 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
+				var companyCode = '';
+				// #ifdef H5
+				companyCode = '泉运公司综合出行H5';
+				// #endif
+				// #ifdef APP-PLUS
+				companyCode = '泉运公司综合出行APP';
+				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
@@ -356,7 +351,7 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						companyCode: '泉运公司综合出行',
+						companyCode: companyCode,
 						clientID: that.userInfo.userId, //用户ID
 						clientName: that.userInfo.nickname, //用户名
 						phoneNumber: that.userInfo.phoneNumber, //手机号码
@@ -384,11 +379,12 @@
 						getOnPoint: that.specialStartStation,//定制班车上车点
 						getOffPoint: that.specialEndStation,//定制班车下车点
 					},
+					
 					success: (res) => {
-						console.log('res', res);
+						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
-								console.log('订单编号', res.data.data);
+								// console.log('订单编号', res.data.data);
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							}else if(res.data.status == false) {
@@ -400,6 +396,8 @@
 											uni.switchTab({
 												url:'../../../order/OrderList'
 											})
+										}else if(res.cancel) {
+											uni.navigateBack()
 										}
 									}
 								})
@@ -407,9 +405,8 @@
 						}
 					},
 					fail(res) {
+						console.log('失败', res);
 						uni.hideLoading();
-						//回调失败，取消定时器
-						clearInterval(timer);
 					}
 				})
 			},
@@ -420,6 +417,7 @@
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
+					
 				// uni.showLoading();
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
@@ -433,11 +431,12 @@
 					},
 					success: (res) => {
 						console.log(res.data);
-						if (res.data != null) {
-							if (res.data) {
+						if (res.data) {
+							if (res.data.status == true) {
 								var msgArray = JSON.parse(res.data.msg);
 								console.log('msgArray', msgArray);
 								if(msgArray.oldState == '结束') {
+									uni.hideLoading();
 									uni.showToast({
 										title: msgArray.message,
 										icon: 'none'
@@ -445,14 +444,25 @@
 									clearInterval(timer);
 								} else if (msgArray.oldState == '支付系统申请支付订单') {
 									that.paymentData = msgArray;
-									console.log('paymentData', that.paymentData);
-									uni.showToast({
-										title: '请在2分钟内完成支付',
-										icon: 'none'
+									// console.log('paymentData', that.paymentData);
+									uni.hideLoading();
+									uni.showModal({
+										content:'请在2分钟内完成支付',
+										showCancel:false
 									})
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
+								
+							}else if(res.data.status == false) {
+								var msgArray = JSON.parse(res.data.msg);
+								uni.hideLoading();
+								uni.showToast({
+									title: msgArray.message,
+									icon: 'none'
+								})
+								//回调失败，取消定时器
+								clearInterval(timer);
 							}
 						}
 					},
@@ -501,6 +511,7 @@
 				});
 				// #endif
 				
+				
 				// #ifdef APP-PLUS
 				console.log('进入app支付',that.paymentData);
 				uni.hideLoading()
@@ -516,8 +527,13 @@
 						prepayid: that.paymentData.jsapi.PrepayId,
 					},
 					success:function(res){
-						console.log(response)
-						if(response.errCode == 0) {//成功
+						console.log(res)
+						uni.showModal({
+							title:'提示',
+							content:res,
+							showCancel:false
+						})
+						if(res.errCode == 0) {//成功
 							uni.showToast({
 								title: '支付成功',
 								icon: 'none'
@@ -525,7 +541,7 @@
 							uni.redirectTo({
 								url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
 							})
-						}else if(response.errCode == -1) {//错误
+						}else if(res.errCode == -1) {//错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
@@ -533,7 +549,7 @@
 							uni.redirectTo({
 								url:'./CTKYPayFail?&orderNum=' + that.orderNum,
 							})
-						}else if(response.errCode == -2) {//用户取消
+						}else if(res.errCode == -2) {//用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
@@ -543,6 +559,11 @@
 										
 					fail: function(ee) {
 						console.log(ee)
+						uni.showModal({
+							title:'提示',
+							content:ee,
+							showCancel:false
+						})
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
 							icon: 'none',

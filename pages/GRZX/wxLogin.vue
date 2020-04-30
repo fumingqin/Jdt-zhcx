@@ -77,9 +77,9 @@
 				var list=uni.getStorageSync('captchaCode')	//验证码和手机号
 				console.log(list,"list")
 				var openid=uni.getStorageSync('scenicSpotOpenId')	//openid
-				console.log(openid,"list")
+				console.log(openid,"openid")
 				var userInfo=uni.getStorageSync('userInfo') //微信授权获取到的微信的个人信息
-				console.log(userInfo,"list")
+				console.log(userInfo,"userInfo")
 				var phone=this.phoneNumber;
 				var code=this.captchaCode;
 				if(phone==null||phone==""){
@@ -100,10 +100,10 @@
 				}else if(phone==list.phone&&code==list.code){
 					//调用绑定手机号接口
 					uni.request({
-						url:'http://111.231.109.113:8002/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+						url:'http://111.231.109.113:8006/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
 						data:{
 							phoneNumber:phone,
-							wxOpenid:openid,
+							wxOpenid:'openid',
 						},
 						method:'POST',
 						success(res) {
@@ -117,7 +117,7 @@
 							that.login(res.data.data)
 							setTimeout(function(){
 								uni.switchTab({
-									url:'/pages/Home/indexZhly'
+									url:'/pages/Home/index'
 								})
 							},500);
 						}
@@ -155,10 +155,10 @@
 							method:self.$GrzxInter.Interface.getLoginCode.method,
 							
 							success:(res)=>{
-						 		console.log(res.data.code);
+						 		console.log(res.data.data,'158');
 								var listCode={
 										phone:self.phoneNumber,
-										code:res.data.code,
+										code:res.data.data,
 									};
 								uni.setStorageSync('captchaCode',listCode)
 								uni.showToast({

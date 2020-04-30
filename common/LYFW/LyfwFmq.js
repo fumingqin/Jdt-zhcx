@@ -1,274 +1,3 @@
-/* 接口参数区 */
-// 示例
-const userInfo = {
-	status: 1, //1成功/0失败提示返回值
-	data: {
-		unid: 183252546, //唯一ID标示
-		mobile: 18888888888, //手机号码
-		nickname: '茜茜爱玩', //姓名
-		gender: 1, //性别
-		birthday: '1994-01-19', //生日
-		permanent: '福建省南平市武夷山市', //地址
-		autograph: '喜欢可以点关注哦~', //签名
-		portrait: '/static/user/touxiang2.jpg', //头像
-		bg: '/static/index/banner2.jpg' //背景图
-	},
-	msg: '提示'
-}
-
-
-/* 首页-轮播图 */
-const rotationPicture = {
-	status:1,
-	data:[{
-		ticketId: 0,
-		ticketImage: "../../static/Home/indexzhly/banner3.jpg",
-		background: "#149bf0",
-	},
-	{
-		ticketId: 1,
-		ticketImage: "../../static/Home/indexzhly/banner2.jpg",
-		background: "#4877c9",
-	},
-	{
-		ticketId: 2,
-		ticketImage: "../../static/Home/indexzhly/banner1.jpg",
-		background: "#69b4e6",
-	}],
-	msg: '提示',
-}
-
-/* 首页-四宫格 */
-const checkeredPattern = {
-	status: 1, //1成功/0失败提示返回值
-	data: [{
-			ticketId: 0,
-			ticketName: '武夷山',
-			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		},
-		{
-			ticketId: 1,
-			ticketName: '溪源峡谷',
-			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg',
-		},
-		{
-			ticketId: 2,
-			ticketName: '芒荡山',
-			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg',
-		},
-		{
-			ticketId: 3,
-			ticketName: '和平古镇',
-			ticketImage: '../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg',
-		}],
-	msg: '提示',
-}
-
-
-/* 门票列表 - 搜索 */
-const ticketSearch= {
-	status: 1,
-	data: {
-			ticketId: 0,
-			ticketTitle: '南平武夷山',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-			ticketAdultPrice: 320,
-			ticketSales: 20188,
-
-		},
-msg: '提示'
-}
-
-
-
-/* 景区列表 - 六宫格 */
-const sixPalaceList = {
-	status: 1, //1成功/0失败提示返回值
-	data: [{
-			ticketId: 0,
-			ticketName: '武夷山',
-			ticketEnglishName: 'Wuyi Mount',
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		},
-		{
-			ticketId: 1,
-			ticketName: '溪源峡谷',
-			ticketEnglishName: 'Creek Gorge',
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg',
-		},
-		{
-			ticketId: 2,
-			ticketName: '芒荡山',
-			ticketEnglishName: 'Mount Mandang',
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg',
-		},
-		{
-			ticketId: 3,
-			ticketName: '和平古镇',
-			ticketEnglishName: 'Peace Towns',
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg',
-		},
-		{
-			ticketId: 4,
-			ticketName: '天成奇侠',
-			ticketEnglishName: 'Natural Gorge',
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/tianchengqixia.jpg',
-		},
-		{
-			ticketId: 5,
-			ticketName: '青龙大瀑布',
-			ticketEnglishName: 'Qinglong Waterfa',
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/qinglongdapubu.jpg',
-		},
-		{
-			ticketId: 6,
-			ticketName: '茶博园',
-			ticketEnglishName: 'Tea Expo',
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/chaboyuan.jpg',
-		}
-	],
-	msg: '提示'
-}
-
-
-
-/* 景区列表 */
-const scenicList = {
-	status: 1, //1成功/0失败提示返回值
-	data: [{
-			ticketId: 0,
-			ticketTitle: '南平武夷山',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-			ticketAdultPrice: 320,
-			ticketSales: 20188,
-		},
-		{
-			ticketId: 1,
-			ticketTitle: '南平溪源峡谷',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/xiyuanxiagu.jpg',
-			ticketAdultPrice: 60,
-			ticketSales: 18687,
-		},
-		{
-			ticketId: 2,
-			ticketTitle: '南平芒荡山',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/mangdangshan.jpg',
-			ticketAdultPrice: 10,
-			ticketSales: 19245,
-		},
-		{
-			ticketId: 3,
-			ticketTitle: '邵武和平古镇',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/hepingguzhen.jpg',
-			ticketAdultPrice: 0,
-			ticketSales: 12815,
-		},
-		{
-			ticketId: 4,
-			ticketTitle: '邵武天成奇峡',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/tianchengqixia.jpg',
-			ticketAdultPrice: 130,
-			ticketSales: 21048,
-		},
-		{
-			ticketId: 5,
-			ticketTitle: '武夷山青龙大瀑布',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/qinglongdapubu.jpg',
-			ticketAdultPrice: 60,
-			ticketSales: 23074,
-
-		},
-		{
-			ticketId: 6,
-			ticketTitle: '中华武夷茶博园',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/chaboyuan.jpg',
-			ticketAdultPrice: 218,
-			ticketSales: 23078,
-
-		},
-		{
-			ticketId: 7,
-			ticketTitle: '建阳卧龙湾花花世界',
-			ticketComment_s1: '一码通' ,
-			ticketComment_s2: '可订明日票' ,
-			ticketComment_s3: '儿童半票' ,
-			ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsList/huahuashijie.jpg',
-			ticketAdultPrice: 10,
-			ticketSales: 110871,
-		}
-	],
-	msg: '提示'
-}
-
-//景区详情 - 武夷山
-const scSpotDetails = {
-	status: 1, //1成功/0失败提示返回值
-	data: {
-		ticketId: 0,
-		ticketTitle: '南平武夷山',
-		ticketOpenUp: '09:00 - 18:00',
-		ticketScenicContent: '武夷山，武夷山位于江西与福建西北部两省交界处，武夷山脉北段东南麓总面积999.75平方公里，是中国著名的风景旅游区和避暑胜地。属典型的丹霞地貌，是首批国家级重点风景名胜区之一。武夷山是三教名山。自秦汉以来，武夷山就为羽流禅家栖息之地，留下了不少宫观、道院和庵堂故址。武夷山还曾是儒家学者倡道讲学之地。武夷山自然保护区，是地球同纬度地区保护最好、物种最丰富的生态系统，拥有2527种植物物种，近5000种野生动物。在中生代晚期，武夷山发生了强烈的火山喷发活动，继之为大规模的花岗岩侵入，已发现本区有丰富的火山机构，为典型的亚洲东部环太平洋带的构造特征。白垩纪晚期的红色砂砾岩是形成丹霞地貌的主体。中生代的地壳运动奠定了武夷山地貌的基本骨架。告性对武夷山地貌发育也很明显，西部海拔1500m以上的山峰，基本上由坚硬的凝灰熔岩和流纹岩等构成，东部红色砂页岩地区则往往发育有较宽的谷地和盆地。所以武夷山丰富的地貌类型是地质构造、流水侵蚀、风化剥蚀、重力崩塌等综合作用的结果。',
-	},
-	msg: '提示'
-}
-
-
-//景区门票
-const admissionTicket = {
-	status: 1, //1成功/0失败提示返回值
-	data: [{
-		admissionTicketID: 0,
-		admissionTicketName: '武夷山门票',
-		ticketContain: '成人票/儿童票/老人票/军人票/教师票/学生票',
-		ticketComment_s1: '一码通' ,
-		ticketComment_s2: '可订明日票' ,
-		ticketComment_s3: '儿童半票' ,
-		ticketAdultPrice: 320,
-		ticketChildPrice: 160,
-	}],
-	msg: '提示'	
-}
-
-
-
-//景区详情 - 武夷山图片组
-const scSpotDetailsImage = {
-	status: 1, //1成功/0失败提示返回值
-	data: [{
-		ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner1.jpg',
-		},{
-		ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner2.jpg',
-		},{
-		ticketImage: '../../../static/LYFW/scenicSpotTickets/ticketsDetails/banner3.jpg',
-		}],
-	msg: '提示'
-}
-
-
 //弹框须知文本
 const notice = {
 	status: 1, //1成功/0失败提示返回值
@@ -283,133 +12,135 @@ const notice = {
 	msg: '提示' 
 }
 
-const orderInfo = {
-	status: 1, //1成功/0失败提示返回值
-	data: [{
-		orderNumber:'11126778833',
-		orderType:'待使用',
-		orderActualPayment: 434, //实际付款金额
-		orderDateReminder: '明天', //时间表达（今天，明天，星期X）
-		orderDate: '2020-03-11', //数字时间
-		orderTicketNumber: 'T8718283713', //取票号
-		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png', //二维码
-		orderInsure : true, //是否购买保险
-		orderInsurePrice : 4,  //保险金额总计
-		
-		ticketId: 0,
-		ticketName: '武夷山',
-		ticketOpenUp: '09:00~18:00',
-		ticketTitle: '南平武夷山', 
-		ticketContain: '观光车+成票+竹筏票',
-		ticketAdultPrice: 320,
-		ticketChildPrice: 160,
-		
-		couponID: '1',
-		couponTitle: '春节限时限量优惠券',
-		couponPrice: 50,
-		couponCondition: 400,
-		
-		userID: 0,
-		userType: '成人',
-		userName: '许小星',
-		userSex: '女',
-		userCodeNum: '35058199503692367',
-		userPhoneNum: '13853989563',
-		userDefault: true,
-		userEmergencyContact:false,
-	},{
-		orderNumber:'11126778833',
-		orderType:'待使用',
-		orderActualPayment: 434, //实际付款金额
-		orderDateReminder: '明天', //时间表达（今天，明天，星期X）
-		orderDate: '2020-03-11', //数字时间
-		orderTicketNumber: 'T8718283713',
-		orderQrCode : '../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png',
-		orderInsure : true,
-		orderInsurePrice : 4,
-		
-		ticketId: 0,
-		ticketName: '武夷山',
-		ticketOpenUp: '09:00~18:00',
-		ticketTitle: '南平武夷山', 
-		ticketContain: '观光车+成票+竹筏票',
-		ticketAdultPrice: 320,
-		ticketChildPrice: 160,
-		
-		couponID: '1',
-		couponTitle: '春节限时限量优惠券',
-		couponPrice: 50,
-		couponCondition: 400,
-		
-		userID: 1,
-		userType: '儿童',
-		userName: '张晓雪',
-		userSex: '女',
-		userCodeNum: '35058200803692367',
-		userPhoneNum: '13853989563',
-		userDefault: false,
-		userEmergencyContact:true,
-	}],
-	msg: '提示'
-}
 
+//接口域名
+const Url = 'http://111.231.109.113:8006';
 
-//景区门票
-const itText = {
-	status: 1, //1成功/0失败提示返回值
-	data: [{
-		id : 0,
-		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		title: '武夷山',
-		conut_1: '5A风景',
-		conut_2: '周边游',
-	},{
-		id : 0,
-		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		title: '武夷山',
-		conut_1: '5A风景',
-		conut_2: '周边游',
-	},{
-		id : 0,
-		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		title: '武夷山',
-		conut_1: '5A风景',
-		conut_2: '周边游',
-	},{
-		id : 0,
-		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		title: '武夷山',
-		conut_1: '5A风景',
-		conut_2: '周边游',
-	},{
-		id : 0,
-		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		title: '武夷山',
-		conut_1: '5A风景',
-		conut_2: '周边游',
-	},{
-		id : 0,
-		src: '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-		title: '武夷山',
-		conut_1: '5A风景',
-		conut_2: '周边游',
-	}],
-	msg: '提示'	
+//引入模板
+	// url:$lyfw.Interface.spt_tl_six.value,
+	// method:$lyfw.Interface.spt_tl_six.method,
+	// import $lyfw from '../../../common/LYFW/LyfwFmq.js' //引用路径
+
+//接口对象
+const Interface = {
+	//GET-POST
+	spt_GetticketSearchByrequestArea_Six:{
+		value: Url + '/api/ly/GetticketSearchByrequestArea_Six',
+		name:'景区列表-六宫格',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+	},
+	
+	spt_GetticketSearchByrequestArea:{
+		value: Url + '/api/ly/GetticketSearchByrequestArea',
+		name:'景区列表-景区列表',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+	},
+	
+	spt_GetticketSearchBysearchValue:{
+		value: Url + '/api/ly/GetticketSearchBysearchValue',
+		name:'景区列表-搜索',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+	},
+	
+	spt_GetticketDetailByticketId:{
+		value: Url + '/api/ly/GetticketDetailByticketId',
+		name:'景区门票-详情',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsDetails.vue"]
+	},
+	
+	spt_GetticketSecurityByticketIde:{
+		value: Url + '/api/ly/GetticketSecurityByticketId',
+		name:'景区门票-门票须知',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_GetcouponByuserId:{
+		value: Url + '/api/ly/GetcouponByuserId',
+		name:'景区门票-优惠券列表',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_scenicSpotSetOrder:{
+		value: Url + '/api/app/scenicSpotSetOrder',
+		name:'景区门票-H5提交订单',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_AddtouristOrder:{
+		value: Url + '/api/ly/AddtouristOrder',
+		name:'景区门票-APP提交订单',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_RequestTicketsList:{
+		value: Url + '/api/ly/RequestTicketsList',
+		name:'订单列表',
+		method:'POST',
+		pages:["order/OrderList.vue"]
+	},
+	
+	spt_RequestTicketsListDetail:{
+		value: Url + '/api/ly/RequestTicketsListDetail',
+		name:'订单详情',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderDetails.vue","LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+	},
+	
+	spt_getIsPaySuccess:{
+		value: Url + '/api/ly/getIsPaySuccess',
+		name:'订单-去支付-查询是否出票',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
+	
+	spt_RequestTickets:{
+		value: Url + '/api/ly/RequestTickets',
+		name:'订单-去支付-出票',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
+	
+	spt_CancelTickets:{
+		value: Url + '/api/ly/CancelTickets',
+		name:'订单-取消',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+	},
+	
+	spt_BounceTickets:{
+		value: Url + '/api/ly/BounceTickets',
+		name:'订单-退票',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+	},
+	
+	spt_DeleteTickets:{
+		value: Url + '/api/ly/DeleteTickets',
+		name:'订单-删除',
+		method:'POST',
+		pages:["order/OrderList.vue"]
+	},
+	
+	spt_Pay:{
+		value: Url + '/api/ly/Pay',
+		name:'订单-请求支付参数',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
+	
 }
 
 
 // 接口声明区
 export default {
-	userInfo,
-	rotationPicture,
-	checkeredPattern,
-	admissionTicket,
-	ticketSearch,
-	sixPalaceList,
-	scenicList,
-	scSpotDetails,
-	scSpotDetailsImage,
 	notice,
-	orderInfo,
-	itText,
+	Interface
 }

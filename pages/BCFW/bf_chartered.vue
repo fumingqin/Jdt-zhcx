@@ -2,9 +2,9 @@
 	<view class="ho_view">
 		<!-- 照片背景图 -->
 		<view>
-			<image class="ho_imageTop" src="../../static/BCFW/home/guanggao.png" mode="aspectFill"></image>
+			<image class="ho_imageTop" src="../../static/BCFW/choice/baocheguanggao.jpg" mode="aspectFill"></image>
 		</view>
-
+		
 		<!-- 专线/定制 -->
 		<view class="ho_queryTickets">
 			<view class="qt_typePickerView">
@@ -60,7 +60,7 @@
 				<view class="tv_vehicleSelection">
 					<button class="vs_button" style="width: 640upx;
 					height:94upx;
-					background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
+					background:rgba(249,92,117,1);
 					box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
 					"
 					 @click="subit">选车型</button>
@@ -111,7 +111,7 @@
 				<view class="tv_vehicleSelection">
 					<button class="vs_button" style="width: 640upx;
 						height:94upx;
-						background:linear-gradient(270deg,rgba(250,116,101,1),rgba(249,92,117,1));
+						background:rgba(249,92,117,1);
 						box-shadow:0px 7px 38px 8px rgba(216,48,75,0.15);
 						"
 					 @click="subit">选车型</button>
@@ -213,12 +213,16 @@
 			},
 
 			//---------------------------------点击起点站---------------------------------
-			startStationTap() {
+			startStationTap:function() {
 				var that = this;
 				//监听事件,监听下个页面返回的值
 				uni.$on('startstaionChange', function(data) {
 					// data即为传过来的值，给上车点赋值
-					that.privateSite = data.data;
+					that.privateSite = '';
+					that.privateSite = data.data.ct_dedicatedLine;
+					that.dl_Latitude = data.data.ct_latitude;
+					that.dl_Longitude = data.data.ct_longitude;
+					console.log(that.dl_Longitude)
 					//清除监听，不清除会消耗资源
 					uni.$off('startstaionChange');
 				});
@@ -382,7 +386,7 @@
 						this.homePageInfo.dl_Longitude = this.dl_Longitude;
 						this.homePageInfo.dl_Latitude = this.dl_Latitude;
 						this.homePageInfo.dayContentObject = this.dayContent[this.index];
-						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+						console.log(this.homePageInfo.dl_Longitude+" "+this.homePageInfo.dl_Latitude)
 						// console.log(this.vehicleSelection[this.value])
 						uni.setStorage({
 							key: 'homePageInfo',

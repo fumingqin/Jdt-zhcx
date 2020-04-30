@@ -134,6 +134,7 @@
 <script>
 	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	import uQRCode from "@/common/uqrcode.js"
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
@@ -180,11 +181,11 @@
 			//访问接口数据
 			lyfwData(e) {
 				uni.request({
-					url : 'http://111.231.109.113:8002/api/ly/RequestTicketsListDetail',
+					url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
+					method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
 					data:{
 						orderNumber : e
 					},
-					method:'POST',
 					header: {'content-type': 'application/json'},
 					success:(res) => {
 						console.log(res)
