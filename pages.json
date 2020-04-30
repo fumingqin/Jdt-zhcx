@@ -578,7 +578,9 @@
 		},
 		{
 			"path": "pages/Home/serve",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "服务"
+			}
 		},
 		{
 			"path": "pages/GRZX/feedback",

@@ -65,7 +65,7 @@
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="feedbackClick">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass5"></image>
+				<image src="../../static/GRZX/tubiao_fankui.png" class="iconClass5"></image>
 				<text class="fontStyle">意见反馈</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
@@ -275,7 +275,12 @@
 		height: 29upx;
 		position: absolute;
 		left:82%;
+		/* #ifdef APP-PLUS */
 		top:-3upx;
+		/* #endif */
+		/* #ifdef MP-WEIXIN */
+		top:-1upx;
+		/* #endif */
 	}
 	.typeBox{  //普通用户
 		width: 126upx;
@@ -393,7 +398,7 @@
 		width: 620upx;
 		height: 104upx;
 		margin-top: 0upx;
-		margin-left: 4.27%;
+		margin-left: 4.27%;	
 		position: relative;
 	}
 	.marginTop{
@@ -421,15 +426,15 @@
 		margin-left: 8upx;
 	}
 	.iconClass4{  //我的投诉图标
-		width: 36upx;
-		height: 39upx;
-		margin-top: 29upx;
+		width: 35upx;
+		height: 40upx;
+		margin-top: 31upx;
 		margin-left: 13upx;
 	}
-	.iconClass5{  //我的投诉图标
+	.iconClass5{  //意见反馈图标
 		width: 36upx;
 		height: 39upx;
-		margin-top: 29upx;
+		margin-top: 31upx;
 		margin-left: 13upx;
 	}
 	.btnClass{

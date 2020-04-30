@@ -1080,7 +1080,11 @@
 				uni.request({
 					url:$privateTaxi.Interface.GetSpecialLine.value,
 					method: $privateTaxi.Interface.GetSpecialLine.method,
+					header:{
+					'Content-Type':'application/x-www-form-urlencoded'
+					},
 					success(res) {
+						console.log(res)
 						if (res.data.status) {
 							uni.hideLoading();
 							that.privateTaxi = res.data.data;

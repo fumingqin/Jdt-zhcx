@@ -18,7 +18,7 @@ const Interface = {
 		value: Url + '/api/SpecialLine/GetSpecialLineByLineID_Passenger',
 		name:'旅客端-根据线路ID获取线路信息',
 		method:'POST',
-		pages:[""]
+		pages:["CZC/PrivateTaxiPayment.vue"]
 	},
 	AddSpecialLineOrder_Passenger:{
 		value: Url + '/api/SpecialLine/AddSpecialLineOrder_Passenger',
@@ -33,8 +33,20 @@ const Interface = {
 		pages:["CZC/PrivateTaxi.nvue"]
 	},
 	getCommonPayparameter:{ 
-		value: Url1+'/api/ly/getCommonPayparameter',
+		value: Url1+'/api/Pay/getCommonPayparameter',
 		name:'旅客端-获取支付信息',
+		method:'POST', 
+		pages:["CZC/PrivateTaxiPayment.vue"]
+	},
+	BouncePay:{
+		value: Url1+'/api/Pay/BouncePay',
+		name:'旅客端-退款',
+		method:'POST', 
+		pages:["CZC/PrivateTaxi.nvue"]
+	},
+	CheckPayState:{
+		value: Url1+'/api/Pay/CheckPayState',
+		name:'旅客端-检测支付是否成功',
 		method:'POST', 
 		pages:["CZC/PrivateTaxi.nvue"]
 	},
@@ -42,7 +54,7 @@ const Interface = {
 		value: Url1+'/api/ly/SpecialLineOrderPay_Passenger',
 		name:'旅客端-订单支付完成',
 		method:'POST', 
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["CZC/PrivateTaxiPayment.vue"]
 	},
 	QuerySpecialLineOrderByUserID_Passenger:{
 		value: Url + '/api/SpecialLine/QuerySpecialLineOrderByUserID_Passenger',

@@ -191,6 +191,7 @@
 			lyfwData:function() {
 				// console.log(this.regionWeixin)
 				// 六宫格
+				console.log($lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value)
 				uni.request({
 					url:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
 					method:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
@@ -198,7 +199,7 @@
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
 					},
-					header: {'content-type': 'application/json'},
+					// header: {'content-type': 'application/x-www-form-urlencoded'},
 					success:(res) => { 
 						console.log(res)
 						
@@ -225,7 +226,7 @@
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
 					},
-					header: {'content-type': 'application/json'},
+					// header: {'content-type': 'application/x-www-form-urlencoded'},
 					success:(res) => {
 						// console.log(res)
 						if(res.data.msg == '搜索景区信息成功'){

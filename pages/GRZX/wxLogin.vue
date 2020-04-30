@@ -103,7 +103,7 @@
 						url:'http://111.231.109.113:8006/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
 						data:{
 							phoneNumber:phone,
-							wxOpenid:openid,
+							wxOpenid:'openid',
 						},
 						method:'POST',
 						success(res) {
@@ -155,10 +155,10 @@
 							method:self.$GrzxInter.Interface.getLoginCode.method,
 							
 							success:(res)=>{
-						 		console.log(res.data.code);
+						 		console.log(res.data.data,'158');
 								var listCode={
 										phone:self.phoneNumber,
-										code:res.data.code,
+										code:res.data.data,
 									};
 								uni.setStorageSync('captchaCode',listCode)
 								uni.showToast({
