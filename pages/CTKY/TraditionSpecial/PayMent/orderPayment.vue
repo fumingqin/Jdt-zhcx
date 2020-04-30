@@ -279,13 +279,12 @@
 							icon: 'none'
 						})
 					}
-					
 				})
 			},
 			//--------------------------读取公众号openid--------------------------
 			getOpenID() {
 				var that = this;
-				uni.getStorageSync({
+				uni.getStorage({
 					key:'scenicSpotOpenId',
 					success:function(response){
 						alert('获取id成功');
@@ -294,11 +293,9 @@
 						that.getOrder();
 					},
 					fail:function(fail){
-						// alert(fail);
 						uni.showModal({
 							content:'用户未授权',
 						})
-						// that.getOrder();
 					}
 				})
 			},
