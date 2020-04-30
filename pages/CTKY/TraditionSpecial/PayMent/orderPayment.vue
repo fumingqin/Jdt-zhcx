@@ -146,10 +146,6 @@
 				that.insurance = '';
 				that.isInsurance = false;
 			}
-
-			setTimeout(function() {
-				// that.countDown();
-			}, 3000);
 			//读取车票信息
 			this.getTickerInfo();
 			//读取用户信息
@@ -235,8 +231,10 @@
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
-				var setTime = date.replace('T',' ');
-				return setTime;
+				if(date) {
+					var setTime = date.replace('T',' ');
+					return setTime;
+				}
 			},
 			//--------------------------读取乘车人信息--------------------------
 			getPassengerInfo() {
@@ -386,6 +384,7 @@
 					},
 					
 					success: (res) => {
+						alert(res);
 						console.log('成功回调', res);
 						if (res.data) {
 							if (res.data.status == true) {
@@ -461,7 +460,6 @@
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
-								
 							}else if(res.data.status == false) {
 								var msgArray = JSON.parse(res.data.msg);
 								uni.hideLoading();
