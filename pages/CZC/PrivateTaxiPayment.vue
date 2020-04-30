@@ -96,8 +96,8 @@
 					// }
 				],
 				countDownInterval: '',
-				SpecialLineName:'',
-				userInfo:'',
+				SpecialLineName: '',
+				userInfo: '',
 			}
 		},
 		onLoad: function(options) {
@@ -131,9 +131,9 @@
 					}
 				}, 1000);
 			},
-			getTimeRemain:function(value){//获取时间
-				var time=new Date(value+"+08:00").getTime();
-				this.countDownDate=(180-(new Date().getTime() -time)/1000).toFixed(0);
+			getTimeRemain: function(value) { //获取时间
+				var time = new Date(value + "+08:00").getTime();
+				this.countDownDate = (180 - (new Date().getTime() - time) / 1000).toFixed(0);
 				this.countDown();
 			},
 			cancelOrder: function() { //取消订单
@@ -148,11 +148,12 @@
 					success: function(res) {
 						if (res.data.status) {
 							that.showToast("超时未支付，订单自动取消");
-							setTimeout(function(){
+							clearInterval(that.countDownInterval); //清除倒计时
+							setTimeout(function() {
 								uni.switchTab({
-									url:"../order/OrderList"
+									url: "../order/OrderList"
 								})
-							},1000)
+							}, 1000)
 						} else {
 							that.showToast(res.data.msg);
 						}
@@ -162,22 +163,22 @@
 					}
 				})
 			},
-			GetSpecialLineByLineID:function(value){
-				let that=this;
+			GetSpecialLineByLineID: function(value) { //获取线路信息
+				let that = this;
 				uni.request({
 					url: $privateTaxi.Interface.GetSpecialLineByLineID.value,
 					method: $privateTaxi.Interface.GetSpecialLineByLineID.method,
 					data: {
 						SpecialLineID: value,
 					},
-					success(res){
-						if(res.data.status){
-						that.SpecialLineName=res.data.data[0].SpecialLineName;
+					success(res) {
+						if (res.data.status) {
+							that.SpecialLineName = res.data.data[0].SpecialLineName;
 						}
 					}
 				})
 			},
-			getOrderDetail: function() {
+			getOrderDetail: function() { //获取订单信息
 				let that = this;
 				uni.request({
 					url: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.value,
@@ -213,7 +214,7 @@
 
 			},
 			// ------------------------------------支付开始------------------------------------------
-			getPaymentInformation: function() {
+			getPaymentInformation: function() { //获取支付信息
 				let that = this;
 				uni.request({
 					url: $privateTaxi.Interface.getCommonPayparameter.value,
@@ -224,7 +225,7 @@
 					data: {
 						payType: 3,
 						// price: that.TaxiCost,
-						price: 0.1,
+						price: 0.01,
 						orderNumber: that.orderNumber,
 						goodsName: that.SpecialLineName,
 						billDescript: "出租车专车费",
@@ -240,11 +241,11 @@
 					provider: "wxpay",
 					orderInfo: orderInfo,
 					success(res) {
-						console.log(res)
-						that.paymentSuccess();
+						clearInterval(that.countDownInterval); //清除倒计时
+						that.CheckPayState();
 					},
 					fail(res) {
-						that.paymentSuccess();
+						that.CheckPayState();
 						if (res.errMsg == "requestPayment:fail canceled") {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")
@@ -255,23 +256,38 @@
 					}
 				})
 			},
-			paymentSuccess: function() {
-				let that=this;
+			CheckPayState: function() {
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CheckPayState.value,
+					method: $privateTaxi.Interface.CheckPayState.method,
+					data: {
+						orderNumber:that.orderNumber
+					},
+					success(res) {
+						console.log(res);
+						if (res.data.status) {
+							that.paymentSuccess();
+						}
+					}
+				})
+			},
+			paymentSuccess: function() { //支付成功订单变成待接单
+				let that = this;
 				uni.request({
 					url: $privateTaxi.Interface.SpecialLineOrderPay_Passenger.value,
 					method: $privateTaxi.Interface.SpecialLineOrderPay_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber,
-						FactPayPrice:that.TaxiCost,
+						FactPayPrice: that.TaxiCost,
 					},
 					success(res) {
-						if (res.status) {
+						if (res.data.status) {
 							uni.redirectTo({
-								url:"./PrivatePaySuccess"
+								url: "./PrivatePaySuccess"
 							})
 						} else {
-							console.log(res)
-							that.showToast("支付失败，请重新支付")
+							that.showToast("出错，请联系客服")
 						}
 					},
 					fail() {

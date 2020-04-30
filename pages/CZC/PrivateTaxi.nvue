@@ -297,21 +297,11 @@
 									uni.navigateTo({
 										url:"PrivateTaxiPayment?orderNumber="+res.data.data.OrderNumber,
 									})
-									// uni.navigateTo({
-									// 	url: '../CZC/WaitTakeOrder?orderNo=' + orderNumber,
-									// 	animationType: 'pop-in',
-									// 	animationDuration: 200, 
-									// 	success: function() {
-									// 		uni.removeStorage({
-									// 			key: "passengerList"
-									// 		})
-									// 	}
-									// });
 								} else if (!res.data.status) {
 									that.showToast(res.data.msg);
 									setTimeout(function() {
 										uni.switchTab({
-											// url: "../order/OrderList"
+											url: "../order/OrderList"
 										})
 									}, 1000)
 								}

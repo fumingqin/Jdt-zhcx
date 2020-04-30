@@ -1285,7 +1285,7 @@
 				}
 			})
 			//请求景区门票数据
-			this.toFinished();
+			// this.toFinished();
 		},
 		onShow: function() {
 			this.toFinished();
@@ -2184,7 +2184,7 @@
 	.whiteBg {
 		position: relative;
 		margin: 52rpx 26rpx;
-		margin-top: -20rpx;
+		// margin-top: -20rpx;
 		padding: 20rpx 0;
 		width: 698rpx;
 		height: 340rpx;
