@@ -56,7 +56,7 @@ const Interface={
 	},
 	changeInfo:{
 		value:Url+'/api/person/changeInfo',
-		name:'修改个人信息',
+		name:'修改个人信息（除头像外）',
 		method:'POST',
 		pages: [],
 	},
@@ -95,7 +95,25 @@ const Interface={
 		name:'微信openid，绑定手机号',
 		method:'POST',
 		pages: [],
-	}
+	},
+	changeInfoPortrait:{
+		value:Url+'/api/person/changeInfoPortrait',
+		name:'只修改头像',
+		method:'POST',
+		pages: [],
+	},
+	GetUserInfoByOpenId_wx:{
+		value:Url+'/api/person/GetUserInfoByOpenId_wx',
+		name:'通过微信的openid获取用户信息',
+		method:'POST',
+		pages: [],
+	}, 
+	GetUserInfoByOpenId_qq:{
+		value:Url+'/api/person/GetUserInfoByOpenId_qq',
+		name:'通过qq的openid获取用户信息',
+		method:'POST',
+		pages: [],
+	}, 
 }
 
 
