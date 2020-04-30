@@ -50,7 +50,7 @@
 						<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
 					</view>
 					<view style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
-						  取票号 {{orderInfo.orderNumber}}
+						  取票号 {{orderInfo.ticketNumber}}
 					</view>
 					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
 						出示二维码，检票上车
@@ -85,7 +85,7 @@
 			console.log(orderInfo);
 			that.stringTurnArray(orderInfo.iDNameType);
 			that.getTicketNum(orderInfo);
-			that.make(this.orderInfo.orderNumber);
+			that.make(this.orderInfo.ticketNumber);
 		},
 		methods: {
 			//-------------------------------生成二维码-------------------------------
