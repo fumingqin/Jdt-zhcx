@@ -121,6 +121,8 @@
 
 <script>
 	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
+	import $bcfw from "../../common/BCFW/bcfw.js"
+	
 	var name;
 	export default {
 		components: {
@@ -205,6 +207,23 @@
 				this.charteredBus = charteredBus.data;
 				// console.log(charteredBus)
 			},
+			// getcharteredBus(){
+			// 	uni.request({
+			// 		url:'http://111.231.109.113:8004/api/Chartered/GetVehicleType_Passenger',
+			// 		method:'POST',
+			// 		header:{'content-type':'application/x-www-form-urlencoded'},
+			// 		data:{
+			// 			systemName:'泉运公司综合出行'
+			// 		},
+			// 		success: (res) => {
+			// 			console.log(res)
+			// 			let that = this;
+			// 			// console.log(res.data);
+			// 		},
+			// 		fail(res) {
+			// 		}
+			// 	})
+			// }
 			readData:function(){
 				uni.getStorage({
 					key:'homePageInfo',
@@ -233,7 +252,7 @@
 								//loginType=1,泉运登录界面
 								//loginType=2,今点通登录界面
 								//loginType=3,武夷股份登录界面
-								url: '../../GRZX/userLogin?loginType=1'
+								url: '../GRZX/userLogin?loginType=1'
 							})
 						}, 500);
 					},
@@ -287,7 +306,7 @@
 									//loginType=1,泉运登录界面
 									//loginType=2,今点通登录界面
 									//loginType=3,武夷股份登录界面
-									url: '../../GRZX/userLogin?loginType=1'
+									url: '../GRZX/userLogin?loginType=1'
 								})
 							}, 500);
 						},
@@ -299,7 +318,7 @@
 					})
 				} else if (e == 1) {
 					uni.navigateTo({
-						url: '../../GRZX/passengerInfo?submitType=1',
+						url: '../GRZX/passengerInfo?submitType=1',
 					});
 				}
 			},
@@ -408,7 +427,7 @@
 					title: '提交订单中...'
 				})
 			// 	uni.request({
-			// 		url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderList?unid=' + this.userInfo.unid,
+					// url: $bcfw.Interface.
 			// 		method: 'POST',
 			// 		success: (res) => {
 			// 			// console.log(res)

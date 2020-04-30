@@ -1382,6 +1382,7 @@
 						that.userInfo = data.data;
 						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
+						that.getArrayInfo();
 					},
 					fail(res) {
 						// console.log('错误', res);
@@ -1612,6 +1613,7 @@
 			
 			//-------------------------出租车开始-------------------------
 			loadczcData: function() {
+				
 				var that = this;
 				uni.getStorage({
 					key: 'userInfo',
@@ -2131,33 +2133,70 @@
 			
 			//-------------------包车订单添加-------------------------
 			//获取模拟数据
-			async getArrayInfo() {
+			// async getArrayInfo() {
+			// 	var that = this;
+			// 	let ArrayInfo = await this.$api.bcfwzyx('ArrayInfo');
+			// 	// console.log('1235', ArrayInfo)
+
+			// 	if (ArrayInfo.data) {
+			// 		for (var i = 0; i < ArrayInfo.data.length; i++) {
+			// 			that.info.push(ArrayInfo.data[i]);
+			// 		}
+			// 		// console.log('1', ArrayInfo)
+
+					
+			// 	}
+			// 	// console.log('2', that.info)
+			// },
+			getArrayInfo: function() {
 				var that = this;
-				let ArrayInfo = await this.$api.bcfwzyx('ArrayInfo');
-				// console.log('1235', ArrayInfo)
-
-				if (ArrayInfo.data) {
-					for (var i = 0; i < ArrayInfo.data.length; i++) {
-						that.info.push(ArrayInfo.data[i]);
-					}
-					// console.log('1', ArrayInfo)
-
-					if (ArrayInfo.data !== '') {
-						for (var i = 0; i < ArrayInfo.data.length; i++) {
-							if (ArrayInfo.data[i].or_type == '已完成') {
-								that.finishArr.push(ArrayInfo.data[i]);
-							} else if (ArrayInfo.data[i].or_type == '进行中' || ArrayInfo.data[i].or_type == '待发车' || ArrayInfo.data[i].or_type ==
-								'待补款') {
-								that.goingArr.push(ArrayInfo.data[i]);
-							} else if (ArrayInfo.data[i].or_type == '待支付') {
-								that.unfinishArr.push(ArrayInfo.data[i]);
-							} else if (ArrayInfo.data[i].or_type == '已取消') {
-								that.cancelArr.push(ArrayInfo.data[i]);
+				uni.getStorage({
+					key: 'userInfo',
+					success: (res) => {
+						this.userInfo = res.data;
+						uni.request({
+							url:'http://111.231.109.113:8004/api/Chartered/QueryCharteredOrderByUserID_Passenger',
+							method:'POST',
+							data: {
+								userId: this.userInfo.userId
+							},
+							header: {'content-type': 'application/json'},
+							success: (res) => {
+								console.log(res);
+								if (res.data.msg == '订单获取成功') {
+									if (ArrayInfo.data !== '') {
+										for (var i = 0; i < ArrayInfo.data.length; i++) {
+											if (ArrayInfo.data[i].or_type == '已完成') {
+												that.finishArr.push(ArrayInfo.data[i]);
+											} else if (ArrayInfo.data[i].or_type == '进行中' || ArrayInfo.data[i].or_type == '待发车' || ArrayInfo.data[i].or_type ==
+												'待补款') {
+												that.goingArr.push(ArrayInfo.data[i]);
+											} else if (ArrayInfo.data[i].or_type == '待支付') {
+												that.unfinishArr.push(ArrayInfo.data[i]);
+											} else if (ArrayInfo.data[i].or_type == '已取消') {
+												that.cancelArr.push(ArrayInfo.data[i]);
+											}
+										}
+									}
+									}
+									
 							}
-						}
+						})
+					},
+					fail() {
+						//请求数据失败，停止刷新
+						uni.stopPullDownRefresh();
+						uni.showToast({
+							title: '暂无订单数据，请先登录后查看订单',
+							icon: 'none',
+							success: function() {
+								uni.redirectTo({
+									url: '../GRZX/userLogin?loginType=1&&urlData=2'
+								})
+							}
+						})
 					}
-				}
-				// console.log('2', that.info)
+				})
 			},
 			//-------------------------拨打电话-------------------------
 			tel: function(e) {
