@@ -164,7 +164,7 @@
 				}
 			})
 			// #ifdef  H5
-			// this.getCode();
+			 this.getCode();
 			//#endif
 		},
 		onReady() {
