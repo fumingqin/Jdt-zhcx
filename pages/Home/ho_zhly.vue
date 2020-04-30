@@ -107,6 +107,7 @@
 </template>
 
 <script>
+	import $lyfw from '../../common/LYFW/LyfwFmq.js' //引用路径
 	export default {
 		data() {
 			return {
@@ -194,12 +195,12 @@
 				}, 1000)
 
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea',
+					url:$lyfw.Interface.spt_GetticketSearchByrequestArea.value,
+					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data: {
 						// requestArea : this.regionWeixin,
 						requestArea: '南平市'
 					},
-					method: 'POST',
 					header: {
 						'content-type': 'application/json'
 					},
