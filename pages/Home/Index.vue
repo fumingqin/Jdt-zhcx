@@ -46,6 +46,10 @@
 <script>
 	import taxi from '../../common/Czc.js'
     // import wx from 'http://res.wx.qq.com/open/js/jweixin-1.6.0.js'
+	import {
+		mapState,
+	    mapMutations  
+	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -176,6 +180,7 @@
 			});
 		},
 		methods: {
+			...mapMutations(['login']),
 			getGaoDeKey: function() {
 				//获取高德key
 				var that = this;
@@ -348,42 +353,34 @@
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
-							uni.showToast({
-								title:res.data.openid,
-								icon:'none',
-								duration:100000
-							})
+							// uni.showToast({
+							// 	title:res.data.openid,
+							// 	icon:'none',
+							// 	duration:100000
+							// })
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
-							uni.setStorageSync('res',res.data)
+							uni.setStorageSync('wxuserInfo',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://zntc.145u.net/api/person/changeInfo',
+								//url:'http://zntc.145u.net/api/person/changeInfo',
+								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
 								data:{
-									nickname:user.nickname,
 									openId_wx:user.openid,
-									portrait:user.headimgurl,
-									userId:'',
-									openId_qq:'',
-									gender:'',
-									address:user.province+user.city,
-									birthday:'',
-									phoneNumber:'',
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									if(res1.data.msg=="信息保存成功！"){
-										uni.setStorageSync('userInfo',res1.data.data)
-										if(res1.data.data.phoneNumber==null){
-											uni.navigateTo({
-												url:'/pages/GRZX/wxLogin',
-											})
-										}else{
-											that.logining=true;
-											that.login(res1.data.data)
-										}
-									}
 									console.log(res1,'res1')
+									//判断是否有绑定手机号
+									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+										uni.navigateTo({
+											url:'/pages/GRZX/wxLogin'
+										})
+									}else{
+										uni.setStorageSync('userInfo',res1.data.data)
+										that.logining=true;
+										that.login(res1.data.data)
+									}	
 								}
 							})
 						},
