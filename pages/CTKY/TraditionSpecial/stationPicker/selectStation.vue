@@ -57,17 +57,17 @@
 
 			//保存上车点数组
 			that.startStationList = stationArray.specialStartArray;
-			// //保存下车点数组
+			//保存下车点数组
 			that.endStationList = stationArray.specialEndArray;
 			if(stationArray.startStaionIndex == ''||stationArray.endStationIndex == '') {
-				// //定位已选择的上车点
+				//定位已选择的上车点
 				that.startSelectIndex = 0;
-				// //定位已选择的下车点
+				//定位已选择的下车点
 				that.endSelectIndex = 0;
 			}else {
-				// //定位已选择的上车点
+				//定位已选择的上车点
 				that.startSelectIndex = stationArray.startStaionIndex;
-				// //定位已选择的下车点
+				//定位已选择的下车点
 				that.endSelectIndex = stationArray.endStationIndex;
 			}
 		},
