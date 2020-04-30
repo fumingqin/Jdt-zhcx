@@ -299,7 +299,7 @@
 			.ct_content1 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 320upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
@@ -316,8 +316,8 @@
 			.ct_content3 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 240upx;
-				padding-left: 68upx;
+				width: 310upx;
+				// padding-left: 68upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
@@ -342,12 +342,12 @@
 			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
 
 				.ct_content6 {
-					width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
@@ -358,8 +358,7 @@
 			.ct_content7 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 225upx;
-				padding-left: 68upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
