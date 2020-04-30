@@ -96,6 +96,7 @@
 				let endSelectIndex = that.endSelectIndex;
 				//点击完成时如果只选中了下车点没有选上车点，给上车点赋值上次选中的值
 				if(that.startStation == '') {
+					alert(that.startStation)
 					that.startStation = that.startStationList[startSelectIndex].SiteName;
 				}
 				//点击完成时如果只选中了上车点没有选下车点，给下车点赋值上次选中的值

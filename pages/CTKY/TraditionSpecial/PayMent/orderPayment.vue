@@ -9,7 +9,7 @@
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{utils.timeTodate('Y-m-d H:i',orderInfo.setTime)}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{turnDate(orderInfo.setTime)}} &nbsp; 仅限当天</text>
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
@@ -233,6 +233,11 @@
 					}
 				})
 			},
+			//-------------------------------时间转换-------------------------------
+			turnDate(date) {
+				var setTime = date.replace('T',' ');
+				return setTime;
+			},
 			//--------------------------读取乘车人信息--------------------------
 			getPassengerInfo() {
 				var that = this;
@@ -283,7 +288,7 @@
 			getOpenID() {
 				var that = this;
 				uni.getStorage({
-					key:'ctkyOpenId',
+					key:'scenicSpotOpenId',
 					success:function(response){
 						console.log(response);
 						that.ctkyOpenID = response.data
