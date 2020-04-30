@@ -379,6 +379,7 @@
 						getOnPoint: that.specialStartStation,//定制班车上车点
 						getOffPoint: that.specialEndStation,//定制班车下车点
 					},
+					
 					success: (res) => {
 						console.log('成功回调', res);
 						if (res.data) {
@@ -430,11 +431,12 @@
 					},
 					success: (res) => {
 						console.log(res.data);
-						if (res.data != null) {
-							if (res.data) {
+						if (res.data) {
+							if (res.data.status == true) {
 								var msgArray = JSON.parse(res.data.msg);
 								console.log('msgArray', msgArray);
 								if(msgArray.oldState == '结束') {
+									uni.hideLoading();
 									uni.showToast({
 										title: msgArray.message,
 										icon: 'none'
@@ -442,14 +444,25 @@
 									clearInterval(timer);
 								} else if (msgArray.oldState == '支付系统申请支付订单') {
 									that.paymentData = msgArray;
-									console.log('paymentData', that.paymentData);
-									uni.showToast({
-										title: '请在2分钟内完成支付',
-										icon: 'none'
+									// console.log('paymentData', that.paymentData);
+									uni.hideLoading();
+									uni.showModal({
+										content:'请在2分钟内完成支付',
+										showCancel:false
 									})
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
+								
+							}else if(res.data.status == false) {
+								var msgArray = JSON.parse(res.data.msg);
+								uni.hideLoading();
+								uni.showToast({
+									title: msgArray.message,
+									icon: 'none'
+								})
+								//回调失败，取消定时器
+								clearInterval(timer);
 							}
 						}
 					},
@@ -498,6 +511,7 @@
 				});
 				// #endif
 				
+				
 				// #ifdef APP-PLUS
 				console.log('进入app支付',that.paymentData);
 				uni.hideLoading()
@@ -512,50 +526,37 @@
 						partnerid: that.paymentData.jsapi.PartnerId, 
 						prepayid: that.paymentData.jsapi.PrepayId,
 					},
-					success:function(res){
-						console.log(res)
-						uni.showModal({
-							title:'提示',
-							content:res,
-							showCancel:false
-						})
-						if(res.errCode == 0) {//成功
-							uni.showToast({
-								title: '支付成功',
-								icon: 'none'
-							})
+					success: function(res) {
+						console.log('支付结果', res)
+						if (res.errMsg == 'requestPayment:ok') { //成功
 							uni.redirectTo({
-								url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
+								url:'CTKYPaySuccess?&orderNum=' + that.orderNum,
 							})
-						}else if(res.errCode == -1) {//错误
+							 
+						} else if (res.errMsg == 'requestPayment:fail') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
-								icon: 'none'
+								icon: 'none',
 							})
-							uni.redirectTo({
-								url:'./CTKYPayFail?&orderNum=' + that.orderNum,
-							})
-						}else if(res.errCode == -2) {//用户取消
+							
+						}
+					},
+					
+					fail: function(ee) {
+						console.log(ee)
+						if (ee.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
 							})
+						} else {
+							uni.showToast({
+								title: ee.errMsg,
+								icon: 'none',
+								duration: 3000
+							})
 						}
 					},
-										
-					fail: function(ee) {
-						console.log(ee)
-						uni.showModal({
-							title:'提示',
-							content:ee,
-							showCancel:false
-						})
-						uni.showToast({
-							title: '拉起支付失败，请检查网络后重试',
-							icon: 'none',
-							duration: 3000
-						})
-					}
 				})
 				// #endif
 			},

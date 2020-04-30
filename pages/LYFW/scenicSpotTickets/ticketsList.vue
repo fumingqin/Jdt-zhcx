@@ -130,6 +130,7 @@
 <script>
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
@@ -191,13 +192,13 @@
 				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
-					url:'http://111.231.109.113:8006/api/ly/GetticketSearchByrequestArea_Six',
+					url:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
+					method:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
 					data:{ 
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
 					},
-					method:'POST',
-					// header: {'content-type': 'application/json'},
+					header: {'content-type': 'application/json'},
 					success:(res) => { 
 						console.log(res)
 						
@@ -218,13 +219,13 @@
 				
 				// 请求景区列表
 				uni.request({
-					url:'http://111.231.109.113:8006/api/ly/GetticketSearchByrequestArea',
+					url:$lyfw.Interface.spt_GetticketSearchByrequestArea.value,
+					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data:{
 						// requestArea : this.regionWeixin,
 						requestArea : '南平市'
 					},
-					method:'POST',
-					// header: {'content-type': 'application/json'},
+					header: {'content-type': 'application/json'},
 					success:(res) => {
 						// console.log(res)
 						if(res.data.msg == '搜索景区信息成功'){
@@ -338,11 +339,11 @@
 					title:'正在搜索',
 				})
 				uni.request ({
-					url:'http://111.231.109.113:8002/api/ly/GetticketSearchBysearchValue',
+					url:$lyfw.Interface.GetticketSearchBysearchValue.value,
+					method:$lyfw.Interface.GetticketSearchBysearchValue.method,
 					data:{
 						searchValue : this.searchValue,
 					},
-					method:'POST',
 					header: {'content-type': 'application/json'},
 					
 					success : (res) => {
