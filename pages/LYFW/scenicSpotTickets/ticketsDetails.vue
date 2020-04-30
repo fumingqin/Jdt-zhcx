@@ -42,6 +42,7 @@
 	</view>
 </template>
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
@@ -101,11 +102,11 @@
 			lyfwData: function(e) {
 				// 请求景区图片
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/GetticketDetailByticketId',
+					url:$lyfw.Interface.spt_GetticketDetailByticketId.value,
+					method:$lyfw.Interface.spt_GetticketDetailByticketId.method,
 					data:{
 						ticketId : e,
 					},
-					method:'POST',
 					header: {'content-type': 'application/json'},
 					success: (res) => {
 						console.log(res)

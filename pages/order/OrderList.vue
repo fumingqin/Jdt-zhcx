@@ -1218,6 +1218,7 @@
 	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
 	import $taxi from '../../common/Czc.js';
 	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import uQRCode from "@/common/uqrcode.js"
 	export default {
 		components: {
@@ -1840,14 +1841,12 @@
 					success: (res) => {
 						this.userInfo = res.data;
 						uni.request({
-							url: 'http://111.231.109.113:8002/api/ly/RequestTicketsList',
+							url:$lyfw.Interface.spt_RequestTicketsList.value,
+							method:$lyfw.Interface.spt_RequestTicketsList.method,
 							data: {
 								userId: this.userInfo.userId
 							},
-							method: 'POST',
-							header: {
-								'content-type': 'application/json'
-							},
+							header: {'content-type': 'application/json'},
 							success: (res) => {
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
@@ -1962,11 +1961,11 @@
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/BounceTickets',
+					url:$lyfw.Interface.spt_BounceTickets.value,
+					method:$lyfw.Interface.spt_BounceTickets.method,
 					data: {
 						orderNumber: this.ticketOrderNumber,
 					},
-					method: 'POST',
 					header: {
 						'content-type': 'application/json'
 					},
@@ -1987,11 +1986,11 @@
 			cancel: function() {
 				if(this.exitindex == '3'){
 					uni.request({
-						url: 'http://111.231.109.113:8002/api/ly/CancelTickets',
+						url:$lyfw.Interface.spt_CancelTickets.value,
+						method:$lyfw.Interface.spt_CancelTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
-						method: 'POST',
 						header: {
 							'content-type': 'application/json'
 						},
@@ -2032,11 +2031,11 @@
 			del: function() {
 				if(this.exitindex == '3'){
 					uni.request({
-						url: 'http://111.231.109.113:8002/api/ly/DeleteTickets',
+						url:$lyfw.Interface.spt_DeleteTickets.value,
+						method:$lyfw.Interface.spt_DeleteTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
-						method: 'POST',
 						header: {
 							'content-type': 'application/json'
 						},

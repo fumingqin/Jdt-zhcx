@@ -13,11 +13,134 @@ const notice = {
 }
 
 
+//接口域名
+const Url = 'http://111.231.109.113:8002';
 
+//引入模板
+	// url:$lyfw.Interface.spt_tl_six.value,
+	// method:$lyfw.Interface.spt_tl_six.method,
+	// import $lyfw from '../../../common/LYFW/LyfwFmq.js' //引用路径
+
+//接口对象
+const Interface = {
+	//GET-POST
+	spt_GetticketSearchByrequestArea_Six:{
+		value: Url + '/api/ly/GetticketSearchByrequestArea_Six',
+		name:'景区列表-六宫格',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+	},
+	
+	spt_GetticketSearchByrequestArea:{
+		value: Url + '/api/ly/GetticketSearchByrequestArea',
+		name:'景区列表-景区列表',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+	},
+	
+	spt_GetticketSearchBysearchValue:{
+		value: Url + '/api/ly/GetticketSearchBysearchValue',
+		name:'景区列表-搜索',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+	},
+	
+	spt_GetticketDetailByticketId:{
+		value: Url + '/api/ly/GetticketDetailByticketId',
+		name:'景区门票-详情',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/ticketsDetails.vue"]
+	},
+	
+	spt_GetticketSecurityByticketIde:{
+		value: Url + '/api/ly/GetticketSecurityByticketId',
+		name:'景区门票-门票须知',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_GetcouponByuserId:{
+		value: Url + '/api/ly/GetcouponByuserId',
+		name:'景区门票-优惠券列表',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_scenicSpotSetOrder:{
+		value: Url + '/api/app/scenicSpotSetOrder',
+		name:'景区门票-H5提交订单',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_AddtouristOrder:{
+		value: Url + '/api/ly/AddtouristOrder',
+		name:'景区门票-APP提交订单',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+	},
+	
+	spt_RequestTicketsList:{
+		value: Url + '/api/ly/RequestTicketsList',
+		name:'订单列表',
+		method:'POST',
+		pages:["order/OrderList.vue"]
+	},
+	
+	spt_RequestTicketsListDetail:{
+		value: Url + '/api/ly/RequestTicketsListDetail',
+		name:'订单详情',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/orderDetails.vue","LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+	},
+	
+	spt_getIsPaySuccess:{
+		value: Url + '/api/ly/getIsPaySuccess',
+		name:'订单-去支付-查询是否出票',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
+	
+	spt_RequestTickets:{
+		value: Url + '/api/ly/RequestTickets',
+		name:'订单-去支付-出票',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
+	
+	spt_CancelTickets:{
+		value: Url + '/api/ly/CancelTickets',
+		name:'订单-取消',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+	},
+	
+	spt_BounceTickets:{
+		value: Url + '/api/ly/BounceTickets',
+		name:'订单-退票',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+	},
+	
+	spt_DeleteTickets:{
+		value: Url + '/api/ly/DeleteTickets',
+		name:'订单-删除',
+		method:'POST',
+		pages:["order/OrderList.vue"]
+	},
+	
+	spt_sp_Pay:{
+		value: Url + '/api/ly/Pay',
+		name:'订单-请求支付参数',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
+	
+}
 
 
 // 接口声明区
 export default {
 	notice,
-
+	Interface
 }
