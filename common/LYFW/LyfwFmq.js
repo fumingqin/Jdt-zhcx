@@ -129,7 +129,7 @@ const Interface = {
 		pages:["order/OrderList.vue"]
 	},
 	
-	spt_sp_Pay:{
+	spt_Pay:{
 		value: Url + '/api/ly/Pay',
 		name:'订单-请求支付参数',
 		method:'POST',

@@ -174,8 +174,8 @@
 			})
 
 			uni.request({
-				url:$lyfw.Interface.spt_sp_TicketsListDetail.value,
-				method:$lyfw.Interface.spt_sp_TicketsListDetail.method,
+				url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
+				method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
 				data: {
 					orderNumber: options.orderNumber
 				},
@@ -572,8 +572,8 @@
 				if (that.channeIndex == 0) {
 					console.log(this.orderInfo.orderNumber)
 					uni.request({
-						url:$lyfw.Interface.spt_sp_Pay.value,
-						method:$lyfw.Interface.spt_sp_Pay.method,
+						url:$lyfw.Interface.spt_Pay.value,
+						method:$lyfw.Interface.spt_Pay.method,
 						data: {
 							payType: 5,
 							price: that.orderInfo.orderActualPayment,
@@ -673,8 +673,8 @@
 				//--------------------------------------微信H5公众号支付-------------------------------------
 				if (that.channeIndex == 0) {
 					uni.request({
-						url:$lyfw.Interface.spt_sp_Pay.value,
-						method:$lyfw.Interface.spt_sp_Pay.method,
+						url:$lyfw.Interface.spt_Pay.value,
+						method:$lyfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
 							price: that.orderInfo.orderActualPayment,
@@ -766,8 +766,8 @@
 				//--------------------------------------微信APP支付-------------------------------------
 				if (this.channeIndex == 0) {
 					uni.request({
-						url:$lyfw.Interface.spt_sp_Pay.value,
-						method:$lyfw.Interface.spt_sp_Pay.method,
+						url:$lyfw.Interface.spt_Pay.value,
+						method:$lyfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
 							price: that.orderInfo.orderActualPayment,
@@ -858,8 +858,8 @@
 					console.log(that.orderInfo.orderNumber)
 					//--------------------------------------支付宝APP支付-------------------------------------
 					uni.request({
-						url:$lyfw.Interface.spt_sp_Pay.value,
-						method:$lyfw.Interface.spt_sp_Pay.method,
+						url:$lyfw.Interface.spt_Pay.value,
+						method:$lyfw.Interface.spt_Pay.method,
 						data: {
 							payType: 2,
 							price: that.orderInfo.orderActualPayment,

@@ -1070,7 +1070,7 @@
 				<view class="box_qrCodeView">
 					<canvas canvas-id="qrcode2" style="width: 160px; height: 160px; left: 174upx; margin-top: 24upx;" />
 					<view class="box_qrCodeTextView">
-						<text class="box_qrCodeText" style="font-size: 26upx; color: #AAAAAA;">若无出现二维码，请重复打开弹框</text>
+						<text class="box_qrCodeText" style="font-size: 26upx; color: #AAAAAA;">若无出现二维码，请点击详情查看二维码</text>
 						<text class="box_qrCodeText">取票码：{{orderIndexData.orderTicketNumber}}</text>
 						<text class="box_qrCodeText">预订人数：{{orderIndexData.orderUserIndex}}人</text>
 					</view>
@@ -2063,6 +2063,7 @@
 			
 			//-------------------------生成二维码-------------------------
 			make: function(e) {
+				console.log(e)
 				uQRCode.make({
 					canvasId: 'qrcode2',
 					componentInstance: this,
