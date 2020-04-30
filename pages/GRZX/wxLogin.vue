@@ -78,7 +78,7 @@
 				console.log(list,"list")
 				var openid=uni.getStorageSync('scenicSpotOpenId')	//openid
 				console.log(openid,"openid")
-				var userInfo=uni.getStorageSync('userInfo') //微信授权获取到的微信的个人信息
+				var userInfo=uni.getStorageSync('wxuserInfo') //微信授权获取到的微信的个人信息
 				console.log(userInfo,"userInfo")
 				var phone=this.phoneNumber;
 				var code=this.captchaCode;

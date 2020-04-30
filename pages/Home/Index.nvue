@@ -314,6 +314,16 @@
 								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
 									console.log(res1,'res1')
+									//判断是否有绑定手机号
+									if(res.data.msg=="不存在该用户"){
+										uni.navigateTo({
+											url:'/pages/GRZX/wxLogin'
+										})
+									}else{
+										uni.setStorageSync('userInfo',res1.data.data)
+										that.logining=true;
+										that.login(res1.data.data)
+									}	
 								}
 							})
 						},
