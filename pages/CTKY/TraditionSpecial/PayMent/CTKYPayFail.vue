@@ -71,7 +71,7 @@
 			godetail: function(e) {
 				if(e==0){
 					uni.switchTab({
-						url: ''
+						url: '../Order/oederList'
 					});
 				}else if(e==1){
 					uni.switchTab({

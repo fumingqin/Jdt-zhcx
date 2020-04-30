@@ -564,11 +564,6 @@
 							content:ee,
 							showCancel:false
 						})
-						uni.showToast({
-							title: '拉起支付失败，请检查网络后重试',
-							icon: 'none',
-							duration: 3000
-						})
 					}
 				})
 				// #endif
