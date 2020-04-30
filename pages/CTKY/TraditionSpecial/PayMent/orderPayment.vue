@@ -288,13 +288,13 @@
 				uni.getStorageSync({
 					key:'scenicSpotOpenId',
 					success:function(response){
-						alert(response);
+						alert('获取id成功');
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail:function(fail){
-						alert(fail);
+						// alert(fail);
 						uni.showModal({
 							content:'用户未授权',
 						})
