@@ -1379,7 +1379,7 @@
 					key: 'userInfo',
 					success: function(data) {
 						that.userInfo = data.data;
-						console.log('错误', that.userInfo);
+						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
 					},
 					fail(res) {
@@ -1387,6 +1387,7 @@
 					}
 				})
 			},
+			
 			//-------------------------请求客运订单数据-------------------------
 			getKeYunOrderInfo: function() {
 				var that = this;
@@ -1414,7 +1415,7 @@
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].state == '7') {
 									that.unfinishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].state == '6') {
+								} else if (res.data.data[i].state == '6' || res.data.data[i].state == '9') {
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
@@ -1485,12 +1486,16 @@
 			// -------------------------客运支付-------------------------
 			keYunPay: function(orderNumber) {
 				// var orderInfo = this.info[index];
-				// console.log(orderInfo);
+				console.log(orderNumber);
 				this.getTicketPaymentInfo(orderNumber);
 			},
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(orderNumber) {
-				// console.log('支付参数', res);
+				console.log('支付参数', orderNumber);
+				uni.showToast({
+					title:orderNumber,
+					icon:'none'
+				})
 				var that = this;
 				var timer = null;
 				that.timer = timer;
@@ -1506,27 +1511,43 @@
 							orderNumber: orderNumber,
 						},
 						success: (res) => {
-							// console.log('支付参数返回数据', res);
-							if (res.data.data != null) {
+							console.log('支付参数返回数据', res);
+							if (res.data.status == true) {
+								uni.hideLoading();
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
-									uni.showToast({
-										title: '订单已结束',
-										icon: 'none',
+									uni.showModal({
+										content:'订单已结束',
+										showCancel:false
 									})
 									clearInterval(timer);
 								} else {
+									that.keYunPayment();
 									that.keYunPaymentData = JSON.parse(res.data.data);
 									clearInterval(timer);
+									
 								}
+							}else if(res.data.status == false) {
 								uni.hideLoading();
+								var info = JSON.parse(res.data.msg);
+								if(info.oldState == '结束') {
+									uni.showModal({
+										content:'订单已结束',
+										showCancel:false
+									})
+								}else {
+									uni.showModal({
+										content:info.oldState,
+										showCancel:false
+									})
+								}
 							}
-							if (res.data.msg != null) {
-								//调起支付
-								// that.keYunPayment();
-								uni.hideLoading();
-								clearInterval(timer);
-							}
+							// if (res.data.msg != null) {
+							// 	//调起支付
+							// 	// that.keYunPayment();
+							// 	uni.hideLoading();
+							// 	clearInterval(timer);
+							// }
 						},
 						fail(res) {
 							uni.hideLoading();
@@ -1547,6 +1568,10 @@
 						icon: 'none'
 					})
 				} else {
+					uni.showModal({
+						content:that.keYunPaymentData,
+						showCancel:false
+					})
 					// console.log('点击了支付', that.keYunPaymentData);
 					WeixinJSBridge.invoke('getBrandWCPayRequest', {
 						"appId": that.keYunPaymentData.AppId, //公众号名称，由商户传入
