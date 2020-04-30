@@ -11,7 +11,7 @@
 				<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
 				<view style="margin-top: 50rpx;align-items: center;">
 					<text class="isWaitText">正在等待司机接单...</text>
-					<text style="color: #999999;font-size: 32rpx;padding-top: 10rpx;" @click="cancleOrder">取消订单</text>
+					<text style="color: #999999;font-size: 32rpx;padding-top: 10rpx;" @click="BouncePay">取消订单</text>
 				</view>
 			</view>
 		</view>
@@ -50,7 +50,7 @@
 				<view @click="callPolice" style="width: 300rpx;align-items: center;border-right:1px solid #2C2D2D;">
 					<text class="callPolice" style="">一键报警</text>
 				</view>
-				<view @click="cancleOrder" style="width: 300rpx;align-items: center;">
+				<view @click="BouncePay" style="width: 300rpx;align-items: center;">
 					<text class="cancle">取消订单</text>
 				</view>
 			</view>
@@ -159,7 +159,8 @@
 						value: 'alipay',
 						checked: false
 					},
-				]
+				],
+				FactPayPrice:'',//订单价格
 			}
 		},
 		onLoad(option) {
@@ -234,6 +235,7 @@
 							that.driverName = data.DriverName;
 							that.vehicleNumber = data.VehicleNumber; //车牌号
 							that.state = data.State; //订单状态
+							that.FactPayPrice = data.FactPayPrice;
 							//绘制起终点标记
 							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
 							that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
@@ -556,6 +558,61 @@
 				}
 				return country + province + city + district + street + streetNum + poiName;
 			},
+			CheckPayState: function() {//检测支付状态
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CheckPayState.value,
+					method: $privateTaxi.Interface.CheckPayState.method,
+					data: {
+						orderNumber:that.orderNumber
+					},
+					success(res) {
+						console.log(res);
+						if (res.data.status) {
+							that.cancleOrder();
+						}else{
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail() {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			BouncePay:function(){
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.BouncePay.value,
+					method: $privateTaxi.Interface.BouncePay.method,
+					data: {
+						orderNumber: that.orderNumber,
+						// price:that.FactPayPrice
+						price:0.01
+					},
+					success(res) {
+						if(res.data.status){
+							that.CheckPayState()
+						}else{
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
 			cancleOrder: function() {
 				//取消订单
 				let that = this;
@@ -600,7 +657,6 @@
 										title: '网络连接失败',
 										icon: 'none'
 									})
-									console.log(res);
 								}
 							});
 						}
