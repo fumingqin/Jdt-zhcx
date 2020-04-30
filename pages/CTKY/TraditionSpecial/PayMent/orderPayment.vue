@@ -344,7 +344,7 @@
 				// #ifdef APP-PLUS
 				companyCode = '泉运公司综合出行APP';
 				// #endif
-				alert(that.ctkyOpenID);
+				// alert(that.ctkyOpenID);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url: 'http://zntc.145u.net/api/ky/SellTicket_NoBill_Booking',
@@ -383,7 +383,7 @@
 					},
 					
 					success: (res) => {
-						alert(res);
+						// alert(res);
 						if (res.data) {
 							if (res.data.status == true) {
 								uni.showToast({
