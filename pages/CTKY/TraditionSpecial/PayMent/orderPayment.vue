@@ -150,17 +150,15 @@
 			setTimeout(function() {
 				// that.countDown();
 			}, 3000);
-
-
-		},
-		onShow() {
 			//读取车票信息
 			this.getTickerInfo();
 			//读取用户信息
 			this.getUserInfo();
 			//读取乘车人信息
 			this.getPassengerInfo();
-			//--------------------------计时器--------------------------
+		},
+		onShow() {
+			
 		},
 		onUnload() {
 			clearInterval(this.timer);
@@ -267,6 +265,9 @@
 						}
 						//-------------------------------读取用户openID-------------------------------
 						// that.getOpenID();
+						
+						
+						//-------------------------------下单-------------------------------
 						that.getOrder();
 					},
 					fail() {
@@ -513,6 +514,11 @@
 					},
 					success:function(res){
 						console.log(res)
+						uni.showModal({
+							title:'提示',
+							content:res,
+							showCancel:false
+						})
 						if(res.errCode == 0) {//成功
 							uni.showToast({
 								title: '支付成功',
@@ -539,6 +545,11 @@
 										
 					fail: function(ee) {
 						console.log(ee)
+						uni.showModal({
+							title:'提示',
+							content:ee,
+							showCancel:false
+						})
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
 							icon: 'none',
