@@ -275,7 +275,12 @@
 		height: 29upx;
 		position: absolute;
 		left:82%;
+		/* #ifdef APP-PLUS */
 		top:-3upx;
+		/* #endif */
+		/* #ifdef MP-WEIXIN */
+		top:-1upx;
+		/* #endif */
 	}
 	.typeBox{  //普通用户
 		width: 126upx;

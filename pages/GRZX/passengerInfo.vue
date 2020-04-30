@@ -190,7 +190,7 @@
 						count++;
 					}
 				}
-				if(e.userauditState==2||e.userType=="儿童"||e.userType=="成人"||e.userType=="老人"){
+				if(e.userauditState=='审核通过'||e.userType=="儿童"||e.userType=="成人"||e.userType=="老人"){
 					if(e.hiddenIndex==1){
 						e.hiddenIndex=0;
 					}else if(count>(this.limit-1) && this.submitType==2){

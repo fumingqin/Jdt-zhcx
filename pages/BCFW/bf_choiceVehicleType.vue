@@ -35,7 +35,7 @@
 							<view class="bv_titleView">
 								<text class="tv_text1">包车须知</text>
 								<text class="tv_text2 jdticon icon-fork " @click="close(1)"></text>
-							</view>
+							</view>																								
 							<scroll-view class="bv_content" scroll-y="ture">
 								<view v-for="(item,index) in priceExplain" :key="index">
 									<text class="ct_text">{{item.title}}</text>
@@ -54,7 +54,7 @@
 				<!-- 顶部滑动 -->
 				<view class="sc_topSlide">
 					<view v-for="(item,index) in vehicleSelection" :key="index">
-						<view class="ts_tab" :class="{current: value===index}" @click="tabClick(index)">{{item.tabName}}</view>
+						<view class="ts_tab" :class="{current: value===index}" @click="tabClick(index)">{{item.cvt_tabName}}</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -62,8 +62,8 @@
 			<!-- 选择按钮  :hidden="status==false"-隐藏 -->
 			<scroll-view class="sr_scroll" scroll-x="true">
 				<view class="sc_selectButton">
-					<view v-for="(item,index) in vehicleSelection[value].cost" :key="index">
-						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.price}}元</view>
+					<view v-for="(item,index) in vehicleSelection[value].cvt_cost" :key="index">
+						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.cvt_price}}元</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -71,10 +71,10 @@
 			<!-- 选择车 -->
 			<scroll-view class="sr_scroll" scroll-x="true">
 				<view class="sc_choiceCar">
-					<view v-for="(item,index) in vehicleSelection[value].cost[value2].vehicle" :key="index" @click="carClick(index)">
+					<view v-for="(item,index) in vehicleSelection[value].cvt_cost[value2].cvt_vehicle" :key="index" @click="carClick(index)">
 						<view class="cc_button">
-							<text class="cc_text" :class="{current3: value3===index}">{{item.carName}}</text>
-							<image class="cc_image" :src="item.car" />
+							<text class="cc_text" :class="{current3: value3===index}">{{item.cvt_Name}}</text>
+							<image class="cc_image" :src="item.cvt_carImage" />
 						</view>
 					</view>
 				</view>
@@ -116,31 +116,28 @@
 				// addressContent:'',
 
 				vehicleSelection: [{
-					tabId: '',
-					tabName: '',
+					cvt_tabId: '',
+					cvt_tabName: '',
 
-					cost: [{
-						btId: '',
-						price: '',
+					cvt_cost: [{
+						cvt_btId: '',
+						cvt_price: '',
 
-						vehicle: [{
-							carId: '',
-							car:'',
-							carName: '',
-							carNumberSeats:'',
-							carprice:'',
+						cvt_vehicle: [{
+							cvt_carImage:'',
+							cvt_Name: '',
+							cvt_carNumberSeats:'',
+							cvt_carprice:'',
 						}],
 					}],
 				}], //车辆选择
 				
 				information:{
-					carId: '',
-					carName: '',
-					car:'',
-					carNumberSeats:'',
-					carprice:'',
+					cvt_Name: '',
+					cvt_carImage:'',
+					cvt_carNumberSeats:'',
+					cvt_carprice:'',
 				},
-				
 				
 				
 			}
@@ -149,6 +146,7 @@
 		onLoad(options) {
 			this.isNormal = options.isNormal;
 			this.routeInit();
+			this.bcfwData();
 		},
 		
 		onShow() {
@@ -156,14 +154,27 @@
 		},
 		
 		methods: {
+			//---------------------------------口数据--------------------------------------
+			bcfwData:function(){
+				uni.request({
+					url:'http://111.231.109.113:8004/api/Chartered/GetVehicleType_Passenger',
+					method:'POST',
+					header: {'content-type': 'application/json'},
+					
+					success: (res) => {
+						console.log(res)
+						this.vehicleSelection=res.data.data;
+						// console.log(this.vehicleSelection)
+					}
+				})
+			},
+			
 			//---------------------------------模拟接口数据---------------------------------
 			async routeInit() {
-				// let choiceVehicle = await this.$api.lyfwcwd('choiceVehicle');
-				// this.addressContent = choiceVehicle.data;
 				let priceExplain = await this.$api.lyfwcwd('priceExplain');
 				this.priceExplain = priceExplain.data;
-				let vehicleSelection = await this.$api.lyfwcwd('vehicleSelection');
-				this.vehicleSelection = vehicleSelection.data;
+				// let vehicleSelection = await this.$api.lyfwcwd('vehicleSelection');
+				// this.vehicleSelection = vehicleSelection.data;
 			},
 
 			//------------------------------弹框事件-----------------------------------------
@@ -224,11 +235,10 @@
 			//------------------------------提交数据-------------------------------------
 			subit:function(){
 				if(this.value3!==''){
-					this.information.carId = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carId;
-					this.information.car = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].car;
-					this.information.carName = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carName;
-					this.information.carNumberSeats = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carNumberSeats;
-					this.information.carprice = this.vehicleSelection[this.value].cost[this.value2].vehicle[this.value3].carprice;
+					this.information.cvt_carImage = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carImage;
+					this.information.cvt_Name = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_Name;
+					this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carNumberSeats;
+					this.information.cvt_carprice = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carprice;
 					
 					console.log(this.vehicleSelection[this.value])
 					uni.setStorage({
@@ -289,7 +299,7 @@
 			.ct_content1 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 320upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
@@ -306,8 +316,8 @@
 			.ct_content3 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 240upx;
-				padding-left: 68upx;
+				width: 310upx;
+				// padding-left: 68upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
@@ -332,12 +342,12 @@
 			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
 
 				.ct_content6 {
-					width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
@@ -348,8 +358,7 @@
 			.ct_content7 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 225upx;
-				padding-left: 68upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
