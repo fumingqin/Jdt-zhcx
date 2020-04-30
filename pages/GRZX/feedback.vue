@@ -12,6 +12,9 @@
 				<robby-image-upload v-model="detailInfo.imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
 			</view>
 		</view>
+		<view class="fb_view3">
+			<button class="fb_btn" form-type="submit">提交</button>
+		</view>
 		</form>
 	</view>
 </template>
@@ -55,7 +58,7 @@
 			},
 			formSubmit: function(e) {
 			    uni.showModal({
-			        content: '表单数据内容：' + JSON.stringify(this.detailInfo),
+			        content: '提交成功',
 			        showCancel: false
 			    });
 			}
@@ -115,6 +118,16 @@
 				position: absolute;
 				left: 31upx;
 				top: 545upx;
+			}
+		}
+		.fb_view3{
+			width:650upx;
+			margin-top: 30upx;
+			margin-left: 50upx;
+			.fb_btn{
+				border-radius:30px;
+				background: #FC4646;
+				color: #FFFFFF;
 			}
 		}
 </style>
