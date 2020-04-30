@@ -464,9 +464,7 @@
 		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
-				// #ifdef H5
 				"navigationStyle": "custom",
-				// #endif
 				"navigationBarTitleText": "通知"
 			}
 		},
@@ -581,9 +579,9 @@
 		{
 			"path": "pages/Home/serve",
 			"style": {
-				// #ifdef H5
+
 				"navigationStyle": "custom",
-				// #endif
+
 				"navigationBarTitleText": "服务"
 				
 				
