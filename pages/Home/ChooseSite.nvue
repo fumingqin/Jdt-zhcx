@@ -249,8 +249,8 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="current == 3">我是公交</view>
-		<view v-if="current == 4" style="margin-top: 10rpx;">
+		<view v-if="current == 4">我是公交</view>
+		<view v-if="current == 3" style="margin-top: 10rpx;">
 			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick(item)">
 				<text style="font-size: 36rpx;font-weight: bold;">{{item.SpecialLineName}}</text>
 				<view style="justify-content: space-between;padding-top: 20rpx;">
@@ -311,7 +311,7 @@
 				startlocation: {},
 				endlocation: {},
 				IsClick: true,
-				items: ['智能', '客运', '出租车', '公交', '专线车'],
+				items: ['智能', '客运', '出租车', '专线车'],
 				points: [],
 				IsSearch: false,
 				markers: [],
@@ -378,7 +378,7 @@
 			uni.removeStorage({
 				key: "passengerList"
 			})
-			clearInterval(that.intervalAround);
+			clearInterval(this.intervalAround);
 		},
 		onShow() {
 			var that = this;
@@ -467,7 +467,7 @@
 					//客运弹框
 					that.open();
 				}
-				if (that.current == 4) {
+				if (that.current == 3) {
 					that.getprivateTaxiLine();
 				}
 			},

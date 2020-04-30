@@ -1,5 +1,5 @@
 {
-    "name" : "综合出行",
+    "name" : "泉运出行综合平台",
     "appid" : "__UNI__7BBF03F",
     "description" : "",
     "versionName" : "1.0.0",
@@ -111,6 +111,13 @@
                         "spotlight@3x" : "unpackage/res/icons/120x120.png"
                     }
                 }
+            },
+            "splashscreen" : {
+                "android" : {
+                    "hdpi" : "C:/Users/32589/Desktop/启动图480x762.png",
+                    "xhdpi" : "C:/Users/32589/Desktop/启动图720x1242.png",
+                    "xxhdpi" : "C:/Users/32589/Desktop/启动图1080x1882.png"
+                }
             }
         },
         "compilerVersion" : 3
@@ -121,9 +128,15 @@
     "mp-weixin" : {
         "appid" : "",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : false,
+            "minified" : true
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于小程序位置接口的效果展示"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -135,7 +148,7 @@
         "usingComponents" : true
     },
     "h5" : {
-        "title" : "综合出行",
-        "domain" : "27.148.155.9"
+        "title" : "泉运出行综合平台",
+        "domain" : ""
     }
 }

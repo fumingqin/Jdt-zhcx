@@ -19,7 +19,9 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				timeout:"",
+			}
 		},
 		onReady() {
 			this.backHome();
@@ -27,6 +29,7 @@
 		methods: {
 			//路由统一事件
 			godetail: function(e) {
+				clearTimeout(timeout)
 				if(e==0){
 					uni.switchTab({
 						url: '../order/OrderList'
@@ -38,7 +41,7 @@
 				}
 			},
 			backHome : function() {
-				setTimeout(() => { 
+				this.timeout=setTimeout(() => { 
 					uni.switchTab({
 						url: '/pages/Home/Index'
 					});

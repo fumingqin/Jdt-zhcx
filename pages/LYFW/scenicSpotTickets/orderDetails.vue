@@ -86,9 +86,12 @@
 				
 				<!-- 空白二维码区域 -->
 				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">支付后生成二维码及取票码</view>
-			
+				
+				<!-- 空白二维码区域 -->
+				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '已退票'">二维码已失效</view>
+				
 				<!-- 二维码 -->
-				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">
+				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' ">
 					<view class="Xx_QRcodeBlock1"> 
 						<text class="Xx_QRcodeContentTitle">取票码</text>
 					</view>

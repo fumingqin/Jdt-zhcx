@@ -36,7 +36,7 @@
 					</view>
 					<image @click="call" src="../../static/CZC/Call.png" style="width: 40rpx;height: 40rpx;"></image>
 				</view>
-				<view v-if="state == 1" style="margin-top: 30rpx;border-top:1px solid #EAEAEA;padding-top: 30rpx;">
+				<view v-if="state == 1" style="margin-top: 30rpx;border-top:1px solid #EAEAEA;padding-top: 30rpx;align-items: center;">
 					<text class="fontClass-28">司机已接单，请提前前往上车点等候</text>
 				</view>
 				<view v-if="state == 2" style="margin-top: 30rpx;border-top:1px solid #EAEAEA;padding-top: 30rpx;">
@@ -59,14 +59,14 @@
 			<view style="padding-left: 10rpx;" elevation='0px'>
 				<image @click="callPolice" src="../../static/Home/CallPollice.png" style="width: 120rpx;height: 120rpx;"></image>
 			</view>
-			<view style="align-items: center;">
-				<view elevation='5px' class="orderBottomContent">
+			<view style="align-items: center;height: 300rpx;">
+				<!-- <view elevation='5px' class="orderBottomContent">
 					<view style="flex-direction: row;justify-content: space-between;margin-bottom: 30rpx;padding-bottom: 30rpx;border-bottom:1px solid #EAEAEA;">
 						<view>
 							<text class="orderTitleFont">车费合计{{totalPrice}}元</text>
 						</view>
 						<view>
-							<!-- <text @click="payDetail" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用疑问</text> -->
+							 <text @click="payDetail" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用疑问</text>
 						</view>
 					</view>
 					<view v-for="item in priceArr" :key='item.key' style="flex-direction: row;justify-content: space-between;padding-bottom: 30rpx;">
@@ -77,7 +77,7 @@
 							<text class="orderTitleFont">{{item.value}}元</text>
 						</view>
 					</view>
-				</view>
+				</view> -->
 			</view>
 		</view>
 	</view>
@@ -224,10 +224,10 @@
 						// console.log(res);
 						if (res.data.status) {
 							//赋值结束点经纬度
-							that.startLon = data.startLon; //起点
-							that.startLat = data.startLat;
-							that.endLon = data.endLon; //终点
-							that.endLat = data.endLat;
+							that.startLon = data.StartLon; //起点
+							that.startLat = data.StartLat;
+							that.endLon = data.EndLon; //终点
+							that.endLat = data.EndLat;
 							that.thisDriverLon = data.DriverLon;
 							that.thisDriverLat = data.DriverLat;
 							that.driverPhone = data.DriverPhone; //司机电话
@@ -487,7 +487,6 @@
 								type: 'gcj02',
 								geocode: true,
 								success: function(res) {
-									console.log(res)
 									uni.request({
 										url: $taxi.Interface.addPassengerOneTouchAlarm.value,
 										method: $taxi.Interface.addPassengerOneTouchAlarm.method,

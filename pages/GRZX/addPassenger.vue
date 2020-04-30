@@ -222,12 +222,13 @@
 						if(res.data.userType=="军人"||res.data.userType=="教师"||res.data.userType=="学生"){
 							that.selector=res.data.userType;
 							uni.request({
-								url:'http://111.231.109.113:8002/api/person/userInfoListDetail',
+								//url:'http://111.231.109.113:8002/api/person/userInfoListDetail',
+								url:that.$GrzxInter.Interface.userInfoListDetail.value,
 								data:{
 									userId:that.userId,
 									passengerId:that.user.passengerId,
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.userInfoListDetail.method,
 								success(res1) {
 									that.fImg= res1.data.data[0].userfrontImg;
 									that.bImg= res1.data.data[0].userbackImg;
@@ -323,11 +324,12 @@
 								}
 								if(age>0){
 									uni.request({
-										url:'http://111.231.109.113:8002/api/person/userInfoList',
+										// url:'http://111.231.109.113:8002/api/person/userInfoList',
+										url:that.$GrzxInter.Interface.userInfoList.value,
 										data:{
 											userId:that.userId,
 										},
-										method:'POST',
+										method:that.$GrzxInter.Interface.userInfoList.method,
 										success(listRes) {
 											//判断是否有本人
 											if(data1.userDefault&&listRes.data.data!=null&&listRes.data.data!=""){
@@ -336,7 +338,8 @@
 												})
 												if(defaultList.length>0){
 													uni.request({
-														url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+														//url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+														url:that.$GrzxInter.Interface.changeUserInfo.value,
 														data:{
 															userId:defaultList[0].userId, //账号id
 															passengerId:defaultList[0].passengerId, //乘车人id
@@ -348,7 +351,7 @@
 														  	userDefault:'false',   //用户是否本人 true/false 
 														  	userEmergencyContact:defaultList[0].userEmergencyContact,   //是否设置为紧急联系人 true/false
 														},
-														method:'POST',
+														method:that.$GrzxInter.Interface.changeUserInfo.method,
 														success(resd) {
 															console.log(resd,"315")
 														}
@@ -362,7 +365,8 @@
 												})
 												if(defaultList.length>0){
 													uni.request({
-														url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+														//url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+														url:that.$GrzxInter.Interface.changeUserInfo.value,
 														data:{
 															userId:defaultList[0].userId, //账号id
 															passengerId:defaultList[0].passengerId, //乘车人id  
@@ -374,7 +378,7 @@
 														  	userDefault:defaultList[0].userDefault,   //用户是否本人 true/false 
 														  	userEmergencyContact:'false',   //是否设置为紧急联系人 true/false
 														},
-														method:'POST',
+														method:that.$GrzxInter.Interface.changeUserInfo.method,
 														success(resd) {
 															console.log(resd,"315")
 														}
@@ -382,7 +386,8 @@
 												}
 											} 
 											uni.request({
-												url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+												// url:'http://111.231.109.113:8002/api/person/changeUserInfo',
+												url:that.$GrzxInter.Interface.changeUserInfo.value,
 												data:{
 													userId:data1.userId, //账号id
 													passengerId:data1.passengerId, //乘车人id   
@@ -397,7 +402,7 @@
 													userbackImg:data1.bImg,		//证件主页
 													userauditState:data1.userauditState,   //审核状态
 												},
-												method:'POST',
+												method:that.$GrzxInter.Interface.changeUserInfo.method,
 												success(res) {
 													console.log(res,"370")
 													if(res.data.msg!=""&&res.data.msg!=null){

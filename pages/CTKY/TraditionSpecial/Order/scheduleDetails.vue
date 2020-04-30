@@ -25,7 +25,7 @@
 			</view>
 			
 			<!-- 地图标点 -->
-			<view class="orderCommonClass">
+			<view class="orderCommonClass" v-if="false">
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<view @tap="checkLocation" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>
@@ -34,7 +34,8 @@
 			</view>
 			
 			<!-- 上下车点选择,0是普通购票不显示上下车点选择 -->
-			<view class="stationContentView" v-if="ticketDetail.shuttleType == '定制班车'">
+			<!-- v-if="ticketDetail.shuttleType == '定制班车'" -->
+			<view class="stationContentView" v-if="ticketDetail.starSiteArr.length > 2 || ticketDetail.endSiteArr.length > 2">
 				<view class="boarding" style="border-bottom:#EAEAEA solid 1px;" @tap="startStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">
@@ -243,8 +244,8 @@
 				totalPrice:0,//车票总价格
 				passengerNum:0,//乘车人数量
 				shuttleType:'',//班车类型'定制班车''普通班车'
-				sepecialStartStationArray:[],//定制班车起点数组
-				specialEndStationArray:[],//定制班车终点数组
+				sepecialStartArray:[],//定制班车起点数组
+				specialEndArray:[],//定制班车终点数组
 			}
 		},
 		
@@ -252,7 +253,8 @@
 			var that = this;
 			//给车票类型赋值，0：普通购票，不显示上下车点选择 1:定制班车，显示上下车点选择
 			// this.isNormal = e.isNormal;
-			
+			that.startStation = '',//定制班车上车点
+			that.endStation = '',//定制班车下车点
 			uni.setNavigationBarTitle({
 				title: '填写订单'
 			});
@@ -263,6 +265,12 @@
 					that.ticketDetail = data.data;//车票数组
 					that.totalPrice = data.data.fare;//价格
 					that.shuttleType = data.data.shuttleType;//班车类型
+					
+					//定制班车起点数组
+					that.sepecialStartArray = data.data.starSiteArr;
+					//定制班车终点数组
+					that.specialEndArray = data.data.endSiteArr
+					
 					console.log('车票数据',that.ticketDetail)
 					if(data.data.insurePrice == 0) {
 						that.isInsurance = 0;
@@ -286,6 +294,12 @@
 			        console.log('success');
 			    }
 			});
+			uni.removeStorage({
+				key:'CTKYStationList',
+				success: function (res) {
+				    console.log('success');
+				}
+			})
 		},
 		methods: {
 			//-------------------------------乘客数据读取-------------------------------
@@ -323,17 +337,29 @@
 			//-------------------------------点击定制班车上车点-----------------------------
 			startStationTap() {
 				var that = this;
+				var stationArray = {
+					startStaionIndex : that.startStaionIndex,
+					endStationIndex : that.endStationIndex,
+					specialStartArray : that.sepecialStartArray,
+					specialEndArray : that.specialEndArray
+				}
 				//跳转到选择上车点页面
 				uni.navigateTo({
-					url:'../stationPicker/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+					url:'../stationPicker/selectStation?stationArray=' + JSON.stringify(stationArray)
 				})
 			},
 			//-------------------------------点击定制班车下车点-----------------------------
 			endStationTap() {
 				var that = this;
+				var stationArray = {
+					startStaionIndex : that.startStaionIndex,
+					endStationIndex : that.endStationIndex,
+					specialStartArray : that.sepecialStartArray,
+					specialEndArray : that.specialEndArray
+				}
 				//跳转到选择下车点页面
 				uni.navigateTo({
-					url:'../stationPicker/selectStation?startStaionIndex=' + that.startStaionIndex + '&endStationIndex=' + that.endStationIndex
+					url:'../stationPicker/selectStation?stationArray=' + JSON.stringify(stationArray)
 				})
 			},
 			//-------------------------------删除乘车人-----------------------------
@@ -391,14 +417,17 @@
 			},
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
-				if (this.ticketDetail.shuttleType == '普通班车') {
-					uni.navigateTo({
-						url:'../MapMark/traditionCarMark'
-					})
-				}else if (this.ticketDetail.shuttleType == '定制班车') {
-					uni.navigateTo({
-						url:'../MapMark/specialMark'
-					})
+				var that = this;
+				if(that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
+					if (this.ticketDetail.starSiteArr.length <= 2 && this.ticketDetail.endSiteArr.length <= 2) {//普通班车
+						uni.navigateTo({
+							url:'../MapMark/traditionCarMark?traditionArray=' + JSON.stringify(this.ticketDetail)
+						})
+					}else if (this.ticketDetail.starSiteArr.length > 2 || this.ticketDetail.endSiteArr.length > 2) {//定制班车
+						uni.navigateTo({
+							url:'../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
+						})
+					}
 				}
 			},
 			//-------------------------------选择乘客-----------------------------
