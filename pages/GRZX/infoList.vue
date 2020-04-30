@@ -13,9 +13,9 @@
 				<view class="redBox">
 					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
 					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
-					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
-					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+					<text v-if="item.userauditState=='待审核'" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.userauditState=='审核通过'" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.userauditState=='审核未通过'" class="fontClass" style="width: 120upx;">审核未通过</text>	
 				</view>
 				<view class="btnRight">
 					<image src="../../static/GRZX/btnRight.png" style="width: 100%;height: 100%;"></image>
@@ -38,9 +38,9 @@
 				<view class="redBox">
 					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
 					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
-					<text v-if="item.auditState==1" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.auditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
-					<text v-if="item.auditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+					<text v-if="item.userauditState=='待审核'" class="fontClass" style="width: 80upx;">待审核</text>
+					<text v-if="item.userauditState=='审核通过'" class="fontClass" style="width: 100upx;">审核通过</text>
+					<text v-if="item.userauditState=='审核未通过'" class="fontClass" style="width: 120upx;">审核未通过</text>	
 				</view>
 				<view v-if="item.deleteIndex==0" class="btnCheck"> 
 					<image src="../../static/GRZX/btnUncheck.png" style="width: 100%;height: 100%;"></image>
@@ -186,7 +186,7 @@
 							},
 							method:that.$GrzxInter.Interface.userInfoList.method,
 							success(res1) {
-								//console.log(res1,'111')
+								console.log(res1,'111')
 								for(var i=0;i<res1.data.data.length;i++){
 									if(res1.data.data[i].userSex==0){
 										res1.data.data[i].userSex="男";

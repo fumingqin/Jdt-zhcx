@@ -77,9 +77,9 @@
 				var list=uni.getStorageSync('captchaCode')	//验证码和手机号
 				console.log(list,"list")
 				var openid=uni.getStorageSync('scenicSpotOpenId')	//openid
-				console.log(openid,"list")
+				console.log(openid,"openid")
 				var userInfo=uni.getStorageSync('userInfo') //微信授权获取到的微信的个人信息
-				console.log(userInfo,"list")
+				console.log(userInfo,"userInfo")
 				var phone=this.phoneNumber;
 				var code=this.captchaCode;
 				if(phone==null||phone==""){
@@ -117,7 +117,7 @@
 							that.login(res.data.data)
 							setTimeout(function(){
 								uni.switchTab({
-									url:'/pages/Home/indexZhly'
+									url:'/pages/Home/index'
 								})
 							},500);
 						}

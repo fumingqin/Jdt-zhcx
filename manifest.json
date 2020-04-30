@@ -149,6 +149,12 @@
     },
     "h5" : {
         "title" : "泉运出行综合平台",
-        "domain" : ""
+        "domain" : "",
+        "router" : {
+            "base" : ""
+        },
+        "devServer" : {
+            "https" : true
+        }
     }
 }

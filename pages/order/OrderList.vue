@@ -246,7 +246,7 @@
 							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(index)">去支付</button>
+							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
 							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
@@ -454,12 +454,12 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn">车辆位置</button>
+							<!-- <button class="allBtn">车辆位置</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn QRCode">二维码</button>
+							<!-- <button class="allBtn QRCode">二维码</button>
 							<button class="allBtn">选座</button>
 							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
-							<button class="allBtn">联系司机</button>
+							<button class="allBtn">联系司机</button> -->
 						</view>
 					</view>
 				</view>
@@ -620,7 +620,7 @@
 				</view>
 
 				<!-- (进行中)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' && item.isDel !== '是'">
+				<view v-if="item.carType=='普通班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -655,10 +655,10 @@
 
 						<view class="CTKYBtnView">
 							<!-- <button class="allBtn">车辆位置</button> -->
-							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<!-- <button class="allBtn QRCode">二维码</button> -->
 							<!-- <button class="allBtn">选座</button> -->
-							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
+							<button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button>
 							<!-- <button class="allBtn">联系司机</button> -->
 						</view>
 					</view>
@@ -850,8 +850,8 @@
 						</view>
 						<view class="CTKYBtnView">
 							<!-- <button class="allBtn" @tap="cancelTap(item.orderId)">取消</button> -->
-							<button class="allBtn" @click="detail(item.titleIndex)">详情</button>
-							<button class="allBtn payBtn" @tap="keYunPay">去支付</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn payBtn" @tap="keYunPay()">去支付</button>
 						</view>
 					</view>
 				</view>
@@ -1050,9 +1050,9 @@
 							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
 
-						<view class="CTKYBtnView" v-if="item.state=='已取消'">
-							<button class="allBtn" @tap="detail(item.titleIndex)">详情</button>
-							<button class="allBtn" @tap="del(index)">删除</button>
+						<view class="CTKYBtnView">
+							<button class="allBtn" @tap="keYunDetail(item)">详情</button>
+							<!-- <button class="allBtn" @tap="del(index)">删除</button> -->
 						</view>
 					</view>
 				</view>
@@ -1070,7 +1070,7 @@
 				<view class="box_qrCodeView">
 					<canvas canvas-id="qrcode2" style="width: 160px; height: 160px; left: 174upx; margin-top: 24upx;" />
 					<view class="box_qrCodeTextView">
-						<text class="box_qrCodeText" style="font-size: 26upx; color: #AAAAAA;">若无出现二维码，请重复打开弹框</text>
+						<text class="box_qrCodeText" style="font-size: 26upx; color: #AAAAAA;">若无出现二维码，请点击详情查看二维码</text>
 						<text class="box_qrCodeText">取票码：{{orderIndexData.orderTicketNumber}}</text>
 						<text class="box_qrCodeText">预订人数：{{orderIndexData.orderUserIndex}}人</text>
 					</view>
@@ -1218,6 +1218,7 @@
 	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
 	import $taxi from '../../common/Czc.js';
 	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import uQRCode from "@/common/uqrcode.js"
 	export default {
 		components: {
@@ -1379,7 +1380,7 @@
 					key: 'userInfo',
 					success: function(data) {
 						that.userInfo = data.data;
-						console.log('错误', that.userInfo);
+						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
 					},
 					fail(res) {
@@ -1387,6 +1388,7 @@
 					}
 				})
 			},
+			
 			//-------------------------请求客运订单数据-------------------------
 			getKeYunOrderInfo: function() {
 				var that = this;
@@ -1412,9 +1414,9 @@
 									that.finishArr.push(res.data.data[i]);
 								} else if (res.data.data[i].state == '4') {
 									that.goingArr.push(res.data.data[i]);
-								} else if (res.data.data[i].state == '订单未支付') {
+								} else if (res.data.data[i].state == '7') {
 									that.unfinishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].state == '9') {
+								} else if (res.data.data[i].state == '6' || res.data.data[i].state == '9') {
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
@@ -1457,7 +1459,7 @@
 				})
 			},
 			// -------------------------客运退票-------------------------
-			keYunRefundTicket: function() {
+			keYunRefundTicket: function(orderNumber) {
 				var that = this;
 				uni.request({
 					url: 'http://111.231.109.113:8002/api/ky/RefundTicket_Flow',
@@ -1466,9 +1468,7 @@
 						'content-type': 'application/x-www-form-urlencoded'
 					},
 					data: {
-						orderNumber: that.ctkyOrderNum,
-						// clientID: that.userInfo.userId,
-						// clientName: that.userInfo.nickname,
+						orderNumber: orderNumber,
 					},
 					success: (respones) => {
 						console.log('删除结果', respones)
@@ -1485,14 +1485,18 @@
 				})
 			},
 			// -------------------------客运支付-------------------------
-			keYunPay: function(index) {
-				var orderInfo = this.info[index];
-				// console.log(orderInfo);
-				this.getTicketPaymentInfo(orderInfo);
+			keYunPay: function(orderNumber) {
+				// var orderInfo = this.info[index];
+				console.log(orderNumber);
+				this.getTicketPaymentInfo(orderNumber);
 			},
 			//--------------------------获取车票支付参数--------------------------
-			getTicketPaymentInfo: function(res) {
-				// console.log('支付参数', res);
+			getTicketPaymentInfo: function(orderNumber) {
+				console.log('支付参数', orderNumber);
+				uni.showToast({
+					title:orderNumber,
+					icon:'none'
+				})
 				var that = this;
 				var timer = null;
 				that.timer = timer;
@@ -1505,30 +1509,46 @@
 							'content-type': 'application/x-www-form-urlencoded'
 						},
 						data: {
-							orderNumber: res.orderNumber,
+							orderNumber: orderNumber,
 						},
 						success: (res) => {
-							// console.log('支付参数返回数据', res);
-							if (res.data.data != null) {
+							console.log('支付参数返回数据', res);
+							if (res.data.status == true) {
+								uni.hideLoading();
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
-									uni.showToast({
-										title: '订单已结束',
-										icon: 'none',
+									uni.showModal({
+										content:'订单已结束',
+										showCancel:false
 									})
 									clearInterval(timer);
 								} else {
+									that.keYunPayment();
 									that.keYunPaymentData = JSON.parse(res.data.data);
 									clearInterval(timer);
+									
 								}
+							}else if(res.data.status == false) {
 								uni.hideLoading();
+								var info = JSON.parse(res.data.msg);
+								if(info.oldState == '结束') {
+									uni.showModal({
+										content:'订单已结束',
+										showCancel:false
+									})
+								}else {
+									uni.showModal({
+										content:info.oldState,
+										showCancel:false
+									})
+								}
 							}
-							if (res.data.msg != null) {
-								//调起支付
-								// that.keYunPayment();
-								uni.hideLoading();
-								clearInterval(timer);
-							}
+							// if (res.data.msg != null) {
+							// 	//调起支付
+							// 	// that.keYunPayment();
+							// 	uni.hideLoading();
+							// 	clearInterval(timer);
+							// }
 						},
 						fail(res) {
 							uni.hideLoading();
@@ -1549,6 +1569,10 @@
 						icon: 'none'
 					})
 				} else {
+					uni.showModal({
+						content:that.keYunPaymentData,
+						showCancel:false
+					})
 					// console.log('点击了支付', that.keYunPaymentData);
 					WeixinJSBridge.invoke('getBrandWCPayRequest', {
 						"appId": that.keYunPaymentData.AppId, //公众号名称，由商户传入
@@ -1840,14 +1864,12 @@
 					success: (res) => {
 						this.userInfo = res.data;
 						uni.request({
-							url: 'http://111.231.109.113:8002/api/ly/RequestTicketsList',
+							url:$lyfw.Interface.spt_RequestTicketsList.value,
+							method:$lyfw.Interface.spt_RequestTicketsList.method,
 							data: {
 								userId: this.userInfo.userId
 							},
-							method: 'POST',
-							header: {
-								'content-type': 'application/json'
-							},
+							header: {'content-type': 'application/json'},
 							success: (res) => {
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
@@ -1962,11 +1984,11 @@
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/BounceTickets',
+					url:$lyfw.Interface.spt_BounceTickets.value,
+					method:$lyfw.Interface.spt_BounceTickets.method,
 					data: {
 						orderNumber: this.ticketOrderNumber,
 					},
-					method: 'POST',
 					header: {
 						'content-type': 'application/json'
 					},
@@ -1987,11 +2009,11 @@
 			cancel: function() {
 				if(this.exitindex == '3'){
 					uni.request({
-						url: 'http://111.231.109.113:8002/api/ly/CancelTickets',
+						url:$lyfw.Interface.spt_CancelTickets.value,
+						method:$lyfw.Interface.spt_CancelTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
-						method: 'POST',
 						header: {
 							'content-type': 'application/json'
 						},
@@ -2032,11 +2054,11 @@
 			del: function() {
 				if(this.exitindex == '3'){
 					uni.request({
-						url: 'http://111.231.109.113:8002/api/ly/DeleteTickets',
+						url:$lyfw.Interface.spt_DeleteTickets.value,
+						method:$lyfw.Interface.spt_DeleteTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
-						method: 'POST',
 						header: {
 							'content-type': 'application/json'
 						},
@@ -2066,6 +2088,7 @@
 			
 			//-------------------------生成二维码-------------------------
 			make: function(e) {
+				console.log(e)
 				uQRCode.make({
 					canvasId: 'qrcode2',
 					componentInstance: this,
