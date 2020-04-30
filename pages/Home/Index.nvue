@@ -302,7 +302,7 @@
 							// 	duration:100000
 							// })
 							console.log(res,"res")
-							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
+							uni.setStorageSync('wxOpenId',res.data.openid)
 							uni.setStorageSync('wxuserInfo',res.data)
 							let user=res.data;
 							uni.request({
