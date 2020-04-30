@@ -280,7 +280,7 @@
 			    let Appid = "wx14af28006f937f6e";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
-				let local = "http://zntc.145u.net/#/";
+				let local = "http://zntc.145u.net/h5/#/";
 				if (code == null || code === "") {
 				  //不存在就打开上面的地址进行授权
 					window.location.href =
@@ -306,7 +306,7 @@
 							uni.setStorageSync('res',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://111.231.109.113:8006/api/person/changeInfo',
+								url:'http://zntc.145u.net/api/person/changeInfo',
 								data:{
 									nickname:user.nickname,
 									openId_wx:user.openid,

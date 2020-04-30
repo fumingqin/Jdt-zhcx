@@ -100,7 +100,7 @@
 				}else if(phone==list.phone&&code==list.code){
 					//调用绑定手机号接口
 					uni.request({
-						url:'http://111.231.109.113:8006/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+						url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
 						data:{
 							phoneNumber:phone,
 							wxOpenid:'openid',
