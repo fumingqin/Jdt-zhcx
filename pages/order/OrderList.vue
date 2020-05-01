@@ -250,6 +250,7 @@
 							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
+							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
 						</view>
 					</view>
 				</view>
@@ -1394,7 +1395,7 @@
 			getKeYunOrderInfo: function() {
 				var that = this;
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/searchOrder',
+					url: 'http://zntc.145u.net/api/ky/searchOrder',
 					method: 'GET',
 					header: {
 						'content-type': 'application/json'
@@ -1464,7 +1465,7 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/RefundTicket_Flow',
+					url: 'http://zntc.145u.net/api/ky/RefundTicket_Flow',
 					method: 'GET',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -1510,7 +1511,7 @@
 				uni.showLoading();
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
+						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
 						method: 'GET',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
@@ -1682,7 +1683,7 @@
 					success: (res1) => {
 						this.userInfo = res1.data;
 						uni.request({
-							url: 'http://111.231.109.113:8002/api/taxi/GetAllExpressOrder_Passenger',
+							url: 'http://zntc.145u.net/api/taxi/GetAllExpressOrder_Passenger',
 							data: {
 								userId: that.userInfo.userId,
 							},
@@ -2334,7 +2335,7 @@
 		// margin-top: -20rpx;
 		padding: 20rpx 0;
 		width: 698rpx;
-		height: 340rpx;
+		// height: 340rpx;
 		background: #FFFFFF;
 		border-radius: 12rpx;
 		box-shadow: 0 0 5rpx 0rpx #aaa;
@@ -2543,7 +2544,7 @@
 		margin-top: 30upx;
 		display: flex;
 		float: right;
-
+		margin-bottom: 20rpx;
 		.allBtn {
 			padding: 0 20upx;
 			// padding-top: 32upx;

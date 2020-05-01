@@ -21,7 +21,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
@@ -29,7 +29,7 @@
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<view class="tabItem-font"><text >公交查询</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/BCFW/bf_chartered')">
+				<view class="tabItem" @click="godetail3('/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
@@ -64,61 +64,61 @@
 				mapHeight: '',
 				QQ: '450906905',
 				controls: [{
-						id: 'back',
-						position: {
-							left: 10,
-							top: 445,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Position.png',
-						clickable: true,
-					},
-					/* 			{
-									id: 'CallPollice',
-									position: {
-										left: 300,
-										top: 290,
-										width: 55,
-										height: 55
+										id: 'back',
+										position: {
+											left: 10,
+											top: 405,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Position.png',
+										clickable: true,
 									},
-									iconPath: '../../static/Home/CallPollice.png',
-									clickable: true,
-								}, */
-					{
-						id: 'Service',
-						position: {
-							left: 300,
-							top: 345,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Service.png',
-						clickable: true,
-					},
-					{
-						id: 'Big',
-						position: {
-							left: 300,
-							top: 405,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Big.png',
-						clickable: true,
-					},
-					{
-						id: 'Small',
-						position: {
-							left: 300,
-							top: 440,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Small.png',
-						clickable: true,
-					}
-				],
+									/* 			{
+													id: 'CallPollice',
+													position: {
+														left: 300,
+														top: 290,
+														width: 55,
+														height: 55
+													},
+													iconPath: '../../static/Home/CallPollice.png',
+													clickable: true,
+												}, */
+									/* {
+										id: 'Service',
+										position: {
+											left: 300,
+											top: 345,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Service.png',
+										clickable: true,
+									}, */
+									{
+										id: 'Big',
+										position: {
+											left: 300,
+											top: 365,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Big.png',
+										clickable: true,
+									},
+									{
+										id: 'Small',
+										position: {
+											left: 300,
+											top: 400,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Small.png',
+										clickable: true,
+									}
+								],
 			}
 		},
 		onLoad:function() {
@@ -164,7 +164,7 @@
 				}
 			})
 			// #ifdef  H5
-			// this.getCode();
+			 this.getCode();
 			//#endif
 		},
 		onReady() {
@@ -300,17 +300,19 @@
 
 			//路由统一事件
 			godetail: function(url) {
-				if(url != '/pages/CTKY/TraditionSpecial/Home/ctkyIndex'){
-					uni.showToast({
-						title:'正在测试中，敬请期待...',
-						icon:'none'
-					});
-					return;
-				}
 				uni.navigateTo({
 					url: url
 				});
 			},
+			
+			//路由统一事件
+			godetail3: function(url) {
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				});
+			},
+			
 			//旅游服务专属路由
 			godetail2: function(url) {
 				uni.showToast({
@@ -373,9 +375,15 @@
 									console.log(res1,'res1')
 									//判断是否有绑定手机号
 									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
-										uni.navigateTo({
-											url:'/pages/GRZX/wxLogin'
+										uni.showToast({
+											title:'您未绑定手机号，请绑定手机号！',
+											icon:'none',
 										})
+										setTimeout(function(){
+											uni.navigateTo({
+												url:'/pages/GRZX/wxLogin'
+											})
+										},1000);
 									}else{
 										uni.setStorageSync('userInfo',res1.data.data)
 										that.logining=true;

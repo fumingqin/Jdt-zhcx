@@ -170,15 +170,22 @@
 				}
 			},
 			collectionClick(){
-				uni.navigateTo({
-					url:'/pages/GRZX/collection'
-				}) 
+				// uni.navigateTo({
+				// 	url:'/pages/GRZX/collection'
+				// }) 
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				})
 			},
 			historyClick(){
-				uni.navigateTo({
-					url:'/pages/GRZX/history'
-				}) 
-				
+				// uni.navigateTo({
+				// 	url:'/pages/GRZX/history'
+				// }) 
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				})
 			},
 			scanClick(){
 				uni.showToast({
