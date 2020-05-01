@@ -110,6 +110,8 @@
 						success(res1) {
 							let base64 = uni.arrayBufferToBase64(userInfo.portrait); //把arraybuffer转成base64
 							let port = 'data:image/jpeg;base64,' + base64; //不加上这串字符，在页面无法显示
+							console.log(base64,'base64')
+							console.log(port,'base64')
 							uni.request({
 								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
 								data:{
