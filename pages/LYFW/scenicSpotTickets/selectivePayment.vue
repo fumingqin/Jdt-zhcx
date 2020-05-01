@@ -555,87 +555,97 @@
 				// #ifdef H5
 				//--------------------------------------微信H5公众号支付-------------------------------------
 				if (that.channeIndex == 0) {
-					uni.request({
-						url:$lyfw.Interface.spt_Pay.value,
-						method:$lyfw.Interface.spt_Pay.method,
-						data: {
-							payType: 3,
-							price: that.orderInfo.orderActualPayment,
-							orderNumber: that.orderInfo.orderNumber,
-							goodsName: that.orderInfo.title,
-							billDescript: that.orderInfo.ticketTitle
-						},
-						success: function(res) {
-							// console.log(res)
-							WeixinJSBridge.invoke('getBrandWCPayRequest', {
-								"appId": res.data.data.appId, //公众号名称，由商户传入
-								"timeStamp": res.data.data.timeStamp, //时间戳
-								"nonceStr": res.data.data.nonceStr, //随机串
-								"package": res.data.data.package, //扩展包
-								"signType": 'MD5', //微信签名方式:MD5
-								"paySign": res.data.data.paySign, //微信签名
-							}, function(res) {
-								if (res.err_msg == "get_brand_wcpay_request:ok") {
-									//支付成功再进计时器查询状态
-									// location.href = "/Order/BaseCallback/" + flowID;
-									// alert("支付成功");
-									uni.request({
-										url:$lyfw.Interface.spt_RequestTickets.value,
-										method:$lyfw.Interface.spt_RequestTickets.method,
-										data: {
-											orderNumber: that.orderInfo.orderNumber
-										},
-										header: {'content-type': 'application/json'},
-										success: function(res) {
-											if (res.data.msg == '出票成功') {
-												uni.redirectTo({
-													url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
-												})
-											} else {
-												uni.showToast({
-													title: '出票失败，联系客服出示订单编号',
-													icon: 'none',
-													duration: 3000
-												})
-											}
-										},
-										fail: function() {
+					uni.getStorage({
+						key:'scenicSpotOpenId',
+						success:(res)=>{
+							uni.request({
+								url:$lyfw.Interface.spt_Pay.value,
+								method:$lyfw.Interface.spt_Pay.method,
+								data: {
+									payType: 4,
+									price: that.orderInfo.orderActualPayment,
+									orderNumber: that.orderInfo.orderNumber,
+									goodsName: that.orderInfo.title,
+									billDescript: that.orderInfo.ticketTitle,
+									openId : res.data
+								},
+								success: function(res) {
+									console.log(res)
+									WeixinJSBridge.invoke('getBrandWCPayRequest', {
+										"appId": res.data.data.appId, //公众号名称，由商户传入
+										"timeStamp": res.data.data.timeStamp, //时间戳
+										"nonceStr": res.data.data.nonceStr, //随机串
+										"package": res.data.data.package, //扩展包
+										"signType": 'MD5', //微信签名方式:MD5
+										"paySign": res.data.data.paySign, //微信签名
+									}, function(res) {
+										if (res.err_msg == "get_brand_wcpay_request:ok") {
+											uni.request({
+												url:$lyfw.Interface.spt_RequestTickets.value,
+												method:$lyfw.Interface.spt_RequestTickets.method,
+												data: {
+													orderNumber: that.orderInfo.orderNumber
+												},
+												header: {'content-type': 'application/json'},
+												success: function(res) {
+													console.log(res)
+													if (res.data.msg == '出票成功') {
+														uni.redirectTo({
+															url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+														})
+													} else {
+														uni.showToast({
+															title: '出票失败，联系客服出示订单编号',
+															icon: 'none',
+															duration: 3000
+														})
+													}
+												},
+												fail: function() {
+													uni.showToast({
+														title: '出票失败，请联系客服出示订单编号',
+														icon: 'none',
+														duration: 3000
+													})
+												}
+											})
+										} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 											uni.showToast({
-												title: '出票失败，请联系客服出示订单编号',
+												title: '您放弃了支付',
+												icon: 'none',
+												duration: 3000
+											})
+										} else if (res.err_msg == "get_brand_wcpay_request:faile") {
+											uni.showToast({
+												title: '支付失败，请重试',
+												icon: 'none',
+												duration: 3000
+											})
+							
+										} else {
+											uni.showToast({
+												title: '网络异常，请检查网络后重试',
 												icon: 'none',
 												duration: 3000
 											})
 										}
-									})	
-								} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-									// alert("您取消了支付，请重新支付");
+									});
+								},
+								fail: function() {
 									uni.showToast({
-										title: '您取消了支付，请重新支付',
-										icon: 'none'
+										title: '请求支付参数失败，请查看网络状态'
 									})
-								} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-									// alert("支付失败，请重新支付"); 
-									uni.showToast({
-										title: '支付失败，请重新支付',
-										icon: 'none',
-										success: function() {
-											uni.switchTab({
-												url: '../../order/OrderList'
-											})
-										}
-									})
-
-								} else {
-									// location.href = "/Coach/GetCoach";
 								}
-							});
+							})
 						},
-						fail: function() {
+						fail:function(){
 							uni.showToast({
-								title: '请求支付参数失败，请查看网络状态'
+								title:'账户未授权',
+								icon:'none'
 							})
 						}
 					})
+					
 				} else {
 					uni.showToast({
 						title: '请选择微信支付',
@@ -708,7 +718,7 @@
 										})
 									} else if (e.errMsg == 'requestPayment:fail errors') {
 										uni.showToast({
-											title: '拉起支付失败，请重试',
+											title: '支付失败，请重试',
 											icon: 'none',
 											duration: 3000
 										})
