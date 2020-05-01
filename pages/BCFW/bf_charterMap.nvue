@@ -9,11 +9,14 @@
 			 @click="callPolice"></image>
 			<!-- 行程信息   -->
 			<scroll-view class="cm_content" scroll-y="true">
-				<view class="ct_state" v-if="driverInformation.orderType == '进行中' || driverInformation.orderType == '待发车'">
-					<text class="sa_text">{{driverInformation.orderType}}</text>
+				<view class="ct_state" v-if="driverInformation.or_Type == 4">
+					<text class="sa_text">进行中</text>
 				</view>
-				<view class="ct_state" v-if="driverInformation.orderType == '待支付'">
-					<text class="sa_text">{{driverInformation.orderType}}</text>
+				<view class="ct_state" v-if="driverInformation.or_Type == 1">
+					<text class="sa_text">待发车</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 5">
+					<text class="sa_text">待支付</text>
 					<text class="sa_popu" @click="open">去支付></text>
 				</view>
 				<!-- <uni-popup ref="popup" type="bottom">
@@ -59,17 +62,17 @@
 				<view class="ct_information">
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
-						<text class="te_text">车牌号:{{driverInformation.licensePlate}}</text>
-						<text class="te_text">车型:{{driverInformation.vehicleType}}</text>
+						<text class="te_text">车牌号:{{driverInformation.cm_licensePlate}}</text>
+						<text class="te_text">车型:{{driverInformation.cm_vehicleType}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">姓名:{{driverInformation.name}}</text>
-						<text class="te_text">驾龄:{{driverInformation.age}}年</text>
+						<text class="te_text">姓名:{{driverInformation.cm_driverName}}</text>
+						<text class="te_text">驾龄:{{driverInformation.cm_vehicleAge}}年</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">电话:{{driverInformation.telephone}}</text>
+						<text class="te_text">电话:{{driverInformation.or_driverTelephone}}</text>
 					</view>
-					<view class="if_button" v-if="driverInformation.orderType == '进行中' || driverInformation.orderType == '待发车'">
+					<view class="if_button" v-if="driverInformation.or_Type == 4 || driverInformation.or_Type == 1 || driverInformation.or_Type == 5">
 						<button class="bt_remind3" type="warn">联系司机</button>
 					</view>
 				</view>
@@ -79,27 +82,27 @@
 				<view class="ct_feeDetails">
 					<text class="if_topTitle2">费用详情</text>
 					<view class="if_text">
-						<text class="te_text">包车天数:{{driverInformation.day}}天</text>
-						<text class="te_text">已包时长:{{driverInformation.duration}}</text>
+						<text class="te_text">包车天数:{{driverInformation.cm_day}}天</text>
+						<text class="te_text">已包时长:{{driverInformation.cm_duration}}时</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">包车费用:{{driverInformation.cost}}元</text>
-						<text class="te_text">超时费用:{{driverInformation.overtimeCharge}}元</text>
+						<text class="te_text">包车费用:{{driverInformation.cm_money}}元</text>
+						<text class="te_text">超时费用:{{driverInformation.cm_timeout}}元</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">总计:{{driverInformation.totalCost}}元</text>
+						<text class="te_text">总计:{{driverInformation.cm_totalCost}}元</text>
 					</view>
 				</view>
 				<!-- 路线信息 -->
 				<view class="ct_routeInformation">
 					<text class="if_topTitle3">路线信息</text>
 					<view class="if_text">
-						<text class="te_text">上车点:{{driverInformation.boardingPoint}}</text>
-						<text class="te_text">目的地:{{driverInformation.destination}}</text>
+						<text class="te_text">上车点:{{driverInformation.or_boardingPoint}}</text>
+						<text class="te_text">目的地:{{driverInformation.or_destination}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">总里程:{{driverInformation.totalLi}}</text>
-						<text class="te_text">总时长:{{driverInformation.totalDuration}}</text>
+						<text class="te_text">总里程:{{driverInformation.cm_totalLi}}</text>
+						<text class="te_text">总时长:{{driverInformation.cm_totalDuration}}</text>
 					</view>
 				</view>
 			</scroll-view>
@@ -157,37 +160,22 @@
 				reason: '请选择报警原因',
 				pickerValue: -1,
 				remark: '',
-				// orderType:'进行中',
-				// licensePlate:'闽A88888',
-				// vehicleType:'豪华车型',
-				// name:'张三丰',
-				// age:'6年',
-				// telephone:'134566456126',
-				// day:'3天',
-				// duration:'47:00',
-				// cost:'200元',
-				// overtimeCharge:'50元',
-				// totalCost:'250元',
-				// boardingPoint:'泉州客运中心',
-				// destination:'泉州动车站',
-				// totalLi:'150km',
-				// totalDuration:'02:00:00',
 				driverInformation: {
-					orderType: '',
-					licensePlate: '',
-					vehicleType: '',
-					name: '',
-					age: '',
-					telephone: '',
-					day: '',
-					duration: '',
-					cost: '',
-					overtimeCharge: '',
-					totalCost: '',
-					boardingPoint: '',
-					destination: '',
-					totalLi: '',
-					totalDuration: '',
+					or_Type: '',
+					cm_licensePlate: '',
+					cm_vehicleType: '',
+					cm_driverName: '',
+					cm_vehicleAge: '',
+					or_driverTelephone: '',
+					cm_day: '',
+					cm_duration: '',
+					cm_money: '',
+					cm_timeout: '',
+					cm_totalCost: '',
+					or_boardingPoint: '',
+					or_destination: '',
+					cm_totalLi: '',
+					cm_totalDuration: '',
 				},
 
 				weixinId: 1,
@@ -198,7 +186,8 @@
 		},
 		onLoad() {
 			var that = this;
-			that.routeInit();
+			that.bcfwData();
+			// that.routeInit();
 			that.setMarker(1, 118.600608, 24.889217, '../../static/CTKY/start.png');
 			that.setMarker(2, 118.613688, 24.912702, '../../static/CZC/End.png');
 			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
@@ -211,18 +200,33 @@
 			});
 		},
 		methods: {
-			//---------------------------------模拟接口数据---------------------------------
-			async routeInit() {
-				let driverInformation = await this.$api.lyfwcwd('driverInformation');
-				this.driverInformation = driverInformation.data;
-				
-				if(this.driverInformation.overtimeCharge>0){
-					this.$refs.popup.open();
-				}else{
-					
-				}
-				// console.log(driverInformation.data)
+			bcfwData:function(){
+				uni.request({
+					url:'http://111.231.109.113:8004/api/Chartered/QueryCharteredOrderByOrderNumber_Passenger',
+					method:'POST',
+					header: {'content-type': 'application/json'},
+					data:{
+						or_number:'2020050100161105783201',
+					},
+					success:(res)=>{
+						console.log(res)
+						this.driverInformation = res.data.data;
+					}
+				})
 			},
+			
+			//---------------------------------模拟接口数据---------------------------------
+			// async routeInit() {
+			// 	let driverInformation = await this.$api.lyfwcwd('driverInformation');
+			// 	this.driverInformation = driverInformation.data;
+				
+				// if(this.driverInformation.overtimeCharge>0){
+				// 	this.$refs.popup.open();
+				// }else{
+					
+				// }
+				// console.log(driverInformation.data)
+			// },
 
 			//------------------------------弹框事件-----------------------------------------
 

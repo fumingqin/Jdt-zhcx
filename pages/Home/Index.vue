@@ -5,13 +5,13 @@
 
 		</map>
 
-		<view class="SearchBarBlock">
+		<!-- <view class="SearchBarBlock">
 			<view class="SearchBar" elevation='5px' style="">
 				<image class="topContent-image" src="../../static/Home/Search.png"></image>
 				<text @click="chooseSite" style="width: 500rpx;line-height: 45rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:400; color:rgba(153,153,153,1);">{{Address}}</text>
 				<image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image>
 			</view>
-		</view>
+		</view> -->
 
 		<view class="bottomContent" elevation='5px' style="width: 100%;">
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
@@ -21,7 +21,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
@@ -29,7 +29,7 @@
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<view class="tabItem-font"><text >公交查询</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/BCFW/bf_chartered')">
+				<view class="tabItem" @click="godetail3('/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
@@ -45,12 +45,18 @@
 
 <script>
 	import taxi from '../../common/Czc.js'
-
+    // import wx from 'http://res.wx.qq.com/open/js/jweixin-1.6.0.js'
+	import {
+		mapState,
+	    mapMutations  
+	} from 'vuex';
 	export default {
 		data() {
 			return {
-				longitude: "118.599705", //精度
-				latitude: "24.889993", //纬度
+				longitude: "118.611339", //精度
+				latitude: "24.885683", //纬度
+				// longitude: "", //精度
+				// latitude: "", //纬度
 				Address: '搜索您要去的地方',
 				mapContext: '',
 				key: [],
@@ -58,65 +64,87 @@
 				mapHeight: '',
 				QQ: '450906905',
 				controls: [{
-						id: 'back',
-						position: {
-							left: 10,
-							top: 445,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Position.png',
-						clickable: true,
-					},
-					/* 			{
-									id: 'CallPollice',
-									position: {
-										left: 300,
-										top: 290,
-										width: 55,
-										height: 55
+										id: 'back',
+										position: {
+											left: 10,
+											top: 405,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Position.png',
+										clickable: true,
 									},
-									iconPath: '../../static/Home/CallPollice.png',
-									clickable: true,
-								}, */
-					{
-						id: 'Service',
-						position: {
-							left: 300,
-							top: 345,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Service.png',
-						clickable: true,
-					},
-					{
-						id: 'Big',
-						position: {
-							left: 300,
-							top: 405,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Big.png',
-						clickable: true,
-					},
-					{
-						id: 'Small',
-						position: {
-							left: 300,
-							top: 440,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Small.png',
-						clickable: true,
-					}
-				],
+									/* 			{
+													id: 'CallPollice',
+													position: {
+														left: 300,
+														top: 290,
+														width: 55,
+														height: 55
+													},
+													iconPath: '../../static/Home/CallPollice.png',
+													clickable: true,
+												}, */
+									/* {
+										id: 'Service',
+										position: {
+											left: 300,
+											top: 345,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Service.png',
+										clickable: true,
+									}, */
+									{
+										id: 'Big',
+										position: {
+											left: 300,
+											top: 365,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Big.png',
+										clickable: true,
+									},
+									{
+										id: 'Small',
+										position: {
+											left: 300,
+											top: 400,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Small.png',
+										clickable: true,
+									}
+								],
 			}
 		},
 		onLoad:function() {
 			var that = this;
+			// wx.config({
+			//   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+			//   appId: '', // 必填，公众号的唯一标识
+			//   timestamp: new Date().getTime(), // 必填，生成签名的时间戳
+			//   nonceStr: '', // 必填，生成签名的随机串
+			//   signature: '',// 必填，签名
+			//   jsApiList: [] // 必填，需要使用的JS接口列表
+			// });
+			// wx.ready(function(){
+			//   // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+			//  wx.getLocation({
+			//    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+			//    success: function (res) {
+			//      var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+			//      var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+			//      var speed = res.speed; // 速度，以米/每秒计
+			//      var accuracy = res.accuracy; // 位置精度
+			//    }
+			//  });
+			// });
+			
+			
 			that.getGaoDeKey();
 			that.getMyLocation();
 			uni.getSystemInfo({
@@ -136,7 +164,7 @@
 				}
 			})
 			// #ifdef  H5
-			this.getCode();
+			 this.getCode();
 			//#endif
 		},
 		onReady() {
@@ -152,6 +180,7 @@
 			});
 		},
 		methods: {
+			...mapMutations(['login']),
 			getGaoDeKey: function() {
 				//获取高德key
 				var that = this;
@@ -164,15 +193,29 @@
 					type: 'gcj02',
 					geocode: true,
 					success: function(res) {
+						alert(0)
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
-						console.log(that.longitude)
+						console.log(that.longitude);
 					},
 					fail: function() {
+						alert(0)
 					console.log(0)
 					},
 				}
-				uni.getLocation(ojb);
+				// uni.getLocation(ojb);
+				uni.getLocation({
+					type: 'gcj02',
+					success: (res) => {
+						alert(10)
+						that.longitude = res.longitude;
+						that.latitude = res.latitude;
+						console.log(res);
+					},
+					fail: () => {
+						console.log(0)
+					}
+				})
 			},
 			//地图控件调用方法
 			controltap: function(e) {
@@ -184,7 +227,9 @@
 				// #ifdef MP-WEIXIN
 				controlId = e.controlId;
 				// #endif
-
+				// #ifdef H5
+				controlId = e.detail.controlId;
+				// #endif
 				if (controlId === 'back') {
 					//回到我的位置
 					that.mapContext.moveToLocation();
@@ -259,8 +304,22 @@
 					url: url
 				});
 			},
+			
+			//路由统一事件
+			godetail3: function(url) {
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				});
+			},
+			
 			//旅游服务专属路由
 			godetail2: function(url) {
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				});
+				return;
 				// #ifdef MP-WEIXIN
 				uni.redirectTo({
 					url: url
@@ -280,7 +339,7 @@
 			    let Appid = "wx14af28006f937f6e";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
-				let local = "http://zntc.145u.net/";
+				let local = "http://zntc.145u.net/h5/#/";
 				if (code == null || code === "") {
 				  //不存在就打开上面的地址进行授权
 					window.location.href =
@@ -296,42 +355,40 @@
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
-							uni.showToast({
-								title:res.data.openid,
-								icon:'none',
-								duration:100000
-							})
+							// uni.showToast({
+							// 	title:res.data.openid,
+							// 	icon:'none',
+							// 	duration:100000
+							// })
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
-							uni.setStorageSync('res',res.data)
+							uni.setStorageSync('wxuserInfo',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://111.231.109.113:8006/api/person/changeInfo',
+								//url:'http://zntc.145u.net/api/person/changeInfo',
+								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
 								data:{
-									nickname:user.nickname,
 									openId_wx:user.openid,
-									portrait:user.headimgurl,
-									userId:'',
-									openId_qq:'',
-									gender:'',
-									address:user.province+user.city,
-									birthday:'',
-									phoneNumber:'',
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									if(res1.data.msg=="信息保存成功！"){
-										uni.setStorageSync('userInfo',res1.data.data)
-										if(res1.data.data.phoneNumber==null){
-											uni.navigateTo({
-												url:'/pages/GRZX/wxLogin',
-											})
-										}else{
-											that.logining=true;
-											that.login(res1.data.data)
-										}
-									}
 									console.log(res1,'res1')
+									//判断是否有绑定手机号
+									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+										uni.showToast({
+											title:'您未绑定手机号，请绑定手机号！',
+											icon:'none',
+										})
+										setTimeout(function(){
+											uni.navigateTo({
+												url:'/pages/GRZX/wxLogin'
+											})
+										},1000);
+									}else{
+										uni.setStorageSync('userInfo',res1.data.data)
+										that.logining=true;
+										that.login(res1.data.data)
+									}	
 								}
 							})
 						},

@@ -9,7 +9,7 @@
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">使用时间</view>
-					<text class="MP_text">{{utils.timeTodate('Y-m-d H:i',orderInfo.setTime)}} &nbsp; 仅限当天</text>
+					<text class="MP_text">{{turnDate(orderInfo.setTime)}} &nbsp; 仅限当天</text>
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
@@ -146,21 +146,15 @@
 				that.insurance = '';
 				that.isInsurance = false;
 			}
-
-			setTimeout(function() {
-				// that.countDown();
-			}, 3000);
-
-
-		},
-		onShow() {
 			//读取车票信息
 			this.getTickerInfo();
 			//读取用户信息
 			this.getUserInfo();
 			//读取乘车人信息
 			this.getPassengerInfo();
-			//--------------------------计时器--------------------------
+		},
+		onShow() {
+			
 		},
 		onUnload() {
 			clearInterval(this.timer);
@@ -235,6 +229,13 @@
 					}
 				})
 			},
+			//-------------------------------时间转换-------------------------------
+			turnDate(date) {
+				if(date) {
+					var setTime = date.replace('T',' ');
+					return setTime;
+				}
+			},
 			//--------------------------读取乘车人信息--------------------------
 			getPassengerInfo() {
 				var that = this;
@@ -266,8 +267,11 @@
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						// that.getOpenID();
-						that.getOrder();
+						that.getOpenID();
+						
+						
+						//-------------------------------下单-------------------------------
+						// that.getOrder();
 					},
 					fail() {
 						uni.showToast({
@@ -275,26 +279,24 @@
 							icon: 'none'
 						})
 					}
-					
 				})
 			},
 			//--------------------------读取公众号openid--------------------------
 			getOpenID() {
 				var that = this;
 				uni.getStorage({
-					key:'ctkyOpenId',
+					key:'scenicSpotOpenId',
 					success:function(response){
-						console.log(response);
+						// alert('获取id成功');
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail:function(fail){
-						console.log(fail);
-						// uni.showModal({
-						// 	content:'用户未授权',
-						// })
-						that.getOrder();
+						uni.hideLoading();
+						uni.showModal({
+							content:'用户未授权',
+						})
 					}
 				})
 			},
@@ -342,9 +344,10 @@
 				// #ifdef APP-PLUS
 				companyCode = '泉运公司综合出行APP';
 				// #endif
+				// alert(that.ctkyOpenID);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/SellTicket_NoBill_Booking',
+					url: 'http://zntc.145u.net/api/ky/SellTicket_NoBill_Booking',
 					method: 'GET',
 					header: {
 						'content-type': 'application/json'
@@ -371,18 +374,22 @@
 						carryChild: that.childrenNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
-						openId: 'oMluguFoTfQ7YajiqYVxj3YzxhMI',
+						openId: that.ctkyOpenID,
 						totalPrice: that.totalPrice, //总价格
 						payParameter: '', //不需要的参数，传空
 						
 						getOnPoint: that.specialStartStation,//定制班车上车点
 						getOffPoint: that.specialEndStation,//定制班车下车点
 					},
+					
 					success: (res) => {
-						console.log('成功回调', res);
+						// alert(res);
 						if (res.data) {
 							if (res.data.status == true) {
-								// console.log('订单编号', res.data.data);
+								uni.showToast({
+									title:res.data.status,
+									icon:'none'
+								})
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							}else if(res.data.status == false) {
@@ -410,15 +417,12 @@
 			},
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(res) {
-				// console.log(res);
 				var that = this;
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
-					
-				// uni.showLoading();
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
+					url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
 					method: 'GET',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -429,11 +433,12 @@
 					},
 					success: (res) => {
 						console.log(res.data);
-						if (res.data != null) {
-							if (res.data) {
+						if (res.data) {
+							if (res.data.status == true) {
 								var msgArray = JSON.parse(res.data.msg);
-								console.log('msgArray', msgArray);
+								// console.log('msgArray', msgArray);
 								if(msgArray.oldState == '结束') {
+									uni.hideLoading();
 									uni.showToast({
 										title: msgArray.message,
 										icon: 'none'
@@ -441,14 +446,24 @@
 									clearInterval(timer);
 								} else if (msgArray.oldState == '支付系统申请支付订单') {
 									that.paymentData = msgArray;
-									console.log('paymentData', that.paymentData);
-									uni.showToast({
-										title: '请在2分钟内完成支付',
-										icon: 'none'
+									// console.log('paymentData', that.paymentData);
+									uni.hideLoading();
+									uni.showModal({
+										content:'请在2分钟内完成支付',
+										showCancel:false
 									})
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
+							}else if(res.data.status == false) {
+								var msgArray = JSON.parse(res.data.msg);
+								uni.hideLoading();
+								uni.showToast({
+									title: msgArray.message,
+									icon: 'none'
+								})
+								//回调失败，取消定时器
+								clearInterval(timer);
 							}
 						}
 					},
@@ -464,7 +479,7 @@
 			//--------------------------调起支付--------------------------
 			payment: function() {
 				var that = this;
-				console.log('111111',that.paymentData);
+				// console.log('111111',that.paymentData);
 				// #ifdef H5
 				WeixinJSBridge.invoke('getBrandWCPayRequest', {
 					"appId": that.paymentData.jsapi.AppId, //公众号名称，由商户传入
@@ -497,6 +512,7 @@
 				});
 				// #endif
 				
+				
 				// #ifdef APP-PLUS
 				console.log('进入app支付',that.paymentData);
 				uni.hideLoading()
@@ -513,6 +529,11 @@
 					},
 					success:function(res){
 						console.log(res)
+						uni.showModal({
+							title:'提示',
+							content:res,
+							showCancel:false
+						})
 						if(res.errCode == 0) {//成功
 							uni.showToast({
 								title: '支付成功',
@@ -539,6 +560,11 @@
 										
 					fail: function(ee) {
 						console.log(ee)
+						uni.showModal({
+							title:'提示',
+							content:ee,
+							showCancel:false
+						})
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
 							icon: 'none',

@@ -77,9 +77,9 @@
 				var list=uni.getStorageSync('captchaCode')	//验证码和手机号
 				console.log(list,"list")
 				var openid=uni.getStorageSync('scenicSpotOpenId')	//openid
-				console.log(openid,"list")
-				var userInfo=uni.getStorageSync('userInfo') //微信授权获取到的微信的个人信息
-				console.log(userInfo,"list")
+				console.log(openid,"openid")
+				var userInfo=uni.getStorageSync('wxuserInfo') //微信授权获取到的微信的个人信息
+				console.log(userInfo,"userInfo")
 				var phone=this.phoneNumber;
 				var code=this.captchaCode;
 				if(phone==null||phone==""){
@@ -100,28 +100,45 @@
 				}else if(phone==list.phone&&code==list.code){
 					//调用绑定手机号接口
 					uni.request({
-						url:'http://111.231.109.113:8006/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+						url:that.$GrzxInter.Interface.login.value,
 						data:{
 							phoneNumber:phone,
-							wxOpenid:openid,
 						},
-						method:'POST',
-						success(res) {
-							console.log(res,"res")
-							uni.showToast({
-								title:res.data.msg,
-								icon:'success',
-							})
-							uni.setStorageSync('userInfo',res.data.data)
-							that.logining=true;
-							that.login(res.data.data)
-							setTimeout(function(){
-								uni.switchTab({
-									url:'/pages/Home/indexZhly'
-								})
-							},500);
+						method:that.$GrzxInter.Interface.login.method,
+						success(res1) {
+							uni.request({
+								//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
+								//url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
+								url:that.$GrzxInter.Interface.changeInfo.value,
+								data:{
+									userId:res1.data.data.userId,
+									phoneNumber:phone,
+									nickname:userInfo.nickname,
+									address:userInfo.province+userInfo.city,
+									openId_wx:userInfo.openid,
+									portrait:userInfo.portrait,
+									//wxOpenid:openid,
+								},
+								method:that.$GrzxInter.Interface.changeInfo.method,
+								success(res) {
+									console.log(res,"res")
+									uni.showToast({
+										title:'绑定成功！',
+										icon:'success',
+									})
+									uni.setStorageSync('userInfo',res.data.data)
+									that.logining=true;
+									that.login(res.data.data)
+									setTimeout(function(){
+										uni.switchTab({
+											url:'/pages/Home/Index'
+										})
+									},500);
+								}
+							})	
 						}
-					})	
+					})
+					
 				}else{
 					uni.showToast({
 						title:"验证码输入错误，请重新输入",
@@ -155,10 +172,10 @@
 							method:self.$GrzxInter.Interface.getLoginCode.method,
 							
 							success:(res)=>{
-						 		console.log(res.data.code);
+						 		console.log(res.data.data,'158');
 								var listCode={
 										phone:self.phoneNumber,
-										code:res.data.code,
+										code:res.data.data,
 									};
 								uni.setStorageSync('captchaCode',listCode)
 								uni.showToast({

@@ -4,19 +4,21 @@
 		<text class="titleClass">{{title}}</text>
 		<text class="versionClass">{{versionNum}}</text>
 		<view class="boxClass1">
-			<view class="functionClass" @click="functionClick">
+			<!-- <view class="functionClass" @click="functionClick">
 				<text class="fontClass">{{functionIntroduction}}</text>
 				<image src="../../static/GRZX/btnRight.png" class="imgClass1"></image>
-			</view>
+			</view> -->
+			<!-- #ifndef H5 -->
 			<view class="checkClass" @click="checkClick">
 				<text class="fontClass">{{checkVersion}}</text>
-				<text class="textCLass">{{version}}</text>
-				<image src="../../static/GRZX/btnRight.png" class="imgClass2"></image>
+				<!-- <text class="textCLass">{{version}}</text> -->
+				<image src="../../static/GRZX/btnRight.png" class="imgClass1"></image>
 			</view>
+			<!-- #endif -->
 		</view>
 		<view class="boxClass2">
-			<text class="agreementClass" @click="agreementClick">{{agreement}}</text>
-			<text class="privacyClass" @click="privacyClick">{{privacy}}</text>
+			<!-- <text class="agreementClass" @click="agreementClick">{{agreement}}</text>
+			<text class="privacyClass" @click="privacyClick">{{privacy}}</text> -->
 			<text class="copyrightClass">{{copyright1}}</text>
 			<text class="copyrightClass">{{copyright2}}</text>
 			<text class="copyrightClass">{{copyright3}}</text>
@@ -51,9 +53,39 @@
 				})
 			},
 			checkClick(){
-				uni.showToast({
-					icon:'none',
-					title:'检查新版本'
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.SearchVersion.value,
+					data:{
+						model:'旅客端',
+					},
+					method:that.$GrzxInter.Interface.SearchVersion.method,
+					success(res) {
+						console.log(res)
+						if(that.version!=res.data.data.version){
+							uni.showModal({
+							    content: '是否下载新版本',
+							    success: (e)=>{
+							    	if(e.confirm){
+										//plus.runtime.openURL(res.data.DownLoadUrl);
+										// #ifdef APP-PLUS || H5
+										plus.runtime.openURL("http://27.148.155.9:9248/LoadAppWebsite/泉运出行综合平台.apk");
+										// #endif
+										// #ifndef APP-PLUS || H5
+										uni.showToast({
+											title:'暂无法下载新版本'
+										})
+										// #endif
+							    	}
+							    }
+							});
+						}else{
+							uni.showToast({
+								icon:'none',
+								title:'当前版本为最新版本'
+							})
+						}
+					}
 				})
 			},
 			agreementClick(){

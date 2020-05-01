@@ -24,6 +24,9 @@
 			}
 		},
 		onReady() {
+			// this.backHome();
+		},
+		onLoad() {
 			this.backHome();
 		},
 		methods: {

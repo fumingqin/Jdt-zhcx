@@ -19,9 +19,14 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				
+			}
 		},
 		onLoad(res) {
+			
+		},
+		onShow(res) {
 			this.getTicketPaymentInfo(res.orderNum);
 		},
 		onReady() {
@@ -35,7 +40,7 @@
 				that.timer = timer;
 				timer=setInterval(function(){
 					uni.request({
-						url: 'http://111.231.109.113:8002/api/ky/SellTicket_Flow',
+						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
 						method: 'GET',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
@@ -69,20 +74,20 @@
 			},
 			//路由统一事件
 			godetail: function(e) {
-				if(e==0){
+				if(e==0){//查看订单
 					uni.switchTab({
-						url: ''
+						url: '../../../order/OrderList',
 					});
-				}else if(e==1){
+				}else if(e==1){//返回首页
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url:'../../../Home/Index'
 					});
 				}
 			},
 			backHome : function() {
 				setTimeout(() => { 
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url: '../../../Home/Index'
 					});
 				}, 10000)
 			}
