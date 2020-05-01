@@ -2046,7 +2046,7 @@
 				this.$refs.popup5.close()
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
-			open2(e,exitindex) {
+			open2:function(e,exitindex) {
 				this.ticketOrderNumber = e;
 				this.exitindex = exitindex;
 				this.$refs.popup2.open()
