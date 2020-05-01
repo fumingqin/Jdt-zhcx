@@ -1514,6 +1514,7 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
+						alert(respones.data.msg)
 						console.log('取消结果', respones)
 						if(respones.data.status == true){
 							uni.hideLoading()
@@ -1530,6 +1531,7 @@
 						}
 					},
 					fail: (respones) => {
+						alert(respones.data.msg)
 						uni.hideLoading()
 						console.log(respones)
 						uni.showToast({

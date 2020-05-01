@@ -2,7 +2,7 @@
 	<view class="content">
 		<image src="../../static/GRZX/logo_quanzhou.png" class="logoClass"></image>
 		<text class="titleClass">{{title}}</text>
-		<text class="versionClass">{{versionNum}}</text>
+		<text class="versionClass">{{versionNum}}{{version}}</text>
 		<view class="boxClass1">
 			<!-- <view class="functionClass" @click="functionClick">
 				<text class="fontClass">{{functionIntroduction}}</text>
@@ -31,7 +31,7 @@
 		data(){
 			return{
 				title:'泉州综合出行',
-				versionNum:'Version 1.0.0',
+				versionNum:'Version ',
 				functionIntroduction:'功能介绍',
 				checkVersion:'检查新版本',
 				agreement:'《软件许可及服务协议》',
@@ -39,11 +39,11 @@
 				copyright1:'途游信息科技 版权所有',
 				copyright2:'Copyright©2020 Journey',
 				copyright3:'All Rights Reserved',
-				version:'1.0.0',
+				version:'',
 			}
 		},
 		onLoad(){
-			//this.version=plus.runtime.version;
+			this.version=plus.runtime.version;
 		},
 		methods:{
 			functionClick(){
