@@ -498,13 +498,13 @@
 						});
 						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-						alert("您取消了支付，请重新支付");
+						// alert("您取消了支付，请重新支付");
 						uni.showToast({
-							title: '您取消了支付',
+							title: '您取消了支付，请重新支付',
 							icon: 'none'
 						})
 					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-						alert("支付失败，请重新支付");
+						// alert("支付失败，请重新支付");
 						uni.showToast({
 							title: '支付失败，请重新支付',
 							icon: 'none'
@@ -539,18 +539,15 @@
 							showCancel: false
 						})
 						if (res.errCode == 0) { //成功
-							uni.showToast({
-								title: '支付成功',
-								icon: 'none'
-							})
-
+							alert("支付成功");
+							uni.showLoading({
+							    title: '加载中...'
+							});
+							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 						} else if (res.errCode == -1) { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
-							})
-							uni.redirectTo({
-								url: './CTKYPayFail?&orderNum=' + that.orderNum,
 							})
 						} else if (res.errCode == -2) { //用户取消
 							uni.showToast({
