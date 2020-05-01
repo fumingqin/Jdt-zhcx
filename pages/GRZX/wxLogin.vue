@@ -17,6 +17,7 @@
 </template>
 
 <script>
+	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import {
 		mapState,
 	    mapMutations  
@@ -108,23 +109,37 @@
 						},
 						method:that.$GrzxInter.Interface.login.method,
 						success(res1) {
-							let base64 = uni.arrayBufferToBase64(userInfo.portrait); //把arraybuffer转成base64
-							let port = 'data:image/jpeg;base64,' + base64; //不加上这串字符，在页面无法显示
-							uni.request({
-								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								data:{
-									userId:res1.data.data.userId,
-									phoneNumber:phone,
-									nickname:userInfo.nickname,
-									address:userInfo.province+userInfo.city,
-									openId_wx:userInfo.openid,
-									portrait:port,
-								},
-								method:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								success(res2) {
-									console.log(res2);
-								}
-							})
+							// let base64 = uni.arrayBufferToBase64(userInfo.portrait); //把arraybuffer转成base64
+							// let port = 'data:image/png;base64,' + base64; //不加上这串字符，在页面无法显示
+							// console.log(base64,'base64')
+							// console.log(port,'base64')
+							uni.downloadFile({
+							    url: userInfo.portrait, //仅为示例，并非真实的资源
+							    success: (res2) => {
+							        if (res2.statusCode === 200) {
+										pathToBase64(res2.tempFilePath)
+										.then(base64 => {
+											console.log(base64,'base64');
+											uni.request({
+												url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+												data:{
+													userId:res1.data.data.userId,
+													phoneNumber:phone,
+													nickname:userInfo.nickname,
+													address:userInfo.province+userInfo.city,
+													openId_wx:userInfo.openid,
+													portrait:base64,
+												},
+												method:that.$GrzxInter.Interface.changeInfoPortrait.value,
+												success(res3) {
+													console.log(res3);
+												}
+											})
+										})
+							            console.log('下载成功');
+							        }
+							    }
+							});
 							uni.request({
 								//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
 								//url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,

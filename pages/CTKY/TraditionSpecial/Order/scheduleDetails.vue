@@ -389,6 +389,7 @@
 				console.log(e)
 				this.passengerInfo.splice(e, 1)
 				this.passengerNum--
+				this.calculateTotalPrice();
 				if (this.passengerNum == 0) {
 					this.totalPrice = 0;
 				}
