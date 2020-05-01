@@ -27,7 +27,7 @@
 			
 		},
 		onShow(res) {
-			this.getTicketPaymentInfo(res.orderNum);
+			// this.getTicketPaymentInfo(res.orderNum);
 		},
 		onReady() {
 			this.backHome();

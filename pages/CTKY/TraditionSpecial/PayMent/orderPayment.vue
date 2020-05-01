@@ -493,19 +493,25 @@
 						//支付成功再进计时器查询状态
 						// location.href = "/Order/BaseCallback/" + flowID;
 						alert("支付成功");
-						uni.redirectTo({
-							url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
-						})
+						that.getTicketPaymentInfo_ticketIssue(that.orderNum)
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						alert("您取消了支付，请重新支付");
-						uni.redirectTo({
-							url:'./CTKYPayFail?&orderNum=' + that.orderNum,
+						uni.showToast({
+							title:'您取消了支付',
+							icon:'none'
 						})
+						// uni.redirectTo({
+						// 	url:'./CTKYPayFail?&orderNum=' + that.orderNum,
+						// })
 					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
 						alert("支付失败，请重新支付");
-						uni.redirectTo({
-							url:'./CTKYPayFail?&orderNum=' + that.orderNum,
+						uni.showToast({
+							title:'支付失败，请重新支付',
+							icon:'none'
 						})
+						// uni.redirectTo({
+						// 	url:'./CTKYPayFail?&orderNum=' + that.orderNum,
+						// })
 					} else {
 						// location.href = "/Coach/GetCoach";
 					}
@@ -539,9 +545,7 @@
 								title: '支付成功',
 								icon: 'none'
 							})
-							uni.redirectTo({
-								url:'./CTKYPaySuccess?&orderNum=' + that.orderNum,
-							})
+							
 						}else if(res.errCode == -1) {//错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
@@ -573,6 +577,71 @@
 					}
 				})
 				// #endif
+			},
+			
+			
+			//--------------------------获取车票支付参数--------------------------
+			getTicketPaymentInfo_ticketIssue: function(orderNumber) {
+				var that = this;
+				var timer = null;
+				that.timer = timer;
+				uni.showLoading({
+					title:'检索订单是否支付...'
+				});
+				timer = setInterval(function() {
+					uni.request({
+						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
+						method: 'GET',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							orderNumber: orderNumber,
+						},
+						success: (res) => {
+							console.log('支付参数返回数据', res);
+							if (res.data.status == true) {
+								uni.hideLoading();
+								var info = JSON.parse(res.data.msg);
+								if (info.oldState == '结束') {
+									console.log('出票成功')
+									clearInterval(timer);
+									// uni.reLaunch({
+									// 	url:'CTKYPaySuccess'
+									// })
+								} else {
+									clearInterval(timer);
+									that.keYunPaymentData = JSON.parse(res.data.msg);
+									// console.log('支付参数返回数据', that.keYunPaymentData);
+									that.keYunPayment();
+								}
+								
+							} else if (res.data.status == false) {
+								uni.hideLoading();
+								var info = JSON.parse(res.data.msg);
+								if (info.oldState == '结束') {
+									console.log('出票失败')
+									clearInterval(timer);
+									// uni.showModal({
+									// 	content: '订单已结束',
+									// 	showCancel: false
+									// })
+									
+								} else {
+									uni.showModal({
+										content: info.oldState,
+										showCancel: false
+									})
+								}
+							}
+						},
+						fail(res) {
+							uni.hideLoading();
+							//回调失败，取消定时器
+							clearInterval(timer);
+						}
+					})
+				}, 3000)
 			},
 		}
 	}
