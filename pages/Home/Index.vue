@@ -193,13 +193,13 @@
 					type: 'gcj02',
 					geocode: true,
 					success: function(res) {
-						alert(0)
+						// alert(0)
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
 						console.log(that.longitude);
 					},
 					fail: function() {
-						alert(0)
+						// alert(0)
 					console.log(0)
 					},
 				}
@@ -207,7 +207,7 @@
 				uni.getLocation({
 					type: 'gcj02',
 					success: (res) => {
-						alert(10)
+						// alert(10)
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
 						console.log(res);
