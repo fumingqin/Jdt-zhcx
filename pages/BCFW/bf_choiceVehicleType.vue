@@ -91,6 +91,7 @@
 </template>
 
 <script>
+	import $bcfw from '@/common/BCFW/bcfw.js'
 	import uniPopup from "../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	export default {
 		components: {
@@ -159,8 +160,8 @@
 			//---------------------------------口数据--------------------------------------
 			bcfwData:function(){
 				uni.request({
-					url:'http://111.231.109.113:8004/api/Chartered/GetVehicleType_Passenger',
-					method:'POST',
+					url:$bcfw.Interface.fw_selectVehicle.value,
+					method:$bcfw.Interface.fw_selectVehicle.method,
 					header: {'content-type': 'application/json'},
 					
 					success: (res) => {
@@ -175,8 +176,6 @@
 			async routeInit() {
 				let priceExplain = await this.$api.lyfwcwd('priceExplain');
 				this.priceExplain = priceExplain.data;
-				// let vehicleSelection = await this.$api.lyfwcwd('vehicleSelection');
-				// this.vehicleSelection = vehicleSelection.data;
 			},
 
 			//------------------------------弹框事件-----------------------------------------
@@ -242,7 +241,7 @@
 					this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carNumberSeats;
 					this.information.cvt_carprice = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carprice;
 					
-					console.log(this.vehicleSelection[this.value])
+					// console.log(this.vehicleSelection[this.value])
 					uni.setStorage({
 						key:'vehicleInformation',	
 						data:this.information,
@@ -252,6 +251,7 @@
 							})
 						}
 					})
+					console.log(this.information)
 				}else{
 					uni.showToast({
 						title: '请选择包车',
