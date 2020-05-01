@@ -2174,9 +2174,9 @@
 
 				} else if (this.exitindex == '2') {
 					this.keYunCancelTicket(this.ticketOrderNumber)
-
+				}
 			},
-
+			
 			//-------------------------景区门票-删除-------------------------
 			del: function() {
 				if (this.exitindex == '3') {
