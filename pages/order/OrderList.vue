@@ -244,6 +244,7 @@
 
 						<view class="CTKYBtnView">
 							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
+							<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
 							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
@@ -851,7 +852,7 @@
 							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 						</view>
 						<view class="CTKYBtnView">
-							<button class="allBtn" @tap="open3(item.orderId,'2')">取消</button>
+							<button class="allBtn" @tap="open3(item.orderNumber,'2')">取消</button>
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>
 						</view>
@@ -1499,6 +1500,44 @@
 					}
 				})
 			},
+			// -------------------------客运取消-------------------------
+			keYunCancelTicket: function(orderNumber) {
+				console.log(orderNumber)
+				var that = this;
+				uni.request({
+					url: 'http://zntc.145u.net/api/ky/CancelTicket_Flow',
+					method: 'GET',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						orderNumber: orderNumber,
+					},
+					success: (respones) => {
+						console.log('取消结果', respones)
+						if(respones.data.status == true){
+							uni.hideLoading()
+							uni.showToast({
+								title:'取消成功'
+							})
+							this.$refs.popup2.close()
+						}else {
+							uni.hideLoading()
+							uni.showToast({
+								title:'取消失败',
+								icon:'none'
+							})
+						}
+					},
+					fail: (respones) => {
+						uni.hideLoading()
+						console.log(respones)
+						uni.showToast({
+							title:'服务器异常，请联系客服'
+						})
+					}
+				})
+			},
 			// -------------------------客运支付-------------------------
 			keYunPay: function(orderNumber) {
 				// var orderInfo = this.info[index];
@@ -2132,41 +2171,7 @@
 				} else if (this.exitindex == '4') {
 
 				} else if (this.exitindex == '2') {
-					uni.request({
-						url: $lyfw.Interface.spt_CancelTickets.value,
-						method: 'GET',
-						data: {
-							orderNumber: this.ticketOrderNumber
-						},
-						header: {'content-type': 'application/x-www-form-urlencoded'},
-						success: (e) => {
-							// console.log(e)
-							if (e.data.msg == '订单取消成功') {
-								uni.showToast({
-									title: '订单取消成功',
-									icon: 'none'
-								})
-								this.close3();
-								this.toFinished();
-							} else if (e.data.msg == '订单取消失败') {
-								uni.showToast({
-									title: '订单取消失败',
-									icon: 'none'
-								})
-								this.close3();
-								this.toFinished();
-							}
-						},
-						fail() {
-							uni.showToast({
-								title: '取消失败！请检查网络状态',
-								icon: 'none',
-								duration: 1500,
-							})
-						}
-					})
-				}
-
+					this.keYunCancelTicket(this.ticketOrderNumber)
 
 			},
 
