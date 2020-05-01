@@ -120,11 +120,11 @@
 				timer: '', //定时器数据
 				isPayEnable: false, //当前是否可以点击支付
 				orderNum: '', //订单编号
-				ticketInfo:[],
-				specialStartStation:'',//定制班车上车点
-				specialEndStation:'',//定制班车下车点
-				tickettype :'',//班车类型
-				ctkyOpenID :'',
+				ticketInfo: [],
+				specialStartStation: '', //定制班车上车点
+				specialEndStation: '', //定制班车下车点
+				tickettype: '', //班车类型
+				ctkyOpenID: '',
 			}
 		},
 		onLoad: function(param) {
@@ -136,8 +136,8 @@
 			that.specialEndStation = that.ticketInfo.getOffPoint;
 			//班车类型
 			that.tickettype = that.ticketInfo.shuttleType;
-			
-			uni.showLoading();
+
+			uni.showLoading('loading...');
 			that.totalPrice = param.totalPrice;
 			if (param.isInsurance == 1) {
 				that.insurance = '保险';
@@ -231,8 +231,8 @@
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
-				if(date) {
-					var setTime = date.replace('T',' ');
+				if (date) {
+					var setTime = date.replace('T', ' ');
 					return setTime;
 				}
 			},
@@ -268,8 +268,8 @@
 						}
 						//-------------------------------读取用户openID-------------------------------
 						that.getOpenID();
-						
-						
+
+
 						//-------------------------------下单-------------------------------
 						// that.getOrder();
 					},
@@ -285,17 +285,17 @@
 			getOpenID() {
 				var that = this;
 				uni.getStorage({
-					key:'scenicSpotOpenId',
-					success:function(response){
+					key: 'scenicSpotOpenId',
+					success: function(response) {
 						// alert('获取id成功');
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
-					fail:function(fail){
+					fail: function(fail) {
 						uni.hideLoading();
 						uni.showModal({
-							content:'用户未授权',
+							content: '用户未授权',
 						})
 					}
 				})
@@ -377,31 +377,31 @@
 						openId: that.ctkyOpenID,
 						totalPrice: that.totalPrice, //总价格
 						payParameter: '', //不需要的参数，传空
-						
-						getOnPoint: that.specialStartStation,//定制班车上车点
-						getOffPoint: that.specialEndStation,//定制班车下车点
+
+						getOnPoint: that.specialStartStation, //定制班车上车点
+						getOffPoint: that.specialEndStation, //定制班车下车点
 					},
-					
+
 					success: (res) => {
 						// alert(res);
 						if (res.data) {
 							if (res.data.status == true) {
 								uni.showToast({
-									title:res.data.status,
-									icon:'none'
+									title: res.data.status,
+									icon: 'none'
 								})
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
-							}else if(res.data.status == false) {
+							} else if (res.data.status == false) {
 								uni.hideLoading();
 								uni.showModal({
-									content:res.data.msg,
+									content: res.data.msg,
 									success: (res) => {
-										if(res.confirm) {
+										if (res.confirm) {
 											uni.switchTab({
-												url:'../../../order/OrderList'
+												url: '../../../order/OrderList'
 											})
-										}else if(res.cancel) {
+										} else if (res.cancel) {
 											uni.navigateBack()
 										}
 									}
@@ -421,59 +421,59 @@
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {
-				uni.request({
-					url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-					method: 'GET',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
-					data: {
-						//订单编号
-						orderNumber: res
-					},
-					success: (res) => {
-						console.log(res.data);
-						if (res.data) {
-							if (res.data.status == true) {
-								var msgArray = JSON.parse(res.data.msg);
-								// console.log('msgArray', msgArray);
-								if(msgArray.oldState == '结束') {
+					uni.request({
+						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
+						method: 'GET',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							//订单编号
+							orderNumber: res
+						},
+						success: (res) => {
+							// console.log(res.data);
+							if (res.data) {
+								if (res.data.status == true) {
+									var msgArray = JSON.parse(res.data.msg);
+									// console.log('msgArray', msgArray);
+									if (msgArray.oldState == '结束') {
+										uni.hideLoading();
+										uni.showToast({
+											title: msgArray.message,
+											icon: 'none'
+										})
+										clearInterval(timer);
+									} else if (msgArray.oldState == '支付系统申请支付订单') {
+										that.paymentData = msgArray;
+										// console.log('paymentData', that.paymentData);
+										uni.hideLoading();
+										uni.showModal({
+											content: '请在2分钟内完成支付',
+											showCancel: false
+										})
+										//回调失败，取消定时器
+										clearInterval(timer);
+									}
+								} else if (res.data.status == false) {
+									var msgArray = JSON.parse(res.data.msg);
 									uni.hideLoading();
 									uni.showToast({
 										title: msgArray.message,
 										icon: 'none'
 									})
-									clearInterval(timer);
-								} else if (msgArray.oldState == '支付系统申请支付订单') {
-									that.paymentData = msgArray;
-									// console.log('paymentData', that.paymentData);
-									uni.hideLoading();
-									uni.showModal({
-										content:'请在2分钟内完成支付',
-										showCancel:false
-									})
 									//回调失败，取消定时器
 									clearInterval(timer);
 								}
-							}else if(res.data.status == false) {
-								var msgArray = JSON.parse(res.data.msg);
-								uni.hideLoading();
-								uni.showToast({
-									title: msgArray.message,
-									icon: 'none'
-								})
-								//回调失败，取消定时器
-								clearInterval(timer);
 							}
+						},
+						fail(res) {
+							uni.hideLoading();
+							console.log('失败');
+							//回调失败，取消定时器
+							clearInterval(timer);
 						}
-					},
-					fail(res) {
-						uni.hideLoading();
-						console.log('失败');
-						//回调失败，取消定时器
-						clearInterval(timer);
-					}
-				})
+					})
 				}, 3000)
 			},
 			//--------------------------调起支付--------------------------
@@ -490,37 +490,33 @@
 					"paySign": that.paymentData.jsapi.PaySign //微信签名
 				}, function(res) {
 					if (res.err_msg == "get_brand_wcpay_request:ok") {
-						//支付成功再进计时器查询状态
-						// location.href = "/Order/BaseCallback/" + flowID;
+
 						alert("支付成功");
-						that.getTicketPaymentInfo_ticketIssue(that.orderNum)
+						uni.showLoading('loading...');
+						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						alert("您取消了支付，请重新支付");
 						uni.showToast({
-							title:'您取消了支付',
-							icon:'none'
+							title: '您取消了支付',
+							icon: 'none'
 						})
-						// uni.redirectTo({
-						// 	url:'./CTKYPayFail?&orderNum=' + that.orderNum,
-						// })
 					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
 						alert("支付失败，请重新支付");
 						uni.showToast({
-							title:'支付失败，请重新支付',
-							icon:'none'
+							title: '支付失败，请重新支付',
+							icon: 'none'
 						})
-						// uni.redirectTo({
-						// 	url:'./CTKYPayFail?&orderNum=' + that.orderNum,
-						// })
+
 					} else {
 						// location.href = "/Coach/GetCoach";
 					}
 				});
 				// #endif
-				
-				
+
+
 				// #ifdef APP-PLUS
-				console.log('进入app支付',that.paymentData);
+				console.log('进入app支付', that.paymentData);
 				uni.hideLoading()
 				uni.requestPayment({
 					provider: 'wxpay',
@@ -530,44 +526,44 @@
 						noncestr: that.paymentData.jsapi.NonceStr,
 						package: 'Sign=WXPay',
 						sign: that.paymentData.jsapi.PaySign,
-						partnerid: that.paymentData.jsapi.PartnerId, 
+						partnerid: that.paymentData.jsapi.PartnerId,
 						prepayid: that.paymentData.jsapi.PrepayId,
 					},
-					success:function(res){
+					success: function(res) {
 						console.log(res)
 						uni.showModal({
-							title:'提示',
-							content:res,
-							showCancel:false
+							title: '提示',
+							content: res,
+							showCancel: false
 						})
-						if(res.errCode == 0) {//成功
+						if (res.errCode == 0) { //成功
 							uni.showToast({
 								title: '支付成功',
 								icon: 'none'
 							})
-							
-						}else if(res.errCode == -1) {//错误
+
+						} else if (res.errCode == -1) { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
 							uni.redirectTo({
-								url:'./CTKYPayFail?&orderNum=' + that.orderNum,
+								url: './CTKYPayFail?&orderNum=' + that.orderNum,
 							})
-						}else if(res.errCode == -2) {//用户取消
+						} else if (res.errCode == -2) { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
 							})
 						}
 					},
-										
+
 					fail: function(ee) {
 						console.log(ee)
 						uni.showModal({
-							title:'提示',
-							content:ee,
-							showCancel:false
+							title: '提示',
+							content: ee,
+							showCancel: false
 						})
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
@@ -578,15 +574,13 @@
 				})
 				// #endif
 			},
-			
-			
-			//--------------------------获取车票支付参数--------------------------
+			//--------------------------成功之后重新获取车票支付参数--------------------------
 			getTicketPaymentInfo_ticketIssue: function(orderNumber) {
 				var that = this;
 				var timer = null;
 				that.timer = timer;
 				uni.showLoading({
-					title:'检索订单是否支付...'
+					title: '检索订单是否支付...'
 				});
 				timer = setInterval(function() {
 					uni.request({
@@ -602,37 +596,21 @@
 							console.log('支付参数返回数据', res);
 							if (res.data.status == true) {
 								uni.hideLoading();
-								var info = JSON.parse(res.data.msg);
-								if (info.oldState == '结束') {
-									console.log('出票成功')
-									clearInterval(timer);
-									// uni.reLaunch({
-									// 	url:'CTKYPaySuccess'
-									// })
-								} else {
-									clearInterval(timer);
-									that.keYunPaymentData = JSON.parse(res.data.msg);
-									// console.log('支付参数返回数据', that.keYunPaymentData);
-									that.keYunPayment();
-								}
+								uni.showToast({
+									title: '出票成功',
+									icon: 'none',
+									success(){
+										uni.redirectTo({
+											url: './CTKYPaySuccess'
+										})
+									}
+								})
 								
 							} else if (res.data.status == false) {
-								uni.hideLoading();
-								var info = JSON.parse(res.data.msg);
-								if (info.oldState == '结束') {
-									console.log('出票失败')
-									clearInterval(timer);
-									// uni.showModal({
-									// 	content: '订单已结束',
-									// 	showCancel: false
-									// })
-									
-								} else {
-									uni.showModal({
-										content: info.oldState,
-										showCancel: false
-									})
-								}
+								uni.showToast({
+									title: '出票失败',
+									icon: 'none',
+								})
 							}
 						},
 						fail(res) {

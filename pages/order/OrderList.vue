@@ -216,10 +216,10 @@
 
 					<view class="whiteBg">
 						<!-- 站点-状态 -->
-						<view class="u-f-ac">
+						<view class="u-f-ac"> 
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
 								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
@@ -431,7 +431,7 @@
 						<view class="u-f-ac">
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
 								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
@@ -631,7 +631,7 @@
 						<view class="u-f-ac">
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
 								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
@@ -828,7 +828,7 @@
 						<view class="u-f-ac">
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
 								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
@@ -1029,7 +1029,7 @@
 						<view class="u-f-ac">
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
+								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
 								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 							</view>
 						</view>
@@ -2610,7 +2610,16 @@
 			color: #06B4FD;
 		}
 	}
-
+	//站点标题
+	.stationTitle {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		color: #2C2D2D; 
+		font-size: 34rpx;
+		font-weight: bold;
+		width: 80%;
+	}
 	//预定日期---LJH
 	.reserveDate {
 		padding: 12rpx 25rpx;
