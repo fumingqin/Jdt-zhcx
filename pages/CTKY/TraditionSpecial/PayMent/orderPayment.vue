@@ -385,10 +385,9 @@
 					},
 
 					success: (res) => {
-						// alert(res);
+						alert(res);
 						if (res.data) {
 							if (res.data.status == true) {
-								uni.hideLoading();
 								uni.showToast({
 									title: res.data.status,
 									icon: 'none'
@@ -438,6 +437,7 @@
 							// console.log(res.data);
 							if (res.data) {
 								if (res.data.status == true) {
+									alert('获取支付参数状态成功',res.data.status)
 									var msgArray = JSON.parse(res.data.msg);
 									if (msgArray.oldState == '结束') {
 										uni.hideLoading();
@@ -457,6 +457,7 @@
 										clearInterval(timer);
 									}
 								} else if (res.data.status == false) {
+									alert('获取支付参数状态失败',res.data.status)
 									var msgArray = JSON.parse(res.data.msg);
 									uni.hideLoading();
 									uni.showToast({
