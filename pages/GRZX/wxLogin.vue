@@ -108,6 +108,23 @@
 						},
 						method:that.$GrzxInter.Interface.login.method,
 						success(res1) {
+							let base64 = wx.arrayBufferToBase64(userInfo.portrait); //把arraybuffer转成base64
+							let port = 'data:image/jpeg;base64,' + base64; //不加上这串字符，在页面无法显示
+							uni.request({
+								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+								data:{
+									userId:res1.data.data.userId,
+									phoneNumber:phone,
+									nickname:userInfo.nickname,
+									address:userInfo.province+userInfo.city,
+									openId_wx:userInfo.openid,
+									portrait:port,
+								},
+								method:that.$GrzxInter.Interface.changeInfoPortrait.value,
+								success(res2) {
+									console.log(res2);
+								}
+							})
 							uni.request({
 								//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
 								//url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
@@ -118,7 +135,6 @@
 									nickname:userInfo.nickname,
 									address:userInfo.province+userInfo.city,
 									openId_wx:userInfo.openid,
-									portrait:userInfo.portrait,
 									//wxOpenid:openid,
 								},
 								method:that.$GrzxInter.Interface.changeInfo.method,
@@ -128,6 +144,7 @@
 										title:'绑定成功！',
 										icon:'success',
 									})
+									res.data.data.portrait=userInfo.portrait;
 									uni.setStorageSync('userInfo',res.data.data)
 									that.logining=true;
 									that.login(res.data.data)
