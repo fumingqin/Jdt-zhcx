@@ -1655,7 +1655,7 @@
 
 
 					// #ifdef APP-PLUS
-					console.log('进入app支付', that.paymentData);
+					// console.log('进入app支付', that.paymentData);
 					uni.hideLoading()
 					uni.requestPayment({
 						provider: 'wxpay',
@@ -1669,12 +1669,6 @@
 							prepayid: that.keYunPaymentData.jsapi.PrepayId,
 						},
 						success: function(res) {
-							console.log('支付结果', res)
-							uni.showModal({
-								title: '提示',
-								content: res,
-								showCancel: false
-							})
 							if (res.errMsg == 'requestPayment:ok') { //成功
 								uni.showToast({
 									title: '支付成功',
@@ -1683,13 +1677,11 @@
 										uni.startPullDownRefresh();
 									}
 								})
-								
 							} else if (res.errMsg == 'requestPayment:fail') { //错误
 								uni.showToast({
 									title: '支付失败，请重新支付',
 									icon: 'none',
 								})
-								
 							}
 						},
 
