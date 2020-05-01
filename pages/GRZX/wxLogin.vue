@@ -116,6 +116,7 @@
 									nickname:userInfo.nickname,
 									address:userInfo.province+userInfo.city,
 									openId_wx:userInfo.openid,
+									portrait:userInfo.portrait,
 									//wxOpenid:openid,
 								},
 								method:that.$GrzxInter.Interface.changeInfo.method,

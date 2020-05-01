@@ -47,6 +47,7 @@ const userInfo = {
 
 //const Url='http://111.231.109.113:8002';
 const Url='http://zntc.145u.net';
+const Url1='http://111.231.109.113:8002';
 const Interface={
 	login:{
 		value:Url+'/api/person/login',
@@ -111,6 +112,12 @@ const Interface={
 	GetUserInfoByOpenId_qq:{
 		value:Url+'/api/person/GetUserInfoByOpenId_qq',
 		name:'通过qq的openid获取用户信息',
+		method:'POST',
+		pages: [],
+	}, 
+	SearchVersion:{
+		value:Url+'/api/person/SearchVersion',
+		name:'获取版本号',
 		method:'POST',
 		pages: [],
 	}, 
