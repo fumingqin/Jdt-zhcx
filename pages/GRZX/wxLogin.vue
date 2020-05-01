@@ -116,7 +116,7 @@
 							uni.downloadFile({
 							    url: userInfo.portrait, //仅为示例，并非真实的资源
 							    success: (res2) => {
-							        if (res.statusCode === 200) {
+							        if (res2.statusCode === 200) {
 										pathToBase64(res2.tempFilePath)
 										.then(base64 => {
 											console.log(base64,'base64');
