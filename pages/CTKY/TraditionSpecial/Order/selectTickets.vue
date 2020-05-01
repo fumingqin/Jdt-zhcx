@@ -79,6 +79,8 @@
 		onLoad(param) {
 			//班次列表数据参数，从上一个页面传过来的时间，上下车点
 			this.date = param.date;
+			console.log(this.date)
+			console.log(param.date)
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			
@@ -137,7 +139,6 @@
 			turnDate(date) {
 				var setTime = date.replace('T',' ');
 				return setTime;
-				// return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------显示日期-------------------------------
 			onShowDatePicker(type) { //显示
@@ -274,11 +275,13 @@
 			},
 			//-------------------------------初始化时间轴-------------------------------
 			loadDate() {
-				var date = new Date();
+				var date = new Date(this.date);
+				// var mydate = this.date;
 				console.log(date);
 				this.selectIndex = 0;
-				for (var i = 0; i < 8; i++) {
+				for (var i = 0; i < 7; i++) {
 					var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000);
+					
 					var nowdate = this.getTime(3, mydate);
 					var week = this.getTime(2, mydate);
 					var longdate = this.getTime(0, mydate);

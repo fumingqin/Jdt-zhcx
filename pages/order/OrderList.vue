@@ -246,7 +246,7 @@
 							<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
-							<button class="allBtn" v-if="item.state=='7'" @tap="open2(item.orderNumber,'2')">退票</button>
+							<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
 							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
 							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->

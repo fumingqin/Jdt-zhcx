@@ -594,6 +594,7 @@
 							console.log('支付参数返回数据', res);
 							if (res.data.status == true) {
 								uni.hideLoading();
+								clearInterval(timer);
 								uni.showToast({
 									title: '出票成功',
 									icon: 'none',
@@ -605,6 +606,7 @@
 								})
 								
 							} else if (res.data.status == false) {
+								clearInterval(timer);
 								uni.showToast({
 									title: '出票失败',
 									icon: 'none',
