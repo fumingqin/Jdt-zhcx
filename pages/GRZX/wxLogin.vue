@@ -1,6 +1,8 @@
 <template>
     <view class="content">
 		<!-- <image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image> -->
+		<image src="../../static/GRZX/bindPhone.png" class="backClass"></image>
+		<text class="titleClass">手机绑定</text>
 		<view class="inputItem phoneNum">
 			<image src="../../static/GRZX/shouji.png" class="iconClass1"></image>
 			<input type="number" placeholder="手机号码" maxlength="11" class="inputClass" data-key="phoneNumber" @input="inputChange1" />
@@ -8,8 +10,8 @@
 		<view class="inputItem Captcha">
 			<image src="../../static/GRZX/yanzhengma.png" class="iconClass2"></image>
 			<input type="number" placeholder="输入验证码" maxlength="6" class="inputClass" data-key="captchaCode" @input="inputChange2" />
+			<view class="getCode style" @click="getCodeClick" id="Code">{{textCode}}</view>
 		</view>
-		<view class="getCode style" @click="getCodeClick" id="Code">{{textCode}}</view>
 		<button type="warn" @click="bindPhone" class="btnClass">确定</button>
     </view>
 </template>
@@ -207,6 +209,11 @@
 </script>
 
 <style lang="scss">
+	.content{
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+	}
 	.iconClass1{   //手机图标
 		width: 26upx;
 		height: 36upx;
@@ -225,16 +232,14 @@
 		width: 87.6%;
 		height: 140upx;
 		border-bottom: 1upx solid #EAEAEA;
+		position: relative;
+		margin-left: 6%;
 	}
 	.phoneNum{
-		position: absolute;
-		top:125upx;
-		left: 6.19%;
+		margin-top: 20upx;
 	}
 	.Captcha{
-		position: absolute;
-		top:275upx;
-		left: 6.19%;
+		margin-top: 20upx;
 	}
 	.inputClass{	//输入框的位置
 		position: absolute;
@@ -247,7 +252,7 @@
 	}
 	.getCode{  //获取验证码
 		position: absolute;
-		top:320upx;
+		top:45upx;
 		left: 64%;
 		width:30%;
 		font-size: 28upx;
@@ -261,9 +266,11 @@
 		color: #ED1C24;
 	}
 	.btnClass{
-		position: absolute;
-		top:495upx;
-		left: 5%;
+		// position: absolute;
+		// top:495upx;
+		// left: 5%;
+		margin-top: 50upx;
+		margin-left: 5%;
 		width: 90%;
 		height: 100upx;
 		line-height: 100upx;
@@ -274,6 +281,16 @@
 		top: 80upx;
 		left: 5.13%;
 		position: absolute;
+	}
+	.backClass{
+		width: 100%;
+		height: 350upx;
+	}
+	.titleClass{
+		color: #FC4646;
+		font-size: 48upx;
+		margin-top:10upx;
+		margin-left: 6%;
 	}
 </style>
 
