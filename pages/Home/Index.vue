@@ -64,61 +64,61 @@
 				mapHeight: '',
 				QQ: '450906905',
 				controls: [{
-						id: 'back',
-						position: {
-							left: 10,
-							top: 445,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Position.png',
-						clickable: true,
-					},
-					/* 			{
-									id: 'CallPollice',
-									position: {
-										left: 300,
-										top: 290,
-										width: 55,
-										height: 55
+										id: 'back',
+										position: {
+											left: 10,
+											top: 405,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Position.png',
+										clickable: true,
 									},
-									iconPath: '../../static/Home/CallPollice.png',
-									clickable: true,
-								}, */
-					{
-						id: 'Service',
-						position: {
-							left: 300,
-							top: 345,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Service.png',
-						clickable: true,
-					},
-					{
-						id: 'Big',
-						position: {
-							left: 300,
-							top: 405,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Big.png',
-						clickable: true,
-					},
-					{
-						id: 'Small',
-						position: {
-							left: 300,
-							top: 440,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Small.png',
-						clickable: true,
-					}
-				],
+									/* 			{
+													id: 'CallPollice',
+													position: {
+														left: 300,
+														top: 290,
+														width: 55,
+														height: 55
+													},
+													iconPath: '../../static/Home/CallPollice.png',
+													clickable: true,
+												}, */
+									/* {
+										id: 'Service',
+										position: {
+											left: 300,
+											top: 345,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Service.png',
+										clickable: true,
+									}, */
+									{
+										id: 'Big',
+										position: {
+											left: 300,
+											top: 365,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Big.png',
+										clickable: true,
+									},
+									{
+										id: 'Small',
+										position: {
+											left: 300,
+											top: 400,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Small.png',
+										clickable: true,
+									}
+								],
 			}
 		},
 		onLoad:function() {
