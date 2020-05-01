@@ -75,12 +75,12 @@
 							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
 						</view>
 
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+						<view style="display: flex;justify-content: flex-end;">
+							<button class="Btn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
 							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
-							<button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+							<button class="Btn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<button class="Btn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
+							<button class="Btn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
 					</view>
 				</view>
@@ -326,12 +326,12 @@
 							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
 						</view>
 
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
-							<button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
-							<button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+						<view style="display: flex;justify-content: flex-end;">
+							<button class="Btn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="Btn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+							<button class="Btn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<button class="Btn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
+							<button class="Btn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
 					</view>
 				</view>
@@ -536,12 +536,12 @@
 							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
 						</view>
 
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
-							<button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
-							<button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+						<view style="display: flex;justify-content: flex-end;">
+							<button class="Btn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="Btn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+							<button class="Btn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<button class="Btn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
+							<button class="Btn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
 					</view>
 				</view>
@@ -737,12 +737,12 @@
 							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
 						</view>
 
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
-							<button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
-							<button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+						<view style="display: flex;justify-content: flex-end;">
+							<button class="Btn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="Btn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+							<button class="Btn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<button class="Btn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
+							<button class="Btn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
 					</view>
 				</view>
@@ -927,12 +927,12 @@
 							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
 						</view>
 
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
-							<button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
-							<button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+						<view style="display: flex;justify-content: flex-end;">
+							<button class="Btn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="Btn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+							<button class="Btn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<button class="Btn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button>
+							<button class="Btn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
 					</view>
 				</view>
@@ -1257,7 +1257,7 @@
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				orderType1: '',
-				ctkyOrderNum:'',//传统客运订单号（退票需要）
+				ctkyOrderNum: '', //传统客运订单号（退票需要）
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
@@ -1276,7 +1276,7 @@
 				specialLineInfo: ''
 			}
 		},
-		onLoad:function() {
+		onLoad: function() {
 			var that = this;
 			//读取用户ID
 			uni.getStorage({
@@ -1453,7 +1453,7 @@
 			keYunDetail: function(res) {
 				console.log(res)
 				uni.navigateTo({
-					url:'../CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
+					url: '../CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
 				})
 			},
 			// -------------------------客运退票-------------------------
@@ -1473,13 +1473,13 @@
 					success: (respones) => {
 						console.log('删除结果', respones)
 						uni.showModal({
-							content:respones.message,
+							content: respones.message,
 						})
 					},
 					fail: (respones) => {
 						console.log(respones)
 						uni.showModal({
-							content:respones.message,
+							content: respones.message,
 						})
 					}
 				})
@@ -1585,7 +1585,7 @@
 					this.current = e.currentIndex
 				}
 			},
-			
+
 			//-------------------------出租车开始-------------------------
 			loadczcData: function() {
 				var that = this;
@@ -1708,7 +1708,7 @@
 					data: {
 						UserID: that.userInfo.userId,
 					},
-					success:function(res){
+					success: function(res) {
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -1823,14 +1823,14 @@
 					}
 				})
 			},
-			GotoPay:function(value){
+			GotoPay: function(value) {
 				uni.navigateTo({
-					url:"../CZC/PrivateTaxiPayment?orderNumber="+value
+					url: "../CZC/PrivateTaxiPayment?orderNumber=" + value
 				})
 			},
 			//-------------------------出租车专线代码结束-------------------------
-			
-			
+
+
 			//-------------------------景区门票代码开始-------------------------
 			//-------------------------请求订单列表-------------------------
 			toFinished: function() {
@@ -1863,7 +1863,8 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType == '支付超时') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
+												'支付超时') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}
@@ -1985,7 +1986,7 @@
 
 			//-------------------------景区门票-取消-------------------------
 			cancel: function() {
-				if(this.exitindex == '3'){
+				if (this.exitindex == '3') {
 					uni.request({
 						url: 'http://111.231.109.113:8002/api/ly/CancelTickets',
 						data: {
@@ -2021,16 +2022,16 @@
 							})
 						}
 					})
-				}else if(this.exitindex == '4'){
-					
+				} else if (this.exitindex == '4') {
+
 				}
-				
+
 
 			},
 
 			//-------------------------景区门票-删除-------------------------
 			del: function() {
-				if(this.exitindex == '3'){
+				if (this.exitindex == '3') {
 					uni.request({
 						url: 'http://111.231.109.113:8002/api/ly/DeleteTickets',
 						data: {
@@ -2058,12 +2059,12 @@
 							})
 						}
 					})
-				}else if(this.exitindex == '4'){
-					
+				} else if (this.exitindex == '4') {
+
 				}
-				
+
 			},
-			
+
 			//-------------------------生成二维码-------------------------
 			make: function(e) {
 				uQRCode.make({
@@ -2080,7 +2081,7 @@
 				this.$refs.popup5.open()
 			},
 			//-------------------------景区门票代码结束-------------------------
-			
+
 			detail: function(item) {
 				if (item == 1) {
 					uni.navigateTo({
@@ -2088,7 +2089,7 @@
 					})
 				}
 			},
-			
+
 			going: function(item) {
 				// console.log(item)
 				var state = this.taxiOrderState(item.state)
@@ -2105,7 +2106,7 @@
 					}
 				}
 			},
-			
+
 			//-------------------包车订单添加-------------------------
 			//获取模拟数据
 			async getArrayInfo() {
@@ -2190,14 +2191,19 @@
 
 	//白底1
 	.whiteBg {
-		position: relative;
-		margin: 52rpx 26rpx;
-		margin-top: -20rpx;
-		padding: 20rpx 0;
-		width: 698rpx;
-		height: 340rpx;
-		background: #FFFFFF;
+		// position: relative;
+		// margin: 52rpx 26rpx;
+		// margin-top: -20rpx;
+		// padding: 20rpx 0;
+		// width: 698rpx;
+		// height: 340rpx;
+		// background: #FFFFFF;
+		// border-radius: 12rpx;
+		// box-shadow: 0 0 5rpx 0rpx #aaa;
+		background-color: #FFF;
 		border-radius: 12rpx;
+		margin: 20rpx 0;
+		padding: 20rpx 42rpx;
 		box-shadow: 0 0 5rpx 0rpx #aaa;
 	}
 
@@ -2415,6 +2421,7 @@
 			background-color: #fff;
 			color: #666666;
 		}
+
 
 		//支付
 		.payBtn {
