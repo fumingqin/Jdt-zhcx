@@ -137,7 +137,9 @@
 			//班车类型
 			that.tickettype = that.ticketInfo.shuttleType;
 
-			uni.showLoading('loading...');
+			uni.showLoading({
+			    title: '加载中...'
+			});
 			that.totalPrice = param.totalPrice;
 			if (param.isInsurance == 1) {
 				that.insurance = '保险';
@@ -386,6 +388,7 @@
 						// alert(res);
 						if (res.data) {
 							if (res.data.status == true) {
+								uni.hideLoading();
 								uni.showToast({
 									title: res.data.status,
 									icon: 'none'
@@ -436,7 +439,6 @@
 							if (res.data) {
 								if (res.data.status == true) {
 									var msgArray = JSON.parse(res.data.msg);
-									// console.log('msgArray', msgArray);
 									if (msgArray.oldState == '结束') {
 										uni.hideLoading();
 										uni.showToast({
@@ -446,7 +448,6 @@
 										clearInterval(timer);
 									} else if (msgArray.oldState == '支付系统申请支付订单') {
 										that.paymentData = msgArray;
-										// console.log('paymentData', that.paymentData);
 										uni.hideLoading();
 										uni.showModal({
 											content: '请在2分钟内完成支付',
@@ -479,8 +480,8 @@
 			//--------------------------调起支付--------------------------
 			payment: function() {
 				var that = this;
-				// console.log('111111',that.paymentData);
 				// #ifdef H5
+				uni.hideLoading()
 				WeixinJSBridge.invoke('getBrandWCPayRequest', {
 					"appId": that.paymentData.jsapi.AppId, //公众号名称，由商户传入
 					"timeStamp": that.paymentData.jsapi.TimeStamp, //时间戳
@@ -490,11 +491,11 @@
 					"paySign": that.paymentData.jsapi.PaySign //微信签名
 				}, function(res) {
 					if (res.err_msg == "get_brand_wcpay_request:ok") {
-
 						alert("支付成功");
-						uni.showLoading('loading...');
+						uni.showLoading({
+						    title: '加载中...'
+						});
 						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
-
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						alert("您取消了支付，请重新支付");
 						uni.showToast({
