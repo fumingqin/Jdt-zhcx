@@ -321,10 +321,13 @@
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
+				// #ifndef MP-WEIXIN
+				"navigationStyle": "custom",
+				// #endif
 				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#f5f5f5"
-				// "navigationStyle": "custom"
+				
 			}
 		}, {
 			// 出租车订单详情
@@ -609,6 +612,11 @@
 			}
         }
     ],
+	
+	
+	
+	
+	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
