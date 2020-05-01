@@ -104,7 +104,7 @@
 					<!-- 包车天数 -->
 					<view class="dl_choice">包车天数</view>
 					<picker @change="godetail" :value="index" :range="dayContent">
-						<text class="ci_text">{{dayContent[index]}}</text>
+						<text class="ci_text">{{dayContent[index]}}天</text>
 					</picker>
 				</view>
 				<!-- 第二页面按钮 -->
