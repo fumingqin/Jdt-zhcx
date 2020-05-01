@@ -51,6 +51,7 @@
 </template>
 
 <script>
+	import $bcfw from '@/common/BCFW/bcfw.js'
 	export default {
 		data() {
 			return {
@@ -84,8 +85,8 @@
 			getBusStationList() {
 				uni.showLoading();
 				uni.request({
-					url:'http://111.231.109.113:8004/api/Chartered/GetCharteredAllLine_Passenger',
-					method:'POST',
+					url:$bcfw.Interface.fw_selectSpecialLine.value,
+					method:$bcfw.Interface.fw_selectSpecialLine.method,
 					header:{'content-type': 'application/json'},
 					success: (res) => {
 						console.log(res)
@@ -128,8 +129,8 @@
 				//以下示例截取淘宝的关键字，请替换成你的接口
 				uni.showLoading();
 				uni.request({
-					url: 'http://111.231.109.113:8004/api/Chartered/GetCharteredLineByLineName_Passenger',
-					method:'POST',
+					url:$bcfw.Interface.fw_privateLineSearch.value,
+					method:$bcfw.Interface.fw_privateLineSearch.method,
 					header:{'content-type': 'application/json'},
 					data:{
 						linename:keyword,

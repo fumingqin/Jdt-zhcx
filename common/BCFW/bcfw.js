@@ -5,42 +5,6 @@ const Url = 'http://111.231.109.113:8004';
 
 //接口对象
 const Interface = {
-	//GET-POST
-	// spt_GetticketSearchByrequestArea_Six:{
-	// 	value: Url + '/api/ly/GetticketSearchByrequestArea_Six',
-	// 	name:'景区列表-六宫格',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
-	// },
-	
-	// spt_GetticketSearchByrequestArea:{
-	// 	value: Url + '/api/ly/GetticketSearchByrequestArea',
-	// 	name:'景区列表-景区列表',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
-	// },
-	
-	// spt_GetticketSearchBysearchValue:{
-	// 	value: Url + '/api/ly/GetticketSearchBysearchValue',
-	// 	name:'景区列表-搜索',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
-	// },
-	
-	// spt_GetticketDetailByticketId:{
-	// 	value: Url + '/api/ly/GetticketDetailByticketId',
-	// 	name:'景区门票-详情',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsDetails.vue"]
-	// },
-	
-	// spt_GetticketSecurityByticketIde:{
-	// 	value: Url + '/api/ly/GetticketSecurityByticketId',
-	// 	name:'景区门票-门票须知',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
-	// },
-	
 	spt_GetcouponByuserId:{
 		value: Url + '/api/bc/GetcouponByuserId',
 		name:'包车订单-优惠券列表',
@@ -69,20 +33,6 @@ const Interface = {
 		pages:["order/OrderList.vue"]
 	},
 	
-	// spt_RequestTicketsListDetail:{
-	// 	value: Url + '/api/ly/RequestTicketsListDetail',
-	// 	name:'订单详情',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/orderDetails.vue","LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
-	// },
-	
-	// spt_getIsPaySuccess:{
-	// 	value: Url + '/api/ly/getIsPaySuccess',
-	// 	name:'订单-去支付-查询是否出票',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
-	// },
-	
 	spt_RequestTickets:{
 		value: Url + '/api/Chartered/QuerySpecialLineOrder_Passenger',
 		name:'订单-去支付',
@@ -110,6 +60,27 @@ const Interface = {
 		method:'POST',
 		pages:["BCFW/charteredBusPayment.vue"]
 	},
+	
+	fw_selectSpecialLine:{
+		value: Url + '/api/Chartered/GetCharteredAllLine_Passenger',
+		name:'包车-选择专线',
+		method:'POST',
+		pages:["BCFW/bf_choice.vue"]
+	},
+	
+	fw_privateLineSearch:{
+		value: Url + '/api/Chartered/GetCharteredLineByLineName_Passenger',
+		name:'包车-选择专线搜索',
+		method:'POST',
+		pages:["BCFW/bf_choice.vue"]
+	},
+	
+	fw_selectVehicle:{
+		value: Url + '/api/Chartered/GetVehicleType_Passenger',
+		name:'包车-选择车辆',
+		method:'POST',
+		pages:["BCFW/bf_choiceVehicleType.vue"]
+	}
 	
 }
 

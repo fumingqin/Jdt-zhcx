@@ -1,9 +1,15 @@
 <template>
 	<view class="Cr_background">
 		<form @submit="formSubmit" >
+			<!-- #ifdef H5 -->
+			<image class="bg" :src="backImg||'/static/GRZX/login1.png'" mode="aspectFill" name="backImg"></image>
+			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait"></image>
+			<!-- #endif -->
+			<!-- #ifndef H5 -->
 			<image class="bg" :src="backImg||'/static/GRZX/login1.png'" mode="aspectFill" name="backImg"></image>
 			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait" @click="getPhoto"></image>
 			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
+			<!-- #endif -->
 			<view class="Cr_slk1">
 				<text class="bz">姓&nbsp;名：</text>
 				<input class="slk"  name="nickname"  placeholder="请输入" v-model="nickname" adjust-position="" />
