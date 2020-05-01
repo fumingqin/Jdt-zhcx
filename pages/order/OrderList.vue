@@ -207,7 +207,7 @@
 
 
 				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
@@ -422,7 +422,7 @@
 
 
 				<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -622,7 +622,7 @@
 				</view>
 
 				<!-- (进行中)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -819,7 +819,7 @@
 				</view>
 
 				<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -1020,7 +1020,7 @@
 
 
 				<!-- (已取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
