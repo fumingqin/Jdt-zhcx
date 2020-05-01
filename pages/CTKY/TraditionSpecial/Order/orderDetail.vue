@@ -25,7 +25,7 @@
 							<!-- 身份证 -->
 							<view>身份证</view>
 							<!-- 联系电话 -->
-							<view>联系电话</view>
+							<!-- <view>联系电话</view> -->
 							<!-- 退改规则 -->
 							<view>退改规则</view>
 							<!-- 附加保险 -->
@@ -37,7 +37,7 @@
 							<!-- 身份证 -->
 							<view>{{item.userCodeNum}}</view>
 							<!-- 联系电话 -->
-							<view>{{orderInfo.phoneNumber}}</view>
+							<!-- <view>{{orderInfo.phoneNumber}}</view> -->
 							<!-- 退改规则 -->
 							<view>{{role}}</view>
 							<!-- 附加保险 -->
