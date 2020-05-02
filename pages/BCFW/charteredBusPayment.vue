@@ -27,9 +27,9 @@
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">包车人信息</view>
-					<text class="MP_text">包车人：{{orderInfo.userName}}</text>
-					<text class="MP_text">身份证：{{orderInfo.userCID}}</text>	
-					<text class="MP_text">手机号：{{orderInfo.userPhone}}</text>						
+					<text class="MP_text">包车人：{{orderInfo.nickName}}</text>
+					<text class="MP_text">身份证：{{orderInfo.nickId}}</text>	
+					<text class="MP_text">手机号：{{orderInfo.nickPhone}}</text>						
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
@@ -71,13 +71,13 @@
 			</view>
 			
 			<!-- #ifndef H5 -->
-			<view class="MP_information2">
-				<view class="MP_optionBar">
+			<!-- <view class="MP_information2"> -->
+				<!-- <view class="MP_optionBar">
 					<text class="Mp-icon jdticon icon-alipay"></text>
-					<!-- <text class="Mp_title">支付宝</text> -->
+					<text class="Mp_title">支付宝</text>
 					<radio class="Mp_box" :checked="channeIndex===1" :color="'#01aaef'" @click="Selection"></radio>
-				</view>
-			</view>
+				</view> -->
+			<!-- </view> -->
 			<!-- #endif -->
 			
 
@@ -115,9 +115,9 @@
 					or_boardingPoint: '',//出发地
 					or_destination:'',//目的地
 					cm_day:0,					
-					userName:'',//包车人
-					userCID:'',//包车人身份证
-					userPhone:'',//包车人电话
+					nickName:'',//包车人
+					nickId:'',//包车人身份证
+					nickPhone:'',//包车人电话
 					
 					
 
@@ -144,27 +144,28 @@
 			}
 		},
 		onLoad: function(options) {
-			// uni.showLoading({
-			// 	title: '拉起订单中...'
-			// })
+			uni.showLoading({
+				title: '拉起订单中...'
+			})
 			this.returnIndex = false;
 			uni.setStorage({
 				key: 'returnIndex',
 				data: this.returnIndex,
-			})
-			this.getArrayInfo();
-			
-			// uni.request({
-			// 	url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + options.orderNumber,
-			// 	method: 'POST',
-			// 	success: (res) => {
-			// 		console.log(res)
-			// 		this.orderInfo = res.data.data;
-			// 		
+			}),
+			uni.request({
+				url: 'http://111.231.109.113:8004/api/Chartered/QueryCharteredOrderByOrderNumber_Passenger',
+				data:{
+					or_number :options.orderNumber
+				},
+				method: 'POST',
+				success: (res) => {
+					console.log(res)
+					this.orderInfo = res.data.data;
+					
 					// this.getDate();
-					// uni.hideLoading()
-			// 	}
-			// })
+					uni.hideLoading()
+				}
+			})
 			
 			// #ifdef H5
 			uni.getStorage({
@@ -202,12 +203,12 @@
 					this.channeIndex = 0;
 				}
 			},
-			async getArrayInfo(){
-				var that=this;
-				let orderInfo = await this.$api.bcfwzyx('orderInfo');
-				that.orderInfo=orderInfo.data;
-				console.log('1235',orderInfo)
-				},
+			// async getArrayInfo(){
+			// 	var that=this;
+			// 	let orderInfo = await this.$api.bcfwzyx('orderInfo');
+			// 	that.orderInfo=orderInfo.data;
+			// 	console.log('1235',orderInfo)
+			// 	},
 
 			// //数组提取
 			// screenUser: function() {
@@ -218,35 +219,35 @@
 
 
 			//获取当前时间并格式化
-			getDate: function() {
-				//先提取订单下单时间把空格转换成T
-				var a = this.orderInfo.setOrderTime.replace(' ', 'T')
-				//把时间转换成时间戳
-				var b = new Date(a).getTime();
+			// getDate: function() {
+			// 	//先提取订单下单时间把空格转换成T
+			// 	var a = this.orderInfo.setOrderTime.replace(' ', 'T')
+			// 	//把时间转换成时间戳
+			// 	var b = new Date(a).getTime();
 
-				//获取当前时间（为什么要先把当前时间戳格式化？）是因为直接获取当前时间戳存在时间误差
-				var date = new Date(),
-					year = date.getFullYear(),
-					month = date.getMonth() + 1,
-					day = date.getDate(),
-					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-					minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
-					second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-				month >= 1 && month <= 9 ? (month = "0" + month) : "";
-				day >= 0 && day <= 9 ? (day = "0" + day) : "";
-				var timer = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
-				//把转换后的时间，转换成时间戳
-				var c = new Date(timer).getTime();
+			// 	//获取当前时间（为什么要先把当前时间戳格式化？）是因为直接获取当前时间戳存在时间误差
+			// 	var date = new Date(),
+			// 		year = date.getFullYear(),
+			// 		month = date.getMonth() + 1,
+			// 		day = date.getDate(),
+			// 		hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+			// 		minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
+			// 		second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+			// 	month >= 1 && month <= 9 ? (month = "0" + month) : "";
+			// 	day >= 0 && day <= 9 ? (day = "0" + day) : "";
+			// 	var timer = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
+			// 	//把转换后的时间，转换成时间戳
+			// 	var c = new Date(timer).getTime();
 
-				//用当前时间-下单时间再除于1000就是秒
-				var d = (c - b) / 1000;
+			// 	//用当前时间-下单时间再除于1000就是秒
+			// 	var d = (c - b) / 1000;
 
-				//这里的300秒就是支付倒计时，门票是5分钟
-				var e = 394 - d;
+			// 	//这里的300秒就是支付倒计时，门票是5分钟
+			// 	var e = 394 - d;
 
-				this.countDownDate = e;
-				this.countDown();
-			},
+			// 	this.countDownDate = e;
+			// 	this.countDown();
+			// },
 
 
 			//支付倒计时
@@ -433,7 +434,6 @@
 				if (this.channeIndex == 0) {
 					var payTypeIndex = 3;
 					uni.hideLoading()
-					
 					uni.request({
 						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
 						data: {

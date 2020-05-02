@@ -56,14 +56,14 @@ const Interface = {
 	},
 	
 	spt_AddtouristOrder:{
-		value: Url + '/api/bc/AddtouristOrder',
+		value: Url + '/api/Chartered/AddCharteredOrder_Passenger',
 		name:'包车订单-APP提交订单',
 		method:'POST',
 		pages:["BCFW/bf_information.vue"]
 	},
 	
 	spt_RequestTicketsList:{
-		value: Url + '/api/bc/RequestTicketsList',
+		value: Url + '/api/Chartered/QueryCharteredOrderByUserID_Passenger',
 		name:'订单列表',
 		method:'POST',
 		pages:["order/OrderList.vue"]
@@ -91,14 +91,14 @@ const Interface = {
 	},
 	
 	spt_CancelTickets:{
-		value: Url + '/api/bc/CancelTickets',
+		value: Url + '/api/Chartered/CancelCharteredOrder_Passenger',
 		name:'订单-取消',
 		method:'POST',
 		pages:["BCFW/charteredBusPayment.vue","order/OrderList.vue"]
 	},
 	
 	spt_DeleteTickets:{
-		value: Url + '/api/bc/DeleteTickets',
+		value: Url + '/api/Chartered/DeleteCharteredOrder_Passenger',
 		name:'订单-删除',
 		method:'POST',
 		pages:["order/OrderList.vue"]
