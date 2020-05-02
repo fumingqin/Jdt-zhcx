@@ -2,11 +2,11 @@
 	<view>
 		<!-- 顶部背景 -->
 		<view class="ob_background">
-			<image src="@/static/BCFW/choice/red.png" mode="aspectFill"></image>
+			<image src="../../static/BCFW/choice/red.png" mode="aspectFill"></image>
 		</view>
 
 		<view class="cover-container">
-			<image class="okImage" mode="aspectFill" src="@/static/LYFW/scenicSpotTickets/successfulPayment/ok.png"></image>
+			<image class="okImage" mode="aspectFill" src="../../static/BCFW/choice/ok.png"></image>
 			<text class="title">购票成功</text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
@@ -33,12 +33,12 @@
 				if(e==0){ 
 					this.godetailIndex=1;
 					uni.switchTab({
-						url: '../../order/OrderList'	
+						url: '../../../pages/order/OrderList'	
 					});
 				}else if(e==1){
 					this.godetailIndex=2;
 					uni.switchTab({
-						url: '/pages/Home/indexZhly'
+						url: '../../../pages/Home/Index'
 					});
 				}
 			},
@@ -46,7 +46,7 @@
 				setTimeout(() => {
 					if(this.godetailIndex == ''){
 						uni.switchTab({
-							url: '/pages/Home/indexZhly'
+							url: '../../../pages/Home/Index'
 						});
 					}
 				}, 10000)

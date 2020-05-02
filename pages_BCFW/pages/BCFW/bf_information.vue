@@ -120,8 +120,8 @@
 </template>
 
 <script>
-	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
-	import $bcfw from "../../common/BCFW/bcfw.js"
+	import uniPopup from "@/components/BCFW/choice/uni-popup/uni-popup.vue"
+	import $bcfw from "@/common/BCFW/bcfw.js"
 
 	var name;
 	export default {
@@ -254,7 +254,7 @@
 								//loginType=1,泉运登录界面
 								//loginType=2,今点通登录界面
 								//loginType=3,武夷股份登录界面
-								url: '../GRZX/userLogin?loginType=1'
+								url: '../../../pages/GRZX/userLogin?loginType=1'
 							})
 						}, 500);
 					},
@@ -326,19 +326,19 @@
 									//loginType=1,泉运登录界面
 									//loginType=2,今点通登录界面
 									//loginType=3,武夷股份登录界面
-									url: '../GRZX/userLogin?loginType=1'
+									url: '../../../pages/GRZX/userLogin?loginType=1'
 								})
 							}, 500);
 						},
 						success() {
 							uni.navigateTo({
-								url: '../../GRZX/addPassenger?type=add',
+								url: '../../../pages/GRZX/addPassenger?type=add',
 							})
 						}
 					})
 				} else if (e == 1) {
 					uni.navigateTo({
-						url: '../GRZX/passengerInfo?submitType=1',
+						url: '../../../pages/GRZX/passengerInfo?submitType=1',
 					});
 				}
 			},
@@ -579,7 +579,7 @@
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
-											url: '/pages/BCFW/charteredBusPayment?orderNumber=' +res.data.data.OrderNumber
+											url: './charteredBusPayment?orderNumber=' +res.data.data.OrderNumber
 										})
 									}
 								},
@@ -598,7 +598,7 @@
 								duration: 2000
 							})
 							uni.switchTab({
-								url: '../../order/OrderList'
+								url: '../../../pages/order/OrderList'
 							})
 						}
 					},

@@ -1,7 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-popup": "/components/CZC/uni-popup/uni-popup",
-    "uni-icons": "/components/CZC/uni-icons/uni-icons"
-  }
-}

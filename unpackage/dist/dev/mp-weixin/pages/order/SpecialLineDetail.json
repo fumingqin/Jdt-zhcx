@@ -1,8 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-popup": "/components/Order/uni-popup/uni-popup",
-    "uni-icons": "/components/Order/uni-icons/uni-icons",
-    "uni-rate": "/components/Order/StarJudge/uni-rate/uni-rate"
-  }
-}
