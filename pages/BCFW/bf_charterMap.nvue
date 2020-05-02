@@ -15,6 +15,12 @@
 				<view class="ct_state" v-if="driverInformation.or_Type == 1">
 					<text class="sa_text">待发车</text>
 				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 6">
+					<text class="sa_text">已完成</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 8 ||driverInformation.or_Type == 9">
+					<text class="sa_text">已取消</text>
+				</view>
 				<view class="ct_state" v-if="driverInformation.or_Type == 5">
 					<text class="sa_text">待支付</text>
 					<text class="sa_popu" @click="open">去支付></text>
@@ -72,7 +78,8 @@
 					<view class="if_text">
 						<text class="te_text">电话:{{driverInformation.or_driverTelephone}}</text>
 					</view>
-					<view class="if_button" v-if="driverInformation.or_Type == 4 || driverInformation.or_Type == 1 || driverInformation.or_Type == 5">
+					<view class="if_button" v-if="driverInformation.or_Type == 4 || driverInformation.or_Type == 1 || driverInformation.or_Type == 8 
+					 || driverInformation.or_Type == 9 || driverInformation.or_Type == 5 || driverInformation.or_Type == 6">
 						<button class="bt_remind3" type="warn">联系司机</button>
 					</view>
 				</view>
@@ -160,6 +167,7 @@
 				reason: '请选择报警原因',
 				pickerValue: -1,
 				remark: '',
+				or_number:'',
 				driverInformation: {
 					or_Type: '',
 					cm_licensePlate: '',
@@ -184,8 +192,9 @@
 				choiceIndex2: 0,
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			var that = this;
+			that.or_number=JSON.parse(options.or_number);
 			that.bcfwData();
 			// that.routeInit();
 			that.setMarker(1, 118.600608, 24.889217, '../../static/CTKY/start.png');
@@ -206,7 +215,7 @@
 					method:'POST',
 					header: {'content-type': 'application/json'},
 					data:{
-						or_number:this.driverInformation.or_number,
+						or_number:this.or_number,
 					},
 					success:(res)=>{
 						console.log(res)
