@@ -291,7 +291,7 @@
 					})
 				} else if (e == 1) {
 					uni.navigateTo({
-						url: '../../../../GRZX/passengerInfo?submitType=1',
+						url:'../../../../pages/GRZX/passengerInfo?submitType=1'
 					})
 				}
 
@@ -531,7 +531,7 @@
 								duration: 2000,
 								success: function() {
 									uni.switchTab({
-										url: '../../../../order/OrderList'
+										url: '../../../../pages/order/OrderList'
 									})
 									that.submissionState = false;
 									uni.hideLoading()
@@ -605,7 +605,7 @@
 								duration: 2000,
 								success: function() {
 									uni.switchTab({
-										url: '../../../../order/OrderList'
+										url: '../../../../pages/order/OrderList'
 									})
 									that.submissionState = false;
 									uni.hideLoading()
