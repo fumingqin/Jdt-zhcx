@@ -65,7 +65,7 @@
 					</view>
 				</uni-popup> -->
 				<!-- 司机信息 -->
-				<view class="ct_information">
+				<view class="ct_information" v-if="driverInformation.or_Type !== 5">
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
 						<text class="te_text">车牌号:{{driverInformation.cm_licensePlate}}</text>
