@@ -180,7 +180,15 @@ import MxDatePicker from "../../../../components/CTKY/mx-datepicker/mx-datepicke
 						icon: 'none'
 					})
 				}else {
-					this.historyLines.unshift(this.departure + "-" + this.destination);
+					var station = this.departure + "-" + this.destination;
+					if(this.historyLines) {
+						for(let i = 0; i <= this.historyLines.length;i++){
+							if(station == this.historyLines[i]) {
+								this.historyLines.splice(i,1);
+							}
+						}
+						this.historyLines.unshift(this.departure + "-" + this.destination);
+					}
 					uni.setStorage({
 						key:'historyLines',
 						data:this.historyLines,
