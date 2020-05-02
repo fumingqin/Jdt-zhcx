@@ -67,7 +67,7 @@
 </template>
 
 <script>
-	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
+	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
 	export default {
 		data() {
 			return {

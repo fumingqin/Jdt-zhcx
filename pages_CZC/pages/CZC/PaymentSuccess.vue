@@ -32,18 +32,18 @@
 				clearTimeout(timeout)
 				if(e==0){
 					uni.switchTab({
-						url: '../order/OrderList'
+						url:'../../../pages/order/OrderList'
 					});
 				}else if(e==1){
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url:'../../../pages/Home/Index'
 					});
 				}
 			},
 			backHome : function() {
 				this.timeout=setTimeout(() => { 
 					uni.switchTab({
-						url: '/pages/Home/Index'
+						url:'../../../pages/Home/Index'
 					});
 				}, 10000)
 			}

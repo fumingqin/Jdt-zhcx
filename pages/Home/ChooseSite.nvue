@@ -278,12 +278,12 @@
 </template>
 
 <script>
-	import $taxi from "../../common/Czc.js";
-	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
-	import uniIcons from "../../components/HOME/uni-icons/uni-icons.vue";
-	import uniSegmentedControl from "../../components/HOME/uni-segmented-control/uni-segmented-control.vue";
-	import hTimePicker from "../../components/HOME/h-timePicker/h-timePicker.vue";
-	import popup from "../../components/HOME/uni-popup/uni-popup.vue"; //弹框组件
+	import $taxi from "@/common/Czc.js";
+	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
+	import uniIcons from "@/components/HOME/uni-icons/uni-icons.vue";
+	import uniSegmentedControl from "@/components/HOME/uni-segmented-control/uni-segmented-control.vue";
+	import hTimePicker from "@/components/HOME/h-timePicker/h-timePicker.vue";
+	import popup from "@/components/HOME/uni-popup/uni-popup.vue"; //弹框组件
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js"; //时间格式转换
 	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
 	export default {
