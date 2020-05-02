@@ -462,8 +462,14 @@
 	.mt{
 		width: 100%;
 		//margin-top: 292upx;
+		/* #ifndef H5 */
 		margin-top: 185upx;
 		margin-bottom: 160upx;
+		/* #endif */
+		/* #ifdef H5 */
+		margin-top: 115upx;
+		margin-bottom: 90upx;
+		/* #endif */
 	}
 	.boxClass{
 		background-color: #FFFFFF;
@@ -638,7 +644,12 @@
 		position: fixed;
 		top: 0upx;
 		width: 100%;
+		/* #ifndef H5 */
 		height: 170upx;
+		/* #endif */
+		/* #ifdef H5 */
+		height: 100upx;
+		/* #endif */
 		border-bottom: 1upx solid #F5F5F5;
 		background-color: #FFFFFF;
 	}
@@ -646,12 +657,22 @@
 		width: 25upx;
 		height: 40upx;
 		position: absolute;
+		/* #ifdef H5 */
+		top: 30upx;
+		/* #endif */
+		/* #ifndef H5 */
 		top: 100upx;
+		/* #endif */
 		left: 25upx;
 	}
 	.titleClass{  //常用信息设置
 		position: absolute;
+		/* #ifdef H5 */
+		top: 20upx;
+		/* #endif */
+		/* #ifndef H5 */
 		top: 90upx;
+		/* #endif */
 		width: 100%;
 		text-align: center;
 		color: #232323;
@@ -659,7 +680,12 @@
 	}
 	.dfClass{	//管理和完成
 		position: absolute;
+		/* #ifdef H5 */
+		top: 20upx;
+		/* #endif */
+		/* #ifndef H5 */
 		top: 90upx;
+		/* #endif */
 		left: 85%;
 		color: #232323;
 		font-size: 38upx;
