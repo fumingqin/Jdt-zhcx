@@ -80,6 +80,13 @@ const Interface = {
 		name:'包车-选择车辆',
 		method:'POST',
 		pages:["BCFW/bf_choiceVehicleType.vue"]
+	},
+	
+	fw_charterDetails:{
+		value: Url + '/api/Chartered/QueryCharteredOrderByOrderNumber_Passenger',
+		name:'包车-详情',
+		method:'POST',
+		pages:["BCFW/bf_charterMap.vue"]
 	}
 	
 }
