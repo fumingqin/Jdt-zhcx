@@ -104,7 +104,8 @@
 					data:e
 				})
 				uni.navigateTo({
-					url:'/pages/GRZX/detailTweet'
+					//url:'/pages/GRZX/detailTweet'
+					url:this.$GrzxInter.Route.detailTweet.url,
 				})
 			},
 		}

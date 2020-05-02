@@ -1222,7 +1222,7 @@
 	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import uQRCode from "@/common/uqrcode.js"
-	import $bcfw from '../../common/BCFW/bcfw.js'
+	import $bcfw from '@/common/BCFW/bcfw.js'
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -2377,7 +2377,7 @@
 			//-------------------------包车-详情跳转-------------------------
 			details2(e) {
 				uni.navigateTo({
-					url: '../BCFW/bf_charterMap?or_number=' + JSON.stringify(e)
+					url: '../../pages_BCFW/pages/BCFW/bf_charterMap?or_number=' + JSON.stringify(e)
 				})
 			},
 			//-------------------------判断订单状态-------------------------

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-	import pickerAddress from '../../components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue' 
+	import pickerAddress from '@/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue' 
 	export default {
 		components:{
 			pickerAddress
@@ -127,7 +127,8 @@
 						}
 					})
 					uni.redirectTo({
-						url:'/pages/GRZX/infoList'
+						// url:'/pages/GRZX/infoList',
+						url:that.$GrzxInter.Route.infoList.url,
 					})
 				}else if(this.type=='add'){
 					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
@@ -152,7 +153,8 @@
 						}
 					})
 					uni.redirectTo({
-						url:'/pages/GRZX/infoList'
+						// url:'/pages/GRZX/infoList'
+						url:that.$GrzxInter.Route.infoList.url,
 					})
 				}else{
 					var randomNum = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);

@@ -292,7 +292,7 @@
 										success: (res) => {
 											if (res.data == false) {
 												uni.switchTab({
-													url: '../../order/OrderList'
+													url: '../../../pages/order/OrderList'
 												})
 											}
 										}
@@ -306,7 +306,7 @@
 										success: (res) => {
 											if (res.data == false) {
 												uni.switchTab({
-													url: '../../order/OrderList'
+													url: '../../../pages/order/OrderList'
 												})
 											}
 										}
@@ -408,7 +408,7 @@
 										icon: 'none',
 										success:function(){
 											uni.switchTab({
-												url: '../../order/OrderList'
+												url: '../../../pages/order/OrderList'
 											})
 										}
 									})

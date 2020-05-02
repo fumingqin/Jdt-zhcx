@@ -103,7 +103,8 @@
 			//#ifndef H5
 			if(index === 2){
 				uni.navigateTo({
-					url:'/pages/GRZX/set'
+					// url:'/pages/GRZX/set'
+					url:this.$GrzxInter.Route.set.url,
 				})
 			}
 			if(index === 0){
@@ -120,13 +121,15 @@
 			//#ifdef H5
 			if(index === 0){
 				uni.navigateTo({
-					url:'/pages/GRZX/set'
+					//url:'/pages/GRZX/set',
+					url:this.$GrzxInter.Route.set.url,
 				})
 			}
 			//#endif
 			if(index === 1){
 				uni.navigateTo({
-					url:'/pages/GRZX/myNews'
+					// url:'/pages/GRZX/myNews'
+					url:this.$GrzxInter.Route.myNews.url,
 				})
 			}
 		},
@@ -173,18 +176,21 @@
 			//信息管理
 			infoClick(){
 				uni.navigateTo({
-					url:'/pages/GRZX/infoList'
+					//url:'/pages/GRZX/infoList',
+					url:this.$GrzxInter.Route.infoList.url,
 				})
 			},
 			// 投诉
 			complaintClick(){
 				uni.navigateTo({
-					url:'/pages/GRZX/complaint'
+					// url:'/pages/GRZX/complaint'
+					url:this.$GrzxInter.Route.complaint.url,
 				})  
 			},
 			feedbackClick(){
 				uni.navigateTo({
-					url:'/pages/GRZX/feedback'
+					// url:'/pages/GRZX/feedback'
+					url:this.$GrzxInter.Route.feedback.url,
 				})  				
 			},
 			checkLogin(){
@@ -218,12 +224,14 @@
 					})
 					setTimeout(function(){
 						uni.navigateTo({
-							url:'/pages/GRZX/wxLogin'
+							// url:'/pages/GRZX/wxLogin',
+							url:this.$GrzxInter.Route.wxLogin.url,
 						})
 					},1000);
 				}else{
 					uni.navigateTo({
-						url :'/pages/GRZX/personal'
+						// url :'/pages/GRZX/personal'
+						url:this.$GrzxInter.Route.personal.url,
 					})  
 				}
 				//#endif

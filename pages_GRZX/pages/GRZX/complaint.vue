@@ -59,8 +59,8 @@
 </template>
 
 <script>
-	import pickerAddress from '@/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue';
-	import robbyImageUpload from '@/components/GRZX/robby-image-upload/robby-image-upload.vue';
+	import pickerAddress from '@/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue'
+	import robbyImageUpload from '@/components/GRZX/robby-image-upload/robby-image-upload.vue'
 	import {
 		mapState
 	} from 'vuex';

@@ -33,7 +33,8 @@
 		methods:{
 			noticeClick(){
 				uni.switchTab({
-					url:'/pages/GRZX/notice'
+					// url:'/pages/GRZX/notice'
+					url:this.$GrzxInter.Route.notice.url,
 				})
 			},
 			navTo(url){
