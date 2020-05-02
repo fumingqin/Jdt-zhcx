@@ -381,6 +381,12 @@
 		position: absolute;
 		left: 34upx;
 		top: 1upx;
+		/* #ifdef H5 */
+		top: -3upx;
+		/* #endif */
+		/* #ifndef H5 */
+		top: 1upx;
+		/* #endif */
 	}
 	.editClass{		//修改按钮
 		width: 40upx;
