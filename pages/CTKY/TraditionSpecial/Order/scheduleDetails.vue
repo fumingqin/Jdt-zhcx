@@ -36,7 +36,7 @@
 
 			<!-- 上下车点选择,0是普通购票不显示上下车点选择 -->
 			<!-- v-if="ticketDetail.shuttleType == '定制班车'" -->
-			<view class="stationContentView" v-if="ticketDetail.starSiteArr.length > 2 || ticketDetail.endSiteArr.length > 2">
+			<view class="stationContentView" v-if="ticketDetail.shuttleType == '定制班车'">
 				<view class="boarding" style="border-bottom:#EAEAEA solid 1px;" @tap="startStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">

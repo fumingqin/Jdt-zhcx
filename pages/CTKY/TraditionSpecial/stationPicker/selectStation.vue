@@ -56,9 +56,10 @@
 			that.stationArray = stationArray;
 
 			//保存上车点数组
-			that.startStationList = stationArray.specialStartArray;
+			that.startStationList = that.arrayDistinct(stationArray.specialStartArray);
 			//保存下车点数组
-			that.endStationList = stationArray.specialEndArray;
+			that.endStationList = that.arrayDistinct(stationArray.specialEndArray);
+			
 			if(stationArray.startStaionIndex == ''||stationArray.endStationIndex == '') {
 				//定位已选择的上车点
 				that.startSelectIndex = 0;
@@ -87,6 +88,17 @@
 				that.endSelectIndex = e;
 				//取出下车站点
 				that.endStation = that.endStationList[e].SiteName;
+			},
+			//--------------------------数组去重---------------------------
+			arrayDistinct:function(array){
+			    let siteNameArr = [];
+			    for(let item of array){
+					siteNameArr.push(item.SiteName);
+			    }
+			    let distinctArr = array.filter((x,index) => {
+					return siteNameArr.indexOf(x.SiteName) == index
+			    });
+			    return distinctArr
 			},
 			//---------------------------点击完成---------------------------
 			doneClick(){
