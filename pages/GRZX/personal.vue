@@ -248,6 +248,9 @@
 			},
 			// --------提交数据---------
 			formSubmit: function(e) {
+				uni.showLoading({
+					title:'保存中...'
+				})
 				console.log(this.userId)
 				console.log(this.nickname)
 				console.log(this.portrait)
@@ -265,60 +268,42 @@
 				console.log(this.nickname)
 				console.log(this.birthday)
 				console.log(this.phoneNumber)
+				var that=this;
 				uni.request({
 					//url:'http://111.231.109.113:8002/api/person/changeInfo',
-					url:this.$GrzxInter.Interface.changeInfo.value,
+					url:that.$GrzxInter.Interface.changeInfo.value,
 					data:{
 						//portrait:this.port,
-						userId:this.userId,
-						gender:this.gender,
-						openId_qq:this.openId_qq,
-						openId_wx:this.openId_wx,
-						address:this.address,
-						nickname:this.nickname,
-						birthday:this.birthday,
-						autograph:this.autograph,
-						phoneNumber:this.phoneNumber,
+						userId:that.userId,
+						gender:that.gender,
+						openId_qq:that.openId_qq,
+						openId_wx:that.openId_wx,
+						address:that.address,
+						nickname:that.nickname,
+						birthday:that.birthday,
+						autograph:that.autograph,
+						phoneNumber:that.phoneNumber,
 					},
-					method:this.$GrzxInter.Interface.changeInfo.method,
+					method:that.$GrzxInter.Interface.changeInfo.method,
 					success(res) {
 						console.log(res,"286")
+						uni.request({
+							url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+							data:{
+								portrait:that.port,
+								userId:that.userId,
+							},
+							method:that.$GrzxInter.Interface.changeInfoPortrait.method,
+							success(res1) {
+								console.log(res1,"290")
+								//uni.setStorageSync('userInfo',res1.data.data)
+								//that.login(res1.data.data);
+								uni.hideLoading();
+								uni.navigateBack();
+							}
+						})
 					}
-				})
-				uni.request({
-					url:this.$GrzxInter.Interface.changeInfoPortrait.value,
-					data:{
-						portrait:this.port,
-						userId:this.userId,
-						gender:this.gender,
-						openId_qq:this.openId_qq,
-						openId_wx:this.openId_wx,
-						address:this.address,
-						nickname:this.nickname,
-						birthday:this.birthday,
-						autograph:this.autograph,
-						phoneNumber:this.phoneNumber,
-					},
-					method:this.$GrzxInter.Interface.changeInfoPortrait.method,
-					success(res1) {
-						console.log(res1,"290")
-					}
-				})
-				var list={
-						portrait:this.portrait,
-						userId:this.userId,
-						openId_qq:this.openId_qq,
-						openId_wx:this.openId_wx,
-						gender:this.gender,
-						address:this.address,
-						nickname:this.nickname,
-						birthday:this.birthday,
-						autograph:this.autograph,
-						phoneNumber:this.phoneNumber,
-					};
-				uni.setStorageSync('userInfo',list)
-				this.login(list);
-				uni.navigateBack();
+				})				
 			},
 			// --------获得头像---------
 			getPhoto(){
