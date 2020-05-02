@@ -401,12 +401,7 @@
 						},
 						"navigationBarTitleText": "选择车型"
 					}
-				}, {
-					"path": "BCFW/charterMap",
-					"style": {
-						"navigationStyle": "custom"
-					}
-				}, {
+				},{
 					"path": "BCFW/bf_charterMap",
 					"style": {
 						"navigationStyle": "custom"

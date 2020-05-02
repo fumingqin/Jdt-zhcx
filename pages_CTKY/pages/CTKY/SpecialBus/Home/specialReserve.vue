@@ -209,7 +209,7 @@
 </template>
 
 <script>
-	import popup from "../../../../components/CTKY/uni-popup/uni-popup.vue";
+	import popup from "@/components/CTKY/uni-popup/uni-popup.vue";
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components:{
