@@ -151,8 +151,8 @@
 </template>
 
 <script>
-	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
-	import uniCalendar from '../../../components/LYFW/scenicSpotTickets/uni-calendar/uni-calendar.vue'
+	import uniPopup from "@/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniCalendar from '@/components/LYFW/scenicSpotTickets/uni-calendar/uni-calendar.vue'
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
@@ -279,19 +279,19 @@
 									//loginType=1,泉运登录界面
 									//loginType=2,今点通登录界面
 									//loginType=3,武夷股份登录界面
-									url: '../../GRZX/userLogin?loginType=1'
+									url:'../../../../pages/GRZX/userLogin?loginType=1'
 								})
 							}, 500);
 						},
 						success() {
 							uni.navigateTo({
-								url: '../../GRZX/addPassenger?type=add',
+								url:'../../../../pages/GRZX/addPassenger?type=add',
 							})
 						}
 					})
 				} else if (e == 1) {
 					uni.navigateTo({
-						url: '../../GRZX/passengerInfo?submitType=1',
+						url: '../../../../GRZX/passengerInfo?submitType=1',
 					})
 				}
 
@@ -457,7 +457,7 @@
 										duration: 2000,
 										success: function() {
 											uni.switchTab({
-												url: '../../order/OrderList'
+												url: '../../../../pages/order/OrderList'
 											})
 											that.submissionState = false;
 											uni.hideLoading()
@@ -466,7 +466,7 @@
 
 								} else if (res.data.msg == '订单下单成功') {
 									uni.redirectTo({
-										url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+										url:'selectivePayment?orderNumber=' + res.data.data.orderNumber
 									})
 									uni.hideLoading()
 								} else {
@@ -531,7 +531,7 @@
 								duration: 2000,
 								success: function() {
 									uni.switchTab({
-										url: '../../order/OrderList'
+										url: '../../../../order/OrderList'
 									})
 									that.submissionState = false;
 									uni.hideLoading()
@@ -540,7 +540,7 @@
 
 						} else if (res.data.msg == '订单下单成功') {
 							uni.redirectTo({
-								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+								url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
 							})
 							uni.hideLoading()
 						} else {
@@ -605,7 +605,7 @@
 								duration: 2000,
 								success: function() {
 									uni.switchTab({
-										url: '../../order/OrderList'
+										url: '../../../../order/OrderList'
 									})
 									that.submissionState = false;
 									uni.hideLoading()
@@ -614,7 +614,7 @@
 
 						} else if (res.data.msg == '订单下单成功') {
 							uni.redirectTo({
-								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+								url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
 							})
 							uni.hideLoading()
 						}

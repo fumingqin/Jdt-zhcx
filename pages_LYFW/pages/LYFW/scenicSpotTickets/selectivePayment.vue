@@ -227,7 +227,7 @@
 									// console.log(res)
 									if (res.data.msg == '出票成功') {
 										uni.redirectTo({ 
-											url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+											url:'successfulPayment'
 										})
 									} else if (res.data.msg == '出票失败') {
 										uni.showToast({
@@ -237,7 +237,7 @@
 										})
 									}else if (res.data.msg == '您当前无可出票的订单或该订单已出票') {
 										uni.redirectTo({
-											url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+											url: 'successfulPayment'
 										})
 									}
 								},
@@ -336,7 +336,7 @@
 						success: ()=>{
 							this.countDown()
 							uni.switchTab({
-								url:'../../order/OrderList'
+								url:'../../../../order/OrderList'
 							})
 						}
 					})
@@ -397,7 +397,7 @@
 										duration: 2000,
 										success: () => {
 											uni.switchTab({
-												url: '../../order/OrderList'
+												url: '../../../../order/OrderList'
 											})
 										}
 									})
@@ -410,7 +410,7 @@
 										duration: 2000,
 										success: function() {
 											uni.switchTab({
-												url: '../../order/OrderList'
+												url: '../../../../order/OrderList'
 											})
 										}
 									})
@@ -488,7 +488,7 @@
 											success: function(res) {
 												if (res.data.msg == '出票成功') {
 													uni.redirectTo({
-														url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+														url: 'successfulPayment'
 													})
 												} else {
 													uni.showToast({
@@ -520,7 +520,7 @@
 											icon: 'none',
 											success: function() {
 												uni.switchTab({
-													url: '../../order/OrderList'
+													url: '../../../../order/OrderList'
 												})
 											}
 										})
@@ -688,7 +688,7 @@
 											console.log(res)
 											if (res.data.msg == '出票成功') {
 												uni.redirectTo({
-													url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+													url: 'successfulPayment'
 												})
 											} else {
 												uni.showToast({
@@ -780,7 +780,7 @@
 											console.log(res)
 											if (res.data.msg == '出票成功') {
 												uni.redirectTo({
-													url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+													url: 'successfulPayment'
 												})
 											} else {
 												uni.showToast({

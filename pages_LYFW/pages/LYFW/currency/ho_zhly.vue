@@ -2,7 +2,7 @@
 	<view>
 		<!-- 顶部图片 -->
 		<view class="zl_topPicture">
-			<image class="zl_image" src="../../static/Home/ho_zhly/kaiyuanshi.jpg" mode="aspectFill"></image>
+			<image class="zl_image" src="../../../static/LYFW/currency/ho_zhly/kaiyuanshi.jpg" mode="aspectFill"></image>
 		</view>
 
 		<!-- 顶部点击跳转栏 -->
@@ -10,22 +10,22 @@
 			<view class="zl_topClick">
 				<!-- 自由行 -->
 				<view class="zl_independentTravel" @click="route1">
-					<image class="zl_itImage" src="../../static/Home/ho_zhly/ziyouxin.png"></image>
+					<image class="zl_itImage" src="../../../static/LYFW/currency/ho_zhly/ziyouxin.png"></image>
 					<text class="zl_itText">自由行</text>
 				</view>
 				<!-- 跟团游 -->
 				<view class="zl_groupTour" @click="route2">
-					<image class="zl_gtImage" src="../../static/Home/ho_zhly/gentuanyou.png"></image>
+					<image class="zl_gtImage" src="../../../static/LYFW/currency/ho_zhly/gentuanyou.png"></image>
 					<text class="zl_gtText">跟团游</text>
 				</view>
 				<!-- 景区门票 -->
 				<view class="zl_admissionTicket" @click="route3">
-					<image class="zl_atImage" src="../../static/Home/ho_zhly/jinqugoupiao.png"></image>
+					<image class="zl_atImage" src="../../../static/LYFW/currency/ho_zhly/jinqugoupiao.png"></image>
 					<text class="zl_atText">景区门票</text>
 				</view>
 				<!-- 景区商品 -->
 				<view class="zl_commodity" @click="route4">
-					<image class="zl_coImage" src="../../static/Home/ho_zhly/jinqushangpin.png"></image>
+					<image class="zl_coImage" src="../../../static/LYFW/currency/ho_zhly/jinqushangpin.png"></image>
 					<text class="zl_coText">景区商品</text>
 				</view>
 			</view>
@@ -34,7 +34,7 @@
 		<!-- 消息通告 -->
 		<!-- <view class="notice">
 			<view class="zl_content">
-				<image class="zl_noImage" src="../../static/Home/ho_zhly/xiaoxitonggao.png" mode="aspectFill"></image>
+				<image class="zl_noImage" src="../../../static/LYFW/currency/ho_zhly/xiaoxitonggao.png" mode="aspectFill"></image>
 				<view class="zl_noContent">
 					<text class="zl_noText">{{Announcement.zl_title}}</text>
 					<view class="zl_label">
@@ -97,7 +97,7 @@
 				</view>
 				<view class="title clamp">{{item.title}}</view>
 				<view>
-					<image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
+					<image class="Portrait" src="../../../../static/GRZX/missing-face.png" mode="aspectFill"></image>
 					<text class="price">{{item.createdTime}}</text>
 					<text class="price-zan">阅读{{item.count+1080}}</text>
 				</view>
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-	import $lyfw from '../../common/LYFW/LyfwFmq.js' //引用路径
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //引用路径
 	export default {
 		data() {
 			return {
@@ -225,7 +225,7 @@
 					icon: 'none'
 				})
 				// uni.navigateTo({
-				// 	url: '/pages/LYFW/independentTravel/it_list'
+				// 	url: '../independentTravel/it_list'
 				// })
 			},
 			route2: function() {
@@ -234,18 +234,15 @@
 					icon: 'none'
 				})
 				// uni.navigateTo({
-				// 	url: '/pages/LYFW/groupTour/groupTourList'
+				// 	url: '../groupTour/groupTourList'
 				// })
 			},
 			route3: function() {
 				uni.navigateTo({
-					url: '/pages/LYFW/scenicSpotTickets/ticketsList'
+					url: '../scenicSpotTickets/ticketsList'
 				})
 			},
 			route4: function() {
-				// uni.navigateTo({
-				// 	url: '/pages/CTKY/ctkyIndex'
-				// })
 				uni.showToast({
 					title: '正在开发中...',
 					icon: 'none'
@@ -255,7 +252,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+JSON.stringify(e)
+					url: '../scenicSpotTickets/ticketsDetails?ticketId='+JSON.stringify(e)
 				})
 			},
 		}

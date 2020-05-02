@@ -757,7 +757,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1683,6 +1683,1509 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
     return format.replace('Y', years).replace('m', months).replace('d', days).replace('H', hours).replace('i', minutes).replace('s', seconds).replace('index', value);
   } };exports.default = _default;
+
+/***/ }),
+
+/***/ 133:
+/*!*****************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/uqrcode.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //---------------------------------------------------------------------
+// github https://github.com/Sansnn/uQRCode
+//---------------------------------------------------------------------
+
+var uQRCode = {};
+
+(function () {
+  //---------------------------------------------------------------------
+  // QRCode for JavaScript
+  //
+  // Copyright (c) 2009 Kazuhiko Arase
+  //
+  // URL: http://www.d-project.com/
+  //
+  // Licensed under the MIT license:
+  //   http://www.opensource.org/licenses/mit-license.php
+  //
+  // The word "QR Code" is registered trademark of 
+  // DENSO WAVE INCORPORATED
+  //   http://www.denso-wave.com/qrcode/faqpatent-e.html
+  //
+  //---------------------------------------------------------------------
+
+  //---------------------------------------------------------------------
+  // QR8bitByte
+  //---------------------------------------------------------------------
+
+  function QR8bitByte(data) {
+    this.mode = QRMode.MODE_8BIT_BYTE;
+    this.data = data;
+  }
+
+  QR8bitByte.prototype = {
+
+    getLength: function getLength(buffer) {
+      return this.data.length;
+    },
+
+    write: function write(buffer) {
+      for (var i = 0; i < this.data.length; i++) {
+        // not JIS ...
+        buffer.put(this.data.charCodeAt(i), 8);
+      }
+    } };
+
+
+  //---------------------------------------------------------------------
+  // QRCode
+  //---------------------------------------------------------------------
+
+  function QRCode(typeNumber, errorCorrectLevel) {
+    this.typeNumber = typeNumber;
+    this.errorCorrectLevel = errorCorrectLevel;
+    this.modules = null;
+    this.moduleCount = 0;
+    this.dataCache = null;
+    this.dataList = new Array();
+  }
+
+  QRCode.prototype = {
+
+    addData: function addData(data) {
+      var newData = new QR8bitByte(data);
+      this.dataList.push(newData);
+      this.dataCache = null;
+    },
+
+    isDark: function isDark(row, col) {
+      if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+        throw new Error(row + "," + col);
+      }
+      return this.modules[row][col];
+    },
+
+    getModuleCount: function getModuleCount() {
+      return this.moduleCount;
+    },
+
+    make: function make() {
+      // Calculate automatically typeNumber if provided is < 1
+      if (this.typeNumber < 1) {
+        var typeNumber = 1;
+        for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+
+          var buffer = new QRBitBuffer();
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          for (var i = 0; i < this.dataList.length; i++) {
+            var data = this.dataList[i];
+            buffer.put(data.mode, 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
+            data.write(buffer);
+          }
+          if (buffer.getLengthInBits() <= totalDataCount * 8)
+          break;
+        }
+        this.typeNumber = typeNumber;
+      }
+      this.makeImpl(false, this.getBestMaskPattern());
+    },
+
+    makeImpl: function makeImpl(test, maskPattern) {
+
+      this.moduleCount = this.typeNumber * 4 + 17;
+      this.modules = new Array(this.moduleCount);
+
+      for (var row = 0; row < this.moduleCount; row++) {
+
+        this.modules[row] = new Array(this.moduleCount);
+
+        for (var col = 0; col < this.moduleCount; col++) {
+          this.modules[row][col] = null; //(col + row) % 3;
+        }
+      }
+
+      this.setupPositionProbePattern(0, 0);
+      this.setupPositionProbePattern(this.moduleCount - 7, 0);
+      this.setupPositionProbePattern(0, this.moduleCount - 7);
+      this.setupPositionAdjustPattern();
+      this.setupTimingPattern();
+      this.setupTypeInfo(test, maskPattern);
+
+      if (this.typeNumber >= 7) {
+        this.setupTypeNumber(test);
+      }
+
+      if (this.dataCache == null) {
+        this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+      }
+
+      this.mapData(this.dataCache, maskPattern);
+    },
+
+    setupPositionProbePattern: function setupPositionProbePattern(row, col) {
+
+      for (var r = -1; r <= 7; r++) {
+
+        if (row + r <= -1 || this.moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c++) {
+
+          if (col + c <= -1 || this.moduleCount <= col + c) continue;
+
+          if (0 <= r && r <= 6 && (c == 0 || c == 6) ||
+          0 <= c && c <= 6 && (r == 0 || r == 6) ||
+          2 <= r && r <= 4 && 2 <= c && c <= 4) {
+            this.modules[row + r][col + c] = true;
+          } else {
+            this.modules[row + r][col + c] = false;
+          }
+        }
+      }
+    },
+
+    getBestMaskPattern: function getBestMaskPattern() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i++) {
+
+        this.makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    },
+
+    createMovieClip: function createMovieClip(target_mc, instance_name, depth) {
+
+      var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+      var cs = 1;
+
+      this.make();
+
+      for (var row = 0; row < this.modules.length; row++) {
+
+        var y = row * cs;
+
+        for (var col = 0; col < this.modules[row].length; col++) {
+
+          var x = col * cs;
+          var dark = this.modules[row][col];
+
+          if (dark) {
+            qr_mc.beginFill(0, 100);
+            qr_mc.moveTo(x, y);
+            qr_mc.lineTo(x + cs, y);
+            qr_mc.lineTo(x + cs, y + cs);
+            qr_mc.lineTo(x, y + cs);
+            qr_mc.endFill();
+          }
+        }
+      }
+
+      return qr_mc;
+    },
+
+    setupTimingPattern: function setupTimingPattern() {
+
+      for (var r = 8; r < this.moduleCount - 8; r++) {
+        if (this.modules[r][6] != null) {
+          continue;
+        }
+        this.modules[r][6] = r % 2 == 0;
+      }
+
+      for (var c = 8; c < this.moduleCount - 8; c++) {
+        if (this.modules[6][c] != null) {
+          continue;
+        }
+        this.modules[6][c] = c % 2 == 0;
+      }
+    },
+
+    setupPositionAdjustPattern: function setupPositionAdjustPattern() {
+
+      var pos = QRUtil.getPatternPosition(this.typeNumber);
+
+      for (var i = 0; i < pos.length; i++) {
+
+        for (var j = 0; j < pos.length; j++) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (this.modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r++) {
+
+            for (var c = -2; c <= 2; c++) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2 ||
+              r == 0 && c == 0) {
+                this.modules[row + r][col + c] = true;
+              } else {
+                this.modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    },
+
+    setupTypeNumber: function setupTypeNumber(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+
+      for (var i = 0; i < 18; i++) {
+        var mod = !test && (bits >> i & 1) == 1;
+        this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i++) {
+        var mod = !test && (bits >> i & 1) == 1;
+        this.modules[i % 3 + this.moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    },
+
+    setupTypeInfo: function setupTypeInfo(test, maskPattern) {
+
+      var data = this.errorCorrectLevel << 3 | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical		
+      for (var i = 0; i < 15; i++) {
+
+        var mod = !test && (bits >> i & 1) == 1;
+
+        if (i < 6) {
+          this.modules[i][8] = mod;
+        } else if (i < 8) {
+          this.modules[i + 1][8] = mod;
+        } else {
+          this.modules[this.moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i++) {
+
+        var mod = !test && (bits >> i & 1) == 1;
+
+        if (i < 8) {
+          this.modules[8][this.moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          this.modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          this.modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      this.modules[this.moduleCount - 8][8] = !test;
+
+    },
+
+    mapData: function mapData(data, maskPattern) {
+
+      var inc = -1;
+      var row = this.moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+
+      for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col--;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c++) {
+
+            if (this.modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = (data[byteIndex] >>> bitIndex & 1) == 1;
+              }
+
+              var mask = QRUtil.getMask(maskPattern, row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              this.modules[row][col - c] = dark;
+              bitIndex--;
+
+              if (bitIndex == -1) {
+                byteIndex++;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || this.moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+
+    } };
+
+
+
+  QRCode.PAD0 = 0xEC;
+  QRCode.PAD1 = 0x11;
+
+  QRCode.createData = function (typeNumber, errorCorrectLevel, dataList) {
+
+    var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+
+    var buffer = new QRBitBuffer();
+
+    for (var i = 0; i < dataList.length; i++) {
+      var data = dataList[i];
+      buffer.put(data.mode, 4);
+      buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
+      data.write(buffer);
+    }
+
+    // calc num max data.
+    var totalDataCount = 0;
+    for (var i = 0; i < rsBlocks.length; i++) {
+      totalDataCount += rsBlocks[i].dataCount;
+    }
+
+    if (buffer.getLengthInBits() > totalDataCount * 8) {
+      throw new Error("code length overflow. (" +
+      buffer.getLengthInBits() +
+      ">" +
+      totalDataCount * 8 +
+      ")");
+    }
+
+    // end code
+    if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+      buffer.put(0, 4);
+    }
+
+    // padding
+    while (buffer.getLengthInBits() % 8 != 0) {
+      buffer.putBit(false);
+    }
+
+    // padding
+    while (true) {
+
+      if (buffer.getLengthInBits() >= totalDataCount * 8) {
+        break;
+      }
+      buffer.put(QRCode.PAD0, 8);
+
+      if (buffer.getLengthInBits() >= totalDataCount * 8) {
+        break;
+      }
+      buffer.put(QRCode.PAD1, 8);
+    }
+
+    return QRCode.createBytes(buffer, rsBlocks);
+  };
+
+  QRCode.createBytes = function (buffer, rsBlocks) {
+
+    var offset = 0;
+
+    var maxDcCount = 0;
+    var maxEcCount = 0;
+
+    var dcdata = new Array(rsBlocks.length);
+    var ecdata = new Array(rsBlocks.length);
+
+    for (var r = 0; r < rsBlocks.length; r++) {
+
+      var dcCount = rsBlocks[r].dataCount;
+      var ecCount = rsBlocks[r].totalCount - dcCount;
+
+      maxDcCount = Math.max(maxDcCount, dcCount);
+      maxEcCount = Math.max(maxEcCount, ecCount);
+
+      dcdata[r] = new Array(dcCount);
+
+      for (var i = 0; i < dcdata[r].length; i++) {
+        dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+      }
+      offset += dcCount;
+
+      var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+      var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+      var modPoly = rawPoly.mod(rsPoly);
+      ecdata[r] = new Array(rsPoly.getLength() - 1);
+      for (var i = 0; i < ecdata[r].length; i++) {
+        var modIndex = i + modPoly.getLength() - ecdata[r].length;
+        ecdata[r][i] = modIndex >= 0 ? modPoly.get(modIndex) : 0;
+      }
+
+    }
+
+    var totalCodeCount = 0;
+    for (var i = 0; i < rsBlocks.length; i++) {
+      totalCodeCount += rsBlocks[i].totalCount;
+    }
+
+    var data = new Array(totalCodeCount);
+    var index = 0;
+
+    for (var i = 0; i < maxDcCount; i++) {
+      for (var r = 0; r < rsBlocks.length; r++) {
+        if (i < dcdata[r].length) {
+          data[index++] = dcdata[r][i];
+        }
+      }
+    }
+
+    for (var i = 0; i < maxEcCount; i++) {
+      for (var r = 0; r < rsBlocks.length; r++) {
+        if (i < ecdata[r].length) {
+          data[index++] = ecdata[r][i];
+        }
+      }
+    }
+
+    return data;
+
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER: 1 << 0,
+    MODE_ALPHA_NUM: 1 << 1,
+    MODE_8BIT_BYTE: 1 << 2,
+    MODE_KANJI: 1 << 3 };
+
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectLevel = {
+    L: 1,
+    M: 0,
+    Q: 3,
+    H: 2 };
+
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000: 0,
+    PATTERN001: 1,
+    PATTERN010: 2,
+    PATTERN011: 3,
+    PATTERN100: 4,
+    PATTERN101: 5,
+    PATTERN110: 6,
+    PATTERN111: 7 };
+
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = {
+
+    PATTERN_POSITION_TABLE: [
+    [],
+    [6, 18],
+    [6, 22],
+    [6, 26],
+    [6, 30],
+    [6, 34],
+    [6, 22, 38],
+    [6, 24, 42],
+    [6, 26, 46],
+    [6, 28, 50],
+    [6, 30, 54],
+    [6, 32, 58],
+    [6, 34, 62],
+    [6, 26, 46, 66],
+    [6, 26, 48, 70],
+    [6, 26, 50, 74],
+    [6, 30, 54, 78],
+    [6, 30, 56, 82],
+    [6, 30, 58, 86],
+    [6, 34, 62, 90],
+    [6, 28, 50, 72, 94],
+    [6, 26, 50, 74, 98],
+    [6, 30, 54, 78, 102],
+    [6, 28, 54, 80, 106],
+    [6, 32, 58, 84, 110],
+    [6, 30, 58, 86, 114],
+    [6, 34, 62, 90, 118],
+    [6, 26, 50, 74, 98, 122],
+    [6, 30, 54, 78, 102, 126],
+    [6, 26, 52, 78, 104, 130],
+    [6, 30, 56, 82, 108, 134],
+    [6, 34, 60, 86, 112, 138],
+    [6, 30, 58, 86, 114, 142],
+    [6, 34, 62, 90, 118, 146],
+    [6, 30, 54, 78, 102, 126, 150],
+    [6, 24, 50, 76, 102, 128, 154],
+    [6, 28, 54, 80, 106, 132, 158],
+    [6, 32, 58, 84, 110, 136, 162],
+    [6, 26, 54, 82, 110, 138, 166],
+    [6, 30, 58, 86, 114, 142, 170]],
+
+
+    G15: 1 << 10 | 1 << 8 | 1 << 5 | 1 << 4 | 1 << 2 | 1 << 1 | 1 << 0,
+    G18: 1 << 12 | 1 << 11 | 1 << 10 | 1 << 9 | 1 << 8 | 1 << 5 | 1 << 2 | 1 << 0,
+    G15_MASK: 1 << 14 | 1 << 12 | 1 << 10 | 1 << 4 | 1 << 1,
+
+    getBCHTypeInfo: function getBCHTypeInfo(data) {
+      var d = data << 10;
+      while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+        d ^= QRUtil.G15 << QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15);
+      }
+      return (data << 10 | d) ^ QRUtil.G15_MASK;
+    },
+
+    getBCHTypeNumber: function getBCHTypeNumber(data) {
+      var d = data << 12;
+      while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+        d ^= QRUtil.G18 << QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18);
+      }
+      return data << 12 | d;
+    },
+
+    getBCHDigit: function getBCHDigit(data) {
+
+      var digit = 0;
+
+      while (data != 0) {
+        digit++;
+        data >>>= 1;
+      }
+
+      return digit;
+    },
+
+    getPatternPosition: function getPatternPosition(typeNumber) {
+      return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+
+    getMask: function getMask(maskPattern, i, j) {
+
+      switch (maskPattern) {
+
+        case QRMaskPattern.PATTERN000:
+          return (i + j) % 2 == 0;
+        case QRMaskPattern.PATTERN001:
+          return i % 2 == 0;
+        case QRMaskPattern.PATTERN010:
+          return j % 3 == 0;
+        case QRMaskPattern.PATTERN011:
+          return (i + j) % 3 == 0;
+        case QRMaskPattern.PATTERN100:
+          return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 == 0;
+        case QRMaskPattern.PATTERN101:
+          return i * j % 2 + i * j % 3 == 0;
+        case QRMaskPattern.PATTERN110:
+          return (i * j % 2 + i * j % 3) % 2 == 0;
+        case QRMaskPattern.PATTERN111:
+          return (i * j % 3 + (i + j) % 2) % 2 == 0;
+
+        default:
+          throw new Error("bad maskPattern:" + maskPattern);}
+
+    },
+
+    getErrorCorrectPolynomial: function getErrorCorrectPolynomial(errorCorrectLength) {
+
+      var a = new QRPolynomial([1], 0);
+
+      for (var i = 0; i < errorCorrectLength; i++) {
+        a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0));
+      }
+
+      return a;
+    },
+
+    getLengthInBits: function getLengthInBits(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch (mode) {
+          case QRMode.MODE_NUMBER:
+            return 10;
+          case QRMode.MODE_ALPHA_NUM:
+            return 9;
+          case QRMode.MODE_8BIT_BYTE:
+            return 8;
+          case QRMode.MODE_KANJI:
+            return 8;
+          default:
+            throw new Error("mode:" + mode);}
+
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch (mode) {
+          case QRMode.MODE_NUMBER:
+            return 12;
+          case QRMode.MODE_ALPHA_NUM:
+            return 11;
+          case QRMode.MODE_8BIT_BYTE:
+            return 16;
+          case QRMode.MODE_KANJI:
+            return 10;
+          default:
+            throw new Error("mode:" + mode);}
+
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch (mode) {
+          case QRMode.MODE_NUMBER:
+            return 14;
+          case QRMode.MODE_ALPHA_NUM:
+            return 13;
+          case QRMode.MODE_8BIT_BYTE:
+            return 16;
+          case QRMode.MODE_KANJI:
+            return 12;
+          default:
+            throw new Error("mode:" + mode);}
+
+
+      } else {
+        throw new Error("type:" + type);
+      }
+    },
+
+    getLostPoint: function getLostPoint(qrCode) {
+
+      var moduleCount = qrCode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row++) {
+
+        for (var col = 0; col < moduleCount; col++) {
+
+          var sameCount = 0;
+          var dark = qrCode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r++) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c++) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrCode.isDark(row + r, col + c)) {
+                sameCount++;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += 3 + sameCount - 5;
+          }
+        }
+      }
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row++) {
+        for (var col = 0; col < moduleCount - 1; col++) {
+          var count = 0;
+          if (qrCode.isDark(row, col)) count++;
+          if (qrCode.isDark(row + 1, col)) count++;
+          if (qrCode.isDark(row, col + 1)) count++;
+          if (qrCode.isDark(row + 1, col + 1)) count++;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row++) {
+        for (var col = 0; col < moduleCount - 6; col++) {
+          if (qrCode.isDark(row, col) &&
+          !qrCode.isDark(row, col + 1) &&
+          qrCode.isDark(row, col + 2) &&
+          qrCode.isDark(row, col + 3) &&
+          qrCode.isDark(row, col + 4) &&
+          !qrCode.isDark(row, col + 5) &&
+          qrCode.isDark(row, col + 6)) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col++) {
+        for (var row = 0; row < moduleCount - 6; row++) {
+          if (qrCode.isDark(row, col) &&
+          !qrCode.isDark(row + 1, col) &&
+          qrCode.isDark(row + 2, col) &&
+          qrCode.isDark(row + 3, col) &&
+          qrCode.isDark(row + 4, col) &&
+          !qrCode.isDark(row + 5, col) &&
+          qrCode.isDark(row + 6, col)) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col++) {
+        for (var row = 0; row < moduleCount; row++) {
+          if (qrCode.isDark(row, col)) {
+            darkCount++;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    } };
+
+
+
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = {
+
+    glog: function glog(n) {
+
+      if (n < 1) {
+        throw new Error("glog(" + n + ")");
+      }
+
+      return QRMath.LOG_TABLE[n];
+    },
+
+    gexp: function gexp(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return QRMath.EXP_TABLE[n];
+    },
+
+    EXP_TABLE: new Array(256),
+
+    LOG_TABLE: new Array(256) };
+
+
+
+  for (var i = 0; i < 8; i++) {
+    QRMath.EXP_TABLE[i] = 1 << i;
+  }
+  for (var i = 8; i < 256; i++) {
+    QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4] ^
+    QRMath.EXP_TABLE[i - 5] ^
+    QRMath.EXP_TABLE[i - 6] ^
+    QRMath.EXP_TABLE[i - 8];
+  }
+  for (var i = 0; i < 255; i++) {
+    QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
+  }
+
+  //---------------------------------------------------------------------
+  // QRPolynomial
+  //---------------------------------------------------------------------
+
+  function QRPolynomial(num, shift) {
+
+    if (num.length == undefined) {
+      throw new Error(num.length + "/" + shift);
+    }
+
+    var offset = 0;
+
+    while (offset < num.length && num[offset] == 0) {
+      offset++;
+    }
+
+    this.num = new Array(num.length - offset + shift);
+    for (var i = 0; i < num.length - offset; i++) {
+      this.num[i] = num[i + offset];
+    }
+  }
+
+  QRPolynomial.prototype = {
+
+    get: function get(index) {
+      return this.num[index];
+    },
+
+    getLength: function getLength() {
+      return this.num.length;
+    },
+
+    multiply: function multiply(e) {
+
+      var num = new Array(this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < this.getLength(); i++) {
+        for (var j = 0; j < e.getLength(); j++) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
+        }
+      }
+
+      return new QRPolynomial(num, 0);
+    },
+
+    mod: function mod(e) {
+
+      if (this.getLength() - e.getLength() < 0) {
+        return this;
+      }
+
+      var ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0));
+
+      var num = new Array(this.getLength());
+
+      for (var i = 0; i < this.getLength(); i++) {
+        num[i] = this.get(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i++) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
+      }
+
+      // recursive call
+      return new QRPolynomial(num, 0).mod(e);
+    } };
+
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  function QRRSBlock(totalCount, dataCount) {
+    this.totalCount = totalCount;
+    this.dataCount = dataCount;
+  }
+
+  QRRSBlock.RS_BLOCK_TABLE = [
+
+  // L
+  // M
+  // Q
+  // H
+
+  // 1
+  [1, 26, 19],
+  [1, 26, 16],
+  [1, 26, 13],
+  [1, 26, 9],
+
+  // 2
+  [1, 44, 34],
+  [1, 44, 28],
+  [1, 44, 22],
+  [1, 44, 16],
+
+  // 3
+  [1, 70, 55],
+  [1, 70, 44],
+  [2, 35, 17],
+  [2, 35, 13],
+
+  // 4		
+  [1, 100, 80],
+  [2, 50, 32],
+  [2, 50, 24],
+  [4, 25, 9],
+
+  // 5
+  [1, 134, 108],
+  [2, 67, 43],
+  [2, 33, 15, 2, 34, 16],
+  [2, 33, 11, 2, 34, 12],
+
+  // 6
+  [2, 86, 68],
+  [4, 43, 27],
+  [4, 43, 19],
+  [4, 43, 15],
+
+  // 7		
+  [2, 98, 78],
+  [4, 49, 31],
+  [2, 32, 14, 4, 33, 15],
+  [4, 39, 13, 1, 40, 14],
+
+  // 8
+  [2, 121, 97],
+  [2, 60, 38, 2, 61, 39],
+  [4, 40, 18, 2, 41, 19],
+  [4, 40, 14, 2, 41, 15],
+
+  // 9
+  [2, 146, 116],
+  [3, 58, 36, 2, 59, 37],
+  [4, 36, 16, 4, 37, 17],
+  [4, 36, 12, 4, 37, 13],
+
+  // 10		
+  [2, 86, 68, 2, 87, 69],
+  [4, 69, 43, 1, 70, 44],
+  [6, 43, 19, 2, 44, 20],
+  [6, 43, 15, 2, 44, 16],
+
+  // 11
+  [4, 101, 81],
+  [1, 80, 50, 4, 81, 51],
+  [4, 50, 22, 4, 51, 23],
+  [3, 36, 12, 8, 37, 13],
+
+  // 12
+  [2, 116, 92, 2, 117, 93],
+  [6, 58, 36, 2, 59, 37],
+  [4, 46, 20, 6, 47, 21],
+  [7, 42, 14, 4, 43, 15],
+
+  // 13
+  [4, 133, 107],
+  [8, 59, 37, 1, 60, 38],
+  [8, 44, 20, 4, 45, 21],
+  [12, 33, 11, 4, 34, 12],
+
+  // 14
+  [3, 145, 115, 1, 146, 116],
+  [4, 64, 40, 5, 65, 41],
+  [11, 36, 16, 5, 37, 17],
+  [11, 36, 12, 5, 37, 13],
+
+  // 15
+  [5, 109, 87, 1, 110, 88],
+  [5, 65, 41, 5, 66, 42],
+  [5, 54, 24, 7, 55, 25],
+  [11, 36, 12],
+
+  // 16
+  [5, 122, 98, 1, 123, 99],
+  [7, 73, 45, 3, 74, 46],
+  [15, 43, 19, 2, 44, 20],
+  [3, 45, 15, 13, 46, 16],
+
+  // 17
+  [1, 135, 107, 5, 136, 108],
+  [10, 74, 46, 1, 75, 47],
+  [1, 50, 22, 15, 51, 23],
+  [2, 42, 14, 17, 43, 15],
+
+  // 18
+  [5, 150, 120, 1, 151, 121],
+  [9, 69, 43, 4, 70, 44],
+  [17, 50, 22, 1, 51, 23],
+  [2, 42, 14, 19, 43, 15],
+
+  // 19
+  [3, 141, 113, 4, 142, 114],
+  [3, 70, 44, 11, 71, 45],
+  [17, 47, 21, 4, 48, 22],
+  [9, 39, 13, 16, 40, 14],
+
+  // 20
+  [3, 135, 107, 5, 136, 108],
+  [3, 67, 41, 13, 68, 42],
+  [15, 54, 24, 5, 55, 25],
+  [15, 43, 15, 10, 44, 16],
+
+  // 21
+  [4, 144, 116, 4, 145, 117],
+  [17, 68, 42],
+  [17, 50, 22, 6, 51, 23],
+  [19, 46, 16, 6, 47, 17],
+
+  // 22
+  [2, 139, 111, 7, 140, 112],
+  [17, 74, 46],
+  [7, 54, 24, 16, 55, 25],
+  [34, 37, 13],
+
+  // 23
+  [4, 151, 121, 5, 152, 122],
+  [4, 75, 47, 14, 76, 48],
+  [11, 54, 24, 14, 55, 25],
+  [16, 45, 15, 14, 46, 16],
+
+  // 24
+  [6, 147, 117, 4, 148, 118],
+  [6, 73, 45, 14, 74, 46],
+  [11, 54, 24, 16, 55, 25],
+  [30, 46, 16, 2, 47, 17],
+
+  // 25
+  [8, 132, 106, 4, 133, 107],
+  [8, 75, 47, 13, 76, 48],
+  [7, 54, 24, 22, 55, 25],
+  [22, 45, 15, 13, 46, 16],
+
+  // 26
+  [10, 142, 114, 2, 143, 115],
+  [19, 74, 46, 4, 75, 47],
+  [28, 50, 22, 6, 51, 23],
+  [33, 46, 16, 4, 47, 17],
+
+  // 27
+  [8, 152, 122, 4, 153, 123],
+  [22, 73, 45, 3, 74, 46],
+  [8, 53, 23, 26, 54, 24],
+  [12, 45, 15, 28, 46, 16],
+
+  // 28
+  [3, 147, 117, 10, 148, 118],
+  [3, 73, 45, 23, 74, 46],
+  [4, 54, 24, 31, 55, 25],
+  [11, 45, 15, 31, 46, 16],
+
+  // 29
+  [7, 146, 116, 7, 147, 117],
+  [21, 73, 45, 7, 74, 46],
+  [1, 53, 23, 37, 54, 24],
+  [19, 45, 15, 26, 46, 16],
+
+  // 30
+  [5, 145, 115, 10, 146, 116],
+  [19, 75, 47, 10, 76, 48],
+  [15, 54, 24, 25, 55, 25],
+  [23, 45, 15, 25, 46, 16],
+
+  // 31
+  [13, 145, 115, 3, 146, 116],
+  [2, 74, 46, 29, 75, 47],
+  [42, 54, 24, 1, 55, 25],
+  [23, 45, 15, 28, 46, 16],
+
+  // 32
+  [17, 145, 115],
+  [10, 74, 46, 23, 75, 47],
+  [10, 54, 24, 35, 55, 25],
+  [19, 45, 15, 35, 46, 16],
+
+  // 33
+  [17, 145, 115, 1, 146, 116],
+  [14, 74, 46, 21, 75, 47],
+  [29, 54, 24, 19, 55, 25],
+  [11, 45, 15, 46, 46, 16],
+
+  // 34
+  [13, 145, 115, 6, 146, 116],
+  [14, 74, 46, 23, 75, 47],
+  [44, 54, 24, 7, 55, 25],
+  [59, 46, 16, 1, 47, 17],
+
+  // 35
+  [12, 151, 121, 7, 152, 122],
+  [12, 75, 47, 26, 76, 48],
+  [39, 54, 24, 14, 55, 25],
+  [22, 45, 15, 41, 46, 16],
+
+  // 36
+  [6, 151, 121, 14, 152, 122],
+  [6, 75, 47, 34, 76, 48],
+  [46, 54, 24, 10, 55, 25],
+  [2, 45, 15, 64, 46, 16],
+
+  // 37
+  [17, 152, 122, 4, 153, 123],
+  [29, 74, 46, 14, 75, 47],
+  [49, 54, 24, 10, 55, 25],
+  [24, 45, 15, 46, 46, 16],
+
+  // 38
+  [4, 152, 122, 18, 153, 123],
+  [13, 74, 46, 32, 75, 47],
+  [48, 54, 24, 14, 55, 25],
+  [42, 45, 15, 32, 46, 16],
+
+  // 39
+  [20, 147, 117, 4, 148, 118],
+  [40, 75, 47, 7, 76, 48],
+  [43, 54, 24, 22, 55, 25],
+  [10, 45, 15, 67, 46, 16],
+
+  // 40
+  [19, 148, 118, 6, 149, 119],
+  [18, 75, 47, 31, 76, 48],
+  [34, 54, 24, 34, 55, 25],
+  [20, 45, 15, 61, 46, 16]];
+
+
+  QRRSBlock.getRSBlocks = function (typeNumber, errorCorrectLevel) {
+
+    var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+
+    if (rsBlock == undefined) {
+      throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+    }
+
+    var length = rsBlock.length / 3;
+
+    var list = new Array();
+
+    for (var i = 0; i < length; i++) {
+
+      var count = rsBlock[i * 3 + 0];
+      var totalCount = rsBlock[i * 3 + 1];
+      var dataCount = rsBlock[i * 3 + 2];
+
+      for (var j = 0; j < count; j++) {
+        list.push(new QRRSBlock(totalCount, dataCount));
+      }
+    }
+
+    return list;
+  };
+
+  QRRSBlock.getRsBlockTable = function (typeNumber, errorCorrectLevel) {
+
+    switch (errorCorrectLevel) {
+      case QRErrorCorrectLevel.L:
+        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectLevel.M:
+        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectLevel.Q:
+        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectLevel.H:
+        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default:
+        return undefined;}
+
+  };
+
+  //---------------------------------------------------------------------
+  // QRBitBuffer
+  //---------------------------------------------------------------------
+
+  function QRBitBuffer() {
+    this.buffer = new Array();
+    this.length = 0;
+  }
+
+  QRBitBuffer.prototype = {
+
+    get: function get(index) {
+      var bufIndex = Math.floor(index / 8);
+      return (this.buffer[bufIndex] >>> 7 - index % 8 & 1) == 1;
+    },
+
+    put: function put(num, length) {
+      for (var i = 0; i < length; i++) {
+        this.putBit((num >>> length - i - 1 & 1) == 1);
+      }
+    },
+
+    getLengthInBits: function getLengthInBits() {
+      return this.length;
+    },
+
+    putBit: function putBit(bit) {
+
+      var bufIndex = Math.floor(this.length / 8);
+      if (this.buffer.length <= bufIndex) {
+        this.buffer.push(0);
+      }
+
+      if (bit) {
+        this.buffer[bufIndex] |= 0x80 >>> this.length % 8;
+      }
+
+      this.length++;
+    } };
+
+
+  //---------------------------------------------------------------------
+  // Support Chinese
+  //---------------------------------------------------------------------
+  function utf16To8(text) {
+    var result = '';
+    var c;
+    for (var i = 0; i < text.length; i++) {
+      c = text.charCodeAt(i);
+      if (c >= 0x0001 && c <= 0x007F) {
+        result += text.charAt(i);
+      } else if (c > 0x07FF) {
+        result += String.fromCharCode(0xE0 | c >> 12 & 0x0F);
+        result += String.fromCharCode(0x80 | c >> 6 & 0x3F);
+        result += String.fromCharCode(0x80 | c >> 0 & 0x3F);
+      } else {
+        result += String.fromCharCode(0xC0 | c >> 6 & 0x1F);
+        result += String.fromCharCode(0x80 | c >> 0 & 0x3F);
+      }
+    }
+    return result;
+  }
+
+  uQRCode = {
+
+    defaults: {
+      size: 258,
+      margin: 0,
+      backgroundColor: '#ffffff',
+      foregroundColor: '#000000',
+      fileType: 'png', // 'jpg', 'png'
+      correctLevel: 3,
+      typeNumber: -1 },
+
+
+    make: function make(options) {
+      var defaultOptions = {
+        canvasId: options.canvasId,
+        componentInstance: options.componentInstance,
+        text: options.text,
+        size: this.defaults.size,
+        margin: this.defaults.margin,
+        backgroundColor: this.defaults.backgroundColor,
+        foregroundColor: this.defaults.foregroundColor,
+        fileType: this.defaults.fileType,
+        correctLevel: this.defaults.correctLevel,
+        typeNumber: this.defaults.typeNumber };
+
+      if (options) {
+        for (var i in options) {
+          defaultOptions[i] = options[i];
+        }
+      }
+      options = defaultOptions;
+      if (!options.canvasId) {
+        console.error('uQRCode: Please set canvasId!');
+        return;
+      }
+
+      function createCanvas() {
+        var qrcode = new QRCode(options.typeNumber, options.correctLevel);
+        qrcode.addData(utf16To8(options.text));
+        qrcode.make();
+
+        var ctx = uni.createCanvasContext(options.canvasId, options.componentInstance);
+        ctx.setFillStyle(options.backgroundColor);
+        ctx.fillRect(0, 0, options.size, options.size);
+
+        var tileW = (options.size - options.margin * 2) / qrcode.getModuleCount();
+        var tileH = tileW;
+
+        for (var row = 0; row < qrcode.getModuleCount(); row++) {
+          for (var col = 0; col < qrcode.getModuleCount(); col++) {
+            var style = qrcode.isDark(row, col) ? options.foregroundColor : options.backgroundColor;
+            ctx.setFillStyle(style);
+            var x = Math.round(col * tileW) + options.margin;
+            var y = Math.round(row * tileH) + options.margin;
+            var w = Math.ceil((col + 1) * tileW) - Math.floor(col * tileW);
+            var h = Math.ceil((row + 1) * tileW) - Math.floor(row * tileW);
+            ctx.fillRect(x, y, w, h);
+          }
+        }
+
+        setTimeout(function () {
+          ctx.draw(false, function () {
+            setTimeout(function () {
+              uni.canvasToTempFilePath({
+                canvasId: options.canvasId,
+                fileType: options.fileType,
+                width: options.size,
+                height: options.size,
+                destWidth: options.size,
+                destHeight: options.size,
+                success: function success(res) {
+                  options.success && options.success(res.tempFilePath);
+                },
+                fail: function fail(error) {
+                  options.fail && options.fail(error);
+                },
+                complete: function complete(res) {
+                  options.complete && options.complete(res);
+                } },
+              options.componentInstance);
+            }, options.text.length + 100);
+          });
+        }, 150);
+      }
+
+      createCanvas();
+    } };
+
+
+
+})();var _default =
+
+uQRCode;exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 134:
+/*!*******************************************!*\
+  !*** D:/UAD/Jdt-zhcx/common/BCFW/bcfw.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+//接口域名
+var Url = 'http://111.231.109.113:8004';
+
+//接口对象
+var Interface = {
+  spt_GetcouponByuserId: {
+    value: Url + '/api/bc/GetcouponByuserId',
+    name: '包车订单-优惠券列表',
+    method: 'POST',
+    pages: ["LYFW/scenicSpotTickets/orderAdd.vue"] },
+
+
+  spt_scenicSpotSetOrder: {
+    value: Url + '/api/app/scenicSpotSetOrder',
+    name: '包车订单-H5提交订单',
+    method: 'POST',
+    pages: ["BCFW//bf_information.vue"] },
+
+
+  spt_AddtouristOrder: {
+    value: Url + '/api/Chartered/AddCharteredOrder_Passenger',
+    name: '包车订单-APP提交订单',
+    method: 'POST',
+    pages: ["BCFW/bf_information.vue"] },
+
+
+  spt_RequestTicketsList: {
+    value: Url + '/api/Chartered/QueryCharteredOrderByUserID_Passenger',
+    name: '订单列表',
+    method: 'POST',
+    pages: ["order/OrderList.vue"] },
+
+
+  spt_RequestTickets: {
+    value: Url + '/api/Chartered/QuerySpecialLineOrder_Passenger',
+    name: '订单-去支付',
+    method: 'POST',
+    pages: ["BCFW/charteredBusPayment.vue"] },
+
+
+  spt_CancelTickets: {
+    value: Url + '/api/Chartered/CancelCharteredOrder_Passenger',
+    name: '订单-取消',
+    method: 'POST',
+    pages: ["BCFW/charteredBusPayment.vue", "order/OrderList.vue"] },
+
+
+  spt_DeleteTickets: {
+    value: Url + '/api/Chartered/DeleteCharteredOrder_Passenger',
+    name: '订单-删除',
+    method: 'POST',
+    pages: ["order/OrderList.vue"] },
+
+
+  spt_Pay: {
+    value: Url + '/api/bc/Pay',
+    name: '订单-请求支付参数',
+    method: 'POST',
+    pages: ["BCFW/charteredBusPayment.vue"] },
+
+
+  fw_selectSpecialLine: {
+    value: Url + '/api/Chartered/GetCharteredAllLine_Passenger',
+    name: '包车-选择专线',
+    method: 'POST',
+    pages: ["BCFW/bf_choice.vue"] },
+
+
+  fw_privateLineSearch: {
+    value: Url + '/api/Chartered/GetCharteredLineByLineName_Passenger',
+    name: '包车-选择专线搜索',
+    method: 'POST',
+    pages: ["BCFW/bf_choice.vue"] },
+
+
+  fw_selectVehicle: {
+    value: Url + '/api/Chartered/GetVehicleType_Passenger',
+    name: '包车-选择车辆',
+    method: 'POST',
+    pages: ["BCFW/bf_choiceVehicleType.vue"] } };
+
+
+
+
+var InterfaceAddress = [
+//根据起终点经纬度获取线路规划
+//使用页面 - /CZC/CallAndDrive - 
+'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat',
+//获取所有车辆定位数据
+'http://111.231.109.113:8002/api/zhcx/getAllVehiclePosition',
+//根据经纬度获取附近一定范围的经纬度
+'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition'];
+
+
+// 接口声明区
+var _default = {
+  Interface: Interface,
+  InterfaceAddress: InterfaceAddress };exports.default = _default;
 
 /***/ }),
 
@@ -2763,6 +4266,17 @@ function normalizeComponent (
   }
 }
 
+
+/***/ }),
+
+/***/ 171:
+/*!**************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/libs/qqmap-wx-jssdk.min.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}var ERROR_CONF = { KEY_ERR: 311, KEY_ERR_MSG: 'key格式错误', PARAM_ERR: 310, PARAM_ERR_MSG: '请求参数信息有误', SYSTEM_ERR: 600, SYSTEM_ERR_MSG: '系统错误', WX_ERR_CODE: 1000, WX_OK_CODE: 200 };var BASE_URL = 'https://apis.map.qq.com/ws/';var URL_SEARCH = BASE_URL + 'place/v1/search';var URL_SUGGESTION = BASE_URL + 'place/v1/suggestion';var URL_GET_GEOCODER = BASE_URL + 'geocoder/v1/';var URL_CITY_LIST = BASE_URL + 'district/v1/list';var URL_AREA_LIST = BASE_URL + 'district/v1/getchildren';var URL_DISTANCE = BASE_URL + 'distance/v1/';var URL_DIRECTION = BASE_URL + 'direction/v1/';var MODE = { driving: 'driving', transit: 'transit' };var EARTH_RADIUS = 6378136.49;var Utils = { safeAdd: function safeAdd(x, y) {var lsw = (x & 0xffff) + (y & 0xffff);var msw = (x >> 16) + (y >> 16) + (lsw >> 16);return msw << 16 | lsw & 0xffff;}, bitRotateLeft: function bitRotateLeft(num, cnt) {return num << cnt | num >>> 32 - cnt;}, md5cmn: function md5cmn(q, a, b, x, s, t) {return this.safeAdd(this.bitRotateLeft(this.safeAdd(this.safeAdd(a, q), this.safeAdd(x, t)), s), b);}, md5ff: function md5ff(a, b, c, d, x, s, t) {return this.md5cmn(b & c | ~b & d, a, b, x, s, t);}, md5gg: function md5gg(a, b, c, d, x, s, t) {return this.md5cmn(b & d | c & ~d, a, b, x, s, t);}, md5hh: function md5hh(a, b, c, d, x, s, t) {return this.md5cmn(b ^ c ^ d, a, b, x, s, t);}, md5ii: function md5ii(a, b, c, d, x, s, t) {return this.md5cmn(c ^ (b | ~d), a, b, x, s, t);}, binlMD5: function binlMD5(x, len) {x[len >> 5] |= 0x80 << len % 32;x[(len + 64 >>> 9 << 4) + 14] = len;var i;var olda;var oldb;var oldc;var oldd;var a = 1732584193;var b = -271733879;var c = -1732584194;var d = 271733878;for (i = 0; i < x.length; i += 16) {olda = a;oldb = b;oldc = c;oldd = d;a = this.md5ff(a, b, c, d, x[i], 7, -680876936);d = this.md5ff(d, a, b, c, x[i + 1], 12, -389564586);c = this.md5ff(c, d, a, b, x[i + 2], 17, 606105819);b = this.md5ff(b, c, d, a, x[i + 3], 22, -1044525330);a = this.md5ff(a, b, c, d, x[i + 4], 7, -176418897);d = this.md5ff(d, a, b, c, x[i + 5], 12, 1200080426);c = this.md5ff(c, d, a, b, x[i + 6], 17, -1473231341);b = this.md5ff(b, c, d, a, x[i + 7], 22, -45705983);a = this.md5ff(a, b, c, d, x[i + 8], 7, 1770035416);d = this.md5ff(d, a, b, c, x[i + 9], 12, -1958414417);c = this.md5ff(c, d, a, b, x[i + 10], 17, -42063);b = this.md5ff(b, c, d, a, x[i + 11], 22, -1990404162);a = this.md5ff(a, b, c, d, x[i + 12], 7, 1804603682);d = this.md5ff(d, a, b, c, x[i + 13], 12, -40341101);c = this.md5ff(c, d, a, b, x[i + 14], 17, -1502002290);b = this.md5ff(b, c, d, a, x[i + 15], 22, 1236535329);a = this.md5gg(a, b, c, d, x[i + 1], 5, -165796510);d = this.md5gg(d, a, b, c, x[i + 6], 9, -1069501632);c = this.md5gg(c, d, a, b, x[i + 11], 14, 643717713);b = this.md5gg(b, c, d, a, x[i], 20, -373897302);a = this.md5gg(a, b, c, d, x[i + 5], 5, -701558691);d = this.md5gg(d, a, b, c, x[i + 10], 9, 38016083);c = this.md5gg(c, d, a, b, x[i + 15], 14, -660478335);b = this.md5gg(b, c, d, a, x[i + 4], 20, -405537848);a = this.md5gg(a, b, c, d, x[i + 9], 5, 568446438);d = this.md5gg(d, a, b, c, x[i + 14], 9, -1019803690);c = this.md5gg(c, d, a, b, x[i + 3], 14, -187363961);b = this.md5gg(b, c, d, a, x[i + 8], 20, 1163531501);a = this.md5gg(a, b, c, d, x[i + 13], 5, -1444681467);d = this.md5gg(d, a, b, c, x[i + 2], 9, -51403784);c = this.md5gg(c, d, a, b, x[i + 7], 14, 1735328473);b = this.md5gg(b, c, d, a, x[i + 12], 20, -1926607734);a = this.md5hh(a, b, c, d, x[i + 5], 4, -378558);d = this.md5hh(d, a, b, c, x[i + 8], 11, -2022574463);c = this.md5hh(c, d, a, b, x[i + 11], 16, 1839030562);b = this.md5hh(b, c, d, a, x[i + 14], 23, -35309556);a = this.md5hh(a, b, c, d, x[i + 1], 4, -1530992060);d = this.md5hh(d, a, b, c, x[i + 4], 11, 1272893353);c = this.md5hh(c, d, a, b, x[i + 7], 16, -155497632);b = this.md5hh(b, c, d, a, x[i + 10], 23, -1094730640);a = this.md5hh(a, b, c, d, x[i + 13], 4, 681279174);d = this.md5hh(d, a, b, c, x[i], 11, -358537222);c = this.md5hh(c, d, a, b, x[i + 3], 16, -722521979);b = this.md5hh(b, c, d, a, x[i + 6], 23, 76029189);a = this.md5hh(a, b, c, d, x[i + 9], 4, -640364487);d = this.md5hh(d, a, b, c, x[i + 12], 11, -421815835);c = this.md5hh(c, d, a, b, x[i + 15], 16, 530742520);b = this.md5hh(b, c, d, a, x[i + 2], 23, -995338651);a = this.md5ii(a, b, c, d, x[i], 6, -198630844);d = this.md5ii(d, a, b, c, x[i + 7], 10, 1126891415);c = this.md5ii(c, d, a, b, x[i + 14], 15, -1416354905);b = this.md5ii(b, c, d, a, x[i + 5], 21, -57434055);a = this.md5ii(a, b, c, d, x[i + 12], 6, 1700485571);d = this.md5ii(d, a, b, c, x[i + 3], 10, -1894986606);c = this.md5ii(c, d, a, b, x[i + 10], 15, -1051523);b = this.md5ii(b, c, d, a, x[i + 1], 21, -2054922799);a = this.md5ii(a, b, c, d, x[i + 8], 6, 1873313359);d = this.md5ii(d, a, b, c, x[i + 15], 10, -30611744);c = this.md5ii(c, d, a, b, x[i + 6], 15, -1560198380);b = this.md5ii(b, c, d, a, x[i + 13], 21, 1309151649);a = this.md5ii(a, b, c, d, x[i + 4], 6, -145523070);d = this.md5ii(d, a, b, c, x[i + 11], 10, -1120210379);c = this.md5ii(c, d, a, b, x[i + 2], 15, 718787259);b = this.md5ii(b, c, d, a, x[i + 9], 21, -343485551);a = this.safeAdd(a, olda);b = this.safeAdd(b, oldb);c = this.safeAdd(c, oldc);d = this.safeAdd(d, oldd);}return [a, b, c, d];}, binl2rstr: function binl2rstr(input) {var i;var output = '';var length32 = input.length * 32;for (i = 0; i < length32; i += 8) {output += String.fromCharCode(input[i >> 5] >>> i % 32 & 0xff);}return output;}, rstr2binl: function rstr2binl(input) {var i;var output = [];output[(input.length >> 2) - 1] = undefined;for (i = 0; i < output.length; i += 1) {output[i] = 0;}var length8 = input.length * 8;for (i = 0; i < length8; i += 8) {output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << i % 32;}return output;}, rstrMD5: function rstrMD5(s) {return this.binl2rstr(this.binlMD5(this.rstr2binl(s), s.length * 8));}, rstrHMACMD5: function rstrHMACMD5(key, data) {var i;var bkey = this.rstr2binl(key);var ipad = [];var opad = [];var hash;ipad[15] = opad[15] = undefined;if (bkey.length > 16) {bkey = this.binlMD5(bkey, key.length * 8);}for (i = 0; i < 16; i += 1) {ipad[i] = bkey[i] ^ 0x36363636;opad[i] = bkey[i] ^ 0x5c5c5c5c;}hash = this.binlMD5(ipad.concat(this.rstr2binl(data)), 512 + data.length * 8);return this.binl2rstr(this.binlMD5(opad.concat(hash), 512 + 128));}, rstr2hex: function rstr2hex(input) {var hexTab = '0123456789abcdef';var output = '';var x;var i;for (i = 0; i < input.length; i += 1) {x = input.charCodeAt(i);output += hexTab.charAt(x >>> 4 & 0x0f) + hexTab.charAt(x & 0x0f);}return output;}, str2rstrUTF8: function str2rstrUTF8(input) {return unescape(encodeURIComponent(input));}, rawMD5: function rawMD5(s) {return this.rstrMD5(this.str2rstrUTF8(s));}, hexMD5: function hexMD5(s) {return this.rstr2hex(this.rawMD5(s));}, rawHMACMD5: function rawHMACMD5(k, d) {return this.rstrHMACMD5(this.str2rstrUTF8(k), str2rstrUTF8(d));}, hexHMACMD5: function hexHMACMD5(k, d) {return this.rstr2hex(this.rawHMACMD5(k, d));}, md5: function md5(string, key, raw) {if (!key) {if (!raw) {return this.hexMD5(string);}return this.rawMD5(string);}if (!raw) {return this.hexHMACMD5(key, string);}return this.rawHMACMD5(key, string);}, getSig: function getSig(requestParam, sk, feature, mode) {var sig = null;var requestArr = [];Object.keys(requestParam).sort().forEach(function (key) {requestArr.push(key + '=' + requestParam[key]);});if (feature == 'search') {sig = '/ws/place/v1/search?' + requestArr.join('&') + sk;}if (feature == 'suggest') {sig = '/ws/place/v1/suggestion?' + requestArr.join('&') + sk;}if (feature == 'reverseGeocoder') {sig = '/ws/geocoder/v1/?' + requestArr.join('&') + sk;}if (feature == 'geocoder') {sig = '/ws/geocoder/v1/?' + requestArr.join('&') + sk;}if (feature == 'getCityList') {sig = '/ws/district/v1/list?' + requestArr.join('&') + sk;}if (feature == 'getDistrictByCityId') {sig = '/ws/district/v1/getchildren?' + requestArr.join('&') + sk;}if (feature == 'calculateDistance') {sig = '/ws/distance/v1/?' + requestArr.join('&') + sk;}if (feature == 'direction') {sig = '/ws/direction/v1/' + mode + '?' + requestArr.join('&') + sk;}sig = this.md5(sig);return sig;}, location2query: function location2query(data) {if (typeof data == 'string') {return data;}var query = '';for (var i = 0; i < data.length; i++) {var d = data[i];if (!!query) {query += ';';}if (d.location) {query = query + d.location.lat + ',' + d.location.lng;}if (d.latitude && d.longitude) {query = query + d.latitude + ',' + d.longitude;}}return query;}, rad: function rad(d) {return d * Math.PI / 180.0;}, getEndLocation: function getEndLocation(location) {var to = location.split(';');var endLocation = [];for (var i = 0; i < to.length; i++) {endLocation.push({ lat: parseFloat(to[i].split(',')[0]), lng: parseFloat(to[i].split(',')[1]) });}return endLocation;}, getDistance: function getDistance(latFrom, lngFrom, latTo, lngTo) {var radLatFrom = this.rad(latFrom);var radLatTo = this.rad(latTo);var a = radLatFrom - radLatTo;var b = this.rad(lngFrom) - this.rad(lngTo);var distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLatFrom) * Math.cos(radLatTo) * Math.pow(Math.sin(b / 2), 2)));distance = distance * EARTH_RADIUS;distance = Math.round(distance * 10000) / 10000;return parseFloat(distance.toFixed(0));}, getWXLocation: function getWXLocation(success, fail, complete) {wx.getLocation({ type: 'gcj02', success: success, fail: fail, complete: complete });}, getLocationParam: function getLocationParam(location) {if (typeof location == 'string') {var locationArr = location.split(',');if (locationArr.length === 2) {location = { latitude: location.split(',')[0], longitude: location.split(',')[1] };} else {location = {};}}return location;}, polyfillParam: function polyfillParam(param) {param.success = param.success || function () {};param.fail = param.fail || function () {};param.complete = param.complete || function () {};}, checkParamKeyEmpty: function checkParamKeyEmpty(param, key) {if (!param[key]) {var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + key + '参数格式有误');param.fail(errconf);param.complete(errconf);return true;}return false;}, checkKeyword: function checkKeyword(param) {return !this.checkParamKeyEmpty(param, 'keyword');}, checkLocation: function checkLocation(param) {var location = this.getLocationParam(param.location);if (!location || !location.latitude || !location.longitude) {var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + ' location参数格式有误');param.fail(errconf);param.complete(errconf);return false;}return true;}, buildErrorConfig: function buildErrorConfig(errCode, errMsg) {return { status: errCode, message: errMsg };}, handleData: function handleData(param, data, feature) {if (feature == 'search') {var searchResult = data.data;var searchSimplify = [];for (var i = 0; i < searchResult.length; i++) {searchSimplify.push({ id: searchResult[i].id || null, title: searchResult[i].title || null, latitude: searchResult[i].location && searchResult[i].location.lat || null, longitude: searchResult[i].location && searchResult[i].location.lng || null, address: searchResult[i].address || null, category: searchResult[i].category || null, tel: searchResult[i].tel || null, adcode: searchResult[i].ad_info && searchResult[i].ad_info.adcode || null, city: searchResult[i].ad_info && searchResult[i].ad_info.city || null, district: searchResult[i].ad_info && searchResult[i].ad_info.district || null, province: searchResult[i].ad_info && searchResult[i].ad_info.province || null });}param.success(data, { searchResult: searchResult, searchSimplify: searchSimplify });} else if (feature == 'suggest') {var suggestResult = data.data;var suggestSimplify = [];for (var i = 0; i < suggestResult.length; i++) {suggestSimplify.push({ adcode: suggestResult[i].adcode || null, address: suggestResult[i].address || null, category: suggestResult[i].category || null, city: suggestResult[i].city || null, district: suggestResult[i].district || null, id: suggestResult[i].id || null, latitude: suggestResult[i].location && suggestResult[i].location.lat || null, longitude: suggestResult[i].location && suggestResult[i].location.lng || null, province: suggestResult[i].province || null, title: suggestResult[i].title || null, type: suggestResult[i].type || null });}param.success(data, { suggestResult: suggestResult, suggestSimplify: suggestSimplify });} else if (feature == 'reverseGeocoder') {var reverseGeocoderResult = data.result;var reverseGeocoderSimplify = { address: reverseGeocoderResult.address || null, latitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lat || null, longitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lng || null, adcode: reverseGeocoderResult.ad_info && reverseGeocoderResult.ad_info.adcode || null, city: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.city || null, district: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.district || null, nation: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.nation || null, province: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.province || null, street: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street || null, street_number: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street_number || null, recommend: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.recommend || null, rough: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.rough || null };if (reverseGeocoderResult.pois) {var pois = reverseGeocoderResult.pois;var poisSimplify = [];for (var i = 0; i < pois.length; i++) {poisSimplify.push({ id: pois[i].id || null, title: pois[i].title || null, latitude: pois[i].location && pois[i].location.lat || null, longitude: pois[i].location && pois[i].location.lng || null, address: pois[i].address || null, category: pois[i].category || null, adcode: pois[i].ad_info && pois[i].ad_info.adcode || null, city: pois[i].ad_info && pois[i].ad_info.city || null, district: pois[i].ad_info && pois[i].ad_info.district || null, province: pois[i].ad_info && pois[i].ad_info.province || null });}param.success(data, { reverseGeocoderResult: reverseGeocoderResult, reverseGeocoderSimplify: reverseGeocoderSimplify, pois: pois, poisSimplify: poisSimplify });} else {param.success(data, { reverseGeocoderResult: reverseGeocoderResult, reverseGeocoderSimplify: reverseGeocoderSimplify });}} else if (feature == 'geocoder') {var geocoderResult = data.result;var geocoderSimplify = { title: geocoderResult.title || null, latitude: geocoderResult.location && geocoderResult.location.lat || null, longitude: geocoderResult.location && geocoderResult.location.lng || null, adcode: geocoderResult.ad_info && geocoderResult.ad_info.adcode || null, province: geocoderResult.address_components && geocoderResult.address_components.province || null, city: geocoderResult.address_components && geocoderResult.address_components.city || null, district: geocoderResult.address_components && geocoderResult.address_components.district || null, street: geocoderResult.address_components && geocoderResult.address_components.street || null, street_number: geocoderResult.address_components && geocoderResult.address_components.street_number || null, level: geocoderResult.level || null };param.success(data, { geocoderResult: geocoderResult, geocoderSimplify: geocoderSimplify });} else if (feature == 'getCityList') {var provinceResult = data.result[0];var cityResult = data.result[1];var districtResult = data.result[2];param.success(data, { provinceResult: provinceResult, cityResult: cityResult, districtResult: districtResult });} else if (feature == 'getDistrictByCityId') {var districtByCity = data.result[0];param.success(data, districtByCity);} else if (feature == 'calculateDistance') {var calculateDistanceResult = data.result.elements;var distance = [];for (var i = 0; i < calculateDistanceResult.length; i++) {distance.push(calculateDistanceResult[i].distance);}param.success(data, { calculateDistanceResult: calculateDistanceResult, distance: distance });} else if (feature == 'direction') {var direction = data.result.routes;param.success(data, direction);} else {param.success(data);}}, buildWxRequestConfig: function buildWxRequestConfig(param, options, feature) {var that = this;options.header = { "content-type": "application/json" };options.method = 'GET';options.success = function (res) {var data = res.data;if (data.status === 0) {that.handleData(param, data, feature);} else {param.fail(data);}};options.fail = function (res) {res.statusCode = ERROR_CONF.WX_ERR_CODE;param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));};options.complete = function (res) {var statusCode = +res.statusCode;switch (statusCode) {case ERROR_CONF.WX_ERR_CODE:{param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));break;}case ERROR_CONF.WX_OK_CODE:{var data = res.data;if (data.status === 0) {param.complete(data);} else {param.complete(that.buildErrorConfig(data.status, data.message));}break;}default:{param.complete(that.buildErrorConfig(ERROR_CONF.SYSTEM_ERR, ERROR_CONF.SYSTEM_ERR_MSG));}}};return options;}, locationProcess: function locationProcess(param, locationsuccess, locationfail, locationcomplete) {var that = this;locationfail = locationfail || function (res) {res.statusCode = ERROR_CONF.WX_ERR_CODE;param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));};locationcomplete = locationcomplete || function (res) {if (res.statusCode == ERROR_CONF.WX_ERR_CODE) {param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));}};if (!param.location) {that.getWXLocation(locationsuccess, locationfail, locationcomplete);} else if (that.checkLocation(param)) {var location = Utils.getLocationParam(param.location);locationsuccess(location);}} };var QQMapWX = /*#__PURE__*/function () {"use strict";function QQMapWX(options) {_classCallCheck(this, QQMapWX);if (!options.key) {throw Error('key值不能为空');}this.key = options.key;}_createClass(QQMapWX, [{ key: "search", value: function search(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (!Utils.checkKeyword(options)) {return;}var requestParam = { keyword: options.keyword, orderby: options.orderby || '_distance', page_size: options.page_size || 10, page_index: options.page_index || 1, output: 'json', key: that.key };if (options.address_format) {requestParam.address_format = options.address_format;}if (options.filter) {requestParam.filter = options.filter;}var distance = options.distance || "1000";var auto_extend = options.auto_extend || 1;var region = null;var rectangle = null;if (options.region) {region = options.region;}if (options.rectangle) {rectangle = options.rectangle;}var locationsuccess = function locationsuccess(result) {if (region && !rectangle) {requestParam.boundary = "region(" + region + "," + auto_extend + "," + result.latitude + "," + result.longitude + ")";if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');}} else if (rectangle && !region) {requestParam.boundary = "rectangle(" + rectangle + ")";if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');}} else {requestParam.boundary = "nearby(" + result.latitude + "," + result.longitude + "," + distance + "," + auto_extend + ")";if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');}}wx.request(Utils.buildWxRequestConfig(options, { url: URL_SEARCH, data: requestParam }, 'search'));};Utils.locationProcess(options, locationsuccess);} }, { key: "getSuggestion", value: function getSuggestion(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (!Utils.checkKeyword(options)) {return;}var requestParam = { keyword: options.keyword, region: options.region || '全国', region_fix: options.region_fix || 0, policy: options.policy || 0, page_size: options.page_size || 10, page_index: options.page_index || 1, get_subpois: options.get_subpois || 0, output: 'json', key: that.key };if (options.address_format) {requestParam.address_format = options.address_format;}if (options.filter) {requestParam.filter = options.filter;}if (options.location) {var locationsuccess = function locationsuccess(result) {requestParam.location = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'suggest');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_SUGGESTION, data: requestParam }, "suggest"));};Utils.locationProcess(options, locationsuccess);} else {if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'suggest');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_SUGGESTION, data: requestParam }, "suggest"));}} }, { key: "reverseGeocoder", value: function reverseGeocoder(options) {var that = this;options = options || {};Utils.polyfillParam(options);var requestParam = { coord_type: options.coord_type || 5, get_poi: options.get_poi || 0, output: 'json', key: that.key };if (options.poi_options) {requestParam.poi_options = options.poi_options;}var locationsuccess = function locationsuccess(result) {requestParam.location = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'reverseGeocoder');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_GET_GEOCODER, data: requestParam }, 'reverseGeocoder'));};Utils.locationProcess(options, locationsuccess);} }, { key: "geocoder", value: function geocoder(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'address')) {return;}var requestParam = { address: options.address, output: 'json', key: that.key };if (options.region) {requestParam.region = options.region;}if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'geocoder');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_GET_GEOCODER, data: requestParam }, 'geocoder'));} }, { key: "getCityList", value: function getCityList(options) {var that = this;options = options || {};Utils.polyfillParam(options);var requestParam = { output: 'json', key: that.key };if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'getCityList');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_CITY_LIST, data: requestParam }, 'getCityList'));} }, { key: "getDistrictByCityId", value: function getDistrictByCityId(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'id')) {return;}var requestParam = { id: options.id || '', output: 'json', key: that.key };if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'getDistrictByCityId');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_AREA_LIST, data: requestParam }, 'getDistrictByCityId'));} }, { key: "calculateDistance", value: function calculateDistance(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'to')) {return;}var requestParam = { mode: options.mode || 'walking', to: Utils.location2query(options.to), output: 'json', key: that.key };if (options.from) {options.location = options.from;}if (requestParam.mode == 'straight') {var locationsuccess = function locationsuccess(result) {var locationTo = Utils.getEndLocation(requestParam.to);var data = { message: "query ok", result: { elements: [] }, status: 0 };for (var i = 0; i < locationTo.length; i++) {data.result.elements.push({ distance: Utils.getDistance(result.latitude, result.longitude, locationTo[i].lat, locationTo[i].lng), duration: 0, from: { lat: result.latitude, lng: result.longitude }, to: { lat: locationTo[i].lat, lng: locationTo[i].lng } });}var calculateResult = data.result.elements;var distanceResult = [];for (var i = 0; i < calculateResult.length; i++) {distanceResult.push(calculateResult[i].distance);}return options.success(data, { calculateResult: calculateResult, distanceResult: distanceResult });};Utils.locationProcess(options, locationsuccess);} else {var locationsuccess = function locationsuccess(result) {requestParam.from = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'calculateDistance');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_DISTANCE, data: requestParam }, 'calculateDistance'));};Utils.locationProcess(options, locationsuccess);}} }, { key: "direction", value: function direction(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'to')) {return;}var requestParam = { output: 'json', key: that.key };if (typeof options.to == 'string') {requestParam.to = options.to;} else {requestParam.to = options.to.latitude + ',' + options.to.longitude;}var SET_URL_DIRECTION = null;options.mode = options.mode || MODE.driving;SET_URL_DIRECTION = URL_DIRECTION + options.mode;if (options.from) {options.location = options.from;}if (options.mode == MODE.driving) {if (options.from_poi) {requestParam.from_poi = options.from_poi;}if (options.heading) {requestParam.heading = options.heading;}if (options.speed) {requestParam.speed = options.speed;}if (options.accuracy) {requestParam.accuracy = options.accuracy;}if (options.road_type) {requestParam.road_type = options.road_type;}if (options.to_poi) {requestParam.to_poi = options.to_poi;}if (options.from_track) {requestParam.from_track = options.from_track;}if (options.waypoints) {requestParam.waypoints = options.waypoints;}if (options.policy) {requestParam.policy = options.policy;}if (options.plate_number) {requestParam.plate_number = options.plate_number;}}if (options.mode == MODE.transit) {if (options.departure_time) {requestParam.departure_time = options.departure_time;}if (options.policy) {requestParam.policy = options.policy;}}var locationsuccess = function locationsuccess(result) {requestParam.from = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'direction', options.mode);}wx.request(Utils.buildWxRequestConfig(options, { url: SET_URL_DIRECTION, data: requestParam }, 'direction'));};Utils.locationProcess(options, locationsuccess);} }]);return QQMapWX;}();;module.exports = QQMapWX;
 
 /***/ }),
 
@@ -8410,7 +9924,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8431,14 +9945,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8514,7 +10028,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -9300,1509 +10814,6 @@ var Interface = {
 // 接口声明区
 var _default = {
   userInfo: userInfo, addressInfo: addressInfo, user: user, Interface: Interface };exports.default = _default;
-
-/***/ }),
-
-/***/ 224:
-/*!*****************************************!*\
-  !*** D:/UAD/Jdt-zhcx/common/uqrcode.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //---------------------------------------------------------------------
-// github https://github.com/Sansnn/uQRCode
-//---------------------------------------------------------------------
-
-var uQRCode = {};
-
-(function () {
-  //---------------------------------------------------------------------
-  // QRCode for JavaScript
-  //
-  // Copyright (c) 2009 Kazuhiko Arase
-  //
-  // URL: http://www.d-project.com/
-  //
-  // Licensed under the MIT license:
-  //   http://www.opensource.org/licenses/mit-license.php
-  //
-  // The word "QR Code" is registered trademark of 
-  // DENSO WAVE INCORPORATED
-  //   http://www.denso-wave.com/qrcode/faqpatent-e.html
-  //
-  //---------------------------------------------------------------------
-
-  //---------------------------------------------------------------------
-  // QR8bitByte
-  //---------------------------------------------------------------------
-
-  function QR8bitByte(data) {
-    this.mode = QRMode.MODE_8BIT_BYTE;
-    this.data = data;
-  }
-
-  QR8bitByte.prototype = {
-
-    getLength: function getLength(buffer) {
-      return this.data.length;
-    },
-
-    write: function write(buffer) {
-      for (var i = 0; i < this.data.length; i++) {
-        // not JIS ...
-        buffer.put(this.data.charCodeAt(i), 8);
-      }
-    } };
-
-
-  //---------------------------------------------------------------------
-  // QRCode
-  //---------------------------------------------------------------------
-
-  function QRCode(typeNumber, errorCorrectLevel) {
-    this.typeNumber = typeNumber;
-    this.errorCorrectLevel = errorCorrectLevel;
-    this.modules = null;
-    this.moduleCount = 0;
-    this.dataCache = null;
-    this.dataList = new Array();
-  }
-
-  QRCode.prototype = {
-
-    addData: function addData(data) {
-      var newData = new QR8bitByte(data);
-      this.dataList.push(newData);
-      this.dataCache = null;
-    },
-
-    isDark: function isDark(row, col) {
-      if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
-        throw new Error(row + "," + col);
-      }
-      return this.modules[row][col];
-    },
-
-    getModuleCount: function getModuleCount() {
-      return this.moduleCount;
-    },
-
-    make: function make() {
-      // Calculate automatically typeNumber if provided is < 1
-      if (this.typeNumber < 1) {
-        var typeNumber = 1;
-        for (typeNumber = 1; typeNumber < 40; typeNumber++) {
-          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
-
-          var buffer = new QRBitBuffer();
-          var totalDataCount = 0;
-          for (var i = 0; i < rsBlocks.length; i++) {
-            totalDataCount += rsBlocks[i].dataCount;
-          }
-
-          for (var i = 0; i < this.dataList.length; i++) {
-            var data = this.dataList[i];
-            buffer.put(data.mode, 4);
-            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
-            data.write(buffer);
-          }
-          if (buffer.getLengthInBits() <= totalDataCount * 8)
-          break;
-        }
-        this.typeNumber = typeNumber;
-      }
-      this.makeImpl(false, this.getBestMaskPattern());
-    },
-
-    makeImpl: function makeImpl(test, maskPattern) {
-
-      this.moduleCount = this.typeNumber * 4 + 17;
-      this.modules = new Array(this.moduleCount);
-
-      for (var row = 0; row < this.moduleCount; row++) {
-
-        this.modules[row] = new Array(this.moduleCount);
-
-        for (var col = 0; col < this.moduleCount; col++) {
-          this.modules[row][col] = null; //(col + row) % 3;
-        }
-      }
-
-      this.setupPositionProbePattern(0, 0);
-      this.setupPositionProbePattern(this.moduleCount - 7, 0);
-      this.setupPositionProbePattern(0, this.moduleCount - 7);
-      this.setupPositionAdjustPattern();
-      this.setupTimingPattern();
-      this.setupTypeInfo(test, maskPattern);
-
-      if (this.typeNumber >= 7) {
-        this.setupTypeNumber(test);
-      }
-
-      if (this.dataCache == null) {
-        this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
-      }
-
-      this.mapData(this.dataCache, maskPattern);
-    },
-
-    setupPositionProbePattern: function setupPositionProbePattern(row, col) {
-
-      for (var r = -1; r <= 7; r++) {
-
-        if (row + r <= -1 || this.moduleCount <= row + r) continue;
-
-        for (var c = -1; c <= 7; c++) {
-
-          if (col + c <= -1 || this.moduleCount <= col + c) continue;
-
-          if (0 <= r && r <= 6 && (c == 0 || c == 6) ||
-          0 <= c && c <= 6 && (r == 0 || r == 6) ||
-          2 <= r && r <= 4 && 2 <= c && c <= 4) {
-            this.modules[row + r][col + c] = true;
-          } else {
-            this.modules[row + r][col + c] = false;
-          }
-        }
-      }
-    },
-
-    getBestMaskPattern: function getBestMaskPattern() {
-
-      var minLostPoint = 0;
-      var pattern = 0;
-
-      for (var i = 0; i < 8; i++) {
-
-        this.makeImpl(true, i);
-
-        var lostPoint = QRUtil.getLostPoint(this);
-
-        if (i == 0 || minLostPoint > lostPoint) {
-          minLostPoint = lostPoint;
-          pattern = i;
-        }
-      }
-
-      return pattern;
-    },
-
-    createMovieClip: function createMovieClip(target_mc, instance_name, depth) {
-
-      var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
-      var cs = 1;
-
-      this.make();
-
-      for (var row = 0; row < this.modules.length; row++) {
-
-        var y = row * cs;
-
-        for (var col = 0; col < this.modules[row].length; col++) {
-
-          var x = col * cs;
-          var dark = this.modules[row][col];
-
-          if (dark) {
-            qr_mc.beginFill(0, 100);
-            qr_mc.moveTo(x, y);
-            qr_mc.lineTo(x + cs, y);
-            qr_mc.lineTo(x + cs, y + cs);
-            qr_mc.lineTo(x, y + cs);
-            qr_mc.endFill();
-          }
-        }
-      }
-
-      return qr_mc;
-    },
-
-    setupTimingPattern: function setupTimingPattern() {
-
-      for (var r = 8; r < this.moduleCount - 8; r++) {
-        if (this.modules[r][6] != null) {
-          continue;
-        }
-        this.modules[r][6] = r % 2 == 0;
-      }
-
-      for (var c = 8; c < this.moduleCount - 8; c++) {
-        if (this.modules[6][c] != null) {
-          continue;
-        }
-        this.modules[6][c] = c % 2 == 0;
-      }
-    },
-
-    setupPositionAdjustPattern: function setupPositionAdjustPattern() {
-
-      var pos = QRUtil.getPatternPosition(this.typeNumber);
-
-      for (var i = 0; i < pos.length; i++) {
-
-        for (var j = 0; j < pos.length; j++) {
-
-          var row = pos[i];
-          var col = pos[j];
-
-          if (this.modules[row][col] != null) {
-            continue;
-          }
-
-          for (var r = -2; r <= 2; r++) {
-
-            for (var c = -2; c <= 2; c++) {
-
-              if (r == -2 || r == 2 || c == -2 || c == 2 ||
-              r == 0 && c == 0) {
-                this.modules[row + r][col + c] = true;
-              } else {
-                this.modules[row + r][col + c] = false;
-              }
-            }
-          }
-        }
-      }
-    },
-
-    setupTypeNumber: function setupTypeNumber(test) {
-
-      var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
-
-      for (var i = 0; i < 18; i++) {
-        var mod = !test && (bits >> i & 1) == 1;
-        this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
-      }
-
-      for (var i = 0; i < 18; i++) {
-        var mod = !test && (bits >> i & 1) == 1;
-        this.modules[i % 3 + this.moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
-      }
-    },
-
-    setupTypeInfo: function setupTypeInfo(test, maskPattern) {
-
-      var data = this.errorCorrectLevel << 3 | maskPattern;
-      var bits = QRUtil.getBCHTypeInfo(data);
-
-      // vertical		
-      for (var i = 0; i < 15; i++) {
-
-        var mod = !test && (bits >> i & 1) == 1;
-
-        if (i < 6) {
-          this.modules[i][8] = mod;
-        } else if (i < 8) {
-          this.modules[i + 1][8] = mod;
-        } else {
-          this.modules[this.moduleCount - 15 + i][8] = mod;
-        }
-      }
-
-      // horizontal
-      for (var i = 0; i < 15; i++) {
-
-        var mod = !test && (bits >> i & 1) == 1;
-
-        if (i < 8) {
-          this.modules[8][this.moduleCount - i - 1] = mod;
-        } else if (i < 9) {
-          this.modules[8][15 - i - 1 + 1] = mod;
-        } else {
-          this.modules[8][15 - i - 1] = mod;
-        }
-      }
-
-      // fixed module
-      this.modules[this.moduleCount - 8][8] = !test;
-
-    },
-
-    mapData: function mapData(data, maskPattern) {
-
-      var inc = -1;
-      var row = this.moduleCount - 1;
-      var bitIndex = 7;
-      var byteIndex = 0;
-
-      for (var col = this.moduleCount - 1; col > 0; col -= 2) {
-
-        if (col == 6) col--;
-
-        while (true) {
-
-          for (var c = 0; c < 2; c++) {
-
-            if (this.modules[row][col - c] == null) {
-
-              var dark = false;
-
-              if (byteIndex < data.length) {
-                dark = (data[byteIndex] >>> bitIndex & 1) == 1;
-              }
-
-              var mask = QRUtil.getMask(maskPattern, row, col - c);
-
-              if (mask) {
-                dark = !dark;
-              }
-
-              this.modules[row][col - c] = dark;
-              bitIndex--;
-
-              if (bitIndex == -1) {
-                byteIndex++;
-                bitIndex = 7;
-              }
-            }
-          }
-
-          row += inc;
-
-          if (row < 0 || this.moduleCount <= row) {
-            row -= inc;
-            inc = -inc;
-            break;
-          }
-        }
-      }
-
-    } };
-
-
-
-  QRCode.PAD0 = 0xEC;
-  QRCode.PAD1 = 0x11;
-
-  QRCode.createData = function (typeNumber, errorCorrectLevel, dataList) {
-
-    var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
-
-    var buffer = new QRBitBuffer();
-
-    for (var i = 0; i < dataList.length; i++) {
-      var data = dataList[i];
-      buffer.put(data.mode, 4);
-      buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
-      data.write(buffer);
-    }
-
-    // calc num max data.
-    var totalDataCount = 0;
-    for (var i = 0; i < rsBlocks.length; i++) {
-      totalDataCount += rsBlocks[i].dataCount;
-    }
-
-    if (buffer.getLengthInBits() > totalDataCount * 8) {
-      throw new Error("code length overflow. (" +
-      buffer.getLengthInBits() +
-      ">" +
-      totalDataCount * 8 +
-      ")");
-    }
-
-    // end code
-    if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
-      buffer.put(0, 4);
-    }
-
-    // padding
-    while (buffer.getLengthInBits() % 8 != 0) {
-      buffer.putBit(false);
-    }
-
-    // padding
-    while (true) {
-
-      if (buffer.getLengthInBits() >= totalDataCount * 8) {
-        break;
-      }
-      buffer.put(QRCode.PAD0, 8);
-
-      if (buffer.getLengthInBits() >= totalDataCount * 8) {
-        break;
-      }
-      buffer.put(QRCode.PAD1, 8);
-    }
-
-    return QRCode.createBytes(buffer, rsBlocks);
-  };
-
-  QRCode.createBytes = function (buffer, rsBlocks) {
-
-    var offset = 0;
-
-    var maxDcCount = 0;
-    var maxEcCount = 0;
-
-    var dcdata = new Array(rsBlocks.length);
-    var ecdata = new Array(rsBlocks.length);
-
-    for (var r = 0; r < rsBlocks.length; r++) {
-
-      var dcCount = rsBlocks[r].dataCount;
-      var ecCount = rsBlocks[r].totalCount - dcCount;
-
-      maxDcCount = Math.max(maxDcCount, dcCount);
-      maxEcCount = Math.max(maxEcCount, ecCount);
-
-      dcdata[r] = new Array(dcCount);
-
-      for (var i = 0; i < dcdata[r].length; i++) {
-        dcdata[r][i] = 0xff & buffer.buffer[i + offset];
-      }
-      offset += dcCount;
-
-      var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
-      var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
-
-      var modPoly = rawPoly.mod(rsPoly);
-      ecdata[r] = new Array(rsPoly.getLength() - 1);
-      for (var i = 0; i < ecdata[r].length; i++) {
-        var modIndex = i + modPoly.getLength() - ecdata[r].length;
-        ecdata[r][i] = modIndex >= 0 ? modPoly.get(modIndex) : 0;
-      }
-
-    }
-
-    var totalCodeCount = 0;
-    for (var i = 0; i < rsBlocks.length; i++) {
-      totalCodeCount += rsBlocks[i].totalCount;
-    }
-
-    var data = new Array(totalCodeCount);
-    var index = 0;
-
-    for (var i = 0; i < maxDcCount; i++) {
-      for (var r = 0; r < rsBlocks.length; r++) {
-        if (i < dcdata[r].length) {
-          data[index++] = dcdata[r][i];
-        }
-      }
-    }
-
-    for (var i = 0; i < maxEcCount; i++) {
-      for (var r = 0; r < rsBlocks.length; r++) {
-        if (i < ecdata[r].length) {
-          data[index++] = ecdata[r][i];
-        }
-      }
-    }
-
-    return data;
-
-  };
-
-  //---------------------------------------------------------------------
-  // QRMode
-  //---------------------------------------------------------------------
-
-  var QRMode = {
-    MODE_NUMBER: 1 << 0,
-    MODE_ALPHA_NUM: 1 << 1,
-    MODE_8BIT_BYTE: 1 << 2,
-    MODE_KANJI: 1 << 3 };
-
-
-  //---------------------------------------------------------------------
-  // QRErrorCorrectLevel
-  //---------------------------------------------------------------------
-
-  var QRErrorCorrectLevel = {
-    L: 1,
-    M: 0,
-    Q: 3,
-    H: 2 };
-
-
-  //---------------------------------------------------------------------
-  // QRMaskPattern
-  //---------------------------------------------------------------------
-
-  var QRMaskPattern = {
-    PATTERN000: 0,
-    PATTERN001: 1,
-    PATTERN010: 2,
-    PATTERN011: 3,
-    PATTERN100: 4,
-    PATTERN101: 5,
-    PATTERN110: 6,
-    PATTERN111: 7 };
-
-
-  //---------------------------------------------------------------------
-  // QRUtil
-  //---------------------------------------------------------------------
-
-  var QRUtil = {
-
-    PATTERN_POSITION_TABLE: [
-    [],
-    [6, 18],
-    [6, 22],
-    [6, 26],
-    [6, 30],
-    [6, 34],
-    [6, 22, 38],
-    [6, 24, 42],
-    [6, 26, 46],
-    [6, 28, 50],
-    [6, 30, 54],
-    [6, 32, 58],
-    [6, 34, 62],
-    [6, 26, 46, 66],
-    [6, 26, 48, 70],
-    [6, 26, 50, 74],
-    [6, 30, 54, 78],
-    [6, 30, 56, 82],
-    [6, 30, 58, 86],
-    [6, 34, 62, 90],
-    [6, 28, 50, 72, 94],
-    [6, 26, 50, 74, 98],
-    [6, 30, 54, 78, 102],
-    [6, 28, 54, 80, 106],
-    [6, 32, 58, 84, 110],
-    [6, 30, 58, 86, 114],
-    [6, 34, 62, 90, 118],
-    [6, 26, 50, 74, 98, 122],
-    [6, 30, 54, 78, 102, 126],
-    [6, 26, 52, 78, 104, 130],
-    [6, 30, 56, 82, 108, 134],
-    [6, 34, 60, 86, 112, 138],
-    [6, 30, 58, 86, 114, 142],
-    [6, 34, 62, 90, 118, 146],
-    [6, 30, 54, 78, 102, 126, 150],
-    [6, 24, 50, 76, 102, 128, 154],
-    [6, 28, 54, 80, 106, 132, 158],
-    [6, 32, 58, 84, 110, 136, 162],
-    [6, 26, 54, 82, 110, 138, 166],
-    [6, 30, 58, 86, 114, 142, 170]],
-
-
-    G15: 1 << 10 | 1 << 8 | 1 << 5 | 1 << 4 | 1 << 2 | 1 << 1 | 1 << 0,
-    G18: 1 << 12 | 1 << 11 | 1 << 10 | 1 << 9 | 1 << 8 | 1 << 5 | 1 << 2 | 1 << 0,
-    G15_MASK: 1 << 14 | 1 << 12 | 1 << 10 | 1 << 4 | 1 << 1,
-
-    getBCHTypeInfo: function getBCHTypeInfo(data) {
-      var d = data << 10;
-      while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
-        d ^= QRUtil.G15 << QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15);
-      }
-      return (data << 10 | d) ^ QRUtil.G15_MASK;
-    },
-
-    getBCHTypeNumber: function getBCHTypeNumber(data) {
-      var d = data << 12;
-      while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
-        d ^= QRUtil.G18 << QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18);
-      }
-      return data << 12 | d;
-    },
-
-    getBCHDigit: function getBCHDigit(data) {
-
-      var digit = 0;
-
-      while (data != 0) {
-        digit++;
-        data >>>= 1;
-      }
-
-      return digit;
-    },
-
-    getPatternPosition: function getPatternPosition(typeNumber) {
-      return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
-    },
-
-    getMask: function getMask(maskPattern, i, j) {
-
-      switch (maskPattern) {
-
-        case QRMaskPattern.PATTERN000:
-          return (i + j) % 2 == 0;
-        case QRMaskPattern.PATTERN001:
-          return i % 2 == 0;
-        case QRMaskPattern.PATTERN010:
-          return j % 3 == 0;
-        case QRMaskPattern.PATTERN011:
-          return (i + j) % 3 == 0;
-        case QRMaskPattern.PATTERN100:
-          return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 == 0;
-        case QRMaskPattern.PATTERN101:
-          return i * j % 2 + i * j % 3 == 0;
-        case QRMaskPattern.PATTERN110:
-          return (i * j % 2 + i * j % 3) % 2 == 0;
-        case QRMaskPattern.PATTERN111:
-          return (i * j % 3 + (i + j) % 2) % 2 == 0;
-
-        default:
-          throw new Error("bad maskPattern:" + maskPattern);}
-
-    },
-
-    getErrorCorrectPolynomial: function getErrorCorrectPolynomial(errorCorrectLength) {
-
-      var a = new QRPolynomial([1], 0);
-
-      for (var i = 0; i < errorCorrectLength; i++) {
-        a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0));
-      }
-
-      return a;
-    },
-
-    getLengthInBits: function getLengthInBits(mode, type) {
-
-      if (1 <= type && type < 10) {
-
-        // 1 - 9
-
-        switch (mode) {
-          case QRMode.MODE_NUMBER:
-            return 10;
-          case QRMode.MODE_ALPHA_NUM:
-            return 9;
-          case QRMode.MODE_8BIT_BYTE:
-            return 8;
-          case QRMode.MODE_KANJI:
-            return 8;
-          default:
-            throw new Error("mode:" + mode);}
-
-
-      } else if (type < 27) {
-
-        // 10 - 26
-
-        switch (mode) {
-          case QRMode.MODE_NUMBER:
-            return 12;
-          case QRMode.MODE_ALPHA_NUM:
-            return 11;
-          case QRMode.MODE_8BIT_BYTE:
-            return 16;
-          case QRMode.MODE_KANJI:
-            return 10;
-          default:
-            throw new Error("mode:" + mode);}
-
-
-      } else if (type < 41) {
-
-        // 27 - 40
-
-        switch (mode) {
-          case QRMode.MODE_NUMBER:
-            return 14;
-          case QRMode.MODE_ALPHA_NUM:
-            return 13;
-          case QRMode.MODE_8BIT_BYTE:
-            return 16;
-          case QRMode.MODE_KANJI:
-            return 12;
-          default:
-            throw new Error("mode:" + mode);}
-
-
-      } else {
-        throw new Error("type:" + type);
-      }
-    },
-
-    getLostPoint: function getLostPoint(qrCode) {
-
-      var moduleCount = qrCode.getModuleCount();
-
-      var lostPoint = 0;
-
-      // LEVEL1
-
-      for (var row = 0; row < moduleCount; row++) {
-
-        for (var col = 0; col < moduleCount; col++) {
-
-          var sameCount = 0;
-          var dark = qrCode.isDark(row, col);
-
-          for (var r = -1; r <= 1; r++) {
-
-            if (row + r < 0 || moduleCount <= row + r) {
-              continue;
-            }
-
-            for (var c = -1; c <= 1; c++) {
-
-              if (col + c < 0 || moduleCount <= col + c) {
-                continue;
-              }
-
-              if (r == 0 && c == 0) {
-                continue;
-              }
-
-              if (dark == qrCode.isDark(row + r, col + c)) {
-                sameCount++;
-              }
-            }
-          }
-
-          if (sameCount > 5) {
-            lostPoint += 3 + sameCount - 5;
-          }
-        }
-      }
-
-      // LEVEL2
-
-      for (var row = 0; row < moduleCount - 1; row++) {
-        for (var col = 0; col < moduleCount - 1; col++) {
-          var count = 0;
-          if (qrCode.isDark(row, col)) count++;
-          if (qrCode.isDark(row + 1, col)) count++;
-          if (qrCode.isDark(row, col + 1)) count++;
-          if (qrCode.isDark(row + 1, col + 1)) count++;
-          if (count == 0 || count == 4) {
-            lostPoint += 3;
-          }
-        }
-      }
-
-      // LEVEL3
-
-      for (var row = 0; row < moduleCount; row++) {
-        for (var col = 0; col < moduleCount - 6; col++) {
-          if (qrCode.isDark(row, col) &&
-          !qrCode.isDark(row, col + 1) &&
-          qrCode.isDark(row, col + 2) &&
-          qrCode.isDark(row, col + 3) &&
-          qrCode.isDark(row, col + 4) &&
-          !qrCode.isDark(row, col + 5) &&
-          qrCode.isDark(row, col + 6)) {
-            lostPoint += 40;
-          }
-        }
-      }
-
-      for (var col = 0; col < moduleCount; col++) {
-        for (var row = 0; row < moduleCount - 6; row++) {
-          if (qrCode.isDark(row, col) &&
-          !qrCode.isDark(row + 1, col) &&
-          qrCode.isDark(row + 2, col) &&
-          qrCode.isDark(row + 3, col) &&
-          qrCode.isDark(row + 4, col) &&
-          !qrCode.isDark(row + 5, col) &&
-          qrCode.isDark(row + 6, col)) {
-            lostPoint += 40;
-          }
-        }
-      }
-
-      // LEVEL4
-
-      var darkCount = 0;
-
-      for (var col = 0; col < moduleCount; col++) {
-        for (var row = 0; row < moduleCount; row++) {
-          if (qrCode.isDark(row, col)) {
-            darkCount++;
-          }
-        }
-      }
-
-      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
-      lostPoint += ratio * 10;
-
-      return lostPoint;
-    } };
-
-
-
-
-  //---------------------------------------------------------------------
-  // QRMath
-  //---------------------------------------------------------------------
-
-  var QRMath = {
-
-    glog: function glog(n) {
-
-      if (n < 1) {
-        throw new Error("glog(" + n + ")");
-      }
-
-      return QRMath.LOG_TABLE[n];
-    },
-
-    gexp: function gexp(n) {
-
-      while (n < 0) {
-        n += 255;
-      }
-
-      while (n >= 256) {
-        n -= 255;
-      }
-
-      return QRMath.EXP_TABLE[n];
-    },
-
-    EXP_TABLE: new Array(256),
-
-    LOG_TABLE: new Array(256) };
-
-
-
-  for (var i = 0; i < 8; i++) {
-    QRMath.EXP_TABLE[i] = 1 << i;
-  }
-  for (var i = 8; i < 256; i++) {
-    QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4] ^
-    QRMath.EXP_TABLE[i - 5] ^
-    QRMath.EXP_TABLE[i - 6] ^
-    QRMath.EXP_TABLE[i - 8];
-  }
-  for (var i = 0; i < 255; i++) {
-    QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
-  }
-
-  //---------------------------------------------------------------------
-  // QRPolynomial
-  //---------------------------------------------------------------------
-
-  function QRPolynomial(num, shift) {
-
-    if (num.length == undefined) {
-      throw new Error(num.length + "/" + shift);
-    }
-
-    var offset = 0;
-
-    while (offset < num.length && num[offset] == 0) {
-      offset++;
-    }
-
-    this.num = new Array(num.length - offset + shift);
-    for (var i = 0; i < num.length - offset; i++) {
-      this.num[i] = num[i + offset];
-    }
-  }
-
-  QRPolynomial.prototype = {
-
-    get: function get(index) {
-      return this.num[index];
-    },
-
-    getLength: function getLength() {
-      return this.num.length;
-    },
-
-    multiply: function multiply(e) {
-
-      var num = new Array(this.getLength() + e.getLength() - 1);
-
-      for (var i = 0; i < this.getLength(); i++) {
-        for (var j = 0; j < e.getLength(); j++) {
-          num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
-        }
-      }
-
-      return new QRPolynomial(num, 0);
-    },
-
-    mod: function mod(e) {
-
-      if (this.getLength() - e.getLength() < 0) {
-        return this;
-      }
-
-      var ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0));
-
-      var num = new Array(this.getLength());
-
-      for (var i = 0; i < this.getLength(); i++) {
-        num[i] = this.get(i);
-      }
-
-      for (var i = 0; i < e.getLength(); i++) {
-        num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
-      }
-
-      // recursive call
-      return new QRPolynomial(num, 0).mod(e);
-    } };
-
-
-  //---------------------------------------------------------------------
-  // QRRSBlock
-  //---------------------------------------------------------------------
-
-  function QRRSBlock(totalCount, dataCount) {
-    this.totalCount = totalCount;
-    this.dataCount = dataCount;
-  }
-
-  QRRSBlock.RS_BLOCK_TABLE = [
-
-  // L
-  // M
-  // Q
-  // H
-
-  // 1
-  [1, 26, 19],
-  [1, 26, 16],
-  [1, 26, 13],
-  [1, 26, 9],
-
-  // 2
-  [1, 44, 34],
-  [1, 44, 28],
-  [1, 44, 22],
-  [1, 44, 16],
-
-  // 3
-  [1, 70, 55],
-  [1, 70, 44],
-  [2, 35, 17],
-  [2, 35, 13],
-
-  // 4		
-  [1, 100, 80],
-  [2, 50, 32],
-  [2, 50, 24],
-  [4, 25, 9],
-
-  // 5
-  [1, 134, 108],
-  [2, 67, 43],
-  [2, 33, 15, 2, 34, 16],
-  [2, 33, 11, 2, 34, 12],
-
-  // 6
-  [2, 86, 68],
-  [4, 43, 27],
-  [4, 43, 19],
-  [4, 43, 15],
-
-  // 7		
-  [2, 98, 78],
-  [4, 49, 31],
-  [2, 32, 14, 4, 33, 15],
-  [4, 39, 13, 1, 40, 14],
-
-  // 8
-  [2, 121, 97],
-  [2, 60, 38, 2, 61, 39],
-  [4, 40, 18, 2, 41, 19],
-  [4, 40, 14, 2, 41, 15],
-
-  // 9
-  [2, 146, 116],
-  [3, 58, 36, 2, 59, 37],
-  [4, 36, 16, 4, 37, 17],
-  [4, 36, 12, 4, 37, 13],
-
-  // 10		
-  [2, 86, 68, 2, 87, 69],
-  [4, 69, 43, 1, 70, 44],
-  [6, 43, 19, 2, 44, 20],
-  [6, 43, 15, 2, 44, 16],
-
-  // 11
-  [4, 101, 81],
-  [1, 80, 50, 4, 81, 51],
-  [4, 50, 22, 4, 51, 23],
-  [3, 36, 12, 8, 37, 13],
-
-  // 12
-  [2, 116, 92, 2, 117, 93],
-  [6, 58, 36, 2, 59, 37],
-  [4, 46, 20, 6, 47, 21],
-  [7, 42, 14, 4, 43, 15],
-
-  // 13
-  [4, 133, 107],
-  [8, 59, 37, 1, 60, 38],
-  [8, 44, 20, 4, 45, 21],
-  [12, 33, 11, 4, 34, 12],
-
-  // 14
-  [3, 145, 115, 1, 146, 116],
-  [4, 64, 40, 5, 65, 41],
-  [11, 36, 16, 5, 37, 17],
-  [11, 36, 12, 5, 37, 13],
-
-  // 15
-  [5, 109, 87, 1, 110, 88],
-  [5, 65, 41, 5, 66, 42],
-  [5, 54, 24, 7, 55, 25],
-  [11, 36, 12],
-
-  // 16
-  [5, 122, 98, 1, 123, 99],
-  [7, 73, 45, 3, 74, 46],
-  [15, 43, 19, 2, 44, 20],
-  [3, 45, 15, 13, 46, 16],
-
-  // 17
-  [1, 135, 107, 5, 136, 108],
-  [10, 74, 46, 1, 75, 47],
-  [1, 50, 22, 15, 51, 23],
-  [2, 42, 14, 17, 43, 15],
-
-  // 18
-  [5, 150, 120, 1, 151, 121],
-  [9, 69, 43, 4, 70, 44],
-  [17, 50, 22, 1, 51, 23],
-  [2, 42, 14, 19, 43, 15],
-
-  // 19
-  [3, 141, 113, 4, 142, 114],
-  [3, 70, 44, 11, 71, 45],
-  [17, 47, 21, 4, 48, 22],
-  [9, 39, 13, 16, 40, 14],
-
-  // 20
-  [3, 135, 107, 5, 136, 108],
-  [3, 67, 41, 13, 68, 42],
-  [15, 54, 24, 5, 55, 25],
-  [15, 43, 15, 10, 44, 16],
-
-  // 21
-  [4, 144, 116, 4, 145, 117],
-  [17, 68, 42],
-  [17, 50, 22, 6, 51, 23],
-  [19, 46, 16, 6, 47, 17],
-
-  // 22
-  [2, 139, 111, 7, 140, 112],
-  [17, 74, 46],
-  [7, 54, 24, 16, 55, 25],
-  [34, 37, 13],
-
-  // 23
-  [4, 151, 121, 5, 152, 122],
-  [4, 75, 47, 14, 76, 48],
-  [11, 54, 24, 14, 55, 25],
-  [16, 45, 15, 14, 46, 16],
-
-  // 24
-  [6, 147, 117, 4, 148, 118],
-  [6, 73, 45, 14, 74, 46],
-  [11, 54, 24, 16, 55, 25],
-  [30, 46, 16, 2, 47, 17],
-
-  // 25
-  [8, 132, 106, 4, 133, 107],
-  [8, 75, 47, 13, 76, 48],
-  [7, 54, 24, 22, 55, 25],
-  [22, 45, 15, 13, 46, 16],
-
-  // 26
-  [10, 142, 114, 2, 143, 115],
-  [19, 74, 46, 4, 75, 47],
-  [28, 50, 22, 6, 51, 23],
-  [33, 46, 16, 4, 47, 17],
-
-  // 27
-  [8, 152, 122, 4, 153, 123],
-  [22, 73, 45, 3, 74, 46],
-  [8, 53, 23, 26, 54, 24],
-  [12, 45, 15, 28, 46, 16],
-
-  // 28
-  [3, 147, 117, 10, 148, 118],
-  [3, 73, 45, 23, 74, 46],
-  [4, 54, 24, 31, 55, 25],
-  [11, 45, 15, 31, 46, 16],
-
-  // 29
-  [7, 146, 116, 7, 147, 117],
-  [21, 73, 45, 7, 74, 46],
-  [1, 53, 23, 37, 54, 24],
-  [19, 45, 15, 26, 46, 16],
-
-  // 30
-  [5, 145, 115, 10, 146, 116],
-  [19, 75, 47, 10, 76, 48],
-  [15, 54, 24, 25, 55, 25],
-  [23, 45, 15, 25, 46, 16],
-
-  // 31
-  [13, 145, 115, 3, 146, 116],
-  [2, 74, 46, 29, 75, 47],
-  [42, 54, 24, 1, 55, 25],
-  [23, 45, 15, 28, 46, 16],
-
-  // 32
-  [17, 145, 115],
-  [10, 74, 46, 23, 75, 47],
-  [10, 54, 24, 35, 55, 25],
-  [19, 45, 15, 35, 46, 16],
-
-  // 33
-  [17, 145, 115, 1, 146, 116],
-  [14, 74, 46, 21, 75, 47],
-  [29, 54, 24, 19, 55, 25],
-  [11, 45, 15, 46, 46, 16],
-
-  // 34
-  [13, 145, 115, 6, 146, 116],
-  [14, 74, 46, 23, 75, 47],
-  [44, 54, 24, 7, 55, 25],
-  [59, 46, 16, 1, 47, 17],
-
-  // 35
-  [12, 151, 121, 7, 152, 122],
-  [12, 75, 47, 26, 76, 48],
-  [39, 54, 24, 14, 55, 25],
-  [22, 45, 15, 41, 46, 16],
-
-  // 36
-  [6, 151, 121, 14, 152, 122],
-  [6, 75, 47, 34, 76, 48],
-  [46, 54, 24, 10, 55, 25],
-  [2, 45, 15, 64, 46, 16],
-
-  // 37
-  [17, 152, 122, 4, 153, 123],
-  [29, 74, 46, 14, 75, 47],
-  [49, 54, 24, 10, 55, 25],
-  [24, 45, 15, 46, 46, 16],
-
-  // 38
-  [4, 152, 122, 18, 153, 123],
-  [13, 74, 46, 32, 75, 47],
-  [48, 54, 24, 14, 55, 25],
-  [42, 45, 15, 32, 46, 16],
-
-  // 39
-  [20, 147, 117, 4, 148, 118],
-  [40, 75, 47, 7, 76, 48],
-  [43, 54, 24, 22, 55, 25],
-  [10, 45, 15, 67, 46, 16],
-
-  // 40
-  [19, 148, 118, 6, 149, 119],
-  [18, 75, 47, 31, 76, 48],
-  [34, 54, 24, 34, 55, 25],
-  [20, 45, 15, 61, 46, 16]];
-
-
-  QRRSBlock.getRSBlocks = function (typeNumber, errorCorrectLevel) {
-
-    var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
-
-    if (rsBlock == undefined) {
-      throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
-    }
-
-    var length = rsBlock.length / 3;
-
-    var list = new Array();
-
-    for (var i = 0; i < length; i++) {
-
-      var count = rsBlock[i * 3 + 0];
-      var totalCount = rsBlock[i * 3 + 1];
-      var dataCount = rsBlock[i * 3 + 2];
-
-      for (var j = 0; j < count; j++) {
-        list.push(new QRRSBlock(totalCount, dataCount));
-      }
-    }
-
-    return list;
-  };
-
-  QRRSBlock.getRsBlockTable = function (typeNumber, errorCorrectLevel) {
-
-    switch (errorCorrectLevel) {
-      case QRErrorCorrectLevel.L:
-        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
-      case QRErrorCorrectLevel.M:
-        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
-      case QRErrorCorrectLevel.Q:
-        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
-      case QRErrorCorrectLevel.H:
-        return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
-      default:
-        return undefined;}
-
-  };
-
-  //---------------------------------------------------------------------
-  // QRBitBuffer
-  //---------------------------------------------------------------------
-
-  function QRBitBuffer() {
-    this.buffer = new Array();
-    this.length = 0;
-  }
-
-  QRBitBuffer.prototype = {
-
-    get: function get(index) {
-      var bufIndex = Math.floor(index / 8);
-      return (this.buffer[bufIndex] >>> 7 - index % 8 & 1) == 1;
-    },
-
-    put: function put(num, length) {
-      for (var i = 0; i < length; i++) {
-        this.putBit((num >>> length - i - 1 & 1) == 1);
-      }
-    },
-
-    getLengthInBits: function getLengthInBits() {
-      return this.length;
-    },
-
-    putBit: function putBit(bit) {
-
-      var bufIndex = Math.floor(this.length / 8);
-      if (this.buffer.length <= bufIndex) {
-        this.buffer.push(0);
-      }
-
-      if (bit) {
-        this.buffer[bufIndex] |= 0x80 >>> this.length % 8;
-      }
-
-      this.length++;
-    } };
-
-
-  //---------------------------------------------------------------------
-  // Support Chinese
-  //---------------------------------------------------------------------
-  function utf16To8(text) {
-    var result = '';
-    var c;
-    for (var i = 0; i < text.length; i++) {
-      c = text.charCodeAt(i);
-      if (c >= 0x0001 && c <= 0x007F) {
-        result += text.charAt(i);
-      } else if (c > 0x07FF) {
-        result += String.fromCharCode(0xE0 | c >> 12 & 0x0F);
-        result += String.fromCharCode(0x80 | c >> 6 & 0x3F);
-        result += String.fromCharCode(0x80 | c >> 0 & 0x3F);
-      } else {
-        result += String.fromCharCode(0xC0 | c >> 6 & 0x1F);
-        result += String.fromCharCode(0x80 | c >> 0 & 0x3F);
-      }
-    }
-    return result;
-  }
-
-  uQRCode = {
-
-    defaults: {
-      size: 258,
-      margin: 0,
-      backgroundColor: '#ffffff',
-      foregroundColor: '#000000',
-      fileType: 'png', // 'jpg', 'png'
-      correctLevel: 3,
-      typeNumber: -1 },
-
-
-    make: function make(options) {
-      var defaultOptions = {
-        canvasId: options.canvasId,
-        componentInstance: options.componentInstance,
-        text: options.text,
-        size: this.defaults.size,
-        margin: this.defaults.margin,
-        backgroundColor: this.defaults.backgroundColor,
-        foregroundColor: this.defaults.foregroundColor,
-        fileType: this.defaults.fileType,
-        correctLevel: this.defaults.correctLevel,
-        typeNumber: this.defaults.typeNumber };
-
-      if (options) {
-        for (var i in options) {
-          defaultOptions[i] = options[i];
-        }
-      }
-      options = defaultOptions;
-      if (!options.canvasId) {
-        console.error('uQRCode: Please set canvasId!');
-        return;
-      }
-
-      function createCanvas() {
-        var qrcode = new QRCode(options.typeNumber, options.correctLevel);
-        qrcode.addData(utf16To8(options.text));
-        qrcode.make();
-
-        var ctx = uni.createCanvasContext(options.canvasId, options.componentInstance);
-        ctx.setFillStyle(options.backgroundColor);
-        ctx.fillRect(0, 0, options.size, options.size);
-
-        var tileW = (options.size - options.margin * 2) / qrcode.getModuleCount();
-        var tileH = tileW;
-
-        for (var row = 0; row < qrcode.getModuleCount(); row++) {
-          for (var col = 0; col < qrcode.getModuleCount(); col++) {
-            var style = qrcode.isDark(row, col) ? options.foregroundColor : options.backgroundColor;
-            ctx.setFillStyle(style);
-            var x = Math.round(col * tileW) + options.margin;
-            var y = Math.round(row * tileH) + options.margin;
-            var w = Math.ceil((col + 1) * tileW) - Math.floor(col * tileW);
-            var h = Math.ceil((row + 1) * tileW) - Math.floor(row * tileW);
-            ctx.fillRect(x, y, w, h);
-          }
-        }
-
-        setTimeout(function () {
-          ctx.draw(false, function () {
-            setTimeout(function () {
-              uni.canvasToTempFilePath({
-                canvasId: options.canvasId,
-                fileType: options.fileType,
-                width: options.size,
-                height: options.size,
-                destWidth: options.size,
-                destHeight: options.size,
-                success: function success(res) {
-                  options.success && options.success(res.tempFilePath);
-                },
-                fail: function fail(error) {
-                  options.fail && options.fail(error);
-                },
-                complete: function complete(res) {
-                  options.complete && options.complete(res);
-                } },
-              options.componentInstance);
-            }, options.text.length + 100);
-          });
-        }, 150);
-      }
-
-      createCanvas();
-    } };
-
-
-
-})();var _default =
-
-uQRCode;exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 225:
-/*!*******************************************!*\
-  !*** D:/UAD/Jdt-zhcx/common/BCFW/bcfw.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
-
-//接口域名
-var Url = 'http://111.231.109.113:8004';
-
-//接口对象
-var Interface = {
-  spt_GetcouponByuserId: {
-    value: Url + '/api/bc/GetcouponByuserId',
-    name: '包车订单-优惠券列表',
-    method: 'POST',
-    pages: ["LYFW/scenicSpotTickets/orderAdd.vue"] },
-
-
-  spt_scenicSpotSetOrder: {
-    value: Url + '/api/app/scenicSpotSetOrder',
-    name: '包车订单-H5提交订单',
-    method: 'POST',
-    pages: ["BCFW//bf_information.vue"] },
-
-
-  spt_AddtouristOrder: {
-    value: Url + '/api/Chartered/AddCharteredOrder_Passenger',
-    name: '包车订单-APP提交订单',
-    method: 'POST',
-    pages: ["BCFW/bf_information.vue"] },
-
-
-  spt_RequestTicketsList: {
-    value: Url + '/api/Chartered/QueryCharteredOrderByUserID_Passenger',
-    name: '订单列表',
-    method: 'POST',
-    pages: ["order/OrderList.vue"] },
-
-
-  spt_RequestTickets: {
-    value: Url + '/api/Chartered/QuerySpecialLineOrder_Passenger',
-    name: '订单-去支付',
-    method: 'POST',
-    pages: ["BCFW/charteredBusPayment.vue"] },
-
-
-  spt_CancelTickets: {
-    value: Url + '/api/Chartered/CancelCharteredOrder_Passenger',
-    name: '订单-取消',
-    method: 'POST',
-    pages: ["BCFW/charteredBusPayment.vue", "order/OrderList.vue"] },
-
-
-  spt_DeleteTickets: {
-    value: Url + '/api/Chartered/DeleteCharteredOrder_Passenger',
-    name: '订单-删除',
-    method: 'POST',
-    pages: ["order/OrderList.vue"] },
-
-
-  spt_Pay: {
-    value: Url + '/api/bc/Pay',
-    name: '订单-请求支付参数',
-    method: 'POST',
-    pages: ["BCFW/charteredBusPayment.vue"] },
-
-
-  fw_selectSpecialLine: {
-    value: Url + '/api/Chartered/GetCharteredAllLine_Passenger',
-    name: '包车-选择专线',
-    method: 'POST',
-    pages: ["BCFW/bf_choice.vue"] },
-
-
-  fw_privateLineSearch: {
-    value: Url + '/api/Chartered/GetCharteredLineByLineName_Passenger',
-    name: '包车-选择专线搜索',
-    method: 'POST',
-    pages: ["BCFW/bf_choice.vue"] },
-
-
-  fw_selectVehicle: {
-    value: Url + '/api/Chartered/GetVehicleType_Passenger',
-    name: '包车-选择车辆',
-    method: 'POST',
-    pages: ["BCFW/bf_choiceVehicleType.vue"] } };
-
-
-
-
-var InterfaceAddress = [
-//根据起终点经纬度获取线路规划
-//使用页面 - /CZC/CallAndDrive - 
-'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat',
-//获取所有车辆定位数据
-'http://111.231.109.113:8002/api/zhcx/getAllVehiclePosition',
-//根据经纬度获取附近一定范围的经纬度
-'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition'];
-
-
-// 接口声明区
-var _default = {
-  Interface: Interface,
-  InterfaceAddress: InterfaceAddress };exports.default = _default;
 
 /***/ }),
 
@@ -12512,17 +12523,6 @@ var _default = {
 
 /***/ }),
 
-/***/ 262:
-/*!**************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/libs/qqmap-wx-jssdk.min.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}var ERROR_CONF = { KEY_ERR: 311, KEY_ERR_MSG: 'key格式错误', PARAM_ERR: 310, PARAM_ERR_MSG: '请求参数信息有误', SYSTEM_ERR: 600, SYSTEM_ERR_MSG: '系统错误', WX_ERR_CODE: 1000, WX_OK_CODE: 200 };var BASE_URL = 'https://apis.map.qq.com/ws/';var URL_SEARCH = BASE_URL + 'place/v1/search';var URL_SUGGESTION = BASE_URL + 'place/v1/suggestion';var URL_GET_GEOCODER = BASE_URL + 'geocoder/v1/';var URL_CITY_LIST = BASE_URL + 'district/v1/list';var URL_AREA_LIST = BASE_URL + 'district/v1/getchildren';var URL_DISTANCE = BASE_URL + 'distance/v1/';var URL_DIRECTION = BASE_URL + 'direction/v1/';var MODE = { driving: 'driving', transit: 'transit' };var EARTH_RADIUS = 6378136.49;var Utils = { safeAdd: function safeAdd(x, y) {var lsw = (x & 0xffff) + (y & 0xffff);var msw = (x >> 16) + (y >> 16) + (lsw >> 16);return msw << 16 | lsw & 0xffff;}, bitRotateLeft: function bitRotateLeft(num, cnt) {return num << cnt | num >>> 32 - cnt;}, md5cmn: function md5cmn(q, a, b, x, s, t) {return this.safeAdd(this.bitRotateLeft(this.safeAdd(this.safeAdd(a, q), this.safeAdd(x, t)), s), b);}, md5ff: function md5ff(a, b, c, d, x, s, t) {return this.md5cmn(b & c | ~b & d, a, b, x, s, t);}, md5gg: function md5gg(a, b, c, d, x, s, t) {return this.md5cmn(b & d | c & ~d, a, b, x, s, t);}, md5hh: function md5hh(a, b, c, d, x, s, t) {return this.md5cmn(b ^ c ^ d, a, b, x, s, t);}, md5ii: function md5ii(a, b, c, d, x, s, t) {return this.md5cmn(c ^ (b | ~d), a, b, x, s, t);}, binlMD5: function binlMD5(x, len) {x[len >> 5] |= 0x80 << len % 32;x[(len + 64 >>> 9 << 4) + 14] = len;var i;var olda;var oldb;var oldc;var oldd;var a = 1732584193;var b = -271733879;var c = -1732584194;var d = 271733878;for (i = 0; i < x.length; i += 16) {olda = a;oldb = b;oldc = c;oldd = d;a = this.md5ff(a, b, c, d, x[i], 7, -680876936);d = this.md5ff(d, a, b, c, x[i + 1], 12, -389564586);c = this.md5ff(c, d, a, b, x[i + 2], 17, 606105819);b = this.md5ff(b, c, d, a, x[i + 3], 22, -1044525330);a = this.md5ff(a, b, c, d, x[i + 4], 7, -176418897);d = this.md5ff(d, a, b, c, x[i + 5], 12, 1200080426);c = this.md5ff(c, d, a, b, x[i + 6], 17, -1473231341);b = this.md5ff(b, c, d, a, x[i + 7], 22, -45705983);a = this.md5ff(a, b, c, d, x[i + 8], 7, 1770035416);d = this.md5ff(d, a, b, c, x[i + 9], 12, -1958414417);c = this.md5ff(c, d, a, b, x[i + 10], 17, -42063);b = this.md5ff(b, c, d, a, x[i + 11], 22, -1990404162);a = this.md5ff(a, b, c, d, x[i + 12], 7, 1804603682);d = this.md5ff(d, a, b, c, x[i + 13], 12, -40341101);c = this.md5ff(c, d, a, b, x[i + 14], 17, -1502002290);b = this.md5ff(b, c, d, a, x[i + 15], 22, 1236535329);a = this.md5gg(a, b, c, d, x[i + 1], 5, -165796510);d = this.md5gg(d, a, b, c, x[i + 6], 9, -1069501632);c = this.md5gg(c, d, a, b, x[i + 11], 14, 643717713);b = this.md5gg(b, c, d, a, x[i], 20, -373897302);a = this.md5gg(a, b, c, d, x[i + 5], 5, -701558691);d = this.md5gg(d, a, b, c, x[i + 10], 9, 38016083);c = this.md5gg(c, d, a, b, x[i + 15], 14, -660478335);b = this.md5gg(b, c, d, a, x[i + 4], 20, -405537848);a = this.md5gg(a, b, c, d, x[i + 9], 5, 568446438);d = this.md5gg(d, a, b, c, x[i + 14], 9, -1019803690);c = this.md5gg(c, d, a, b, x[i + 3], 14, -187363961);b = this.md5gg(b, c, d, a, x[i + 8], 20, 1163531501);a = this.md5gg(a, b, c, d, x[i + 13], 5, -1444681467);d = this.md5gg(d, a, b, c, x[i + 2], 9, -51403784);c = this.md5gg(c, d, a, b, x[i + 7], 14, 1735328473);b = this.md5gg(b, c, d, a, x[i + 12], 20, -1926607734);a = this.md5hh(a, b, c, d, x[i + 5], 4, -378558);d = this.md5hh(d, a, b, c, x[i + 8], 11, -2022574463);c = this.md5hh(c, d, a, b, x[i + 11], 16, 1839030562);b = this.md5hh(b, c, d, a, x[i + 14], 23, -35309556);a = this.md5hh(a, b, c, d, x[i + 1], 4, -1530992060);d = this.md5hh(d, a, b, c, x[i + 4], 11, 1272893353);c = this.md5hh(c, d, a, b, x[i + 7], 16, -155497632);b = this.md5hh(b, c, d, a, x[i + 10], 23, -1094730640);a = this.md5hh(a, b, c, d, x[i + 13], 4, 681279174);d = this.md5hh(d, a, b, c, x[i], 11, -358537222);c = this.md5hh(c, d, a, b, x[i + 3], 16, -722521979);b = this.md5hh(b, c, d, a, x[i + 6], 23, 76029189);a = this.md5hh(a, b, c, d, x[i + 9], 4, -640364487);d = this.md5hh(d, a, b, c, x[i + 12], 11, -421815835);c = this.md5hh(c, d, a, b, x[i + 15], 16, 530742520);b = this.md5hh(b, c, d, a, x[i + 2], 23, -995338651);a = this.md5ii(a, b, c, d, x[i], 6, -198630844);d = this.md5ii(d, a, b, c, x[i + 7], 10, 1126891415);c = this.md5ii(c, d, a, b, x[i + 14], 15, -1416354905);b = this.md5ii(b, c, d, a, x[i + 5], 21, -57434055);a = this.md5ii(a, b, c, d, x[i + 12], 6, 1700485571);d = this.md5ii(d, a, b, c, x[i + 3], 10, -1894986606);c = this.md5ii(c, d, a, b, x[i + 10], 15, -1051523);b = this.md5ii(b, c, d, a, x[i + 1], 21, -2054922799);a = this.md5ii(a, b, c, d, x[i + 8], 6, 1873313359);d = this.md5ii(d, a, b, c, x[i + 15], 10, -30611744);c = this.md5ii(c, d, a, b, x[i + 6], 15, -1560198380);b = this.md5ii(b, c, d, a, x[i + 13], 21, 1309151649);a = this.md5ii(a, b, c, d, x[i + 4], 6, -145523070);d = this.md5ii(d, a, b, c, x[i + 11], 10, -1120210379);c = this.md5ii(c, d, a, b, x[i + 2], 15, 718787259);b = this.md5ii(b, c, d, a, x[i + 9], 21, -343485551);a = this.safeAdd(a, olda);b = this.safeAdd(b, oldb);c = this.safeAdd(c, oldc);d = this.safeAdd(d, oldd);}return [a, b, c, d];}, binl2rstr: function binl2rstr(input) {var i;var output = '';var length32 = input.length * 32;for (i = 0; i < length32; i += 8) {output += String.fromCharCode(input[i >> 5] >>> i % 32 & 0xff);}return output;}, rstr2binl: function rstr2binl(input) {var i;var output = [];output[(input.length >> 2) - 1] = undefined;for (i = 0; i < output.length; i += 1) {output[i] = 0;}var length8 = input.length * 8;for (i = 0; i < length8; i += 8) {output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << i % 32;}return output;}, rstrMD5: function rstrMD5(s) {return this.binl2rstr(this.binlMD5(this.rstr2binl(s), s.length * 8));}, rstrHMACMD5: function rstrHMACMD5(key, data) {var i;var bkey = this.rstr2binl(key);var ipad = [];var opad = [];var hash;ipad[15] = opad[15] = undefined;if (bkey.length > 16) {bkey = this.binlMD5(bkey, key.length * 8);}for (i = 0; i < 16; i += 1) {ipad[i] = bkey[i] ^ 0x36363636;opad[i] = bkey[i] ^ 0x5c5c5c5c;}hash = this.binlMD5(ipad.concat(this.rstr2binl(data)), 512 + data.length * 8);return this.binl2rstr(this.binlMD5(opad.concat(hash), 512 + 128));}, rstr2hex: function rstr2hex(input) {var hexTab = '0123456789abcdef';var output = '';var x;var i;for (i = 0; i < input.length; i += 1) {x = input.charCodeAt(i);output += hexTab.charAt(x >>> 4 & 0x0f) + hexTab.charAt(x & 0x0f);}return output;}, str2rstrUTF8: function str2rstrUTF8(input) {return unescape(encodeURIComponent(input));}, rawMD5: function rawMD5(s) {return this.rstrMD5(this.str2rstrUTF8(s));}, hexMD5: function hexMD5(s) {return this.rstr2hex(this.rawMD5(s));}, rawHMACMD5: function rawHMACMD5(k, d) {return this.rstrHMACMD5(this.str2rstrUTF8(k), str2rstrUTF8(d));}, hexHMACMD5: function hexHMACMD5(k, d) {return this.rstr2hex(this.rawHMACMD5(k, d));}, md5: function md5(string, key, raw) {if (!key) {if (!raw) {return this.hexMD5(string);}return this.rawMD5(string);}if (!raw) {return this.hexHMACMD5(key, string);}return this.rawHMACMD5(key, string);}, getSig: function getSig(requestParam, sk, feature, mode) {var sig = null;var requestArr = [];Object.keys(requestParam).sort().forEach(function (key) {requestArr.push(key + '=' + requestParam[key]);});if (feature == 'search') {sig = '/ws/place/v1/search?' + requestArr.join('&') + sk;}if (feature == 'suggest') {sig = '/ws/place/v1/suggestion?' + requestArr.join('&') + sk;}if (feature == 'reverseGeocoder') {sig = '/ws/geocoder/v1/?' + requestArr.join('&') + sk;}if (feature == 'geocoder') {sig = '/ws/geocoder/v1/?' + requestArr.join('&') + sk;}if (feature == 'getCityList') {sig = '/ws/district/v1/list?' + requestArr.join('&') + sk;}if (feature == 'getDistrictByCityId') {sig = '/ws/district/v1/getchildren?' + requestArr.join('&') + sk;}if (feature == 'calculateDistance') {sig = '/ws/distance/v1/?' + requestArr.join('&') + sk;}if (feature == 'direction') {sig = '/ws/direction/v1/' + mode + '?' + requestArr.join('&') + sk;}sig = this.md5(sig);return sig;}, location2query: function location2query(data) {if (typeof data == 'string') {return data;}var query = '';for (var i = 0; i < data.length; i++) {var d = data[i];if (!!query) {query += ';';}if (d.location) {query = query + d.location.lat + ',' + d.location.lng;}if (d.latitude && d.longitude) {query = query + d.latitude + ',' + d.longitude;}}return query;}, rad: function rad(d) {return d * Math.PI / 180.0;}, getEndLocation: function getEndLocation(location) {var to = location.split(';');var endLocation = [];for (var i = 0; i < to.length; i++) {endLocation.push({ lat: parseFloat(to[i].split(',')[0]), lng: parseFloat(to[i].split(',')[1]) });}return endLocation;}, getDistance: function getDistance(latFrom, lngFrom, latTo, lngTo) {var radLatFrom = this.rad(latFrom);var radLatTo = this.rad(latTo);var a = radLatFrom - radLatTo;var b = this.rad(lngFrom) - this.rad(lngTo);var distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLatFrom) * Math.cos(radLatTo) * Math.pow(Math.sin(b / 2), 2)));distance = distance * EARTH_RADIUS;distance = Math.round(distance * 10000) / 10000;return parseFloat(distance.toFixed(0));}, getWXLocation: function getWXLocation(success, fail, complete) {wx.getLocation({ type: 'gcj02', success: success, fail: fail, complete: complete });}, getLocationParam: function getLocationParam(location) {if (typeof location == 'string') {var locationArr = location.split(',');if (locationArr.length === 2) {location = { latitude: location.split(',')[0], longitude: location.split(',')[1] };} else {location = {};}}return location;}, polyfillParam: function polyfillParam(param) {param.success = param.success || function () {};param.fail = param.fail || function () {};param.complete = param.complete || function () {};}, checkParamKeyEmpty: function checkParamKeyEmpty(param, key) {if (!param[key]) {var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + key + '参数格式有误');param.fail(errconf);param.complete(errconf);return true;}return false;}, checkKeyword: function checkKeyword(param) {return !this.checkParamKeyEmpty(param, 'keyword');}, checkLocation: function checkLocation(param) {var location = this.getLocationParam(param.location);if (!location || !location.latitude || !location.longitude) {var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + ' location参数格式有误');param.fail(errconf);param.complete(errconf);return false;}return true;}, buildErrorConfig: function buildErrorConfig(errCode, errMsg) {return { status: errCode, message: errMsg };}, handleData: function handleData(param, data, feature) {if (feature == 'search') {var searchResult = data.data;var searchSimplify = [];for (var i = 0; i < searchResult.length; i++) {searchSimplify.push({ id: searchResult[i].id || null, title: searchResult[i].title || null, latitude: searchResult[i].location && searchResult[i].location.lat || null, longitude: searchResult[i].location && searchResult[i].location.lng || null, address: searchResult[i].address || null, category: searchResult[i].category || null, tel: searchResult[i].tel || null, adcode: searchResult[i].ad_info && searchResult[i].ad_info.adcode || null, city: searchResult[i].ad_info && searchResult[i].ad_info.city || null, district: searchResult[i].ad_info && searchResult[i].ad_info.district || null, province: searchResult[i].ad_info && searchResult[i].ad_info.province || null });}param.success(data, { searchResult: searchResult, searchSimplify: searchSimplify });} else if (feature == 'suggest') {var suggestResult = data.data;var suggestSimplify = [];for (var i = 0; i < suggestResult.length; i++) {suggestSimplify.push({ adcode: suggestResult[i].adcode || null, address: suggestResult[i].address || null, category: suggestResult[i].category || null, city: suggestResult[i].city || null, district: suggestResult[i].district || null, id: suggestResult[i].id || null, latitude: suggestResult[i].location && suggestResult[i].location.lat || null, longitude: suggestResult[i].location && suggestResult[i].location.lng || null, province: suggestResult[i].province || null, title: suggestResult[i].title || null, type: suggestResult[i].type || null });}param.success(data, { suggestResult: suggestResult, suggestSimplify: suggestSimplify });} else if (feature == 'reverseGeocoder') {var reverseGeocoderResult = data.result;var reverseGeocoderSimplify = { address: reverseGeocoderResult.address || null, latitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lat || null, longitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lng || null, adcode: reverseGeocoderResult.ad_info && reverseGeocoderResult.ad_info.adcode || null, city: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.city || null, district: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.district || null, nation: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.nation || null, province: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.province || null, street: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street || null, street_number: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street_number || null, recommend: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.recommend || null, rough: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.rough || null };if (reverseGeocoderResult.pois) {var pois = reverseGeocoderResult.pois;var poisSimplify = [];for (var i = 0; i < pois.length; i++) {poisSimplify.push({ id: pois[i].id || null, title: pois[i].title || null, latitude: pois[i].location && pois[i].location.lat || null, longitude: pois[i].location && pois[i].location.lng || null, address: pois[i].address || null, category: pois[i].category || null, adcode: pois[i].ad_info && pois[i].ad_info.adcode || null, city: pois[i].ad_info && pois[i].ad_info.city || null, district: pois[i].ad_info && pois[i].ad_info.district || null, province: pois[i].ad_info && pois[i].ad_info.province || null });}param.success(data, { reverseGeocoderResult: reverseGeocoderResult, reverseGeocoderSimplify: reverseGeocoderSimplify, pois: pois, poisSimplify: poisSimplify });} else {param.success(data, { reverseGeocoderResult: reverseGeocoderResult, reverseGeocoderSimplify: reverseGeocoderSimplify });}} else if (feature == 'geocoder') {var geocoderResult = data.result;var geocoderSimplify = { title: geocoderResult.title || null, latitude: geocoderResult.location && geocoderResult.location.lat || null, longitude: geocoderResult.location && geocoderResult.location.lng || null, adcode: geocoderResult.ad_info && geocoderResult.ad_info.adcode || null, province: geocoderResult.address_components && geocoderResult.address_components.province || null, city: geocoderResult.address_components && geocoderResult.address_components.city || null, district: geocoderResult.address_components && geocoderResult.address_components.district || null, street: geocoderResult.address_components && geocoderResult.address_components.street || null, street_number: geocoderResult.address_components && geocoderResult.address_components.street_number || null, level: geocoderResult.level || null };param.success(data, { geocoderResult: geocoderResult, geocoderSimplify: geocoderSimplify });} else if (feature == 'getCityList') {var provinceResult = data.result[0];var cityResult = data.result[1];var districtResult = data.result[2];param.success(data, { provinceResult: provinceResult, cityResult: cityResult, districtResult: districtResult });} else if (feature == 'getDistrictByCityId') {var districtByCity = data.result[0];param.success(data, districtByCity);} else if (feature == 'calculateDistance') {var calculateDistanceResult = data.result.elements;var distance = [];for (var i = 0; i < calculateDistanceResult.length; i++) {distance.push(calculateDistanceResult[i].distance);}param.success(data, { calculateDistanceResult: calculateDistanceResult, distance: distance });} else if (feature == 'direction') {var direction = data.result.routes;param.success(data, direction);} else {param.success(data);}}, buildWxRequestConfig: function buildWxRequestConfig(param, options, feature) {var that = this;options.header = { "content-type": "application/json" };options.method = 'GET';options.success = function (res) {var data = res.data;if (data.status === 0) {that.handleData(param, data, feature);} else {param.fail(data);}};options.fail = function (res) {res.statusCode = ERROR_CONF.WX_ERR_CODE;param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));};options.complete = function (res) {var statusCode = +res.statusCode;switch (statusCode) {case ERROR_CONF.WX_ERR_CODE:{param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));break;}case ERROR_CONF.WX_OK_CODE:{var data = res.data;if (data.status === 0) {param.complete(data);} else {param.complete(that.buildErrorConfig(data.status, data.message));}break;}default:{param.complete(that.buildErrorConfig(ERROR_CONF.SYSTEM_ERR, ERROR_CONF.SYSTEM_ERR_MSG));}}};return options;}, locationProcess: function locationProcess(param, locationsuccess, locationfail, locationcomplete) {var that = this;locationfail = locationfail || function (res) {res.statusCode = ERROR_CONF.WX_ERR_CODE;param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));};locationcomplete = locationcomplete || function (res) {if (res.statusCode == ERROR_CONF.WX_ERR_CODE) {param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));}};if (!param.location) {that.getWXLocation(locationsuccess, locationfail, locationcomplete);} else if (that.checkLocation(param)) {var location = Utils.getLocationParam(param.location);locationsuccess(location);}} };var QQMapWX = /*#__PURE__*/function () {"use strict";function QQMapWX(options) {_classCallCheck(this, QQMapWX);if (!options.key) {throw Error('key值不能为空');}this.key = options.key;}_createClass(QQMapWX, [{ key: "search", value: function search(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (!Utils.checkKeyword(options)) {return;}var requestParam = { keyword: options.keyword, orderby: options.orderby || '_distance', page_size: options.page_size || 10, page_index: options.page_index || 1, output: 'json', key: that.key };if (options.address_format) {requestParam.address_format = options.address_format;}if (options.filter) {requestParam.filter = options.filter;}var distance = options.distance || "1000";var auto_extend = options.auto_extend || 1;var region = null;var rectangle = null;if (options.region) {region = options.region;}if (options.rectangle) {rectangle = options.rectangle;}var locationsuccess = function locationsuccess(result) {if (region && !rectangle) {requestParam.boundary = "region(" + region + "," + auto_extend + "," + result.latitude + "," + result.longitude + ")";if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');}} else if (rectangle && !region) {requestParam.boundary = "rectangle(" + rectangle + ")";if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');}} else {requestParam.boundary = "nearby(" + result.latitude + "," + result.longitude + "," + distance + "," + auto_extend + ")";if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');}}wx.request(Utils.buildWxRequestConfig(options, { url: URL_SEARCH, data: requestParam }, 'search'));};Utils.locationProcess(options, locationsuccess);} }, { key: "getSuggestion", value: function getSuggestion(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (!Utils.checkKeyword(options)) {return;}var requestParam = { keyword: options.keyword, region: options.region || '全国', region_fix: options.region_fix || 0, policy: options.policy || 0, page_size: options.page_size || 10, page_index: options.page_index || 1, get_subpois: options.get_subpois || 0, output: 'json', key: that.key };if (options.address_format) {requestParam.address_format = options.address_format;}if (options.filter) {requestParam.filter = options.filter;}if (options.location) {var locationsuccess = function locationsuccess(result) {requestParam.location = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'suggest');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_SUGGESTION, data: requestParam }, "suggest"));};Utils.locationProcess(options, locationsuccess);} else {if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'suggest');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_SUGGESTION, data: requestParam }, "suggest"));}} }, { key: "reverseGeocoder", value: function reverseGeocoder(options) {var that = this;options = options || {};Utils.polyfillParam(options);var requestParam = { coord_type: options.coord_type || 5, get_poi: options.get_poi || 0, output: 'json', key: that.key };if (options.poi_options) {requestParam.poi_options = options.poi_options;}var locationsuccess = function locationsuccess(result) {requestParam.location = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'reverseGeocoder');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_GET_GEOCODER, data: requestParam }, 'reverseGeocoder'));};Utils.locationProcess(options, locationsuccess);} }, { key: "geocoder", value: function geocoder(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'address')) {return;}var requestParam = { address: options.address, output: 'json', key: that.key };if (options.region) {requestParam.region = options.region;}if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'geocoder');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_GET_GEOCODER, data: requestParam }, 'geocoder'));} }, { key: "getCityList", value: function getCityList(options) {var that = this;options = options || {};Utils.polyfillParam(options);var requestParam = { output: 'json', key: that.key };if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'getCityList');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_CITY_LIST, data: requestParam }, 'getCityList'));} }, { key: "getDistrictByCityId", value: function getDistrictByCityId(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'id')) {return;}var requestParam = { id: options.id || '', output: 'json', key: that.key };if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'getDistrictByCityId');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_AREA_LIST, data: requestParam }, 'getDistrictByCityId'));} }, { key: "calculateDistance", value: function calculateDistance(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'to')) {return;}var requestParam = { mode: options.mode || 'walking', to: Utils.location2query(options.to), output: 'json', key: that.key };if (options.from) {options.location = options.from;}if (requestParam.mode == 'straight') {var locationsuccess = function locationsuccess(result) {var locationTo = Utils.getEndLocation(requestParam.to);var data = { message: "query ok", result: { elements: [] }, status: 0 };for (var i = 0; i < locationTo.length; i++) {data.result.elements.push({ distance: Utils.getDistance(result.latitude, result.longitude, locationTo[i].lat, locationTo[i].lng), duration: 0, from: { lat: result.latitude, lng: result.longitude }, to: { lat: locationTo[i].lat, lng: locationTo[i].lng } });}var calculateResult = data.result.elements;var distanceResult = [];for (var i = 0; i < calculateResult.length; i++) {distanceResult.push(calculateResult[i].distance);}return options.success(data, { calculateResult: calculateResult, distanceResult: distanceResult });};Utils.locationProcess(options, locationsuccess);} else {var locationsuccess = function locationsuccess(result) {requestParam.from = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'calculateDistance');}wx.request(Utils.buildWxRequestConfig(options, { url: URL_DISTANCE, data: requestParam }, 'calculateDistance'));};Utils.locationProcess(options, locationsuccess);}} }, { key: "direction", value: function direction(options) {var that = this;options = options || {};Utils.polyfillParam(options);if (Utils.checkParamKeyEmpty(options, 'to')) {return;}var requestParam = { output: 'json', key: that.key };if (typeof options.to == 'string') {requestParam.to = options.to;} else {requestParam.to = options.to.latitude + ',' + options.to.longitude;}var SET_URL_DIRECTION = null;options.mode = options.mode || MODE.driving;SET_URL_DIRECTION = URL_DIRECTION + options.mode;if (options.from) {options.location = options.from;}if (options.mode == MODE.driving) {if (options.from_poi) {requestParam.from_poi = options.from_poi;}if (options.heading) {requestParam.heading = options.heading;}if (options.speed) {requestParam.speed = options.speed;}if (options.accuracy) {requestParam.accuracy = options.accuracy;}if (options.road_type) {requestParam.road_type = options.road_type;}if (options.to_poi) {requestParam.to_poi = options.to_poi;}if (options.from_track) {requestParam.from_track = options.from_track;}if (options.waypoints) {requestParam.waypoints = options.waypoints;}if (options.policy) {requestParam.policy = options.policy;}if (options.plate_number) {requestParam.plate_number = options.plate_number;}}if (options.mode == MODE.transit) {if (options.departure_time) {requestParam.departure_time = options.departure_time;}if (options.policy) {requestParam.policy = options.policy;}}var locationsuccess = function locationsuccess(result) {requestParam.from = result.latitude + ',' + result.longitude;if (options.sig) {requestParam.sig = Utils.getSig(requestParam, options.sig, 'direction', options.mode);}wx.request(Utils.buildWxRequestConfig(options, { url: SET_URL_DIRECTION, data: requestParam }, 'direction'));};Utils.locationProcess(options, locationsuccess);} }]);return QQMapWX;}();;module.exports = QQMapWX;
-
-/***/ }),
-
 /***/ 27:
 /*!********************************************************!*\
   !*** D:/UAD/Jdt-zhcx/common/scenicSpotDistribution.js ***!
@@ -13935,157 +13935,7 @@ var _default = {
 
 /***/ }),
 
-/***/ 6:
-/*!******************************************************!*\
-  !*** ./node_modules/@dcloudio/uni-stat/package.json ***!
-  \******************************************************/
-/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
-/***/ (function(module) {
-
-module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.0.0-26920200424005","_inBundle":false,"_integrity":"sha512-FT8Z/C5xSmIxooqhV1v69jTkxATPz+FsRQIFOrbdlWekjGkrE73jfrdNMWm7gL5u41ALPJTVArxN1Re9by1bjQ==","_location":"/@dcloudio/uni-stat","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"@dcloudio/uni-stat@next","name":"@dcloudio/uni-stat","escapedName":"@dcloudio%2funi-stat","scope":"@dcloudio","rawSpec":"next","saveSpec":null,"fetchSpec":"next"},"_requiredBy":["#USER","/","/@dcloudio/vue-cli-plugin-uni"],"_resolved":"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-26920200424005.tgz","_shasum":"47f4375095eda3089cf4678b4b96fc656a7ab623","_spec":"@dcloudio/uni-stat@next","_where":"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli","author":"","bugs":{"url":"https://github.com/dcloudio/uni-app/issues"},"bundleDependencies":false,"deprecated":false,"description":"","devDependencies":{"@babel/core":"^7.5.5","@babel/preset-env":"^7.5.5","eslint":"^6.1.0","rollup":"^1.19.3","rollup-plugin-babel":"^4.3.3","rollup-plugin-clear":"^2.0.7","rollup-plugin-commonjs":"^10.0.2","rollup-plugin-copy":"^3.1.0","rollup-plugin-eslint":"^7.0.0","rollup-plugin-json":"^4.0.0","rollup-plugin-node-resolve":"^5.2.0","rollup-plugin-replace":"^2.2.0","rollup-plugin-uglify":"^6.0.2"},"files":["dist","package.json","LICENSE"],"gitHead":"94494d54ed23e2dcf9ab8e3245b48b770b4e98a9","homepage":"https://github.com/dcloudio/uni-app#readme","license":"Apache-2.0","main":"dist/index.js","name":"@dcloudio/uni-stat","repository":{"type":"git","url":"git+https://github.com/dcloudio/uni-app.git","directory":"packages/uni-stat"},"scripts":{"build":"NODE_ENV=production rollup -c rollup.config.js","dev":"NODE_ENV=development rollup -w -c rollup.config.js"},"version":"2.0.0-26920200424005"};
-
-/***/ }),
-
-/***/ 67:
-/*!***********************************************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js ***!
-  \***********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.pathToBase64 = pathToBase64;exports.base64ToPath = base64ToPath;function getLocalFilePath(path) {
-  if (path.indexOf('_www') === 0 || path.indexOf('_doc') === 0 || path.indexOf('_documents') === 0 || path.indexOf('_downloads') === 0) {
-    return path;
-  }
-  if (path.indexOf('file://') === 0) {
-    return path;
-  }
-  if (path.indexOf('/storage/emulated/0/') === 0) {
-    return path;
-  }
-  if (path.indexOf('/') === 0) {
-    var localFilePath = plus.io.convertAbsoluteFileSystem(path);
-    if (localFilePath !== path) {
-      return localFilePath;
-    } else {
-      path = path.substr(1);
-    }
-  }
-  return '_www/' + path;
-}
-
-function pathToBase64(path) {
-  return new Promise(function (resolve, reject) {
-    if (typeof window === 'object' && 'document' in window) {
-      var canvas = document.createElement('canvas');
-      var c2x = canvas.getContext('2d');
-      var img = new Image();
-      img.onload = function () {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        c2x.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL());
-      };
-      img.onerror = reject;
-      img.src = path;
-      return;
-    }
-    if (typeof plus === 'object') {
-      plus.io.resolveLocalFileSystemURL(getLocalFilePath(path), function (entry) {
-        entry.file(function (file) {
-          var fileReader = new plus.io.FileReader();
-          fileReader.onload = function (data) {
-            resolve(data.target.result);
-          };
-          fileReader.onerror = function (error) {
-            reject(error);
-          };
-          fileReader.readAsDataURL(file);
-        }, function (error) {
-          reject(error);
-        });
-      }, function (error) {
-        reject(error);
-      });
-      return;
-    }
-    if (typeof wx === 'object' && wx.canIUse('getFileSystemManager')) {
-      wx.getFileSystemManager().readFile({
-        filePath: path,
-        encoding: 'base64',
-        success: function success(res) {
-          resolve('data:image/png;base64,' + res.data);
-        },
-        fail: function fail(error) {
-          reject(error);
-        } });
-
-      return;
-    }
-    reject(new Error('not support'));
-  });
-}
-
-function base64ToPath(base64) {
-  return new Promise(function (resolve, reject) {
-    if (typeof window === 'object' && 'document' in window) {
-      base64 = base64.split(',');
-      var type = base64[0].match(/:(.*?);/)[1];
-      var str = atob(base64[1]);
-      var n = str.length;
-      var array = new Uint8Array(n);
-      while (n--) {
-        array[n] = str.charCodeAt(n);
-      }
-      return resolve((window.URL || window.webkitURL).createObjectURL(new Blob([array], { type: type })));
-    }
-    var extName = base64.match(/data\:\S+\/(\S+);/);
-    if (extName) {
-      extName = extName[1];
-    } else {
-      reject(new Error('base64 error'));
-    }
-    var fileName = Date.now() + '.' + extName;
-    if (typeof plus === 'object') {
-      var bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now());
-      bitmap.loadBase64Data(base64, function () {
-        var filePath = '_doc/uniapp_temp/' + fileName;
-        bitmap.save(filePath, {}, function () {
-          bitmap.clear();
-          resolve(filePath);
-        }, function (error) {
-          bitmap.clear();
-          reject(error);
-        });
-      }, function (error) {
-        bitmap.clear();
-        reject(error);
-      });
-      return;
-    }
-    if (typeof wx === 'object' && wx.canIUse('getFileSystemManager')) {
-      var filePath = wx.env.USER_DATA_PATH + '/' + fileName;
-      wx.getFileSystemManager().writeFile({
-        filePath: filePath,
-        data: base64.replace(/^data:\S+\/\S+;base64,/, ''),
-        encoding: 'base64',
-        success: function success() {
-          resolve(filePath);
-        },
-        fail: function fail(error) {
-          reject(error);
-        } });
-
-      return;
-    }
-    reject(new Error('not support'));
-  });
-}
-
-/***/ }),
-
-/***/ 681:
+/***/ 590:
 /*!**********************************************************!*\
   !*** D:/UAD/Jdt-zhcx/components/HOME/uni-icons/icons.js ***!
   \**********************************************************/
@@ -14227,19 +14077,18 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 
-/***/ 7:
-/*!***************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/pages.json?{"type":"style"} ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ 6:
+/*!******************************************************!*\
+  !*** ./node_modules/@dcloudio/uni-stat/package.json ***!
+  \******************************************************/
+/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
+/***/ (function(module) {
 
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/Home/init": {}, "pages/Home/guidePage": { "navigationStyle": "custom" }, "pages/Home/Index": { "navigationStyle": "custom" }, "pages/Home/ChooseSite": { "backgroundColor": "#007AFF", "navigationStyle": "custom" }, "pages/GRZX/user": { "navigationStyle": "custom" }, "pages/GRZX/userLogin": { "navigationStyle": "custom" }, "pages/GRZX/wxLogin": { "navigationStyle": "custom" }, "pages/GRZX/personal": {}, "pages/GRZX/address": { "navigationStyle": "custom" }, "pages/GRZX/set": { "navigationBarTitleText": "设置" }, "pages/GRZX/passengerInfo": { "enablePullDownRefresh": true, "navigationStyle": "custom" }, "pages/GRZX/addPassenger": { "navigationStyle": "custom" }, "pages/GRZX/addAddress": { "navigationBarTitleText": "添加邮寄地址", "navigationBarBackgroundColor": "#FFFFFF" }, "pages/GRZX/aboutApp": { "navigationBarTitleText": "关于App" }, "pages/GRZX/coupon": { "navigationBarTitleText": "卡券红包" }, "pages/GRZX/myNews": { "navigationBarTitleText": "我的消息" }, "pages/GRZX/infoList": { "enablePullDownRefresh": true, "navigationStyle": "custom" }, "pages/GRZX/complaint": { "navigationBarTitleText": "我要投诉" }, "pages/GRZX/collection": { "navigationBarTitleText": "我的收藏" }, "pages/GRZX/history": { "navigationBarTitleText": "我的历史" }, "pages/GRZX/notice": { "navigationBarTitleText": "通知" }, "pages/GRZX/detailTweet": { "navigationBarTitleText": "推送详情" }, "pages/GRZX/feedback": { "navigationBarTitleText": "意见反馈" }, "pages/order/OrderList": { "enablePullDownRefresh": true, "navigationBarTitleText": "", "navigationBarBackgroundColor": "#f5f5f5" }, "pages/order/OrderDetail": { "navigationStyle": "custom" }, "pages/order/SpecialLineDetail": { "navigationStyle": "custom" }, "pages/Home/InformationDetails": { "navigationBarTitleText": "资讯详情" }, "pages/Home/MapIndex": { "navigationBarTitleText": "搜索地址" }, "pages/Home/MapSearch": {}, "pages/Home/serve": { "navigationBarTitleText": "服务" }, "pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome": {}, "pages_CTKY/pages/CTKY/SpecialBus/Home/specialLinePicker": {}, "pages_CTKY/pages/CTKY/SpecialBus/Home/specialReserve": {}, "pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex": { "navigationBarTitleText": "客运" }, "pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick": { "navigationBarTitleText": "选择站点" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets": { "navigationBarTitleText": "班次列表" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/scheduleDetails": { "backgroundColor": "#F1F1F1", "navigationBarBackgroundColor": "#FC4646", "navigationBarTextStyle": "white", "navigationBarTitleText": "班次详情" }, "pages_CTKY/pages/CTKY/TraditionSpecial/seatSelection": { "backgroundColor": "#F1F1F1", "navigationBarBackgroundColor": "#FC4646", "navigationBarTextStyle": "white", "navigationBarTitleText": "选择座位" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/oederList": { "navigationBarTitleText": "订单列表" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail": { "navigationBarTitleText": "订单详情" }, "pages_CTKY/pages/CTKY/TraditionSpecial/issueView": { "navigationBarTitleText": "订单评价" }, "pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/traditionCarMark": { "navigationBarTitleText": "传统地图标识" }, "pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/specialMark": { "navigationBarTitleText": "定制标识" }, "pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation": { "navigationBarTitleText": "查看班车位置" }, "pages_CTKY/pages/CTKY/TraditionSpecial/PayMent/orderPayment": {}, "pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/selectStation": { "navigationBarTitleText": "上下车点选择", "navigationBarBackgroundColor": "#FE6C66" }, "pages_CTKY/pages/CTKY/TraditionSpecial/PayMent/CTKYPaySuccess": {}, "pages_CTKY/pages/CTKY/TraditionSpecial/PayMent/CTKYPayFail": {}, "pages_CZC/pages/CZC/Index": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/CallAndDrive": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PrivateTaxi": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/WaitTakeOrder": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PriceDetail": { "navigationBarTitleText": "费用明细" }, "pages_CZC/pages/CZC/PaymentSuccess": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PaymentFail": {}, "pages_CZC/pages/CZC/PrivateTaxiPayment": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PrivatePaySuccess": { "navigationStyle": "custom" }, "pages_GJCX/pages/GJCX/busH5": {}, "pages_BCFW/pages/BCFW/bf_chartered": {}, "pages_BCFW/pages/BCFW/bf_choice": {}, "pages_BCFW/pages/BCFW/bf_information": { "navigationBarTitleText": "用车信息" }, "pages_BCFW/pages/BCFW/bf_choiceVehicleType": { "navigationBarTitleText": "选择车型" }, "pages_BCFW/pages/BCFW/charterMap": { "navigationStyle": "custom" }, "pages_BCFW/pages/BCFW/bf_charterMap": { "navigationStyle": "custom" }, "pages_BCFW/pages/BCFW/BCsuccessfulPayment": {}, "pages_BCFW/pages/BCFW/charteredBusPayment": {}, "pages_LYFW/pages/LYFW/currency/imglist": { "navigationBarTitleText": "全部图片" }, "pages_LYFW/pages/LYFW/currency/imgPreview": { "navigationBarTitleText": "查看图片" }, "pages_LYFW/pages/LYFW/currency/travelDetails": {}, "pages_LYFW/pages/LYFW/currency/ho_zhly": { "navigationBarTitleText": "旅游服务" }, "pages_LYFW/pages/LYFW/groupTour/groupTourList": { "navigationBarTitleText": "跟团游列表" }, "pages_LYFW/pages/LYFW/groupTour/viewMore": {}, "pages_LYFW/pages/LYFW/independentTravel/it_list": {}, "pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList": { "navigationBarTitleText": "景区列表", "enablePullDownRefresh": true, "navigationBarBackgroundColor": "#FFFFFF", "onReachBottomDistance": 0 }, "pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails": { "navigationBarTitleText": "景区详情" }, "pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment": { "navigationBarTitleText": "选择支付 " }, "pages_LYFW/pages/LYFW/scenicSpotTickets/successfulPayment": { "navigationBarTitleText": "购票成功" }, "pages_LYFW/pages/LYFW/scenicSpotTickets/orderAdd": { "navigationBarTitleText": "填写订单" }, "pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails": { "navigationBarTitleText": "订单详情" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.0.0-26920200424005","_inBundle":false,"_integrity":"sha512-FT8Z/C5xSmIxooqhV1v69jTkxATPz+FsRQIFOrbdlWekjGkrE73jfrdNMWm7gL5u41ALPJTVArxN1Re9by1bjQ==","_location":"/@dcloudio/uni-stat","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"@dcloudio/uni-stat@next","name":"@dcloudio/uni-stat","escapedName":"@dcloudio%2funi-stat","scope":"@dcloudio","rawSpec":"next","saveSpec":null,"fetchSpec":"next"},"_requiredBy":["#USER","/","/@dcloudio/vue-cli-plugin-uni"],"_resolved":"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-26920200424005.tgz","_shasum":"47f4375095eda3089cf4678b4b96fc656a7ab623","_spec":"@dcloudio/uni-stat@next","_where":"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli","author":"","bugs":{"url":"https://github.com/dcloudio/uni-app/issues"},"bundleDependencies":false,"deprecated":false,"description":"","devDependencies":{"@babel/core":"^7.5.5","@babel/preset-env":"^7.5.5","eslint":"^6.1.0","rollup":"^1.19.3","rollup-plugin-babel":"^4.3.3","rollup-plugin-clear":"^2.0.7","rollup-plugin-commonjs":"^10.0.2","rollup-plugin-copy":"^3.1.0","rollup-plugin-eslint":"^7.0.0","rollup-plugin-json":"^4.0.0","rollup-plugin-node-resolve":"^5.2.0","rollup-plugin-replace":"^2.2.0","rollup-plugin-uglify":"^6.0.2"},"files":["dist","package.json","LICENSE"],"gitHead":"94494d54ed23e2dcf9ab8e3245b48b770b4e98a9","homepage":"https://github.com/dcloudio/uni-app#readme","license":"Apache-2.0","main":"dist/index.js","name":"@dcloudio/uni-stat","repository":{"type":"git","url":"git+https://github.com/dcloudio/uni-app.git","directory":"packages/uni-stat"},"scripts":{"build":"NODE_ENV=production rollup -c rollup.config.js","dev":"NODE_ENV=development rollup -w -c rollup.config.js"},"version":"2.0.0-26920200424005"};
 
 /***/ }),
 
-/***/ 722:
+/***/ 631:
 /*!**********************************************************************!*\
   !*** D:/UAD/Jdt-zhcx/components/GRZX/w-picker/city-data/province.js ***!
   \**********************************************************************/
@@ -14389,7 +14238,7 @@ provinceData;exports.default = _default;
 
 /***/ }),
 
-/***/ 723:
+/***/ 632:
 /*!******************************************************************!*\
   !*** D:/UAD/Jdt-zhcx/components/GRZX/w-picker/city-data/city.js ***!
   \******************************************************************/
@@ -15903,7 +15752,7 @@ cityData;exports.default = _default;
 
 /***/ }),
 
-/***/ 724:
+/***/ 633:
 /*!******************************************************************!*\
   !*** D:/UAD/Jdt-zhcx/components/GRZX/w-picker/city-data/area.js ***!
   \******************************************************************/
@@ -28456,7 +28305,7 @@ areaData;exports.default = _default;
 
 /***/ }),
 
-/***/ 725:
+/***/ 634:
 /*!************************************************************!*\
   !*** D:/UAD/Jdt-zhcx/components/GRZX/w-picker/w-picker.js ***!
   \************************************************************/
@@ -29054,10290 +28903,7 @@ initPicker;exports.default = _default;
 
 /***/ }),
 
-/***/ 733:
-/*!**********************************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/GRZX/wangding-pickerAddress/data.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = [
-{
-  "provinceCode": "110000",
-  "provinceName": "北京",
-  "city": [{
-    "cityCode": "110000-1",
-    "cityName": "北京市",
-    "county": [{
-      "countyCode": "110115",
-      "countyName": "大兴区" },
-    {
-      "countyCode": "110116",
-      "countyName": "怀柔区" },
-    {
-      "countyCode": "110105",
-      "countyName": "朝阳区" },
-    {
-      "countyCode": "110229",
-      "countyName": "延庆区" },
-    {
-      "countyCode": "110114",
-      "countyName": "昌平区" },
-    {
-      "countyCode": "110108",
-      "countyName": "海淀区" },
-    {
-      "countyCode": "110107",
-      "countyName": "石景山区" },
-    {
-      "countyCode": "110112",
-      "countyName": "通州区" },
-    {
-      "countyCode": "110228",
-      "countyName": "密云区" },
-    {
-      "countyCode": "110117",
-      "countyName": "平谷区" },
-    {
-      "countyCode": "110109",
-      "countyName": "门头沟区" },
-    {
-      "countyCode": "110113",
-      "countyName": "顺义区" },
-    {
-      "countyCode": "110106",
-      "countyName": "丰台区" },
-    {
-      "countyCode": "110111",
-      "countyName": "房山区" },
-    {
-      "countyCode": "110101",
-      "countyName": "东城区" },
-    {
-      "countyCode": "110102",
-      "countyName": "西城区" }] }] },
-
-
-{
-  "provinceCode": "120000",
-  "provinceName": "天津",
-  "city": [{
-    "cityCode": "120000-1",
-    "cityName": "天津市",
-    "county": [{
-      "countyCode": "120103",
-      "countyName": "河西区" },
-    {
-      "countyCode": "120106",
-      "countyName": "红桥区" },
-    {
-      "countyCode": "120223",
-      "countyName": "静海区" },
-    {
-      "countyCode": "120114",
-      "countyName": "武清区" },
-    {
-      "countyCode": "120110",
-      "countyName": "东丽区" },
-    {
-      "countyCode": "120111",
-      "countyName": "西青区" },
-    {
-      "countyCode": "120225",
-      "countyName": "蓟州区" },
-    {
-      "countyCode": "120116",
-      "countyName": "滨海新区" },
-    {
-      "countyCode": "120113",
-      "countyName": "北辰区" },
-    {
-      "countyCode": "120115",
-      "countyName": "宝坻区" },
-    {
-      "countyCode": "120101",
-      "countyName": "和平区" },
-    {
-      "countyCode": "120112",
-      "countyName": "津南区" },
-    {
-      "countyCode": "120221",
-      "countyName": "宁河区" },
-    {
-      "countyCode": "120104",
-      "countyName": "南开区" },
-    {
-      "countyCode": "120105",
-      "countyName": "河北区" },
-    {
-      "countyCode": "120102",
-      "countyName": "河东区" }] }] },
-
-
-{
-  "provinceCode": "130000",
-  "provinceName": "河北省",
-  "city": [{
-    "cityCode": "130400",
-    "cityName": "邯郸市",
-    "county": [{
-      "countyCode": "130404",
-      "countyName": "复兴区" },
-    {
-      "countyCode": "130424",
-      "countyName": "成安县" },
-    {
-      "countyCode": "130403",
-      "countyName": "丛台区" },
-    {
-      "countyCode": "130402",
-      "countyName": "邯山区" },
-    {
-      "countyCode": "130434",
-      "countyName": "魏县" },
-    {
-      "countyCode": "130429",
-      "countyName": "永年区" },
-    {
-      "countyCode": "130427",
-      "countyName": "磁县" },
-    {
-      "countyCode": "130433",
-      "countyName": "馆陶县" },
-    {
-      "countyCode": "130421",
-      "countyName": "邯郸县" },
-    {
-      "countyCode": "130435",
-      "countyName": "曲周县" },
-    {
-      "countyCode": "130425",
-      "countyName": "大名县" },
-    {
-      "countyCode": "130426",
-      "countyName": "涉县" },
-    {
-      "countyCode": "130423",
-      "countyName": "临漳县" },
-    {
-      "countyCode": "130431",
-      "countyName": "鸡泽县" },
-    {
-      "countyCode": "130406",
-      "countyName": "峰峰矿区" },
-    {
-      "countyCode": "130430",
-      "countyName": "邱县" },
-    {
-      "countyCode": "130428",
-      "countyName": "肥乡区" },
-    {
-      "countyCode": "130432",
-      "countyName": "广平县" },
-    {
-      "countyCode": "130481",
-      "countyName": "武安市" }] },
-
-  {
-    "cityCode": "131100",
-    "cityName": "衡水市",
-    "county": [{
-      "countyCode": "131127",
-      "countyName": "景县" },
-    {
-      "countyCode": "131102",
-      "countyName": "桃城区" },
-    {
-      "countyCode": "131128",
-      "countyName": "阜城县" },
-    {
-      "countyCode": "131125",
-      "countyName": "安平县" },
-    {
-      "countyCode": "131121",
-      "countyName": "枣强县" },
-    {
-      "countyCode": "131123",
-      "countyName": "武强县" },
-    {
-      "countyCode": "131122",
-      "countyName": "武邑县" },
-    {
-      "countyCode": "131181",
-      "countyName": "冀州区" },
-    {
-      "countyCode": "131126",
-      "countyName": "故城县" },
-    {
-      "countyCode": "131124",
-      "countyName": "饶阳县" },
-    {
-      "countyCode": "131182",
-      "countyName": "深州市" }] },
-
-  {
-    "cityCode": "130900",
-    "cityName": "沧州市",
-    "county": [{
-      "countyCode": "130930",
-      "countyName": "孟村回族自治县" },
-    {
-      "countyCode": "130923",
-      "countyName": "东光县" },
-    {
-      "countyCode": "130981",
-      "countyName": "泊头市" },
-    {
-      "countyCode": "130924",
-      "countyName": "海兴县" },
-    {
-      "countyCode": "130927",
-      "countyName": "南皮县" },
-    {
-      "countyCode": "130922",
-      "countyName": "青县" },
-    {
-      "countyCode": "130902",
-      "countyName": "新华区" },
-    {
-      "countyCode": "130925",
-      "countyName": "盐山县" },
-    {
-      "countyCode": "130903",
-      "countyName": "运河区" },
-    {
-      "countyCode": "130921",
-      "countyName": "沧县" },
-    {
-      "countyCode": "130984",
-      "countyName": "河间市" },
-    {
-      "countyCode": "130926",
-      "countyName": "肃宁县" },
-    {
-      "countyCode": "130982",
-      "countyName": "任丘市" },
-    {
-      "countyCode": "130983",
-      "countyName": "黄骅市" },
-    {
-      "countyCode": "130928",
-      "countyName": "吴桥县" },
-    {
-      "countyCode": "130929",
-      "countyName": "献县" }] },
-
-  {
-    "cityCode": "130200",
-    "cityName": "唐山市",
-    "county": [{
-      "countyCode": "130207",
-      "countyName": "丰南区" },
-    {
-      "countyCode": "130204",
-      "countyName": "古冶区" },
-    {
-      "countyCode": "130224",
-      "countyName": "滦南县" },
-    {
-      "countyCode": "130209",
-      "countyName": "曹妃甸区" },
-    {
-      "countyCode": "130202",
-      "countyName": "路南区" },
-    {
-      "countyCode": "130208",
-      "countyName": "丰润区" },
-    {
-      "countyCode": "130203",
-      "countyName": "路北区" },
-    {
-      "countyCode": "130281",
-      "countyName": "遵化市" },
-    {
-      "countyCode": "130205",
-      "countyName": "开平区" },
-    {
-      "countyCode": "130283",
-      "countyName": "迁安市" },
-    {
-      "countyCode": "130227",
-      "countyName": "迁西县" },
-    {
-      "countyCode": "130229",
-      "countyName": "玉田县" },
-    {
-      "countyCode": "130225",
-      "countyName": "乐亭县" },
-    {
-      "countyCode": "130223",
-      "countyName": "滦州市" }] },
-
-  {
-    "cityCode": "130700",
-    "cityName": "张家口市",
-    "county": [{
-      "countyCode": "130728",
-      "countyName": "怀安县" },
-    {
-      "countyCode": "130723",
-      "countyName": "康保县" },
-    {
-      "countyCode": "130702",
-      "countyName": "桥东区" },
-    {
-      "countyCode": "130732",
-      "countyName": "赤城县" },
-    {
-      "countyCode": "130733",
-      "countyName": "崇礼区" },
-    {
-      "countyCode": "130727",
-      "countyName": "阳原县" },
-    {
-      "countyCode": "130731",
-      "countyName": "涿鹿县" },
-    {
-      "countyCode": "130705",
-      "countyName": "宣化区" },
-    {
-      "countyCode": "130722",
-      "countyName": "张北县" },
-    {
-      "countyCode": "130729",
-      "countyName": "万全区" },
-    {
-      "countyCode": "130724",
-      "countyName": "沽源县" },
-    {
-      "countyCode": "130703",
-      "countyName": "桥西区" },
-    {
-      "countyCode": "130706",
-      "countyName": "下花园区" },
-    {
-      "countyCode": "130730",
-      "countyName": "怀来县" },
-    {
-      "countyCode": "130725",
-      "countyName": "尚义县" },
-    {
-      "countyCode": "130726",
-      "countyName": "蔚县" },
-    {
-      "countyCode": "130721",
-      "countyName": "宣化县" }] },
-
-  {
-    "cityCode": "131000",
-    "cityName": "廊坊市",
-    "county": [{
-      "countyCode": "131002",
-      "countyName": "安次区" },
-    {
-      "countyCode": "131082",
-      "countyName": "三河市" },
-    {
-      "countyCode": "131025",
-      "countyName": "大城县" },
-    {
-      "countyCode": "131023",
-      "countyName": "永清县" },
-    {
-      "countyCode": "131028",
-      "countyName": "大厂回族自治县" },
-    {
-      "countyCode": "131022",
-      "countyName": "固安县" },
-    {
-      "countyCode": "131003",
-      "countyName": "广阳区" },
-    {
-      "countyCode": "131081",
-      "countyName": "霸州市" },
-    {
-      "countyCode": "131026",
-      "countyName": "文安县" },
-    {
-      "countyCode": "131024",
-      "countyName": "香河县" }] },
-
-  {
-    "cityCode": "130300",
-    "cityName": "秦皇岛市",
-    "county": [{
-      "countyCode": "130323",
-      "countyName": "抚宁区" },
-    {
-      "countyCode": "130321",
-      "countyName": "青龙满族自治县" },
-    {
-      "countyCode": "130303",
-      "countyName": "山海关区" },
-    {
-      "countyCode": "130304",
-      "countyName": "北戴河区" },
-    {
-      "countyCode": "130302",
-      "countyName": "海港区" },
-    {
-      "countyCode": "130322",
-      "countyName": "昌黎县" },
-    {
-      "countyCode": "130324",
-      "countyName": "卢龙县" }] },
-
-  {
-    "cityCode": "130500",
-    "cityName": "邢台市",
-    "county": [{
-      "countyCode": "130533",
-      "countyName": "威县" },
-    {
-      "countyCode": "130532",
-      "countyName": "平乡县" },
-    {
-      "countyCode": "130527",
-      "countyName": "南和县" },
-    {
-      "countyCode": "130521",
-      "countyName": "邢台县" },
-    {
-      "countyCode": "130524",
-      "countyName": "柏乡县" },
-    {
-      "countyCode": "130522",
-      "countyName": "临城县" },
-    {
-      "countyCode": "130530",
-      "countyName": "新河县" },
-    {
-      "countyCode": "130534",
-      "countyName": "清河县" },
-    {
-      "countyCode": "130582",
-      "countyName": "沙河市" },
-    {
-      "countyCode": "130531",
-      "countyName": "广宗县" },
-    {
-      "countyCode": "130525",
-      "countyName": "隆尧县" },
-    {
-      "countyCode": "130529",
-      "countyName": "巨鹿县" },
-    {
-      "countyCode": "130523",
-      "countyName": "内丘县" },
-    {
-      "countyCode": "130528",
-      "countyName": "宁晋县" },
-    {
-      "countyCode": "130526",
-      "countyName": "任县" },
-    {
-      "countyCode": "130581",
-      "countyName": "南宫市" },
-    {
-      "countyCode": "130535",
-      "countyName": "临西县" },
-    {
-      "countyCode": "130502",
-      "countyName": "桥东区" },
-    {
-      "countyCode": "130503",
-      "countyName": "桥西区" }] },
-
-  {
-    "cityCode": "130100",
-    "cityName": "石家庄市",
-    "county": [{
-      "countyCode": "130125",
-      "countyName": "行唐县" },
-    {
-      "countyCode": "130185",
-      "countyName": "鹿泉区" },
-    {
-      "countyCode": "130123",
-      "countyName": "正定县" },
-    {
-      "countyCode": "130107",
-      "countyName": "井陉矿区" },
-    {
-      "countyCode": "130102",
-      "countyName": "长安区" },
-    {
-      "countyCode": "130184",
-      "countyName": "新乐市" },
-    {
-      "countyCode": "130183",
-      "countyName": "晋州市" },
-    {
-      "countyCode": "130128",
-      "countyName": "深泽县" },
-    {
-      "countyCode": "130181",
-      "countyName": "辛集市" },
-    {
-      "countyCode": "130124",
-      "countyName": "栾城区" },
-    {
-      "countyCode": "130126",
-      "countyName": "灵寿县" },
-    {
-      "countyCode": "130104",
-      "countyName": "桥西区" },
-    {
-      "countyCode": "130130",
-      "countyName": "无极县" },
-    {
-      "countyCode": "130108",
-      "countyName": "裕华区" },
-    {
-      "countyCode": "130129",
-      "countyName": "赞皇县" },
-    {
-      "countyCode": "130133",
-      "countyName": "赵县" },
-    {
-      "countyCode": "130182",
-      "countyName": "藁城区" },
-    {
-      "countyCode": "130127",
-      "countyName": "高邑县" },
-    {
-      "countyCode": "130132",
-      "countyName": "元氏县" },
-    {
-      "countyCode": "130131",
-      "countyName": "平山县" },
-    {
-      "countyCode": "130121",
-      "countyName": "井陉县" },
-    {
-      "countyCode": "130105",
-      "countyName": "新华区" }] },
-
-  {
-    "cityCode": "130800",
-    "cityName": "承德市",
-    "county": [{
-      "countyCode": "130803",
-      "countyName": "双滦区" },
-    {
-      "countyCode": "130827",
-      "countyName": "宽城满族自治县" },
-    {
-      "countyCode": "130802",
-      "countyName": "双桥区" },
-    {
-      "countyCode": "130826",
-      "countyName": "丰宁满族自治县" },
-    {
-      "countyCode": "130821",
-      "countyName": "承德县" },
-    {
-      "countyCode": "130828",
-      "countyName": "围场满族蒙古族自治县" },
-    {
-      "countyCode": "130822",
-      "countyName": "兴隆县" },
-    {
-      "countyCode": "130825",
-      "countyName": "隆化县" },
-    {
-      "countyCode": "130823",
-      "countyName": "平泉市" },
-    {
-      "countyCode": "130804",
-      "countyName": "鹰手营子矿区" },
-    {
-      "countyCode": "130824",
-      "countyName": "滦平县" }] },
-
-  {
-    "cityCode": "130600",
-    "cityName": "保定市",
-    "county": [{
-      "countyCode": "130638",
-      "countyName": "雄县" },
-    {
-      "countyCode": "130625",
-      "countyName": "徐水区" },
-    {
-      "countyCode": "130682",
-      "countyName": "定州市" },
-    {
-      "countyCode": "130631",
-      "countyName": "望都县" },
-    {
-      "countyCode": "130630",
-      "countyName": "涞源县" },
-    {
-      "countyCode": "130621",
-      "countyName": "满城区" },
-    {
-      "countyCode": "130626",
-      "countyName": "定兴县" },
-    {
-      "countyCode": "130624",
-      "countyName": "阜平县" },
-    {
-      "countyCode": "130636",
-      "countyName": "顺平县" },
-    {
-      "countyCode": "130627",
-      "countyName": "唐县" },
-    {
-      "countyCode": "130623",
-      "countyName": "涞水县" },
-    {
-      "countyCode": "130629",
-      "countyName": "容城县" },
-    {
-      "countyCode": "130634",
-      "countyName": "曲阳县" },
-    {
-      "countyCode": "130637",
-      "countyName": "博野县" },
-    {
-      "countyCode": "130622",
-      "countyName": "清苑区" },
-    {
-      "countyCode": "130632",
-      "countyName": "安新县" },
-    {
-      "countyCode": "130684",
-      "countyName": "高碑店市" },
-    {
-      "countyCode": "130633",
-      "countyName": "易县" },
-    {
-      "countyCode": "130628",
-      "countyName": "高阳县" },
-    {
-      "countyCode": "130683",
-      "countyName": "安国市" },
-    {
-      "countyCode": "130604",
-      "countyName": "南市区" },
-    {
-      "countyCode": "130603",
-      "countyName": "北市区" },
-    {
-      "countyCode": "130681",
-      "countyName": "涿州市" },
-    {
-      "countyCode": "130635",
-      "countyName": "蠡县" },
-    {
-      "countyCode": "130602",
-      "countyName": "竞秀区" },
-    {
-      "countyCode": "130606",
-      "countyName": "莲池区" }] }] },
-
-
-{
-  "provinceCode": "140000",
-  "provinceName": "山西省",
-  "city": [{
-    "cityCode": "141000",
-    "cityName": "临汾市",
-    "county": [{
-      "countyCode": "141033",
-      "countyName": "蒲县" },
-    {
-      "countyCode": "141025",
-      "countyName": "古县" },
-    {
-      "countyCode": "141034",
-      "countyName": "汾西县" },
-    {
-      "countyCode": "141027",
-      "countyName": "浮山县" },
-    {
-      "countyCode": "141021",
-      "countyName": "曲沃县" },
-    {
-      "countyCode": "141032",
-      "countyName": "永和县" },
-    {
-      "countyCode": "141082",
-      "countyName": "霍州市" },
-    {
-      "countyCode": "141028",
-      "countyName": "吉县" },
-    {
-      "countyCode": "141022",
-      "countyName": "翼城县" },
-    {
-      "countyCode": "141030",
-      "countyName": "大宁县" },
-    {
-      "countyCode": "141081",
-      "countyName": "侯马市" },
-    {
-      "countyCode": "141002",
-      "countyName": "尧都区" },
-    {
-      "countyCode": "141026",
-      "countyName": "安泽县" },
-    {
-      "countyCode": "141024",
-      "countyName": "洪洞县" },
-    {
-      "countyCode": "141023",
-      "countyName": "襄汾县" },
-    {
-      "countyCode": "141029",
-      "countyName": "乡宁县" },
-    {
-      "countyCode": "141031",
-      "countyName": "隰县" }] },
-
-  {
-    "cityCode": "140200",
-    "cityName": "大同市",
-    "county": [{
-      "countyCode": "140223",
-      "countyName": "广灵县" },
-    {
-      "countyCode": "140203",
-      "countyName": "矿区" },
-    {
-      "countyCode": "140212",
-      "countyName": "新荣区" },
-    {
-      "countyCode": "140224",
-      "countyName": "灵丘县" },
-    {
-      "countyCode": "140222",
-      "countyName": "天镇县" },
-    {
-      "countyCode": "140213",
-      "countyName": "平城区" },
-    {
-      "countyCode": "140227",
-      "countyName": "云州区" },
-    {
-      "countyCode": "140202",
-      "countyName": "城区" },
-    {
-      "countyCode": "140225",
-      "countyName": "浑源县" },
-    {
-      "countyCode": "140221",
-      "countyName": "阳高县" },
-    {
-      "countyCode": "140211",
-      "countyName": "南郊区" },
-    {
-      "countyCode": "140214",
-      "countyName": "云冈区" },
-    {
-      "countyCode": "140226",
-      "countyName": "左云县" }] },
-
-  {
-    "cityCode": "140700",
-    "cityName": "晋中市",
-    "county": [{
-      "countyCode": "140722",
-      "countyName": "左权县" },
-    {
-      "countyCode": "140721",
-      "countyName": "榆社县" },
-    {
-      "countyCode": "140728",
-      "countyName": "平遥县" },
-    {
-      "countyCode": "140723",
-      "countyName": "和顺县" },
-    {
-      "countyCode": "140726",
-      "countyName": "太谷县" },
-    {
-      "countyCode": "140781",
-      "countyName": "介休市" },
-    {
-      "countyCode": "140725",
-      "countyName": "寿阳县" },
-    {
-      "countyCode": "140727",
-      "countyName": "祁县" },
-    {
-      "countyCode": "140724",
-      "countyName": "昔阳县" },
-    {
-      "countyCode": "140702",
-      "countyName": "榆次区" },
-    {
-      "countyCode": "140729",
-      "countyName": "灵石县" }] },
-
-  {
-    "cityCode": "140500",
-    "cityName": "晋城市",
-    "county": [{
-      "countyCode": "140521",
-      "countyName": "沁水县" },
-    {
-      "countyCode": "140581",
-      "countyName": "高平市" },
-    {
-      "countyCode": "140524",
-      "countyName": "陵川县" },
-    {
-      "countyCode": "140522",
-      "countyName": "阳城县" },
-    {
-      "countyCode": "140525",
-      "countyName": "泽州县" },
-    {
-      "countyCode": "140502",
-      "countyName": "城区" }] },
-
-  {
-    "cityCode": "140600",
-    "cityName": "朔州市",
-    "county": [{
-      "countyCode": "140621",
-      "countyName": "山阴县" },
-    {
-      "countyCode": "140623",
-      "countyName": "右玉县" },
-    {
-      "countyCode": "140603",
-      "countyName": "平鲁区" },
-    {
-      "countyCode": "140602",
-      "countyName": "朔城区" },
-    {
-      "countyCode": "140622",
-      "countyName": "应县" },
-    {
-      "countyCode": "140624",
-      "countyName": "怀仁市" }] },
-
-  {
-    "cityCode": "141100",
-    "cityName": "吕梁市",
-    "county": [{
-      "countyCode": "141125",
-      "countyName": "柳林县" },
-    {
-      "countyCode": "141127",
-      "countyName": "岚县" },
-    {
-      "countyCode": "141122",
-      "countyName": "交城县" },
-    {
-      "countyCode": "141128",
-      "countyName": "方山县" },
-    {
-      "countyCode": "141129",
-      "countyName": "中阳县" },
-    {
-      "countyCode": "141102",
-      "countyName": "离石区" },
-    {
-      "countyCode": "141126",
-      "countyName": "石楼县" },
-    {
-      "countyCode": "141182",
-      "countyName": "汾阳市" },
-    {
-      "countyCode": "141130",
-      "countyName": "交口县" },
-    {
-      "countyCode": "141124",
-      "countyName": "临县" },
-    {
-      "countyCode": "141181",
-      "countyName": "孝义市" },
-    {
-      "countyCode": "141123",
-      "countyName": "兴县" },
-    {
-      "countyCode": "141121",
-      "countyName": "文水县" }] },
-
-  {
-    "cityCode": "140900",
-    "cityName": "忻州市",
-    "county": [{
-      "countyCode": "140902",
-      "countyName": "忻府区" },
-    {
-      "countyCode": "140922",
-      "countyName": "五台县" },
-    {
-      "countyCode": "140981",
-      "countyName": "原平市" },
-    {
-      "countyCode": "140932",
-      "countyName": "偏关县" },
-    {
-      "countyCode": "140927",
-      "countyName": "神池县" },
-    {
-      "countyCode": "140925",
-      "countyName": "宁武县" },
-    {
-      "countyCode": "140924",
-      "countyName": "繁峙县" },
-    {
-      "countyCode": "140931",
-      "countyName": "保德县" },
-    {
-      "countyCode": "140926",
-      "countyName": "静乐县" },
-    {
-      "countyCode": "140930",
-      "countyName": "河曲县" },
-    {
-      "countyCode": "140921",
-      "countyName": "定襄县" },
-    {
-      "countyCode": "140923",
-      "countyName": "代县" },
-    {
-      "countyCode": "140928",
-      "countyName": "五寨县" },
-    {
-      "countyCode": "140929",
-      "countyName": "岢岚县" }] },
-
-  {
-    "cityCode": "140100",
-    "cityName": "太原市",
-    "county": [{
-      "countyCode": "140107",
-      "countyName": "杏花岭区" },
-    {
-      "countyCode": "140109",
-      "countyName": "万柏林区" },
-    {
-      "countyCode": "140105",
-      "countyName": "小店区" },
-    {
-      "countyCode": "140181",
-      "countyName": "古交市" },
-    {
-      "countyCode": "140110",
-      "countyName": "晋源区" },
-    {
-      "countyCode": "140122",
-      "countyName": "阳曲县" },
-    {
-      "countyCode": "140108",
-      "countyName": "尖草坪区" },
-    {
-      "countyCode": "140121",
-      "countyName": "清徐县" },
-    {
-      "countyCode": "140123",
-      "countyName": "娄烦县" },
-    {
-      "countyCode": "140106",
-      "countyName": "迎泽区" }] },
-
-  {
-    "cityCode": "140300",
-    "cityName": "阳泉市",
-    "county": [{
-      "countyCode": "140302",
-      "countyName": "城区" },
-    {
-      "countyCode": "140321",
-      "countyName": "平定县" },
-    {
-      "countyCode": "140311",
-      "countyName": "郊区" },
-    {
-      "countyCode": "140303",
-      "countyName": "矿区" },
-    {
-      "countyCode": "140322",
-      "countyName": "盂县" }] },
-
-  {
-    "cityCode": "140800",
-    "cityName": "运城市",
-    "county": [{
-      "countyCode": "140802",
-      "countyName": "盐湖区" },
-    {
-      "countyCode": "140829",
-      "countyName": "平陆县" },
-    {
-      "countyCode": "140828",
-      "countyName": "夏县" },
-    {
-      "countyCode": "140825",
-      "countyName": "新绛县" },
-    {
-      "countyCode": "140830",
-      "countyName": "芮城县" },
-    {
-      "countyCode": "140823",
-      "countyName": "闻喜县" },
-    {
-      "countyCode": "140826",
-      "countyName": "绛县" },
-    {
-      "countyCode": "140822",
-      "countyName": "万荣县" },
-    {
-      "countyCode": "140821",
-      "countyName": "临猗县" },
-    {
-      "countyCode": "140827",
-      "countyName": "垣曲县" },
-    {
-      "countyCode": "140824",
-      "countyName": "稷山县" },
-    {
-      "countyCode": "140881",
-      "countyName": "永济市" },
-    {
-      "countyCode": "140882",
-      "countyName": "河津市" }] },
-
-  {
-    "cityCode": "140400",
-    "cityName": "长治市",
-    "county": [{
-      "countyCode": "140428",
-      "countyName": "长子县" },
-    {
-      "countyCode": "140430",
-      "countyName": "沁县" },
-    {
-      "countyCode": "140426",
-      "countyName": "黎城县" },
-    {
-      "countyCode": "140481",
-      "countyName": "潞城市" },
-    {
-      "countyCode": "140403",
-      "countyName": "潞州区" },
-    {
-      "countyCode": "140402",
-      "countyName": "城区" },
-    {
-      "countyCode": "140427",
-      "countyName": "壶关县" },
-    {
-      "countyCode": "140429",
-      "countyName": "武乡县" },
-    {
-      "countyCode": "140425",
-      "countyName": "平顺县" },
-    {
-      "countyCode": "140421",
-      "countyName": "长治县" },
-    {
-      "countyCode": "140424",
-      "countyName": "屯留县" },
-    {
-      "countyCode": "140431",
-      "countyName": "沁源县" },
-    {
-      "countyCode": "140411",
-      "countyName": "郊区" },
-    {
-      "countyCode": "140423",
-      "countyName": "襄垣县" }] }] },
-
-
-{
-  "provinceCode": "150000",
-  "provinceName": "内蒙古自治区",
-  "city": [{
-    "cityCode": "150100",
-    "cityName": "呼和浩特市",
-    "county": [{
-      "countyCode": "150125",
-      "countyName": "武川县" },
-    {
-      "countyCode": "150124",
-      "countyName": "清水河县" },
-    {
-      "countyCode": "150105",
-      "countyName": "赛罕区" },
-    {
-      "countyCode": "150122",
-      "countyName": "托克托县" },
-    {
-      "countyCode": "150121",
-      "countyName": "土默特左旗" },
-    {
-      "countyCode": "150102",
-      "countyName": "新城区" },
-    {
-      "countyCode": "150104",
-      "countyName": "玉泉区" },
-    {
-      "countyCode": "150123",
-      "countyName": "和林格尔县" },
-    {
-      "countyCode": "150103",
-      "countyName": "回民区" }] },
-
-  {
-    "cityCode": "150300",
-    "cityName": "乌海市",
-    "county": [{
-      "countyCode": "150303",
-      "countyName": "海南区" },
-    {
-      "countyCode": "150302",
-      "countyName": "海勃湾区" },
-    {
-      "countyCode": "150304",
-      "countyName": "乌达区" }] },
-
-  {
-    "cityCode": "150500",
-    "cityName": "通辽市",
-    "county": [{
-      "countyCode": "150502",
-      "countyName": "科尔沁区" },
-    {
-      "countyCode": "150526",
-      "countyName": "扎鲁特旗" },
-    {
-      "countyCode": "150522",
-      "countyName": "科尔沁左翼后旗" },
-    {
-      "countyCode": "150523",
-      "countyName": "开鲁县" },
-    {
-      "countyCode": "150524",
-      "countyName": "库伦旗" },
-    {
-      "countyCode": "150525",
-      "countyName": "奈曼旗" },
-    {
-      "countyCode": "150521",
-      "countyName": "科尔沁左翼中旗" },
-    {
-      "countyCode": "150581",
-      "countyName": "霍林郭勒市" }] },
-
-  {
-    "cityCode": "150400",
-    "cityName": "赤峰市",
-    "county": [{
-      "countyCode": "150422",
-      "countyName": "巴林左旗" },
-    {
-      "countyCode": "150429",
-      "countyName": "宁城县" },
-    {
-      "countyCode": "150421",
-      "countyName": "阿鲁科尔沁旗" },
-    {
-      "countyCode": "150423",
-      "countyName": "巴林右旗" },
-    {
-      "countyCode": "150425",
-      "countyName": "克什克腾旗" },
-    {
-      "countyCode": "150426",
-      "countyName": "翁牛特旗" },
-    {
-      "countyCode": "150402",
-      "countyName": "红山区" },
-    {
-      "countyCode": "150430",
-      "countyName": "敖汉旗" },
-    {
-      "countyCode": "150428",
-      "countyName": "喀喇沁旗" },
-    {
-      "countyCode": "150404",
-      "countyName": "松山区" },
-    {
-      "countyCode": "150424",
-      "countyName": "林西县" },
-    {
-      "countyCode": "150403",
-      "countyName": "元宝山区" }] },
-
-  {
-    "cityCode": "150200",
-    "cityName": "包头市",
-    "county": [{
-      "countyCode": "150203",
-      "countyName": "昆都仑区" },
-    {
-      "countyCode": "150204",
-      "countyName": "青山区" },
-    {
-      "countyCode": "150205",
-      "countyName": "石拐区" },
-    {
-      "countyCode": "150221",
-      "countyName": "土默特右旗" },
-    {
-      "countyCode": "150222",
-      "countyName": "固阳县" },
-    {
-      "countyCode": "150223",
-      "countyName": "达尔罕茂明安联合旗" },
-    {
-      "countyCode": "150206",
-      "countyName": "白云鄂博矿区" },
-    {
-      "countyCode": "150202",
-      "countyName": "东河区" },
-    {
-      "countyCode": "150207",
-      "countyName": "九原区" }] },
-
-  {
-    "cityCode": "150700",
-    "cityName": "呼伦贝尔市",
-    "county": [{
-      "countyCode": "150721",
-      "countyName": "阿荣旗" },
-    {
-      "countyCode": "150723",
-      "countyName": "鄂伦春自治旗" },
-    {
-      "countyCode": "150785",
-      "countyName": "根河市" },
-    {
-      "countyCode": "150782",
-      "countyName": "牙克石市" },
-    {
-      "countyCode": "150783",
-      "countyName": "扎兰屯市" },
-    {
-      "countyCode": "150724",
-      "countyName": "鄂温克族自治旗" },
-    {
-      "countyCode": "150784",
-      "countyName": "额尔古纳市" },
-    {
-      "countyCode": "150727",
-      "countyName": "新巴尔虎右旗" },
-    {
-      "countyCode": "150726",
-      "countyName": "新巴尔虎左旗" },
-    {
-      "countyCode": "150702",
-      "countyName": "海拉尔区" },
-    {
-      "countyCode": "150703",
-      "countyName": "扎赉诺尔区" },
-    {
-      "countyCode": "150781",
-      "countyName": "满洲里市" },
-    {
-      "countyCode": "150725",
-      "countyName": "陈巴尔虎旗" },
-    {
-      "countyCode": "150722",
-      "countyName": "莫力达瓦达斡尔族自治旗" }] },
-
-  {
-    "cityCode": "152500",
-    "cityName": "锡林郭勒盟",
-    "county": [{
-      "countyCode": "152529",
-      "countyName": "正镶白旗" },
-    {
-      "countyCode": "152501",
-      "countyName": "二连浩特市" },
-    {
-      "countyCode": "152525",
-      "countyName": "东乌珠穆沁旗" },
-    {
-      "countyCode": "152524",
-      "countyName": "苏尼特右旗" },
-    {
-      "countyCode": "152523",
-      "countyName": "苏尼特左旗" },
-    {
-      "countyCode": "152526",
-      "countyName": "西乌珠穆沁旗" },
-    {
-      "countyCode": "152531",
-      "countyName": "多伦县" },
-    {
-      "countyCode": "152528",
-      "countyName": "镶黄旗" },
-    {
-      "countyCode": "152530",
-      "countyName": "正蓝旗" },
-    {
-      "countyCode": "152522",
-      "countyName": "阿巴嘎旗" },
-    {
-      "countyCode": "152502",
-      "countyName": "锡林浩特市" },
-    {
-      "countyCode": "152527",
-      "countyName": "太仆寺旗" }] },
-
-  {
-    "cityCode": "152200",
-    "cityName": "兴安盟",
-    "county": [{
-      "countyCode": "152221",
-      "countyName": "科尔沁右翼前旗" },
-    {
-      "countyCode": "152223",
-      "countyName": "扎赉特旗" },
-    {
-      "countyCode": "152201",
-      "countyName": "乌兰浩特市" },
-    {
-      "countyCode": "152224",
-      "countyName": "突泉县" },
-    {
-      "countyCode": "152222",
-      "countyName": "科尔沁右翼中旗" },
-    {
-      "countyCode": "152202",
-      "countyName": "阿尔山市" }] },
-
-  {
-    "cityCode": "150900",
-    "cityName": "乌兰察布市",
-    "county": [{
-      "countyCode": "150902",
-      "countyName": "集宁区" },
-    {
-      "countyCode": "150921",
-      "countyName": "卓资县" },
-    {
-      "countyCode": "150922",
-      "countyName": "化德县" },
-    {
-      "countyCode": "150923",
-      "countyName": "商都县" },
-    {
-      "countyCode": "150928",
-      "countyName": "察哈尔右翼后旗" },
-    {
-      "countyCode": "150926",
-      "countyName": "察哈尔右翼前旗" },
-    {
-      "countyCode": "150927",
-      "countyName": "察哈尔右翼中旗" },
-    {
-      "countyCode": "150929",
-      "countyName": "四子王旗" },
-    {
-      "countyCode": "150981",
-      "countyName": "丰镇市" },
-    {
-      "countyCode": "150925",
-      "countyName": "凉城县" },
-    {
-      "countyCode": "150924",
-      "countyName": "兴和县" }] },
-
-  {
-    "cityCode": "150600",
-    "cityName": "鄂尔多斯市",
-    "county": [{
-      "countyCode": "150624",
-      "countyName": "鄂托克旗" },
-    {
-      "countyCode": "150621",
-      "countyName": "达拉特旗" },
-    {
-      "countyCode": "150626",
-      "countyName": "乌审旗" },
-    {
-      "countyCode": "150602",
-      "countyName": "东胜区" },
-    {
-      "countyCode": "150603",
-      "countyName": "康巴什区" },
-    {
-      "countyCode": "150623",
-      "countyName": "鄂托克前旗" },
-    {
-      "countyCode": "150622",
-      "countyName": "准格尔旗" },
-    {
-      "countyCode": "150625",
-      "countyName": "杭锦旗" },
-    {
-      "countyCode": "150627",
-      "countyName": "伊金霍洛旗" }] },
-
-  {
-    "cityCode": "152900",
-    "cityName": "阿拉善盟",
-    "county": [{
-      "countyCode": "152923",
-      "countyName": "额济纳旗" },
-    {
-      "countyCode": "152921",
-      "countyName": "阿拉善左旗" },
-    {
-      "countyCode": "152922",
-      "countyName": "阿拉善右旗" }] },
-
-  {
-    "cityCode": "150800",
-    "cityName": "巴彦淖尔市",
-    "county": [{
-      "countyCode": "150802",
-      "countyName": "临河区" },
-    {
-      "countyCode": "150823",
-      "countyName": "乌拉特前旗" },
-    {
-      "countyCode": "150821",
-      "countyName": "五原县" },
-    {
-      "countyCode": "150826",
-      "countyName": "杭锦后旗" },
-    {
-      "countyCode": "150825",
-      "countyName": "乌拉特后旗" },
-    {
-      "countyCode": "150824",
-      "countyName": "乌拉特中旗" },
-    {
-      "countyCode": "150822",
-      "countyName": "磴口县" }] }] },
-
-
-{
-  "provinceCode": "210000",
-  "provinceName": "辽宁省",
-  "city": [{
-    "cityCode": "211200",
-    "cityName": "铁岭市",
-    "county": [{
-      "countyCode": "211281",
-      "countyName": "调兵山市" },
-    {
-      "countyCode": "211221",
-      "countyName": "铁岭县" },
-    {
-      "countyCode": "211224",
-      "countyName": "昌图县" },
-    {
-      "countyCode": "211223",
-      "countyName": "西丰县" },
-    {
-      "countyCode": "211282",
-      "countyName": "开原市" },
-    {
-      "countyCode": "211202",
-      "countyName": "银州区" },
-    {
-      "countyCode": "211204",
-      "countyName": "清河区" }] },
-
-  {
-    "cityCode": "210500",
-    "cityName": "本溪市",
-    "county": [{
-      "countyCode": "210522",
-      "countyName": "桓仁满族自治县" },
-    {
-      "countyCode": "210502",
-      "countyName": "平山区" },
-    {
-      "countyCode": "210503",
-      "countyName": "溪湖区" },
-    {
-      "countyCode": "210505",
-      "countyName": "南芬区" },
-    {
-      "countyCode": "210504",
-      "countyName": "明山区" },
-    {
-      "countyCode": "210521",
-      "countyName": "本溪满族自治县" }] },
-
-  {
-    "cityCode": "211400",
-    "cityName": "葫芦岛市",
-    "county": [{
-      "countyCode": "211421",
-      "countyName": "绥中县" },
-    {
-      "countyCode": "211481",
-      "countyName": "兴城市" },
-    {
-      "countyCode": "211403",
-      "countyName": "龙港区" },
-    {
-      "countyCode": "211404",
-      "countyName": "南票区" },
-    {
-      "countyCode": "211422",
-      "countyName": "建昌县" },
-    {
-      "countyCode": "211402",
-      "countyName": "连山区" }] },
-
-  {
-    "cityCode": "210100",
-    "cityName": "沈阳市",
-    "county": [{
-      "countyCode": "210122",
-      "countyName": "辽中区" },
-    {
-      "countyCode": "210104",
-      "countyName": "大东区" },
-    {
-      "countyCode": "210105",
-      "countyName": "皇姑区" },
-    {
-      "countyCode": "210123",
-      "countyName": "康平县" },
-    {
-      "countyCode": "210124",
-      "countyName": "法库县" },
-    {
-      "countyCode": "210181",
-      "countyName": "新民市" },
-    {
-      "countyCode": "210103",
-      "countyName": "沈河区" },
-    {
-      "countyCode": "210111",
-      "countyName": "苏家屯区" },
-    {
-      "countyCode": "210106",
-      "countyName": "铁西区" },
-    {
-      "countyCode": "210102",
-      "countyName": "和平区" },
-    {
-      "countyCode": "210113",
-      "countyName": "沈北新区" },
-    {
-      "countyCode": "210114",
-      "countyName": "于洪区" },
-    {
-      "countyCode": "210112",
-      "countyName": "浑南区" }] },
-
-  {
-    "cityCode": "210900",
-    "cityName": "阜新市",
-    "county": [{
-      "countyCode": "210905",
-      "countyName": "清河门区" },
-    {
-      "countyCode": "210911",
-      "countyName": "细河区" },
-    {
-      "countyCode": "210921",
-      "countyName": "阜新蒙古族自治县" },
-    {
-      "countyCode": "210902",
-      "countyName": "海州区" },
-    {
-      "countyCode": "210903",
-      "countyName": "新邱区" },
-    {
-      "countyCode": "210922",
-      "countyName": "彰武县" },
-    {
-      "countyCode": "210904",
-      "countyName": "太平区" }] },
-
-  {
-    "cityCode": "210800",
-    "cityName": "营口市",
-    "county": [{
-      "countyCode": "210802",
-      "countyName": "站前区" },
-    {
-      "countyCode": "210804",
-      "countyName": "鲅鱼圈区" },
-    {
-      "countyCode": "210811",
-      "countyName": "老边区" },
-    {
-      "countyCode": "210882",
-      "countyName": "大石桥市" },
-    {
-      "countyCode": "210881",
-      "countyName": "盖州市" },
-    {
-      "countyCode": "210803",
-      "countyName": "西市区" }] },
-
-  {
-    "cityCode": "210300",
-    "cityName": "鞍山市",
-    "county": [{
-      "countyCode": "210304",
-      "countyName": "立山区" },
-    {
-      "countyCode": "210381",
-      "countyName": "海城市" },
-    {
-      "countyCode": "210321",
-      "countyName": "台安县" },
-    {
-      "countyCode": "210311",
-      "countyName": "千山区" },
-    {
-      "countyCode": "210302",
-      "countyName": "铁东区" },
-    {
-      "countyCode": "210303",
-      "countyName": "铁西区" },
-    {
-      "countyCode": "210323",
-      "countyName": "岫岩满族自治县" }] },
-
-  {
-    "cityCode": "210700",
-    "cityName": "锦州市",
-    "county": [{
-      "countyCode": "210727",
-      "countyName": "义县" },
-    {
-      "countyCode": "210781",
-      "countyName": "凌海市" },
-    {
-      "countyCode": "210711",
-      "countyName": "太和区" },
-    {
-      "countyCode": "210726",
-      "countyName": "黑山县" },
-    {
-      "countyCode": "210782",
-      "countyName": "北镇市" },
-    {
-      "countyCode": "210702",
-      "countyName": "古塔区" },
-    {
-      "countyCode": "210703",
-      "countyName": "凌河区" }] },
-
-  {
-    "cityCode": "210400",
-    "cityName": "抚顺市",
-    "county": [{
-      "countyCode": "210403",
-      "countyName": "东洲区" },
-    {
-      "countyCode": "210411",
-      "countyName": "顺城区" },
-    {
-      "countyCode": "210404",
-      "countyName": "望花区" },
-    {
-      "countyCode": "210402",
-      "countyName": "新抚区" },
-    {
-      "countyCode": "210421",
-      "countyName": "抚顺县" },
-    {
-      "countyCode": "210423",
-      "countyName": "清原满族自治县" },
-    {
-      "countyCode": "210422",
-      "countyName": "新宾满族自治县" }] },
-
-  {
-    "cityCode": "210200",
-    "cityName": "大连市",
-    "county": [{
-      "countyCode": "210213",
-      "countyName": "金州区" },
-    {
-      "countyCode": "210202",
-      "countyName": "中山区" },
-    {
-      "countyCode": "210282",
-      "countyName": "普兰店区" },
-    {
-      "countyCode": "210204",
-      "countyName": "沙河口区" },
-    {
-      "countyCode": "210203",
-      "countyName": "西岗区" },
-    {
-      "countyCode": "210281",
-      "countyName": "瓦房店市" },
-    {
-      "countyCode": "210211",
-      "countyName": "甘井子区" },
-    {
-      "countyCode": "210212",
-      "countyName": "旅顺口区" },
-    {
-      "countyCode": "210224",
-      "countyName": "长海县" },
-    {
-      "countyCode": "210283",
-      "countyName": "庄河市" }] },
-
-  {
-    "cityCode": "211000",
-    "cityName": "辽阳市",
-    "county": [{
-      "countyCode": "211003",
-      "countyName": "文圣区" },
-    {
-      "countyCode": "211081",
-      "countyName": "灯塔市" },
-    {
-      "countyCode": "211011",
-      "countyName": "太子河区" },
-    {
-      "countyCode": "211005",
-      "countyName": "弓长岭区" },
-    {
-      "countyCode": "211004",
-      "countyName": "宏伟区" },
-    {
-      "countyCode": "211021",
-      "countyName": "辽阳县" },
-    {
-      "countyCode": "211002",
-      "countyName": "白塔区" }] },
-
-  {
-    "cityCode": "210600",
-    "cityName": "丹东市",
-    "county": [{
-      "countyCode": "210603",
-      "countyName": "振兴区" },
-    {
-      "countyCode": "210681",
-      "countyName": "东港市" },
-    {
-      "countyCode": "210624",
-      "countyName": "宽甸满族自治县" },
-    {
-      "countyCode": "210682",
-      "countyName": "凤城市" },
-    {
-      "countyCode": "210604",
-      "countyName": "振安区" },
-    {
-      "countyCode": "210602",
-      "countyName": "元宝区" }] },
-
-  {
-    "cityCode": "211300",
-    "cityName": "朝阳市",
-    "county": [{
-      "countyCode": "211382",
-      "countyName": "凌源市" },
-    {
-      "countyCode": "211322",
-      "countyName": "建平县" },
-    {
-      "countyCode": "211381",
-      "countyName": "北票市" },
-    {
-      "countyCode": "211303",
-      "countyName": "龙城区" },
-    {
-      "countyCode": "211302",
-      "countyName": "双塔区" },
-    {
-      "countyCode": "211324",
-      "countyName": "喀喇沁左翼蒙古族自治县" },
-    {
-      "countyCode": "211321",
-      "countyName": "朝阳县" }] },
-
-  {
-    "cityCode": "211100",
-    "cityName": "盘锦市",
-    "county": [{
-      "countyCode": "211122",
-      "countyName": "盘山县" },
-    {
-      "countyCode": "211103",
-      "countyName": "兴隆台区" },
-    {
-      "countyCode": "211102",
-      "countyName": "双台子区" },
-    {
-      "countyCode": "211121",
-      "countyName": "大洼区" }] }] },
-
-
-{
-  "provinceCode": "220000",
-  "provinceName": "吉林省",
-  "city": [{
-    "cityCode": "220600",
-    "cityName": "白山市",
-    "county": [{
-      "countyCode": "220621",
-      "countyName": "抚松县" },
-    {
-      "countyCode": "220602",
-      "countyName": "浑江区" },
-    {
-      "countyCode": "220622",
-      "countyName": "靖宇县" },
-    {
-      "countyCode": "220605",
-      "countyName": "江源区" },
-    {
-      "countyCode": "220681",
-      "countyName": "临江市" },
-    {
-      "countyCode": "220623",
-      "countyName": "长白朝鲜族自治县" }] },
-
-  {
-    "cityCode": "220500",
-    "cityName": "通化市",
-    "county": [{
-      "countyCode": "220523",
-      "countyName": "辉南县" },
-    {
-      "countyCode": "220521",
-      "countyName": "通化县" },
-    {
-      "countyCode": "220581",
-      "countyName": "梅河口市" },
-    {
-      "countyCode": "220502",
-      "countyName": "东昌区" },
-    {
-      "countyCode": "220524",
-      "countyName": "柳河县" },
-    {
-      "countyCode": "220503",
-      "countyName": "二道江区" },
-    {
-      "countyCode": "220582",
-      "countyName": "集安市" }] },
-
-  {
-    "cityCode": "220700",
-    "cityName": "松原市",
-    "county": [{
-      "countyCode": "220722",
-      "countyName": "长岭县" },
-    {
-      "countyCode": "220702",
-      "countyName": "宁江区" },
-    {
-      "countyCode": "220724",
-      "countyName": "扶余市" },
-    {
-      "countyCode": "220721",
-      "countyName": "前郭尔罗斯蒙古族自治县" },
-    {
-      "countyCode": "220723",
-      "countyName": "乾安县" }] },
-
-  {
-    "cityCode": "220800",
-    "cityName": "白城市",
-    "county": [{
-      "countyCode": "220802",
-      "countyName": "洮北区" },
-    {
-      "countyCode": "220821",
-      "countyName": "镇赉县" },
-    {
-      "countyCode": "220822",
-      "countyName": "通榆县" },
-    {
-      "countyCode": "220881",
-      "countyName": "洮南市" },
-    {
-      "countyCode": "220882",
-      "countyName": "大安市" }] },
-
-  {
-    "cityCode": "220100",
-    "cityName": "长春市",
-    "county": [{
-      "countyCode": "220105",
-      "countyName": "二道区" },
-    {
-      "countyCode": "220182",
-      "countyName": "榆树市" },
-    {
-      "countyCode": "220106",
-      "countyName": "绿园区" },
-    {
-      "countyCode": "220181",
-      "countyName": "九台区" },
-    {
-      "countyCode": "220122",
-      "countyName": "农安县" },
-    {
-      "countyCode": "220103",
-      "countyName": "宽城区" },
-    {
-      "countyCode": "220102",
-      "countyName": "南关区" },
-    {
-      "countyCode": "220104",
-      "countyName": "朝阳区" },
-    {
-      "countyCode": "220183",
-      "countyName": "德惠市" },
-    {
-      "countyCode": "220112",
-      "countyName": "双阳区" }] },
-
-  {
-    "cityCode": "222400",
-    "cityName": "延边朝鲜族自治州",
-    "county": [{
-      "countyCode": "222424",
-      "countyName": "汪清县" },
-    {
-      "countyCode": "222401",
-      "countyName": "延吉市" },
-    {
-      "countyCode": "222404",
-      "countyName": "珲春市" },
-    {
-      "countyCode": "222405",
-      "countyName": "龙井市" },
-    {
-      "countyCode": "222402",
-      "countyName": "图们市" },
-    {
-      "countyCode": "222426",
-      "countyName": "安图县" },
-    {
-      "countyCode": "222406",
-      "countyName": "和龙市" },
-    {
-      "countyCode": "222403",
-      "countyName": "敦化市" }] },
-
-  {
-    "cityCode": "220400",
-    "cityName": "辽源市",
-    "county": [{
-      "countyCode": "220422",
-      "countyName": "东辽县" },
-    {
-      "countyCode": "220402",
-      "countyName": "龙山区" },
-    {
-      "countyCode": "220421",
-      "countyName": "东丰县" },
-    {
-      "countyCode": "220403",
-      "countyName": "西安区" }] },
-
-  {
-    "cityCode": "220300",
-    "cityName": "四平市",
-    "county": [{
-      "countyCode": "220381",
-      "countyName": "公主岭市" },
-    {
-      "countyCode": "220323",
-      "countyName": "伊通满族自治县" },
-    {
-      "countyCode": "220322",
-      "countyName": "梨树县" },
-    {
-      "countyCode": "220382",
-      "countyName": "双辽市" },
-    {
-      "countyCode": "220302",
-      "countyName": "铁西区" },
-    {
-      "countyCode": "220303",
-      "countyName": "铁东区" }] },
-
-  {
-    "cityCode": "220200",
-    "cityName": "吉林市",
-    "county": [{
-      "countyCode": "220204",
-      "countyName": "船营区" },
-    {
-      "countyCode": "220283",
-      "countyName": "舒兰市" },
-    {
-      "countyCode": "220282",
-      "countyName": "桦甸市" },
-    {
-      "countyCode": "220202",
-      "countyName": "昌邑区" },
-    {
-      "countyCode": "220281",
-      "countyName": "蛟河市" },
-    {
-      "countyCode": "220284",
-      "countyName": "磐石市" },
-    {
-      "countyCode": "220211",
-      "countyName": "丰满区" },
-    {
-      "countyCode": "220203",
-      "countyName": "龙潭区" },
-    {
-      "countyCode": "220221",
-      "countyName": "永吉县" }] }] },
-
-
-{
-  "provinceCode": "230000",
-  "provinceName": "黑龙江省",
-  "city": [{
-    "cityCode": "230400",
-    "cityName": "鹤岗市",
-    "county": [{
-      "countyCode": "230406",
-      "countyName": "东山区" },
-    {
-      "countyCode": "230407",
-      "countyName": "兴山区" },
-    {
-      "countyCode": "230422",
-      "countyName": "绥滨县" },
-    {
-      "countyCode": "230403",
-      "countyName": "工农区" },
-    {
-      "countyCode": "230404",
-      "countyName": "南山区" },
-    {
-      "countyCode": "230421",
-      "countyName": "萝北县" },
-    {
-      "countyCode": "230402",
-      "countyName": "向阳区" },
-    {
-      "countyCode": "230405",
-      "countyName": "兴安区" }] },
-
-  {
-    "cityCode": "230700",
-    "cityName": "伊春市",
-    "county": [{
-      "countyCode": "230708",
-      "countyName": "美溪区" },
-    {
-      "countyCode": "230705",
-      "countyName": "西林区" },
-    {
-      "countyCode": "230722",
-      "countyName": "嘉荫县" },
-    {
-      "countyCode": "230709",
-      "countyName": "金山屯区" },
-    {
-      "countyCode": "230711",
-      "countyName": "乌马河区" },
-    {
-      "countyCode": "230707",
-      "countyName": "新青区" },
-    {
-      "countyCode": "230702",
-      "countyName": "伊春区" },
-    {
-      "countyCode": "230704",
-      "countyName": "友好区" },
-    {
-      "countyCode": "230703",
-      "countyName": "南岔区" },
-    {
-      "countyCode": "230710",
-      "countyName": "五营区" },
-    {
-      "countyCode": "230716",
-      "countyName": "上甘岭区" },
-    {
-      "countyCode": "230712",
-      "countyName": "汤旺河区" },
-    {
-      "countyCode": "230781",
-      "countyName": "铁力市" },
-    {
-      "countyCode": "230714",
-      "countyName": "乌伊岭区" },
-    {
-      "countyCode": "230715",
-      "countyName": "红星区" },
-    {
-      "countyCode": "230706",
-      "countyName": "翠峦区" },
-    {
-      "countyCode": "230713",
-      "countyName": "带岭区" }] },
-
-  {
-    "cityCode": "230800",
-    "cityName": "佳木斯市",
-    "county": [{
-      "countyCode": "230881",
-      "countyName": "同江市" },
-    {
-      "countyCode": "230805",
-      "countyName": "东风区" },
-    {
-      "countyCode": "230811",
-      "countyName": "郊区" },
-    {
-      "countyCode": "230882",
-      "countyName": "富锦市" },
-    {
-      "countyCode": "230828",
-      "countyName": "汤原县" },
-    {
-      "countyCode": "230833",
-      "countyName": "抚远市" },
-    {
-      "countyCode": "230804",
-      "countyName": "前进区" },
-    {
-      "countyCode": "230803",
-      "countyName": "向阳区" },
-    {
-      "countyCode": "230826",
-      "countyName": "桦川县" },
-    {
-      "countyCode": "230822",
-      "countyName": "桦南县" }] },
-
-  {
-    "cityCode": "230200",
-    "cityName": "齐齐哈尔市",
-    "county": [{
-      "countyCode": "230207",
-      "countyName": "碾子山区" },
-    {
-      "countyCode": "230203",
-      "countyName": "建华区" },
-    {
-      "countyCode": "230204",
-      "countyName": "铁锋区" },
-    {
-      "countyCode": "230208",
-      "countyName": "梅里斯达斡尔族区" },
-    {
-      "countyCode": "230230",
-      "countyName": "克东县" },
-    {
-      "countyCode": "230227",
-      "countyName": "富裕县" },
-    {
-      "countyCode": "230205",
-      "countyName": "昂昂溪区" },
-    {
-      "countyCode": "230221",
-      "countyName": "龙江县" },
-    {
-      "countyCode": "230206",
-      "countyName": "富拉尔基区" },
-    {
-      "countyCode": "230223",
-      "countyName": "依安县" },
-    {
-      "countyCode": "230225",
-      "countyName": "甘南县" },
-    {
-      "countyCode": "230229",
-      "countyName": "克山县" },
-    {
-      "countyCode": "230281",
-      "countyName": "讷河市" },
-    {
-      "countyCode": "230202",
-      "countyName": "龙沙区" },
-    {
-      "countyCode": "230231",
-      "countyName": "拜泉县" },
-    {
-      "countyCode": "230224",
-      "countyName": "泰来县" }] },
-
-  {
-    "cityCode": "230500",
-    "cityName": "双鸭山市",
-    "county": [{
-      "countyCode": "230524",
-      "countyName": "饶河县" },
-    {
-      "countyCode": "230506",
-      "countyName": "宝山区" },
-    {
-      "countyCode": "230503",
-      "countyName": "岭东区" },
-    {
-      "countyCode": "230505",
-      "countyName": "四方台区" },
-    {
-      "countyCode": "230523",
-      "countyName": "宝清县" },
-    {
-      "countyCode": "230521",
-      "countyName": "集贤县" },
-    {
-      "countyCode": "230522",
-      "countyName": "友谊县" },
-    {
-      "countyCode": "230502",
-      "countyName": "尖山区" }] },
-
-  {
-    "cityCode": "230100",
-    "cityName": "哈尔滨市",
-    "county": [{
-      "countyCode": "230109",
-      "countyName": "松北区" },
-    {
-      "countyCode": "230127",
-      "countyName": "木兰县" },
-    {
-      "countyCode": "230124",
-      "countyName": "方正县" },
-    {
-      "countyCode": "230103",
-      "countyName": "南岗区" },
-    {
-      "countyCode": "230183",
-      "countyName": "尚志市" },
-    {
-      "countyCode": "230129",
-      "countyName": "延寿县" },
-    {
-      "countyCode": "230126",
-      "countyName": "巴彦县" },
-    {
-      "countyCode": "230125",
-      "countyName": "宾县" },
-    {
-      "countyCode": "230102",
-      "countyName": "道里区" },
-    {
-      "countyCode": "230111",
-      "countyName": "呼兰区" },
-    {
-      "countyCode": "230112",
-      "countyName": "阿城区" },
-    {
-      "countyCode": "230110",
-      "countyName": "香坊区" },
-    {
-      "countyCode": "230108",
-      "countyName": "平房区" },
-    {
-      "countyCode": "230182",
-      "countyName": "双城区" },
-    {
-      "countyCode": "230123",
-      "countyName": "依兰县" },
-    {
-      "countyCode": "230184",
-      "countyName": "五常市" },
-    {
-      "countyCode": "230104",
-      "countyName": "道外区" },
-    {
-      "countyCode": "230128",
-      "countyName": "通河县" }] },
-
-  {
-    "cityCode": "231000",
-    "cityName": "牡丹江市",
-    "county": [{
-      "countyCode": "231003",
-      "countyName": "阳明区" },
-    {
-      "countyCode": "231005",
-      "countyName": "西安区" },
-    {
-      "countyCode": "231025",
-      "countyName": "林口县" },
-    {
-      "countyCode": "231024",
-      "countyName": "东宁市" },
-    {
-      "countyCode": "231004",
-      "countyName": "爱民区" },
-    {
-      "countyCode": "231084",
-      "countyName": "宁安市" },
-    {
-      "countyCode": "231083",
-      "countyName": "海林市" },
-    {
-      "countyCode": "231002",
-      "countyName": "东安区" },
-    {
-      "countyCode": "231085",
-      "countyName": "穆棱市" },
-    {
-      "countyCode": "231081",
-      "countyName": "绥芬河市" }] },
-
-  {
-    "cityCode": "230900",
-    "cityName": "七台河市",
-    "county": [{
-      "countyCode": "230904",
-      "countyName": "茄子河区" },
-    {
-      "countyCode": "230921",
-      "countyName": "勃利县" },
-    {
-      "countyCode": "230902",
-      "countyName": "新兴区" },
-    {
-      "countyCode": "230903",
-      "countyName": "桃山区" }] },
-
-  {
-    "cityCode": "231100",
-    "cityName": "黑河市",
-    "county": [{
-      "countyCode": "231102",
-      "countyName": "爱辉区" },
-    {
-      "countyCode": "231182",
-      "countyName": "五大连池市" },
-    {
-      "countyCode": "231181",
-      "countyName": "北安市" },
-    {
-      "countyCode": "231124",
-      "countyName": "孙吴县" },
-    {
-      "countyCode": "231123",
-      "countyName": "逊克县" },
-    {
-      "countyCode": "231121",
-      "countyName": "嫩江县" }] },
-
-  {
-    "cityCode": "230600",
-    "cityName": "大庆市",
-    "county": [{
-      "countyCode": "230605",
-      "countyName": "红岗区" },
-    {
-      "countyCode": "230606",
-      "countyName": "大同区" },
-    {
-      "countyCode": "230623",
-      "countyName": "林甸县" },
-    {
-      "countyCode": "230622",
-      "countyName": "肇源县" },
-    {
-      "countyCode": "230621",
-      "countyName": "肇州县" },
-    {
-      "countyCode": "230624",
-      "countyName": "杜尔伯特蒙古族自治县" },
-    {
-      "countyCode": "230603",
-      "countyName": "龙凤区" },
-    {
-      "countyCode": "230602",
-      "countyName": "萨尔图区" },
-    {
-      "countyCode": "230604",
-      "countyName": "让胡路区" }] },
-
-  {
-    "cityCode": "232700",
-    "cityName": "大兴安岭地区",
-    "county": [{
-      "countyCode": "232703",
-      "countyName": "新林区" },
-    {
-      "countyCode": "232702",
-      "countyName": "松岭区" },
-    {
-      "countyCode": "232701",
-      "countyName": "加格达奇区" },
-    {
-      "countyCode": "232722",
-      "countyName": "塔河县" },
-    {
-      "countyCode": "232721",
-      "countyName": "呼玛县" },
-    {
-      "countyCode": "232704",
-      "countyName": "呼中区" },
-    {
-      "countyCode": "232723",
-      "countyName": "漠河市" }] },
-
-  {
-    "cityCode": "231200",
-    "cityName": "绥化市",
-    "county": [{
-      "countyCode": "231281",
-      "countyName": "安达市" },
-    {
-      "countyCode": "231224",
-      "countyName": "庆安县" },
-    {
-      "countyCode": "231282",
-      "countyName": "肇东市" },
-    {
-      "countyCode": "231283",
-      "countyName": "海伦市" },
-    {
-      "countyCode": "231225",
-      "countyName": "明水县" },
-    {
-      "countyCode": "231222",
-      "countyName": "兰西县" },
-    {
-      "countyCode": "231223",
-      "countyName": "青冈县" },
-    {
-      "countyCode": "231226",
-      "countyName": "绥棱县" },
-    {
-      "countyCode": "231221",
-      "countyName": "望奎县" },
-    {
-      "countyCode": "231202",
-      "countyName": "北林区" }] },
-
-  {
-    "cityCode": "230300",
-    "cityName": "鸡西市",
-    "county": [{
-      "countyCode": "230303",
-      "countyName": "恒山区" },
-    {
-      "countyCode": "230302",
-      "countyName": "鸡冠区" },
-    {
-      "countyCode": "230305",
-      "countyName": "梨树区" },
-    {
-      "countyCode": "230321",
-      "countyName": "鸡东县" },
-    {
-      "countyCode": "230304",
-      "countyName": "滴道区" },
-    {
-      "countyCode": "230381",
-      "countyName": "虎林市" },
-    {
-      "countyCode": "230307",
-      "countyName": "麻山区" },
-    {
-      "countyCode": "230306",
-      "countyName": "城子河区" },
-    {
-      "countyCode": "230382",
-      "countyName": "密山市" }] }] },
-
-
-{
-  "provinceCode": "310000",
-  "provinceName": "上海",
-  "city": [{
-    "cityCode": "310000-1",
-    "cityName": "上海市",
-    "county": [{
-      "countyCode": "310115",
-      "countyName": "浦东新区" },
-    {
-      "countyCode": "310110",
-      "countyName": "杨浦区" },
-    {
-      "countyCode": "310230",
-      "countyName": "崇明区" },
-    {
-      "countyCode": "310113",
-      "countyName": "宝山区" },
-    {
-      "countyCode": "310114",
-      "countyName": "嘉定区" },
-    {
-      "countyCode": "310109",
-      "countyName": "虹口区" },
-    {
-      "countyCode": "310101",
-      "countyName": "黄浦区" },
-    {
-      "countyCode": "310120",
-      "countyName": "奉贤区" },
-    {
-      "countyCode": "310118",
-      "countyName": "青浦区" },
-    {
-      "countyCode": "310112",
-      "countyName": "闵行区" },
-    {
-      "countyCode": "310105",
-      "countyName": "长宁区" },
-    {
-      "countyCode": "310104",
-      "countyName": "徐汇区" },
-    {
-      "countyCode": "310117",
-      "countyName": "松江区" },
-    {
-      "countyCode": "310106",
-      "countyName": "静安区" },
-    {
-      "countyCode": "310107",
-      "countyName": "普陀区" },
-    {
-      "countyCode": "310116",
-      "countyName": "金山区" }] }] },
-
-
-{
-  "provinceCode": "340000",
-  "provinceName": "安徽省",
-  "city": [{
-    "cityCode": "341000",
-    "cityName": "黄山市",
-    "county": [{
-      "countyCode": "341022",
-      "countyName": "休宁县" },
-    {
-      "countyCode": "341024",
-      "countyName": "祁门县" },
-    {
-      "countyCode": "341021",
-      "countyName": "歙县" },
-    {
-      "countyCode": "341003",
-      "countyName": "黄山区" },
-    {
-      "countyCode": "341023",
-      "countyName": "黟县" },
-    {
-      "countyCode": "341004",
-      "countyName": "徽州区" },
-    {
-      "countyCode": "341002",
-      "countyName": "屯溪区" }] },
-
-  {
-    "cityCode": "340200",
-    "cityName": "芜湖市",
-    "county": [{
-      "countyCode": "340208",
-      "countyName": "三山区" },
-    {
-      "countyCode": "340222",
-      "countyName": "繁昌县" },
-    {
-      "countyCode": "340207",
-      "countyName": "鸠江区" },
-    {
-      "countyCode": "340221",
-      "countyName": "芜湖县" },
-    {
-      "countyCode": "340202",
-      "countyName": "镜湖区" },
-    {
-      "countyCode": "340203",
-      "countyName": "弋江区" },
-    {
-      "countyCode": "340225",
-      "countyName": "无为县" },
-    {
-      "countyCode": "340223",
-      "countyName": "南陵县" }] },
-
-  {
-    "cityCode": "340800",
-    "cityName": "安庆市",
-    "county": [{
-      "countyCode": "340826",
-      "countyName": "宿松县" },
-    {
-      "countyCode": "340824",
-      "countyName": "潜山市" },
-    {
-      "countyCode": "340881",
-      "countyName": "桐城市" },
-    {
-      "countyCode": "340828",
-      "countyName": "岳西县" },
-    {
-      "countyCode": "340825",
-      "countyName": "太湖县" },
-    {
-      "countyCode": "340811",
-      "countyName": "宜秀区" },
-    {
-      "countyCode": "340803",
-      "countyName": "大观区" },
-    {
-      "countyCode": "340827",
-      "countyName": "望江县" },
-    {
-      "countyCode": "340802",
-      "countyName": "迎江区" },
-    {
-      "countyCode": "340822",
-      "countyName": "怀宁县" }] },
-
-  {
-    "cityCode": "341100",
-    "cityName": "滁州市",
-    "county": [{
-      "countyCode": "341103",
-      "countyName": "南谯区" },
-    {
-      "countyCode": "341102",
-      "countyName": "琅琊区" },
-    {
-      "countyCode": "341181",
-      "countyName": "天长市" },
-    {
-      "countyCode": "341125",
-      "countyName": "定远县" },
-    {
-      "countyCode": "341124",
-      "countyName": "全椒县" },
-    {
-      "countyCode": "341122",
-      "countyName": "来安县" },
-    {
-      "countyCode": "341182",
-      "countyName": "明光市" },
-    {
-      "countyCode": "341126",
-      "countyName": "凤阳县" }] },
-
-  {
-    "cityCode": "340600",
-    "cityName": "淮北市",
-    "county": [{
-      "countyCode": "340621",
-      "countyName": "濉溪县" },
-    {
-      "countyCode": "340603",
-      "countyName": "相山区" },
-    {
-      "countyCode": "340602",
-      "countyName": "杜集区" },
-    {
-      "countyCode": "340604",
-      "countyName": "烈山区" }] },
-
-  {
-    "cityCode": "340700",
-    "cityName": "铜陵市",
-    "county": [{
-      "countyCode": "340711",
-      "countyName": "郊区" },
-    {
-      "countyCode": "340702",
-      "countyName": "铜官山区" },
-    {
-      "countyCode": "340823",
-      "countyName": "枞阳县" },
-    {
-      "countyCode": "340703",
-      "countyName": "铜官区" },
-    {
-      "countyCode": "340721",
-      "countyName": "义安区" }] },
-
-  {
-    "cityCode": "340300",
-    "cityName": "蚌埠市",
-    "county": [{
-      "countyCode": "340303",
-      "countyName": "蚌山区" },
-    {
-      "countyCode": "340323",
-      "countyName": "固镇县" },
-    {
-      "countyCode": "340322",
-      "countyName": "五河县" },
-    {
-      "countyCode": "340304",
-      "countyName": "禹会区" },
-    {
-      "countyCode": "340311",
-      "countyName": "淮上区" },
-    {
-      "countyCode": "340302",
-      "countyName": "龙子湖区" },
-    {
-      "countyCode": "340321",
-      "countyName": "怀远县" }] },
-
-  {
-    "cityCode": "340400",
-    "cityName": "淮南市",
-    "county": [{
-      "countyCode": "340421",
-      "countyName": "凤台县" },
-    {
-      "countyCode": "341521",
-      "countyName": "寿县" },
-    {
-      "countyCode": "340403",
-      "countyName": "田家庵区" },
-    {
-      "countyCode": "340404",
-      "countyName": "谢家集区" },
-    {
-      "countyCode": "340406",
-      "countyName": "潘集区" },
-    {
-      "countyCode": "340405",
-      "countyName": "八公山区" },
-    {
-      "countyCode": "340402",
-      "countyName": "大通区" }] },
-
-  {
-    "cityCode": "341300",
-    "cityName": "宿州市",
-    "county": [{
-      "countyCode": "341321",
-      "countyName": "砀山县" },
-    {
-      "countyCode": "341322",
-      "countyName": "萧县" },
-    {
-      "countyCode": "341324",
-      "countyName": "泗县" },
-    {
-      "countyCode": "341323",
-      "countyName": "灵璧县" },
-    {
-      "countyCode": "341302",
-      "countyName": "埇桥区" }] },
-
-  {
-    "cityCode": "341700",
-    "cityName": "池州市",
-    "county": [{
-      "countyCode": "341723",
-      "countyName": "青阳县" },
-    {
-      "countyCode": "341722",
-      "countyName": "石台县" },
-    {
-      "countyCode": "341721",
-      "countyName": "东至县" },
-    {
-      "countyCode": "341702",
-      "countyName": "贵池区" }] },
-
-  {
-    "cityCode": "340500",
-    "cityName": "马鞍山市",
-    "county": [{
-      "countyCode": "340522",
-      "countyName": "含山县" },
-    {
-      "countyCode": "340503",
-      "countyName": "花山区" },
-    {
-      "countyCode": "340506",
-      "countyName": "博望区" },
-    {
-      "countyCode": "340523",
-      "countyName": "和县" },
-    {
-      "countyCode": "340521",
-      "countyName": "当涂县" },
-    {
-      "countyCode": "340504",
-      "countyName": "雨山区" }] },
-
-  {
-    "cityCode": "341200",
-    "cityName": "阜阳市",
-    "county": [{
-      "countyCode": "341222",
-      "countyName": "太和县" },
-    {
-      "countyCode": "341226",
-      "countyName": "颍上县" },
-    {
-      "countyCode": "341221",
-      "countyName": "临泉县" },
-    {
-      "countyCode": "341204",
-      "countyName": "颍泉区" },
-    {
-      "countyCode": "341225",
-      "countyName": "阜南县" },
-    {
-      "countyCode": "341282",
-      "countyName": "界首市" },
-    {
-      "countyCode": "341203",
-      "countyName": "颍东区" },
-    {
-      "countyCode": "341202",
-      "countyName": "颍州区" }] },
-
-  {
-    "cityCode": "341600",
-    "cityName": "亳州市",
-    "county": [{
-      "countyCode": "341621",
-      "countyName": "涡阳县" },
-    {
-      "countyCode": "341623",
-      "countyName": "利辛县" },
-    {
-      "countyCode": "341602",
-      "countyName": "谯城区" },
-    {
-      "countyCode": "341622",
-      "countyName": "蒙城县" }] },
-
-  {
-    "cityCode": "341800",
-    "cityName": "宣城市",
-    "county": [{
-      "countyCode": "341881",
-      "countyName": "宁国市" },
-    {
-      "countyCode": "341822",
-      "countyName": "广德县" },
-    {
-      "countyCode": "341821",
-      "countyName": "郎溪县" },
-    {
-      "countyCode": "341823",
-      "countyName": "泾县" },
-    {
-      "countyCode": "341825",
-      "countyName": "旌德县" },
-    {
-      "countyCode": "341802",
-      "countyName": "宣州区" },
-    {
-      "countyCode": "341824",
-      "countyName": "绩溪县" }] },
-
-  {
-    "cityCode": "340100",
-    "cityName": "合肥市",
-    "county": [{
-      "countyCode": "340181",
-      "countyName": "巢湖市" },
-    {
-      "countyCode": "340104",
-      "countyName": "蜀山区" },
-    {
-      "countyCode": "340122",
-      "countyName": "肥东县" },
-    {
-      "countyCode": "340111",
-      "countyName": "包河区" },
-    {
-      "countyCode": "340102",
-      "countyName": "瑶海区" },
-    {
-      "countyCode": "340123",
-      "countyName": "肥西县" },
-    {
-      "countyCode": "340124",
-      "countyName": "庐江县" },
-    {
-      "countyCode": "340121",
-      "countyName": "长丰县" },
-    {
-      "countyCode": "340103",
-      "countyName": "庐阳区" }] },
-
-  {
-    "cityCode": "341500",
-    "cityName": "六安市",
-    "county": [{
-      "countyCode": "341525",
-      "countyName": "霍山县" },
-    {
-      "countyCode": "341502",
-      "countyName": "金安区" },
-    {
-      "countyCode": "341503",
-      "countyName": "裕安区" },
-    {
-      "countyCode": "341522",
-      "countyName": "霍邱县" },
-    {
-      "countyCode": "341504",
-      "countyName": "叶集区" },
-    {
-      "countyCode": "341523",
-      "countyName": "舒城县" },
-    {
-      "countyCode": "341524",
-      "countyName": "金寨县" }] }] },
-
-
-{
-  "provinceCode": "350000",
-  "provinceName": "福建省",
-  "city": [{
-    "cityCode": "350200",
-    "cityName": "厦门市",
-    "county": [{
-      "countyCode": "350206",
-      "countyName": "湖里区" },
-    {
-      "countyCode": "350212",
-      "countyName": "同安区" },
-    {
-      "countyCode": "350203",
-      "countyName": "思明区" },
-    {
-      "countyCode": "350213",
-      "countyName": "翔安区" },
-    {
-      "countyCode": "350205",
-      "countyName": "海沧区" },
-    {
-      "countyCode": "350211",
-      "countyName": "集美区" }] },
-
-  {
-    "cityCode": "350800",
-    "cityName": "龙岩市",
-    "county": [{
-      "countyCode": "350881",
-      "countyName": "漳平市" },
-    {
-      "countyCode": "350825",
-      "countyName": "连城县" },
-    {
-      "countyCode": "350821",
-      "countyName": "长汀县" },
-    {
-      "countyCode": "350802",
-      "countyName": "新罗区" },
-    {
-      "countyCode": "350823",
-      "countyName": "上杭县" },
-    {
-      "countyCode": "350822",
-      "countyName": "永定区" },
-    {
-      "countyCode": "350824",
-      "countyName": "武平县" }] },
-
-  {
-    "cityCode": "350100",
-    "cityName": "福州市",
-    "county": [{
-      "countyCode": "350124",
-      "countyName": "闽清县" },
-    {
-      "countyCode": "350103",
-      "countyName": "台江区" },
-    {
-      "countyCode": "350121",
-      "countyName": "闽侯县" },
-    {
-      "countyCode": "350182",
-      "countyName": "长乐区" },
-    {
-      "countyCode": "350125",
-      "countyName": "永泰县" },
-    {
-      "countyCode": "350111",
-      "countyName": "晋安区" },
-    {
-      "countyCode": "350123",
-      "countyName": "罗源县" },
-    {
-      "countyCode": "350102",
-      "countyName": "鼓楼区" },
-    {
-      "countyCode": "350105",
-      "countyName": "马尾区" },
-    {
-      "countyCode": "350104",
-      "countyName": "仓山区" },
-    {
-      "countyCode": "350128",
-      "countyName": "平潭县" },
-    {
-      "countyCode": "350181",
-      "countyName": "福清市" },
-    {
-      "countyCode": "350122",
-      "countyName": "连江县" }] },
-
-  {
-    "cityCode": "350700",
-    "cityName": "南平市",
-    "county": [{
-      "countyCode": "350724",
-      "countyName": "松溪县" },
-    {
-      "countyCode": "350783",
-      "countyName": "建瓯市" },
-    {
-      "countyCode": "350725",
-      "countyName": "政和县" },
-    {
-      "countyCode": "350723",
-      "countyName": "光泽县" },
-    {
-      "countyCode": "350721",
-      "countyName": "顺昌县" },
-    {
-      "countyCode": "350781",
-      "countyName": "邵武市" },
-    {
-      "countyCode": "350782",
-      "countyName": "武夷山市" },
-    {
-      "countyCode": "350722",
-      "countyName": "浦城县" },
-    {
-      "countyCode": "350784",
-      "countyName": "建阳区" },
-    {
-      "countyCode": "350702",
-      "countyName": "延平区" }] },
-
-  {
-    "cityCode": "350900",
-    "cityName": "宁德市",
-    "county": [{
-      "countyCode": "350922",
-      "countyName": "古田县" },
-    {
-      "countyCode": "350924",
-      "countyName": "寿宁县" },
-    {
-      "countyCode": "350902",
-      "countyName": "蕉城区" },
-    {
-      "countyCode": "350926",
-      "countyName": "柘荣县" },
-    {
-      "countyCode": "350925",
-      "countyName": "周宁县" },
-    {
-      "countyCode": "350982",
-      "countyName": "福鼎市" },
-    {
-      "countyCode": "350923",
-      "countyName": "屏南县" },
-    {
-      "countyCode": "350981",
-      "countyName": "福安市" },
-    {
-      "countyCode": "350921",
-      "countyName": "霞浦县" }] },
-
-  {
-    "cityCode": "350500",
-    "cityName": "泉州市",
-    "county": [{
-      "countyCode": "350526",
-      "countyName": "德化县" },
-    {
-      "countyCode": "350582",
-      "countyName": "晋江市" },
-    {
-      "countyCode": "350583",
-      "countyName": "南安市" },
-    {
-      "countyCode": "350503",
-      "countyName": "丰泽区" },
-    {
-      "countyCode": "350581",
-      "countyName": "石狮市" },
-    {
-      "countyCode": "350525",
-      "countyName": "永春县" },
-    {
-      "countyCode": "350521",
-      "countyName": "惠安县" },
-    {
-      "countyCode": "350524",
-      "countyName": "安溪县" },
-    {
-      "countyCode": "350502",
-      "countyName": "鲤城区" },
-    {
-      "countyCode": "350505",
-      "countyName": "泉港区" },
-    {
-      "countyCode": "350527",
-      "countyName": "金门县" },
-    {
-      "countyCode": "350504",
-      "countyName": "洛江区" }] },
-
-  {
-    "cityCode": "350400",
-    "cityName": "三明市",
-    "county": [{
-      "countyCode": "350421",
-      "countyName": "明溪县" },
-    {
-      "countyCode": "350403",
-      "countyName": "三元区" },
-    {
-      "countyCode": "350423",
-      "countyName": "清流县" },
-    {
-      "countyCode": "350426",
-      "countyName": "尤溪县" },
-    {
-      "countyCode": "350481",
-      "countyName": "永安市" },
-    {
-      "countyCode": "350424",
-      "countyName": "宁化县" },
-    {
-      "countyCode": "350425",
-      "countyName": "大田县" },
-    {
-      "countyCode": "350427",
-      "countyName": "沙县" },
-    {
-      "countyCode": "350430",
-      "countyName": "建宁县" },
-    {
-      "countyCode": "350428",
-      "countyName": "将乐县" },
-    {
-      "countyCode": "350402",
-      "countyName": "梅列区" },
-    {
-      "countyCode": "350429",
-      "countyName": "泰宁县" }] },
-
-  {
-    "cityCode": "350300",
-    "cityName": "莆田市",
-    "county": [{
-      "countyCode": "350322",
-      "countyName": "仙游县" },
-    {
-      "countyCode": "350303",
-      "countyName": "涵江区" },
-    {
-      "countyCode": "350304",
-      "countyName": "荔城区" },
-    {
-      "countyCode": "350302",
-      "countyName": "城厢区" },
-    {
-      "countyCode": "350305",
-      "countyName": "秀屿区" }] },
-
-  {
-    "cityCode": "350600",
-    "cityName": "漳州市",
-    "county": [{
-      "countyCode": "350629",
-      "countyName": "华安县" },
-    {
-      "countyCode": "350623",
-      "countyName": "漳浦县" },
-    {
-      "countyCode": "350602",
-      "countyName": "芗城区" },
-    {
-      "countyCode": "350625",
-      "countyName": "长泰县" },
-    {
-      "countyCode": "350603",
-      "countyName": "龙文区" },
-    {
-      "countyCode": "350622",
-      "countyName": "云霄县" },
-    {
-      "countyCode": "350628",
-      "countyName": "平和县" },
-    {
-      "countyCode": "350627",
-      "countyName": "南靖县" },
-    {
-      "countyCode": "350681",
-      "countyName": "龙海市" },
-    {
-      "countyCode": "350624",
-      "countyName": "诏安县" },
-    {
-      "countyCode": "350626",
-      "countyName": "东山县" }] }] },
-
-
-{
-  "provinceCode": "360000",
-  "provinceName": "江西省",
-  "city": [{
-    "cityCode": "361000",
-    "cityName": "抚州市",
-    "county": [{
-      "countyCode": "361002",
-      "countyName": "临川区" },
-    {
-      "countyCode": "361023",
-      "countyName": "南丰县" },
-    {
-      "countyCode": "361026",
-      "countyName": "宜黄县" },
-    {
-      "countyCode": "361028",
-      "countyName": "资溪县" },
-    {
-      "countyCode": "361029",
-      "countyName": "东乡区" },
-    {
-      "countyCode": "361027",
-      "countyName": "金溪县" },
-    {
-      "countyCode": "361022",
-      "countyName": "黎川县" },
-    {
-      "countyCode": "361021",
-      "countyName": "南城县" },
-    {
-      "countyCode": "361025",
-      "countyName": "乐安县" },
-    {
-      "countyCode": "361024",
-      "countyName": "崇仁县" },
-    {
-      "countyCode": "361030",
-      "countyName": "广昌县" }] },
-
-  {
-    "cityCode": "360900",
-    "cityName": "宜春市",
-    "county": [{
-      "countyCode": "360981",
-      "countyName": "丰城市" },
-    {
-      "countyCode": "360902",
-      "countyName": "袁州区" },
-    {
-      "countyCode": "360921",
-      "countyName": "奉新县" },
-    {
-      "countyCode": "360983",
-      "countyName": "高安市" },
-    {
-      "countyCode": "360922",
-      "countyName": "万载县" },
-    {
-      "countyCode": "360926",
-      "countyName": "铜鼓县" },
-    {
-      "countyCode": "360923",
-      "countyName": "上高县" },
-    {
-      "countyCode": "360924",
-      "countyName": "宜丰县" },
-    {
-      "countyCode": "360925",
-      "countyName": "靖安县" },
-    {
-      "countyCode": "360982",
-      "countyName": "樟树市" }] },
-
-  {
-    "cityCode": "360100",
-    "cityName": "南昌市",
-    "county": [{
-      "countyCode": "360104",
-      "countyName": "青云谱区" },
-    {
-      "countyCode": "360105",
-      "countyName": "湾里区" },
-    {
-      "countyCode": "360124",
-      "countyName": "进贤县" },
-    {
-      "countyCode": "360102",
-      "countyName": "东湖区" },
-    {
-      "countyCode": "360123",
-      "countyName": "安义县" },
-    {
-      "countyCode": "360122",
-      "countyName": "新建区" },
-    {
-      "countyCode": "360121",
-      "countyName": "南昌县" },
-    {
-      "countyCode": "360111",
-      "countyName": "青山湖区" },
-    {
-      "countyCode": "360103",
-      "countyName": "西湖区" }] },
-
-  {
-    "cityCode": "360700",
-    "cityName": "赣州市",
-    "county": [{
-      "countyCode": "360725",
-      "countyName": "崇义县" },
-    {
-      "countyCode": "360727",
-      "countyName": "龙南县" },
-    {
-      "countyCode": "360728",
-      "countyName": "定南县" },
-    {
-      "countyCode": "360723",
-      "countyName": "大余县" },
-    {
-      "countyCode": "360734",
-      "countyName": "寻乌县" },
-    {
-      "countyCode": "360702",
-      "countyName": "章贡区" },
-    {
-      "countyCode": "360726",
-      "countyName": "安远县" },
-    {
-      "countyCode": "360729",
-      "countyName": "全南县" },
-    {
-      "countyCode": "360735",
-      "countyName": "石城县" },
-    {
-      "countyCode": "360782",
-      "countyName": "南康区" },
-    {
-      "countyCode": "360721",
-      "countyName": "赣县区" },
-    {
-      "countyCode": "360732",
-      "countyName": "兴国县" },
-    {
-      "countyCode": "360781",
-      "countyName": "瑞金市" },
-    {
-      "countyCode": "360724",
-      "countyName": "上犹县" },
-    {
-      "countyCode": "360730",
-      "countyName": "宁都县" },
-    {
-      "countyCode": "360733",
-      "countyName": "会昌县" },
-    {
-      "countyCode": "360722",
-      "countyName": "信丰县" },
-    {
-      "countyCode": "360731",
-      "countyName": "于都县" }] },
-
-  {
-    "cityCode": "360200",
-    "cityName": "景德镇市",
-    "county": [{
-      "countyCode": "360222",
-      "countyName": "浮梁县" },
-    {
-      "countyCode": "360281",
-      "countyName": "乐平市" },
-    {
-      "countyCode": "360202",
-      "countyName": "昌江区" },
-    {
-      "countyCode": "360203",
-      "countyName": "珠山区" }] },
-
-  {
-    "cityCode": "360800",
-    "cityName": "吉安市",
-    "county": [{
-      "countyCode": "360829",
-      "countyName": "安福县" },
-    {
-      "countyCode": "360821",
-      "countyName": "吉安县" },
-    {
-      "countyCode": "360827",
-      "countyName": "遂川县" },
-    {
-      "countyCode": "360803",
-      "countyName": "青原区" },
-    {
-      "countyCode": "360828",
-      "countyName": "万安县" },
-    {
-      "countyCode": "360826",
-      "countyName": "泰和县" },
-    {
-      "countyCode": "360823",
-      "countyName": "峡江县" },
-    {
-      "countyCode": "360822",
-      "countyName": "吉水县" },
-    {
-      "countyCode": "360802",
-      "countyName": "吉州区" },
-    {
-      "countyCode": "360824",
-      "countyName": "新干县" },
-    {
-      "countyCode": "360830",
-      "countyName": "永新县" },
-    {
-      "countyCode": "360881",
-      "countyName": "井冈山市" },
-    {
-      "countyCode": "360825",
-      "countyName": "永丰县" }] },
-
-  {
-    "cityCode": "360400",
-    "cityName": "九江市",
-    "county": [{
-      "countyCode": "360423",
-      "countyName": "武宁县" },
-    {
-      "countyCode": "360421",
-      "countyName": "柴桑区" },
-    {
-      "countyCode": "360429",
-      "countyName": "湖口县" },
-    {
-      "countyCode": "360427",
-      "countyName": "庐山市" },
-    {
-      "countyCode": "360426",
-      "countyName": "德安县" },
-    {
-      "countyCode": "360428",
-      "countyName": "都昌县" },
-    {
-      "countyCode": "360430",
-      "countyName": "彭泽县" },
-    {
-      "countyCode": "360403",
-      "countyName": "浔阳区" },
-    {
-      "countyCode": "360402",
-      "countyName": "濂溪区" },
-    {
-      "countyCode": "360424",
-      "countyName": "修水县" },
-    {
-      "countyCode": "360481",
-      "countyName": "瑞昌市" },
-    {
-      "countyCode": "360425",
-      "countyName": "永修县" },
-    {
-      "countyCode": "360482",
-      "countyName": "共青城市" }] },
-
-  {
-    "cityCode": "360600",
-    "cityName": "鹰潭市",
-    "county": [{
-      "countyCode": "360602",
-      "countyName": "月湖区" },
-    {
-      "countyCode": "360622",
-      "countyName": "余江区" },
-    {
-      "countyCode": "360681",
-      "countyName": "贵溪市" }] },
-
-  {
-    "cityCode": "360500",
-    "cityName": "新余市",
-    "county": [{
-      "countyCode": "360521",
-      "countyName": "分宜县" },
-    {
-      "countyCode": "360502",
-      "countyName": "渝水区" }] },
-
-  {
-    "cityCode": "361100",
-    "cityName": "上饶市",
-    "county": [{
-      "countyCode": "361181",
-      "countyName": "德兴市" },
-    {
-      "countyCode": "361102",
-      "countyName": "信州区" },
-    {
-      "countyCode": "361130",
-      "countyName": "婺源县" },
-    {
-      "countyCode": "361128",
-      "countyName": "鄱阳县" },
-    {
-      "countyCode": "361129",
-      "countyName": "万年县" },
-    {
-      "countyCode": "361123",
-      "countyName": "玉山县" },
-    {
-      "countyCode": "361122",
-      "countyName": "广丰区" },
-    {
-      "countyCode": "361124",
-      "countyName": "铅山县" },
-    {
-      "countyCode": "361121",
-      "countyName": "上饶县" },
-    {
-      "countyCode": "361127",
-      "countyName": "余干县" },
-    {
-      "countyCode": "361126",
-      "countyName": "弋阳县" },
-    {
-      "countyCode": "361125",
-      "countyName": "横峰县" }] },
-
-  {
-    "cityCode": "360300",
-    "cityName": "萍乡市",
-    "county": [{
-      "countyCode": "360322",
-      "countyName": "上栗县" },
-    {
-      "countyCode": "360313",
-      "countyName": "湘东区" },
-    {
-      "countyCode": "360302",
-      "countyName": "安源区" },
-    {
-      "countyCode": "360323",
-      "countyName": "芦溪县" },
-    {
-      "countyCode": "360321",
-      "countyName": "莲花县" }] }] },
-
-
-{
-  "provinceCode": "370000",
-  "provinceName": "山东省",
-  "city": [{
-    "cityCode": "370400",
-    "cityName": "枣庄市",
-    "county": [{
-      "countyCode": "370402",
-      "countyName": "市中区" },
-    {
-      "countyCode": "370481",
-      "countyName": "滕州市" },
-    {
-      "countyCode": "370406",
-      "countyName": "山亭区" },
-    {
-      "countyCode": "370405",
-      "countyName": "台儿庄区" },
-    {
-      "countyCode": "370403",
-      "countyName": "薛城区" },
-    {
-      "countyCode": "370404",
-      "countyName": "峄城区" }] },
-
-  {
-    "cityCode": "371100",
-    "cityName": "日照市",
-    "county": [{
-      "countyCode": "371121",
-      "countyName": "五莲县" },
-    {
-      "countyCode": "371102",
-      "countyName": "东港区" },
-    {
-      "countyCode": "371122",
-      "countyName": "莒县" },
-    {
-      "countyCode": "371103",
-      "countyName": "岚山区" }] },
-
-  {
-    "cityCode": "371700",
-    "cityName": "菏泽市",
-    "county": [{
-      "countyCode": "371722",
-      "countyName": "单县" },
-    {
-      "countyCode": "371724",
-      "countyName": "巨野县" },
-    {
-      "countyCode": "371721",
-      "countyName": "曹县" },
-    {
-      "countyCode": "371702",
-      "countyName": "牡丹区" },
-    {
-      "countyCode": "371727",
-      "countyName": "定陶区" },
-    {
-      "countyCode": "371728",
-      "countyName": "东明县" },
-    {
-      "countyCode": "371723",
-      "countyName": "成武县" },
-    {
-      "countyCode": "371725",
-      "countyName": "郓城县" },
-    {
-      "countyCode": "371726",
-      "countyName": "鄄城县" }] },
-
-  {
-    "cityCode": "371500",
-    "cityName": "聊城市",
-    "county": [{
-      "countyCode": "371524",
-      "countyName": "东阿县" },
-    {
-      "countyCode": "371521",
-      "countyName": "阳谷县" },
-    {
-      "countyCode": "371526",
-      "countyName": "高唐县" },
-    {
-      "countyCode": "371502",
-      "countyName": "东昌府区" },
-    {
-      "countyCode": "371581",
-      "countyName": "临清市" },
-    {
-      "countyCode": "371522",
-      "countyName": "莘县" },
-    {
-      "countyCode": "371525",
-      "countyName": "冠县" },
-    {
-      "countyCode": "371523",
-      "countyName": "茌平县" }] },
-
-  {
-    "cityCode": "371000",
-    "cityName": "威海市",
-    "county": [{
-      "countyCode": "371002",
-      "countyName": "环翠区" },
-    {
-      "countyCode": "371083",
-      "countyName": "乳山市" },
-    {
-      "countyCode": "371082",
-      "countyName": "荣成市" },
-    {
-      "countyCode": "371081",
-      "countyName": "文登区" }] },
-
-  {
-    "cityCode": "370300",
-    "cityName": "淄博市",
-    "county": [{
-      "countyCode": "370322",
-      "countyName": "高青县" },
-    {
-      "countyCode": "370321",
-      "countyName": "桓台县" },
-    {
-      "countyCode": "370305",
-      "countyName": "临淄区" },
-    {
-      "countyCode": "370306",
-      "countyName": "周村区" },
-    {
-      "countyCode": "370323",
-      "countyName": "沂源县" },
-    {
-      "countyCode": "370304",
-      "countyName": "博山区" },
-    {
-      "countyCode": "370302",
-      "countyName": "淄川区" },
-    {
-      "countyCode": "370303",
-      "countyName": "张店区" }] },
-
-  {
-    "cityCode": "370800",
-    "cityName": "济宁市",
-    "county": [{
-      "countyCode": "370811",
-      "countyName": "任城区" },
-    {
-      "countyCode": "370802",
-      "countyName": "市中区" },
-    {
-      "countyCode": "370882",
-      "countyName": "兖州区" },
-    {
-      "countyCode": "370830",
-      "countyName": "汶上县" },
-    {
-      "countyCode": "370883",
-      "countyName": "邹城市" },
-    {
-      "countyCode": "370828",
-      "countyName": "金乡县" },
-    {
-      "countyCode": "370829",
-      "countyName": "嘉祥县" },
-    {
-      "countyCode": "370826",
-      "countyName": "微山县" },
-    {
-      "countyCode": "370881",
-      "countyName": "曲阜市" },
-    {
-      "countyCode": "370827",
-      "countyName": "鱼台县" },
-    {
-      "countyCode": "370831",
-      "countyName": "泗水县" },
-    {
-      "countyCode": "370832",
-      "countyName": "梁山县" }] },
-
-  {
-    "cityCode": "371200",
-    "cityName": "莱芜市",
-    "county": [{
-      "countyCode": "371202",
-      "countyName": "莱城区" },
-    {
-      "countyCode": "371203",
-      "countyName": "钢城区" }] },
-
-  {
-    "cityCode": "370500",
-    "cityName": "东营市",
-    "county": [{
-      "countyCode": "370523",
-      "countyName": "广饶县" },
-    {
-      "countyCode": "370521",
-      "countyName": "垦利区" },
-    {
-      "countyCode": "370502",
-      "countyName": "东营区" },
-    {
-      "countyCode": "370522",
-      "countyName": "利津县" },
-    {
-      "countyCode": "370503",
-      "countyName": "河口区" }] },
-
-  {
-    "cityCode": "371600",
-    "cityName": "滨州市",
-    "county": [{
-      "countyCode": "371625",
-      "countyName": "博兴县" },
-    {
-      "countyCode": "371622",
-      "countyName": "阳信县" },
-    {
-      "countyCode": "371621",
-      "countyName": "惠民县" },
-    {
-      "countyCode": "371626",
-      "countyName": "邹平市" },
-    {
-      "countyCode": "371602",
-      "countyName": "滨城区" },
-    {
-      "countyCode": "371623",
-      "countyName": "无棣县" },
-    {
-      "countyCode": "371624",
-      "countyName": "沾化区" }] },
-
-  {
-    "cityCode": "371300",
-    "cityName": "临沂市",
-    "county": [{
-      "countyCode": "371328",
-      "countyName": "蒙阴县" },
-    {
-      "countyCode": "371302",
-      "countyName": "兰山区" },
-    {
-      "countyCode": "371329",
-      "countyName": "临沭县" },
-    {
-      "countyCode": "371321",
-      "countyName": "沂南县" },
-    {
-      "countyCode": "371311",
-      "countyName": "罗庄区" },
-    {
-      "countyCode": "371325",
-      "countyName": "费县" },
-    {
-      "countyCode": "371326",
-      "countyName": "平邑县" },
-    {
-      "countyCode": "371327",
-      "countyName": "莒南县" },
-    {
-      "countyCode": "371312",
-      "countyName": "河东区" },
-    {
-      "countyCode": "371324",
-      "countyName": "兰陵县" },
-    {
-      "countyCode": "371323",
-      "countyName": "沂水县" },
-    {
-      "countyCode": "371322",
-      "countyName": "郯城县" }] },
-
-  {
-    "cityCode": "370200",
-    "cityName": "青岛市",
-    "county": [{
-      "countyCode": "370211",
-      "countyName": "黄岛区" },
-    {
-      "countyCode": "370203",
-      "countyName": "市北区" },
-    {
-      "countyCode": "370281",
-      "countyName": "胶州市" },
-    {
-      "countyCode": "370212",
-      "countyName": "崂山区" },
-    {
-      "countyCode": "370202",
-      "countyName": "市南区" },
-    {
-      "countyCode": "370282",
-      "countyName": "即墨区" },
-    {
-      "countyCode": "370205",
-      "countyName": "四方区" },
-    {
-      "countyCode": "370214",
-      "countyName": "城阳区" },
-    {
-      "countyCode": "370283",
-      "countyName": "平度市" },
-    {
-      "countyCode": "370213",
-      "countyName": "李沧区" },
-    {
-      "countyCode": "370285",
-      "countyName": "莱西市" }] },
-
-  {
-    "cityCode": "370100",
-    "cityName": "济南市",
-    "county": [{
-      "countyCode": "370124",
-      "countyName": "平阴县" },
-    {
-      "countyCode": "370103",
-      "countyName": "市中区" },
-    {
-      "countyCode": "370181",
-      "countyName": "章丘区" },
-    {
-      "countyCode": "370126",
-      "countyName": "商河县" },
-    {
-      "countyCode": "370125",
-      "countyName": "济阳区" },
-    {
-      "countyCode": "370113",
-      "countyName": "长清区" },
-    {
-      "countyCode": "370102",
-      "countyName": "历下区" },
-    {
-      "countyCode": "370112",
-      "countyName": "历城区" },
-    {
-      "countyCode": "370105",
-      "countyName": "天桥区" },
-    {
-      "countyCode": "370104",
-      "countyName": "槐荫区" }] },
-
-  {
-    "cityCode": "371400",
-    "cityName": "德州市",
-    "county": [{
-      "countyCode": "371481",
-      "countyName": "乐陵市" },
-    {
-      "countyCode": "371423",
-      "countyName": "庆云县" },
-    {
-      "countyCode": "371421",
-      "countyName": "陵城区" },
-    {
-      "countyCode": "371482",
-      "countyName": "禹城市" },
-    {
-      "countyCode": "371424",
-      "countyName": "临邑县" },
-    {
-      "countyCode": "371426",
-      "countyName": "平原县" },
-    {
-      "countyCode": "371425",
-      "countyName": "齐河县" },
-    {
-      "countyCode": "371427",
-      "countyName": "夏津县" },
-    {
-      "countyCode": "371422",
-      "countyName": "宁津县" },
-    {
-      "countyCode": "371428",
-      "countyName": "武城县" },
-    {
-      "countyCode": "371402",
-      "countyName": "德城区" }] },
-
-  {
-    "cityCode": "370900",
-    "cityName": "泰安市",
-    "county": [{
-      "countyCode": "370911",
-      "countyName": "岱岳区" },
-    {
-      "countyCode": "370923",
-      "countyName": "东平县" },
-    {
-      "countyCode": "370983",
-      "countyName": "肥城市" },
-    {
-      "countyCode": "370921",
-      "countyName": "宁阳县" },
-    {
-      "countyCode": "370982",
-      "countyName": "新泰市" },
-    {
-      "countyCode": "370902",
-      "countyName": "泰山区" }] },
-
-  {
-    "cityCode": "370600",
-    "cityName": "烟台市",
-    "county": [{
-      "countyCode": "370686",
-      "countyName": "栖霞市" },
-    {
-      "countyCode": "370634",
-      "countyName": "长岛县" },
-    {
-      "countyCode": "370613",
-      "countyName": "莱山区" },
-    {
-      "countyCode": "370612",
-      "countyName": "牟平区" },
-    {
-      "countyCode": "370681",
-      "countyName": "龙口市" },
-    {
-      "countyCode": "370683",
-      "countyName": "莱州市" },
-    {
-      "countyCode": "370602",
-      "countyName": "芝罘区" },
-    {
-      "countyCode": "370682",
-      "countyName": "莱阳市" },
-    {
-      "countyCode": "370685",
-      "countyName": "招远市" },
-    {
-      "countyCode": "370611",
-      "countyName": "福山区" },
-    {
-      "countyCode": "370684",
-      "countyName": "蓬莱市" },
-    {
-      "countyCode": "370687",
-      "countyName": "海阳市" }] },
-
-  {
-    "cityCode": "370700",
-    "cityName": "潍坊市",
-    "county": [{
-      "countyCode": "370781",
-      "countyName": "青州市" },
-    {
-      "countyCode": "370782",
-      "countyName": "诸城市" },
-    {
-      "countyCode": "370703",
-      "countyName": "寒亭区" },
-    {
-      "countyCode": "370785",
-      "countyName": "高密市" },
-    {
-      "countyCode": "370702",
-      "countyName": "潍城区" },
-    {
-      "countyCode": "370725",
-      "countyName": "昌乐县" },
-    {
-      "countyCode": "370704",
-      "countyName": "坊子区" },
-    {
-      "countyCode": "370784",
-      "countyName": "安丘市" },
-    {
-      "countyCode": "370705",
-      "countyName": "奎文区" },
-    {
-      "countyCode": "370724",
-      "countyName": "临朐县" },
-    {
-      "countyCode": "370786",
-      "countyName": "昌邑市" },
-    {
-      "countyCode": "370783",
-      "countyName": "寿光市" }] }] },
-
-
-{
-  "provinceCode": "410000",
-  "provinceName": "河南省",
-  "city": [{
-    "cityCode": "411500",
-    "cityName": "信阳市",
-    "county": [{
-      "countyCode": "411523",
-      "countyName": "新县" },
-    {
-      "countyCode": "411525",
-      "countyName": "固始县" },
-    {
-      "countyCode": "411524",
-      "countyName": "商城县" },
-    {
-      "countyCode": "411528",
-      "countyName": "息县" },
-    {
-      "countyCode": "411502",
-      "countyName": "浉河区" },
-    {
-      "countyCode": "411521",
-      "countyName": "罗山县" },
-    {
-      "countyCode": "411522",
-      "countyName": "光山县" },
-    {
-      "countyCode": "411503",
-      "countyName": "平桥区" },
-    {
-      "countyCode": "411526",
-      "countyName": "潢川县" },
-    {
-      "countyCode": "411527",
-      "countyName": "淮滨县" }] },
-
-  {
-    "cityCode": "410300",
-    "cityName": "洛阳市",
-    "county": [{
-      "countyCode": "410323",
-      "countyName": "新安县" },
-    {
-      "countyCode": "410306",
-      "countyName": "吉利区" },
-    {
-      "countyCode": "410328",
-      "countyName": "洛宁县" },
-    {
-      "countyCode": "410325",
-      "countyName": "嵩县" },
-    {
-      "countyCode": "410302",
-      "countyName": "老城区" },
-    {
-      "countyCode": "410322",
-      "countyName": "孟津县" },
-    {
-      "countyCode": "410311",
-      "countyName": "洛龙区" },
-    {
-      "countyCode": "410304",
-      "countyName": "瀍河回族区" },
-    {
-      "countyCode": "410327",
-      "countyName": "宜阳县" },
-    {
-      "countyCode": "410381",
-      "countyName": "偃师市" },
-    {
-      "countyCode": "410326",
-      "countyName": "汝阳县" },
-    {
-      "countyCode": "410329",
-      "countyName": "伊川县" },
-    {
-      "countyCode": "410305",
-      "countyName": "涧西区" },
-    {
-      "countyCode": "410324",
-      "countyName": "栾川县" },
-    {
-      "countyCode": "410303",
-      "countyName": "西工区" }] },
-
-  {
-    "cityCode": "411200",
-    "cityName": "三门峡市",
-    "county": [{
-      "countyCode": "411222",
-      "countyName": "陕州区" },
-    {
-      "countyCode": "411281",
-      "countyName": "义马市" },
-    {
-      "countyCode": "411282",
-      "countyName": "灵宝市" },
-    {
-      "countyCode": "411221",
-      "countyName": "渑池县" },
-    {
-      "countyCode": "411202",
-      "countyName": "湖滨区" },
-    {
-      "countyCode": "411224",
-      "countyName": "卢氏县" }] },
-
-  {
-    "cityCode": "411700",
-    "cityName": "驻马店市",
-    "county": [{
-      "countyCode": "411729",
-      "countyName": "新蔡县" },
-    {
-      "countyCode": "411728",
-      "countyName": "遂平县" },
-    {
-      "countyCode": "411727",
-      "countyName": "汝南县" },
-    {
-      "countyCode": "411724",
-      "countyName": "正阳县" },
-    {
-      "countyCode": "411723",
-      "countyName": "平舆县" },
-    {
-      "countyCode": "411725",
-      "countyName": "确山县" },
-    {
-      "countyCode": "411722",
-      "countyName": "上蔡县" },
-    {
-      "countyCode": "411702",
-      "countyName": "驿城区" },
-    {
-      "countyCode": "411721",
-      "countyName": "西平县" },
-    {
-      "countyCode": "411726",
-      "countyName": "泌阳县" }] },
-
-  {
-    "cityCode": "410500",
-    "cityName": "安阳市",
-    "county": [{
-      "countyCode": "410505",
-      "countyName": "殷都区" },
-    {
-      "countyCode": "410527",
-      "countyName": "内黄县" },
-    {
-      "countyCode": "410522",
-      "countyName": "安阳县" },
-    {
-      "countyCode": "410526",
-      "countyName": "滑县" },
-    {
-      "countyCode": "410502",
-      "countyName": "文峰区" },
-    {
-      "countyCode": "410503",
-      "countyName": "北关区" },
-    {
-      "countyCode": "410506",
-      "countyName": "龙安区" },
-    {
-      "countyCode": "410523",
-      "countyName": "汤阴县" },
-    {
-      "countyCode": "410581",
-      "countyName": "林州市" }] },
-
-  {
-    "cityCode": "411300",
-    "cityName": "南阳市",
-    "county": [{
-      "countyCode": "411325",
-      "countyName": "内乡县" },
-    {
-      "countyCode": "411328",
-      "countyName": "唐河县" },
-    {
-      "countyCode": "411381",
-      "countyName": "邓州市" },
-    {
-      "countyCode": "411322",
-      "countyName": "方城县" },
-    {
-      "countyCode": "411330",
-      "countyName": "桐柏县" },
-    {
-      "countyCode": "411321",
-      "countyName": "南召县" },
-    {
-      "countyCode": "411323",
-      "countyName": "西峡县" },
-    {
-      "countyCode": "411327",
-      "countyName": "社旗县" },
-    {
-      "countyCode": "411302",
-      "countyName": "宛城区" },
-    {
-      "countyCode": "411303",
-      "countyName": "卧龙区" },
-    {
-      "countyCode": "411326",
-      "countyName": "淅川县" },
-    {
-      "countyCode": "411329",
-      "countyName": "新野县" },
-    {
-      "countyCode": "411324",
-      "countyName": "镇平县" }] },
-
-  {
-    "cityCode": "410700",
-    "cityName": "新乡市",
-    "county": [{
-      "countyCode": "410711",
-      "countyName": "牧野区" },
-    {
-      "countyCode": "410721",
-      "countyName": "新乡县" },
-    {
-      "countyCode": "410704",
-      "countyName": "凤泉区" },
-    {
-      "countyCode": "410781",
-      "countyName": "卫辉市" },
-    {
-      "countyCode": "410727",
-      "countyName": "封丘县" },
-    {
-      "countyCode": "410702",
-      "countyName": "红旗区" },
-    {
-      "countyCode": "410726",
-      "countyName": "延津县" },
-    {
-      "countyCode": "410703",
-      "countyName": "卫滨区" },
-    {
-      "countyCode": "410782",
-      "countyName": "辉县市" },
-    {
-      "countyCode": "410728",
-      "countyName": "长垣县" },
-    {
-      "countyCode": "410724",
-      "countyName": "获嘉县" },
-    {
-      "countyCode": "410725",
-      "countyName": "原阳县" }] },
-
-  {
-    "cityCode": "410200",
-    "cityName": "开封市",
-    "county": [{
-      "countyCode": "410205",
-      "countyName": "禹王台区" },
-    {
-      "countyCode": "410222",
-      "countyName": "通许县" },
-    {
-      "countyCode": "410225",
-      "countyName": "兰考县" },
-    {
-      "countyCode": "410223",
-      "countyName": "尉氏县" },
-    {
-      "countyCode": "410203",
-      "countyName": "顺河回族区" },
-    {
-      "countyCode": "410204",
-      "countyName": "鼓楼区" },
-    {
-      "countyCode": "410224",
-      "countyName": "祥符区" },
-    {
-      "countyCode": "410221",
-      "countyName": "杞县" },
-    {
-      "countyCode": "410211",
-      "countyName": "金明区" },
-    {
-      "countyCode": "410202",
-      "countyName": "龙亭区" }] },
-
-  {
-    "cityCode": "411400",
-    "cityName": "商丘市",
-    "county": [{
-      "countyCode": "411402",
-      "countyName": "梁园区" },
-    {
-      "countyCode": "411422",
-      "countyName": "睢县" },
-    {
-      "countyCode": "411423",
-      "countyName": "宁陵县" },
-    {
-      "countyCode": "411421",
-      "countyName": "民权县" },
-    {
-      "countyCode": "411424",
-      "countyName": "柘城县" },
-    {
-      "countyCode": "411425",
-      "countyName": "虞城县" },
-    {
-      "countyCode": "411426",
-      "countyName": "夏邑县" },
-    {
-      "countyCode": "411481",
-      "countyName": "永城市" },
-    {
-      "countyCode": "411403",
-      "countyName": "睢阳区" }] },
-
-  {
-    "cityCode": "411000",
-    "cityName": "许昌市",
-    "county": [{
-      "countyCode": "411024",
-      "countyName": "鄢陵县" },
-    {
-      "countyCode": "411082",
-      "countyName": "长葛市" },
-    {
-      "countyCode": "411002",
-      "countyName": "魏都区" },
-    {
-      "countyCode": "411081",
-      "countyName": "禹州市" },
-    {
-      "countyCode": "411025",
-      "countyName": "襄城县" },
-    {
-      "countyCode": "411023",
-      "countyName": "建安区" }] },
-
-  {
-    "cityCode": "410100",
-    "cityName": "郑州市",
-    "county": [{
-      "countyCode": "410185",
-      "countyName": "登封市" },
-    {
-      "countyCode": "410182",
-      "countyName": "荥阳市" },
-    {
-      "countyCode": "410104",
-      "countyName": "管城回族区" },
-    {
-      "countyCode": "410108",
-      "countyName": "惠济区" },
-    {
-      "countyCode": "410122",
-      "countyName": "中牟县" },
-    {
-      "countyCode": "410105",
-      "countyName": "金水区" },
-    {
-      "countyCode": "410183",
-      "countyName": "新密市" },
-    {
-      "countyCode": "410184",
-      "countyName": "新郑市" },
-    {
-      "countyCode": "410181",
-      "countyName": "巩义市" },
-    {
-      "countyCode": "410106",
-      "countyName": "上街区" },
-    {
-      "countyCode": "410103",
-      "countyName": "二七区" },
-    {
-      "countyCode": "410102",
-      "countyName": "中原区" }] },
-
-  {
-    "cityCode": "419001",
-    "cityName": "济源市",
-    "county": [{
-      "countyCode": "419001-1",
-      "countyName": "济源市" }] },
-
-  {
-    "cityCode": "410400",
-    "cityName": "平顶山市",
-    "county": [{
-      "countyCode": "410481",
-      "countyName": "舞钢市" },
-    {
-      "countyCode": "410421",
-      "countyName": "宝丰县" },
-    {
-      "countyCode": "410482",
-      "countyName": "汝州市" },
-    {
-      "countyCode": "410404",
-      "countyName": "石龙区" },
-    {
-      "countyCode": "410403",
-      "countyName": "卫东区" },
-    {
-      "countyCode": "410411",
-      "countyName": "湛河区" },
-    {
-      "countyCode": "410402",
-      "countyName": "新华区" },
-    {
-      "countyCode": "410423",
-      "countyName": "鲁山县" },
-    {
-      "countyCode": "410422",
-      "countyName": "叶县" },
-    {
-      "countyCode": "410425",
-      "countyName": "郏县" }] },
-
-  {
-    "cityCode": "410900",
-    "cityName": "濮阳市",
-    "county": [{
-      "countyCode": "410902",
-      "countyName": "华龙区" },
-    {
-      "countyCode": "410922",
-      "countyName": "清丰县" },
-    {
-      "countyCode": "410926",
-      "countyName": "范县" },
-    {
-      "countyCode": "410927",
-      "countyName": "台前县" },
-    {
-      "countyCode": "410923",
-      "countyName": "南乐县" },
-    {
-      "countyCode": "410928",
-      "countyName": "濮阳县" }] },
-
-  {
-    "cityCode": "410600",
-    "cityName": "鹤壁市",
-    "county": [{
-      "countyCode": "410603",
-      "countyName": "山城区" },
-    {
-      "countyCode": "410611",
-      "countyName": "淇滨区" },
-    {
-      "countyCode": "410602",
-      "countyName": "鹤山区" },
-    {
-      "countyCode": "410621",
-      "countyName": "浚县" },
-    {
-      "countyCode": "410622",
-      "countyName": "淇县" }] },
-
-  {
-    "cityCode": "411100",
-    "cityName": "漯河市",
-    "county": [{
-      "countyCode": "411102",
-      "countyName": "源汇区" },
-    {
-      "countyCode": "411122",
-      "countyName": "临颍县" },
-    {
-      "countyCode": "411103",
-      "countyName": "郾城区" },
-    {
-      "countyCode": "411104",
-      "countyName": "召陵区" },
-    {
-      "countyCode": "411121",
-      "countyName": "舞阳县" }] },
-
-  {
-    "cityCode": "411600",
-    "cityName": "周口市",
-    "county": [{
-      "countyCode": "411626",
-      "countyName": "淮阳县" },
-    {
-      "countyCode": "411681",
-      "countyName": "项城市" },
-    {
-      "countyCode": "411624",
-      "countyName": "沈丘县" },
-    {
-      "countyCode": "411622",
-      "countyName": "西华县" },
-    {
-      "countyCode": "411627",
-      "countyName": "太康县" },
-    {
-      "countyCode": "411623",
-      "countyName": "商水县" },
-    {
-      "countyCode": "411628",
-      "countyName": "鹿邑县" },
-    {
-      "countyCode": "411602",
-      "countyName": "川汇区" },
-    {
-      "countyCode": "411621",
-      "countyName": "扶沟县" },
-    {
-      "countyCode": "411625",
-      "countyName": "郸城县" }] },
-
-  {
-    "cityCode": "410800",
-    "cityName": "焦作市",
-    "county": [{
-      "countyCode": "410883",
-      "countyName": "孟州市" },
-    {
-      "countyCode": "410823",
-      "countyName": "武陟县" },
-    {
-      "countyCode": "410882",
-      "countyName": "沁阳市" },
-    {
-      "countyCode": "410822",
-      "countyName": "博爱县" },
-    {
-      "countyCode": "410821",
-      "countyName": "修武县" },
-    {
-      "countyCode": "410825",
-      "countyName": "温县" },
-    {
-      "countyCode": "410804",
-      "countyName": "马村区" },
-    {
-      "countyCode": "410802",
-      "countyName": "解放区" },
-    {
-      "countyCode": "410811",
-      "countyName": "山阳区" },
-    {
-      "countyCode": "410803",
-      "countyName": "中站区" }] }] },
-
-
-{
-  "provinceCode": "420000",
-  "provinceName": "湖北省",
-  "city": [{
-    "cityCode": "429004",
-    "cityName": "仙桃市",
-    "county": [{
-      "countyCode": "429004-1",
-      "countyName": "仙桃市" }] },
-
-  {
-    "cityCode": "421200",
-    "cityName": "咸宁市",
-    "county": [{
-      "countyCode": "421223",
-      "countyName": "崇阳县" },
-    {
-      "countyCode": "421224",
-      "countyName": "通山县" },
-    {
-      "countyCode": "421202",
-      "countyName": "咸安区" },
-    {
-      "countyCode": "421222",
-      "countyName": "通城县" },
-    {
-      "countyCode": "421221",
-      "countyName": "嘉鱼县" },
-    {
-      "countyCode": "421281",
-      "countyName": "赤壁市" }] },
-
-  {
-    "cityCode": "421300",
-    "cityName": "随州市",
-    "county": [{
-      "countyCode": "421381",
-      "countyName": "广水市" },
-    {
-      "countyCode": "421303",
-      "countyName": "曾都区" },
-    {
-      "countyCode": "421321",
-      "countyName": "随县" }] },
-
-  {
-    "cityCode": "422800",
-    "cityName": "恩施土家族苗族自治州",
-    "county": [{
-      "countyCode": "422828",
-      "countyName": "鹤峰县" },
-    {
-      "countyCode": "422825",
-      "countyName": "宣恩县" },
-    {
-      "countyCode": "422801",
-      "countyName": "恩施市" },
-    {
-      "countyCode": "422822",
-      "countyName": "建始县" },
-    {
-      "countyCode": "422823",
-      "countyName": "巴东县" },
-    {
-      "countyCode": "422826",
-      "countyName": "咸丰县" },
-    {
-      "countyCode": "422827",
-      "countyName": "来凤县" },
-    {
-      "countyCode": "422802",
-      "countyName": "利川市" }] },
-
-  {
-    "cityCode": "420900",
-    "cityName": "孝感市",
-    "county": [{
-      "countyCode": "420902",
-      "countyName": "孝南区" },
-    {
-      "countyCode": "420981",
-      "countyName": "应城市" },
-    {
-      "countyCode": "420923",
-      "countyName": "云梦县" },
-    {
-      "countyCode": "420982",
-      "countyName": "安陆市" },
-    {
-      "countyCode": "420922",
-      "countyName": "大悟县" },
-    {
-      "countyCode": "420921",
-      "countyName": "孝昌县" },
-    {
-      "countyCode": "420984",
-      "countyName": "汉川市" }] },
-
-  {
-    "cityCode": "420100",
-    "cityName": "武汉市",
-    "county": [{
-      "countyCode": "420104",
-      "countyName": "硚口区" },
-    {
-      "countyCode": "420107",
-      "countyName": "青山区" },
-    {
-      "countyCode": "420116",
-      "countyName": "黄陂区" },
-    {
-      "countyCode": "420102",
-      "countyName": "江岸区" },
-    {
-      "countyCode": "420115",
-      "countyName": "江夏区" },
-    {
-      "countyCode": "420114",
-      "countyName": "蔡甸区" },
-    {
-      "countyCode": "420106",
-      "countyName": "武昌区" },
-    {
-      "countyCode": "420112",
-      "countyName": "东西湖区" },
-    {
-      "countyCode": "420105",
-      "countyName": "汉阳区" },
-    {
-      "countyCode": "420113",
-      "countyName": "汉南区" },
-    {
-      "countyCode": "420111",
-      "countyName": "洪山区" },
-    {
-      "countyCode": "420103",
-      "countyName": "江汉区" },
-    {
-      "countyCode": "420117",
-      "countyName": "新洲区" }] },
-
-  {
-    "cityCode": "420500",
-    "cityName": "宜昌市",
-    "county": [{
-      "countyCode": "420502",
-      "countyName": "西陵区" },
-    {
-      "countyCode": "420505",
-      "countyName": "猇亭区" },
-    {
-      "countyCode": "420503",
-      "countyName": "伍家岗区" },
-    {
-      "countyCode": "420581",
-      "countyName": "宜都市" },
-    {
-      "countyCode": "420504",
-      "countyName": "点军区" },
-    {
-      "countyCode": "420526",
-      "countyName": "兴山县" },
-    {
-      "countyCode": "420525",
-      "countyName": "远安县" },
-    {
-      "countyCode": "420527",
-      "countyName": "秭归县" },
-    {
-      "countyCode": "420583",
-      "countyName": "枝江市" },
-    {
-      "countyCode": "420529",
-      "countyName": "五峰土家族自治县" },
-    {
-      "countyCode": "420582",
-      "countyName": "当阳市" },
-    {
-      "countyCode": "420506",
-      "countyName": "夷陵区" },
-    {
-      "countyCode": "420528",
-      "countyName": "长阳土家族自治县" }] },
-
-  {
-    "cityCode": "420800",
-    "cityName": "荆门市",
-    "county": [{
-      "countyCode": "420804",
-      "countyName": "掇刀区" },
-    {
-      "countyCode": "420822",
-      "countyName": "沙洋县" },
-    {
-      "countyCode": "420802",
-      "countyName": "东宝区" },
-    {
-      "countyCode": "420881",
-      "countyName": "钟祥市" },
-    {
-      "countyCode": "420821",
-      "countyName": "京山市" }] },
-
-  {
-    "cityCode": "429006",
-    "cityName": "天门市",
-    "county": [{
-      "countyCode": "429006-1",
-      "countyName": "天门市" }] },
-
-  {
-    "cityCode": "421000",
-    "cityName": "荆州市",
-    "county": [{
-      "countyCode": "421003",
-      "countyName": "荆州区" },
-    {
-      "countyCode": "421023",
-      "countyName": "监利县" },
-    {
-      "countyCode": "421087",
-      "countyName": "松滋市" },
-    {
-      "countyCode": "421022",
-      "countyName": "公安县" },
-    {
-      "countyCode": "421002",
-      "countyName": "沙市区" },
-    {
-      "countyCode": "421024",
-      "countyName": "江陵县" },
-    {
-      "countyCode": "421081",
-      "countyName": "石首市" },
-    {
-      "countyCode": "421083",
-      "countyName": "洪湖市" }] },
-
-  {
-    "cityCode": "420600",
-    "cityName": "襄阳市",
-    "county": [{
-      "countyCode": "420625",
-      "countyName": "谷城县" },
-    {
-      "countyCode": "420607",
-      "countyName": "襄州区" },
-    {
-      "countyCode": "420606",
-      "countyName": "樊城区" },
-    {
-      "countyCode": "420602",
-      "countyName": "襄城区" },
-    {
-      "countyCode": "420626",
-      "countyName": "保康县" },
-    {
-      "countyCode": "420624",
-      "countyName": "南漳县" },
-    {
-      "countyCode": "420683",
-      "countyName": "枣阳市" },
-    {
-      "countyCode": "420682",
-      "countyName": "老河口市" },
-    {
-      "countyCode": "420684",
-      "countyName": "宜城市" }] },
-
-  {
-    "cityCode": "420700",
-    "cityName": "鄂州市",
-    "county": [{
-      "countyCode": "420702",
-      "countyName": "梁子湖区" },
-    {
-      "countyCode": "420703",
-      "countyName": "华容区" },
-    {
-      "countyCode": "420704",
-      "countyName": "鄂城区" }] },
-
-  {
-    "cityCode": "429021",
-    "cityName": "神农架林区",
-    "county": [{
-      "countyCode": "429021-1",
-      "countyName": "神农架林区" }] },
-
-  {
-    "cityCode": "420200",
-    "cityName": "黄石市",
-    "county": [{
-      "countyCode": "420202",
-      "countyName": "黄石港区" },
-    {
-      "countyCode": "420281",
-      "countyName": "大冶市" },
-    {
-      "countyCode": "420205",
-      "countyName": "铁山区" },
-    {
-      "countyCode": "420222",
-      "countyName": "阳新县" },
-    {
-      "countyCode": "420203",
-      "countyName": "西塞山区" },
-    {
-      "countyCode": "420204",
-      "countyName": "下陆区" }] },
-
-  {
-    "cityCode": "421100",
-    "cityName": "黄冈市",
-    "county": [{
-      "countyCode": "421181",
-      "countyName": "麻城市" },
-    {
-      "countyCode": "421125",
-      "countyName": "浠水县" },
-    {
-      "countyCode": "421121",
-      "countyName": "团风县" },
-    {
-      "countyCode": "421182",
-      "countyName": "武穴市" },
-    {
-      "countyCode": "421124",
-      "countyName": "英山县" },
-    {
-      "countyCode": "421122",
-      "countyName": "红安县" },
-    {
-      "countyCode": "421102",
-      "countyName": "黄州区" },
-    {
-      "countyCode": "421123",
-      "countyName": "罗田县" },
-    {
-      "countyCode": "421126",
-      "countyName": "蕲春县" },
-    {
-      "countyCode": "421127",
-      "countyName": "黄梅县" }] },
-
-  {
-    "cityCode": "420300",
-    "cityName": "十堰市",
-    "county": [{
-      "countyCode": "420322",
-      "countyName": "郧西县" },
-    {
-      "countyCode": "420321",
-      "countyName": "郧阳区" },
-    {
-      "countyCode": "420323",
-      "countyName": "竹山县" },
-    {
-      "countyCode": "420324",
-      "countyName": "竹溪县" },
-    {
-      "countyCode": "420325",
-      "countyName": "房县" },
-    {
-      "countyCode": "420302",
-      "countyName": "茅箭区" },
-    {
-      "countyCode": "420303",
-      "countyName": "张湾区" },
-    {
-      "countyCode": "420381",
-      "countyName": "丹江口市" }] },
-
-  {
-    "cityCode": "429005",
-    "cityName": "潜江市",
-    "county": [{
-      "countyCode": "429005-1",
-      "countyName": "潜江市" }] }] },
-
-
-{
-  "provinceCode": "430000",
-  "provinceName": "湖南省",
-  "city": [{
-    "cityCode": "430300",
-    "cityName": "湘潭市",
-    "county": [{
-      "countyCode": "430381",
-      "countyName": "湘乡市" },
-    {
-      "countyCode": "430302",
-      "countyName": "雨湖区" },
-    {
-      "countyCode": "430382",
-      "countyName": "韶山市" },
-    {
-      "countyCode": "430321",
-      "countyName": "湘潭县" },
-    {
-      "countyCode": "430304",
-      "countyName": "岳塘区" }] },
-
-  {
-    "cityCode": "430600",
-    "cityName": "岳阳市",
-    "county": [{
-      "countyCode": "430623",
-      "countyName": "华容县" },
-    {
-      "countyCode": "430682",
-      "countyName": "临湘市" },
-    {
-      "countyCode": "430603",
-      "countyName": "云溪区" },
-    {
-      "countyCode": "430681",
-      "countyName": "汨罗市" },
-    {
-      "countyCode": "430624",
-      "countyName": "湘阴县" },
-    {
-      "countyCode": "430602",
-      "countyName": "岳阳楼区" },
-    {
-      "countyCode": "430626",
-      "countyName": "平江县" },
-    {
-      "countyCode": "430611",
-      "countyName": "君山区" },
-    {
-      "countyCode": "430621",
-      "countyName": "岳阳县" }] },
-
-  {
-    "cityCode": "430100",
-    "cityName": "长沙市",
-    "county": [{
-      "countyCode": "430111",
-      "countyName": "雨花区" },
-    {
-      "countyCode": "430103",
-      "countyName": "天心区" },
-    {
-      "countyCode": "430104",
-      "countyName": "岳麓区" },
-    {
-      "countyCode": "430181",
-      "countyName": "浏阳市" },
-    {
-      "countyCode": "430124",
-      "countyName": "宁乡市" },
-    {
-      "countyCode": "430112",
-      "countyName": "望城区" },
-    {
-      "countyCode": "430121",
-      "countyName": "长沙县" },
-    {
-      "countyCode": "430105",
-      "countyName": "开福区" },
-    {
-      "countyCode": "430102",
-      "countyName": "芙蓉区" }] },
-
-  {
-    "cityCode": "430200",
-    "cityName": "株洲市",
-    "county": [{
-      "countyCode": "430202",
-      "countyName": "荷塘区" },
-    {
-      "countyCode": "430225",
-      "countyName": "炎陵县" },
-    {
-      "countyCode": "430281",
-      "countyName": "醴陵市" },
-    {
-      "countyCode": "430203",
-      "countyName": "芦淞区" },
-    {
-      "countyCode": "430224",
-      "countyName": "茶陵县" },
-    {
-      "countyCode": "430211",
-      "countyName": "天元区" },
-    {
-      "countyCode": "430221",
-      "countyName": "株洲县" },
-    {
-      "countyCode": "430223",
-      "countyName": "攸县" },
-    {
-      "countyCode": "430204",
-      "countyName": "石峰区" }] },
-
-  {
-    "cityCode": "431000",
-    "cityName": "郴州市",
-    "county": [{
-      "countyCode": "431028",
-      "countyName": "安仁县" },
-    {
-      "countyCode": "431021",
-      "countyName": "桂阳县" },
-    {
-      "countyCode": "431002",
-      "countyName": "北湖区" },
-    {
-      "countyCode": "431027",
-      "countyName": "桂东县" },
-    {
-      "countyCode": "431024",
-      "countyName": "嘉禾县" },
-    {
-      "countyCode": "431026",
-      "countyName": "汝城县" },
-    {
-      "countyCode": "431023",
-      "countyName": "永兴县" },
-    {
-      "countyCode": "431025",
-      "countyName": "临武县" },
-    {
-      "countyCode": "431022",
-      "countyName": "宜章县" },
-    {
-      "countyCode": "431003",
-      "countyName": "苏仙区" },
-    {
-      "countyCode": "431081",
-      "countyName": "资兴市" }] },
-
-  {
-    "cityCode": "431200",
-    "cityName": "怀化市",
-    "county": [{
-      "countyCode": "431223",
-      "countyName": "辰溪县" },
-    {
-      "countyCode": "431202",
-      "countyName": "鹤城区" },
-    {
-      "countyCode": "431224",
-      "countyName": "溆浦县" },
-    {
-      "countyCode": "431226",
-      "countyName": "麻阳苗族自治县" },
-    {
-      "countyCode": "431229",
-      "countyName": "靖州苗族侗族自治县" },
-    {
-      "countyCode": "431230",
-      "countyName": "通道侗族自治县" },
-    {
-      "countyCode": "431281",
-      "countyName": "洪江市" },
-    {
-      "countyCode": "431228",
-      "countyName": "芷江侗族自治县" },
-    {
-      "countyCode": "431221",
-      "countyName": "中方县" },
-    {
-      "countyCode": "431225",
-      "countyName": "会同县" },
-    {
-      "countyCode": "431227",
-      "countyName": "新晃侗族自治县" },
-    {
-      "countyCode": "431222",
-      "countyName": "沅陵县" }] },
-
-  {
-    "cityCode": "431100",
-    "cityName": "永州市",
-    "county": [{
-      "countyCode": "431123",
-      "countyName": "双牌县" },
-    {
-      "countyCode": "431125",
-      "countyName": "江永县" },
-    {
-      "countyCode": "431102",
-      "countyName": "零陵区" },
-    {
-      "countyCode": "431129",
-      "countyName": "江华瑶族自治县" },
-    {
-      "countyCode": "431124",
-      "countyName": "道县" },
-    {
-      "countyCode": "431127",
-      "countyName": "蓝山县" },
-    {
-      "countyCode": "431103",
-      "countyName": "冷水滩区" },
-    {
-      "countyCode": "431122",
-      "countyName": "东安县" },
-    {
-      "countyCode": "431128",
-      "countyName": "新田县" },
-    {
-      "countyCode": "431121",
-      "countyName": "祁阳县" },
-    {
-      "countyCode": "431126",
-      "countyName": "宁远县" }] },
-
-  {
-    "cityCode": "430700",
-    "cityName": "常德市",
-    "county": [{
-      "countyCode": "430703",
-      "countyName": "鼎城区" },
-    {
-      "countyCode": "430725",
-      "countyName": "桃源县" },
-    {
-      "countyCode": "430724",
-      "countyName": "临澧县" },
-    {
-      "countyCode": "430781",
-      "countyName": "津市市" },
-    {
-      "countyCode": "430702",
-      "countyName": "武陵区" },
-    {
-      "countyCode": "430721",
-      "countyName": "安乡县" },
-    {
-      "countyCode": "430726",
-      "countyName": "石门县" },
-    {
-      "countyCode": "430722",
-      "countyName": "汉寿县" },
-    {
-      "countyCode": "430723",
-      "countyName": "澧县" }] },
-
-  {
-    "cityCode": "431300",
-    "cityName": "娄底市",
-    "county": [{
-      "countyCode": "431322",
-      "countyName": "新化县" },
-    {
-      "countyCode": "431302",
-      "countyName": "娄星区" },
-    {
-      "countyCode": "431321",
-      "countyName": "双峰县" },
-    {
-      "countyCode": "431381",
-      "countyName": "冷水江市" },
-    {
-      "countyCode": "431382",
-      "countyName": "涟源市" }] },
-
-  {
-    "cityCode": "430800",
-    "cityName": "张家界市",
-    "county": [{
-      "countyCode": "430821",
-      "countyName": "慈利县" },
-    {
-      "countyCode": "430822",
-      "countyName": "桑植县" },
-    {
-      "countyCode": "430802",
-      "countyName": "永定区" },
-    {
-      "countyCode": "430811",
-      "countyName": "武陵源区" }] },
-
-  {
-    "cityCode": "430400",
-    "cityName": "衡阳市",
-    "county": [{
-      "countyCode": "430423",
-      "countyName": "衡山县" },
-    {
-      "countyCode": "430408",
-      "countyName": "蒸湘区" },
-    {
-      "countyCode": "430405",
-      "countyName": "珠晖区" },
-    {
-      "countyCode": "430481",
-      "countyName": "耒阳市" },
-    {
-      "countyCode": "430422",
-      "countyName": "衡南县" },
-    {
-      "countyCode": "430426",
-      "countyName": "祁东县" },
-    {
-      "countyCode": "430407",
-      "countyName": "石鼓区" },
-    {
-      "countyCode": "430482",
-      "countyName": "常宁市" },
-    {
-      "countyCode": "430424",
-      "countyName": "衡东县" },
-    {
-      "countyCode": "430406",
-      "countyName": "雁峰区" },
-    {
-      "countyCode": "430421",
-      "countyName": "衡阳县" },
-    {
-      "countyCode": "430412",
-      "countyName": "南岳区" }] },
-
-  {
-    "cityCode": "430500",
-    "cityName": "邵阳市",
-    "county": [{
-      "countyCode": "430524",
-      "countyName": "隆回县" },
-    {
-      "countyCode": "430503",
-      "countyName": "大祥区" },
-    {
-      "countyCode": "430528",
-      "countyName": "新宁县" },
-    {
-      "countyCode": "430529",
-      "countyName": "城步苗族自治县" },
-    {
-      "countyCode": "430581",
-      "countyName": "武冈市" },
-    {
-      "countyCode": "430502",
-      "countyName": "双清区" },
-    {
-      "countyCode": "430523",
-      "countyName": "邵阳县" },
-    {
-      "countyCode": "430522",
-      "countyName": "新邵县" },
-    {
-      "countyCode": "430521",
-      "countyName": "邵东县" },
-    {
-      "countyCode": "430525",
-      "countyName": "洞口县" },
-    {
-      "countyCode": "430511",
-      "countyName": "北塔区" },
-    {
-      "countyCode": "430527",
-      "countyName": "绥宁县" }] },
-
-  {
-    "cityCode": "433100",
-    "cityName": "湘西土家族苗族自治州",
-    "county": [{
-      "countyCode": "433123",
-      "countyName": "凤凰县" },
-    {
-      "countyCode": "433126",
-      "countyName": "古丈县" },
-    {
-      "countyCode": "433125",
-      "countyName": "保靖县" },
-    {
-      "countyCode": "433124",
-      "countyName": "花垣县" },
-    {
-      "countyCode": "433127",
-      "countyName": "永顺县" },
-    {
-      "countyCode": "433122",
-      "countyName": "泸溪县" },
-    {
-      "countyCode": "433101",
-      "countyName": "吉首市" },
-    {
-      "countyCode": "433130",
-      "countyName": "龙山县" }] },
-
-  {
-    "cityCode": "430900",
-    "cityName": "益阳市",
-    "county": [{
-      "countyCode": "430923",
-      "countyName": "安化县" },
-    {
-      "countyCode": "430921",
-      "countyName": "南县" },
-    {
-      "countyCode": "430902",
-      "countyName": "资阳区" },
-    {
-      "countyCode": "430981",
-      "countyName": "沅江市" },
-    {
-      "countyCode": "430903",
-      "countyName": "赫山区" },
-    {
-      "countyCode": "430922",
-      "countyName": "桃江县" }] }] },
-
-
-{
-  "provinceCode": "450000",
-  "provinceName": "广西壮族自治区",
-  "city": [{
-    "cityCode": "450400",
-    "cityName": "梧州市",
-    "county": [{
-      "countyCode": "450481",
-      "countyName": "岑溪市" },
-    {
-      "countyCode": "450423",
-      "countyName": "蒙山县" },
-    {
-      "countyCode": "450421",
-      "countyName": "苍梧县" },
-    {
-      "countyCode": "450422",
-      "countyName": "藤县" },
-    {
-      "countyCode": "450403",
-      "countyName": "万秀区" },
-    {
-      "countyCode": "450405",
-      "countyName": "长洲区" },
-    {
-      "countyCode": "450424",
-      "countyName": "龙圩区" },
-    {
-      "countyCode": "450404",
-      "countyName": "蝶山区" }] },
-
-  {
-    "cityCode": "450500",
-    "cityName": "北海市",
-    "county": [{
-      "countyCode": "450521",
-      "countyName": "合浦县" },
-    {
-      "countyCode": "450512",
-      "countyName": "铁山港区" },
-    {
-      "countyCode": "450502",
-      "countyName": "海城区" },
-    {
-      "countyCode": "450503",
-      "countyName": "银海区" }] },
-
-  {
-    "cityCode": "450300",
-    "cityName": "桂林市",
-    "county": [{
-      "countyCode": "450327",
-      "countyName": "灌阳县" },
-    {
-      "countyCode": "450305",
-      "countyName": "七星区" },
-    {
-      "countyCode": "450326",
-      "countyName": "永福县" },
-    {
-      "countyCode": "450325",
-      "countyName": "兴安县" },
-    {
-      "countyCode": "450321",
-      "countyName": "阳朔县" },
-    {
-      "countyCode": "450332",
-      "countyName": "恭城瑶族自治县" },
-    {
-      "countyCode": "450302",
-      "countyName": "秀峰区" },
-    {
-      "countyCode": "450304",
-      "countyName": "象山区" },
-    {
-      "countyCode": "450330",
-      "countyName": "平乐县" },
-    {
-      "countyCode": "450331",
-      "countyName": "荔浦县" },
-    {
-      "countyCode": "450329",
-      "countyName": "资源县" },
-    {
-      "countyCode": "450323",
-      "countyName": "灵川县" },
-    {
-      "countyCode": "450324",
-      "countyName": "全州县" },
-    {
-      "countyCode": "450322",
-      "countyName": "临桂区" },
-    {
-      "countyCode": "450303",
-      "countyName": "叠彩区" },
-    {
-      "countyCode": "450311",
-      "countyName": "雁山区" },
-    {
-      "countyCode": "450328",
-      "countyName": "龙胜各族自治县" }] },
-
-  {
-    "cityCode": "451100",
-    "cityName": "贺州市",
-    "county": [{
-      "countyCode": "451121",
-      "countyName": "昭平县" },
-    {
-      "countyCode": "451122",
-      "countyName": "钟山县" },
-    {
-      "countyCode": "451102",
-      "countyName": "八步区" },
-    {
-      "countyCode": "451123",
-      "countyName": "富川瑶族自治县" },
-    {
-      "countyCode": "451103",
-      "countyName": "平桂区" }] },
-
-  {
-    "cityCode": "450800",
-    "cityName": "贵港市",
-    "county": [{
-      "countyCode": "450804",
-      "countyName": "覃塘区" },
-    {
-      "countyCode": "450881",
-      "countyName": "桂平市" },
-    {
-      "countyCode": "450821",
-      "countyName": "平南县" },
-    {
-      "countyCode": "450803",
-      "countyName": "港南区" },
-    {
-      "countyCode": "450802",
-      "countyName": "港北区" }] },
-
-  {
-    "cityCode": "450900",
-    "cityName": "玉林市",
-    "county": [{
-      "countyCode": "450921",
-      "countyName": "容县" },
-    {
-      "countyCode": "450924",
-      "countyName": "兴业县" },
-    {
-      "countyCode": "450902",
-      "countyName": "玉州区" },
-    {
-      "countyCode": "450903",
-      "countyName": "福绵区" },
-    {
-      "countyCode": "450981",
-      "countyName": "北流市" },
-    {
-      "countyCode": "450923",
-      "countyName": "博白县" },
-    {
-      "countyCode": "450922",
-      "countyName": "陆川县" }] },
-
-  {
-    "cityCode": "450200",
-    "cityName": "柳州市",
-    "county": [{
-      "countyCode": "450225",
-      "countyName": "融水苗族自治县" },
-    {
-      "countyCode": "450202",
-      "countyName": "城中区" },
-    {
-      "countyCode": "450223",
-      "countyName": "鹿寨县" },
-    {
-      "countyCode": "450226",
-      "countyName": "三江侗族自治县" },
-    {
-      "countyCode": "450204",
-      "countyName": "柳南区" },
-    {
-      "countyCode": "450203",
-      "countyName": "鱼峰区" },
-    {
-      "countyCode": "450222",
-      "countyName": "柳城县" },
-    {
-      "countyCode": "450224",
-      "countyName": "融安县" },
-    {
-      "countyCode": "450205",
-      "countyName": "柳北区" },
-    {
-      "countyCode": "450221",
-      "countyName": "柳江区" }] },
-
-  {
-    "cityCode": "451000",
-    "cityName": "百色市",
-    "county": [{
-      "countyCode": "451002",
-      "countyName": "右江区" },
-    {
-      "countyCode": "451031",
-      "countyName": "隆林各族自治县" },
-    {
-      "countyCode": "451027",
-      "countyName": "凌云县" },
-    {
-      "countyCode": "451023",
-      "countyName": "平果县" },
-    {
-      "countyCode": "451026",
-      "countyName": "那坡县" },
-    {
-      "countyCode": "451030",
-      "countyName": "西林县" },
-    {
-      "countyCode": "451024",
-      "countyName": "德保县" },
-    {
-      "countyCode": "451022",
-      "countyName": "田东县" },
-    {
-      "countyCode": "451021",
-      "countyName": "田阳县" },
-    {
-      "countyCode": "451028",
-      "countyName": "乐业县" },
-    {
-      "countyCode": "451029",
-      "countyName": "田林县" },
-    {
-      "countyCode": "451025",
-      "countyName": "靖西市" }] },
-
-  {
-    "cityCode": "451300",
-    "cityName": "来宾市",
-    "county": [{
-      "countyCode": "451381",
-      "countyName": "合山市" },
-    {
-      "countyCode": "451322",
-      "countyName": "象州县" },
-    {
-      "countyCode": "451324",
-      "countyName": "金秀瑶族自治县" },
-    {
-      "countyCode": "451321",
-      "countyName": "忻城县" },
-    {
-      "countyCode": "451302",
-      "countyName": "兴宾区" },
-    {
-      "countyCode": "451323",
-      "countyName": "武宣县" }] },
-
-  {
-    "cityCode": "450100",
-    "cityName": "南宁市",
-    "county": [{
-      "countyCode": "450105",
-      "countyName": "江南区" },
-    {
-      "countyCode": "450107",
-      "countyName": "西乡塘区" },
-    {
-      "countyCode": "450109",
-      "countyName": "邕宁区" },
-    {
-      "countyCode": "450126",
-      "countyName": "宾阳县" },
-    {
-      "countyCode": "450108",
-      "countyName": "良庆区" },
-    {
-      "countyCode": "450125",
-      "countyName": "上林县" },
-    {
-      "countyCode": "450123",
-      "countyName": "隆安县" },
-    {
-      "countyCode": "450124",
-      "countyName": "马山县" },
-    {
-      "countyCode": "450122",
-      "countyName": "武鸣区" },
-    {
-      "countyCode": "450102",
-      "countyName": "兴宁区" },
-    {
-      "countyCode": "450127",
-      "countyName": "横县" },
-    {
-      "countyCode": "450103",
-      "countyName": "青秀区" }] },
-
-  {
-    "cityCode": "450700",
-    "cityName": "钦州市",
-    "county": [{
-      "countyCode": "450702",
-      "countyName": "钦南区" },
-    {
-      "countyCode": "450722",
-      "countyName": "浦北县" },
-    {
-      "countyCode": "450721",
-      "countyName": "灵山县" },
-    {
-      "countyCode": "450703",
-      "countyName": "钦北区" }] },
-
-  {
-    "cityCode": "450600",
-    "cityName": "防城港市",
-    "county": [{
-      "countyCode": "450603",
-      "countyName": "防城区" },
-    {
-      "countyCode": "450621",
-      "countyName": "上思县" },
-    {
-      "countyCode": "450602",
-      "countyName": "港口区" },
-    {
-      "countyCode": "450681",
-      "countyName": "东兴市" }] },
-
-  {
-    "cityCode": "451200",
-    "cityName": "河池市",
-    "county": [{
-      "countyCode": "451202",
-      "countyName": "金城江区" },
-    {
-      "countyCode": "451281",
-      "countyName": "宜州区" },
-    {
-      "countyCode": "451221",
-      "countyName": "南丹县" },
-    {
-      "countyCode": "451224",
-      "countyName": "东兰县" },
-    {
-      "countyCode": "451228",
-      "countyName": "都安瑶族自治县" },
-    {
-      "countyCode": "451229",
-      "countyName": "大化瑶族自治县" },
-    {
-      "countyCode": "451222",
-      "countyName": "天峨县" },
-    {
-      "countyCode": "451225",
-      "countyName": "罗城仫佬族自治县" },
-    {
-      "countyCode": "451227",
-      "countyName": "巴马瑶族自治县" },
-    {
-      "countyCode": "451226",
-      "countyName": "环江毛南族自治县" },
-    {
-      "countyCode": "451223",
-      "countyName": "凤山县" }] },
-
-  {
-    "cityCode": "451400",
-    "cityName": "崇左市",
-    "county": [{
-      "countyCode": "451423",
-      "countyName": "龙州县" },
-    {
-      "countyCode": "451425",
-      "countyName": "天等县" },
-    {
-      "countyCode": "451481",
-      "countyName": "凭祥市" },
-    {
-      "countyCode": "451422",
-      "countyName": "宁明县" },
-    {
-      "countyCode": "451402",
-      "countyName": "江州区" },
-    {
-      "countyCode": "451421",
-      "countyName": "扶绥县" },
-    {
-      "countyCode": "451424",
-      "countyName": "大新县" }] }] },
-
-
-{
-  "provinceCode": "460000",
-  "provinceName": "海南省",
-  "city": [{
-    "cityCode": "469005",
-    "cityName": "文昌市",
-    "county": [{
-      "countyCode": "469005-1",
-      "countyName": "文昌市" }] },
-
-  {
-    "cityCode": "460300",
-    "cityName": "三沙市",
-    "county": [{
-      "countyCode": "460321",
-      "countyName": "西沙群岛" },
-    {
-      "countyCode": "460322",
-      "countyName": "南沙群岛" },
-    {
-      "countyCode": "469031",
-      "countyName": "西沙群岛" },
-    {
-      "countyCode": "469032",
-      "countyName": "南沙群岛" },
-    {
-      "countyCode": "460323",
-      "countyName": "中沙群岛的岛礁及其海域" }] },
-
-  {
-    "cityCode": "469027",
-    "cityName": "乐东黎族自治县",
-    "county": [{
-      "countyCode": "469027-1",
-      "countyName": "乐东黎族自治县" }] },
-
-  {
-    "cityCode": "460200",
-    "cityName": "三亚市",
-    "county": [{
-      "countyCode": "460203",
-      "countyName": "吉阳区" },
-    {
-      "countyCode": "460202",
-      "countyName": "海棠区" },
-    {
-      "countyCode": "460205",
-      "countyName": "崖州区" },
-    {
-      "countyCode": "460204",
-      "countyName": "天涯区" }] },
-
-  {
-    "cityCode": "469002",
-    "cityName": "琼海市",
-    "county": [{
-      "countyCode": "469002-1",
-      "countyName": "琼海市" }] },
-
-  {
-    "cityCode": "469021",
-    "cityName": "定安县",
-    "county": [{
-      "countyCode": "469021-1",
-      "countyName": "定安县" }] },
-
-  {
-    "cityCode": "460100",
-    "cityName": "海口市",
-    "county": [{
-      "countyCode": "460107",
-      "countyName": "琼山区" },
-    {
-      "countyCode": "460108",
-      "countyName": "美兰区" },
-    {
-      "countyCode": "460105",
-      "countyName": "秀英区" },
-    {
-      "countyCode": "460106",
-      "countyName": "龙华区" }] },
-
-  {
-    "cityCode": "469006",
-    "cityName": "万宁市",
-    "county": [{
-      "countyCode": "469006-1",
-      "countyName": "万宁市" }] },
-
-  {
-    "cityCode": "469029",
-    "cityName": "保亭黎族苗族自治县",
-    "county": [{
-      "countyCode": "469029-1",
-      "countyName": "保亭黎族苗族自治县" }] },
-
-  {
-    "cityCode": "469003",
-    "cityName": "儋州市",
-    "county": [{
-      "countyCode": "469003-1",
-      "countyName": "儋州市" }] },
-
-  {
-    "cityCode": "469023",
-    "cityName": "澄迈县",
-    "county": [{
-      "countyCode": "469023-1",
-      "countyName": "澄迈县" }] },
-
-  {
-    "cityCode": "469022",
-    "cityName": "屯昌县",
-    "county": [{
-      "countyCode": "469022-1",
-      "countyName": "屯昌县" }] },
-
-  {
-    "cityCode": "469028",
-    "cityName": "陵水黎族自治县",
-    "county": [{
-      "countyCode": "469028-1",
-      "countyName": "陵水黎族自治县" }] },
-
-  {
-    "cityCode": "469007",
-    "cityName": "东方市",
-    "county": [{
-      "countyCode": "469007-1",
-      "countyName": "东方市" }] },
-
-  {
-    "cityCode": "469001",
-    "cityName": "五指山市",
-    "county": [{
-      "countyCode": "469001-1",
-      "countyName": "五指山市" }] },
-
-  {
-    "cityCode": "469025",
-    "cityName": "白沙黎族自治县",
-    "county": [{
-      "countyCode": "469025-1",
-      "countyName": "白沙黎族自治县" }] },
-
-  {
-    "cityCode": "469026",
-    "cityName": "昌江黎族自治县",
-    "county": [{
-      "countyCode": "469026-1",
-      "countyName": "昌江黎族自治县" }] },
-
-  {
-    "cityCode": "469024",
-    "cityName": "临高县",
-    "county": [{
-      "countyCode": "469024-1",
-      "countyName": "临高县" }] },
-
-  {
-    "cityCode": "469030",
-    "cityName": "琼中黎族苗族自治县",
-    "county": [{
-      "countyCode": "469030-1",
-      "countyName": "琼中黎族苗族自治县" }] }] },
-
-
-{
-  "provinceCode": "500000",
-  "provinceName": "重庆",
-  "city": [{
-    "cityCode": "500000-1",
-    "cityName": "重庆市",
-    "county": [{
-      "countyCode": "500108",
-      "countyName": "南岸区" },
-    {
-      "countyCode": "500101",
-      "countyName": "万州区" },
-    {
-      "countyCode": "500103",
-      "countyName": "渝中区" },
-    {
-      "countyCode": "500106",
-      "countyName": "沙坪坝区" },
-    {
-      "countyCode": "500102",
-      "countyName": "涪陵区" },
-    {
-      "countyCode": "500226",
-      "countyName": "荣昌区" },
-    {
-      "countyCode": "500223",
-      "countyName": "潼南区" },
-    {
-      "countyCode": "500242",
-      "countyName": "酉阳土家族苗族自治县" },
-    {
-      "countyCode": "500232",
-      "countyName": "武隆区" },
-    {
-      "countyCode": "500113",
-      "countyName": "巴南区" },
-    {
-      "countyCode": "500109",
-      "countyName": "北碚区" },
-    {
-      "countyCode": "500104",
-      "countyName": "大渡口区" },
-    {
-      "countyCode": "500117",
-      "countyName": "合川区" },
-    {
-      "countyCode": "500112",
-      "countyName": "渝北区" },
-    {
-      "countyCode": "500116",
-      "countyName": "江津区" },
-    {
-      "countyCode": "500228",
-      "countyName": "梁平区" },
-    {
-      "countyCode": "500119",
-      "countyName": "南川区" },
-    {
-      "countyCode": "500110",
-      "countyName": "綦江区" },
-    {
-      "countyCode": "500227",
-      "countyName": "璧山区" },
-    {
-      "countyCode": "500115",
-      "countyName": "长寿区" },
-    {
-      "countyCode": "500231",
-      "countyName": "垫江县" },
-    {
-      "countyCode": "500230",
-      "countyName": "丰都县" },
-    {
-      "countyCode": "500224",
-      "countyName": "铜梁区" },
-    {
-      "countyCode": "500243",
-      "countyName": "彭水苗族土家族自治县" },
-    {
-      "countyCode": "500105",
-      "countyName": "江北区" },
-    {
-      "countyCode": "500107",
-      "countyName": "九龙坡区" },
-    {
-      "countyCode": "500236",
-      "countyName": "奉节县" },
-    {
-      "countyCode": "500111",
-      "countyName": "大足区" },
-    {
-      "countyCode": "500234",
-      "countyName": "开州区" },
-    {
-      "countyCode": "500241",
-      "countyName": "秀山土家族苗族自治县" },
-    {
-      "countyCode": "500229",
-      "countyName": "城口县" },
-    {
-      "countyCode": "500238",
-      "countyName": "巫溪县" },
-    {
-      "countyCode": "500118",
-      "countyName": "永川区" },
-    {
-      "countyCode": "500233",
-      "countyName": "忠县" },
-    {
-      "countyCode": "500240",
-      "countyName": "石柱土家族自治县" },
-    {
-      "countyCode": "500114",
-      "countyName": "黔江区" },
-    {
-      "countyCode": "500237",
-      "countyName": "巫山县" },
-    {
-      "countyCode": "500235",
-      "countyName": "云阳县" }] }] },
-
-
-{
-  "provinceCode": "510000",
-  "provinceName": "四川省",
-  "city": [{
-    "cityCode": "511300",
-    "cityName": "南充市",
-    "county": [{
-      "countyCode": "511304",
-      "countyName": "嘉陵区" },
-    {
-      "countyCode": "511323",
-      "countyName": "蓬安县" },
-    {
-      "countyCode": "511322",
-      "countyName": "营山县" },
-    {
-      "countyCode": "511381",
-      "countyName": "阆中市" },
-    {
-      "countyCode": "511303",
-      "countyName": "高坪区" },
-    {
-      "countyCode": "511324",
-      "countyName": "仪陇县" },
-    {
-      "countyCode": "511302",
-      "countyName": "顺庆区" },
-    {
-      "countyCode": "511321",
-      "countyName": "南部县" },
-    {
-      "countyCode": "511325",
-      "countyName": "西充县" }] },
-
-  {
-    "cityCode": "511800",
-    "cityName": "雅安市",
-    "county": [{
-      "countyCode": "511826",
-      "countyName": "芦山县" },
-    {
-      "countyCode": "511824",
-      "countyName": "石棉县" },
-    {
-      "countyCode": "511803",
-      "countyName": "名山区" },
-    {
-      "countyCode": "511827",
-      "countyName": "宝兴县" },
-    {
-      "countyCode": "511802",
-      "countyName": "雨城区" },
-    {
-      "countyCode": "511823",
-      "countyName": "汉源县" },
-    {
-      "countyCode": "511825",
-      "countyName": "天全县" },
-    {
-      "countyCode": "511822",
-      "countyName": "荥经县" }] },
-
-  {
-    "cityCode": "513400",
-    "cityName": "凉山彝族自治州",
-    "county": [{
-      "countyCode": "513427",
-      "countyName": "宁南县" },
-    {
-      "countyCode": "513432",
-      "countyName": "喜德县" },
-    {
-      "countyCode": "513431",
-      "countyName": "昭觉县" },
-    {
-      "countyCode": "513401",
-      "countyName": "西昌市" },
-    {
-      "countyCode": "513437",
-      "countyName": "雷波县" },
-    {
-      "countyCode": "513433",
-      "countyName": "冕宁县" },
-    {
-      "countyCode": "513434",
-      "countyName": "越西县" },
-    {
-      "countyCode": "513435",
-      "countyName": "甘洛县" },
-    {
-      "countyCode": "513429",
-      "countyName": "布拖县" },
-    {
-      "countyCode": "513430",
-      "countyName": "金阳县" },
-    {
-      "countyCode": "513436",
-      "countyName": "美姑县" },
-    {
-      "countyCode": "513428",
-      "countyName": "普格县" },
-    {
-      "countyCode": "513424",
-      "countyName": "德昌县" },
-    {
-      "countyCode": "513425",
-      "countyName": "会理县" },
-    {
-      "countyCode": "513423",
-      "countyName": "盐源县" },
-    {
-      "countyCode": "513426",
-      "countyName": "会东县" },
-    {
-      "countyCode": "513422",
-      "countyName": "木里藏族自治县" }] },
-
-  {
-    "cityCode": "511400",
-    "cityName": "眉山市",
-    "county": [{
-      "countyCode": "511422",
-      "countyName": "彭山区" },
-    {
-      "countyCode": "511424",
-      "countyName": "丹棱县" },
-    {
-      "countyCode": "511425",
-      "countyName": "青神县" },
-    {
-      "countyCode": "511402",
-      "countyName": "东坡区" },
-    {
-      "countyCode": "511423",
-      "countyName": "洪雅县" },
-    {
-      "countyCode": "511421",
-      "countyName": "仁寿县" }] },
-
-  {
-    "cityCode": "510300",
-    "cityName": "自贡市",
-    "county": [{
-      "countyCode": "510304",
-      "countyName": "大安区" },
-    {
-      "countyCode": "510302",
-      "countyName": "自流井区" },
-    {
-      "countyCode": "510321",
-      "countyName": "荣县" },
-    {
-      "countyCode": "510303",
-      "countyName": "贡井区" },
-    {
-      "countyCode": "510322",
-      "countyName": "富顺县" },
-    {
-      "countyCode": "510311",
-      "countyName": "沿滩区" }] },
-
-  {
-    "cityCode": "511900",
-    "cityName": "巴中市",
-    "county": [{
-      "countyCode": "511903",
-      "countyName": "恩阳区" },
-    {
-      "countyCode": "511921",
-      "countyName": "通江县" },
-    {
-      "countyCode": "511922",
-      "countyName": "南江县" },
-    {
-      "countyCode": "511902",
-      "countyName": "巴州区" },
-    {
-      "countyCode": "511923",
-      "countyName": "平昌县" }] },
-
-  {
-    "cityCode": "513300",
-    "cityName": "甘孜藏族自治州",
-    "county": [{
-      "countyCode": "513328",
-      "countyName": "甘孜县" },
-    {
-      "countyCode": "513324",
-      "countyName": "九龙县" },
-    {
-      "countyCode": "513332",
-      "countyName": "石渠县" },
-    {
-      "countyCode": "513337",
-      "countyName": "稻城县" },
-    {
-      "countyCode": "513326",
-      "countyName": "道孚县" },
-    {
-      "countyCode": "513330",
-      "countyName": "德格县" },
-    {
-      "countyCode": "513336",
-      "countyName": "乡城县" },
-    {
-      "countyCode": "513325",
-      "countyName": "雅江县" },
-    {
-      "countyCode": "513334",
-      "countyName": "理塘县" },
-    {
-      "countyCode": "513329",
-      "countyName": "新龙县" },
-    {
-      "countyCode": "513338",
-      "countyName": "得荣县" },
-    {
-      "countyCode": "513331",
-      "countyName": "白玉县" },
-    {
-      "countyCode": "513323",
-      "countyName": "丹巴县" },
-    {
-      "countyCode": "513327",
-      "countyName": "炉霍县" },
-    {
-      "countyCode": "513335",
-      "countyName": "巴塘县" },
-    {
-      "countyCode": "513321",
-      "countyName": "康定市" },
-    {
-      "countyCode": "513333",
-      "countyName": "色达县" },
-    {
-      "countyCode": "513322",
-      "countyName": "泸定县" }] },
-
-  {
-    "cityCode": "511700",
-    "cityName": "达州市",
-    "county": [{
-      "countyCode": "511722",
-      "countyName": "宣汉县" },
-    {
-      "countyCode": "511781",
-      "countyName": "万源市" },
-    {
-      "countyCode": "511724",
-      "countyName": "大竹县" },
-    {
-      "countyCode": "511723",
-      "countyName": "开江县" },
-    {
-      "countyCode": "511721",
-      "countyName": "达川区" },
-    {
-      "countyCode": "511702",
-      "countyName": "通川区" },
-    {
-      "countyCode": "511725",
-      "countyName": "渠县" }] },
-
-  {
-    "cityCode": "510500",
-    "cityName": "泸州市",
-    "county": [{
-      "countyCode": "510524",
-      "countyName": "叙永县" },
-    {
-      "countyCode": "510521",
-      "countyName": "泸县" },
-    {
-      "countyCode": "510502",
-      "countyName": "江阳区" },
-    {
-      "countyCode": "510504",
-      "countyName": "龙马潭区" },
-    {
-      "countyCode": "510525",
-      "countyName": "古蔺县" },
-    {
-      "countyCode": "510522",
-      "countyName": "合江县" },
-    {
-      "countyCode": "510503",
-      "countyName": "纳溪区" }] },
-
-  {
-    "cityCode": "510800",
-    "cityName": "广元市",
-    "county": [{
-      "countyCode": "510802",
-      "countyName": "利州区" },
-    {
-      "countyCode": "510811",
-      "countyName": "昭化区" },
-    {
-      "countyCode": "510824",
-      "countyName": "苍溪县" },
-    {
-      "countyCode": "510812",
-      "countyName": "朝天区" },
-    {
-      "countyCode": "510823",
-      "countyName": "剑阁县" },
-    {
-      "countyCode": "510821",
-      "countyName": "旺苍县" },
-    {
-      "countyCode": "510822",
-      "countyName": "青川县" }] },
-
-  {
-    "cityCode": "512000",
-    "cityName": "资阳市",
-    "county": [{
-      "countyCode": "512022",
-      "countyName": "乐至县" },
-    {
-      "countyCode": "512021",
-      "countyName": "安岳县" },
-    {
-      "countyCode": "512002",
-      "countyName": "雁江区" }] },
-
-  {
-    "cityCode": "510400",
-    "cityName": "攀枝花市",
-    "county": [{
-      "countyCode": "510411",
-      "countyName": "仁和区" },
-    {
-      "countyCode": "510422",
-      "countyName": "盐边县" },
-    {
-      "countyCode": "510403",
-      "countyName": "西区" },
-    {
-      "countyCode": "510421",
-      "countyName": "米易县" },
-    {
-      "countyCode": "510402",
-      "countyName": "东区" }] },
-
-  {
-    "cityCode": "510100",
-    "cityName": "成都市",
-    "county": [{
-      "countyCode": "510115",
-      "countyName": "温江区" },
-    {
-      "countyCode": "510105",
-      "countyName": "青羊区" },
-    {
-      "countyCode": "510124",
-      "countyName": "郫都区" },
-    {
-      "countyCode": "510122",
-      "countyName": "双流区" },
-    {
-      "countyCode": "510129",
-      "countyName": "大邑县" },
-    {
-      "countyCode": "510106",
-      "countyName": "金牛区" },
-    {
-      "countyCode": "510112",
-      "countyName": "龙泉驿区" },
-    {
-      "countyCode": "512081",
-      "countyName": "简阳市" },
-    {
-      "countyCode": "510181",
-      "countyName": "都江堰市" },
-    {
-      "countyCode": "510108",
-      "countyName": "成华区" },
-    {
-      "countyCode": "510132",
-      "countyName": "新津县" },
-    {
-      "countyCode": "510113",
-      "countyName": "青白江区" },
-    {
-      "countyCode": "510182",
-      "countyName": "彭州市" },
-    {
-      "countyCode": "510114",
-      "countyName": "新都区" },
-    {
-      "countyCode": "510184",
-      "countyName": "崇州市" },
-    {
-      "countyCode": "510121",
-      "countyName": "金堂县" },
-    {
-      "countyCode": "510107",
-      "countyName": "武侯区" },
-    {
-      "countyCode": "510104",
-      "countyName": "锦江区" },
-    {
-      "countyCode": "510131",
-      "countyName": "蒲江县" },
-    {
-      "countyCode": "510183",
-      "countyName": "邛崃市" }] },
-
-  {
-    "cityCode": "511100",
-    "cityName": "乐山市",
-    "county": [{
-      "countyCode": "511132",
-      "countyName": "峨边彝族自治县" },
-    {
-      "countyCode": "511113",
-      "countyName": "金口河区" },
-    {
-      "countyCode": "511111",
-      "countyName": "沙湾区" },
-    {
-      "countyCode": "511181",
-      "countyName": "峨眉山市" },
-    {
-      "countyCode": "511126",
-      "countyName": "夹江县" },
-    {
-      "countyCode": "511102",
-      "countyName": "市中区" },
-    {
-      "countyCode": "511112",
-      "countyName": "五通桥区" },
-    {
-      "countyCode": "511124",
-      "countyName": "井研县" },
-    {
-      "countyCode": "511129",
-      "countyName": "沐川县" },
-    {
-      "countyCode": "511123",
-      "countyName": "犍为县" },
-    {
-      "countyCode": "511133",
-      "countyName": "马边彝族自治县" }] },
-
-  {
-    "cityCode": "510700",
-    "cityName": "绵阳市",
-    "county": [{
-      "countyCode": "510724",
-      "countyName": "安州区" },
-    {
-      "countyCode": "510725",
-      "countyName": "梓潼县" },
-    {
-      "countyCode": "510781",
-      "countyName": "江油市" },
-    {
-      "countyCode": "510704",
-      "countyName": "游仙区" },
-    {
-      "countyCode": "510727",
-      "countyName": "平武县" },
-    {
-      "countyCode": "510723",
-      "countyName": "盐亭县" },
-    {
-      "countyCode": "510703",
-      "countyName": "涪城区" },
-    {
-      "countyCode": "510722",
-      "countyName": "三台县" },
-    {
-      "countyCode": "510726",
-      "countyName": "北川羌族自治县" }] },
-
-  {
-    "cityCode": "511600",
-    "cityName": "广安市",
-    "county": [{
-      "countyCode": "511623",
-      "countyName": "邻水县" },
-    {
-      "countyCode": "511622",
-      "countyName": "武胜县" },
-    {
-      "countyCode": "511603000000",
-      "countyName": "前锋区" },
-    {
-      "countyCode": "511602",
-      "countyName": "广安区" },
-    {
-      "countyCode": "511621",
-      "countyName": "岳池县" },
-    {
-      "countyCode": "511681",
-      "countyName": "华蓥市" }] },
-
-  {
-    "cityCode": "511500",
-    "cityName": "宜宾市",
-    "county": [{
-      "countyCode": "511523",
-      "countyName": "江安县" },
-    {
-      "countyCode": "511521",
-      "countyName": "叙州区" },
-    {
-      "countyCode": "511525",
-      "countyName": "高县" },
-    {
-      "countyCode": "511529",
-      "countyName": "屏山县" },
-    {
-      "countyCode": "511528",
-      "countyName": "兴文县" },
-    {
-      "countyCode": "511502",
-      "countyName": "翠屏区" },
-    {
-      "countyCode": "511527",
-      "countyName": "筠连县" },
-    {
-      "countyCode": "511524",
-      "countyName": "长宁县" },
-    {
-      "countyCode": "511526",
-      "countyName": "珙县" },
-    {
-      "countyCode": "511503",
-      "countyName": "南溪区" }] },
-
-  {
-    "cityCode": "511000",
-    "cityName": "内江市",
-    "county": [{
-      "countyCode": "511024",
-      "countyName": "威远县" },
-    {
-      "countyCode": "511002",
-      "countyName": "市中区" },
-    {
-      "countyCode": "511011",
-      "countyName": "东兴区" },
-    {
-      "countyCode": "511028",
-      "countyName": "隆昌市" },
-    {
-      "countyCode": "511025",
-      "countyName": "资中县" }] },
-
-  {
-    "cityCode": "513200",
-    "cityName": "阿坝藏族羌族自治州",
-    "county": [{
-      "countyCode": "513230",
-      "countyName": "壤塘县" },
-    {
-      "countyCode": "513225",
-      "countyName": "九寨沟县" },
-    {
-      "countyCode": "513223",
-      "countyName": "茂县" },
-    {
-      "countyCode": "513226",
-      "countyName": "金川县" },
-    {
-      "countyCode": "513227",
-      "countyName": "小金县" },
-    {
-      "countyCode": "513233",
-      "countyName": "红原县" },
-    {
-      "countyCode": "513222",
-      "countyName": "理县" },
-    {
-      "countyCode": "513232",
-      "countyName": "若尔盖县" },
-    {
-      "countyCode": "513221",
-      "countyName": "汶川县" },
-    {
-      "countyCode": "513228",
-      "countyName": "黑水县" },
-    {
-      "countyCode": "513229",
-      "countyName": "马尔康市" },
-    {
-      "countyCode": "513231",
-      "countyName": "阿坝县" },
-    {
-      "countyCode": "513224",
-      "countyName": "松潘县" }] },
-
-  {
-    "cityCode": "510900",
-    "cityName": "遂宁市",
-    "county": [{
-      "countyCode": "510904",
-      "countyName": "安居区" },
-    {
-      "countyCode": "510923",
-      "countyName": "大英县" },
-    {
-      "countyCode": "510922",
-      "countyName": "射洪县" },
-    {
-      "countyCode": "510903",
-      "countyName": "船山区" },
-    {
-      "countyCode": "510921",
-      "countyName": "蓬溪县" }] },
-
-  {
-    "cityCode": "510600",
-    "cityName": "德阳市",
-    "county": [{
-      "countyCode": "510682",
-      "countyName": "什邡市" },
-    {
-      "countyCode": "510683",
-      "countyName": "绵竹市" },
-    {
-      "countyCode": "510623",
-      "countyName": "中江县" },
-    {
-      "countyCode": "510681",
-      "countyName": "广汉市" },
-    {
-      "countyCode": "510626",
-      "countyName": "罗江区" },
-    {
-      "countyCode": "510603",
-      "countyName": "旌阳区" }] }] },
-
-
-{
-  "provinceCode": "520000",
-  "provinceName": "贵州省",
-  "city": [{
-    "cityCode": "520100",
-    "cityName": "贵阳市",
-    "county": [{
-      "countyCode": "520103",
-      "countyName": "云岩区" },
-    {
-      "countyCode": "520123",
-      "countyName": "修文县" },
-    {
-      "countyCode": "520121",
-      "countyName": "开阳县" },
-    {
-      "countyCode": "520114",
-      "countyName": "小河区" },
-    {
-      "countyCode": "520122",
-      "countyName": "息烽县" },
-    {
-      "countyCode": "520113",
-      "countyName": "白云区" },
-    {
-      "countyCode": "520115",
-      "countyName": "观山湖区" },
-    {
-      "countyCode": "520102",
-      "countyName": "南明区" },
-    {
-      "countyCode": "520181",
-      "countyName": "清镇市" },
-    {
-      "countyCode": "520112",
-      "countyName": "乌当区" },
-    {
-      "countyCode": "520111",
-      "countyName": "花溪区" }] },
-
-  {
-    "cityCode": "520300",
-    "cityName": "遵义市",
-    "county": [{
-      "countyCode": "520381",
-      "countyName": "赤水市" },
-    {
-      "countyCode": "520329",
-      "countyName": "余庆县" },
-    {
-      "countyCode": "520325",
-      "countyName": "道真仡佬族苗族自治县" },
-    {
-      "countyCode": "520326",
-      "countyName": "务川仡佬族苗族自治县" },
-    {
-      "countyCode": "520328",
-      "countyName": "湄潭县" },
-    {
-      "countyCode": "520327",
-      "countyName": "凤冈县" },
-    {
-      "countyCode": "520302",
-      "countyName": "红花岗区" },
-    {
-      "countyCode": "520382",
-      "countyName": "仁怀市" },
-    {
-      "countyCode": "520321",
-      "countyName": "播州区" },
-    {
-      "countyCode": "520330",
-      "countyName": "习水县" },
-    {
-      "countyCode": "520324",
-      "countyName": "正安县" },
-    {
-      "countyCode": "520303",
-      "countyName": "汇川区" },
-    {
-      "countyCode": "520323",
-      "countyName": "绥阳县" },
-    {
-      "countyCode": "520322",
-      "countyName": "桐梓县" }] },
-
-  {
-    "cityCode": "522700",
-    "cityName": "黔南布依族苗族自治州",
-    "county": [{
-      "countyCode": "522722",
-      "countyName": "荔波县" },
-    {
-      "countyCode": "522725",
-      "countyName": "瓮安县" },
-    {
-      "countyCode": "522702",
-      "countyName": "福泉市" },
-    {
-      "countyCode": "522728",
-      "countyName": "罗甸县" },
-    {
-      "countyCode": "522723",
-      "countyName": "贵定县" },
-    {
-      "countyCode": "522701",
-      "countyName": "都匀市" },
-    {
-      "countyCode": "522726",
-      "countyName": "独山县" },
-    {
-      "countyCode": "522731",
-      "countyName": "惠水县" },
-    {
-      "countyCode": "522732",
-      "countyName": "三都水族自治县" },
-    {
-      "countyCode": "522727",
-      "countyName": "平塘县" },
-    {
-      "countyCode": "522729",
-      "countyName": "长顺县" },
-    {
-      "countyCode": "522730",
-      "countyName": "龙里县" }] },
-
-  {
-    "cityCode": "520200",
-    "cityName": "六盘水市",
-    "county": [{
-      "countyCode": "520222",
-      "countyName": "盘州市" },
-    {
-      "countyCode": "520203",
-      "countyName": "六枝特区" },
-    {
-      "countyCode": "520201",
-      "countyName": "钟山区" },
-    {
-      "countyCode": "520221",
-      "countyName": "水城县" }] },
-
-  {
-    "cityCode": "520400",
-    "cityName": "安顺市",
-    "county": [{
-      "countyCode": "520424",
-      "countyName": "关岭布依族苗族自治县" },
-    {
-      "countyCode": "520423",
-      "countyName": "镇宁布依族苗族自治县" },
-    {
-      "countyCode": "520422",
-      "countyName": "普定县" },
-    {
-      "countyCode": "520421",
-      "countyName": "平坝区" },
-    {
-      "countyCode": "520425",
-      "countyName": "紫云苗族布依族自治县" },
-    {
-      "countyCode": "520402",
-      "countyName": "西秀区" }] },
-
-  {
-    "cityCode": "520500",
-    "cityName": "毕节市",
-    "county": [{
-      "countyCode": "520523",
-      "countyName": "金沙县" },
-    {
-      "countyCode": "520524",
-      "countyName": "织金县" },
-    {
-      "countyCode": "520525",
-      "countyName": "纳雍县" },
-    {
-      "countyCode": "520522",
-      "countyName": "黔西县" },
-    {
-      "countyCode": "520526",
-      "countyName": "威宁彝族回族苗族自治县" },
-    {
-      "countyCode": "520527",
-      "countyName": "赫章县" },
-    {
-      "countyCode": "520521",
-      "countyName": "大方县" },
-    {
-      "countyCode": "520502",
-      "countyName": "七星关区" }] },
-
-  {
-    "cityCode": "522600",
-    "cityName": "黔东南苗族侗族自治州",
-    "county": [{
-      "countyCode": "522626",
-      "countyName": "岑巩县" },
-    {
-      "countyCode": "522630",
-      "countyName": "台江县" },
-    {
-      "countyCode": "522624",
-      "countyName": "三穗县" },
-    {
-      "countyCode": "522625",
-      "countyName": "镇远县" },
-    {
-      "countyCode": "522636",
-      "countyName": "丹寨县" },
-    {
-      "countyCode": "522633",
-      "countyName": "从江县" },
-    {
-      "countyCode": "522634",
-      "countyName": "雷山县" },
-    {
-      "countyCode": "522623",
-      "countyName": "施秉县" },
-    {
-      "countyCode": "522629",
-      "countyName": "剑河县" },
-    {
-      "countyCode": "522628",
-      "countyName": "锦屏县" },
-    {
-      "countyCode": "522632",
-      "countyName": "榕江县" },
-    {
-      "countyCode": "522631",
-      "countyName": "黎平县" },
-    {
-      "countyCode": "522627",
-      "countyName": "天柱县" },
-    {
-      "countyCode": "522622",
-      "countyName": "黄平县" },
-    {
-      "countyCode": "522635",
-      "countyName": "麻江县" },
-    {
-      "countyCode": "522601",
-      "countyName": "凯里市" }] },
-
-  {
-    "cityCode": "522300",
-    "cityName": "黔西南布依族苗族自治州",
-    "county": [{
-      "countyCode": "522326",
-      "countyName": "望谟县" },
-    {
-      "countyCode": "522327",
-      "countyName": "册亨县" },
-    {
-      "countyCode": "522323",
-      "countyName": "普安县" },
-    {
-      "countyCode": "522322",
-      "countyName": "兴仁县" },
-    {
-      "countyCode": "522301",
-      "countyName": "兴义市" },
-    {
-      "countyCode": "522328",
-      "countyName": "安龙县" },
-    {
-      "countyCode": "522324",
-      "countyName": "晴隆县" },
-    {
-      "countyCode": "522325",
-      "countyName": "贞丰县" }] },
-
-  {
-    "cityCode": "520600",
-    "cityName": "铜仁市",
-    "county": [{
-      "countyCode": "520602",
-      "countyName": "碧江区" },
-    {
-      "countyCode": "520622",
-      "countyName": "玉屏侗族自治县" },
-    {
-      "countyCode": "520603",
-      "countyName": "万山区" },
-    {
-      "countyCode": "520627",
-      "countyName": "沿河土家族自治县" },
-    {
-      "countyCode": "520624",
-      "countyName": "思南县" },
-    {
-      "countyCode": "520626",
-      "countyName": "德江县" },
-    {
-      "countyCode": "520628",
-      "countyName": "松桃苗族自治县" },
-    {
-      "countyCode": "520621",
-      "countyName": "江口县" },
-    {
-      "countyCode": "520623",
-      "countyName": "石阡县" },
-    {
-      "countyCode": "520625",
-      "countyName": "印江土家族苗族自治县" }] }] },
-
-
-{
-  "provinceCode": "530000",
-  "provinceName": "云南省",
-  "city": [{
-    "cityCode": "530400",
-    "cityName": "玉溪市",
-    "county": [{
-      "countyCode": "530425",
-      "countyName": "易门县" },
-    {
-      "countyCode": "530423",
-      "countyName": "通海县" },
-    {
-      "countyCode": "530421",
-      "countyName": "江川区" },
-    {
-      "countyCode": "530424",
-      "countyName": "华宁县" },
-    {
-      "countyCode": "530426",
-      "countyName": "峨山彝族自治县" },
-    {
-      "countyCode": "530402",
-      "countyName": "红塔区" },
-    {
-      "countyCode": "530422",
-      "countyName": "澄江县" },
-    {
-      "countyCode": "530427",
-      "countyName": "新平彝族傣族自治县" },
-    {
-      "countyCode": "530428",
-      "countyName": "元江哈尼族彝族傣族自治县" }] },
-
-  {
-    "cityCode": "533100",
-    "cityName": "德宏傣族景颇族自治州",
-    "county": [{
-      "countyCode": "533124",
-      "countyName": "陇川县" },
-    {
-      "countyCode": "533122",
-      "countyName": "梁河县" },
-    {
-      "countyCode": "533123",
-      "countyName": "盈江县" },
-    {
-      "countyCode": "533103",
-      "countyName": "芒市" },
-    {
-      "countyCode": "533102",
-      "countyName": "瑞丽市" }] },
-
-  {
-    "cityCode": "532900",
-    "cityName": "大理白族自治州",
-    "county": [{
-      "countyCode": "532927",
-      "countyName": "巍山彝族回族自治县" },
-    {
-      "countyCode": "532931",
-      "countyName": "剑川县" },
-    {
-      "countyCode": "532923",
-      "countyName": "祥云县" },
-    {
-      "countyCode": "532932",
-      "countyName": "鹤庆县" },
-    {
-      "countyCode": "532928",
-      "countyName": "永平县" },
-    {
-      "countyCode": "532929",
-      "countyName": "云龙县" },
-    {
-      "countyCode": "532930",
-      "countyName": "洱源县" },
-    {
-      "countyCode": "532924",
-      "countyName": "宾川县" },
-    {
-      "countyCode": "532925",
-      "countyName": "弥渡县" },
-    {
-      "countyCode": "532926",
-      "countyName": "南涧彝族自治县" },
-    {
-      "countyCode": "532901",
-      "countyName": "大理市" },
-    {
-      "countyCode": "532922",
-      "countyName": "漾濞彝族自治县" }] },
-
-  {
-    "cityCode": "530100",
-    "cityName": "昆明市",
-    "county": [{
-      "countyCode": "530124",
-      "countyName": "富民县" },
-    {
-      "countyCode": "530114",
-      "countyName": "呈贡区" },
-    {
-      "countyCode": "530126",
-      "countyName": "石林彝族自治县" },
-    {
-      "countyCode": "530181",
-      "countyName": "安宁市" },
-    {
-      "countyCode": "530128",
-      "countyName": "禄劝彝族苗族自治县" },
-    {
-      "countyCode": "530125",
-      "countyName": "宜良县" },
-    {
-      "countyCode": "530103",
-      "countyName": "盘龙区" },
-    {
-      "countyCode": "530102",
-      "countyName": "五华区" },
-    {
-      "countyCode": "530122",
-      "countyName": "晋宁区" },
-    {
-      "countyCode": "530113",
-      "countyName": "东川区" },
-    {
-      "countyCode": "530111",
-      "countyName": "官渡区" },
-    {
-      "countyCode": "530127",
-      "countyName": "嵩明县" },
-    {
-      "countyCode": "530112",
-      "countyName": "西山区" },
-    {
-      "countyCode": "530129",
-      "countyName": "寻甸回族彝族自治县" }] },
-
-  {
-    "cityCode": "530900",
-    "cityName": "临沧市",
-    "county": [{
-      "countyCode": "530921",
-      "countyName": "凤庆县" },
-    {
-      "countyCode": "530926",
-      "countyName": "耿马傣族佤族自治县" },
-    {
-      "countyCode": "530922",
-      "countyName": "云县" },
-    {
-      "countyCode": "530924",
-      "countyName": "镇康县" },
-    {
-      "countyCode": "530923",
-      "countyName": "永德县" },
-    {
-      "countyCode": "530927",
-      "countyName": "沧源佤族自治县" },
-    {
-      "countyCode": "530925",
-      "countyName": "双江拉祜族佤族布朗族傣族自治县" },
-    {
-      "countyCode": "530902",
-      "countyName": "临翔区" }] },
-
-  {
-    "cityCode": "532300",
-    "cityName": "楚雄彝族自治州",
-    "county": [{
-      "countyCode": "532329",
-      "countyName": "武定县" },
-    {
-      "countyCode": "532324",
-      "countyName": "南华县" },
-    {
-      "countyCode": "532327",
-      "countyName": "永仁县" },
-    {
-      "countyCode": "532328",
-      "countyName": "元谋县" },
-    {
-      "countyCode": "532331",
-      "countyName": "禄丰县" },
-    {
-      "countyCode": "532326",
-      "countyName": "大姚县" },
-    {
-      "countyCode": "532325",
-      "countyName": "姚安县" },
-    {
-      "countyCode": "532301",
-      "countyName": "楚雄市" },
-    {
-      "countyCode": "532323",
-      "countyName": "牟定县" },
-    {
-      "countyCode": "532322",
-      "countyName": "双柏县" }] },
-
-  {
-    "cityCode": "532800",
-    "cityName": "西双版纳傣族自治州",
-    "county": [{
-      "countyCode": "532823",
-      "countyName": "勐腊县" },
-    {
-      "countyCode": "532801",
-      "countyName": "景洪市" },
-    {
-      "countyCode": "532822",
-      "countyName": "勐海县" }] },
-
-  {
-    "cityCode": "532600",
-    "cityName": "文山壮族苗族自治州",
-    "county": [{
-      "countyCode": "532601",
-      "countyName": "文山市" },
-    {
-      "countyCode": "532623",
-      "countyName": "西畴县" },
-    {
-      "countyCode": "532627",
-      "countyName": "广南县" },
-    {
-      "countyCode": "532625",
-      "countyName": "马关县" },
-    {
-      "countyCode": "532622",
-      "countyName": "砚山县" },
-    {
-      "countyCode": "532628",
-      "countyName": "富宁县" },
-    {
-      "countyCode": "532624",
-      "countyName": "麻栗坡县" },
-    {
-      "countyCode": "532626",
-      "countyName": "丘北县" }] },
-
-  {
-    "cityCode": "530300",
-    "cityName": "曲靖市",
-    "county": [{
-      "countyCode": "530302",
-      "countyName": "麒麟区" },
-    {
-      "countyCode": "530325",
-      "countyName": "富源县" },
-    {
-      "countyCode": "530326",
-      "countyName": "会泽县" },
-    {
-      "countyCode": "530324",
-      "countyName": "罗平县" },
-    {
-      "countyCode": "530328",
-      "countyName": "沾益区" },
-    {
-      "countyCode": "530323",
-      "countyName": "师宗县" },
-    {
-      "countyCode": "530321",
-      "countyName": "马龙区" },
-    {
-      "countyCode": "530322",
-      "countyName": "陆良县" },
-    {
-      "countyCode": "530381",
-      "countyName": "宣威市" }] },
-
-  {
-    "cityCode": "533400",
-    "cityName": "迪庆藏族自治州",
-    "county": [{
-      "countyCode": "533421",
-      "countyName": "香格里拉市" },
-    {
-      "countyCode": "533422",
-      "countyName": "德钦县" },
-    {
-      "countyCode": "533423",
-      "countyName": "维西傈僳族自治县" }] },
-
-  {
-    "cityCode": "530600",
-    "cityName": "昭通市",
-    "county": [{
-      "countyCode": "530629",
-      "countyName": "威信县" },
-    {
-      "countyCode": "530624",
-      "countyName": "大关县" },
-    {
-      "countyCode": "530630",
-      "countyName": "水富县" },
-    {
-      "countyCode": "530626",
-      "countyName": "绥江县" },
-    {
-      "countyCode": "530628",
-      "countyName": "彝良县" },
-    {
-      "countyCode": "530623",
-      "countyName": "盐津县" },
-    {
-      "countyCode": "530602",
-      "countyName": "昭阳区" },
-    {
-      "countyCode": "530621",
-      "countyName": "鲁甸县" },
-    {
-      "countyCode": "530627",
-      "countyName": "镇雄县" },
-    {
-      "countyCode": "530625",
-      "countyName": "永善县" },
-    {
-      "countyCode": "530622",
-      "countyName": "巧家县" }] },
-
-  {
-    "cityCode": "533300",
-    "cityName": "怒江傈僳族自治州",
-    "county": [{
-      "countyCode": "533323",
-      "countyName": "福贡县" },
-    {
-      "countyCode": "533324",
-      "countyName": "贡山独龙族怒族自治县" },
-    {
-      "countyCode": "533321",
-      "countyName": "泸水市" },
-    {
-      "countyCode": "533325",
-      "countyName": "兰坪白族普米族自治县" }] },
-
-  {
-    "cityCode": "530700",
-    "cityName": "丽江市",
-    "county": [{
-      "countyCode": "530724",
-      "countyName": "宁蒗彝族自治县" },
-    {
-      "countyCode": "530722",
-      "countyName": "永胜县" },
-    {
-      "countyCode": "530702",
-      "countyName": "古城区" },
-    {
-      "countyCode": "530721",
-      "countyName": "玉龙纳西族自治县" },
-    {
-      "countyCode": "530723",
-      "countyName": "华坪县" }] },
-
-  {
-    "cityCode": "530800",
-    "cityName": "普洱市",
-    "county": [{
-      "countyCode": "530822",
-      "countyName": "墨江哈尼族自治县" },
-    {
-      "countyCode": "530823",
-      "countyName": "景东彝族自治县" },
-    {
-      "countyCode": "530827",
-      "countyName": "孟连傣族拉祜族佤族自治县" },
-    {
-      "countyCode": "530825",
-      "countyName": "镇沅彝族哈尼族拉祜族自治县" },
-    {
-      "countyCode": "530828",
-      "countyName": "澜沧拉祜族自治县" },
-    {
-      "countyCode": "530829",
-      "countyName": "西盟佤族自治县" },
-    {
-      "countyCode": "530821",
-      "countyName": "宁洱哈尼族彝族自治县" },
-    {
-      "countyCode": "530802",
-      "countyName": "思茅区" },
-    {
-      "countyCode": "530826",
-      "countyName": "江城哈尼族彝族自治县" },
-    {
-      "countyCode": "530824",
-      "countyName": "景谷傣族彝族自治县" }] },
-
-  {
-    "cityCode": "532500",
-    "cityName": "红河哈尼族彝族自治州",
-    "county": [{
-      "countyCode": "532525",
-      "countyName": "石屏县" },
-    {
-      "countyCode": "532530",
-      "countyName": "金平苗族瑶族傣族自治县" },
-    {
-      "countyCode": "532503",
-      "countyName": "蒙自市" },
-    {
-      "countyCode": "532528",
-      "countyName": "元阳县" },
-    {
-      "countyCode": "532527",
-      "countyName": "泸西县" },
-    {
-      "countyCode": "532502",
-      "countyName": "开远市" },
-    {
-      "countyCode": "532524",
-      "countyName": "建水县" },
-    {
-      "countyCode": "532532",
-      "countyName": "河口瑶族自治县" },
-    {
-      "countyCode": "532529",
-      "countyName": "红河县" },
-    {
-      "countyCode": "532531",
-      "countyName": "绿春县" },
-    {
-      "countyCode": "532501",
-      "countyName": "个旧市" },
-    {
-      "countyCode": "532523",
-      "countyName": "屏边苗族自治县" },
-    {
-      "countyCode": "532526",
-      "countyName": "弥勒市" }] },
-
-  {
-    "cityCode": "530500",
-    "cityName": "保山市",
-    "county": [{
-      "countyCode": "530523",
-      "countyName": "龙陵县" },
-    {
-      "countyCode": "530522",
-      "countyName": "腾冲市" },
-    {
-      "countyCode": "530521",
-      "countyName": "施甸县" },
-    {
-      "countyCode": "530502",
-      "countyName": "隆阳区" },
-    {
-      "countyCode": "530524",
-      "countyName": "昌宁县" }] }] },
-
-
-{
-  "provinceCode": "540000",
-  "provinceName": "西藏自治区",
-  "city": [{
-    "cityCode": "542100",
-    "cityName": "昌都市",
-    "county": [{
-      "countyCode": "542122",
-      "countyName": "江达县" },
-    {
-      "countyCode": "542129",
-      "countyName": "芒康县" },
-    {
-      "countyCode": "542128",
-      "countyName": "左贡县" },
-    {
-      "countyCode": "542126",
-      "countyName": "察雅县" },
-    {
-      "countyCode": "542132",
-      "countyName": "洛隆县" },
-    {
-      "countyCode": "542121",
-      "countyName": "卡若区" },
-    {
-      "countyCode": "542125",
-      "countyName": "丁青县" },
-    {
-      "countyCode": "542133",
-      "countyName": "边坝县" },
-    {
-      "countyCode": "542123",
-      "countyName": "贡觉县" },
-    {
-      "countyCode": "542127",
-      "countyName": "八宿县" },
-    {
-      "countyCode": "542124",
-      "countyName": "类乌齐县" }] },
-
-  {
-    "cityCode": "542200",
-    "cityName": "山南市",
-    "county": [{
-      "countyCode": "542229",
-      "countyName": "加查县" },
-    {
-      "countyCode": "542225",
-      "countyName": "琼结县" },
-    {
-      "countyCode": "542232",
-      "countyName": "错那县" },
-    {
-      "countyCode": "542221",
-      "countyName": "乃东区" },
-    {
-      "countyCode": "542224",
-      "countyName": "桑日县" },
-    {
-      "countyCode": "542222",
-      "countyName": "扎囊县" },
-    {
-      "countyCode": "542227",
-      "countyName": "措美县" },
-    {
-      "countyCode": "542223",
-      "countyName": "贡嘎县" },
-    {
-      "countyCode": "542228",
-      "countyName": "洛扎县" },
-    {
-      "countyCode": "542226",
-      "countyName": "曲松县" },
-    {
-      "countyCode": "542233",
-      "countyName": "浪卡子县" },
-    {
-      "countyCode": "542231",
-      "countyName": "隆子县" }] },
-
-  {
-    "cityCode": "542400",
-    "cityName": "那曲市",
-    "county": [{
-      "countyCode": "542426",
-      "countyName": "申扎县" },
-    {
-      "countyCode": "542423",
-      "countyName": "比如县" },
-    {
-      "countyCode": "542430",
-      "countyName": "尼玛县" },
-    {
-      "countyCode": "542421",
-      "countyName": "色尼区" },
-    {
-      "countyCode": "542422",
-      "countyName": "嘉黎县" },
-    {
-      "countyCode": "542424",
-      "countyName": "聂荣县" },
-    {
-      "countyCode": "542427",
-      "countyName": "索县" },
-    {
-      "countyCode": "542425",
-      "countyName": "安多县" },
-    {
-      "countyCode": "542428",
-      "countyName": "班戈县" },
-    {
-      "countyCode": "542429",
-      "countyName": "巴青县" }] },
-
-  {
-    "cityCode": "542600",
-    "cityName": "林芝市",
-    "county": [{
-      "countyCode": "542623",
-      "countyName": "米林县" },
-    {
-      "countyCode": "542626",
-      "countyName": "察隅县" },
-    {
-      "countyCode": "542627",
-      "countyName": "朗县" },
-    {
-      "countyCode": "542622",
-      "countyName": "工布江达县" },
-    {
-      "countyCode": "542625",
-      "countyName": "波密县" },
-    {
-      "countyCode": "542624",
-      "countyName": "墨脱县" },
-    {
-      "countyCode": "542621",
-      "countyName": "巴宜区" }] },
-
-  {
-    "cityCode": "540100",
-    "cityName": "拉萨市",
-    "county": [{
-      "countyCode": "540121",
-      "countyName": "林周县" },
-    {
-      "countyCode": "540124",
-      "countyName": "曲水县" },
-    {
-      "countyCode": "540126",
-      "countyName": "达孜区" },
-    {
-      "countyCode": "540125",
-      "countyName": "堆龙德庆区" },
-    {
-      "countyCode": "540122",
-      "countyName": "当雄县" },
-    {
-      "countyCode": "540127",
-      "countyName": "墨竹工卡县" },
-    {
-      "countyCode": "540123",
-      "countyName": "尼木县" },
-    {
-      "countyCode": "540102",
-      "countyName": "城关区" }] },
-
-  {
-    "cityCode": "542300",
-    "cityName": "日喀则市",
-    "county": [{
-      "countyCode": "542335",
-      "countyName": "吉隆县" },
-    {
-      "countyCode": "542323",
-      "countyName": "江孜县" },
-    {
-      "countyCode": "542331",
-      "countyName": "康马县" },
-    {
-      "countyCode": "542322",
-      "countyName": "南木林县" },
-    {
-      "countyCode": "542338",
-      "countyName": "岗巴县" },
-    {
-      "countyCode": "542336",
-      "countyName": "聂拉木县" },
-    {
-      "countyCode": "542328",
-      "countyName": "谢通门县" },
-    {
-      "countyCode": "542325",
-      "countyName": "萨迦县" },
-    {
-      "countyCode": "542329",
-      "countyName": "白朗县" },
-    {
-      "countyCode": "542326",
-      "countyName": "拉孜县" },
-    {
-      "countyCode": "542332",
-      "countyName": "定结县" },
-    {
-      "countyCode": "542327",
-      "countyName": "昂仁县" },
-    {
-      "countyCode": "542334",
-      "countyName": "亚东县" },
-    {
-      "countyCode": "542337",
-      "countyName": "萨嘎县" },
-    {
-      "countyCode": "542324",
-      "countyName": "定日县" },
-    {
-      "countyCode": "542333",
-      "countyName": "仲巴县" },
-    {
-      "countyCode": "542301",
-      "countyName": "桑珠孜区" },
-    {
-      "countyCode": "542330",
-      "countyName": "仁布县" }] },
-
-  {
-    "cityCode": "542500",
-    "cityName": "阿里地区",
-    "county": [{
-      "countyCode": "542523",
-      "countyName": "噶尔县" },
-    {
-      "countyCode": "542525",
-      "countyName": "革吉县" },
-    {
-      "countyCode": "542524",
-      "countyName": "日土县" },
-    {
-      "countyCode": "542527",
-      "countyName": "措勤县" },
-    {
-      "countyCode": "542521",
-      "countyName": "普兰县" },
-    {
-      "countyCode": "542526",
-      "countyName": "改则县" },
-    {
-      "countyCode": "542522",
-      "countyName": "札达县" }] }] },
-
-
-{
-  "provinceCode": "610000",
-  "provinceName": "陕西省",
-  "city": [{
-    "cityCode": "610800",
-    "cityName": "榆林市",
-    "county": [{
-      "countyCode": "610831",
-      "countyName": "子洲县" },
-    {
-      "countyCode": "610825",
-      "countyName": "定边县" },
-    {
-      "countyCode": "610827",
-      "countyName": "米脂县" },
-    {
-      "countyCode": "610821",
-      "countyName": "神木市" },
-    {
-      "countyCode": "610829",
-      "countyName": "吴堡县" },
-    {
-      "countyCode": "610822",
-      "countyName": "府谷县" },
-    {
-      "countyCode": "610830",
-      "countyName": "清涧县" },
-    {
-      "countyCode": "610823",
-      "countyName": "横山区" },
-    {
-      "countyCode": "610824",
-      "countyName": "靖边县" },
-    {
-      "countyCode": "610826",
-      "countyName": "绥德县" },
-    {
-      "countyCode": "610802",
-      "countyName": "榆阳区" },
-    {
-      "countyCode": "610828",
-      "countyName": "佳县" }] },
-
-  {
-    "cityCode": "610200",
-    "cityName": "铜川市",
-    "county": [{
-      "countyCode": "610202",
-      "countyName": "王益区" },
-    {
-      "countyCode": "610203",
-      "countyName": "印台区" },
-    {
-      "countyCode": "610204",
-      "countyName": "耀州区" },
-    {
-      "countyCode": "610222",
-      "countyName": "宜君县" }] },
-
-  {
-    "cityCode": "611000",
-    "cityName": "商洛市",
-    "county": [{
-      "countyCode": "611022",
-      "countyName": "丹凤县" },
-    {
-      "countyCode": "611023",
-      "countyName": "商南县" },
-    {
-      "countyCode": "611026",
-      "countyName": "柞水县" },
-    {
-      "countyCode": "611025",
-      "countyName": "镇安县" },
-    {
-      "countyCode": "611024",
-      "countyName": "山阳县" },
-    {
-      "countyCode": "611021",
-      "countyName": "洛南县" },
-    {
-      "countyCode": "611002",
-      "countyName": "商州区" }] },
-
-  {
-    "cityCode": "610500",
-    "cityName": "渭南市",
-    "county": [{
-      "countyCode": "610582",
-      "countyName": "华阴市" },
-    {
-      "countyCode": "610524",
-      "countyName": "合阳县" },
-    {
-      "countyCode": "610521",
-      "countyName": "华州区" },
-    {
-      "countyCode": "610581",
-      "countyName": "韩城市" },
-    {
-      "countyCode": "610526",
-      "countyName": "蒲城县" },
-    {
-      "countyCode": "610527",
-      "countyName": "白水县" },
-    {
-      "countyCode": "610522",
-      "countyName": "潼关县" },
-    {
-      "countyCode": "610528",
-      "countyName": "富平县" },
-    {
-      "countyCode": "610523",
-      "countyName": "大荔县" },
-    {
-      "countyCode": "610502",
-      "countyName": "临渭区" },
-    {
-      "countyCode": "610525",
-      "countyName": "澄城县" }] },
-
-  {
-    "cityCode": "610300",
-    "cityName": "宝鸡市",
-    "county": [{
-      "countyCode": "610328",
-      "countyName": "千阳县" },
-    {
-      "countyCode": "610330",
-      "countyName": "凤县" },
-    {
-      "countyCode": "610329",
-      "countyName": "麟游县" },
-    {
-      "countyCode": "610323",
-      "countyName": "岐山县" },
-    {
-      "countyCode": "610302",
-      "countyName": "渭滨区" },
-    {
-      "countyCode": "610327",
-      "countyName": "陇县" },
-    {
-      "countyCode": "610322",
-      "countyName": "凤翔县" },
-    {
-      "countyCode": "610324",
-      "countyName": "扶风县" },
-    {
-      "countyCode": "610304",
-      "countyName": "陈仓区" },
-    {
-      "countyCode": "610303",
-      "countyName": "金台区" },
-    {
-      "countyCode": "610326",
-      "countyName": "眉县" },
-    {
-      "countyCode": "610331",
-      "countyName": "太白县" }] },
-
-  {
-    "cityCode": "610900",
-    "cityName": "安康市",
-    "county": [{
-      "countyCode": "610927",
-      "countyName": "镇坪县" },
-    {
-      "countyCode": "610923",
-      "countyName": "宁陕县" },
-    {
-      "countyCode": "610922",
-      "countyName": "石泉县" },
-    {
-      "countyCode": "610921",
-      "countyName": "汉阴县" },
-    {
-      "countyCode": "610925",
-      "countyName": "岚皋县" },
-    {
-      "countyCode": "610926",
-      "countyName": "平利县" },
-    {
-      "countyCode": "610928",
-      "countyName": "旬阳县" },
-    {
-      "countyCode": "610929",
-      "countyName": "白河县" },
-    {
-      "countyCode": "610902",
-      "countyName": "汉滨区" },
-    {
-      "countyCode": "610924",
-      "countyName": "紫阳县" }] },
-
-  {
-    "cityCode": "610700",
-    "cityName": "汉中市",
-    "county": [{
-      "countyCode": "610724",
-      "countyName": "西乡县" },
-    {
-      "countyCode": "610721",
-      "countyName": "南郑区" },
-    {
-      "countyCode": "610722",
-      "countyName": "城固县" },
-    {
-      "countyCode": "610727",
-      "countyName": "略阳县" },
-    {
-      "countyCode": "610728",
-      "countyName": "镇巴县" },
-    {
-      "countyCode": "610702",
-      "countyName": "汉台区" },
-    {
-      "countyCode": "610729",
-      "countyName": "留坝县" },
-    {
-      "countyCode": "610723",
-      "countyName": "洋县" },
-    {
-      "countyCode": "610730",
-      "countyName": "佛坪县" },
-    {
-      "countyCode": "610726",
-      "countyName": "宁强县" },
-    {
-      "countyCode": "610725",
-      "countyName": "勉县" }] },
-
-  {
-    "cityCode": "610600",
-    "cityName": "延安市",
-    "county": [{
-      "countyCode": "610628",
-      "countyName": "富县" },
-    {
-      "countyCode": "610631",
-      "countyName": "黄龙县" },
-    {
-      "countyCode": "610602",
-      "countyName": "宝塔区" },
-    {
-      "countyCode": "610630",
-      "countyName": "宜川县" },
-    {
-      "countyCode": "610624",
-      "countyName": "安塞区" },
-    {
-      "countyCode": "610629",
-      "countyName": "洛川县" },
-    {
-      "countyCode": "610621",
-      "countyName": "延长县" },
-    {
-      "countyCode": "610632",
-      "countyName": "黄陵县" },
-    {
-      "countyCode": "610626",
-      "countyName": "吴起县" },
-    {
-      "countyCode": "610623",
-      "countyName": "子长县" },
-    {
-      "countyCode": "610627",
-      "countyName": "甘泉县" },
-    {
-      "countyCode": "610625",
-      "countyName": "志丹县" },
-    {
-      "countyCode": "610622",
-      "countyName": "延川县" }] },
-
-  {
-    "cityCode": "610100",
-    "cityName": "西安市",
-    "county": [{
-      "countyCode": "610116",
-      "countyName": "长安区" },
-    {
-      "countyCode": "610112",
-      "countyName": "未央区" },
-    {
-      "countyCode": "610102",
-      "countyName": "新城区" },
-    {
-      "countyCode": "610114",
-      "countyName": "阎良区" },
-    {
-      "countyCode": "610111",
-      "countyName": "灞桥区" },
-    {
-      "countyCode": "610126",
-      "countyName": "高陵区" },
-    {
-      "countyCode": "610122",
-      "countyName": "蓝田县" },
-    {
-      "countyCode": "610103",
-      "countyName": "碑林区" },
-    {
-      "countyCode": "610115",
-      "countyName": "临潼区" },
-    {
-      "countyCode": "610113",
-      "countyName": "雁塔区" },
-    {
-      "countyCode": "610124",
-      "countyName": "周至县" },
-    {
-      "countyCode": "610104",
-      "countyName": "莲湖区" },
-    {
-      "countyCode": "610125",
-      "countyName": "鄠邑区" }] },
-
-  {
-    "cityCode": "610400",
-    "cityName": "咸阳市",
-    "county": [{
-      "countyCode": "610430",
-      "countyName": "淳化县" },
-    {
-      "countyCode": "610423",
-      "countyName": "泾阳县" },
-    {
-      "countyCode": "610481",
-      "countyName": "兴平市" },
-    {
-      "countyCode": "610422",
-      "countyName": "三原县" },
-    {
-      "countyCode": "610424",
-      "countyName": "乾县" },
-    {
-      "countyCode": "610426",
-      "countyName": "永寿县" },
-    {
-      "countyCode": "610427",
-      "countyName": "彬州市" },
-    {
-      "countyCode": "610402",
-      "countyName": "秦都区" },
-    {
-      "countyCode": "610404",
-      "countyName": "渭城区" },
-    {
-      "countyCode": "610403",
-      "countyName": "杨陵区" },
-    {
-      "countyCode": "610431",
-      "countyName": "武功县" },
-    {
-      "countyCode": "610428",
-      "countyName": "长武县" },
-    {
-      "countyCode": "610425",
-      "countyName": "礼泉县" },
-    {
-      "countyCode": "610429",
-      "countyName": "旬邑县" }] }] },
-
-
-{
-  "provinceCode": "620000",
-  "provinceName": "甘肃省",
-  "city": [{
-    "cityCode": "620500",
-    "cityName": "天水市",
-    "county": [{
-      "countyCode": "620524",
-      "countyName": "武山县" },
-    {
-      "countyCode": "620502",
-      "countyName": "秦州区" },
-    {
-      "countyCode": "620521",
-      "countyName": "清水县" },
-    {
-      "countyCode": "620523",
-      "countyName": "甘谷县" },
-    {
-      "countyCode": "620522",
-      "countyName": "秦安县" },
-    {
-      "countyCode": "620503",
-      "countyName": "麦积区" },
-    {
-      "countyCode": "620525",
-      "countyName": "张家川回族自治县" }] },
-
-  {
-    "cityCode": "620300",
-    "cityName": "金昌市",
-    "county": [{
-      "countyCode": "620302",
-      "countyName": "金川区" },
-    {
-      "countyCode": "620321",
-      "countyName": "永昌县" }] },
-
-  {
-    "cityCode": "620600",
-    "cityName": "武威市",
-    "county": [{
-      "countyCode": "620602",
-      "countyName": "凉州区" },
-    {
-      "countyCode": "620623",
-      "countyName": "天祝藏族自治县" },
-    {
-      "countyCode": "620622",
-      "countyName": "古浪县" },
-    {
-      "countyCode": "620621",
-      "countyName": "民勤县" }] },
-
-  {
-    "cityCode": "620700",
-    "cityName": "张掖市",
-    "county": [{
-      "countyCode": "620702",
-      "countyName": "甘州区" },
-    {
-      "countyCode": "620724",
-      "countyName": "高台县" },
-    {
-      "countyCode": "620725",
-      "countyName": "山丹县" },
-    {
-      "countyCode": "620723",
-      "countyName": "临泽县" },
-    {
-      "countyCode": "620722",
-      "countyName": "民乐县" },
-    {
-      "countyCode": "620721",
-      "countyName": "肃南裕固族自治县" }] },
-
-  {
-    "cityCode": "621200",
-    "cityName": "陇南市",
-    "county": [{
-      "countyCode": "621225",
-      "countyName": "西和县" },
-    {
-      "countyCode": "621223",
-      "countyName": "宕昌县" },
-    {
-      "countyCode": "621227",
-      "countyName": "徽县" },
-    {
-      "countyCode": "621224",
-      "countyName": "康县" },
-    {
-      "countyCode": "621221",
-      "countyName": "成县" },
-    {
-      "countyCode": "621228",
-      "countyName": "两当县" },
-    {
-      "countyCode": "621226",
-      "countyName": "礼县" },
-    {
-      "countyCode": "621222",
-      "countyName": "文县" },
-    {
-      "countyCode": "621202",
-      "countyName": "武都区" }] },
-
-  {
-    "cityCode": "620100",
-    "cityName": "兰州市",
-    "county": [{
-      "countyCode": "620121",
-      "countyName": "永登县" },
-    {
-      "countyCode": "620111",
-      "countyName": "红古区" },
-    {
-      "countyCode": "620103",
-      "countyName": "七里河区" },
-    {
-      "countyCode": "620122",
-      "countyName": "皋兰县" },
-    {
-      "countyCode": "620104",
-      "countyName": "西固区" },
-    {
-      "countyCode": "620102",
-      "countyName": "城关区" },
-    {
-      "countyCode": "620105",
-      "countyName": "安宁区" },
-    {
-      "countyCode": "620123",
-      "countyName": "榆中县" }] },
-
-  {
-    "cityCode": "621000",
-    "cityName": "庆阳市",
-    "county": [{
-      "countyCode": "621025",
-      "countyName": "正宁县" },
-    {
-      "countyCode": "621026",
-      "countyName": "宁县" },
-    {
-      "countyCode": "621027",
-      "countyName": "镇原县" },
-    {
-      "countyCode": "621023",
-      "countyName": "华池县" },
-    {
-      "countyCode": "621002",
-      "countyName": "西峰区" },
-    {
-      "countyCode": "621024",
-      "countyName": "合水县" },
-    {
-      "countyCode": "621022",
-      "countyName": "环县" },
-    {
-      "countyCode": "621021",
-      "countyName": "庆城县" }] },
-
-  {
-    "cityCode": "620200",
-    "cityName": "嘉峪关市",
-    "county": [{
-      "countyCode": "620200-1",
-      "countyName": "嘉峪关市" }] },
-
-  {
-    "cityCode": "620800",
-    "cityName": "平凉市",
-    "county": [{
-      "countyCode": "620826",
-      "countyName": "静宁县" },
-    {
-      "countyCode": "620822",
-      "countyName": "灵台县" },
-    {
-      "countyCode": "620823",
-      "countyName": "崇信县" },
-    {
-      "countyCode": "620825",
-      "countyName": "庄浪县" },
-    {
-      "countyCode": "620824",
-      "countyName": "华亭县" },
-    {
-      "countyCode": "620821",
-      "countyName": "泾川县" },
-    {
-      "countyCode": "620802",
-      "countyName": "崆峒区" }] },
-
-  {
-    "cityCode": "623000",
-    "cityName": "甘南藏族自治州",
-    "county": [{
-      "countyCode": "623024",
-      "countyName": "迭部县" },
-    {
-      "countyCode": "623026",
-      "countyName": "碌曲县" },
-    {
-      "countyCode": "623022",
-      "countyName": "卓尼县" },
-    {
-      "countyCode": "623021",
-      "countyName": "临潭县" },
-    {
-      "countyCode": "623025",
-      "countyName": "玛曲县" },
-    {
-      "countyCode": "623001",
-      "countyName": "合作市" },
-    {
-      "countyCode": "623027",
-      "countyName": "夏河县" },
-    {
-      "countyCode": "623023",
-      "countyName": "舟曲县" }] },
-
-  {
-    "cityCode": "620400",
-    "cityName": "白银市",
-    "county": [{
-      "countyCode": "620422",
-      "countyName": "会宁县" },
-    {
-      "countyCode": "620403",
-      "countyName": "平川区" },
-    {
-      "countyCode": "620423",
-      "countyName": "景泰县" },
-    {
-      "countyCode": "620421",
-      "countyName": "靖远县" },
-    {
-      "countyCode": "620402",
-      "countyName": "白银区" }] },
-
-  {
-    "cityCode": "620900",
-    "cityName": "酒泉市",
-    "county": [{
-      "countyCode": "620921",
-      "countyName": "金塔县" },
-    {
-      "countyCode": "620924",
-      "countyName": "阿克塞哈萨克族自治县" },
-    {
-      "countyCode": "620923",
-      "countyName": "肃北蒙古族自治县" },
-    {
-      "countyCode": "620922",
-      "countyName": "瓜州县" },
-    {
-      "countyCode": "620981",
-      "countyName": "玉门市" },
-    {
-      "countyCode": "620902",
-      "countyName": "肃州区" },
-    {
-      "countyCode": "620982",
-      "countyName": "敦煌市" }] },
-
-  {
-    "cityCode": "621100",
-    "cityName": "定西市",
-    "county": [{
-      "countyCode": "621122",
-      "countyName": "陇西县" },
-    {
-      "countyCode": "621123",
-      "countyName": "渭源县" },
-    {
-      "countyCode": "621125",
-      "countyName": "漳县" },
-    {
-      "countyCode": "621124",
-      "countyName": "临洮县" },
-    {
-      "countyCode": "621121",
-      "countyName": "通渭县" },
-    {
-      "countyCode": "621126",
-      "countyName": "岷县" },
-    {
-      "countyCode": "621102",
-      "countyName": "安定区" }] },
-
-  {
-    "cityCode": "622900",
-    "cityName": "临夏回族自治州",
-    "county": [{
-      "countyCode": "622921",
-      "countyName": "临夏县" },
-    {
-      "countyCode": "622925",
-      "countyName": "和政县" },
-    {
-      "countyCode": "622924",
-      "countyName": "广河县" },
-    {
-      "countyCode": "622901",
-      "countyName": "临夏市" },
-    {
-      "countyCode": "622926",
-      "countyName": "东乡族自治县" },
-    {
-      "countyCode": "622923",
-      "countyName": "永靖县" },
-    {
-      "countyCode": "622927",
-      "countyName": "积石山保安族东乡族撒拉族自治县" },
-    {
-      "countyCode": "622922",
-      "countyName": "康乐县" }] }] },
-
-
-{
-  "provinceCode": "630000",
-  "provinceName": "青海省",
-  "city": [{
-    "cityCode": "632200",
-    "cityName": "海北藏族自治州",
-    "county": [{
-      "countyCode": "632224",
-      "countyName": "刚察县" },
-    {
-      "countyCode": "632222",
-      "countyName": "祁连县" },
-    {
-      "countyCode": "632223",
-      "countyName": "海晏县" },
-    {
-      "countyCode": "632221",
-      "countyName": "门源回族自治县" }] },
-
-  {
-    "cityCode": "632500",
-    "cityName": "海南藏族自治州",
-    "county": [{
-      "countyCode": "632522",
-      "countyName": "同德县" },
-    {
-      "countyCode": "632525",
-      "countyName": "贵南县" },
-    {
-      "countyCode": "632524",
-      "countyName": "兴海县" },
-    {
-      "countyCode": "632523",
-      "countyName": "贵德县" },
-    {
-      "countyCode": "632521",
-      "countyName": "共和县" }] },
-
-  {
-    "cityCode": "630100",
-    "cityName": "西宁市",
-    "county": [{
-      "countyCode": "630102",
-      "countyName": "城东区" },
-    {
-      "countyCode": "630122",
-      "countyName": "湟中县" },
-    {
-      "countyCode": "630105",
-      "countyName": "城北区" },
-    {
-      "countyCode": "630121",
-      "countyName": "大通回族土族自治县" },
-    {
-      "countyCode": "630103",
-      "countyName": "城中区" },
-    {
-      "countyCode": "630104",
-      "countyName": "城西区" },
-    {
-      "countyCode": "630123",
-      "countyName": "湟源县" }] },
-
-  {
-    "cityCode": "632700",
-    "cityName": "玉树藏族自治州",
-    "county": [{
-      "countyCode": "632726",
-      "countyName": "曲麻莱县" },
-    {
-      "countyCode": "632721",
-      "countyName": "玉树市" },
-    {
-      "countyCode": "632723",
-      "countyName": "称多县" },
-    {
-      "countyCode": "632722",
-      "countyName": "杂多县" },
-    {
-      "countyCode": "632725",
-      "countyName": "囊谦县" },
-    {
-      "countyCode": "632724",
-      "countyName": "治多县" }] },
-
-  {
-    "cityCode": "632800",
-    "cityName": "海西蒙古族藏族自治州",
-    "county": [{
-      "countyCode": "632801",
-      "countyName": "格尔木市" },
-    {
-      "countyCode": "632823",
-      "countyName": "天峻县" },
-    {
-      "countyCode": "632802",
-      "countyName": "德令哈市" },
-    {
-      "countyCode": "632822",
-      "countyName": "都兰县" },
-    {
-      "countyCode": "632821",
-      "countyName": "乌兰县" },
-    {
-      "countyCode": "632803",
-      "countyName": "茫崖市" }] },
-
-  {
-    "cityCode": "632100",
-    "cityName": "海东市",
-    "county": [{
-      "countyCode": "632128",
-      "countyName": "循化撒拉族自治县" },
-    {
-      "countyCode": "632126",
-      "countyName": "互助土族自治县" },
-    {
-      "countyCode": "632127",
-      "countyName": "化隆回族自治县" },
-    {
-      "countyCode": "632122",
-      "countyName": "民和回族土族自治县" },
-    {
-      "countyCode": "632121",
-      "countyName": "平安区" },
-    {
-      "countyCode": "632123",
-      "countyName": "乐都区" }] },
-
-  {
-    "cityCode": "632300",
-    "cityName": "黄南藏族自治州",
-    "county": [{
-      "countyCode": "632322",
-      "countyName": "尖扎县" },
-    {
-      "countyCode": "632323",
-      "countyName": "泽库县" },
-    {
-      "countyCode": "632324",
-      "countyName": "河南蒙古族自治县" },
-    {
-      "countyCode": "632321",
-      "countyName": "同仁县" }] },
-
-  {
-    "cityCode": "632600",
-    "cityName": "果洛藏族自治州",
-    "county": [{
-      "countyCode": "632625",
-      "countyName": "久治县" },
-    {
-      "countyCode": "632623",
-      "countyName": "甘德县" },
-    {
-      "countyCode": "632622",
-      "countyName": "班玛县" },
-    {
-      "countyCode": "632626",
-      "countyName": "玛多县" },
-    {
-      "countyCode": "632624",
-      "countyName": "达日县" },
-    {
-      "countyCode": "632621",
-      "countyName": "玛沁县" }] }] },
-
-
-{
-  "provinceCode": "640000",
-  "provinceName": "宁夏回族自治区",
-  "city": [{
-    "cityCode": "640200",
-    "cityName": "石嘴山市",
-    "county": [{
-      "countyCode": "640205",
-      "countyName": "惠农区" },
-    {
-      "countyCode": "640202",
-      "countyName": "大武口区" },
-    {
-      "countyCode": "640221",
-      "countyName": "平罗县" }] },
-
-  {
-    "cityCode": "640300",
-    "cityName": "吴忠市",
-    "county": [{
-      "countyCode": "640323",
-      "countyName": "盐池县" },
-    {
-      "countyCode": "640381",
-      "countyName": "青铜峡市" },
-    {
-      "countyCode": "640302",
-      "countyName": "利通区" },
-    {
-      "countyCode": "640303",
-      "countyName": "红寺堡区" },
-    {
-      "countyCode": "640324",
-      "countyName": "同心县" }] },
-
-  {
-    "cityCode": "640500",
-    "cityName": "中卫市",
-    "county": [{
-      "countyCode": "640522",
-      "countyName": "海原县" },
-    {
-      "countyCode": "640502",
-      "countyName": "沙坡头区" },
-    {
-      "countyCode": "640521",
-      "countyName": "中宁县" }] },
-
-  {
-    "cityCode": "640400",
-    "cityName": "固原市",
-    "county": [{
-      "countyCode": "640402",
-      "countyName": "原州区" },
-    {
-      "countyCode": "640423",
-      "countyName": "隆德县" },
-    {
-      "countyCode": "640424",
-      "countyName": "泾源县" },
-    {
-      "countyCode": "640422",
-      "countyName": "西吉县" },
-    {
-      "countyCode": "640425",
-      "countyName": "彭阳县" }] },
-
-  {
-    "cityCode": "640100",
-    "cityName": "银川市",
-    "county": [{
-      "countyCode": "640106",
-      "countyName": "金凤区" },
-    {
-      "countyCode": "640105",
-      "countyName": "西夏区" },
-    {
-      "countyCode": "640122",
-      "countyName": "贺兰县" },
-    {
-      "countyCode": "640104",
-      "countyName": "兴庆区" },
-    {
-      "countyCode": "640181",
-      "countyName": "灵武市" },
-    {
-      "countyCode": "640121",
-      "countyName": "永宁县" }] }] },
-
-
-{
-  "provinceCode": "650000",
-  "provinceName": "新疆维吾尔自治区",
-  "city": [{
-    "cityCode": "650200",
-    "cityName": "克拉玛依市",
-    "county": [{
-      "countyCode": "650203",
-      "countyName": "克拉玛依区" },
-    {
-      "countyCode": "650205",
-      "countyName": "乌尔禾区" },
-    {
-      "countyCode": "650202",
-      "countyName": "独山子区" },
-    {
-      "countyCode": "650204",
-      "countyName": "白碱滩区" }] },
-
-  {
-    "cityCode": "652800",
-    "cityName": "巴音郭楞蒙古自治州",
-    "county": [{
-      "countyCode": "652829",
-      "countyName": "博湖县" },
-    {
-      "countyCode": "652824",
-      "countyName": "若羌县" },
-    {
-      "countyCode": "652826",
-      "countyName": "焉耆回族自治县" },
-    {
-      "countyCode": "652823",
-      "countyName": "尉犁县" },
-    {
-      "countyCode": "652822",
-      "countyName": "轮台县" },
-    {
-      "countyCode": "652825",
-      "countyName": "且末县" },
-    {
-      "countyCode": "652801",
-      "countyName": "库尔勒市" },
-    {
-      "countyCode": "652827",
-      "countyName": "和静县" },
-    {
-      "countyCode": "652828",
-      "countyName": "和硕县" }] },
-
-  {
-    "cityCode": "654200",
-    "cityName": "塔城地区",
-    "county": [{
-      "countyCode": "654223",
-      "countyName": "沙湾县" },
-    {
-      "countyCode": "654201",
-      "countyName": "塔城市" },
-    {
-      "countyCode": "654226",
-      "countyName": "和布克赛尔蒙古自治县" },
-    {
-      "countyCode": "654202",
-      "countyName": "乌苏市" },
-    {
-      "countyCode": "654224",
-      "countyName": "托里县" },
-    {
-      "countyCode": "654221",
-      "countyName": "额敏县" },
-    {
-      "countyCode": "654225",
-      "countyName": "裕民县" }] },
-
-  {
-    "cityCode": "652200",
-    "cityName": "哈密市",
-    "county": [{
-      "countyCode": "652222",
-      "countyName": "巴里坤哈萨克自治县" },
-    {
-      "countyCode": "652201",
-      "countyName": "伊州区" },
-    {
-      "countyCode": "652223",
-      "countyName": "伊吾县" }] },
-
-  {
-    "cityCode": "654000",
-    "cityName": "伊犁哈萨克自治州",
-    "county": [{
-      "countyCode": "654027",
-      "countyName": "特克斯县" },
-    {
-      "countyCode": "654024",
-      "countyName": "巩留县" },
-    {
-      "countyCode": "654022",
-      "countyName": "察布查尔锡伯自治县" },
-    {
-      "countyCode": "654004",
-      "countyName": "霍尔果斯市" },
-    {
-      "countyCode": "654023",
-      "countyName": "霍城县" },
-    {
-      "countyCode": "654028",
-      "countyName": "尼勒克县" },
-    {
-      "countyCode": "654003",
-      "countyName": "奎屯市" },
-    {
-      "countyCode": "654021",
-      "countyName": "伊宁县" },
-    {
-      "countyCode": "654025",
-      "countyName": "新源县" },
-    {
-      "countyCode": "654002",
-      "countyName": "伊宁市" },
-    {
-      "countyCode": "654026",
-      "countyName": "昭苏县" }] },
-
-  {
-    "cityCode": "654300",
-    "cityName": "阿勒泰地区",
-    "county": [{
-      "countyCode": "654325",
-      "countyName": "青河县" },
-    {
-      "countyCode": "654326",
-      "countyName": "吉木乃县" },
-    {
-      "countyCode": "654321",
-      "countyName": "布尔津县" },
-    {
-      "countyCode": "654323",
-      "countyName": "福海县" },
-    {
-      "countyCode": "654301",
-      "countyName": "阿勒泰市" },
-    {
-      "countyCode": "654322",
-      "countyName": "富蕴县" },
-    {
-      "countyCode": "654324",
-      "countyName": "哈巴河县" }] },
-
-  {
-    "cityCode": "652100",
-    "cityName": "吐鲁番市",
-    "county": [{
-      "countyCode": "652122",
-      "countyName": "鄯善县" },
-    {
-      "countyCode": "652101",
-      "countyName": "高昌区" },
-    {
-      "countyCode": "652123",
-      "countyName": "托克逊县" }] },
-
-  {
-    "cityCode": "650100",
-    "cityName": "乌鲁木齐市",
-    "county": [{
-      "countyCode": "650121",
-      "countyName": "乌鲁木齐县" },
-    {
-      "countyCode": "650109",
-      "countyName": "米东区" },
-    {
-      "countyCode": "650103",
-      "countyName": "沙依巴克区" },
-    {
-      "countyCode": "650105",
-      "countyName": "水磨沟区" },
-    {
-      "countyCode": "650107",
-      "countyName": "达坂城区" },
-    {
-      "countyCode": "650104",
-      "countyName": "新市区" },
-    {
-      "countyCode": "650102",
-      "countyName": "天山区" },
-    {
-      "countyCode": "650106",
-      "countyName": "头屯河区" }] },
-
-  {
-    "cityCode": "659002",
-    "cityName": "阿拉尔市",
-    "county": [{
-      "countyCode": "659002-1",
-      "countyName": "阿拉尔市" }] },
-
-  {
-    "cityCode": "653200",
-    "cityName": "和田地区",
-    "county": [{
-      "countyCode": "653222",
-      "countyName": "墨玉县" },
-    {
-      "countyCode": "653226",
-      "countyName": "于田县" },
-    {
-      "countyCode": "653223",
-      "countyName": "皮山县" },
-    {
-      "countyCode": "653221",
-      "countyName": "和田县" },
-    {
-      "countyCode": "653224",
-      "countyName": "洛浦县" },
-    {
-      "countyCode": "653225",
-      "countyName": "策勒县" },
-    {
-      "countyCode": "653227",
-      "countyName": "民丰县" },
-    {
-      "countyCode": "653201",
-      "countyName": "和田市" }] },
-
-  {
-    "cityCode": "659003",
-    "cityName": "图木舒克市",
-    "county": [{
-      "countyCode": "659003-1",
-      "countyName": "图木舒克市" }] },
-
-  {
-    "cityCode": "695005",
-    "cityName": "北屯市",
-    "county": [{
-      "countyCode": "695005-1",
-      "countyName": "北屯市" }] },
-
-  {
-    "cityCode": "652300",
-    "cityName": "昌吉回族自治州",
-    "county": [{
-      "countyCode": "652302",
-      "countyName": "阜康市" },
-    {
-      "countyCode": "652324",
-      "countyName": "玛纳斯县" },
-    {
-      "countyCode": "652325",
-      "countyName": "奇台县" },
-    {
-      "countyCode": "652323",
-      "countyName": "呼图壁县" },
-    {
-      "countyCode": "652301",
-      "countyName": "昌吉市" },
-    {
-      "countyCode": "652327",
-      "countyName": "吉木萨尔县" },
-    {
-      "countyCode": "652328",
-      "countyName": "木垒哈萨克自治县" },
-    {
-      "countyCode": "652303",
-      "countyName": "准东开发区" }] },
-
-  {
-    "cityCode": "653100",
-    "cityName": "喀什地区",
-    "county": [{
-      "countyCode": "653128",
-      "countyName": "岳普湖县" },
-    {
-      "countyCode": "653129",
-      "countyName": "伽师县" },
-    {
-      "countyCode": "653126",
-      "countyName": "叶城县" },
-    {
-      "countyCode": "653122",
-      "countyName": "疏勒县" },
-    {
-      "countyCode": "653124",
-      "countyName": "泽普县" },
-    {
-      "countyCode": "653121",
-      "countyName": "疏附县" },
-    {
-      "countyCode": "653131",
-      "countyName": "塔什库尔干塔吉克自治县" },
-    {
-      "countyCode": "653130",
-      "countyName": "巴楚县" },
-    {
-      "countyCode": "653123",
-      "countyName": "英吉沙县" },
-    {
-      "countyCode": "653127",
-      "countyName": "麦盖提县" },
-    {
-      "countyCode": "653125",
-      "countyName": "莎车县" },
-    {
-      "countyCode": "653101",
-      "countyName": "喀什市" }] },
-
-  {
-    "cityCode": "659001",
-    "cityName": "石河子市",
-    "county": [{
-      "countyCode": "659001-1",
-      "countyName": "石河子市" }] },
-
-  {
-    "cityCode": "695006",
-    "cityName": "铁门关市",
-    "county": [{
-      "countyCode": "695006-1",
-      "countyName": "铁门关市" }] },
-
-  {
-    "cityCode": "652900",
-    "cityName": "阿克苏地区",
-    "county": [{
-      "countyCode": "652901",
-      "countyName": "阿克苏市" },
-    {
-      "countyCode": "652922",
-      "countyName": "温宿县" },
-    {
-      "countyCode": "652928",
-      "countyName": "阿瓦提县" },
-    {
-      "countyCode": "652929",
-      "countyName": "柯坪县" },
-    {
-      "countyCode": "652925",
-      "countyName": "新和县" },
-    {
-      "countyCode": "652924",
-      "countyName": "沙雅县" },
-    {
-      "countyCode": "652927",
-      "countyName": "乌什县" },
-    {
-      "countyCode": "652923",
-      "countyName": "库车县" },
-    {
-      "countyCode": "652926",
-      "countyName": "拜城县" }] },
-
-  {
-    "cityCode": "653000",
-    "cityName": "克孜勒苏柯尔克孜自治州",
-    "county": [{
-      "countyCode": "653023",
-      "countyName": "阿合奇县" },
-    {
-      "countyCode": "653022",
-      "countyName": "阿克陶县" },
-    {
-      "countyCode": "653001",
-      "countyName": "阿图什市" },
-    {
-      "countyCode": "653024",
-      "countyName": "乌恰县" }] },
-
-  {
-    "cityCode": "659004",
-    "cityName": "五家渠市",
-    "county": [{
-      "countyCode": "659004-1",
-      "countyName": "五家渠市" }] },
-
-  {
-    "cityCode": "652700",
-    "cityName": "博尔塔拉蒙古自治州",
-    "county": [{
-      "countyCode": "652701",
-      "countyName": "博乐市" },
-    {
-      "countyCode": "652723",
-      "countyName": "温泉县" },
-    {
-      "countyCode": "652722",
-      "countyName": "精河县" }] },
-
-  {
-    "cityCode": "695007",
-    "cityName": "双河市",
-    "county": [{
-      "countyCode": "695007-1",
-      "countyName": "双河市" }] }] },
-
-
-{
-  "provinceCode": "330000",
-  "provinceName": "浙江省",
-  "city": [{
-    "cityCode": "330900",
-    "cityName": "舟山市",
-    "county": [{
-      "countyCode": "330922",
-      "countyName": "嵊泗县" },
-    {
-      "countyCode": "330903",
-      "countyName": "普陀区" },
-    {
-      "countyCode": "330902",
-      "countyName": "定海区" },
-    {
-      "countyCode": "330921",
-      "countyName": "岱山县" }] },
-
-  {
-    "cityCode": "330800",
-    "cityName": "衢州市",
-    "county": [{
-      "countyCode": "330824",
-      "countyName": "开化县" },
-    {
-      "countyCode": "330803",
-      "countyName": "衢江区" },
-    {
-      "countyCode": "330881",
-      "countyName": "江山市" },
-    {
-      "countyCode": "330802",
-      "countyName": "柯城区" },
-    {
-      "countyCode": "330822",
-      "countyName": "常山县" },
-    {
-      "countyCode": "330825",
-      "countyName": "龙游县" }] },
-
-  {
-    "cityCode": "330700",
-    "cityName": "金华市",
-    "county": [{
-      "countyCode": "330782",
-      "countyName": "义乌市" },
-    {
-      "countyCode": "330784",
-      "countyName": "永康市" },
-    {
-      "countyCode": "330727",
-      "countyName": "磐安县" },
-    {
-      "countyCode": "330702",
-      "countyName": "婺城区" },
-    {
-      "countyCode": "330726",
-      "countyName": "浦江县" },
-    {
-      "countyCode": "330783",
-      "countyName": "东阳市" },
-    {
-      "countyCode": "330781",
-      "countyName": "兰溪市" },
-    {
-      "countyCode": "330723",
-      "countyName": "武义县" },
-    {
-      "countyCode": "330703",
-      "countyName": "金东区" }] },
-
-  {
-    "cityCode": "330300",
-    "cityName": "温州市",
-    "county": [{
-      "countyCode": "330302",
-      "countyName": "鹿城区" },
-    {
-      "countyCode": "330322",
-      "countyName": "洞头区" },
-    {
-      "countyCode": "330381",
-      "countyName": "瑞安市" },
-    {
-      "countyCode": "330329",
-      "countyName": "泰顺县" },
-    {
-      "countyCode": "330324",
-      "countyName": "永嘉县" },
-    {
-      "countyCode": "330304",
-      "countyName": "瓯海区" },
-    {
-      "countyCode": "330327",
-      "countyName": "苍南县" },
-    {
-      "countyCode": "330328",
-      "countyName": "文成县" },
-    {
-      "countyCode": "330326",
-      "countyName": "平阳县" },
-    {
-      "countyCode": "330382",
-      "countyName": "乐清市" },
-    {
-      "countyCode": "330303",
-      "countyName": "龙湾区" }] },
-
-  {
-    "cityCode": "330200",
-    "cityName": "宁波市",
-    "county": [{
-      "countyCode": "330204",
-      "countyName": "江东区" },
-    {
-      "countyCode": "330225",
-      "countyName": "象山县" },
-    {
-      "countyCode": "330212",
-      "countyName": "鄞州区" },
-    {
-      "countyCode": "330226",
-      "countyName": "宁海县" },
-    {
-      "countyCode": "330283",
-      "countyName": "奉化区" },
-    {
-      "countyCode": "330282",
-      "countyName": "慈溪市" },
-    {
-      "countyCode": "330281",
-      "countyName": "余姚市" },
-    {
-      "countyCode": "330211",
-      "countyName": "镇海区" },
-    {
-      "countyCode": "330205",
-      "countyName": "江北区" },
-    {
-      "countyCode": "330206",
-      "countyName": "北仑区" },
-    {
-      "countyCode": "330203",
-      "countyName": "海曙区" }] },
-
-  {
-    "cityCode": "330100",
-    "cityName": "杭州市",
-    "county": [{
-      "countyCode": "330110",
-      "countyName": "余杭区" },
-    {
-      "countyCode": "330106",
-      "countyName": "西湖区" },
-    {
-      "countyCode": "330109",
-      "countyName": "萧山区" },
-    {
-      "countyCode": "330185",
-      "countyName": "临安区" },
-    {
-      "countyCode": "330122",
-      "countyName": "桐庐县" },
-    {
-      "countyCode": "330103",
-      "countyName": "下城区" },
-    {
-      "countyCode": "330182",
-      "countyName": "建德市" },
-    {
-      "countyCode": "330102",
-      "countyName": "上城区" },
-    {
-      "countyCode": "330127",
-      "countyName": "淳安县" },
-    {
-      "countyCode": "330105",
-      "countyName": "拱墅区" },
-    {
-      "countyCode": "330104",
-      "countyName": "江干区" },
-    {
-      "countyCode": "330108",
-      "countyName": "滨江区" },
-    {
-      "countyCode": "330183",
-      "countyName": "富阳区" }] },
-
-  {
-    "cityCode": "330400",
-    "cityName": "嘉兴市",
-    "county": [{
-      "countyCode": "330482",
-      "countyName": "平湖市" },
-    {
-      "countyCode": "330402",
-      "countyName": "南湖区" },
-    {
-      "countyCode": "330481",
-      "countyName": "海宁市" },
-    {
-      "countyCode": "330421",
-      "countyName": "嘉善县" },
-    {
-      "countyCode": "330424",
-      "countyName": "海盐县" },
-    {
-      "countyCode": "330411",
-      "countyName": "秀洲区" },
-    {
-      "countyCode": "330483",
-      "countyName": "桐乡市" }] },
-
-  {
-    "cityCode": "330600",
-    "cityName": "绍兴市",
-    "county": [{
-      "countyCode": "330681",
-      "countyName": "诸暨市" },
-    {
-      "countyCode": "330602",
-      "countyName": "越城区" },
-    {
-      "countyCode": "330682",
-      "countyName": "上虞区" },
-    {
-      "countyCode": "330683",
-      "countyName": "嵊州市" },
-    {
-      "countyCode": "330624",
-      "countyName": "新昌县" },
-    {
-      "countyCode": "330621",
-      "countyName": "柯桥区" }] },
-
-  {
-    "cityCode": "331100",
-    "cityName": "丽水市",
-    "county": [{
-      "countyCode": "331125",
-      "countyName": "云和县" },
-    {
-      "countyCode": "331121",
-      "countyName": "青田县" },
-    {
-      "countyCode": "331126",
-      "countyName": "庆元县" },
-    {
-      "countyCode": "331124",
-      "countyName": "松阳县" },
-    {
-      "countyCode": "331123",
-      "countyName": "遂昌县" },
-    {
-      "countyCode": "331122",
-      "countyName": "缙云县" },
-    {
-      "countyCode": "331127",
-      "countyName": "景宁畲族自治县" },
-    {
-      "countyCode": "331102",
-      "countyName": "莲都区" },
-    {
-      "countyCode": "331181",
-      "countyName": "龙泉市" }] },
-
-  {
-    "cityCode": "330500",
-    "cityName": "湖州市",
-    "county": [{
-      "countyCode": "330522",
-      "countyName": "长兴县" },
-    {
-      "countyCode": "330503",
-      "countyName": "南浔区" },
-    {
-      "countyCode": "330523",
-      "countyName": "安吉县" },
-    {
-      "countyCode": "330502",
-      "countyName": "吴兴区" },
-    {
-      "countyCode": "330521",
-      "countyName": "德清县" }] },
-
-  {
-    "cityCode": "331000",
-    "cityName": "台州市",
-    "county": [{
-      "countyCode": "331024",
-      "countyName": "仙居县" },
-    {
-      "countyCode": "331021",
-      "countyName": "玉环市" },
-    {
-      "countyCode": "331082",
-      "countyName": "临海市" },
-    {
-      "countyCode": "331023",
-      "countyName": "天台县" },
-    {
-      "countyCode": "331003",
-      "countyName": "黄岩区" },
-    {
-      "countyCode": "331004",
-      "countyName": "路桥区" },
-    {
-      "countyCode": "331022",
-      "countyName": "三门县" },
-    {
-      "countyCode": "331002",
-      "countyName": "椒江区" },
-    {
-      "countyCode": "331081",
-      "countyName": "温岭市" }] }] },
-
-
-{
-  "provinceCode": "320000",
-  "provinceName": "江苏省",
-  "city": [{
-    "cityCode": "320200",
-    "cityName": "无锡市",
-    "county": [{
-      "countyCode": "320282",
-      "countyName": "宜兴市" },
-    {
-      "countyCode": "320205",
-      "countyName": "锡山区" },
-    {
-      "countyCode": "320211",
-      "countyName": "滨湖区" },
-    {
-      "countyCode": "320281",
-      "countyName": "江阴市" },
-    {
-      "countyCode": "320206",
-      "countyName": "惠山区" },
-    {
-      "countyCode": "320207",
-      "countyName": "梁溪区" },
-    {
-      "countyCode": "320214",
-      "countyName": "新吴区" }] },
-
-  {
-    "cityCode": "320400",
-    "cityName": "常州市",
-    "county": [{
-      "countyCode": "320412",
-      "countyName": "武进区" },
-    {
-      "countyCode": "320405",
-      "countyName": "戚墅堰区" },
-    {
-      "countyCode": "320481",
-      "countyName": "溧阳市" },
-    {
-      "countyCode": "320402",
-      "countyName": "天宁区" },
-    {
-      "countyCode": "320411",
-      "countyName": "新北区" },
-    {
-      "countyCode": "320404",
-      "countyName": "钟楼区" },
-    {
-      "countyCode": "320482",
-      "countyName": "金坛区" }] },
-
-  {
-    "cityCode": "320500",
-    "cityName": "苏州市",
-    "county": [{
-      "countyCode": "320509",
-      "countyName": "吴江区" },
-    {
-      "countyCode": "320506",
-      "countyName": "吴中区" },
-    {
-      "countyCode": "320582",
-      "countyName": "张家港市" },
-    {
-      "countyCode": "320508",
-      "countyName": "姑苏区" },
-    {
-      "countyCode": "320571",
-      "countyName": "苏州工业园区" },
-    {
-      "countyCode": "320583",
-      "countyName": "昆山市" },
-    {
-      "countyCode": "320581",
-      "countyName": "常熟市" },
-    {
-      "countyCode": "320505",
-      "countyName": "虎丘区" },
-    {
-      "countyCode": "320507",
-      "countyName": "相城区" },
-    {
-      "countyCode": "320585",
-      "countyName": "太仓市" }] },
-
-  {
-    "cityCode": "320800",
-    "cityName": "淮安市",
-    "county": [{
-      "countyCode": "320811",
-      "countyName": "清浦区" },
-    {
-      "countyCode": "320829",
-      "countyName": "洪泽区" },
-    {
-      "countyCode": "320802",
-      "countyName": "清江浦区" },
-    {
-      "countyCode": "320803",
-      "countyName": "淮安区" },
-    {
-      "countyCode": "320831",
-      "countyName": "金湖县" },
-    {
-      "countyCode": "320804",
-      "countyName": "淮阴区" },
-    {
-      "countyCode": "320830",
-      "countyName": "盱眙县" },
-    {
-      "countyCode": "320826",
-      "countyName": "涟水县" }] },
-
-  {
-    "cityCode": "320300",
-    "cityName": "徐州市",
-    "county": [{
-      "countyCode": "320381",
-      "countyName": "新沂市" },
-    {
-      "countyCode": "320324",
-      "countyName": "睢宁县" },
-    {
-      "countyCode": "320311",
-      "countyName": "泉山区" },
-    {
-      "countyCode": "320302",
-      "countyName": "鼓楼区" },
-    {
-      "countyCode": "320305",
-      "countyName": "贾汪区" },
-    {
-      "countyCode": "320303",
-      "countyName": "云龙区" },
-    {
-      "countyCode": "320312",
-      "countyName": "铜山区" },
-    {
-      "countyCode": "320321",
-      "countyName": "丰县" },
-    {
-      "countyCode": "320322",
-      "countyName": "沛县" },
-    {
-      "countyCode": "320382",
-      "countyName": "邳州市" }] },
-
-  {
-    "cityCode": "321200",
-    "cityName": "泰州市",
-    "county": [{
-      "countyCode": "321203",
-      "countyName": "高港区" },
-    {
-      "countyCode": "321202",
-      "countyName": "海陵区" },
-    {
-      "countyCode": "321283",
-      "countyName": "泰兴市" },
-    {
-      "countyCode": "321284",
-      "countyName": "姜堰区" },
-    {
-      "countyCode": "321282",
-      "countyName": "靖江市" },
-    {
-      "countyCode": "321281",
-      "countyName": "兴化市" }] },
-
-  {
-    "cityCode": "320700",
-    "cityName": "连云港市",
-    "county": [{
-      "countyCode": "320723",
-      "countyName": "灌云县" },
-    {
-      "countyCode": "320721",
-      "countyName": "赣榆区" },
-    {
-      "countyCode": "320705",
-      "countyName": "新浦区" },
-    {
-      "countyCode": "320722",
-      "countyName": "东海县" },
-    {
-      "countyCode": "320706",
-      "countyName": "海州区" },
-    {
-      "countyCode": "320703",
-      "countyName": "连云区" },
-    {
-      "countyCode": "320724",
-      "countyName": "灌南县" }] },
-
-  {
-    "cityCode": "321100",
-    "cityName": "镇江市",
-    "county": [{
-      "countyCode": "321112",
-      "countyName": "丹徒区" },
-    {
-      "countyCode": "321102",
-      "countyName": "京口区" },
-    {
-      "countyCode": "321182",
-      "countyName": "扬中市" },
-    {
-      "countyCode": "321181",
-      "countyName": "丹阳市" },
-    {
-      "countyCode": "321183",
-      "countyName": "句容市" },
-    {
-      "countyCode": "321111",
-      "countyName": "润州区" }] },
-
-  {
-    "cityCode": "320600",
-    "cityName": "南通市",
-    "county": [{
-      "countyCode": "320602",
-      "countyName": "崇川区" },
-    {
-      "countyCode": "320684",
-      "countyName": "海门市" },
-    {
-      "countyCode": "320681",
-      "countyName": "启东市" },
-    {
-      "countyCode": "320612",
-      "countyName": "通州区" },
-    {
-      "countyCode": "320621",
-      "countyName": "海安市" },
-    {
-      "countyCode": "320623",
-      "countyName": "如东县" },
-    {
-      "countyCode": "320611",
-      "countyName": "港闸区" },
-    {
-      "countyCode": "320682",
-      "countyName": "如皋市" }] },
-
-  {
-    "cityCode": "320900",
-    "cityName": "盐城市",
-    "county": [{
-      "countyCode": "320922",
-      "countyName": "滨海县" },
-    {
-      "countyCode": "320981",
-      "countyName": "东台市" },
-    {
-      "countyCode": "320925",
-      "countyName": "建湖县" },
-    {
-      "countyCode": "320903",
-      "countyName": "盐都区" },
-    {
-      "countyCode": "320921",
-      "countyName": "响水县" },
-    {
-      "countyCode": "320924",
-      "countyName": "射阳县" },
-    {
-      "countyCode": "320902",
-      "countyName": "亭湖区" },
-    {
-      "countyCode": "320923",
-      "countyName": "阜宁县" },
-    {
-      "countyCode": "320982",
-      "countyName": "大丰区" }] },
-
-  {
-    "cityCode": "320100",
-    "cityName": "南京市",
-    "county": [{
-      "countyCode": "320106",
-      "countyName": "鼓楼区" },
-    {
-      "countyCode": "320115",
-      "countyName": "江宁区" },
-    {
-      "countyCode": "320111",
-      "countyName": "浦口区" },
-    {
-      "countyCode": "320116",
-      "countyName": "六合区" },
-    {
-      "countyCode": "320104",
-      "countyName": "秦淮区" },
-    {
-      "countyCode": "320124",
-      "countyName": "溧水区" },
-    {
-      "countyCode": "320125",
-      "countyName": "高淳区" },
-    {
-      "countyCode": "320113",
-      "countyName": "栖霞区" },
-    {
-      "countyCode": "320107",
-      "countyName": "下关区" },
-    {
-      "countyCode": "320102",
-      "countyName": "玄武区" },
-    {
-      "countyCode": "320105",
-      "countyName": "建邺区" },
-    {
-      "countyCode": "320114",
-      "countyName": "雨花台区" },
-    {
-      "countyCode": "320103",
-      "countyName": "白下区" }] },
-
-  {
-    "cityCode": "321000",
-    "cityName": "扬州市",
-    "county": [{
-      "countyCode": "321084",
-      "countyName": "高邮市" },
-    {
-      "countyCode": "321023",
-      "countyName": "宝应县" },
-    {
-      "countyCode": "321012",
-      "countyName": "江都区" },
-    {
-      "countyCode": "321003",
-      "countyName": "邗江区" },
-    {
-      "countyCode": "321081",
-      "countyName": "仪征市" },
-    {
-      "countyCode": "321002",
-      "countyName": "广陵区" }] },
-
-  {
-    "cityCode": "321300",
-    "cityName": "宿迁市",
-    "county": [{
-      "countyCode": "321323",
-      "countyName": "泗阳县" },
-    {
-      "countyCode": "321302",
-      "countyName": "宿城区" },
-    {
-      "countyCode": "321311",
-      "countyName": "宿豫区" },
-    {
-      "countyCode": "321324",
-      "countyName": "泗洪县" },
-    {
-      "countyCode": "321322",
-      "countyName": "沭阳县" }] }] },
-
-
-{
-  "provinceCode": "440000",
-  "provinceName": "广东省",
-  "city": [{
-    "cityCode": "445100",
-    "cityName": "潮州市",
-    "county": [{
-      "countyCode": "445123",
-      "countyName": "潮安县" },
-    {
-      "countyCode": "445122",
-      "countyName": "饶平县" },
-    {
-      "countyCode": "445121",
-      "countyName": "潮安区" },
-    {
-      "countyCode": "445102",
-      "countyName": "湘桥区" }] },
-
-  {
-    "cityCode": "441800",
-    "cityName": "清远市",
-    "county": [{
-      "countyCode": "441802",
-      "countyName": "清城区" },
-    {
-      "countyCode": "441825",
-      "countyName": "连山壮族瑶族自治县" },
-    {
-      "countyCode": "441821",
-      "countyName": "佛冈县" },
-    {
-      "countyCode": "441882",
-      "countyName": "连州市" },
-    {
-      "countyCode": "441823",
-      "countyName": "阳山县" },
-    {
-      "countyCode": "441826",
-      "countyName": "连南瑶族自治县" },
-    {
-      "countyCode": "441827",
-      "countyName": "清新区" },
-    {
-      "countyCode": "441881",
-      "countyName": "英德市" }] },
-
-  {
-    "cityCode": "441300",
-    "cityName": "惠州市",
-    "county": [{
-      "countyCode": "441303",
-      "countyName": "惠阳区" },
-    {
-      "countyCode": "441322",
-      "countyName": "博罗县" },
-    {
-      "countyCode": "441323",
-      "countyName": "惠东县" },
-    {
-      "countyCode": "441324",
-      "countyName": "龙门县" },
-    {
-      "countyCode": "441302",
-      "countyName": "惠城区" }] },
-
-  {
-    "cityCode": "445200",
-    "cityName": "揭阳市",
-    "county": [{
-      "countyCode": "445221",
-      "countyName": "揭东区" },
-    {
-      "countyCode": "445224",
-      "countyName": "惠来县" },
-    {
-      "countyCode": "445222",
-      "countyName": "揭西县" },
-    {
-      "countyCode": "445281",
-      "countyName": "普宁市" },
-    {
-      "countyCode": "445202",
-      "countyName": "榕城区" }] },
-
-  {
-    "cityCode": "440300",
-    "cityName": "深圳市",
-    "county": [{
-      "countyCode": "440303",
-      "countyName": "罗湖区" },
-    {
-      "countyCode": "440306",
-      "countyName": "宝安区" },
-    {
-      "countyCode": "440305",
-      "countyName": "南山区" },
-    {
-      "countyCode": "440307",
-      "countyName": "龙岗区" },
-    {
-      "countyCode": "440311",
-      "countyName": "光明区" },
-    {
-      "countyCode": "440309",
-      "countyName": "龙华区" },
-    {
-      "countyCode": "440308",
-      "countyName": "盐田区" },
-    {
-      "countyCode": "440304",
-      "countyName": "福田区" },
-    {
-      "countyCode": "440312",
-      "countyName": "坪山区" },
-    {
-      "countyCode": "440313",
-      "countyName": "大鹏新区" }] },
-
-  {
-    "cityCode": "441900",
-    "cityName": "东莞市",
-    "county": [{
-      "countyCode": "441900-1",
-      "countyName": "东莞市" }] },
-
-  {
-    "cityCode": "441400",
-    "cityName": "梅州市",
-    "county": [{
-      "countyCode": "441422",
-      "countyName": "大埔县" },
-    {
-      "countyCode": "441423",
-      "countyName": "丰顺县" },
-    {
-      "countyCode": "441426",
-      "countyName": "平远县" },
-    {
-      "countyCode": "441481",
-      "countyName": "兴宁市" },
-    {
-      "countyCode": "441427",
-      "countyName": "蕉岭县" },
-    {
-      "countyCode": "441421",
-      "countyName": "梅县区" },
-    {
-      "countyCode": "441424",
-      "countyName": "五华县" },
-    {
-      "countyCode": "441402",
-      "countyName": "梅江区" }] },
-
-  {
-    "cityCode": "440500-1",
-    "cityName": "汕头市",
-    "county": [{
-      "countyCode": "440515",
-      "countyName": "澄海区" },
-    {
-      "countyCode": "440511",
-      "countyName": "金平区" },
-    {
-      "countyCode": "440523",
-      "countyName": "南澳县" },
-    {
-      "countyCode": "440513",
-      "countyName": "潮阳区" },
-    {
-      "countyCode": "440514",
-      "countyName": "潮南区" },
-    {
-      "countyCode": "440507",
-      "countyName": "龙湖区" },
-    {
-      "countyCode": "440512",
-      "countyName": "濠江区" }] },
-
-  {
-    "cityCode": "441600",
-    "cityName": "河源市",
-    "county": [{
-      "countyCode": "441602",
-      "countyName": "源城区" },
-    {
-      "countyCode": "441621",
-      "countyName": "紫金县" },
-    {
-      "countyCode": "441624",
-      "countyName": "和平县" },
-    {
-      "countyCode": "441622",
-      "countyName": "龙川县" },
-    {
-      "countyCode": "441625",
-      "countyName": "东源县" },
-    {
-      "countyCode": "441623",
-      "countyName": "连平县" }] },
-
-  {
-    "cityCode": "445300",
-    "cityName": "云浮市",
-    "county": [{
-      "countyCode": "445322",
-      "countyName": "郁南县" },
-    {
-      "countyCode": "445381",
-      "countyName": "罗定市" },
-    {
-      "countyCode": "445302",
-      "countyName": "云城区" },
-    {
-      "countyCode": "445321",
-      "countyName": "新兴县" },
-    {
-      "countyCode": "445323",
-      "countyName": "云安区" }] },
-
-  {
-    "cityCode": "440400",
-    "cityName": "珠海市",
-    "county": [{
-      "countyCode": "440404",
-      "countyName": "金湾区" },
-    {
-      "countyCode": "440403",
-      "countyName": "斗门区" },
-    {
-      "countyCode": "440402",
-      "countyName": "香洲区" }] },
-
-  {
-    "cityCode": "440700",
-    "cityName": "江门市",
-    "county": [{
-      "countyCode": "440785",
-      "countyName": "恩平市" },
-    {
-      "countyCode": "440704",
-      "countyName": "江海区" },
-    {
-      "countyCode": "440705",
-      "countyName": "新会区" },
-    {
-      "countyCode": "440784",
-      "countyName": "鹤山市" },
-    {
-      "countyCode": "440703",
-      "countyName": "蓬江区" },
-    {
-      "countyCode": "440783",
-      "countyName": "开平市" },
-    {
-      "countyCode": "440781",
-      "countyName": "台山市" }] },
-
-  {
-    "cityCode": "441500",
-    "cityName": "汕尾市",
-    "county": [{
-      "countyCode": "441523",
-      "countyName": "陆河县" },
-    {
-      "countyCode": "441502",
-      "countyName": "城区" },
-    {
-      "countyCode": "441581",
-      "countyName": "陆丰市" },
-    {
-      "countyCode": "441521",
-      "countyName": "海丰县" }] },
-
-  {
-    "cityCode": "441200",
-    "cityName": "肇庆市",
-    "county": [{
-      "countyCode": "441203",
-      "countyName": "鼎湖区" },
-    {
-      "countyCode": "441224",
-      "countyName": "怀集县" },
-    {
-      "countyCode": "441283",
-      "countyName": "高要区" },
-    {
-      "countyCode": "441284",
-      "countyName": "四会市" },
-    {
-      "countyCode": "441202",
-      "countyName": "端州区" },
-    {
-      "countyCode": "441225",
-      "countyName": "封开县" },
-    {
-      "countyCode": "441226",
-      "countyName": "德庆县" },
-    {
-      "countyCode": "441223",
-      "countyName": "广宁县" }] },
-
-  {
-    "cityCode": "440200",
-    "cityName": "韶关市",
-    "county": [{
-      "countyCode": "440222",
-      "countyName": "始兴县" },
-    {
-      "countyCode": "440281",
-      "countyName": "乐昌市" },
-    {
-      "countyCode": "440203",
-      "countyName": "武江区" },
-    {
-      "countyCode": "440233",
-      "countyName": "新丰县" },
-    {
-      "countyCode": "440224",
-      "countyName": "仁化县" },
-    {
-      "countyCode": "440232",
-      "countyName": "乳源瑶族自治县" },
-    {
-      "countyCode": "440229",
-      "countyName": "翁源县" },
-    {
-      "countyCode": "440282",
-      "countyName": "南雄市" },
-    {
-      "countyCode": "440205",
-      "countyName": "曲江区" },
-    {
-      "countyCode": "440204",
-      "countyName": "浈江区" }] },
-
-  {
-    "cityCode": "440600",
-    "cityName": "佛山市",
-    "county": [{
-      "countyCode": "440606",
-      "countyName": "顺德区" },
-    {
-      "countyCode": "440604",
-      "countyName": "禅城区" },
-    {
-      "countyCode": "440607",
-      "countyName": "三水区" },
-    {
-      "countyCode": "440608",
-      "countyName": "高明区" },
-    {
-      "countyCode": "440605",
-      "countyName": "南海区" }] },
-
-  {
-    "cityCode": "440100",
-    "cityName": "广州市",
-    "county": [{
-      "countyCode": "440114",
-      "countyName": "花都区" },
-    {
-      "countyCode": "440111",
-      "countyName": "白云区" },
-    {
-      "countyCode": "440115",
-      "countyName": "南沙区" },
-    {
-      "countyCode": "440113",
-      "countyName": "番禺区" },
-    {
-      "countyCode": "440183",
-      "countyName": "增城区" },
-    {
-      "countyCode": "440112",
-      "countyName": "黄埔区" },
-    {
-      "countyCode": "440106",
-      "countyName": "天河区" },
-    {
-      "countyCode": "440184",
-      "countyName": "从化区" },
-    {
-      "countyCode": "440105",
-      "countyName": "海珠区" },
-    {
-      "countyCode": "440103",
-      "countyName": "荔湾区" },
-    {
-      "countyCode": "440104",
-      "countyName": "越秀区" }] },
-
-  {
-    "cityCode": "442000",
-    "cityName": "中山市",
-    "county": [{
-      "countyCode": "442000-1",
-      "countyName": "中山市" }] },
-
-  {
-    "cityCode": "440800",
-    "cityName": "湛江市",
-    "county": [{
-      "countyCode": "440881",
-      "countyName": "廉江市" },
-    {
-      "countyCode": "440804",
-      "countyName": "坡头区" },
-    {
-      "countyCode": "440882",
-      "countyName": "雷州市" },
-    {
-      "countyCode": "440823",
-      "countyName": "遂溪县" },
-    {
-      "countyCode": "440803",
-      "countyName": "霞山区" },
-    {
-      "countyCode": "440825",
-      "countyName": "徐闻县" },
-    {
-      "countyCode": "440802",
-      "countyName": "赤坎区" },
-    {
-      "countyCode": "440811",
-      "countyName": "麻章区" },
-    {
-      "countyCode": "440883",
-      "countyName": "吴川市" }] },
-
-  {
-    "cityCode": "441700",
-    "cityName": "阳江市",
-    "county": [{
-      "countyCode": "441781",
-      "countyName": "阳春市" },
-    {
-      "countyCode": "441702",
-      "countyName": "江城区" },
-    {
-      "countyCode": "441721",
-      "countyName": "阳西县" },
-    {
-      "countyCode": "441723",
-      "countyName": "阳东区" }] },
-
-  {
-    "cityCode": "440900",
-    "cityName": "茂名市",
-    "county": [{
-      "countyCode": "440902",
-      "countyName": "茂南区" },
-    {
-      "countyCode": "440923",
-      "countyName": "电白区" },
-    {
-      "countyCode": "440982",
-      "countyName": "化州市" },
-    {
-      "countyCode": "440903",
-      "countyName": "茂港区 " },
-    {
-      "countyCode": "440981",
-      "countyName": "高州市" },
-    {
-      "countyCode": "440983",
-      "countyName": "信宜市" }] }] },
-
-
-{
-  "provinceCode": "810000",
-  "provinceName": "香港特别行政区",
-  "city": [{
-    "cityCode": "810000-1",
-    "cityName": "香港",
-    "county": [{
-      "countyCode": "810400",
-      "countyName": "离岛" },
-    {
-      "countyCode": "810100",
-      "countyName": "香港岛" },
-    {
-      "countyCode": "810300",
-      "countyName": "新界" },
-    {
-      "countyCode": "810200",
-      "countyName": "九龙" }] }] }];exports.default = _default;
-
-/***/ }),
-
-/***/ 76:
-/*!*********************************************************************************************!*\
-  !*** ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator/index.js ***!
-  \*********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! regenerator-runtime */ 77);
-
-/***/ }),
-
-/***/ 767:
+/***/ 656:
 /*!***********************************************************!*\
   !*** D:/UAD/Jdt-zhcx/components/Order/uni-icons/icons.js ***!
   \***********************************************************/
@@ -39476,6 +29042,609 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
   "cloud-download-filled": "\uE8E9",
   "headphones": "\uE8BF",
   "shop": "\uE609" };exports.default = _default;
+
+/***/ }),
+
+/***/ 67:
+/*!***********************************************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.pathToBase64 = pathToBase64;exports.base64ToPath = base64ToPath;function getLocalFilePath(path) {
+  if (path.indexOf('_www') === 0 || path.indexOf('_doc') === 0 || path.indexOf('_documents') === 0 || path.indexOf('_downloads') === 0) {
+    return path;
+  }
+  if (path.indexOf('file://') === 0) {
+    return path;
+  }
+  if (path.indexOf('/storage/emulated/0/') === 0) {
+    return path;
+  }
+  if (path.indexOf('/') === 0) {
+    var localFilePath = plus.io.convertAbsoluteFileSystem(path);
+    if (localFilePath !== path) {
+      return localFilePath;
+    } else {
+      path = path.substr(1);
+    }
+  }
+  return '_www/' + path;
+}
+
+function pathToBase64(path) {
+  return new Promise(function (resolve, reject) {
+    if (typeof window === 'object' && 'document' in window) {
+      var canvas = document.createElement('canvas');
+      var c2x = canvas.getContext('2d');
+      var img = new Image();
+      img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        c2x.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL());
+      };
+      img.onerror = reject;
+      img.src = path;
+      return;
+    }
+    if (typeof plus === 'object') {
+      plus.io.resolveLocalFileSystemURL(getLocalFilePath(path), function (entry) {
+        entry.file(function (file) {
+          var fileReader = new plus.io.FileReader();
+          fileReader.onload = function (data) {
+            resolve(data.target.result);
+          };
+          fileReader.onerror = function (error) {
+            reject(error);
+          };
+          fileReader.readAsDataURL(file);
+        }, function (error) {
+          reject(error);
+        });
+      }, function (error) {
+        reject(error);
+      });
+      return;
+    }
+    if (typeof wx === 'object' && wx.canIUse('getFileSystemManager')) {
+      wx.getFileSystemManager().readFile({
+        filePath: path,
+        encoding: 'base64',
+        success: function success(res) {
+          resolve('data:image/png;base64,' + res.data);
+        },
+        fail: function fail(error) {
+          reject(error);
+        } });
+
+      return;
+    }
+    reject(new Error('not support'));
+  });
+}
+
+function base64ToPath(base64) {
+  return new Promise(function (resolve, reject) {
+    if (typeof window === 'object' && 'document' in window) {
+      base64 = base64.split(',');
+      var type = base64[0].match(/:(.*?);/)[1];
+      var str = atob(base64[1]);
+      var n = str.length;
+      var array = new Uint8Array(n);
+      while (n--) {
+        array[n] = str.charCodeAt(n);
+      }
+      return resolve((window.URL || window.webkitURL).createObjectURL(new Blob([array], { type: type })));
+    }
+    var extName = base64.match(/data\:\S+\/(\S+);/);
+    if (extName) {
+      extName = extName[1];
+    } else {
+      reject(new Error('base64 error'));
+    }
+    var fileName = Date.now() + '.' + extName;
+    if (typeof plus === 'object') {
+      var bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now());
+      bitmap.loadBase64Data(base64, function () {
+        var filePath = '_doc/uniapp_temp/' + fileName;
+        bitmap.save(filePath, {}, function () {
+          bitmap.clear();
+          resolve(filePath);
+        }, function (error) {
+          bitmap.clear();
+          reject(error);
+        });
+      }, function (error) {
+        bitmap.clear();
+        reject(error);
+      });
+      return;
+    }
+    if (typeof wx === 'object' && wx.canIUse('getFileSystemManager')) {
+      var filePath = wx.env.USER_DATA_PATH + '/' + fileName;
+      wx.getFileSystemManager().writeFile({
+        filePath: filePath,
+        data: base64.replace(/^data:\S+\/\S+;base64,/, ''),
+        encoding: 'base64',
+        success: function success() {
+          resolve(filePath);
+        },
+        fail: function fail(error) {
+          reject(error);
+        } });
+
+      return;
+    }
+    reject(new Error('not support'));
+  });
+}
+
+/***/ }),
+
+/***/ 7:
+/*!***************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/pages.json?{"type":"style"} ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/Home/init": {}, "pages/Home/guidePage": { "navigationStyle": "custom" }, "pages/Home/Index": { "navigationStyle": "custom" }, "pages/Home/ChooseSite": { "backgroundColor": "#007AFF", "navigationStyle": "custom" }, "pages/GRZX/user": { "navigationStyle": "custom" }, "pages/GRZX/userLogin": { "navigationStyle": "custom" }, "pages/GRZX/wxLogin": { "navigationStyle": "custom" }, "pages/GRZX/personal": {}, "pages/GRZX/address": { "navigationStyle": "custom" }, "pages/GRZX/set": { "navigationBarTitleText": "设置" }, "pages/GRZX/passengerInfo": { "enablePullDownRefresh": true, "navigationStyle": "custom" }, "pages/GRZX/addPassenger": { "navigationStyle": "custom" }, "pages/GRZX/addAddress": { "navigationBarTitleText": "添加邮寄地址", "navigationBarBackgroundColor": "#FFFFFF" }, "pages/GRZX/aboutApp": { "navigationBarTitleText": "关于App" }, "pages/GRZX/coupon": { "navigationBarTitleText": "卡券红包" }, "pages/GRZX/myNews": { "navigationBarTitleText": "我的消息" }, "pages/GRZX/infoList": { "enablePullDownRefresh": true, "navigationStyle": "custom" }, "pages/GRZX/complaint": { "navigationBarTitleText": "我要投诉" }, "pages/GRZX/collection": { "navigationBarTitleText": "我的收藏" }, "pages/GRZX/history": { "navigationBarTitleText": "我的历史" }, "pages/GRZX/notice": { "navigationBarTitleText": "通知" }, "pages/GRZX/detailTweet": { "navigationBarTitleText": "推送详情" }, "pages/GRZX/feedback": { "navigationBarTitleText": "意见反馈" }, "pages/order/OrderList": { "enablePullDownRefresh": true, "navigationBarTitleText": "", "navigationBarBackgroundColor": "#f5f5f5" }, "pages/order/OrderDetail": { "navigationStyle": "custom" }, "pages/order/SpecialLineDetail": { "navigationStyle": "custom" }, "pages/Home/InformationDetails": { "navigationBarTitleText": "资讯详情" }, "pages/Home/MapIndex": { "navigationBarTitleText": "搜索地址" }, "pages/Home/MapSearch": {}, "pages/Home/serve": { "navigationBarTitleText": "服务" }, "pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome": {}, "pages_CTKY/pages/CTKY/SpecialBus/Home/specialLinePicker": {}, "pages_CTKY/pages/CTKY/SpecialBus/Home/specialReserve": {}, "pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex": { "navigationBarTitleText": "客运" }, "pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick": { "navigationBarTitleText": "选择站点" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets": { "navigationBarTitleText": "班次列表" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/scheduleDetails": { "backgroundColor": "#F1F1F1", "navigationBarBackgroundColor": "#FC4646", "navigationBarTextStyle": "white", "navigationBarTitleText": "班次详情" }, "pages_CTKY/pages/CTKY/TraditionSpecial/seatSelection": { "backgroundColor": "#F1F1F1", "navigationBarBackgroundColor": "#FC4646", "navigationBarTextStyle": "white", "navigationBarTitleText": "选择座位" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/oederList": { "navigationBarTitleText": "订单列表" }, "pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail": { "navigationBarTitleText": "订单详情" }, "pages_CTKY/pages/CTKY/TraditionSpecial/issueView": { "navigationBarTitleText": "订单评价" }, "pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/traditionCarMark": { "navigationBarTitleText": "传统地图标识" }, "pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/specialMark": { "navigationBarTitleText": "定制标识" }, "pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation": { "navigationBarTitleText": "查看班车位置" }, "pages_CTKY/pages/CTKY/TraditionSpecial/PayMent/orderPayment": {}, "pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/selectStation": { "navigationBarTitleText": "上下车点选择", "navigationBarBackgroundColor": "#FE6C66" }, "pages_CTKY/pages/CTKY/TraditionSpecial/PayMent/CTKYPaySuccess": {}, "pages_CTKY/pages/CTKY/TraditionSpecial/PayMent/CTKYPayFail": {}, "pages_CZC/pages/CZC/Index": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/CallAndDrive": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PrivateTaxi": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/WaitTakeOrder": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PriceDetail": { "navigationBarTitleText": "费用明细" }, "pages_CZC/pages/CZC/PaymentSuccess": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PaymentFail": {}, "pages_CZC/pages/CZC/PrivateTaxiPayment": { "navigationStyle": "custom" }, "pages_CZC/pages/CZC/PrivatePaySuccess": { "navigationStyle": "custom" }, "pages_GJCX/pages/GJCX/busH5": {}, "pages_BCFW/pages/BCFW/bf_chartered": {}, "pages_BCFW/pages/BCFW/bf_choice": {}, "pages_BCFW/pages/BCFW/bf_information": { "navigationBarTitleText": "用车信息" }, "pages_BCFW/pages/BCFW/bf_choiceVehicleType": { "navigationBarTitleText": "选择车型" }, "pages_BCFW/pages/BCFW/charterMap": { "navigationStyle": "custom" }, "pages_BCFW/pages/BCFW/bf_charterMap": { "navigationStyle": "custom" }, "pages_BCFW/pages/BCFW/BCsuccessfulPayment": {}, "pages_BCFW/pages/BCFW/charteredBusPayment": {}, "pages_LYFW/pages/LYFW/currency/imglist": { "navigationBarTitleText": "全部图片" }, "pages_LYFW/pages/LYFW/currency/imgPreview": { "navigationBarTitleText": "查看图片" }, "pages_LYFW/pages/LYFW/currency/travelDetails": {}, "pages_LYFW/pages/LYFW/currency/ho_zhly": { "navigationBarTitleText": "旅游服务" }, "pages_LYFW/pages/LYFW/groupTour/groupTourList": { "navigationBarTitleText": "跟团游列表" }, "pages_LYFW/pages/LYFW/groupTour/viewMore": {}, "pages_LYFW/pages/LYFW/independentTravel/it_list": {}, "pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList": { "navigationBarTitleText": "景区列表", "enablePullDownRefresh": true, "navigationBarBackgroundColor": "#FFFFFF", "onReachBottomDistance": 0 }, "pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails": { "navigationBarTitleText": "景区详情" }, "pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment": { "navigationBarTitleText": "选择支付 " }, "pages_LYFW/pages/LYFW/scenicSpotTickets/successfulPayment": { "navigationBarTitleText": "购票成功" }, "pages_LYFW/pages/LYFW/scenicSpotTickets/orderAdd": { "navigationBarTitleText": "填写订单" }, "pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails": { "navigationBarTitleText": "订单详情" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+
+/***/ }),
+
+/***/ 706:
+/*!*********************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/components/CZC/uni-icons/icons.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  "pulldown": "\uE588",
+  "refreshempty": "\uE461",
+  "back": "\uE471",
+  "forward": "\uE470",
+  "more": "\uE507",
+  "more-filled": "\uE537",
+  "scan": "\uE612",
+  "qq": "\uE264",
+  "weibo": "\uE260",
+  "weixin": "\uE261",
+  "pengyouquan": "\uE262",
+  "loop": "\uE565",
+  "refresh": "\uE407",
+  "refresh-filled": "\uE437",
+  "arrowthindown": "\uE585",
+  "arrowthinleft": "\uE586",
+  "arrowthinright": "\uE587",
+  "arrowthinup": "\uE584",
+  "undo-filled": "\uE7D6",
+  "undo": "\uE406",
+  "redo": "\uE405",
+  "redo-filled": "\uE7D9",
+  "bars": "\uE563",
+  "chatboxes": "\uE203",
+  "camera": "\uE301",
+  "chatboxes-filled": "\uE233",
+  "camera-filled": "\uE7EF",
+  "cart-filled": "\uE7F4",
+  "cart": "\uE7F5",
+  "checkbox-filled": "\uE442",
+  "checkbox": "\uE7FA",
+  "arrowleft": "\uE582",
+  "arrowdown": "\uE581",
+  "arrowright": "\uE583",
+  "smallcircle-filled": "\uE801",
+  "arrowup": "\uE580",
+  "circle": "\uE411",
+  "eye-filled": "\uE568",
+  "eye-slash-filled": "\uE822",
+  "eye-slash": "\uE823",
+  "eye": "\uE824",
+  "flag-filled": "\uE825",
+  "flag": "\uE508",
+  "gear-filled": "\uE532",
+  "reload": "\uE462",
+  "gear": "\uE502",
+  "hand-thumbsdown-filled": "\uE83B",
+  "hand-thumbsdown": "\uE83C",
+  "hand-thumbsup-filled": "\uE83D",
+  "heart-filled": "\uE83E",
+  "hand-thumbsup": "\uE83F",
+  "heart": "\uE840",
+  "home": "\uE500",
+  "info": "\uE504",
+  "home-filled": "\uE530",
+  "info-filled": "\uE534",
+  "circle-filled": "\uE441",
+  "chat-filled": "\uE847",
+  "chat": "\uE263",
+  "mail-open-filled": "\uE84D",
+  "email-filled": "\uE231",
+  "mail-open": "\uE84E",
+  "email": "\uE201",
+  "checkmarkempty": "\uE472",
+  "list": "\uE562",
+  "locked-filled": "\uE856",
+  "locked": "\uE506",
+  "map-filled": "\uE85C",
+  "map-pin": "\uE85E",
+  "map-pin-ellipse": "\uE864",
+  "map": "\uE364",
+  "minus-filled": "\uE440",
+  "mic-filled": "\uE332",
+  "minus": "\uE410",
+  "micoff": "\uE360",
+  "mic": "\uE302",
+  "clear": "\uE434",
+  "smallcircle": "\uE868",
+  "close": "\uE404",
+  "closeempty": "\uE460",
+  "paperclip": "\uE567",
+  "paperplane": "\uE503",
+  "paperplane-filled": "\uE86E",
+  "person-filled": "\uE131",
+  "contact-filled": "\uE130",
+  "person": "\uE101",
+  "contact": "\uE100",
+  "images-filled": "\uE87A",
+  "phone": "\uE200",
+  "images": "\uE87B",
+  "image": "\uE363",
+  "image-filled": "\uE877",
+  "location-filled": "\uE333",
+  "location": "\uE303",
+  "plus-filled": "\uE439",
+  "plus": "\uE409",
+  "plusempty": "\uE468",
+  "help-filled": "\uE535",
+  "help": "\uE505",
+  "navigate-filled": "\uE884",
+  "navigate": "\uE501",
+  "mic-slash-filled": "\uE892",
+  "search": "\uE466",
+  "settings": "\uE560",
+  "sound": "\uE590",
+  "sound-filled": "\uE8A1",
+  "spinner-cycle": "\uE465",
+  "download-filled": "\uE8A4",
+  "personadd-filled": "\uE132",
+  "videocam-filled": "\uE8AF",
+  "personadd": "\uE102",
+  "upload": "\uE402",
+  "upload-filled": "\uE8B1",
+  "starhalf": "\uE463",
+  "star-filled": "\uE438",
+  "star": "\uE408",
+  "trash": "\uE401",
+  "phone-filled": "\uE230",
+  "compose": "\uE400",
+  "videocam": "\uE300",
+  "trash-filled": "\uE8DC",
+  "download": "\uE403",
+  "chatbubble-filled": "\uE232",
+  "chatbubble": "\uE202",
+  "cloud-download": "\uE8E4",
+  "cloud-upload-filled": "\uE8E5",
+  "cloud-upload": "\uE8E6",
+  "cloud-download-filled": "\uE8E9",
+  "headphones": "\uE8BF",
+  "shop": "\uE609" };exports.default = _default;
+
+/***/ }),
+
+/***/ 714:
+/*!************************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/components/HOME/uni-location/city.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; /**
+                                                                                                      * Created by dianwoda on 2019/3/28.
+                                                                                                      * // A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+                                                                                                         // { cityName: '', pinYin: '', py: '', code: '', airName: ''},
+                                                                                                      */var _default =
+{
+  hotCity: [
+  { cityName: '北京', pinYin: 'beijing', py: 'bj', code: 'PEK' },
+  { cityName: '上海', pinYin: 'shanghai', py: 'sh', code: 'SHA' },
+  { cityName: '天津', pinYin: 'tianjin', py: 'tj', code: 'TSN' },
+  { cityName: '青岛', pinYin: 'qingdao', py: 'qd', code: 'TAO' },
+  { cityName: '南京', pinYin: 'nanjing', py: 'nj', code: 'NKG' },
+  { cityName: '杭州', pinYin: 'hangzhou', py: 'hz', code: 'HGH' },
+  { cityName: '厦门', pinYin: 'xiamen', py: 'xm', code: 'XMN' },
+  { cityName: '成都', pinYin: 'chengdu', py: 'cd', code: 'CTU' },
+  { cityName: '深圳', pinYin: 'shenzhen', py: 'sz', code: 'SZX' },
+  { cityName: '广州', pinYin: 'guangzhou', py: 'gz', code: 'CAN' },
+  { cityName: '沈阳', pinYin: 'shenyang', py: 'sy', code: 'SHE' },
+  { cityName: '武汉', pinYin: 'wuhan', py: 'wh', code: 'WUH' }],
+
+  cities: [{
+    "cityName": "厦门市",
+    "pinyin": "xiamenshi",
+    "py": "xms",
+    "code": "XMS" },
+  {
+    "cityName": "龙岩市",
+    "pinyin": "longyanshi",
+    "py": "lys",
+    "code": "LYS" },
+  {
+    "cityName": "南平市",
+    "pinyin": "nanpingshi",
+    "py": "np",
+    "code": "NPS" },
+  {
+    "cityName": "宁德市",
+    "pinyin": "ningdeshi",
+    "py": "nds",
+    "code": "NDS" },
+  {
+    "cityName": "莆田市",
+    "pinyin": "putianshi",
+    "py": "pts",
+    "code": "PTS" },
+  {
+    "cityName": "泉州市",
+    "pinyin": "quanzhoushi",
+    "py": "qzs",
+    "code": "QZS" },
+  {
+    "cityName": "三明市",
+    "pinyin": "sanmingshi",
+    "py": "sms",
+    "code": "SMS" },
+  {
+    "cityName": "福州市",
+    "pinyin": "fuzhoushi",
+    "py": "fzs",
+    "code": "FZS" },
+  {
+    "cityName": "漳州市",
+    "pinyin": "zhangzhoushi",
+    "py": "zss",
+    "code": "ZSS" }] };exports.default = _default;
+
+/***/ }),
+
+/***/ 715:
+/*!********************************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/components/HOME/uni-location/amap/amap-wx.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function AMapWX(a) {this.key = a.key, this.requestConfig = { key: a.key, s: "rsx", platform: "WXJS", appname: a.key, sdkversion: "1.2.0", logversion: "2.0" };}AMapWX.prototype.getWxLocation = function (a, b) {wx.getLocation({ type: "gcj02", success: function success(a) {var c = a.longitude + "," + a.latitude;wx.setStorage({ key: "userLocation", data: c }), b(c);}, fail: function fail(c) {wx.getStorage({ key: "userLocation", success: function success(a) {a.data && b(a.data);} }), a.fail({ errCode: "0", errMsg: c.errMsg || "" });} });}, AMapWX.prototype.getRegeo = function (a) {function c(c) {var d = b.requestConfig;wx.request({ url: "https://restapi.amap.com/v3/geocode/regeo", data: { key: b.key, location: c, extensions: "all", s: d.s, platform: d.platform, appname: b.key, sdkversion: d.sdkversion, logversion: d.logversion }, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {var d, e, f, g, h, i, j, k, l;b.data.status && "1" == b.data.status ? (d = b.data.regeocode, e = d.addressComponent, f = [], g = "", d && d.roads[0] && d.roads[0].name && (g = d.roads[0].name + "附近"), h = c.split(",")[0], i = c.split(",")[1], d.pois && d.pois[0] && (g = d.pois[0].name + "附近", j = d.pois[0].location, j && (h = parseFloat(j.split(",")[0]), i = parseFloat(j.split(",")[1]))), e.provice && f.push(e.provice), e.city && f.push(e.city), e.district && f.push(e.district), e.streetNumber && e.streetNumber.street && e.streetNumber.number ? (f.push(e.streetNumber.street), f.push(e.streetNumber.number)) : (k = "", d && d.roads[0] && d.roads[0].name && (k = d.roads[0].name), f.push(k)), f = f.join(""), l = [{ iconPath: a.iconPath, width: a.iconWidth, height: a.iconHeight, name: f, desc: g, longitude: h, latitude: i, id: 0, regeocodeData: d }], a.success(l)) : a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}var b = this;a.location ? c(a.location) : b.getWxLocation(a, function (a) {c(a);});}, AMapWX.prototype.getWeather = function (a) {function d(d) {var e = "base";a.type && "forecast" == a.type && (e = "all"), wx.request({ url: "https://restapi.amap.com/v3/weather/weatherInfo", data: { key: b.key, city: d, extensions: e, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion }, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {function c(a) {var b = { city: { text: "城市", data: a.city }, weather: { text: "天气", data: a.weather }, temperature: { text: "温度", data: a.temperature }, winddirection: { text: "风向", data: a.winddirection + "风" }, windpower: { text: "风力", data: a.windpower + "级" }, humidity: { text: "湿度", data: a.humidity + "%" } };return b;}var d, e;b.data.status && "1" == b.data.status ? b.data.lives ? (d = b.data.lives, d && d.length > 0 && (d = d[0], e = c(d), e["liveData"] = d, a.success(e))) : b.data.forecasts && b.data.forecasts[0] && a.success({ forecast: b.data.forecasts[0] }) : a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}function e(e) {wx.request({ url: "https://restapi.amap.com/v3/geocode/regeo", data: { key: b.key, location: e, extensions: "all", s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion }, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {var c, e;b.data.status && "1" == b.data.status ? (e = b.data.regeocode, e.addressComponent ? c = e.addressComponent.adcode : e.aois && e.aois.length > 0 && (c = e.aois[0].adcode), d(c)) : a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}var b = this,c = b.requestConfig;a.city ? d(a.city) : b.getWxLocation(a, function (a) {e(a);});}, AMapWX.prototype.getPoiAround = function (a) {function d(d) {var e = { key: b.key, location: d, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.querytypes && (e["types"] = a.querytypes), a.querykeywords && (e["keywords"] = a.querykeywords), wx.request({ url: "https://restapi.amap.com/v3/place/around", data: e, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {var c, d, e, f;if (b.data.status && "1" == b.data.status) {if (b = b.data, b && b.pois) {for (c = [], d = 0; d < b.pois.length; d++) {e = 0 == d ? a.iconPathSelected : a.iconPath, c.push({ latitude: parseFloat(b.pois[d].location.split(",")[1]), longitude: parseFloat(b.pois[d].location.split(",")[0]), iconPath: e, width: 22, height: 32, id: d, name: b.pois[d].name, address: b.pois[d].address });}f = { markers: c, poisData: b.pois }, a.success(f);}} else a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}var b = this,c = b.requestConfig;a.location ? d(a.location) : b.getWxLocation(a, function (a) {d(a);});}, AMapWX.prototype.getStaticmap = function (a) {function f(b) {c.push("location=" + b), a.zoom && c.push("zoom=" + a.zoom), a.size && c.push("size=" + a.size), a.scale && c.push("scale=" + a.scale), a.markers && c.push("markers=" + a.markers), a.labels && c.push("labels=" + a.labels), a.paths && c.push("paths=" + a.paths), a.traffic && c.push("traffic=" + a.traffic);var e = d + c.join("&");a.success({ url: e });}var e,b = this,c = [],d = "https://restapi.amap.com/v3/staticmap?";c.push("key=" + b.key), e = b.requestConfig, c.push("s=" + e.s), c.push("platform=" + e.platform), c.push("appname=" + e.appname), c.push("sdkversion=" + e.sdkversion), c.push("logversion=" + e.logversion), a.location ? f(a.location) : b.getWxLocation(a, function (a) {f(a);});}, AMapWX.prototype.getInputtips = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.location && (d["location"] = a.location), a.keywords && (d["keywords"] = a.keywords), a.type && (d["type"] = a.type), a.city && (d["city"] = a.city), a.citylimit && (d["citylimit"] = a.citylimit), wx.request({ url: "https://restapi.amap.com/v3/assistant/inputtips", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.tips && a.success({ tips: b.data.tips });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getDrivingRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), a.strategy && (d["strategy"] = a.strategy), a.waypoints && (d["waypoints"] = a.waypoints), a.avoidpolygons && (d["avoidpolygons"] = a.avoidpolygons), a.avoidroad && (d["avoidroad"] = a.avoidroad), wx.request({ url: "https://restapi.amap.com/v3/direction/driving", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.route && a.success({ paths: b.data.route.paths, taxi_cost: b.data.route.taxi_cost || "" });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getWalkingRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), wx.request({ url: "https://restapi.amap.com/v3/direction/walking", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.route && a.success({ paths: b.data.route.paths });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getTransitRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), a.strategy && (d["strategy"] = a.strategy), a.city && (d["city"] = a.city), a.cityd && (d["cityd"] = a.cityd), wx.request({ url: "https://restapi.amap.com/v3/direction/transit/integrated", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {if (b && b.data && b.data.route) {var c = b.data.route;a.success({ distance: c.distance || "", taxi_cost: c.taxi_cost || "", transits: c.transits });}}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getRidingRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), wx.request({ url: "https://restapi.amap.com/v4/direction/bicycling", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.data && a.success({ paths: b.data.data.paths });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, module.exports.AMapWX = AMapWX;
+
+/***/ }),
+
+/***/ 744:
+/*!*********************************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/components/Order/StarJudge/uni-icons/icons.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  'contact': "\uE100",
+  'person': "\uE101",
+  'personadd': "\uE102",
+  'contact-filled': "\uE130",
+  'person-filled': "\uE131",
+  'personadd-filled': "\uE132",
+  'phone': "\uE200",
+  'email': "\uE201",
+  'chatbubble': "\uE202",
+  'chatboxes': "\uE203",
+  'phone-filled': "\uE230",
+  'email-filled': "\uE231",
+  'chatbubble-filled': "\uE232",
+  'chatboxes-filled': "\uE233",
+  'weibo': "\uE260",
+  'weixin': "\uE261",
+  'pengyouquan': "\uE262",
+  'chat': "\uE263",
+  'qq': "\uE264",
+  'videocam': "\uE300",
+  'camera': "\uE301",
+  'mic': "\uE302",
+  'location': "\uE303",
+  'mic-filled': "\uE332",
+  'speech': "\uE332",
+  'location-filled': "\uE333",
+  'micoff': "\uE360",
+  'image': "\uE363",
+  'map': "\uE364",
+  'compose': "\uE400",
+  'trash': "\uE401",
+  'upload': "\uE402",
+  'download': "\uE403",
+  'close': "\uE404",
+  'redo': "\uE405",
+  'undo': "\uE406",
+  'refresh': "\uE407",
+  'star': "\uE408",
+  'plus': "\uE409",
+  'minus': "\uE410",
+  'circle': "\uE411",
+  'checkbox': "\uE411",
+  'close-filled': "\uE434",
+  'clear': "\uE434",
+  'refresh-filled': "\uE437",
+  'star-filled': "\uE438",
+  'plus-filled': "\uE439",
+  'minus-filled': "\uE440",
+  'circle-filled': "\uE441",
+  'checkbox-filled': "\uE442",
+  'closeempty': "\uE460",
+  'refreshempty': "\uE461",
+  'reload': "\uE462",
+  'starhalf': "\uE463",
+  'spinner': "\uE464",
+  'spinner-cycle': "\uE465",
+  'search': "\uE466",
+  'plusempty': "\uE468",
+  'forward': "\uE470",
+  'back': "\uE471",
+  'left-nav': "\uE471",
+  'checkmarkempty': "\uE472",
+  'home': "\uE500",
+  'navigate': "\uE501",
+  'gear': "\uE502",
+  'paperplane': "\uE503",
+  'info': "\uE504",
+  'help': "\uE505",
+  'locked': "\uE506",
+  'more': "\uE507",
+  'flag': "\uE508",
+  'home-filled': "\uE530",
+  'gear-filled': "\uE532",
+  'info-filled': "\uE534",
+  'help-filled': "\uE535",
+  'more-filled': "\uE537",
+  'settings': "\uE560",
+  'list': "\uE562",
+  'bars': "\uE563",
+  'loop': "\uE565",
+  'paperclip': "\uE567",
+  'eye': "\uE568",
+  'arrowup': "\uE580",
+  'arrowdown': "\uE581",
+  'arrowleft': "\uE582",
+  'arrowright': "\uE583",
+  'arrowthinup': "\uE584",
+  'arrowthindown': "\uE585",
+  'arrowthinleft': "\uE586",
+  'arrowthinright': "\uE587",
+  'pulldown': "\uE588",
+  'closefill': "\uE589",
+  'sound': "\uE590",
+  'scan': "\uE612" };exports.default = _default;
+
+/***/ }),
+
+/***/ 759:
+/*!********************************************************************!*\
+  !*** D:/UAD/Jdt-zhcx/components/CTKY/StarJudge/uni-icons/icons.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  'contact': "\uE100",
+  'person': "\uE101",
+  'personadd': "\uE102",
+  'contact-filled': "\uE130",
+  'person-filled': "\uE131",
+  'personadd-filled': "\uE132",
+  'phone': "\uE200",
+  'email': "\uE201",
+  'chatbubble': "\uE202",
+  'chatboxes': "\uE203",
+  'phone-filled': "\uE230",
+  'email-filled': "\uE231",
+  'chatbubble-filled': "\uE232",
+  'chatboxes-filled': "\uE233",
+  'weibo': "\uE260",
+  'weixin': "\uE261",
+  'pengyouquan': "\uE262",
+  'chat': "\uE263",
+  'qq': "\uE264",
+  'videocam': "\uE300",
+  'camera': "\uE301",
+  'mic': "\uE302",
+  'location': "\uE303",
+  'mic-filled': "\uE332",
+  'speech': "\uE332",
+  'location-filled': "\uE333",
+  'micoff': "\uE360",
+  'image': "\uE363",
+  'map': "\uE364",
+  'compose': "\uE400",
+  'trash': "\uE401",
+  'upload': "\uE402",
+  'download': "\uE403",
+  'close': "\uE404",
+  'redo': "\uE405",
+  'undo': "\uE406",
+  'refresh': "\uE407",
+  'star': "\uE408",
+  'plus': "\uE409",
+  'minus': "\uE410",
+  'circle': "\uE411",
+  'checkbox': "\uE411",
+  'close-filled': "\uE434",
+  'clear': "\uE434",
+  'refresh-filled': "\uE437",
+  'star-filled': "\uE438",
+  'plus-filled': "\uE439",
+  'minus-filled': "\uE440",
+  'circle-filled': "\uE441",
+  'checkbox-filled': "\uE442",
+  'closeempty': "\uE460",
+  'refreshempty': "\uE461",
+  'reload': "\uE462",
+  'starhalf': "\uE463",
+  'spinner': "\uE464",
+  'spinner-cycle': "\uE465",
+  'search': "\uE466",
+  'plusempty': "\uE468",
+  'forward': "\uE470",
+  'back': "\uE471",
+  'left-nav': "\uE471",
+  'checkmarkempty': "\uE472",
+  'home': "\uE500",
+  'navigate': "\uE501",
+  'gear': "\uE502",
+  'paperplane': "\uE503",
+  'info': "\uE504",
+  'help': "\uE505",
+  'locked': "\uE506",
+  'more': "\uE507",
+  'flag': "\uE508",
+  'home-filled': "\uE530",
+  'gear-filled': "\uE532",
+  'info-filled': "\uE534",
+  'help-filled': "\uE535",
+  'more-filled': "\uE537",
+  'settings': "\uE560",
+  'list': "\uE562",
+  'bars': "\uE563",
+  'loop': "\uE565",
+  'paperclip': "\uE567",
+  'eye': "\uE568",
+  'arrowup': "\uE580",
+  'arrowdown': "\uE581",
+  'arrowleft': "\uE582",
+  'arrowright': "\uE583",
+  'arrowthinup': "\uE584",
+  'arrowthindown': "\uE585",
+  'arrowthinleft': "\uE586",
+  'arrowthinright': "\uE587",
+  'pulldown': "\uE588",
+  'closefill': "\uE589",
+  'sound': "\uE590",
+  'scan': "\uE612" };exports.default = _default;
+
+/***/ }),
+
+/***/ 76:
+/*!*********************************************************************************************!*\
+  !*** ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator/index.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! regenerator-runtime */ 77);
 
 /***/ }),
 
@@ -40372,589 +30541,6 @@ module.exports = {
 
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "appid": "__UNI__7BBF03F" };exports.default = _default;
-
-/***/ }),
-
-/***/ 817:
-/*!*********************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/CZC/uni-icons/icons.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  "pulldown": "\uE588",
-  "refreshempty": "\uE461",
-  "back": "\uE471",
-  "forward": "\uE470",
-  "more": "\uE507",
-  "more-filled": "\uE537",
-  "scan": "\uE612",
-  "qq": "\uE264",
-  "weibo": "\uE260",
-  "weixin": "\uE261",
-  "pengyouquan": "\uE262",
-  "loop": "\uE565",
-  "refresh": "\uE407",
-  "refresh-filled": "\uE437",
-  "arrowthindown": "\uE585",
-  "arrowthinleft": "\uE586",
-  "arrowthinright": "\uE587",
-  "arrowthinup": "\uE584",
-  "undo-filled": "\uE7D6",
-  "undo": "\uE406",
-  "redo": "\uE405",
-  "redo-filled": "\uE7D9",
-  "bars": "\uE563",
-  "chatboxes": "\uE203",
-  "camera": "\uE301",
-  "chatboxes-filled": "\uE233",
-  "camera-filled": "\uE7EF",
-  "cart-filled": "\uE7F4",
-  "cart": "\uE7F5",
-  "checkbox-filled": "\uE442",
-  "checkbox": "\uE7FA",
-  "arrowleft": "\uE582",
-  "arrowdown": "\uE581",
-  "arrowright": "\uE583",
-  "smallcircle-filled": "\uE801",
-  "arrowup": "\uE580",
-  "circle": "\uE411",
-  "eye-filled": "\uE568",
-  "eye-slash-filled": "\uE822",
-  "eye-slash": "\uE823",
-  "eye": "\uE824",
-  "flag-filled": "\uE825",
-  "flag": "\uE508",
-  "gear-filled": "\uE532",
-  "reload": "\uE462",
-  "gear": "\uE502",
-  "hand-thumbsdown-filled": "\uE83B",
-  "hand-thumbsdown": "\uE83C",
-  "hand-thumbsup-filled": "\uE83D",
-  "heart-filled": "\uE83E",
-  "hand-thumbsup": "\uE83F",
-  "heart": "\uE840",
-  "home": "\uE500",
-  "info": "\uE504",
-  "home-filled": "\uE530",
-  "info-filled": "\uE534",
-  "circle-filled": "\uE441",
-  "chat-filled": "\uE847",
-  "chat": "\uE263",
-  "mail-open-filled": "\uE84D",
-  "email-filled": "\uE231",
-  "mail-open": "\uE84E",
-  "email": "\uE201",
-  "checkmarkempty": "\uE472",
-  "list": "\uE562",
-  "locked-filled": "\uE856",
-  "locked": "\uE506",
-  "map-filled": "\uE85C",
-  "map-pin": "\uE85E",
-  "map-pin-ellipse": "\uE864",
-  "map": "\uE364",
-  "minus-filled": "\uE440",
-  "mic-filled": "\uE332",
-  "minus": "\uE410",
-  "micoff": "\uE360",
-  "mic": "\uE302",
-  "clear": "\uE434",
-  "smallcircle": "\uE868",
-  "close": "\uE404",
-  "closeempty": "\uE460",
-  "paperclip": "\uE567",
-  "paperplane": "\uE503",
-  "paperplane-filled": "\uE86E",
-  "person-filled": "\uE131",
-  "contact-filled": "\uE130",
-  "person": "\uE101",
-  "contact": "\uE100",
-  "images-filled": "\uE87A",
-  "phone": "\uE200",
-  "images": "\uE87B",
-  "image": "\uE363",
-  "image-filled": "\uE877",
-  "location-filled": "\uE333",
-  "location": "\uE303",
-  "plus-filled": "\uE439",
-  "plus": "\uE409",
-  "plusempty": "\uE468",
-  "help-filled": "\uE535",
-  "help": "\uE505",
-  "navigate-filled": "\uE884",
-  "navigate": "\uE501",
-  "mic-slash-filled": "\uE892",
-  "search": "\uE466",
-  "settings": "\uE560",
-  "sound": "\uE590",
-  "sound-filled": "\uE8A1",
-  "spinner-cycle": "\uE465",
-  "download-filled": "\uE8A4",
-  "personadd-filled": "\uE132",
-  "videocam-filled": "\uE8AF",
-  "personadd": "\uE102",
-  "upload": "\uE402",
-  "upload-filled": "\uE8B1",
-  "starhalf": "\uE463",
-  "star-filled": "\uE438",
-  "star": "\uE408",
-  "trash": "\uE401",
-  "phone-filled": "\uE230",
-  "compose": "\uE400",
-  "videocam": "\uE300",
-  "trash-filled": "\uE8DC",
-  "download": "\uE403",
-  "chatbubble-filled": "\uE232",
-  "chatbubble": "\uE202",
-  "cloud-download": "\uE8E4",
-  "cloud-upload-filled": "\uE8E5",
-  "cloud-upload": "\uE8E6",
-  "cloud-download-filled": "\uE8E9",
-  "headphones": "\uE8BF",
-  "shop": "\uE609" };exports.default = _default;
-
-/***/ }),
-
-/***/ 825:
-/*!************************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/HOME/uni-location/city.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; /**
-                                                                                                      * Created by dianwoda on 2019/3/28.
-                                                                                                      * // A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-                                                                                                         // { cityName: '', pinYin: '', py: '', code: '', airName: ''},
-                                                                                                      */var _default =
-{
-  hotCity: [
-  { cityName: '北京', pinYin: 'beijing', py: 'bj', code: 'PEK' },
-  { cityName: '上海', pinYin: 'shanghai', py: 'sh', code: 'SHA' },
-  { cityName: '天津', pinYin: 'tianjin', py: 'tj', code: 'TSN' },
-  { cityName: '青岛', pinYin: 'qingdao', py: 'qd', code: 'TAO' },
-  { cityName: '南京', pinYin: 'nanjing', py: 'nj', code: 'NKG' },
-  { cityName: '杭州', pinYin: 'hangzhou', py: 'hz', code: 'HGH' },
-  { cityName: '厦门', pinYin: 'xiamen', py: 'xm', code: 'XMN' },
-  { cityName: '成都', pinYin: 'chengdu', py: 'cd', code: 'CTU' },
-  { cityName: '深圳', pinYin: 'shenzhen', py: 'sz', code: 'SZX' },
-  { cityName: '广州', pinYin: 'guangzhou', py: 'gz', code: 'CAN' },
-  { cityName: '沈阳', pinYin: 'shenyang', py: 'sy', code: 'SHE' },
-  { cityName: '武汉', pinYin: 'wuhan', py: 'wh', code: 'WUH' }],
-
-  cities: [{
-    "cityName": "厦门市",
-    "pinyin": "xiamenshi",
-    "py": "xms",
-    "code": "XMS" },
-  {
-    "cityName": "龙岩市",
-    "pinyin": "longyanshi",
-    "py": "lys",
-    "code": "LYS" },
-  {
-    "cityName": "南平市",
-    "pinyin": "nanpingshi",
-    "py": "np",
-    "code": "NPS" },
-  {
-    "cityName": "宁德市",
-    "pinyin": "ningdeshi",
-    "py": "nds",
-    "code": "NDS" },
-  {
-    "cityName": "莆田市",
-    "pinyin": "putianshi",
-    "py": "pts",
-    "code": "PTS" },
-  {
-    "cityName": "泉州市",
-    "pinyin": "quanzhoushi",
-    "py": "qzs",
-    "code": "QZS" },
-  {
-    "cityName": "三明市",
-    "pinyin": "sanmingshi",
-    "py": "sms",
-    "code": "SMS" },
-  {
-    "cityName": "福州市",
-    "pinyin": "fuzhoushi",
-    "py": "fzs",
-    "code": "FZS" },
-  {
-    "cityName": "漳州市",
-    "pinyin": "zhangzhoushi",
-    "py": "zss",
-    "code": "ZSS" }] };exports.default = _default;
-
-/***/ }),
-
-/***/ 826:
-/*!********************************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/HOME/uni-location/amap/amap-wx.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function AMapWX(a) {this.key = a.key, this.requestConfig = { key: a.key, s: "rsx", platform: "WXJS", appname: a.key, sdkversion: "1.2.0", logversion: "2.0" };}AMapWX.prototype.getWxLocation = function (a, b) {wx.getLocation({ type: "gcj02", success: function success(a) {var c = a.longitude + "," + a.latitude;wx.setStorage({ key: "userLocation", data: c }), b(c);}, fail: function fail(c) {wx.getStorage({ key: "userLocation", success: function success(a) {a.data && b(a.data);} }), a.fail({ errCode: "0", errMsg: c.errMsg || "" });} });}, AMapWX.prototype.getRegeo = function (a) {function c(c) {var d = b.requestConfig;wx.request({ url: "https://restapi.amap.com/v3/geocode/regeo", data: { key: b.key, location: c, extensions: "all", s: d.s, platform: d.platform, appname: b.key, sdkversion: d.sdkversion, logversion: d.logversion }, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {var d, e, f, g, h, i, j, k, l;b.data.status && "1" == b.data.status ? (d = b.data.regeocode, e = d.addressComponent, f = [], g = "", d && d.roads[0] && d.roads[0].name && (g = d.roads[0].name + "附近"), h = c.split(",")[0], i = c.split(",")[1], d.pois && d.pois[0] && (g = d.pois[0].name + "附近", j = d.pois[0].location, j && (h = parseFloat(j.split(",")[0]), i = parseFloat(j.split(",")[1]))), e.provice && f.push(e.provice), e.city && f.push(e.city), e.district && f.push(e.district), e.streetNumber && e.streetNumber.street && e.streetNumber.number ? (f.push(e.streetNumber.street), f.push(e.streetNumber.number)) : (k = "", d && d.roads[0] && d.roads[0].name && (k = d.roads[0].name), f.push(k)), f = f.join(""), l = [{ iconPath: a.iconPath, width: a.iconWidth, height: a.iconHeight, name: f, desc: g, longitude: h, latitude: i, id: 0, regeocodeData: d }], a.success(l)) : a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}var b = this;a.location ? c(a.location) : b.getWxLocation(a, function (a) {c(a);});}, AMapWX.prototype.getWeather = function (a) {function d(d) {var e = "base";a.type && "forecast" == a.type && (e = "all"), wx.request({ url: "https://restapi.amap.com/v3/weather/weatherInfo", data: { key: b.key, city: d, extensions: e, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion }, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {function c(a) {var b = { city: { text: "城市", data: a.city }, weather: { text: "天气", data: a.weather }, temperature: { text: "温度", data: a.temperature }, winddirection: { text: "风向", data: a.winddirection + "风" }, windpower: { text: "风力", data: a.windpower + "级" }, humidity: { text: "湿度", data: a.humidity + "%" } };return b;}var d, e;b.data.status && "1" == b.data.status ? b.data.lives ? (d = b.data.lives, d && d.length > 0 && (d = d[0], e = c(d), e["liveData"] = d, a.success(e))) : b.data.forecasts && b.data.forecasts[0] && a.success({ forecast: b.data.forecasts[0] }) : a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}function e(e) {wx.request({ url: "https://restapi.amap.com/v3/geocode/regeo", data: { key: b.key, location: e, extensions: "all", s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion }, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {var c, e;b.data.status && "1" == b.data.status ? (e = b.data.regeocode, e.addressComponent ? c = e.addressComponent.adcode : e.aois && e.aois.length > 0 && (c = e.aois[0].adcode), d(c)) : a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}var b = this,c = b.requestConfig;a.city ? d(a.city) : b.getWxLocation(a, function (a) {e(a);});}, AMapWX.prototype.getPoiAround = function (a) {function d(d) {var e = { key: b.key, location: d, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.querytypes && (e["types"] = a.querytypes), a.querykeywords && (e["keywords"] = a.querykeywords), wx.request({ url: "https://restapi.amap.com/v3/place/around", data: e, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {var c, d, e, f;if (b.data.status && "1" == b.data.status) {if (b = b.data, b && b.pois) {for (c = [], d = 0; d < b.pois.length; d++) {e = 0 == d ? a.iconPathSelected : a.iconPath, c.push({ latitude: parseFloat(b.pois[d].location.split(",")[1]), longitude: parseFloat(b.pois[d].location.split(",")[0]), iconPath: e, width: 22, height: 32, id: d, name: b.pois[d].name, address: b.pois[d].address });}f = { markers: c, poisData: b.pois }, a.success(f);}} else a.fail({ errCode: b.data.infocode, errMsg: b.data.info });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}var b = this,c = b.requestConfig;a.location ? d(a.location) : b.getWxLocation(a, function (a) {d(a);});}, AMapWX.prototype.getStaticmap = function (a) {function f(b) {c.push("location=" + b), a.zoom && c.push("zoom=" + a.zoom), a.size && c.push("size=" + a.size), a.scale && c.push("scale=" + a.scale), a.markers && c.push("markers=" + a.markers), a.labels && c.push("labels=" + a.labels), a.paths && c.push("paths=" + a.paths), a.traffic && c.push("traffic=" + a.traffic);var e = d + c.join("&");a.success({ url: e });}var e,b = this,c = [],d = "https://restapi.amap.com/v3/staticmap?";c.push("key=" + b.key), e = b.requestConfig, c.push("s=" + e.s), c.push("platform=" + e.platform), c.push("appname=" + e.appname), c.push("sdkversion=" + e.sdkversion), c.push("logversion=" + e.logversion), a.location ? f(a.location) : b.getWxLocation(a, function (a) {f(a);});}, AMapWX.prototype.getInputtips = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.location && (d["location"] = a.location), a.keywords && (d["keywords"] = a.keywords), a.type && (d["type"] = a.type), a.city && (d["city"] = a.city), a.citylimit && (d["citylimit"] = a.citylimit), wx.request({ url: "https://restapi.amap.com/v3/assistant/inputtips", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.tips && a.success({ tips: b.data.tips });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getDrivingRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), a.strategy && (d["strategy"] = a.strategy), a.waypoints && (d["waypoints"] = a.waypoints), a.avoidpolygons && (d["avoidpolygons"] = a.avoidpolygons), a.avoidroad && (d["avoidroad"] = a.avoidroad), wx.request({ url: "https://restapi.amap.com/v3/direction/driving", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.route && a.success({ paths: b.data.route.paths, taxi_cost: b.data.route.taxi_cost || "" });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getWalkingRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), wx.request({ url: "https://restapi.amap.com/v3/direction/walking", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.route && a.success({ paths: b.data.route.paths });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getTransitRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), a.strategy && (d["strategy"] = a.strategy), a.city && (d["city"] = a.city), a.cityd && (d["cityd"] = a.cityd), wx.request({ url: "https://restapi.amap.com/v3/direction/transit/integrated", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {if (b && b.data && b.data.route) {var c = b.data.route;a.success({ distance: c.distance || "", taxi_cost: c.taxi_cost || "", transits: c.transits });}}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, AMapWX.prototype.getRidingRoute = function (a) {var b = this,c = b.requestConfig,d = { key: b.key, s: c.s, platform: c.platform, appname: b.key, sdkversion: c.sdkversion, logversion: c.logversion };a.origin && (d["origin"] = a.origin), a.destination && (d["destination"] = a.destination), wx.request({ url: "https://restapi.amap.com/v4/direction/bicycling", data: d, method: "GET", header: { "content-type": "application/json" }, success: function success(b) {b && b.data && b.data.data && a.success({ paths: b.data.data.paths });}, fail: function fail(b) {a.fail({ errCode: "0", errMsg: b.errMsg || "" });} });}, module.exports.AMapWX = AMapWX;
-
-/***/ }),
-
-/***/ 848:
-/*!**********************************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/LYFW/ouristRoute/uni-icons/icons.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  "pulldown": "\uE588",
-  "refreshempty": "\uE461",
-  "back": "\uE471",
-  "forward": "\uE470",
-  "more": "\uE507",
-  "more-filled": "\uE537",
-  "scan": "\uE612",
-  "qq": "\uE264",
-  "weibo": "\uE260",
-  "weixin": "\uE261",
-  "pengyouquan": "\uE262",
-  "loop": "\uE565",
-  "refresh": "\uE407",
-  "refresh-filled": "\uE437",
-  "arrowthindown": "\uE585",
-  "arrowthinleft": "\uE586",
-  "arrowthinright": "\uE587",
-  "arrowthinup": "\uE584",
-  "undo-filled": "\uE7D6",
-  "undo": "\uE406",
-  "redo": "\uE405",
-  "redo-filled": "\uE7D9",
-  "bars": "\uE563",
-  "chatboxes": "\uE203",
-  "camera": "\uE301",
-  "chatboxes-filled": "\uE233",
-  "camera-filled": "\uE7EF",
-  "cart-filled": "\uE7F4",
-  "cart": "\uE7F5",
-  "checkbox-filled": "\uE442",
-  "checkbox": "\uE7FA",
-  "arrowleft": "\uE582",
-  "arrowdown": "\uE581",
-  "arrowright": "\uE583",
-  "smallcircle-filled": "\uE801",
-  "arrowup": "\uE580",
-  "circle": "\uE411",
-  "eye-filled": "\uE568",
-  "eye-slash-filled": "\uE822",
-  "eye-slash": "\uE823",
-  "eye": "\uE824",
-  "flag-filled": "\uE825",
-  "flag": "\uE508",
-  "gear-filled": "\uE532",
-  "reload": "\uE462",
-  "gear": "\uE502",
-  "hand-thumbsdown-filled": "\uE83B",
-  "hand-thumbsdown": "\uE83C",
-  "hand-thumbsup-filled": "\uE83D",
-  "heart-filled": "\uE83E",
-  "hand-thumbsup": "\uE83F",
-  "heart": "\uE840",
-  "home": "\uE500",
-  "info": "\uE504",
-  "home-filled": "\uE530",
-  "info-filled": "\uE534",
-  "circle-filled": "\uE441",
-  "chat-filled": "\uE847",
-  "chat": "\uE263",
-  "mail-open-filled": "\uE84D",
-  "email-filled": "\uE231",
-  "mail-open": "\uE84E",
-  "email": "\uE201",
-  "checkmarkempty": "\uE472",
-  "list": "\uE562",
-  "locked-filled": "\uE856",
-  "locked": "\uE506",
-  "map-filled": "\uE85C",
-  "map-pin": "\uE85E",
-  "map-pin-ellipse": "\uE864",
-  "map": "\uE364",
-  "minus-filled": "\uE440",
-  "mic-filled": "\uE332",
-  "minus": "\uE410",
-  "micoff": "\uE360",
-  "mic": "\uE302",
-  "clear": "\uE434",
-  "smallcircle": "\uE868",
-  "close": "\uE404",
-  "closeempty": "\uE460",
-  "paperclip": "\uE567",
-  "paperplane": "\uE503",
-  "paperplane-filled": "\uE86E",
-  "person-filled": "\uE131",
-  "contact-filled": "\uE130",
-  "person": "\uE101",
-  "contact": "\uE100",
-  "images-filled": "\uE87A",
-  "phone": "\uE200",
-  "images": "\uE87B",
-  "image": "\uE363",
-  "image-filled": "\uE877",
-  "location-filled": "\uE333",
-  "location": "\uE303",
-  "plus-filled": "\uE439",
-  "plus": "\uE409",
-  "plusempty": "\uE468",
-  "help-filled": "\uE535",
-  "help": "\uE505",
-  "navigate-filled": "\uE884",
-  "navigate": "\uE501",
-  "mic-slash-filled": "\uE892",
-  "search": "\uE466",
-  "settings": "\uE560",
-  "sound": "\uE590",
-  "sound-filled": "\uE8A1",
-  "spinner-cycle": "\uE465",
-  "download-filled": "\uE8A4",
-  "personadd-filled": "\uE132",
-  "videocam-filled": "\uE8AF",
-  "personadd": "\uE102",
-  "upload": "\uE402",
-  "upload-filled": "\uE8B1",
-  "starhalf": "\uE463",
-  "star-filled": "\uE438",
-  "star": "\uE408",
-  "trash": "\uE401",
-  "phone-filled": "\uE230",
-  "compose": "\uE400",
-  "videocam": "\uE300",
-  "trash-filled": "\uE8DC",
-  "download": "\uE403",
-  "chatbubble-filled": "\uE232",
-  "chatbubble": "\uE202",
-  "cloud-download": "\uE8E4",
-  "cloud-upload-filled": "\uE8E5",
-  "cloud-upload": "\uE8E6",
-  "cloud-download-filled": "\uE8E9",
-  "headphones": "\uE8BF",
-  "shop": "\uE609" };exports.default = _default;
-
-/***/ }),
-
-/***/ 863:
-/*!*********************************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/Order/StarJudge/uni-icons/icons.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  'contact': "\uE100",
-  'person': "\uE101",
-  'personadd': "\uE102",
-  'contact-filled': "\uE130",
-  'person-filled': "\uE131",
-  'personadd-filled': "\uE132",
-  'phone': "\uE200",
-  'email': "\uE201",
-  'chatbubble': "\uE202",
-  'chatboxes': "\uE203",
-  'phone-filled': "\uE230",
-  'email-filled': "\uE231",
-  'chatbubble-filled': "\uE232",
-  'chatboxes-filled': "\uE233",
-  'weibo': "\uE260",
-  'weixin': "\uE261",
-  'pengyouquan': "\uE262",
-  'chat': "\uE263",
-  'qq': "\uE264",
-  'videocam': "\uE300",
-  'camera': "\uE301",
-  'mic': "\uE302",
-  'location': "\uE303",
-  'mic-filled': "\uE332",
-  'speech': "\uE332",
-  'location-filled': "\uE333",
-  'micoff': "\uE360",
-  'image': "\uE363",
-  'map': "\uE364",
-  'compose': "\uE400",
-  'trash': "\uE401",
-  'upload': "\uE402",
-  'download': "\uE403",
-  'close': "\uE404",
-  'redo': "\uE405",
-  'undo': "\uE406",
-  'refresh': "\uE407",
-  'star': "\uE408",
-  'plus': "\uE409",
-  'minus': "\uE410",
-  'circle': "\uE411",
-  'checkbox': "\uE411",
-  'close-filled': "\uE434",
-  'clear': "\uE434",
-  'refresh-filled': "\uE437",
-  'star-filled': "\uE438",
-  'plus-filled': "\uE439",
-  'minus-filled': "\uE440",
-  'circle-filled': "\uE441",
-  'checkbox-filled': "\uE442",
-  'closeempty': "\uE460",
-  'refreshempty': "\uE461",
-  'reload': "\uE462",
-  'starhalf': "\uE463",
-  'spinner': "\uE464",
-  'spinner-cycle': "\uE465",
-  'search': "\uE466",
-  'plusempty': "\uE468",
-  'forward': "\uE470",
-  'back': "\uE471",
-  'left-nav': "\uE471",
-  'checkmarkempty': "\uE472",
-  'home': "\uE500",
-  'navigate': "\uE501",
-  'gear': "\uE502",
-  'paperplane': "\uE503",
-  'info': "\uE504",
-  'help': "\uE505",
-  'locked': "\uE506",
-  'more': "\uE507",
-  'flag': "\uE508",
-  'home-filled': "\uE530",
-  'gear-filled': "\uE532",
-  'info-filled': "\uE534",
-  'help-filled': "\uE535",
-  'more-filled': "\uE537",
-  'settings': "\uE560",
-  'list': "\uE562",
-  'bars': "\uE563",
-  'loop': "\uE565",
-  'paperclip': "\uE567",
-  'eye': "\uE568",
-  'arrowup': "\uE580",
-  'arrowdown': "\uE581",
-  'arrowleft': "\uE582",
-  'arrowright': "\uE583",
-  'arrowthinup': "\uE584",
-  'arrowthindown': "\uE585",
-  'arrowthinleft': "\uE586",
-  'arrowthinright': "\uE587",
-  'pulldown': "\uE588",
-  'closefill': "\uE589",
-  'sound': "\uE590",
-  'scan': "\uE612" };exports.default = _default;
-
-/***/ }),
-
-/***/ 878:
-/*!********************************************************************!*\
-  !*** D:/UAD/Jdt-zhcx/components/CTKY/StarJudge/uni-icons/icons.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  'contact': "\uE100",
-  'person': "\uE101",
-  'personadd': "\uE102",
-  'contact-filled': "\uE130",
-  'person-filled': "\uE131",
-  'personadd-filled': "\uE132",
-  'phone': "\uE200",
-  'email': "\uE201",
-  'chatbubble': "\uE202",
-  'chatboxes': "\uE203",
-  'phone-filled': "\uE230",
-  'email-filled': "\uE231",
-  'chatbubble-filled': "\uE232",
-  'chatboxes-filled': "\uE233",
-  'weibo': "\uE260",
-  'weixin': "\uE261",
-  'pengyouquan': "\uE262",
-  'chat': "\uE263",
-  'qq': "\uE264",
-  'videocam': "\uE300",
-  'camera': "\uE301",
-  'mic': "\uE302",
-  'location': "\uE303",
-  'mic-filled': "\uE332",
-  'speech': "\uE332",
-  'location-filled': "\uE333",
-  'micoff': "\uE360",
-  'image': "\uE363",
-  'map': "\uE364",
-  'compose': "\uE400",
-  'trash': "\uE401",
-  'upload': "\uE402",
-  'download': "\uE403",
-  'close': "\uE404",
-  'redo': "\uE405",
-  'undo': "\uE406",
-  'refresh': "\uE407",
-  'star': "\uE408",
-  'plus': "\uE409",
-  'minus': "\uE410",
-  'circle': "\uE411",
-  'checkbox': "\uE411",
-  'close-filled': "\uE434",
-  'clear': "\uE434",
-  'refresh-filled': "\uE437",
-  'star-filled': "\uE438",
-  'plus-filled': "\uE439",
-  'minus-filled': "\uE440",
-  'circle-filled': "\uE441",
-  'checkbox-filled': "\uE442",
-  'closeempty': "\uE460",
-  'refreshempty': "\uE461",
-  'reload': "\uE462",
-  'starhalf': "\uE463",
-  'spinner': "\uE464",
-  'spinner-cycle': "\uE465",
-  'search': "\uE466",
-  'plusempty': "\uE468",
-  'forward': "\uE470",
-  'back': "\uE471",
-  'left-nav': "\uE471",
-  'checkmarkempty': "\uE472",
-  'home': "\uE500",
-  'navigate': "\uE501",
-  'gear': "\uE502",
-  'paperplane': "\uE503",
-  'info': "\uE504",
-  'help': "\uE505",
-  'locked': "\uE506",
-  'more': "\uE507",
-  'flag': "\uE508",
-  'home-filled': "\uE530",
-  'gear-filled': "\uE532",
-  'info-filled': "\uE534",
-  'help-filled': "\uE535",
-  'more-filled': "\uE537",
-  'settings': "\uE560",
-  'list': "\uE562",
-  'bars': "\uE563",
-  'loop': "\uE565",
-  'paperclip': "\uE567",
-  'eye': "\uE568",
-  'arrowup': "\uE580",
-  'arrowdown': "\uE581",
-  'arrowleft': "\uE582",
-  'arrowright': "\uE583",
-  'arrowthinup': "\uE584",
-  'arrowthindown': "\uE585",
-  'arrowthinleft': "\uE586",
-  'arrowthinright': "\uE587",
-  'pulldown': "\uE588",
-  'closefill': "\uE589",
-  'sound': "\uE590",
-  'scan': "\uE612" };exports.default = _default;
 
 /***/ })
 

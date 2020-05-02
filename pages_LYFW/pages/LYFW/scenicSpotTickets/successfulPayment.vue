@@ -33,12 +33,12 @@
 				if(e==0){ 
 					this.godetailIndex=1;
 					uni.switchTab({
-						url: '../../order/OrderList'	
+						url: '../../../../order/OrderList'	
 					});
 				}else if(e==1){
 					this.godetailIndex=2;
 					uni.switchTab({
-						url: '../../Home/Index'
+						url: '../../../../Home/Index'
 					});
 				}
 			},
@@ -46,7 +46,7 @@
 				setTimeout(() => {
 					if(this.godetailIndex == ''){
 						uni.switchTab({
-							url: '../../Home/Index'
+							url: '../../../../Home/Index'
 						});
 					}
 				}, 10000)

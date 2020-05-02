@@ -372,7 +372,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+JSON.stringify(e)
+					url: './ticketsDetails?ticketId='+JSON.stringify(e)
 				})
 			},
 

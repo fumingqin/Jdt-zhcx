@@ -1,7 +1,4 @@
 {
   "navigationBarTitleText": "添加邮寄地址",
-  "navigationBarBackgroundColor": "#FFFFFF",
-  "usingComponents": {
-    "picker-address": "/components/GRZX/wangding-pickerAddress/wangding-pickerAddress"
-  }
+  "navigationBarBackgroundColor": "#FFFFFF"
 }

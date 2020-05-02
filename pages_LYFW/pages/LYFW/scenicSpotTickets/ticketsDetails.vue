@@ -124,7 +124,8 @@
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.piclist);
 				uni.navigateTo({
-					url: '/pages/LYFW/currency/imglist'
+					url: '../currency/imgPreview',
+					
 				})
 			},
 			//路由整合
@@ -134,7 +135,7 @@
 					data:e,
 					success() {
 						uni.navigateTo({
-							url: '/pages/LYFW/scenicSpotTickets/orderAdd'
+							url: 'orderAdd'
 						})
 					}
 				})
