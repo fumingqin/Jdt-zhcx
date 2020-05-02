@@ -122,7 +122,7 @@
 								uni.setStorageSync('userInfo',res1.data.data)
 								// ------------1.头像-------------
 								var base64=res1.data.data.portrait;
-								//theself.port=res1.data.data.portrait;
+								theself.port=res1.data.data.portrait;
 								if(theself.isBase64(base64)){
 									base64ToPath(base64)
 									  .then(path => {
@@ -285,27 +285,25 @@
 						console.log(res,"286")
 					}
 				})
-				if(this.port!=null||this.port!=""){
-					uni.request({
-						url:this.$GrzxInter.Interface.changeInfoPortrait.value,
-						data:{
-							portrait:this.port,
-							userId:this.userId,
-							gender:this.gender,
-							openId_qq:this.openId_qq,
-							openId_wx:this.openId_wx,
-							address:this.address,
-							nickname:this.nickname,
-							birthday:this.birthday,
-							autograph:this.autograph,
-							phoneNumber:this.phoneNumber,
-						},
-						method:this.$GrzxInter.Interface.changeInfoPortrait.method,
-						success(res1) {
-							console.log(res1,"290")
-						}
-					})
-				}
+				uni.request({
+					url:this.$GrzxInter.Interface.changeInfoPortrait.value,
+					data:{
+						portrait:this.port,
+						userId:this.userId,
+						gender:this.gender,
+						openId_qq:this.openId_qq,
+						openId_wx:this.openId_wx,
+						address:this.address,
+						nickname:this.nickname,
+						birthday:this.birthday,
+						autograph:this.autograph,
+						phoneNumber:this.phoneNumber,
+					},
+					method:this.$GrzxInter.Interface.changeInfoPortrait.method,
+					success(res1) {
+						console.log(res1,"290")
+					}
+				})
 				var list={
 						portrait:this.portrait,
 						userId:this.userId,
