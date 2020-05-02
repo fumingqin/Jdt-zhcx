@@ -11,7 +11,7 @@
 			<text class="Dx_title">{{orderInfo.orderType}}</text>
 			<text class="Dx_text" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' " >预订成功，旅途愉快！</text>
 			<image class="Dx_image" src="../../../static/LYFW/scenicSpotTickets/orderDetails/gantan.png" @click="open"></image>
-			<text class="Dx_price" @click="open" >{{orderInfo.ticketAdultPrice}}</text>
+			<text class="Dx_price" @click="open" >{{orderInfo.orderActualPayment}}</text>
 			<text class="Dx_priceIcon" @click="open">¥</text>
 			<text class="Dx_remarks">订单编号：{{orderInfo.orderNumber}}</text>
 			</view>
@@ -54,7 +54,7 @@
 					
 					
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{orderInfo.ticketAdultPrice}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo.orderActualPayment}}</text>
 					</view>
 				</view>
 			</view>
