@@ -1458,7 +1458,7 @@
 			keYunDetail: function(res) {
 				console.log(res)
 				uni.navigateTo({
-					url: '../CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
+					url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
 				})
 			},
 			// -------------------------客运退票-------------------------
