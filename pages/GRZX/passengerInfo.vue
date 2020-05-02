@@ -249,8 +249,13 @@
 	}
 	.returnClass{ //返回按钮
 		width: 22upx;
-		height: 40upx;
+		/* #ifdef H5 */
+		margin-top: 30upx;
+		/* #endif */
+		/* #ifndef H5 */
 		margin-top: 103upx;
+		/* #endif */
+		height: 40upx;
 		margin-left: 3.47%;
 	}
 	.btnRight{ //进入编辑的箭头
@@ -264,13 +269,18 @@
 		margin-left: 20upx;
 		font-size: 38upx;
 		/*font-weight: bold; */
+		/* #ifdef H5 */
+		margin-top: 20upx;
+		/* #endif */
+		/* #ifndef H5 */
 		margin-top: 95upx;
+		/* #endif */
 	}
 	.passengerList{ //列表样式
 		width: 100%;
 		/* #ifdef H5 */
 		margin-top: 110upx;
-		margin-bottom: 90upx;
+		margin-bottom: 30upx;
 		/* #endif */
 		/* #ifndef H5 */
 		margin-top: 180upx;

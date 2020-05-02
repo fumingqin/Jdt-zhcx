@@ -468,7 +468,7 @@
 		/* #endif */
 		/* #ifdef H5 */
 		margin-top: 115upx;
-		margin-bottom: 90upx;
+		margin-bottom: 30upx;
 		/* #endif */
 	}
 	.boxClass{
