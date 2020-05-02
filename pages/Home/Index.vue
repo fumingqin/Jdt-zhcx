@@ -17,7 +17,7 @@
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
 			</view> -->
 			<view class="tabBlock">
-				<view class="tabItem" @click="godetail('/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
+				<view class="tabItem" @click="godetail('/pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
@@ -25,15 +25,15 @@
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/GJCX/busH5')">
+				<view class="tabItem" @click="godetail('/pages_GJCX/pages/GJCX/busH5')">
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<view class="tabItem-font"><text >公交查询</text></view>
 				</view>
-				<view class="tabItem" @click="godetail3('/pages/BCFW/bf_chartered')">
+				<view class="tabItem" @click="godetail3('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
-				<view class="tabItem" @click="godetail2('/pages/Home/ho_zhly')">
+				<view class="tabItem" @click="godetail2('/pages_CTKY/pages/LYFW/currency/ho_zhly')">
 					<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
 					<view class="tabItem-font"><text >旅游服务</text></view>
 				</view>

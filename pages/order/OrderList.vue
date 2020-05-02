@@ -2079,19 +2079,19 @@
 			//-------------------------景区门票-详情跳转-------------------------
 			details(e) {
 				uni.navigateTo({
-					url: '../LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e
+					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
 				})
 			},
 			//-------------------------景区门票-去支付跳转-------------------------
 			topay(e) {
 				uni.navigateTo({
-					url: '../LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
+					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
 				})
 			},
 			//-------------------------景区门票-再次购买-------------------------
 			repurchase(e) {
 				uni.navigateTo({
-					url: '../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
+					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
 				})
 			},
 			//-------------------------景区门票-退票-------------------------

@@ -7,7 +7,7 @@
 		<view class="sv_view2">
 			<view class="sv_title">出行</view>
 			<view style="display: flex; flex-wrap: wrap;">
-				<view class="sv_view3" @click="natTo('/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
+				<view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
 					<image class="sv_print" src="../../static/Home/serve/cpdinggou.png" mode="aspectFit"></image>
 					<text class="sv_text">车票订购</text>
 				</view>
@@ -17,12 +17,12 @@
 					<text class="sv_text">网络约车</text>
 				</view>
 
-				<view class="sv_view3" @click="natTo('/pages/GJCX/busH5')">
+				<view class="sv_view3" @click="natTo('/pages_GJCX/pages/GJCX/busH5')">
 					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" mode="aspectFit"></image>
 					<text class="sv_text">公交查询</text>
 				</view>
 
-				<view class="sv_view3" @click="natTo2('/pages/BCFW/bf_chartered')">
+				<view class="sv_view3" @click="natTo2('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
 					<text class="sv_text">包车服务</text>
 				</view>
@@ -37,15 +37,15 @@
 		<view class="sv_view2">
 			<view class="sv_title">旅游</view>
 			<view style="display: flex; flex-wrap: wrap;">
-			<view class="sv_view3" @click="natTo2('/pages/LYFW/independentTravel/it_list')">
+			<view class="sv_view3" @click="natTo2('/pages_LYFW/pages/LYFW/independentTravel/it_list')">
 				<image class="sv_print" src="../../static/Home/serve/ziyouxing.png" mode="aspectFit"></image>
 				<text class="sv_text">自由行</text>
 			</view>
-			<view class="sv_view3" @click="natTo2('/pages/LYFW/groupTour/groupTourList')">
+			<view class="sv_view3" @click="natTo2('/pages_LYFW/pages/LYFW/groupTour/groupTourList')">
 				<image class="sv_print" src="../../static/Home/serve/gentuanyou.png" mode="aspectFit"></image>
 				<text class="sv_text">跟团游</text>
 			</view>
-			<view class="sv_view3" @click="natTo3('/pages/LYFW/scenicSpotTickets/ticketsList')">
+			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
 				<image class="sv_print" src="../../static/Home/serve/jqgoupiao.png" mode="aspectFit"></image>
 				<text class="sv_text">景区购票</text>
 			</view>
