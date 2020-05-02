@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "订单评价",
-  "usingComponents": {
-    "uni-rate": "/components/CTKY/StarJudge/uni-rate/uni-rate"
-  }
-}
