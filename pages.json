@@ -83,22 +83,6 @@
 			}
 		},
 		{
-			"path": "pages/GRZX/personal",
-			"style": {}
-		},
-		{
-			"path": "pages/GRZX/address",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/GRZX/set",
-			"style": {
-				"navigationBarTitleText": "设置"
-			}
-		},
-		{
 			"path": "pages/GRZX/passengerInfo",
 			"style": {
 				"enablePullDownRefresh": true,
@@ -116,65 +100,6 @@
 			}
 		},
 		{
-			"path": "pages/GRZX/addAddress", //添加邮寄地址
-			"style": {
-				"navigationBarTitleText": "添加邮寄地址",
-				"navigationBarBackgroundColor": "#FFFFFF"
-			}
-		},
-		{
-			"path": "pages/GRZX/aboutApp", //关于App
-			"style": {
-				"navigationBarTitleText": "关于App"
-			}
-		},
-		{
-			"path": "pages/GRZX/coupon", //卡券红包
-			"style": {
-				"navigationBarTitleText": "卡券红包"
-			}
-		},
-		{
-			"path": "pages/GRZX/myNews", //我的消息
-			"style": {
-				"navigationBarTitleText": "我的消息"
-			}
-		},
-		{
-			"path": "pages/GRZX/infoList", //常用信息设置
-			"style": {
-				"enablePullDownRefresh": true,
-				"navigationStyle": "custom"
-				// "navigationBarTitleText": "常用信息设置"
-				// "buttons": [{
-				// 		"fontSrc": "/static/GRZX/jdticon.ttf",
-				// 		"text": "\ue60f",
-				// 		"fontSize": "24",
-				// 		"color": "#303133",
-				// 		"width": "46px",
-				// 		"background": "rgba(0,0,0,0)",
-				// 		"float": "left"
-				// 	}]
-			}
-		},
-		{
-			"path": "pages/GRZX/complaint",
-			"style": {
-				"navigationBarTitleText": "我要投诉"
-			}
-		},
-		{
-			"path": "pages/GRZX/collection",
-			"style": {
-				"navigationBarTitleText": "我的收藏"
-			}
-		}, {
-			"path": "pages/GRZX/history",
-			"style": {
-				"navigationBarTitleText": "我的历史"
-			}
-		},
-		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
 				// #ifdef H5
@@ -183,19 +108,6 @@
 				"navigationBarTitleText": "通知"
 			}
 		},
-		{
-			"path": "pages/GRZX/detailTweet", //推文详情
-			"style": {
-				"navigationBarTitleText": "推送详情"
-			}
-		},
-		{
-			"path": "pages/GRZX/feedback",
-			"style": {
-				"navigationBarTitleText": "意见反馈"
-			}
-		},
-		
 		//----------------------------订单列表----------------------------
 		{
 			"path": "pages/order/OrderList",
@@ -651,6 +563,100 @@
 								"type": "transparent"
 							}
 						}
+					}
+				}
+			]
+		},
+	//---------------------------------------------第六个包：个人中心------------------------------------------
+		{
+			"root": "pages_GRZX/pages/",
+			"pages": [
+
+				{
+					"path": "GRZX/personal",
+					"style": {}
+				},
+				{
+					"path": "GRZX/address",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "GRZX/set",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "GRZX/addAddress", //添加邮寄地址
+					"style": {
+						"navigationBarTitleText": "添加邮寄地址",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
+				},
+				{
+					"path": "GRZX/aboutApp", //关于App
+					"style": {
+						"navigationBarTitleText": "关于App"
+					}
+				},
+				{
+					"path": "GRZX/coupon", //卡券红包
+					"style": {
+						"navigationBarTitleText": "卡券红包"
+					}
+				},
+				{
+					"path": "GRZX/myNews", //我的消息
+					"style": {
+						"navigationBarTitleText": "我的消息"
+					}
+				},
+				{
+					"path": "GRZX/infoList", //常用信息设置
+					"style": {
+						"enablePullDownRefresh": true,
+						"navigationStyle": "custom"
+						// "navigationBarTitleText": "常用信息设置"
+						// "buttons": [{
+						// 		"fontSrc": "/static/GRZX/jdticon.ttf",
+						// 		"text": "\ue60f",
+						// 		"fontSize": "24",
+						// 		"color": "#303133",
+						// 		"width": "46px",
+						// 		"background": "rgba(0,0,0,0)",
+						// 		"float": "left"
+						// 	}]
+					}
+				},
+				{
+					"path": "GRZX/complaint",
+					"style": {
+						"navigationBarTitleText": "我要投诉"
+					}
+				},
+				{
+					"path": "GRZX/collection",
+					"style": {
+						"navigationBarTitleText": "我的收藏"
+					}
+				}, {
+					"path": "GRZX/history",
+					"style": {
+						"navigationBarTitleText": "我的历史"
+					}
+				},
+				{
+					"path": "GRZX/detailTweet", //推文详情
+					"style": {
+						"navigationBarTitleText": "推送详情"
+					}
+				},
+				{
+					"path": "GRZX/feedback",
+					"style": {
+						"navigationBarTitleText": "意见反馈"
 					}
 				}
 			]
