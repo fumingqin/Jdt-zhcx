@@ -79,8 +79,8 @@
 		onLoad(param) {
 			//班次列表数据参数，从上一个页面传过来的时间，上下车点
 			this.date = param.date;
-			console.log(this.date)
-			console.log(param.date)
+			// console.log(this.date)
+			// console.log(param.date)
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			
@@ -162,7 +162,7 @@
 					//原始的Date对象
 					// console.log('date => ' + e.date);
 					this.date = e.value;
-					
+					// console.log(e.value)
 					//从日历选择时间后刷新列表数据
 					this.getTicketInfo(e.value);
 					var IsExist = false;
@@ -275,9 +275,11 @@
 			},
 			//-------------------------------初始化时间轴-------------------------------
 			loadDate() {
-				var date = new Date(this.date);
+				var subStr= new RegExp('-','ig');
+				var result= this.date.replace(subStr,"/");
+				
+				var date = new Date(result);
 				// var mydate = this.date;
-				console.log(date);
 				this.selectIndex = 0;
 				for (var i = 0; i < 7; i++) {
 					var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000);
