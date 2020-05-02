@@ -9,8 +9,8 @@
 			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
 			 -->
 			<view class="userInfoClass" @click="checkLogin">
-				<image class="portraitClass" :src=" userInfo.portrait || '/static/GRZX/missing-face.png'"></image>
-				<text class="usernameClass">{{userInfo.nickname || '游客'}}</text>
+				<image class="portraitClass" :src="portrait || '/static/GRZX/missing-face.png'"></image>
+				<text class="usernameClass">{{nickname || '游客'}}</text>
 				<!-- <image src="../../static/GRZX/edit.png" class="editClass"></image> -->
 			</view>
 			
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import listCell from '@/components/GRZX/mix-list-cell';
 	import {  
 	    mapState 
@@ -85,6 +86,8 @@
 		data(){
 			return{
 				QQ:'2482549389',
+				nickname:'',
+				portrait:'',
 			}
 		},
 		computed: {
@@ -93,18 +96,14 @@
 		onLoad(){
 		},
 		onShow(){
-			//this.loadData();
+			this.loadData();
 		},
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
+			//#ifndef H5
 			if(index === 2){
 				uni.navigateTo({
 					url:'/pages/GRZX/set'
-				})
-			}
-			if(index === 1){
-				uni.navigateTo({
-					url:'/pages/GRZX/myNews'
 				})
 			}
 			if(index === 0){
@@ -117,9 +116,49 @@
 					}
 				})
 			}
-			
+			//#endif
+			//#ifdef H5
+			if(index === 0){
+				uni.navigateTo({
+					url:'/pages/GRZX/set'
+				})
+			}
+			//#endif
+			if(index === 1){
+				uni.navigateTo({
+					url:'/pages/GRZX/myNews'
+				})
+			}
 		},
 		methods:{
+			loadData(){
+				var that=this;
+				var user=uni.getStorageSync('userInfo');
+				uni.request({
+					url:that.$GrzxInter.Interface.login.value,
+					data:{
+						phoneNumber:user.phoneNumber,
+					},
+					method:that.$GrzxInter.Interface.login.method,
+					success(res) {
+						console.log(res,'res')
+						that.nickname=res.data.data.nickname;
+						var base64=res.data.data.portrait;
+						if(that.isBase64(base64)){
+							base64ToPath(base64)
+							  .then(path => {
+							    that.portrait=path;
+							  })
+							  .catch(error => {
+							    console.error(error)
+							  })
+						}else{
+							that.portrait=base64;
+						}
+						console.log(that.portrait,"that.portrait")
+					}
+				})
+			},
 			orderClick(){
 				uni.switchTab({
 					url:'/pages/order/OrderList'
@@ -150,6 +189,7 @@
 			},
 			checkLogin(){
 				// console.log(this.hasLogin,"6666")
+				//#ifndef H5
 				if(!this.hasLogin){
 					uni.showToast({
 						title : '请先登录',
@@ -168,6 +208,25 @@
 						url :'/pages/GRZX/personal'
 					})  
 				}
+				//#endif
+				//#ifdef H5
+				var user1=uni.getStorageSync('userInfo');
+				if(user1==""||user1==null){
+					uni.showToast({
+						title:"请绑定手机号",
+						icon:'none'
+					})
+					setTimeout(function(){
+						uni.navigateTo({
+							url:'/pages/GRZX/wxLogin'
+						})
+					},1000);
+				}else{
+					uni.navigateTo({
+						url :'/pages/GRZX/personal'
+					})  
+				}
+				//#endif
 			},
 			collectionClick(){
 				// uni.navigateTo({
@@ -195,7 +254,16 @@
 			},
 			QQClick(){
 				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
-			}
+			},
+			//------------判断是否为base64格式-----------
+			isBase64:function(str) {
+			    if (str ==='' || str.trim() ===''){ return false; }
+			    try {
+			        return btoa(atob(str)) == str;
+			    } catch (err) {
+			        return false;
+			    }
+			},
 		}
 		
 	}
@@ -313,6 +381,12 @@
 		position: absolute;
 		left: 34upx;
 		top: 1upx;
+		/* #ifdef H5 */
+		top: -3upx;
+		/* #endif */
+		/* #ifndef H5 */
+		top: 1upx;
+		/* #endif */
 	}
 	.editClass{		//修改按钮
 		width: 40upx;

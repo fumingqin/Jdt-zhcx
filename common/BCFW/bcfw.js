@@ -20,14 +20,14 @@ const Interface = {
 	},
 	
 	spt_AddtouristOrder:{
-		value: Url + '/api/bc/AddtouristOrder',
+		value: Url + '/api/Chartered/AddCharteredOrder_Passenger',
 		name:'包车订单-APP提交订单',
 		method:'POST',
 		pages:["BCFW/bf_information.vue"]
 	},
 	
 	spt_RequestTicketsList:{
-		value: Url + '/api/bc/RequestTicketsList',
+		value: Url + '/api/Chartered/QueryCharteredOrderByUserID_Passenger',
 		name:'订单列表',
 		method:'POST',
 		pages:["order/OrderList.vue"]
@@ -41,14 +41,14 @@ const Interface = {
 	},
 	
 	spt_CancelTickets:{
-		value: Url + '/api/bc/CancelTickets',
+		value: Url + '/api/Chartered/CancelCharteredOrder_Passenger',
 		name:'订单-取消',
 		method:'POST',
 		pages:["BCFW/charteredBusPayment.vue","order/OrderList.vue"]
 	},
 	
 	spt_DeleteTickets:{
-		value: Url + '/api/bc/DeleteTickets',
+		value: Url + '/api/Chartered/DeleteCharteredOrder_Passenger',
 		name:'订单-删除',
 		method:'POST',
 		pages:["order/OrderList.vue"]
@@ -84,8 +84,18 @@ const Interface = {
 	
 }
 
+const InterfaceAddress = [
+	//根据起终点经纬度获取线路规划
+	//使用页面 - /CZC/CallAndDrive - 
+	'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat',
+	//获取所有车辆定位数据
+	'http://111.231.109.113:8002/api/zhcx/getAllVehiclePosition',
+	//根据经纬度获取附近一定范围的经纬度
+	'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition',
+]
 
 // 接口声明区
 export default {
 	Interface,
+	InterfaceAddress,
 }

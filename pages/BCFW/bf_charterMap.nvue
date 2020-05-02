@@ -15,6 +15,12 @@
 				<view class="ct_state" v-if="driverInformation.or_Type == 1">
 					<text class="sa_text">待发车</text>
 				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 6">
+					<text class="sa_text">已完成</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 8 ||driverInformation.or_Type == 9">
+					<text class="sa_text">已取消</text>
+				</view>
 				<view class="ct_state" v-if="driverInformation.or_Type == 5">
 					<text class="sa_text">待支付</text>
 					<text class="sa_popu" @click="open">去支付></text>
@@ -59,7 +65,7 @@
 					</view>
 				</uni-popup> -->
 				<!-- 司机信息 -->
-				<view class="ct_information">
+				<view class="ct_information" v-if="driverInformation.or_Type !== 5">
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
 						<text class="te_text">车牌号:{{driverInformation.cm_licensePlate}}</text>
@@ -72,7 +78,8 @@
 					<view class="if_text">
 						<text class="te_text">电话:{{driverInformation.or_driverTelephone}}</text>
 					</view>
-					<view class="if_button" v-if="driverInformation.or_Type == 4 || driverInformation.or_Type == 1 || driverInformation.or_Type == 5">
+					<view class="if_button" v-if="driverInformation.or_Type == 4 || driverInformation.or_Type == 1 || driverInformation.or_Type == 8 
+					 || driverInformation.or_Type == 9 || driverInformation.or_Type == 5 || driverInformation.or_Type == 6">
 						<button class="bt_remind3" type="warn">联系司机</button>
 					</view>
 				</view>
@@ -130,7 +137,7 @@
 </template>
 
 <script>
-	import taxi from '../../components/BCFW/Czc.js';
+	import $bcfw from '../../common/BCFW/bcfw.js'
 	import uniIcons from "../../components/BCFW/uni-icons/uni-icons.vue";
 	import Map from '../../components/BCFW/my-openMap/openMap.js';
 	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
@@ -160,6 +167,7 @@
 				reason: '请选择报警原因',
 				pickerValue: -1,
 				remark: '',
+				or_number:'',
 				driverInformation: {
 					or_Type: '',
 					cm_licensePlate: '',
@@ -184,8 +192,9 @@
 				choiceIndex2: 0,
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			var that = this;
+			that.or_number=JSON.parse(options.or_number);
 			that.bcfwData();
 			// that.routeInit();
 			that.setMarker(1, 118.600608, 24.889217, '../../static/CTKY/start.png');
@@ -206,7 +215,7 @@
 					method:'POST',
 					header: {'content-type': 'application/json'},
 					data:{
-						or_number:'2020050100161105783201',
+						or_number:this.or_number,
 					},
 					success:(res)=>{
 						console.log(res)
@@ -298,69 +307,6 @@
 				}
 			},
 
-			// setMarkers: function() { //设置始末标点
-			// 	var that = this;
-			// 	var startmarker = { //起点
-			// 		id: 0,
-			// 		latitude: that.startLat,
-			// 		longitude: that.startLon,
-			// 		title: '在这上车',
-			// 		zIndex: '1',
-			// 		iconPath: '../../static/CZC/Start.png',
-			// 		rotate: 0,
-			// 		width: 20,
-			// 		height: 20,
-			// 		anchor: {
-			// 			x: 0.5,
-			// 			y: 1
-			// 		},
-			// 		callout: {
-			// 			content: '在这上车',
-			// 			color: '#000000',
-			// 			fontSize: 10,
-			// 			borderRadius: 4,
-			// 			borderWidth: 1,
-			// 			borderColor: '#333300',
-			// 			bgColor: '#FFFFFF',
-			// 			padding: '5',
-			// 			display: 'ALWAYS'
-			// 		}
-			// 	};
-			// 	var endmarker = {
-			// 		id: 1,
-			// 		latitude: that.endLat,
-			// 		longitude: that.endLon,
-			// 		title: '在这下车',
-			// 		zIndex: '1',
-			// 		iconPath: '../../static/CZC/End.png',
-			// 		rotate: 0,
-			// 		width: 20,
-			// 		height: 20,
-			// 		anchor: {
-			// 			x: 0.5,
-			// 			y: 1
-			// 		},
-			// 		callout: {
-			// 			content: '在这下车',
-			// 			color: '#000000',
-			// 			fontSize: 10,
-			// 			borderRadius: 4,
-			// 			borderWidth: 1,
-			// 			borderColor: '#333300',
-			// 			bgColor: '#FFFFFF',
-			// 			padding: '5',
-			// 			display: 'ALWAYS'
-			// 		}
-			// 	};
-			// 	that.markers = [];
-			// 	that.startmarker = [];
-			// 	that.endmarker = [];
-			// 	that.markers.push(startmarker);
-			// 	that.markers.push(endmarker);
-			// 	that.showlocation = false;
-			// 	that.getDirectionDriving(that.startLonLat, that.endLonLat);
-			// },
-
 			setMarker: function(id, lon, lat, iconPath) {
 				var width = 20;
 				var height = 20;
@@ -382,7 +328,7 @@
 				//调用高德api取得路径规划并绘制线路 
 				var that = this;
 				uni.request({
-					url: taxi.InterfaceAddress[0],
+					url: $bcfw.InterfaceAddress[0],
 					data: {
 						startLonLat: startLonLat,
 						endLonLat: endLonLat,

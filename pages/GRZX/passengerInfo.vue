@@ -248,7 +248,7 @@
 		height:46upx ;
 	}
 	.returnClass{ //返回按钮
-		width: 18upx;
+		width: 22upx;
 		height: 40upx;
 		margin-top: 103upx;
 		margin-left: 3.47%;
@@ -264,12 +264,18 @@
 		margin-left: 20upx;
 		font-size: 38upx;
 		/*font-weight: bold; */
-		margin-top: 97upx;
+		margin-top: 95upx;
 	}
 	.passengerList{ //列表样式
 		width: 100%;
+		/* #ifdef H5 */
+		margin-top: 110upx;
+		margin-bottom: 90upx;
+		/* #endif */
+		/* #ifndef H5 */
 		margin-top: 180upx;
 		margin-bottom: 160upx;
+		/* #endif */
 	}
 	.btnAdd1{
 		border-radius: 12upx;
@@ -352,7 +358,12 @@
 	}
 	.returnBox{
 		width: 100%;
+		/* #ifdef H5 */
+		height: 90upx;
+		/* #endif */
+		/* #ifndef H5 */
 		height: 160upx;
+		/* #endif */
 		position: fixed;
 		top: 0upx;
 		display: flex;

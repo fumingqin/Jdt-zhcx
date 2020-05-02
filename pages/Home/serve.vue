@@ -22,7 +22,7 @@
 					<text class="sv_text">公交查询</text>
 				</view>
 
-				<view class="sv_view3" @click="natTo2('/pages/BCFW/bf_chartered')">
+				<view class="sv_view3" @click="natTo('/pages/BCFW/bf_chartered')">
 					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
 					<text class="sv_text">包车服务</text>
 				</view>

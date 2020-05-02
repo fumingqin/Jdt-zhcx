@@ -13,7 +13,7 @@
 				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
 			</view>
 		</view>
-		
+
 		<view class="cvt_content" :hidden="startingContent==0">
 			<view class="ct_departureContents1">
 				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
@@ -21,7 +21,7 @@
 			</view>
 			<view class="ct_departureContents2">
 				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
-				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{dayContentObject}}</text></view>
+				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{dayContentObject}}天</text></view>
 			</view>
 		</view>
 
@@ -122,7 +122,7 @@
 <script>
 	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
 	import $bcfw from "../../common/BCFW/bcfw.js"
-	
+
 	var name;
 	export default {
 		components: {
@@ -134,18 +134,19 @@
 			// 	format: true
 			// })
 			return {
-				startingContent:0,//0不显示,1显示
-				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
-				submissionState:false,//提交状态
-				destination:'',
-				initialPoint:'',
-				datestring:'',
-				privateSite:'',
-				dayContentObject:'',
-				car:'',
-				carNumberSeats:'',
-				carName:'',
-				carprice:'',
+				startingContent: 0, //0不显示,1显示
+				isNormal: 0, //判断是普通购票还是定制班车:1是普通0是定制
+				submissionState: false, //提交状态
+				initialPoint: '',
+				destination: '',
+				datestring: '',
+				privateSite: '',
+				dayContentObject: '',
+				car: '',
+				carNumberSeats: '',
+				carName: '',
+				carprice: '',
+				userInfo: '',
 				charteredBus: [],
 				nickName: '', //包车人姓名
 				nickId: '', //包车人证件号
@@ -157,12 +158,12 @@
 				admissionTicket: '', //门票内容
 				notice: '', //须知内容
 				selectedValue: 0, //同意须知的选中值
-				st_Longitude:'',//出发地经度
-				st_Latitude:'',//出发地纬度
-				de_Longitude:'',//目的地经度
-				de_Latitude:'',//目的地纬度
-				dl_Longitude:'',//专线经度
-				dl_Latitude:'',//专线纬度
+				st_Longitude: '', //出发地经度
+				st_Latitude: '', //出发地纬度
+				de_Longitude: '', //目的地经度
+				de_Latitude: '', //目的地纬度
+				dl_Longitude: '', //专线经度
+				dl_Latitude: '', //专线纬度
 
 				couponList: [{
 						couponID: '0',
@@ -199,7 +200,7 @@
 			this.readData();
 			this.getSt();
 		},
-		
+
 		methods: {
 			//获取模拟数据
 			async getcharteredBus() {
@@ -224,22 +225,23 @@
 			// 		}
 			// 	})
 			// }
-			readData:function(){
+			readData: function() {
 				uni.getStorage({
-					key:'homePageInfo',
-					success:(res)=>{
+					key: 'homePageInfo',
+					success: (res) => {
 						this.addressContent = res.data;
 						console.log(res)
-						if(this.isNormal == 0){
+						if (this.isNormal == 0) {
 							this.startingContent = 0;
-						}else{
+						} else {
 							this.startingContent = 1;
 						}
-						
+
 					}
-				},500)
+				}, 500)
 			},
-			getSt:function(){
+			getSt: function() {
+				var that=this;
 				uni.getStorage({
 					key: 'userInfo',
 					fail() {
@@ -256,35 +258,53 @@
 							})
 						}, 500);
 					},
-					success :() =>{
+					success: () => {
+						var a='';
 						uni.getStorage({
+							
 							key: 'homePageInfo',
-							success: (res) =>{					
-								this.privateSite=res.data.privateSite;
-								this.destination=res.data.destination;
-								this.initialPoint=res.data.initialPoint;
-								this.datestring=res.data.datestring;
-								this.dayContentObject=res.data.dayContentObject;
-								 console.log(res.data);						
+							success: (res) => {
+								that.privateSite = res.data.privateSite;
+								that.initialPoint = res.data.initialPoint;
+								that.destination = res.data.destination;
+								that.datestring = res.data.datestring;
+								that.dayContentObject = res.data.dayContentObject;
+								a =res.data.dayContentObject.slice(0,2);
+								console.log(a);
+								if(a==that.dayContentObject){
+									that.dayContentObject=that.dayContentObject.slice(0,1);
+									console.log(that.dayContentObject);
+									}else{
+										that.dayContentObject=a
+										console.log(that.dayContentObject);
+									}
+								that.st_Longitude=res.data.st_Longitude;
+								that.st_Latitude=res.data.st_Latitude;
+								that.de_Longitude=res.data.de_Longitude;
+								that.de_Latitude=res.data.de_Latitude;
+								that.dl_Longitude=res.data.dl_Longitude;
+								that.dl_Latitude=res.data.dl_Latitude;
+								console.log(res.data);
+								console.log(that.de_Longitude);
 							}
 						});
 						uni.getStorage({
 							key: 'vehicleInformation',
-							success: (res) =>{
-								this.car=res.data.car;
-								this.carNumberSeats=res.data.carNumberSeats;
-								this.carName=res.data.carName;
-								this.carprice=res.data.carprice;
-								 console.log(res.data);						
+							success: (res) => {
+								this.car = res.data.cvt_carImage;
+								this.carNumberSeats = res.data.cvt_carNumberSeats;
+								this.carName = res.data.cvt_Name;
+								this.carprice = res.data.cvt_carprice;
+								console.log(res.data);
 							}
 						});
 						uni.getStorage({
 							key: 'passengerList',
-							success: (res) =>{
-								this.nickName=res.data[0].userName;
-								this.nickId=res.data[0].userCodeNum;
-								this.nickPhone=res.data[0].userPhoneNum;
-								 console.log(res.data[0]);						
+							success: (res) => {
+								this.nickName = res.data[0].userName;
+								this.nickId = res.data[0].userCodeNum;
+								this.nickPhone = res.data[0].userPhoneNum;
+								console.log(res.data[0]);
 							}
 						})
 					}
@@ -370,7 +390,7 @@
 
 			//仿穿透事件
 			stopPrevent() {},
-			
+
 			//数量+计价
 			numberChange() {
 				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this
@@ -395,8 +415,8 @@
 			//提交按钮状态赋值
 			submitState: function() {
 				//这边还得加上是否选择人数和勾选同意的判断
-				if (this.selectedValue == 1 && this.nickName!=='') {
-					
+				if (this.selectedValue == 1 && this.nickName !== '') {
+
 					if (this.submissionState == false) {
 						this.submissionState = true;
 						this.submit();
@@ -407,7 +427,7 @@
 							duration: 2000
 						})
 					}
-			
+
 				} else if (this.nickName == '') {
 					uni.showToast({
 						title: '请添加包车人信息',
@@ -420,150 +440,178 @@
 					})
 				}
 			},
-			
+
 			//提交表单
 			submit: function() {
+				var that=this;
 				uni.showLoading({
 					title: '提交订单中...'
 				})
-			// 	uni.request({
-					// url: $bcfw.Interface.
-			// 		method: 'POST',
-			// 		success: (res) => {
-			// 			// console.log(res)
-			// 			var a = '';
-			// 			if(res.data.msg =='获取订单列表成功！'){
-			// 				a = res.data.data.filter(item => {
-			// 					return item.orderType == '待支付';
-			// 				})
-			// 			}
-			// 			if (a == '') {
-			// 				// #ifdef H5
-			// 				uni.request({
-			// 					url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
-			// 					data: {
-			// 						// userId: this.userInfo.unid,
-									// destination:destination,
-									// initialPoint:initialPoint,
-									// datestring:datestring,//定制目的地
-									// privateSite:privateSite,//专线目的地
-									// dayContentObject:dayContentObject,
-									// carNumberSeats:carNumberSeats,
-									// carName:carName,
-									// carprice:carprice,
-									// nickName: nickName, 
-									// nickId: nickId, 
-									// nickPhone: nickPhone, 
-									// couponID: this.couponColor,
-									// st_Longitude:this.st_Longitude,
-									// st_Latitude:this.st_Latitude,
-									// de_Longitude:this.de_Longitude,
-									// de_Latitude:de_Latitude,
-									// dl_Longitude:dl_Longitude,
-									// dl_Latitude:dl_Latitude,
-			// 					},
-			
-			// 					method: 'POST',
-			// 					//向服务器发送订单数据，返回订单编号
-			// 					success: (res) => {
-			// 						uni.hideLoading()
-			// 						console.log(res)
-			// 						if (res.data.msg == '无可售门票！') {
-			// 							uni.showToast({
-			// 								title: '该景区无可售门票！',
-			// 								icon: 'none',
-			// 							})
-			// 						} else if (res.data.msg == '下单失败，联系管理员！') {
-			// 							uni.showToast({
-			// 								title: '下单失败，联系管理员！',
-			// 								icon: 'none',
-			// 							})
-			// 						} else if (res.data.msg == '下单成功') {
-			// 							uni.setStorage({
-			// 								key: 'submitH5Data',
-			// 								data: res.data.data,
-			// 								success: function() {
-			// 									uni.redirectTo({
-			// 										url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
-			// 									})
-			// 								}
-			// 							})
-			
-			// 						}
-			
-			// 					}
-			// 				})
-			// 				// #endif
-			
-			// 				// #ifdef APP-PLUS
-			// 				uni.request({
-			// 					url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
-			// 					data: {
-									// unid: this.userInfo.unid,
-									// destination:destination,
-									// initialPoint:initialPoint,
-									// datestring:datestring,//定制目的地
-									// privateSite:privateSite,//专线目的地
-									// dayContentObject:dayContentObject,
-									// carNumberSeats:carNumberSeats,
-									// carName:carName,
-									// carprice:carprice,
-									// nickName: nickName, 
-									// nickId: nickId, 
-									// nickPhone: nickPhone, 
-									// couponID: this.couponColor,
-									
-			// 					},
-			
-			// 					method: 'POST',
-			// 					//向服务器发送订单数据，返回订单编号
-			// 					success: (res) => {
-			// 						uni.hideLoading()
-			// 						// console.log(res)
-			// 						if (res.data.msg == '无可售门票！') {
-			// 							uni.showToast({
-			// 								title: '该景区无可售门票！',
-			// 								icon: 'none',
-			// 							})
-			// 						} else if (res.data.msg == '下单失败，联系管理员！') {
-			// 							uni.showToast({
-			// 								title: '下单失败，联系管理员！',
-			// 								icon: 'none',
-			// 							})
-			// 						} else if (res.data.msg == '下单成功') {
-			// 							uni.redirectTo({
-			// 								url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
-			// 							})
-			// 						}
-			
-			// 					}
-			// 				})
+				uni.getStorage({
+					key: 'userInfo',
+					success: (res) => {
+						this.userInfo = res.data;
+					}
+				})
+				uni.request({
+					url: $bcfw.Interface.spt_RequestTicketsList.value,
+					method: $bcfw.Interface.spt_RequestTickets.method,
+					data: {
+						userId: this.userInfo.userId,
+					},
+					success: (res) => {
+						console.log(res)
+						var a = '';
+						if (res.data.msg == '获取订单列表成功！') {
+							a = res.data.data.filter(item => {
+								return item.orderType == '待支付';
+							})
+						}
+						console.log(a);
+						if (a == '') {
+							console.log('3');
+							// console.log(that.userInfo.userId);
+							// console.log(that.privateSite);
+							// console.log(that.datestring);
+							// console.log(that.initialPoint);
+							// console.log(that.destination);
+							// console.log(that.dayContentObject);
+							// console.log(that.carNumberSeats);
+							// console.log(that.carName);
+							// console.log(that.carprice);
+							// console.log(that.nickName);
+							// console.log(that.nickId);
+							
+							// console.log(that.nickPhone);
+							// console.log(that.couponColor);
+							// console.log(that.st_Latitude);
+							// console.log(that.st_Longitude);
+							// console.log(that.de_Longitude);
+							// console.log(that.de_Latitude);
+							// console.log(that.dl_Longitude);
+							// console.log(that.dl_Latitude);
+							// console.log(that.startingContent);
+							 
+							
+							// #ifdef H5
+							uni.request({
+								url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
+								data: {
+									// userId: this.userInfo.unid,
+									destination: that.destination,
+									or_boardingPoint: or_boardingPoint,
+									datestring: datestring, //定制目的地
+									privateSite: privateSite, //专线目的地
+									dayContentObject: this.dayContentObject,
+									carNumberSeats: this.carNumberSeats,
+									carName: this.carName,
+									carprice: this.carprice,
+									nickName: this.nickName,
+									nickId: this.nickId,
+									nickPhone: this.nickPhone,
+									couponID: this.couponColor,
+									st_Longitude: this.st_Longitude,
+									st_Latitude: this.st_Latitude,
+									de_Longitude: this.de_Longitude,
+									de_Latitude: this.de_Latitude,
+									dl_Longitude: this.dl_Longitude,
+									dl_Latitude: this.dl_Latitude,
+								},
+
+
+								//向服务器发送订单数据，返回订单编号
+								success: (res) => {
+									uni.hideLoading()
+									console.log(res)
+									if (res.data.msg == '下单失败，联系管理员！') {
+										uni.showToast({
+											title: '下单失败，联系管理员！',
+											icon: 'none',
+										})
+									} else if (res.data.msg == '下单成功') {
+										uni.setStorage({
+											key: 'submitH5Data',
+											data: res.data.data,
+											success: function() {
+												uni.redirectTo({
+													url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+												})
+											}
+										})
+
+									}
+
+								}
+							})
 							// #endif
-			
-			
-						// } else if (a.length > 0) {
-						// 	uni.hideLoading()
-						// 	uni.showToast({
-						// 		title: '订单中，存在待支付订单，请支付/取消后再下单',
-						// 		icon: 'none',
-						// 		duration: 2000
-						// 	})
-			// 				uni.switchTab({
-			// 					url: '../../order/OrderList'
-			// 				})
-			// 			}
-			// 		},
-			// 		fail:function(ee){
-			// 			console.log(ee)
-			// 		}
-			// 	})
-			
-			
+
+							// #ifdef APP-PLUS
+							
+							uni.request({
+								url: 'http://111.231.109.113:8004/api/Chartered/AddCharteredOrder_Passenger',
+								method:'POST',
+								data: {
+									userId: that.userInfo.userId,
+									privateSite:that.privateSite, //专线目的地
+									datestring:that.datestring, //选择时间
+									or_boardingPoint:that.initialPoint,
+									or_destination:that.destination,
+									cm_day: that.dayContentObject,
+									carNumberSeats:that.carNumberSeats,
+									carName: that.carName,
+									carprice:that.carprice,
+									nickName:that.nickName,
+									nickId:that.nickId,
+									nickPhone: that.nickPhone,								
+									couponID:that.couponColor,
+									st_Longitude:that.st_Longitude,
+									st_Latitude:that.st_Latitude,
+									de_Longitude:that.de_Longitude,
+									de_Latitude:that.de_Latitude,
+									dl_Longitude:that.dl_Longitude,
+									dl_Latitude:that.dl_Latitude,
+									type:that.startingContent,
+								
+								},
+								header: {'content-type': 'application/json'},
+								success:(res)=>{
+									console.log(res)
+									uni.hideLoading()
+									if (res.data.status) {
+										uni.redirectTo({
+											url: '/pages/BCFW/charteredBusPayment?orderNumber=' +res.data.data.OrderNumber
+										})
+									}
+								},
+								fail:(res)=>{
+									console.log('shibai')
+								}
+							})
+							// #endif
+
+
+						} else if (a.length > 0) {
+							uni.hideLoading()
+							uni.showToast({
+								title: '订单中，存在待支付订单，请支付/取消后再下单',
+								icon: 'none',
+								duration: 2000
+							})
+							uni.switchTab({
+								url: '../../order/OrderList'
+							})
+						}
+					},
+					fail: function(ee) {
+						console.log(ee)
+					}
+				})
+
+
 			},
-			
+
 			//同意购买-点击事件
 			Selection: function() {
-				console.log(this.selectedValue);
 				if (this.selectedValue == 0) {
 					this.selectedValue = 1;
 				} else {
@@ -601,13 +649,13 @@
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 		border-radius: 13px;
-	
+
 		//内容样式
 		.ct_departureContents1 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
-	
+
 			.ct_content1 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
@@ -615,7 +663,7 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-	
+
 				.ct_content2 {
 					width: 200upx;
 					font-size: 30upx;
@@ -624,7 +672,7 @@
 					font-weight: bold;
 				}
 			}
-	
+
 			.ct_content3 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
@@ -633,7 +681,7 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-	
+
 				.ct_content4 {
 					width: 200upx;
 					font-size: 30upx;
@@ -643,21 +691,21 @@
 				}
 			}
 		}
-	
+
 		//内容样式
 		.ct_departureContents2 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
 			padding-bottom: 40upx;
-	
+
 			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-	
+
 				.ct_content6 {
 					width: 200upx;
 					font-size: 30upx;
@@ -666,7 +714,7 @@
 					font-weight: bold;
 				}
 			}
-	
+
 			.ct_content7 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
@@ -675,7 +723,7 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-	
+
 				.ct_content8 {
 					width: 200upx;
 					font-size: 30upx;
