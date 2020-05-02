@@ -108,7 +108,7 @@
 <script>
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
-	import QSTabs from '../../../components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
+	import QSTabs from '@/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
 	export default {
 		data() {
 			return {
@@ -127,12 +127,6 @@
 				ifyFirst: '',//分类产品首个
 				ifyList:'',//分类产品列表
 				
-				region : [{
-					id:'0',
-					name:'南平',
-					image : '../../../static/LYFW/scenicSpotTickets/ticketsList/wuyishan.jpg',
-					label : '',
-				}], //地区
 				
 				scrollHeight:'500px',
 				leftIndex:0, //左边列表值

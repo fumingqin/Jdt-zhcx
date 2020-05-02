@@ -1,6 +1,3 @@
 {
-  "navigationBarTitleText": "我的收藏",
-  "usingComponents": {
-    "uni-rate": "/components/LYFW/ouristRoute/uni-rate/uni-rate"
-  }
+  "navigationBarTitleText": "我的收藏"
 }

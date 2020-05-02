@@ -132,7 +132,7 @@
 </template>	 
 
 <script>
-	import uniPopup from "../../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniPopup from "@/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	import uQRCode from "@/common/uqrcode.js"
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
@@ -222,7 +222,7 @@
 			//跳转至景区详情
 			route(){
 				uni.navigateTo({
-					url: '../../LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(this.orderInfo.ticketId)
+					url: 'ticketsDetails?ticketId=' + JSON.stringify(this.orderInfo.ticketId)
 				})
 			},
 			
