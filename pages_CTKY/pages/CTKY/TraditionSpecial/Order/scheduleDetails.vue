@@ -219,7 +219,7 @@
 </template>
 
 <script>
-	import popup from "../../../../components/CTKY/uni-popup/uni-popup.vue";
+	import popup from "@/components/CTKY/uni-popup/uni-popup.vue";
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components: {
@@ -467,14 +467,14 @@
 								//loginType=1,泉运登录界面
 								//loginType=2,今点通登录界面
 								//loginType=3,武夷股份登录界面
-								url: '../../../GRZX/userLogin?loginType=1'
+								url: '../../../../../pages/GRZX/userLogin?loginType=1',
 							})
 						}, 500);
 					},
 					success() {
 						//跳转到选择乘客页面
 						uni.navigateTo({
-							url: '/pages/GRZX/passengerInfo?submitType=1',
+							url: '../../../../../pages/GRZX/passengerInfo?submitType=1',
 						})
 					}
 				})
@@ -493,14 +493,14 @@
 								//loginType=1,泉运登录界面
 								//loginType=2,今点通登录界面
 								//loginType=3,武夷股份登录界面
-								url: '../../../GRZX/userLogin?loginType=1'
+								url: '../../../../../pages/GRZX/userLogin?loginType=1'
 							})
 						}, 500);
 					},
 					success() {
 						//跳转到添加乘客页面
 						uni.navigateTo({
-							url: '/pages/GRZX/addPassenger?type=add',
+							url: '../../../../../pages/GRZX/passengerInfo?type=add',
 						})
 					}
 				})
