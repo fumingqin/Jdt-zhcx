@@ -21,7 +21,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
-				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
@@ -29,11 +29,11 @@
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<view class="tabItem-font"><text >公交查询</text></view>
 				</view>
-				<view class="tabItem" @click="godetail3('/pages_BCFW/pages/BCFW/bf_chartered')">
+				<view class="tabItem" @click="godetail('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
-				<view class="tabItem" @click="godetail2('/pages_CTKY/pages/LYFW/currency/ho_zhly')">
+				<view class="tabItem" @click="godetail2('../../pages_LYFW/pages/LYFW/currency/ho_zhly')">
 					<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
 					<view class="tabItem-font"><text >旅游服务</text></view>
 				</view>
@@ -273,7 +273,6 @@
 			message: function() {
 				uni.navigateTo({
 					url: '../GRZX/notice'
-
 				})
 			},
 			camera: function(e) {
