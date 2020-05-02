@@ -55,7 +55,7 @@
 </template>
 
 <script>
-	import MxDatePicker from "../../../../components/CTKY/mx-datepicker/mx-datepicker.vue";
+	import MxDatePicker from "@/components/CTKY/mx-datepicker/mx-datepicker.vue";
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components: {

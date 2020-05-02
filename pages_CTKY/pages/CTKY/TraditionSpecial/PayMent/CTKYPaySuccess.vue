@@ -76,18 +76,18 @@
 			godetail: function(e) {
 				if(e==0){//查看订单
 					uni.switchTab({
-						url: '../../../order/OrderList',
+						url:'../../../../../pages/order/OrderList',
 					});
 				}else if(e==1){//返回首页
 					uni.switchTab({
-						url:'../../../Home/Index'
+						url:'../../../../../pages/Home/Index',
 					});
 				}
 			},
 			backHome : function() {
 				setTimeout(() => { 
 					uni.switchTab({
-						url: '../../../Home/Index'
+						url:'../../../../../pages/Home/Index',
 					});
 				}, 10000)
 			}

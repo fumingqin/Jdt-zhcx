@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import MxDatePicker from "../../../../components/CTKY/mx-datepicker/mx-datepicker.vue";
+import MxDatePicker from "@/components/CTKY/mx-datepicker/mx-datepicker.vue";
 	export default {
 		components: {
 			MxDatePicker

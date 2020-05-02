@@ -16,7 +16,7 @@
 </template>
 
 <script>
-	import $taxi from '../../../../common/Czc.js';
+	import $taxi from '@/common/Czc.js';
 	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		data() {

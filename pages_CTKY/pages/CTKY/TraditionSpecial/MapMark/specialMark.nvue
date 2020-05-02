@@ -32,7 +32,7 @@
 </template>
 
 <script>
-	import $taxi from '../../../../common/Czc.js';
+	import $taxi from '@/common/Czc.js';
 	export default {
 		data() {
 			return {
