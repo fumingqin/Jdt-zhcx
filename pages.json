@@ -7,9 +7,6 @@
 			"path": "pages/Home/guidePage",
 			"style": {
 				"navigationStyle": "custom"
-				// "app-plus": {
-				// 	"titleNView": false //禁用原生导航栏
-				// }
 			}
 		},
 		{
@@ -198,7 +195,18 @@
 					"bounce": "none",
 					"titleNView": {
 						"type": "transparent",
-						"buttons": [{
+						"buttons": [
+							// #ifndef	H5
+							{
+								"fontSrc": "/static/GRZX/jdticon.ttf",
+								"text": "\ue60d",
+								"fontSize": "26",
+								"color": "#303133",
+								"float": "left",
+								"background": "rgba(0,0,0,0)"
+							},
+							// #endif
+							{
 								"fontSrc": "/static/GRZX/jdticon.ttf",
 								"text": "\ue60f",
 								"fontSize": "24",
@@ -214,15 +222,8 @@
 								"color": "#303133",
 								"background": "rgba(0,0,0,0)",
 								"redDot": true
-							},
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
 							}
+							
 						]
 					}
 				}
@@ -320,10 +321,13 @@
 			// 出租车订单列表
 			"path": "pages/order/OrderList",
 			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom",
+				// #endif
 				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#f5f5f5"
-				// "navigationStyle": "custom"
+				
 			}
 		}, {
 			// 出租车订单详情
@@ -465,6 +469,9 @@
 		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom",
+				// #endif
 				"navigationBarTitleText": "通知"
 			}
 		},
@@ -538,7 +545,7 @@
 					"titleNView": {
 						"type": "transparent"
 					}
-				},
+				}, 
 				"navigationBarTitleText": "选择车型"
 			}
 		}, {
@@ -579,7 +586,12 @@
 		{
 			"path": "pages/Home/serve",
 			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom",
+				// #endif
 				"navigationBarTitleText": "服务"
+				
+				
 			}
 		},
 		{
@@ -599,7 +611,11 @@
 				"navigationStyle": "custom"
 			}
         }
-	],
+    ],
+	
+	
+
+	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",

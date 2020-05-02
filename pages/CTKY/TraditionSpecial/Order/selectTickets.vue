@@ -79,6 +79,8 @@
 		onLoad(param) {
 			//班次列表数据参数，从上一个页面传过来的时间，上下车点
 			this.date = param.date;
+			// console.log(this.date)
+			// console.log(param.date)
 			this.startStation=param.startStation;
 			this.endStation=param.endStation;
 			
@@ -98,7 +100,7 @@
 				uni.showLoading();
 				// console.log(this.startStation,this.endStation,date);
 				uni.request({
-					url: "http://27.148.155.9:9055/CTKY/getListSchedulesInfo",
+					url: "http://27.148.155.9:9056/CTKY/getListSchedulesInfo",
 					data: {
 						systemName:'泉运公司综合出行',
 						startPosition:this.startStation,
@@ -137,7 +139,6 @@
 			turnDate(date) {
 				var setTime = date.replace('T',' ');
 				return setTime;
-				// return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------显示日期-------------------------------
 			onShowDatePicker(type) { //显示
@@ -161,7 +162,7 @@
 					//原始的Date对象
 					// console.log('date => ' + e.date);
 					this.date = e.value;
-					
+					// console.log(e.value)
 					//从日历选择时间后刷新列表数据
 					this.getTicketInfo(e.value);
 					var IsExist = false;
@@ -274,11 +275,15 @@
 			},
 			//-------------------------------初始化时间轴-------------------------------
 			loadDate() {
-				var date = new Date();
-				console.log(date);
+				var subStr= new RegExp('-','ig');
+				var result= this.date.replace(subStr,"/");
+				
+				var date = new Date(result);
+				// var mydate = this.date;
 				this.selectIndex = 0;
-				for (var i = 0; i < 8; i++) {
+				for (var i = 0; i < 7; i++) {
 					var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000);
+					
 					var nowdate = this.getTime(3, mydate);
 					var week = this.getTime(2, mydate);
 					var longdate = this.getTime(0, mydate);

@@ -9,8 +9,8 @@
 			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
 			 -->
 			<view class="userInfoClass" @click="checkLogin">
-				<image class="portraitClass" :src=" userInfo.portrait || '/static/GRZX/missing-face.png'"></image>
-				<text class="usernameClass">{{userInfo.nickname || '游客'}}</text>
+				<image class="portraitClass" :src="portrait || '/static/GRZX/missing-face.png'"></image>
+				<text class="usernameClass">{{nickname || '游客'}}</text>
 				<!-- <image src="../../static/GRZX/edit.png" class="editClass"></image> -->
 			</view>
 			
@@ -59,11 +59,11 @@
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="complaintClick">
+			<!-- <view class="boxClass borderTop" @click="complaintClick">
 				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
 				<text class="fontStyle">我要投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
+			</view> -->
 			<view class="boxClass borderTop" @click="feedbackClick">
 				<image src="../../static/GRZX/tubiao_fankui.png" class="iconClass5"></image>
 				<text class="fontStyle">意见反馈</text>
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import listCell from '@/components/GRZX/mix-list-cell';
 	import {  
 	    mapState 
@@ -85,6 +86,8 @@
 		data(){
 			return{
 				QQ:'2482549389',
+				nickname:'',
+				portrait:'',
 			}
 		},
 		computed: {
@@ -93,21 +96,17 @@
 		onLoad(){
 		},
 		onShow(){
-			//this.loadData();
+			this.loadData();
 		},
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
-			if(index === 0){
+			//#ifndef H5
+			if(index === 2){
 				uni.navigateTo({
 					url:'/pages/GRZX/set'
 				})
 			}
-			if(index === 1){
-				uni.navigateTo({
-					url:'/pages/GRZX/myNews'
-				})
-			}
-			if(index === 2){
+			if(index === 0){
 				uni.scanCode({
 					onlyFromCamera:true,
 					success:function(res){
@@ -117,9 +116,49 @@
 					}
 				})
 			}
-			
+			//#endif
+			//#ifdef H5
+			if(index === 0){
+				uni.navigateTo({
+					url:'/pages/GRZX/set'
+				})
+			}
+			//#endif
+			if(index === 1){
+				uni.navigateTo({
+					url:'/pages/GRZX/myNews'
+				})
+			}
 		},
 		methods:{
+			loadData(){
+				var that=this;
+				var user=uni.getStorageSync('userInfo');
+				uni.request({
+					url:that.$GrzxInter.Interface.login.value,
+					data:{
+						phoneNumber:user.phoneNumber,
+					},
+					method:that.$GrzxInter.Interface.login.method,
+					success(res) {
+						console.log(res,'res')
+						that.nickname=res.data.data.nickname;
+						var base64=res.data.data.portrait;
+						if(that.isBase64(base64)){
+							base64ToPath(base64)
+							  .then(path => {
+							    that.portrait=path;
+							  })
+							  .catch(error => {
+							    console.error(error)
+							  })
+						}else{
+							that.portrait=base64;
+						}
+						console.log(that.portrait,"that.portrait")
+					}
+				})
+			},
 			orderClick(){
 				uni.switchTab({
 					url:'/pages/order/OrderList'
@@ -170,15 +209,22 @@
 				}
 			},
 			collectionClick(){
-				uni.navigateTo({
-					url:'/pages/GRZX/collection'
-				}) 
+				// uni.navigateTo({
+				// 	url:'/pages/GRZX/collection'
+				// }) 
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				})
 			},
 			historyClick(){
-				uni.navigateTo({
-					url:'/pages/GRZX/history'
-				}) 
-				
+				// uni.navigateTo({
+				// 	url:'/pages/GRZX/history'
+				// }) 
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				})
 			},
 			scanClick(){
 				uni.showToast({
@@ -188,7 +234,16 @@
 			},
 			QQClick(){
 				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
-			}
+			},
+			//------------判断是否为base64格式-----------
+			isBase64:function(str) {
+			    if (str ==='' || str.trim() ===''){ return false; }
+			    try {
+			        return btoa(atob(str)) == str;
+			    } catch (err) {
+			        return false;
+			    }
+			},
 		}
 		
 	}

@@ -21,7 +21,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<text class="tabItem-font">车票订购</text>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<text class="tabItem-font">网络约车</text>
 				</view>
@@ -29,7 +29,7 @@
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<text class="tabItem-font">公交查询</text>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/BCFW/bf_chartered')">
+				<view class="tabItem" @click="godetail3('/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<text class="tabItem-font">包车服务</text>
 				</view>
@@ -45,7 +45,10 @@
 
 <script>
 	import taxi from '../../common/Czc.js'
-
+	import {
+			mapState,
+			mapMutations  
+		} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -152,6 +155,7 @@
 			});
 		},
 		methods: {
+			...mapMutations(['login']),
 			getGaoDeKey: function() {
 				//获取高德key
 				var that = this;
@@ -258,6 +262,15 @@
 					url: url
 				});
 			},
+			
+			//路由统一事件
+			godetail3: function(url) {
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon:'none'
+				})
+			},
+			
 			//旅游服务专属路由
 			godetail2: function(url) {
 				// #ifdef MP-WEIXIN
@@ -280,7 +293,7 @@
 			    let Appid = "wx14af28006f937f6e";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
-				let local = "http://zntc.145u.net/#/";
+				let local = "http://zntc.145u.net/h5/#/";
 				if (code == null || code === "") {
 				  //不存在就打开上面的地址进行授权
 					window.location.href =
@@ -296,42 +309,38 @@
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
-							uni.showToast({
-								title:res.data.openid,
-								icon:'none',
-								duration:100000
-							})
+							// uni.showToast({
+							// 	title:res.data.openid,
+							// 	icon:'none',
+							// 	duration:100000
+							// })
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
-							uni.setStorageSync('res',res.data)
+							uni.setStorageSync('wxuserInfo',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://111.231.109.113:8006/api/person/changeInfo',
+								//url:'http://zntc.145u.net/api/person/changeInfo',
+								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
 								data:{
-									nickname:user.nickname,
 									openId_wx:user.openid,
-									portrait:user.headimgurl,
-									userId:'',
-									openId_qq:'',
-									gender:'',
-									address:user.province+user.city,
-									birthday:'',
-									phoneNumber:'',
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									if(res1.data.msg=="信息保存成功！"){
-										uni.setStorageSync('userInfo',res1.data.data)
-										if(res1.data.data.phoneNumber==null){
-											uni.navigateTo({
-												url:'/pages/GRZX/wxLogin',
-											})
-										}else{
-											that.logining=true;
-											that.login(res1.data.data)
-										}
-									}
 									console.log(res1,'res1')
+									console.log(res1.data.msg,'res2')
+									console.log(res1.data.data.msg,'res3')
+									//判断是否有绑定手机号
+									if(res1.data.msg=="不存在该用户"){
+										console.log('res4')
+										uni.navigateTo({
+											url:'/pages/GRZX/wxLogin'
+										})
+									}else{
+										console.log('res5')
+										uni.setStorageSync('userInfo',res1.data.data)
+										that.logining=true;
+										that.login(res1.data.data)
+									}	
 								}
 							})
 						},

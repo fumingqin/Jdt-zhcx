@@ -3,92 +3,95 @@
 		<!-- 红色背底 -->
 		<view class="cvt_background"></view>
 		<!-- 出发内容 -->
-		<view class="cvt_content" :hidden="startingContent==1">
-			<view class="ct_departureContents1">
-				<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{addressContent.privateSite}}</text></view>
-				<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{addressContent.initialPoint}}</text></view>
-			</view>
-			<view class="ct_departureContents2">
-				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
-			</view>
-		</view>
-		
-		<view class="cvt_content" :hidden="startingContent==0">
-			<view class="ct_departureContents1">
-				<view class="ct_content1">上车点 &nbsp;<text class="ct_content2">{{addressContent.initialPoint}}</text></view>
-				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{addressContent.destination}}</text></view>
-			</view>
-			<view class="ct_departureContents2">
-				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
-				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.dayContentObject}}</text></view>
-			</view>
-		</view>
-		<!-- 车型选择 -->
-		<view class="cvt_vehicleSelection">
-			<view class="vs_topContent">
-				<text class="tc_text1">车型选择</text>
-				<view class="tc_text2">
-					<image class="tc_image" src="../../static/BCFW/choice/zhuyi.png" style="wbackground-color: rgba(231,231,231,0.53);width: 40upx;height: 40upx;"></image>
-					<text class="tc_text3" @click="open">价格说明</text>
-					<uni-popup ref="popup" type="bottom">
-						<view class="te_boxVlew">
-							<view class="bv_titleView">
-								<text class="tv_text1">包车须知</text>
-								<text class="tv_text2 jdticon icon-fork " @click="close(1)"></text>
-							</view>																								
-							<scroll-view class="bv_content" scroll-y="ture">
-								<view v-for="(item,index) in priceExplain" :key="index">
-									<text class="ct_text">{{item.title}}</text>
-									<view class="ct_noticeText">
-										<rich-text :nodes="item.way"></rich-text>
-									</view>
-								</view>
-							</scroll-view>
-						</view>
-					</uni-popup>
+		<view class="cvt_setOutContent">
+			<view class="cvt_content" :hidden="startingContent==1">
+				<view class="ct_departureContents1">
+					<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{addressContent.privateSite}}</text></view>
+					<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{addressContent.initialPoint}}</text></view>
+				</view>
+				<view class="ct_departureContents2">
+					<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
 				</view>
 			</view>
-
-			<!-- 滑动区域 -->
-			<scroll-view class="sr_scroll" scroll-x="true">
-				<!-- 顶部滑动 -->
-				<view class="sc_topSlide">
-					<view v-for="(item,index) in vehicleSelection" :key="index">
-						<view class="ts_tab" :class="{current: value===index}" @click="tabClick(index)">{{item.cvt_tabName}}</view>
-					</view>
-				</view>
-			</scroll-view>
-
-			<!-- 选择按钮  :hidden="status==false"-隐藏 -->
-			<scroll-view class="sr_scroll" scroll-x="true">
-				<view class="sc_selectButton">
-					<view v-for="(item,index) in vehicleSelection[value].cvt_cost" :key="index">
-						<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.cvt_price}}元</view>
-					</view>
-				</view>
-			</scroll-view>
-
-			<!-- 选择车 -->
-			<scroll-view class="sr_scroll" scroll-x="true">
-				<view class="sc_choiceCar">
-					<view v-for="(item,index) in vehicleSelection[value].cvt_cost[value2].cvt_vehicle" :key="index" @click="carClick(index)">
-						<view class="cc_button">
-							<text class="cc_text" :class="{current3: value3===index}">{{item.cvt_Name}}</text>
-							<image class="cc_image" :src="item.cvt_carImage" />
-						</view>
-					</view>
-				</view>
-			</scroll-view>
 			
-			<!-- 按钮 -->
-			<view class="cvt_button">
-				<button class="bt_button" :class="{submitColor:value3!==''}" @click="subit">确认用车</button>
+			<view class="cvt_content" :hidden="startingContent==0">
+				<view class="ct_departureContents1">
+					<view class="ct_content1">上车点 &nbsp;<text class="ct_content2">{{addressContent.initialPoint}}</text></view>
+					<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{addressContent.destination}}</text></view>
+				</view>
+				<view class="ct_departureContents2">
+					<view class="ct_content9">出发时间 &nbsp;<text class="ct_content10">{{addressContent.datestring}}</text></view>
+					<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.dayContentObject}}</text></view>
+				</view>
+			</view>
+			<!-- 车型选择 -->
+			<view class="cvt_vehicleSelection">
+				<view class="vs_topContent">
+					<text class="tc_text1">车型选择</text>
+					<view class="tc_text2">
+						<image class="tc_image" src="../../static/BCFW/choice/zhuyi.png" style="wbackground-color: rgba(231,231,231,0.53);width: 40upx;height: 40upx;"></image>
+						<text class="tc_text3" @click="open">价格说明</text>
+						<uni-popup ref="popup" type="bottom">
+							<view class="te_boxVlew">
+								<view class="bv_titleView">
+									<text class="tv_text1">包车须知</text>
+									<text class="tv_text2 jdticon icon-fork " @click="close(1)"></text>
+								</view>
+								<scroll-view class="bv_content" scroll-y="ture">
+									<view v-for="(item,index) in priceExplain" :key="index">
+										<text class="ct_text">{{item.title}}</text>
+										<view class="ct_noticeText">
+											<rich-text :nodes="item.way"></rich-text>
+										</view>
+									</view>
+								</scroll-view>
+							</view>
+						</uni-popup>
+					</view>
+				</view>
+			
+				<!-- 滑动区域 -->
+				<scroll-view class="sr_scroll" scroll-x="true">
+					<!-- 顶部滑动 -->
+					<view class="sc_topSlide">
+						<view v-for="(item,index) in vehicleSelection" :key="index">
+							<view class="ts_tab" :class="{current: value===index}" @click="tabClick(index)">{{item.cvt_tabName}}</view>
+						</view>
+					</view>
+				</scroll-view>
+				
+				<!-- 选择按钮  :hidden="status==false"-隐藏 -->
+				<scroll-view class="sr_scroll" scroll-x="true">
+					<view class="sc_selectButton">
+						<view v-for="(item,index) in vehicleSelection[value].cvt_cost" :key="index">
+							<view class="sb_button" @click="buttonClick(item,index)" :class="{current2: value2===index}">{{item.cvt_price}}元</view>
+						</view>
+					</view>
+				</scroll-view>
+				
+				<!-- 选择车 -->
+				<scroll-view class="sr_scroll" scroll-x="true">
+					<view class="sc_choiceCar">
+						<view v-for="(item,index) in vehicleSelection[value].cvt_cost[value2].cvt_vehicle" :key="index" @click="carClick(index)">
+							<view class="cc_button">
+								<text class="cc_text" :class="{current3: value3===index}">{{item.cvt_Name}}</text>
+								<image class="cc_image" :src="item.cvt_carImage" />
+							</view>
+						</view>
+					</view>
+				</scroll-view>
+				
+				<!-- 按钮 -->
+				<view class="cvt_button">
+					<button class="bt_button" :class="{submitColor:value3!==''}" @click="subit">确认用车</button>
+				</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import $bcfw from '@/common/BCFW/bcfw.js'
 	import uniPopup from "../../components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	export default {
 		components: {
@@ -157,8 +160,8 @@
 			//---------------------------------口数据--------------------------------------
 			bcfwData:function(){
 				uni.request({
-					url:'http://111.231.109.113:8004/api/Chartered/GetVehicleType_Passenger',
-					method:'POST',
+					url:$bcfw.Interface.fw_selectVehicle.value,
+					method:$bcfw.Interface.fw_selectVehicle.method,
 					header: {'content-type': 'application/json'},
 					
 					success: (res) => {
@@ -173,8 +176,6 @@
 			async routeInit() {
 				let priceExplain = await this.$api.lyfwcwd('priceExplain');
 				this.priceExplain = priceExplain.data;
-				// let vehicleSelection = await this.$api.lyfwcwd('vehicleSelection');
-				// this.vehicleSelection = vehicleSelection.data;
 			},
 
 			//------------------------------弹框事件-----------------------------------------
@@ -240,7 +241,7 @@
 					this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carNumberSeats;
 					this.information.cvt_carprice = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carprice;
 					
-					console.log(this.vehicleSelection[this.value])
+					// console.log(this.vehicleSelection[this.value])
 					uni.setStorage({
 						key:'vehicleInformation',	
 						data:this.information,
@@ -250,6 +251,7 @@
 							})
 						}
 					})
+					console.log(this.information)
 				}else{
 					uni.showToast({
 						title: '请选择包车',
@@ -273,19 +275,33 @@
 
 	//红色背景
 	.cvt_background {
+		position: absolute;
 		text-align: center;
 		width: 100%;
 		height: 253upx;
 		background: rgba(252, 70, 70, 1);
-		padding-top: 34upx;
+		top: 0;
 	}
-
+	
+	.cvt_setOutContent{
+		position: relative;
+		margin-left: 26upx;
+		margin-right: 26upx;
+		margin-bottom: 135upx;
+		top: 148upx;
+	}
+	
+	/* #ifdef MP-WEIXIN */
+	//整体容器样式 -微信版
+	.cvt_setOutContent {
+		top: 64upx;
+	}
+	
+	/* #endif */
+	
 	//出发内容
 	.cvt_content {
-		position: absolute;
-		top: 197upx;
 		width: 698upx;
-		margin: 0 26upx;
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 		border-radius: 13px;
@@ -331,7 +347,7 @@
 				}
 			}
 		}
-
+		
 		//内容样式
 		.ct_departureContents2 {
 			display: flex;
@@ -342,7 +358,7 @@
 			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 310upx;
+				// width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
@@ -371,13 +387,28 @@
 					font-weight: bold;
 				}
 			}
+			.ct_content9 {
+				color: rgba(102, 102, 102, 1);
+				font-size: 30upx;
+				width: 310upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			
+				.ct_content10 {
+					font-size: 30upx;
+					color: rgba(44, 45, 45, 1);
+					margin-left: 15upx;
+					font-weight: bold;
+				}
+			}
 		}
 	}
 
 	//车型选择样式
 	.cvt_vehicleSelection {
 		width: 698upx;
-		margin: 135upx 26upx;
+		margin-top: 20upx;
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 		border-radius: 13px;

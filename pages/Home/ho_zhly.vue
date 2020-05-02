@@ -57,12 +57,12 @@
 			<view class="zl_reContent2">
 				<view class="zl_contentImage1">
 					<!-- 泉州小西埕 -->
-					<view class="ct_content1">
+					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
 						<image class="ct_image1" :src="sixPalaceList[0].ticketImage" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text>
 					</view>
 					<!-- 稻田摸鱼 -->
-					<view class="ct_content2">
+					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
 						<image class="ct_image2" :src="sixPalaceList[1].ticketImage" mode="aspectFill"></image>
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text>
 					</view>
@@ -70,17 +70,17 @@
 
 				<view class="zl_contentImage2">
 					<!-- 泉州钟楼 -->
-					<view class="ct_content3">
+					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
 						<image class="ct_image3" :src="sixPalaceList[2].ticketImage" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
-					<view class="ct_content4">
+					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
 						<image class="ct_image4" :src="sixPalaceList[3].ticketImage" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text>
 					</view>
 					<!-- 七彩官畲 -->
-					<view class="ct_content5">
+					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
 						<image class="ct_image5" :src="sixPalaceList[4].ticketImage" mode="aspectFill"></image>
 						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text>
 					</view>
@@ -107,6 +107,7 @@
 </template>
 
 <script>
+	import $lyfw from '../../common/LYFW/LyfwFmq.js' //引用路径
 	export default {
 		data() {
 			return {
@@ -194,12 +195,12 @@
 				}, 1000)
 
 				uni.request({
-					url: 'http://111.231.109.113:8002/api/ly/GetticketSearchByrequestArea',
+					url:$lyfw.Interface.spt_GetticketSearchByrequestArea.value,
+					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data: {
 						// requestArea : this.regionWeixin,
 						requestArea: '南平市'
 					},
-					method: 'POST',
 					header: {
 						'content-type': 'application/json'
 					},
@@ -219,14 +220,22 @@
 
 			//金刚区各模块入口
 			route1: function() {
-				uni.navigateTo({
-					url: '/pages/LYFW/independentTravel/it_list'
+				uni.showToast({
+					title: '正在测试中，敬请期待...',
+					icon: 'none'
 				})
+				// uni.navigateTo({
+				// 	url: '/pages/LYFW/independentTravel/it_list'
+				// })
 			},
 			route2: function() {
-				uni.navigateTo({
-					url: '/pages/LYFW/groupTour/groupTourList'
+				uni.showToast({
+					title: '正在测试中，敬请期待...',
+					icon: 'none'
 				})
+				// uni.navigateTo({
+				// 	url: '/pages/LYFW/groupTour/groupTourList'
+				// })
 			},
 			route3: function() {
 				uni.navigateTo({
@@ -240,6 +249,13 @@
 				uni.showToast({
 					title: '正在开发中...',
 					icon: 'none'
+				})
+			},
+			
+			//路由整合
+			godetail: function(e) {
+				uni.navigateTo({
+					url: '/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+JSON.stringify(e)
 				})
 			},
 		}

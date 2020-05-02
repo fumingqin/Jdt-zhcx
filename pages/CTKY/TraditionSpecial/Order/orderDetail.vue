@@ -25,7 +25,7 @@
 							<!-- 身份证 -->
 							<view>身份证</view>
 							<!-- 联系电话 -->
-							<view>联系电话</view>
+							<!-- <view>联系电话</view> -->
 							<!-- 退改规则 -->
 							<view>退改规则</view>
 							<!-- 附加保险 -->
@@ -37,7 +37,7 @@
 							<!-- 身份证 -->
 							<view>{{item.userCodeNum}}</view>
 							<!-- 联系电话 -->
-							<view>{{orderInfo.phoneNumber}}</view>
+							<!-- <view>{{orderInfo.phoneNumber}}</view> -->
 							<!-- 退改规则 -->
 							<view>{{role}}</view>
 							<!-- 附加保险 -->
@@ -45,10 +45,14 @@
 						</view>
 					</view>
 					<!-- 二维码 -->
-					<view class="QRImage">
-						<canvas canvas-id="ctkyQrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
-						<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
+					<view style="justify-content: center; align-items: center;display: flex;">
+						<view class="QRImage">
+							<canvas v-if="ticketNumber" canvas-id="ctkyQrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+							<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
+							<view v-if="ticketNumber == ''" style="font-weight: 300;color: #2C2D2D;font-size: 32rpx;justify-content: center; align-items: center;">{{getQRCodeStatus(orderInfo.state)}}</view>
+						</view>
 					</view>
+					
 					<view style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
 						  取票号 {{orderInfo.ticketNumber}}
 					</view>
@@ -69,13 +73,14 @@
 		data() {
 			return {
 				orderID:'',
-				role:'暂不支持在线退票',
+				role:'过发车时间将无法退票',
 				orderInfo:[],//订单数据
 				passageInfo:[],
 				ticketNum:0,
 				qrcodeSrc: '',//二维码
 				qrcodeText: 'uQRCode',
 				qrcodeSize: 150,
+				ticketNumber:'',
 			}
 		},
 		onLoad(res) {
@@ -83,6 +88,7 @@
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
 			console.log(orderInfo);
+			this.ticketNumber = orderInfo.ticketNumber;
 			that.stringTurnArray(orderInfo.iDNameType);
 			that.getTicketNum(orderInfo);
 			that.make(this.orderInfo.ticketNumber);
@@ -98,12 +104,12 @@
 						size: this.qrcodeSize,
 						margin: 10,
 						success: res => {
-							console.log('完成')
+							// console.log('完成')
 							this.qrcodeSrc = res
 						},
 						complete: () => {
 							// uni.hideLoading()
-							console.log('完成')
+							// console.log('完成')
 						}
 					})
 				}
@@ -111,23 +117,30 @@
 			//-------------------------------获取乘车人信息-------------------------------
 			stringTurnArray(param){
 				var that = this;
+				console.log(param)
+				
 				let a = param.indexOf('|')
-				if(a == -1) {//不存在'|'
+				var singleArray = [];
+				console.log(a)
+				if(param.indexOf('|')) {
+					//存在'|'
+					var array = param.split('|');
+					for(let i = 0;i < array.length; i++) {
+						singleArray = array[i].split(',');
+						var passenger = {
+							userName:singleArray[1],
+							userCodeNum:singleArray[0],
+						}
+						that.passageInfo.push(passenger);
+					}
+				}else {//不存在'|'
 					var array = param.split(',');
 					var passenger = {
 						userName:array[1],
 						userCodeNum:array[0],
 					}
 					that.passageInfo.push(passenger);
-				}else {//存在'|'
-					var array = param.split('|');
-					for(let i = 0;i < array.length; i++) {
-						var passenger = {
-							userName:array[i][1],
-							userCodeNum:array[i][0],
-						}
-						that.passageInfo.push(passenger);
-					}
+					console.log(that.passageInfo)
 				}
 			},
 			//-------------------------------计算车票数量-------------------------------
@@ -148,6 +161,16 @@
 					return '已撤销'
 				} else if (param == 22) {
 					return '已改签'
+				}
+			},
+			//-------------------------判断订单状态-------------------------
+			getQRCodeStatus(param) {
+				if (param == 6) {//已退票
+					return '订单已退票'
+				} else if (param == 7) {//未支付
+					return '订单未支付'
+				} else if (param == 9) {//已撤销
+					return '订单已撤销'
 				}
 			},
 		}
@@ -247,8 +270,11 @@
 	.QRImage {
 		display: flex;
 		width: 100%;
+		align-items: center;
 		justify-content: center;
 		margin-bottom: 20rpx;
+		width: 300rpx;
+		height: 300rpx;
 	}
 	
 </style>

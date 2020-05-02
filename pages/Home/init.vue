@@ -13,12 +13,12 @@
 		},
 		onLoad() {
 			// #ifndef APP-PLUS
-			// uni.switchTab({
-			// 	url:'Index'
-			// });
-			uni.reLaunch({
-				url:'../LYFW/scenicSpotTickets/ticketsList'
-			})
+			uni.switchTab({
+				url:'Index'
+			});
+			// uni.reLaunch({
+			// 	url:'../LYFW/scenicSpotTickets/ticketsList'
+			// })
 			// #endif
 			// #ifdef APP-PLUS
 			const value = uni.getStorageSync('launchFlag');

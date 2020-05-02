@@ -248,7 +248,7 @@
 		height:46upx ;
 	}
 	.returnClass{ //返回按钮
-		width: 18upx;
+		width: 22upx;
 		height: 40upx;
 		margin-top: 103upx;
 		margin-left: 3.47%;
@@ -264,7 +264,7 @@
 		margin-left: 20upx;
 		font-size: 38upx;
 		/*font-weight: bold; */
-		margin-top: 97upx;
+		margin-top: 95upx;
 	}
 	.passengerList{ //列表样式
 		width: 100%;

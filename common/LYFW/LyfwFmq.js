@@ -14,7 +14,7 @@ const notice = {
 
 
 //接口域名
-const Url = 'http://111.231.109.113:8006';
+const Url = 'http://zntc.145u.net';
 
 //引入模板
 	// url:$lyfw.Interface.spt_tl_six.value,
@@ -66,16 +66,9 @@ const Interface = {
 		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
 	},
 	
-	spt_scenicSpotSetOrder:{
-		value: Url + '/api/app/scenicSpotSetOrder',
-		name:'景区门票-H5提交订单',
-		method:'POST',
-		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
-	},
-	
 	spt_AddtouristOrder:{
 		value: Url + '/api/ly/AddtouristOrder',
-		name:'景区门票-APP提交订单',
+		name:'景区门票-提交订单',
 		method:'POST',
 		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
 	},

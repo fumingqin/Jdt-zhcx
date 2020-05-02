@@ -149,12 +149,20 @@
     },
     "h5" : {
         "title" : "泉运出行综合平台",
-        "devServer" : {
-            "https" : false
-        },
+        "domain" : "http://zntc.145u.net",
         "router" : {
             "base" : "/h5/"
         },
-        "domain" : "http://111.231.109.113:8006"
+        "devServer" : {
+            "https" : false
+        },
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    //腾讯地图秘钥（key）
+                    "key" : "HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2"
+                }
+            }
+        }
     }
 }
