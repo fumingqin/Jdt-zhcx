@@ -189,6 +189,7 @@
 			},
 			checkLogin(){
 				// console.log(this.hasLogin,"6666")
+				//#ifndef H5
 				if(!this.hasLogin){
 					uni.showToast({
 						title : '请先登录',
@@ -207,6 +208,25 @@
 						url :'/pages/GRZX/personal'
 					})  
 				}
+				//#endif
+				//#ifdef H5
+				var user1=uni.getStorageSync('userInfo');
+				if(user1==""||user1==null){
+					uni.showToast({
+						title:"请绑定手机号",
+						icon:'none'
+					})
+					setTimeout(function(){
+						uni.navigateTo({
+							url:'/pages/GRZX/wxLogin'
+						})
+					},1000);
+				}else{
+					uni.navigateTo({
+						url :'/pages/GRZX/personal'
+					})  
+				}
+				//#endif
 			},
 			collectionClick(){
 				// uni.navigateTo({

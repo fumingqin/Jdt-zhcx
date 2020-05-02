@@ -33,6 +33,22 @@
 	    onLoad() {	
 			
 	    },
+		//#ifdef H5
+		onBackPress() {
+			uni.showModal({
+			    content: '未绑定手机号会导致无法购买车票，确定退出？',
+			    success: (e)=>{
+			    	if(e.confirm){
+			    		setTimeout(()=>{
+			    			uni.switchTab({
+			    				url:'/pages/Home/Index'
+			    			})
+			    		}, 200)
+			    	}
+			    }
+			});
+		},
+		//#endif
 	    methods: {
 			...mapMutations(['login']),
 			returnClick(){		//返回个人中心
