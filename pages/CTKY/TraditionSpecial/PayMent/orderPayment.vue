@@ -336,6 +336,7 @@
 			},
 			//--------------------------计时器--------------------------
 			getOrder: function() {
+				console.log('11111212314432');
 				var that = this;
 				var timer = null;
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
@@ -347,6 +348,7 @@
 				companyCode = '泉运公司综合出行APP';
 				// #endif
 				// alert(that.ctkyOpenID);
+				
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url: 'http://zntc.145u.net/api/ky/SellTicket_NoBill_Booking',
@@ -398,14 +400,11 @@
 								uni.hideLoading();
 								uni.showModal({
 									content: res.data.msg,
+									showCancel:false,
 									success: (res) => {
 										if (res.confirm) {
-											uni.switchTab({
-												url: '../../../order/OrderList'
-											})
-										} else if (res.cancel) {
 											uni.navigateBack()
-										}
+										} 
 									}
 								})
 							}
@@ -595,6 +594,7 @@
 							console.log('支付参数返回数据', res);
 							if (res.data.status == true) {
 								uni.hideLoading();
+								clearInterval(timer);
 								uni.showToast({
 									title: '出票成功',
 									icon: 'none',
@@ -606,6 +606,7 @@
 								})
 								
 							} else if (res.data.status == false) {
+								clearInterval(timer);
 								uni.showToast({
 									title: '出票失败',
 									icon: 'none',

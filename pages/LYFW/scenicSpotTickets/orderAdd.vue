@@ -204,18 +204,20 @@
 					success: (res) => {
 						this.admissionTicket = res.data;
 						uni.request({
-							url:$lyfw.Interface.spt_GetticketSecurityByticketIde.value,
-							method:$lyfw.Interface.spt_GetticketSecurityByticketIde.method,
+							url: $lyfw.Interface.spt_GetticketSecurityByticketIde.value,
+							method: $lyfw.Interface.spt_GetticketSecurityByticketIde.method,
 							data: {
 								ticketId: res.data.ticketId
 							},
-							header: {'content-type': 'application/json'},
+							header: {
+								'content-type': 'application/json'
+							},
 							success: (res) => {
 								console.log(res)
 								this.notice = res.data.data[0];
 							}
 						})
-						
+
 						// console.log(res)
 					}
 				})
@@ -223,14 +225,16 @@
 					key: 'userInfo',
 					success: (res) => {
 						this.userInfo = res.data;
-						
+
 						uni.request({
-							url:$lyfw.Interface.spt_GetcouponByuserId.value,
-							method:$lyfw.Interface.spt_GetcouponByuserId.method,
+							url: $lyfw.Interface.spt_GetcouponByuserId.value,
+							method: $lyfw.Interface.spt_GetcouponByuserId.method,
 							data: {
 								userId: res.data.userId
 							},
-							header: {'content-type': 'application/json'},
+							header: {
+								'content-type': 'application/json'
+							},
 							success: (res) => {
 								console.log(res)
 								this.couponList = res.data.data;
@@ -416,29 +420,25 @@
 				// #ifdef H5
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
-					success: (res) => {
+					success:function(openid){
+						// console.log(openid)
 						uni.request({
-							url:$lyfw.Interface.spt_scenicSpotSetOrder.value,
-							method:$lyfw.Interface.spt_scenicSpotSetOrder.method,
+							url: $lyfw.Interface.spt_AddtouristOrder.value,
+							method: $lyfw.Interface.spt_AddtouristOrder.method,
 							data: {
-								unid: that.userInfo.unid,
-								ticketProductId: that.admissionTicket.admissionTicketID,
-								ticketId: 0,
-								ticketContain: that.admissionTicket.ticketContain,
-
-								companyId: that.admissionTicket.companyId,
-								executeScheduleId: that.admissionTicket.executeScheduleId,
-
-								addressData: that.addressData,
+								userId: that.userInfo.userId,
+								ticketId: that.admissionTicket.ticketId,
+								userPhone: that.userInfo.phoneNumber,
+								ticketProductId: that.admissionTicket.ticketProductId,
 								couponID: that.couponColor,
-
-								orderDateReminder: that.dateReminder,
 								orderDate: that.date,
 								orderInsure: '',
 								orderInsurePrice: '',
 								orderActualPayment: that.actualPayment,
-								sellerCompanyCode: '南平旅游H5',
-								tppId: res.data,
+								ticketContain: that.admissionTicket.ticketContain,
+								sellerCompanyCode: 'H5',
+								tppId: openid.data,
+								addressData: that.addressData,
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
@@ -450,24 +450,25 @@
 									})
 									that.submissionState = false;
 									uni.hideLoading()
-								} else if (res.data.message == '账号ID不能为空') {
+								} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
 									uni.showToast({
-										title: '账号ID不能为空，请重新登录账户',
+										title: '下单失败,您当前有未支付订单',
 										icon: 'none',
-									})
-									that.submissionState = false;
-									uni.hideLoading()
-								} else if (res.data.msg == '订单下单成功') {
-									uni.setStorage({
-										key: 'submitH5Data',
-										data: res.data.data,
+										duration: 2000,
 										success: function() {
-											uni.redirectTo({
-												url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+											uni.switchTab({
+												url: '../../order/OrderList'
 											})
+											that.submissionState = false;
 											uni.hideLoading()
 										}
 									})
+
+								} else if (res.data.msg == '订单下单成功') {
+									uni.redirectTo({
+										url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
+									})
+									uni.hideLoading()
 								} else {
 									uni.showToast({
 										title: '网络延迟，请重试！',
@@ -493,8 +494,8 @@
 
 				// #ifdef APP-PLUS
 				uni.request({
-					url:$lyfw.Interface.spt_AddtouristOrder.value,
-					method:$lyfw.Interface.spt_AddtouristOrder.method,
+					url: $lyfw.Interface.spt_AddtouristOrder.value,
+					method: $lyfw.Interface.spt_AddtouristOrder.method,
 					data: {
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
@@ -510,7 +511,9 @@
 						tppId: 0,
 						addressData: this.addressData,
 					},
-					header: {'content-type': 'application/json'},
+					header: {
+						'content-type': 'application/json'
+					},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
 						console.log(res)
@@ -558,8 +561,8 @@
 
 				// #ifdef MP-WEIXIN
 				uni.request({
-					url:$lyfw.Interface.spt_AddtouristOrder.value,
-					method:$lyfw.Interface.spt_AddtouristOrder.method,
+					url: $lyfw.Interface.spt_AddtouristOrder.value,
+					method: $lyfw.Interface.spt_AddtouristOrder.method,
 					data: {
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
@@ -575,7 +578,9 @@
 						tppId: 0,
 						addressData: this.addressData,
 					},
-					header: {'content-type': 'application/json'},
+					header: {
+						'content-type': 'application/json'
+					},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
 						console.log(res)

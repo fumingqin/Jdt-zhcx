@@ -315,11 +315,6 @@
 			
 			//旅游服务专属路由
 			godetail2: function(url) {
-				uni.showToast({
-					title:'正在测试中，敬请期待...',
-					icon:'none'
-				});
-				return;
 				// #ifdef MP-WEIXIN
 				uni.redirectTo({
 					url: url

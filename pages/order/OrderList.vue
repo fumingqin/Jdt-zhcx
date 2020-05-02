@@ -207,7 +207,7 @@
 
 
 				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
@@ -246,7 +246,7 @@
 							<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
-							<button class="allBtn" v-if="item.state=='7'" @tap="open2(item.orderNumber,'2')">退票</button>
+							<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
 							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
 							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
@@ -422,7 +422,7 @@
 
 
 				<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -622,7 +622,7 @@
 				</view>
 
 				<!-- (进行中)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -819,7 +819,7 @@
 				</view>
 
 				<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -1020,7 +1020,7 @@
 
 
 				<!-- (已取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车'">
+				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
 					<!-- 预定日期 -->
 					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
 						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
@@ -1998,8 +1998,7 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
-												'支付超时') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType =='支付超时') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}
@@ -2046,7 +2045,7 @@
 				this.$refs.popup5.close()
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
-			open2(e,exitindex) {
+			open2:function(e,exitindex) {
 				this.ticketOrderNumber = e;
 				this.exitindex = exitindex;
 				this.$refs.popup2.open()

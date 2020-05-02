@@ -25,7 +25,7 @@
 							<!-- 身份证 -->
 							<view>身份证</view>
 							<!-- 联系电话 -->
-							<view>联系电话</view>
+							<!-- <view>联系电话</view> -->
 							<!-- 退改规则 -->
 							<view>退改规则</view>
 							<!-- 附加保险 -->
@@ -37,7 +37,7 @@
 							<!-- 身份证 -->
 							<view>{{item.userCodeNum}}</view>
 							<!-- 联系电话 -->
-							<view>{{orderInfo.phoneNumber}}</view>
+							<!-- <view>{{orderInfo.phoneNumber}}</view> -->
 							<!-- 退改规则 -->
 							<view>{{role}}</view>
 							<!-- 附加保险 -->
@@ -73,7 +73,7 @@
 		data() {
 			return {
 				orderID:'',
-				role:'暂不支持在线退票',
+				role:'过发车时间将无法退票',
 				orderInfo:[],//订单数据
 				passageInfo:[],
 				ticketNum:0,
@@ -117,23 +117,30 @@
 			//-------------------------------获取乘车人信息-------------------------------
 			stringTurnArray(param){
 				var that = this;
+				console.log(param)
+				
 				let a = param.indexOf('|')
-				if(a == -1) {//不存在'|'
+				var singleArray = [];
+				console.log(a)
+				if(param.indexOf('|')) {
+					//存在'|'
+					var array = param.split('|');
+					for(let i = 0;i < array.length; i++) {
+						singleArray = array[i].split(',');
+						var passenger = {
+							userName:singleArray[1],
+							userCodeNum:singleArray[0],
+						}
+						that.passageInfo.push(passenger);
+					}
+				}else {//不存在'|'
 					var array = param.split(',');
 					var passenger = {
 						userName:array[1],
 						userCodeNum:array[0],
 					}
 					that.passageInfo.push(passenger);
-				}else {//存在'|'
-					var array = param.split('|');
-					for(let i = 0;i < array.length; i++) {
-						var passenger = {
-							userName:array[i][1],
-							userCodeNum:array[i][0],
-						}
-						that.passageInfo.push(passenger);
-					}
+					console.log(that.passageInfo)
 				}
 			},
 			//-------------------------------计算车票数量-------------------------------
