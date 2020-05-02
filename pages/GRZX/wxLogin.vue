@@ -53,7 +53,8 @@
 			...mapMutations(['login']),
 			returnClick(){		//返回个人中心
 				uni.switchTab({
-					url:'/pages/GRZX/user'
+					// url:'/pages/GRZX/user',
+					url:theSelf.$GrzxInter.Route.user.url,
 				})
 			},
 			judgeNum(val){  //只能输入数字

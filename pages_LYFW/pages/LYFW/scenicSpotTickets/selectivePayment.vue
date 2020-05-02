@@ -336,7 +336,7 @@
 						success: ()=>{
 							this.countDown()
 							uni.switchTab({
-								url:'../../../../order/OrderList'
+								url:'../../../../pages/order/OrderList'
 							})
 						}
 					})
@@ -397,7 +397,7 @@
 										duration: 2000,
 										success: () => {
 											uni.switchTab({
-												url: '../../../../order/OrderList'
+												url: '../../../../pages/order/OrderList',
 											})
 										}
 									})
@@ -410,7 +410,7 @@
 										duration: 2000,
 										success: function() {
 											uni.switchTab({
-												url: '../../../../order/OrderList'
+												url: '../../../../pages/order/OrderList'
 											})
 										}
 									})
@@ -520,7 +520,7 @@
 											icon: 'none',
 											success: function() {
 												uni.switchTab({
-													url: '../../../../order/OrderList'
+													url: '../../../../pages/order/OrderList'
 												})
 											}
 										})
