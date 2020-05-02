@@ -130,7 +130,7 @@
 </template>
 
 <script>
-	import taxi from '../../components/BCFW/Czc.js';
+	import $bcfw from '../../common/BCFW/bcfw.js'
 	import uniIcons from "../../components/BCFW/uni-icons/uni-icons.vue";
 	import Map from '../../components/BCFW/my-openMap/openMap.js';
 	import uniPopup from "../../components/BCFW/choice/uni-popup/uni-popup.vue"
@@ -206,7 +206,7 @@
 					method:'POST',
 					header: {'content-type': 'application/json'},
 					data:{
-						or_number:'2020050100161105783201',
+						or_number:this.driverInformation.or_number,
 					},
 					success:(res)=>{
 						console.log(res)
@@ -298,69 +298,6 @@
 				}
 			},
 
-			// setMarkers: function() { //设置始末标点
-			// 	var that = this;
-			// 	var startmarker = { //起点
-			// 		id: 0,
-			// 		latitude: that.startLat,
-			// 		longitude: that.startLon,
-			// 		title: '在这上车',
-			// 		zIndex: '1',
-			// 		iconPath: '../../static/CZC/Start.png',
-			// 		rotate: 0,
-			// 		width: 20,
-			// 		height: 20,
-			// 		anchor: {
-			// 			x: 0.5,
-			// 			y: 1
-			// 		},
-			// 		callout: {
-			// 			content: '在这上车',
-			// 			color: '#000000',
-			// 			fontSize: 10,
-			// 			borderRadius: 4,
-			// 			borderWidth: 1,
-			// 			borderColor: '#333300',
-			// 			bgColor: '#FFFFFF',
-			// 			padding: '5',
-			// 			display: 'ALWAYS'
-			// 		}
-			// 	};
-			// 	var endmarker = {
-			// 		id: 1,
-			// 		latitude: that.endLat,
-			// 		longitude: that.endLon,
-			// 		title: '在这下车',
-			// 		zIndex: '1',
-			// 		iconPath: '../../static/CZC/End.png',
-			// 		rotate: 0,
-			// 		width: 20,
-			// 		height: 20,
-			// 		anchor: {
-			// 			x: 0.5,
-			// 			y: 1
-			// 		},
-			// 		callout: {
-			// 			content: '在这下车',
-			// 			color: '#000000',
-			// 			fontSize: 10,
-			// 			borderRadius: 4,
-			// 			borderWidth: 1,
-			// 			borderColor: '#333300',
-			// 			bgColor: '#FFFFFF',
-			// 			padding: '5',
-			// 			display: 'ALWAYS'
-			// 		}
-			// 	};
-			// 	that.markers = [];
-			// 	that.startmarker = [];
-			// 	that.endmarker = [];
-			// 	that.markers.push(startmarker);
-			// 	that.markers.push(endmarker);
-			// 	that.showlocation = false;
-			// 	that.getDirectionDriving(that.startLonLat, that.endLonLat);
-			// },
-
 			setMarker: function(id, lon, lat, iconPath) {
 				var width = 20;
 				var height = 20;
@@ -382,7 +319,7 @@
 				//调用高德api取得路径规划并绘制线路 
 				var that = this;
 				uni.request({
-					url: taxi.InterfaceAddress[0],
+					url: $bcfw.InterfaceAddress[0],
 					data: {
 						startLonLat: startLonLat,
 						endLonLat: endLonLat,
