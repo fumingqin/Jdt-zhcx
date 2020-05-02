@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "意见反馈",
+  "usingComponents": {
+    "robby-image-upload": "/components/GRZX/robby-image-upload/robby-image-upload"
+  }
+}

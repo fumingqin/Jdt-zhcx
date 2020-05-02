@@ -1,0 +1,368 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+page,
+.ho_view {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #F1F1F1;
+}
+.cvt_background {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  height: 253rpx;
+  background: #fc4646;
+  top: 0;
+}
+.cvt_setOutContent {
+  position: relative;
+  margin-left: 26rpx;
+  margin-right: 26rpx;
+  margin-bottom: 135rpx;
+  top: 148rpx;
+}
+.cvt_setOutContent {
+  top: 64rpx;
+}
+.cvt_content {
+  width: 698rpx;
+  background: white;
+  -webkit-box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+          box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+  border-radius: 13px;
+}
+.cvt_content .ct_departureContents1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  padding-top: 40rpx;
+  padding-left: 40rpx;
+}
+.cvt_content .ct_departureContents1 .ct_content1 {
+  color: #666666;
+  font-size: 30rpx;
+  width: 310rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cvt_content .ct_departureContents1 .ct_content1 .ct_content2 {
+  width: 200rpx;
+  font-size: 30rpx;
+  color: #2c2d2d;
+  margin-left: 15rpx;
+  font-weight: bold;
+}
+.cvt_content .ct_departureContents1 .ct_content3 {
+  color: #666666;
+  font-size: 30rpx;
+  width: 310rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cvt_content .ct_departureContents1 .ct_content3 .ct_content4 {
+  width: 200rpx;
+  font-size: 30rpx;
+  color: #2c2d2d;
+  margin-left: 15rpx;
+  font-weight: bold;
+}
+.cvt_content .ct_departureContents2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  padding-top: 40rpx;
+  padding-left: 40rpx;
+  padding-bottom: 40rpx;
+}
+.cvt_content .ct_departureContents2 .ct_content5 {
+  color: #666666;
+  font-size: 30rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cvt_content .ct_departureContents2 .ct_content5 .ct_content6 {
+  font-size: 30rpx;
+  color: #2c2d2d;
+  margin-left: 15rpx;
+  font-weight: bold;
+}
+.cvt_content .ct_departureContents2 .ct_content7 {
+  color: #666666;
+  font-size: 30rpx;
+  width: 310rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cvt_content .ct_departureContents2 .ct_content7 .ct_content8 {
+  width: 200rpx;
+  font-size: 30rpx;
+  color: #2c2d2d;
+  margin-left: 15rpx;
+  font-weight: bold;
+}
+.cvt_content .ct_departureContents2 .ct_content9 {
+  color: #666666;
+  font-size: 30rpx;
+  width: 310rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cvt_content .ct_departureContents2 .ct_content9 .ct_content10 {
+  font-size: 30rpx;
+  color: #2c2d2d;
+  margin-left: 15rpx;
+  font-weight: bold;
+}
+.cvt_vehicleSelection {
+  width: 698rpx;
+  margin-top: 20rpx;
+  background: white;
+  -webkit-box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+          box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
+  border-radius: 13px;
+}
+.cvt_vehicleSelection .vs_topContent {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  padding: 31rpx 41rpx 0 41rpx;
+}
+.cvt_vehicleSelection .vs_topContent .tc_text1 {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.cvt_vehicleSelection .tc_text2 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  right: 41rpx;
+}
+.cvt_vehicleSelection .tc_text2 .tc_text3 {
+  font-size: 28rpx;
+  color: #999999;
+}
+.cvt_vehicleSelection .tc_text2 .te_boxVlew {
+  width: 87%;
+  padding: 16rpx 51rpx;
+  padding-bottom: 92rpx;
+  background: #FFFFFF;
+  border-radius: 30rpx;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.cvt_vehicleSelection .tc_text2 .te_boxVlew .bv_titleView {
+  margin: 24rpx 0;
+}
+.cvt_vehicleSelection .tc_text2 .te_boxVlew .bv_titleView .tv_text1 {
+  position: relative;
+  font-size: 38rpx;
+  font-weight: bold;
+  top: 8rpx;
+  margin-bottom: 16rpx;
+}
+.cvt_vehicleSelection .tc_text2 .te_boxVlew .bv_titleView .tv_text2 {
+  margin-top: 8rpx;
+  float: right;
+  color: #333;
+  font-size: 32rpx;
+}
+.cvt_vehicleSelection .tc_text2 .te_boxVlew .bv_content {
+  height: 800rpx;
+  line-height: 32rpx;
+}
+.cvt_vehicleSelection .tc_text2 .te_boxVlew .bv_content .ct_text {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  margin-top: 26rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.cvt_vehicleSelection .tc_text2 .te_boxVlew .bv_content .ct_noticeText {
+  color: #5E5E60;
+  text-align: justify;
+  line-height: 64rpx;
+  margin-top: 28rpx;
+  font-size: 28rpx;
+}
+.cvt_vehicleSelection .sr_scroll {
+  padding: 28rpx 41rpx 0 41rpx;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  width: 89%;
+  height: 100%;
+}
+.cvt_vehicleSelection .sr_scroll .sc_topSlide {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.cvt_vehicleSelection .sr_scroll .sc_topSlide .ts_tab {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  height: 88rpx;
+  width: 230rpx;
+  font-size: 30rpx;
+  color: #888;
+  z-index: 9;
+  position: relative;
+}
+.cvt_vehicleSelection .sr_scroll .sc_topSlide .ts_tab.current {
+  z-index: 10;
+  color: #ff0000;
+}
+.cvt_vehicleSelection .sr_scroll .sc_topSlide .ts_tab.current:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 104rpx;
+  height: 0;
+  border-bottom: 2rpx solid #ff0000;
+}
+.cvt_vehicleSelection .sr_scroll .sc_selectButton {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.cvt_vehicleSelection .sr_scroll .sc_selectButton .sb_button {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  border: 1px solid #888;
+  border-radius: 12rpx;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  font-size: 30rpx;
+  height: 72rpx;
+  width: 212rpx;
+  color: #888;
+  z-index: 20;
+  position: relative;
+  margin-right: 32rpx;
+  margin-top: 37rpx;
+}
+.cvt_vehicleSelection .sr_scroll .sc_selectButton .sb_button.current2 {
+  z-index: 30;
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  border-radius: 12rpx;
+}
+.cvt_vehicleSelection .sr_scroll .sc_choiceCar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.cvt_vehicleSelection .sr_scroll .sc_choiceCar .cc_button {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  height: 165rpx;
+  width: 226rpx;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  color: #888;
+  position: relative;
+  margin-right: 32rpx;
+  margin-top: 30rpx;
+  z-index: 21;
+}
+.cvt_vehicleSelection .sr_scroll .sc_choiceCar .cc_button .cc_image {
+  width: 226rpx;
+  height: 103rpx;
+  padding-top: 12rpx;
+  z-index: 22;
+}
+.cvt_vehicleSelection .sr_scroll .sc_choiceCar .cc_button .cc_text {
+  position: absolute;
+  bottom: 0;
+  font-size: 28rpx;
+  color: #888;
+  z-index: 23;
+}
+.cvt_vehicleSelection .sr_scroll .sc_choiceCar .cc_button .cc_text.current3 {
+  z-index: 24;
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  border-radius: 12rpx;
+  padding: 5rpx;
+}
+.cvt_button {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  padding: 46rpx 41rpx 60rpx 41rpx;
+}
+.cvt_button .bt_button {
+  position: relative;
+  width: 640rpx;
+  height: 94rpx;
+  background-color: #aaa;
+  z-index: 25;
+  font-size: 36rpx;
+  color: #FFFFFF;
+}
+.cvt_button .bt_button.submitColor {
+  z-index: 26;
+  background-color: #f95c75;
+}
+

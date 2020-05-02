@@ -1,0 +1,407 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+page {
+  background-color: #f6f6f6;
+}
+.swi {
+  width: 100%;
+  height: 440rpx;
+}
+.swi .swiItem {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.swi image {
+  width: 100%;
+  height: 100%;
+}
+.titleClass {
+  position: relative;
+  padding-top: 29rpx;
+  border-radius: 27rpx 27rpx 0 0;
+  width: 100%;
+  background-color: #FFFFFF;
+  margin-top: -25rpx;
+  padding-bottom: 47rpx;
+}
+.titleClass .title {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  color: #333333;
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-right: 40rpx;
+  margin-left: 40rpx;
+  margin-top: 16rpx;
+}
+.titleClass .dateCost {
+  padding-top: 29rpx;
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+}
+.titleClass .dateCost .date {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  font-size: 28rpx;
+  color: #aba9aa;
+}
+.titleClass .dateCost .date .cost1 {
+  position: absolute;
+  font-size: 30rpx;
+  color: #FC4646;
+  right: 0;
+  top: -11rpx;
+}
+.titleClass .dateCost .date .cost1 .cost2 {
+  font-size: 40rpx;
+  color: #FC4646;
+}
+.titleClass .grClass {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  margin-top: 60rpx;
+  margin-left: 40rpx;
+  margin-right: 40rpx;
+  padding-bottom: 30rpx;
+}
+.titleClass .grClass .txImage {
+  border-radius: 50%;
+  width: 88rpx;
+  height: 88rpx;
+}
+.titleClass .grClass .grView {
+  margin-left: 25rpx;
+}
+.titleClass .grClass .grView .name {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  font-size: 32rpx;
+  color: #333333;
+}
+.titleClass .grClass .grView .name .ladelView {
+  border-radius: 5px;
+  margin-left: 11rpx;
+  font-size: 20rpx;
+  color: #FFFFFF;
+  text-align: center;
+  width: 80rpx;
+  height: 35rpx;
+  line-height: 32rpx;
+  margin-top: 5rpx;
+}
+.titleClass .grClass .grView .number {
+  display: block;
+  font-size: 28rpx;
+  color: #aba9aa;
+  padding-top: 10rpx;
+}
+.titleClass .grClass .address {
+  position: absolute;
+  font-size: 32rpx;
+  color: #333333;
+  right: 0;
+  top: 16rpx;
+}
+.titleClass .ladel {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  border-radius: 2px;
+  font-size: 20rpx;
+  color: #FFFFFF;
+}
+.screen {
+  background: #FFFFFF;
+}
+.screen .screenView {
+  left: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  height: 97rpx;
+  background: #fff;
+  z-index: 10;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  margin-top: 20rpx;
+}
+.screen .screenView .screenText {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  height: 100%;
+  font-size: 30rpx;
+  color: #888;
+  position: relative;
+}
+.screen .screenView .screenText.current {
+  color: #06B4FD;
+}
+.screen .screenView .screenText.current:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 104rpx;
+  height: 0;
+  border-bottom: 4rpx solid #06B4FD;
+}
+.scenicspotContent {
+  background: #FFFFFF;
+  padding: 0 30rpx;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+}
+.scenicspotContent .content2 {
+  padding-top: 50rpx;
+  padding-bottom: 106rpx;
+  letter-spacing: 4rpx;
+  line-height: 48rpx;
+  text-align: justify;
+  font-size: 30rpx;
+}
+.scheduling {
+  background: #FFFFFF;
+  padding-left: 40rpx;
+  padding-top: 56rpx;
+  padding-bottom: 106rpx;
+}
+.scheduling .tripTitle {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.scheduling .tripTitle .circle {
+  position: relative;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  border: 2px #06B4FD solid;
+}
+.scheduling .tripTitle .circle .circleDay {
+  position: absolute;
+  font-size: 28rpx;
+  color: #06B4FD;
+  top: 12rpx;
+  left: 12rpx;
+}
+.scheduling .tripTitle .title {
+  font-size: 40rpx;
+  color: #333333;
+  font-weight: bold;
+  padding-left: 31rpx;
+  padding-top: 5rpx;
+}
+.scheduling .contentView {
+  margin-top: 50rpx;
+  margin-left: 32rpx;
+  border-left: 2rpx dashed #c8c8c8;
+}
+.scheduling .contentView .hotel {
+  padding-left: 71rpx;
+  padding-bottom: 30rpx;
+}
+.scheduling .contentView .hotel .iconHotel {
+  position: relative;
+  width: 39rpx;
+  height: 33rpx;
+}
+.scheduling .contentView .hotel .hotelText {
+  font-size: 30rpx;
+  color: #aba9aa;
+  margin-left: 18rpx;
+}
+.scheduling .contentView .content {
+  margin-right: 30rpx;
+}
+.scheduling .contentView .content .informationTitle {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+}
+.scheduling .contentView .content .informationTitle .titleDian {
+  position: relative;
+  width: 18rpx;
+  height: 18rpx;
+  background: #06b4fd;
+  border-radius: 50%;
+  top: 32rpx;
+  left: -9rpx;
+}
+.scheduling .contentView .content .informationTitle .title2 {
+  font-size: 32rpx;
+  padding-right: 15rpx;
+  font-weight: bold;
+  color: #333333;
+  padding-left: 46rpx;
+  line-height: 47rpx;
+  letter-spacing: 4rpx;
+  text-align: justify;
+}
+.scheduling .contentView .content .informationTime {
+  margin-top: 25rpx;
+  font-size: 30rpx;
+  color: #aba9aa;
+  padding-left: 46rpx;
+  line-height: 47rpx;
+  letter-spacing: 4rpx;
+}
+.scheduling .contentView .content .informationText {
+  font-size: 30rpx;
+  padding-left: 46rpx;
+  margin-top: 30rpx;
+  padding-bottom: 30rpx;
+  letter-spacing: 4rpx;
+  line-height: 48rpx;
+  text-align: justify;
+}
+.description {
+  background: #FFFFFF;
+  padding-bottom: 106rpx;
+}
+.description .costDescription {
+  position: relative;
+  padding-top: 41rpx;
+}
+.description .costDescription .costTitle {
+  font-weight: bold;
+  font-size: 34rpx;
+  padding-left: 30rpx;
+}
+.description .costDescription .costText {
+  padding-top: 13rpx;
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+  font-size: 30rpx;
+  color: #5E5E60;
+  text-align: justify;
+  line-height: 52rpx;
+}
+.preset .presetNeeds {
+  background: #FFFFFF;
+  padding-bottom: 106rpx;
+}
+.preset .presetNeeds .reserve {
+  position: relative;
+  padding-top: 41rpx;
+}
+.preset .presetNeeds .reserve .reserveTitle {
+  font-weight: bold;
+  font-size: 34rpx;
+  padding-left: 30rpx;
+}
+.preset .presetNeeds .reserve .reserveText {
+  padding-top: 13rpx;
+  font-size: 30rpx;
+  color: #5E5E60;
+  line-height: 52rpx;
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+  text-align: justify;
+}
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 995;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  width: 100%;
+  height: 90rpx;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+          justify-content: space-between;
+  font-size: 30rpx;
+  background: #fff;
+  z-index: 998;
+  color: #f85e52;
+  -webkit-box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+.footer .footerPrice {
+  padding-left: 55rpx;
+}
+.footer .footerPrice .kfIcon {
+  width: 40rpx;
+  height: 36rpx;
+  color: #2c2d2d;
+}
+.footer .footerPrice .zfIcon {
+  padding-left: 50rpx;
+  width: 32rpx;
+  height: 33rpx;
+  color: #2c2d2d;
+}
+.footer .submitChange {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 280rpx;
+  height: 100%;
+  background: #06B4FD;
+}
+.footer .submitChange .submit {
+  color: #fff;
+  font-size: 32rpx;
+}
+

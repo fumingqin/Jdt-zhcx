@@ -1,0 +1,1 @@
+<view class="data-v-24428e57"><view class="pic_list data-v-24428e57"><block wx:for="{{picList}}" wx:for-item="x" wx:for-index="y" wx:key="*this"><view data-event-opts="{{[['tap',[['clickPic',[y]]]]]}}" bindtap="__e" class="data-v-24428e57"><image src="{{x.ticketImage}}" class="data-v-24428e57"></image></view></block></view></view>

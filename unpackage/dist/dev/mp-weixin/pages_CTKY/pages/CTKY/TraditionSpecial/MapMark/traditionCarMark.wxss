@@ -1,0 +1,78 @@
+
+view,
+swiper-item,
+scroll-view {
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:flex;
+  -webkit-box-orient:vertical;
+  -webkit-box-direction:normal;
+  -webkit-flex-direction:column;
+          flex-direction:column;
+  -webkit-flex-shrink: 0;
+          flex-shrink: 0;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+          flex-grow: 0;
+  -webkit-flex-basis: auto;
+          flex-basis: auto;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+          align-items: stretch;
+  -webkit-align-content: flex-start;
+          align-content: flex-start;
+}
+view,
+image,
+input,
+scroll-view,
+swiper,
+swiper-item,
+text,
+textarea,
+video {
+  position: relative;
+  border: 0px solid #000000;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+swiper-item {
+  position: absolute;
+}
+
+
+.content {
+	width: 750rpx;
+	/* height: 100%; */
+	background-color: #FFFFFF;
+}
+.map {
+	width: 750rpx;
+}
+.info {
+	background-color: #FFFFFF;
+	position: fixed;
+	border-radius: 20rpx;
+	left: 20rpx;
+	right: 20rpx;
+	bottom: 20rpx;
+}
+
+/* 起始站 */
+.title {
+	margin-top: 20rpx;
+	margin-left: 20rpx;
+	font-size: 30rpx;
+	color: rgba(44,45,45,1);
+}
+
+/* 时间/上下车点 */
+.text {
+	margin-top: 5rpx;
+	margin-left: 20rpx;
+	font-size: 26rpx;
+	color: rgba(102, 102, 102, 1);
+	margin-bottom: 20rpx;
+	font-weight: 300;
+}
+

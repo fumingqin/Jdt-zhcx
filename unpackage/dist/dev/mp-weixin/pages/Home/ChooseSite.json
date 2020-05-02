@@ -1,0 +1,11 @@
+{
+  "backgroundColor": "#007AFF",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "uni-icons": "/components/HOME/uni-icons/uni-icons",
+    "uni-segmented-control": "/components/HOME/uni-segmented-control/uni-segmented-control",
+    "h-time-picker": "/components/HOME/h-timePicker/h-timePicker",
+    "popup": "/components/HOME/uni-popup/uni-popup",
+    "empty-data": "/components/CTKY/emptyData/emptyData"
+  }
+}

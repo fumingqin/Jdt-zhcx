@@ -1,0 +1,6 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "w-picker": "/components/GRZX/w-picker/w-picker"
+  }
+}

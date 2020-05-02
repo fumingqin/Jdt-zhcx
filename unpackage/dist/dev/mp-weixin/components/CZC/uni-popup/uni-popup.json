@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "uni-transition": "/components/CZC/uni-transition/uni-transition"
+  }
+}

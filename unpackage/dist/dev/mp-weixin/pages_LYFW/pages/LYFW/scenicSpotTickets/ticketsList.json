@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "景区列表",
+  "enablePullDownRefresh": true,
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "onReachBottomDistance": 0,
+  "usingComponents": {
+    "city-select": "/components/HOME/uni-location/linzq-citySelect/linzq-citySelect",
+    "popup-layer": "/components/HOME/uni-location/popup-layer/popup-layer"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "uni-icons": "/components/LYFW/ouristRoute/uni-icons/uni-icons"
+  }
+}

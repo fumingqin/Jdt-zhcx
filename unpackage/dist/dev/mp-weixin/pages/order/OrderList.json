@@ -1,0 +1,12 @@
+{
+  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "",
+  "navigationBarBackgroundColor": "#f5f5f5",
+  "usingComponents": {
+    "uni-segmented-control": "/components/Order/uni-segmented-control/uni-segmented-control",
+    "uni-popup": "/components/Order/uni-popup/uni-popup",
+    "uni-popup2": "/components/Order/uni-popup/uni-popup2",
+    "uni-icons": "/components/Order/uni-icons/uni-icons",
+    "empty-data": "/components/CTKY/emptyData/emptyData"
+  }
+}

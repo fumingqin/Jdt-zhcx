@@ -1,185 +1,25 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		//--------------------引导判断页--------------------
 		{
 			"path": "pages/Home/init",
 			"style": {}
-		}, {
+		},
+		//--------------------引导页--------------------
+		{
 			"path": "pages/Home/guidePage",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
+		//--------------------主页--------------------
 		{
 			"path": "pages/Home/Index",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
-		{
-			"path": "pages/CZC/Index",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		//--------------------------------------旅游代码开始---------------------------------------
-		{
-			"path": "pages/LYFW/scenicSpotTickets/ticketsList",
-
-			"style": {
-				"navigationBarTitleText": "景区列表",
-				"enablePullDownRefresh": true,
-				"navigationBarBackgroundColor": "#FFFFFF",
-				"onReachBottomDistance": 0,
-				"app-plus": {
-					"softinputNavBar": "none"
-				}
-			}
-		},
-		{
-			"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
-			"style": {
-				"navigationBarTitleText": "景区详情",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/LYFW/currency/imglist",
-			"style": {
-				"navigationBarTitleText": "全部图片"
-			}
-		},
-		{
-			"path": "pages/LYFW/currency/imgPreview",
-
-			"style": {
-				"navigationBarTitleText": "查看图片"
-			}
-		},
-
-		{
-
-			"path": "pages/LYFW/currency/travelDetails",
-			"style": {
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
-			"style": {
-				"navigationBarTitleText": "选择支付 ",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		}, {
-			"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
-			"style": {
-				"navigationBarTitleText": "购票成功",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		}, {
-			"path": "pages/LYFW/scenicSpotTickets/orderAdd",
-			"style": {
-				"navigationBarTitleText": "填写订单",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/LYFW/scenicSpotTickets/orderDetails",
-			"style": {
-				"navigationBarTitleText": "订单详情",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/LYFW/independentTravel/it_list",
-			"style": {}
-		},
-		{
-			"path": "pages/LYFW/groupTour/groupTourList",
-			"style": {
-				"navigationBarTitleText": "跟团游列表"
-			}
-		}, {
-			"path": "pages/LYFW/groupTour/viewMore",
-			"style": {}
-		},
-		{
-			"path": "pages/Home/ho_zhly",
-			"style": {
-				"navigationBarTitleText": "南平智慧旅游APP",
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		},
-		//--------------------------------------旅游代码结束---------------------------------------
-
-		{
-			"path": "pages/CZC/CallAndDrive",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/CZC/PrivateTaxi",
-			"style": {
-
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/CZC/WaitTakeOrder",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-
+		//--------------------搜索栏--------------------
 		{
 			"path": "pages/Home/ChooseSite",
 			"style": {
@@ -187,7 +27,8 @@
 				"navigationStyle": "custom"
 			}
 		},
-		{ //个人中心模块开始
+		//----------------------------个人中心模块----------------------------
+		{
 			"path": "pages/GRZX/user",
 			"style": {
 				"navigationStyle": "custom",
@@ -223,7 +64,7 @@
 								"background": "rgba(0,0,0,0)",
 								"redDot": true
 							}
-							
+
 						]
 					}
 				}
@@ -316,145 +157,12 @@
 				// 	}]
 			}
 		},
-		//个人中心模块结束
 		{
-			// 出租车订单列表
-			"path": "pages/order/OrderList",
-			"style": {
-				// #ifdef H5
-				"navigationStyle": "custom",
-				// #endif
-				"enablePullDownRefresh": true,
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#f5f5f5"
-				
-			}
-		}, {
-			// 出租车订单详情
-			"path": "pages/order/OrderDetail",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
-			//价格详情
-			"path": "pages/CZC/PriceDetail",
-			"style": {
-				"navigationBarTitleText": "费用明细"
-			}
-		}, {
-			"path": "pages/CZC/PaymentSuccess",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
-			"path": "pages/CZC/PaymentFail",
-			"style": {}
-		}, {
 			"path": "pages/GRZX/complaint",
 			"style": {
 				"navigationBarTitleText": "我要投诉"
 			}
 		},
-		//----------------------------客运模块开始----------------------------
-
-		{
-			"path": "pages/CTKY/TraditionSpecial/Home/ctkyIndex",
-			"style": {
-				"navigationBarTitleText": "客运"
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick",
-			"style": {
-				"navigationBarTitleText": "选择站点"
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/Order/selectTickets",
-			"style": {
-				"navigationBarTitleText": "班次列表"
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/Order/scheduleDetails",
-			"style": {
-				"backgroundColor": "#F1F1F1",
-				"navigationBarBackgroundColor": "#FC4646",
-				"navigationBarTextStyle": "white",
-				"navigationBarTitleText": "班次详情"
-			}
-		},
-		{
-			"path": "pages/CTKY/TraditionSpecial/seatSelection",
-			"style": {
-				"backgroundColor": "#F1F1F1",
-				"navigationBarBackgroundColor": "#FC4646",
-				"navigationBarTextStyle": "white",
-				"navigationBarTitleText": "选择座位"
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/Order/oederList",
-			"style": {
-				"navigationBarTitleText": "订单列表"
-			}
-		},
-		{
-			"path": "pages/CTKY/TraditionSpecial/Order/orderDetail",
-			"style": {
-				"navigationBarTitleText": "订单详情"
-			}
-		},
-		{
-			"path": "pages/CTKY/TraditionSpecial/issueView",
-			"style": {
-				"navigationBarTitleText": "订单评价"
-			}
-		},
-		{
-			"path": "pages/CTKY/TraditionSpecial/MapMark/traditionCarMark",
-			"style": {
-				"navigationBarTitleText": "传统地图标识"
-			}
-		},
-		{
-			"path": "pages/CTKY/TraditionSpecial/MapMark/specialMark",
-			"style": {
-				"navigationBarTitleText": "定制标识"
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/MapMark/checkBusLocation",
-			"style": {
-				"navigationBarTitleText": "查看班车位置"
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/PayMent/orderPayment",
-			"style": {
-
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/stationPicker/selectStation", //上下车点选择
-			// #ifdef APP-PLUS
-			"navigationStyle": "custom",
-			// #endif
-			"style": {
-				"navigationBarTitleText": "上下车点选择",
-				"navigationBarBackgroundColor": "#FE6C66"
-			}
-		},
-		{
-			"path": "pages/CTKY/TraditionSpecial/PayMent/CTKYPaySuccess",
-			"style": {
-
-			}
-		}, {
-			"path": "pages/CTKY/TraditionSpecial/PayMent/CTKYPayFail",
-			"style": {
-
-			}
-		}, {
-			"path": "pages/CTKY/SpecialBus/Home/specialBusHome",
-			"style": {
-
-			}
-		},
-		//----------------------------客运模块结束----------------------------
 		{
 			"path": "pages/GRZX/collection",
 			"style": {
@@ -480,7 +188,43 @@
 			"style": {
 				"navigationBarTitleText": "推送详情"
 			}
-		}, {
+		},
+		{
+			"path": "pages/GRZX/feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈"
+			}
+		},
+		
+		//----------------------------订单列表----------------------------
+		{
+			"path": "pages/order/OrderList",
+			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom",
+				// #endif
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#f5f5f5"
+
+			}
+		},
+		//----------------------------出租车订单列表----------------------
+		{
+			"path": "pages/order/OrderDetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/order/SpecialLineDetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		
+		//----------------------------公共页面----------------------
+		{
 			"path": "pages/Home/InformationDetails",
 			"style": {
 				"navigationBarTitleText": "资讯详情"
@@ -506,83 +250,7 @@
 			"path": "pages/Home/MapSearch",
 			"style": {}
 		},
-		{
-			"path": "pages/BCFW/bf_chartered",
-			"style": {
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
-			}
-		}, {
-			"path": "pages/BCFW/bf_choice",
-			"style": {}
-		},
-		{
-			"path": "pages/BCFW/bf_information",
-			"style": {
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				},
-				"navigationBarTitleText": "用车信息"
-			}
-		}, {
-			"path": "pages/BCFW/bf_choiceVehicleType",
-			"style": {
-				// #ifdef APP-PLUS
-				"navigationStyle": "custom",
-				// #endif
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}, 
-				"navigationBarTitleText": "选择车型"
-			}
-		}, {
-			"path": "pages/BCFW/charterMap",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
-			"path": "pages/BCFW/bf_charterMap",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
-			"path": "pages/BCFW/BCsuccessfulPayment",
-			"style": {}
-		},
-		{
-			"path": "pages/BCFW/charteredBusPayment",
-			"style": {}
-		}, {
-			"path": "pages/GJCX/busH5",
-			"style": {}
-		},
-		{
-			"path": "pages/CTKY/SpecialBus/Home/specialLinePicker",
-			"style": {}
-		}
-
-		, {
-			"path": "pages/CTKY/SpecialBus/Home/specialReserve",
-			"style": {}
-		}, {
-			"path": "pages/order/SpecialLineDetail",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
+		//-----服务-----
 		{
 			"path": "pages/Home/serve",
 			"style": {
@@ -590,32 +258,407 @@
 				"navigationStyle": "custom",
 				// #endif
 				"navigationBarTitleText": "服务"
-				
-				
-			}
-		},
-		{
-			"path": "pages/GRZX/feedback",
-			"style": {
-				"navigationBarTitleText": "意见反馈"
-			}
-		}, {
-			"path": "pages/CZC/PrivateTaxiPayment",
-			"style": {
-				"navigationStyle": "custom"
 			}
 		}
-        ,{
-            "path" : "pages/CZC/PrivatePaySuccess",
-            "style" : {
-				"navigationStyle": "custom"
-			}
-        }
-    ],
-	
-	
+	],
 
-	
+	"subPackages": [
+		//---------------------------------------------第一个包：传统客运------------------------------------------
+		{
+			"root": "pages_CTKY/pages/",
+			"pages": [
+				//----------------------------------定制巴士--------------------------------------------
+				{
+					"path": "CTKY/SpecialBus/Home/specialBusHome",
+					"style": {}
+				}, {
+					"path": "CTKY/SpecialBus/Home/specialLinePicker",
+					"style": {}
+				}, {
+					"path": "CTKY/SpecialBus/Home/specialReserve",
+					"style": {}
+				},
+				//----------------------------------传统班车/定制班车-----------------------------------
+				{
+					"path": "CTKY/TraditionSpecial/Home/ctkyIndex",
+					"style": {
+						"navigationBarTitleText": "客运"
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/stationPicker/homeSattionPick",
+					"style": {
+						"navigationBarTitleText": "选择站点"
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/Order/selectTickets",
+					"style": {
+						"navigationBarTitleText": "班次列表"
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/Order/scheduleDetails",
+					"style": {
+						"backgroundColor": "#F1F1F1",
+						"navigationBarBackgroundColor": "#FC4646",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "班次详情"
+					}
+				},
+				{
+					"path": "CTKY/TraditionSpecial/seatSelection",
+					"style": {
+						"backgroundColor": "#F1F1F1",
+						"navigationBarBackgroundColor": "#FC4646",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "选择座位"
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/Order/oederList",
+					"style": {
+						"navigationBarTitleText": "订单列表"
+					}
+				},
+				{
+					"path": "CTKY/TraditionSpecial/Order/orderDetail",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "CTKY/TraditionSpecial/issueView",
+					"style": {
+						"navigationBarTitleText": "订单评价"
+					}
+				},
+				{
+					"path": "CTKY/TraditionSpecial/MapMark/traditionCarMark",
+					"style": {
+						"navigationBarTitleText": "传统地图标识"
+					}
+				},
+				{
+					"path": "CTKY/TraditionSpecial/MapMark/specialMark",
+					"style": {
+						"navigationBarTitleText": "定制标识"
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/MapMark/checkBusLocation",
+					"style": {
+						"navigationBarTitleText": "查看班车位置"
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/PayMent/orderPayment",
+					"style": {
+
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/stationPicker/selectStation", //上下车点选择
+					// #ifdef APP-PLUS
+					"navigationStyle": "custom",
+					// #endif
+					"style": {
+						"navigationBarTitleText": "上下车点选择",
+						"navigationBarBackgroundColor": "#FE6C66"
+					}
+				},
+				{
+					"path": "CTKY/TraditionSpecial/PayMent/CTKYPaySuccess",
+					"style": {
+
+					}
+				}, {
+					"path": "CTKY/TraditionSpecial/PayMent/CTKYPayFail",
+					"style": {
+
+					}
+				}
+			]
+		},
+		//---------------------------------------------第二个包：网络约车------------------------------------------
+		{
+			"root": "pages_CZC/pages/",
+			"pages": [
+				//----------------------------------出租车--------------------------------------------
+				{
+					"path": "CZC/Index",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "CZC/CallAndDrive",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "CZC/PrivateTaxi",
+					"style": {
+
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "CZC/WaitTakeOrder",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					//价格详情
+					"path": "CZC/PriceDetail",
+					"style": {
+						"navigationBarTitleText": "费用明细"
+					}
+				}, {
+					"path": "CZC/PaymentSuccess",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}, {
+					"path": "CZC/PaymentFail",
+					"style": {}
+				}, {
+					"path": "CZC/PrivateTaxiPayment",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}, {
+					"path": "CZC/PrivatePaySuccess",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}
+
+			]
+		},
+		//---------------------------------------------第三个包：公交查询------------------------------------------
+		{
+			"root": "pages_GJCX/pages/",
+			"pages": [
+				//----------------------------------公交查询--------------------------------------------
+				{
+					"path": "GJCX/busH5",
+					"style": {}
+				}
+			]
+		},
+		//---------------------------------------------第四个包：包车服务------------------------------------------
+		{
+			"root": "pages_BCFW/pages/",
+			"pages": [
+				//----------------------------------包车服务--------------------------------------------
+				{
+					"path": "BCFW/bf_chartered",
+					"style": {
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				}, {
+					"path": "BCFW/bf_choice",
+					"style": {}
+				},
+				{
+					"path": "BCFW/bf_information",
+					"style": {
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						},
+						"navigationBarTitleText": "用车信息"
+					}
+				}, {
+					"path": "BCFW/bf_choiceVehicleType",
+					"style": {
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						},
+						"navigationBarTitleText": "选择车型"
+					}
+				}, {
+					"path": "BCFW/charterMap",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}, {
+					"path": "BCFW/bf_charterMap",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}, {
+					"path": "BCFW/BCsuccessfulPayment",
+					"style": {}
+				},
+				{
+					"path": "BCFW/charteredBusPayment",
+					"style": {}
+				}
+			]
+		},
+		//---------------------------------------------第五个包：旅游服务------------------------------------------
+		{
+			"root": "pages_LYFW/pages/",
+			"pages": [
+				//----------------------------------通用页面----------------------------------
+				{
+					"path": "LYFW/currency/imglist",
+					"style": {
+						"navigationBarTitleText": "全部图片"
+					}
+				},
+				{
+					"path": "LYFW/currency/imgPreview",
+
+					"style": {
+						"navigationBarTitleText": "查看图片"
+					}
+				},
+				{
+
+					"path": "LYFW/currency/travelDetails",
+					"style": {
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				},
+				{
+					"path": "LYFW/currency/ho_zhly",
+					"style": {
+						"navigationBarTitleText": "旅游服务",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				},
+				//----------------------------------跟团游页面----------------------------------
+				{
+					"path": "LYFW/groupTour/groupTourList",
+					"style": {
+						"navigationBarTitleText": "跟团游列表"
+					}
+				}, {
+					"path": "LYFW/groupTour/viewMore",
+					"style": {}
+				},
+				//----------------------------------自由行页面----------------------------------
+				{
+					"path": "LYFW/independentTravel/it_list",
+					"style": {}
+				},
+				//----------------------------------景区门票页面----------------------------------
+				{
+					"path": "LYFW/scenicSpotTickets/ticketsList",
+
+					"style": {
+						"navigationBarTitleText": "景区列表",
+						"enablePullDownRefresh": true,
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"onReachBottomDistance": 0,
+						"app-plus": {
+							"softinputNavBar": "none"
+						}
+					}
+				},
+				{
+					"path": "LYFW/scenicSpotTickets/ticketsDetails",
+					"style": {
+						"navigationBarTitleText": "景区详情",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				},
+
+				{
+					"path": "LYFW/scenicSpotTickets/selectivePayment",
+					"style": {
+						"navigationBarTitleText": "选择支付 ",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				}, {
+					"path": "LYFW/scenicSpotTickets/successfulPayment",
+					"style": {
+						"navigationBarTitleText": "购票成功",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				}, {
+					"path": "LYFW/scenicSpotTickets/orderAdd",
+					"style": {
+						"navigationBarTitleText": "填写订单",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				},
+				{
+					"path": "LYFW/scenicSpotTickets/orderDetails",
+					"style": {
+						"navigationBarTitleText": "订单详情",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				}
+			]
+		}
+	],
+
+
+
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
@@ -658,7 +701,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "pages/Home/Index", //启动页面，必选
+			"path": "pages/Home/init", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
