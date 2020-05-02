@@ -109,17 +109,7 @@
 						},
 						method:that.$GrzxInter.Interface.login.method,
 						success(res1) {
-							uni.request({
-								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								data:{
-									userId:res1.data.data.userId,
-									portrait:userInfo.portrait,
-								},
-								method:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								success(res3) {
-									console.log(res3);
-								}
-							})
+							console.log(userInfo.headimgurl,'headimgurl')
 							uni.request({
 								//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
 								//url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
@@ -135,21 +125,32 @@
 								method:that.$GrzxInter.Interface.changeInfo.method,
 								success(res) {
 									console.log(res,"res")
-									uni.showToast({
-										title:'绑定成功！',
-										icon:'success',
+									uni.request({
+										url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+										data:{
+											userId:res.data.data.userId,
+											portrait:userInfo.headimgurl,
+										},
+										method:that.$GrzxInter.Interface.changeInfoPortrait.method,
+										success(res3) {
+											console.log(res3);
+											uni.showToast({
+												title:'绑定成功！',
+												icon:'success',
+											})
+											uni.setStorageSync('userInfo',res3.data.data)
+											that.logining=true;
+											that.login(res3.data.data)
+											setTimeout(function(){
+												uni.switchTab({
+													url:'/pages/Home/Index'
+												})
+											},500);
+										}
 									})
-									res.data.data.portrait=userInfo.portrait;
-									uni.setStorageSync('userInfo',res.data.data)
-									that.logining=true;
-									that.login(res.data.data)
-									setTimeout(function(){
-										uni.switchTab({
-											url:'/pages/Home/Index'
-										})
-									},500);
 								}
-							})	
+							})
+							
 						}
 					})
 					

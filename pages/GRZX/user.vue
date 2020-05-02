@@ -97,7 +97,7 @@
 		},
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
-			if(index === 0){
+			if(index === 2){
 				uni.navigateTo({
 					url:'/pages/GRZX/set'
 				})
@@ -107,7 +107,7 @@
 					url:'/pages/GRZX/myNews'
 				})
 			}
-			if(index === 2){
+			if(index === 0){
 				uni.scanCode({
 					onlyFromCamera:true,
 					success:function(res){
