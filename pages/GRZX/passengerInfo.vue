@@ -157,7 +157,8 @@
 					key:'userInfo',
 					success() {
 						uni.navigateTo({
-							url:'/pages/GRZX/addPassenger?type=ad'
+							//url:'/pages/GRZX/addPassenger?type=ad'
+							url:this.$GrzxInter.Route.addPassenger.url+'?type=ad'
 						})
 					},
 					fail() {

@@ -1,6 +1,0 @@
-{
-  "usingComponents": {
-    "date-picker": "/components/CTKY/mx-datepicker/ctkyDatePicker",
-    "popup": "/components/CTKY/uni-popup/uni-popup"
-  }
-}

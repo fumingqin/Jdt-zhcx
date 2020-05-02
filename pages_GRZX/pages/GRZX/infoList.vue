@@ -257,7 +257,8 @@
 	        		data:e
 	        	})
 	        	uni.navigateTo({
-	        		url:'/pages/GRZX/addPassenger?type=edit'
+	        		//url:'/pages/GRZX/addPassenger?type=edit',
+					url:this.$GrzxInter.Route.addPassenger.url+'?type=edit',
 	        	})
 	        },
 			// ---------添加乘车人---------
@@ -272,7 +273,8 @@
 					},
 					success:function(res){
 						uni.navigateTo({
-							url:'/pages/GRZX/addPassenger?type=ad'
+							// url:'/pages/GRZX/addPassenger?type=ad'
+							url:this.$GrzxInter.Route.addPassenger.url+'?type=ad',
 						})
 					}
 				})
@@ -280,7 +282,8 @@
 			// ---------地址管理---------
 			addAddress(){
 				uni.redirectTo({
-					url:'/pages/GRZX/addAddress?type=add'
+					// url:'/pages/GRZX/addAddress?type=add'
+					url:this.$GrzxInter.Route.addAddress.url+'?type=add',
 				})
 			},
 			// ---------选择地址---------
@@ -299,7 +302,8 @@
 					data:e
 				})
 				uni.redirectTo({
-					url:'/pages/GRZX/addAddress?type=edit'
+					// url:'/pages/GRZX/addAddress?type=edit',
+					url:this.$GrzxInter.Route.addAddress.url+'?type=edit',
 				})
 			},
 			// ---------删除乘车人信息---------
@@ -341,7 +345,8 @@
 					}
 					this.state=1;
 					uni.redirectTo({
-						url:'/pages/GRZX/infoList'
+						// url:'/pages/GRZX/infoList',
+						url:that.$GrzxInter.Route.infoList.url,
 					})
 				}
 			},
@@ -367,7 +372,8 @@
 				}
 				this.state=1;
 				uni.redirectTo({
-					url:'/pages/GRZX/infoList'
+					// url:'/pages/GRZX/infoList',
+					url:this.$GrzxInter.Route.infoList.url,
 				})
 			},
 			// ---------选中---------
@@ -381,7 +387,8 @@
 			// ---------返回按钮---------
 			returnClick(){
 				uni.switchTab({
-					url:'/pages/GRZX/user'
+					// url:'/pages/GRZX/user',
+					url:this.$GrzxInter.Route.user.url,
 				})
 			},
 			// ---------删除乘车人---------

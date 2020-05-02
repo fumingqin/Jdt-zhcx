@@ -82,7 +82,8 @@
 		methods:{
 			addAddress(){
 				uni.navigateTo({
-					url:'/pages/GRZX/addAddress?type=add'
+					// url:'/pages/GRZX/addAddress?type=add'
+					url:that.$GrzxInter.Route.addAddress.url+'?type=add',
 				})
 			},
 			returnPages(){
@@ -100,7 +101,8 @@
 					data:e
 				})
 				uni.navigateTo({
-					url:'/pages/GRZX/addAddress?type=edit'
+					// url:'/pages/GRZX/addAddress?type=edit'
+					url:that.$GrzxInter.Route.addAddress.url+'?type=edit',
 				})
 			}
 		}

@@ -93,7 +93,8 @@
 					    		this.logout();
 					    		setTimeout(()=>{
 					    			uni.switchTab({
-					    				url:'/pages/GRZX/user'
+					    				// url:'/pages/GRZX/user'
+										url:this.$GrzxInter.Route.user.url,
 					    			})
 					    		}, 200)
 					    	}
@@ -122,7 +123,8 @@
 							uni.clearStorage();
 							uni.setStorageSync('userInfo',user);
 							uni.redirectTo({
-								url:'/pages/GRZX/set'
+								// url:'/pages/GRZX/set'
+								url:this.$GrzxInter.Route.set.url,
 							})
 				    	}
 				    }

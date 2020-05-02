@@ -78,8 +78,90 @@ const Interface={
 	}, 
 }
 
+const MainPackage='/pages/GRZX';   //主包
+const SubPackage='/pages_GRZX/pages/GRZX'; //分包
+const Route={
+	//主包里页面的路径
+	addPassenger:{
+		url:MainPackage+'/addPassenger',
+		name:'添加乘车人页面',
+	},
+	notice:{
+		url:MainPackage+'/notice',
+		name:'通知页面',
+	},
+	passengerInfo:{
+		url:MainPackage+'/passengerInfo',
+		name:'乘车人列表页面',
+	},
+	user:{
+		url:MainPackage+'user',
+		name:'个人主页页面',
+	},
+	userLogin:{
+		url:MainPackage+'/userLogin',
+		name:'登录页面',
+	},
+	wxLogin:{
+		url:MainPackage+'/wxLogin',
+		name:'绑定手机号页面',
+	},
+	//分包里页面的路径
+	aboutApp:{
+		url:SubPackage+'/aboutApp',
+		name:'关于app页面',
+	},
+	addAddress:{
+		url:SubPackage+'/addAddress',
+		name:'添加地址页面',
+	},
+	address:{
+		url:SubPackage+'/aboutApp',
+		name:'地址列表页面',
+	},
+	collection:{
+		url:SubPackage+'/collection',
+		name:'我的收藏页面',
+	},
+	complaint:{
+		url:SubPackage+'/complaint',
+		name:'我要投诉页面',
+	},
+	coupon:{
+		url:SubPackage+'/coupon',
+		name:'优惠券页面',
+	},
+	detailTweet:{
+		url:SubPackage+'/detailTweet',
+		name:'推文详情页面',
+	},
+	feedback:{
+		url:SubPackage+'/feedback',
+		name:'意见反馈页面',
+	},
+	history:{
+		url:SubPackage+'/history',
+		name:'我的历史页面',
+	},
+	infoList:{
+		url:SubPackage+'/infoList',
+		name:'信息管理页面',
+	},
+	myNews:{
+		url:SubPackage+'/myNews',
+		name:'我的消息页面',
+	},
+	person:{
+		url:SubPackage+'/person',
+		name:'个人信息页面',
+	},
+	set:{
+		url:SubPackage+'/set',
+		name:'设置页面',
+	},
+}
 
 // 接口声明区
 export default {
-	Interface
+	Interface,Route
 }

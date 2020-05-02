@@ -4,13 +4,6 @@
 		<view v-if="loginType==1">
 			<image src="../../static/GRZX/login1.png" class="backClass"></image>
 		</view>
-		<!-- <view v-if="loginType==2">
-			<image src="../../static/GRZX/login2.png" class="backClass"></image>	
-		</view>
-		<view v-if="loginType==3">
-			<image src="../../static/GRZX/login3.png" class="backClass"></image>			
-		</view> -->
-		
 		<image src="../../static/GRZX/loginReturn.png" class="returnClass" @click="returnClick"></image>
 		<view class="inputContent">
 			<view class="inputItem phoneNum">
@@ -26,16 +19,7 @@
 			<view v-if="loginType==1">
 				<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
 				<image src="../../static/GRZX/btnLogin1.png" class="btnLogin" ></image>
-			</view>
-			<!-- <view v-if="loginType==2">
-				<view class="getCode style2" @click="getCodeClick" id="Code">{{textCode}}</view>
-				<image src="../../static/GRZX/btnLogin2.png" class="btnLogin"></image>
-			</view>
-			<view v-if="loginType==3">
-				<view class="getCode style3" @click="getCodeClick" id="Code">{{textCode}}</view>
-				<image src="../../static/GRZX/btnLogin3.png" class="btnLogin"></image>
-			</view> -->
-			
+			</view>		
 			<text class="fontStyle" @click="loginClick">确定</text>
 		</view>
 		
@@ -43,13 +27,7 @@
 		<view v-if="loginType==1">
 			<image src="../../static/GRZX/logo1.png" class="logoClass"></image>
 		</view>
-		<!-- <view v-if="loginType==2">
-			<image src="../../static/GRZX/logo2.png" class="logoClass"></image>
-		</view>
-		<view v-if="loginType==3">
-			<image src="../../static/GRZX/logo3.png" class="logoClass"></image>	
-		</view> -->
-		
+
 		<!-- <view class="loginMode">第三方登录</view>
 		<view class="leftLine"></view>
 		<view class="rightLine"></view> -->
@@ -60,7 +38,7 @@
 </template>
 
 <script>
-	import { pathToBase64, base64ToPath } from '../../components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
+	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import {
 		mapState,
 	    mapMutations  
@@ -324,7 +302,8 @@
 												icon:"none"
 											});
 											uni.switchTab({
-												url:'/pages/GRZX/user'
+												//url:'/pages/GRZX/user',
+												url:theSelf.$GrzxInter.Route.user.url,
 											})
 											
 										}

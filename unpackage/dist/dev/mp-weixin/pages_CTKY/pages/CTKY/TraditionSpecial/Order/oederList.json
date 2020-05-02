@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "订单列表",
-  "usingComponents": {
-    "popup": "/components/CTKY/uni-popup/uni-popup"
-  }
-}

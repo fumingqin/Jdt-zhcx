@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack:///D:/UAD/Jdt-zhcx/main.js"],"names":["createPage","Page"],"mappings":";;;;;;;;;;kDAAA,wCAAmB;AACnB;AACA,uM;AACAA,UAAU,CAACC,YAAD,CAAV,C","file":"pages/GRZX/set.js","sourcesContent":["import 'uni-pages';import '@dcloudio/uni-stat';\nimport Vue from 'vue'\nimport Page from './pages/GRZX/set.vue'\ncreatePage(Page)"],"sourceRoot":""}
