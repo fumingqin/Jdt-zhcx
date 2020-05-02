@@ -109,37 +109,7 @@
 						},
 						method:that.$GrzxInter.Interface.login.method,
 						success(res1) {
-							// let base64 = uni.arrayBufferToBase64(userInfo.portrait); //把arraybuffer转成base64
-							// let port = 'data:image/png;base64,' + base64; //不加上这串字符，在页面无法显示
-							// console.log(base64,'base64')
-							// console.log(port,'base64')
-							uni.downloadFile({
-							    url: userInfo.portrait, //仅为示例，并非真实的资源
-							    success: (res2) => {
-							        if (res2.statusCode === 200) {
-										pathToBase64(res2.tempFilePath)
-										.then(base64 => {
-											console.log(base64,'base64');
-											uni.request({
-												url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-												data:{
-													userId:res1.data.data.userId,
-													phoneNumber:phone,
-													nickname:userInfo.nickname,
-													address:userInfo.province+userInfo.city,
-													openId_wx:userInfo.openid,
-													portrait:base64,
-												},
-												method:that.$GrzxInter.Interface.changeInfoPortrait.value,
-												success(res3) {
-													console.log(res3);
-												}
-											})
-										})
-							            console.log('下载成功');
-							        }
-							    }
-							});
+							console.log(userInfo.headimgurl,'headimgurl')
 							uni.request({
 								//url:'http://zntc.145u.net/api/person/BindPersonInfoOpenID_wxAndPhoneNumber',
 								//url:that.$GrzxInter.Interface.BindPersonInfoOpenID_wxAndPhoneNumber.value,
@@ -155,21 +125,32 @@
 								method:that.$GrzxInter.Interface.changeInfo.method,
 								success(res) {
 									console.log(res,"res")
-									uni.showToast({
-										title:'绑定成功！',
-										icon:'success',
+									uni.request({
+										url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+										data:{
+											userId:res.data.data.userId,
+											portrait:userInfo.headimgurl,
+										},
+										method:that.$GrzxInter.Interface.changeInfoPortrait.method,
+										success(res3) {
+											console.log(res3);
+											uni.showToast({
+												title:'绑定成功！',
+												icon:'success',
+											})
+											uni.setStorageSync('userInfo',res3.data.data)
+											that.logining=true;
+											that.login(res3.data.data)
+											setTimeout(function(){
+												uni.switchTab({
+													url:'/pages/Home/Index'
+												})
+											},500);
+										}
 									})
-									res.data.data.portrait=userInfo.portrait;
-									uni.setStorageSync('userInfo',res.data.data)
-									that.logining=true;
-									that.login(res.data.data)
-									setTimeout(function(){
-										uni.switchTab({
-											url:'/pages/Home/Index'
-										})
-									},500);
 								}
-							})	
+							})
+							
 						}
 					})
 					

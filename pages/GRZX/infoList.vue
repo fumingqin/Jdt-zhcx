@@ -157,8 +157,8 @@
 		  this.loadData();
 		},
 		onShow(){
-			uni.startPullDownRefresh();
-			//this.loadData();
+			//uni.startPullDownRefresh();
+			this.loadData();
 		},
 	    methods: {	
 			// ---------加载数据---------
