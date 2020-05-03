@@ -74,7 +74,7 @@
 						if(res.data.nickname==""||res.data.nickname==null){
 							res.data.nickname="用户"+res.data.phoneNumber;
 						}
-						this.login(res.data);
+						//this.login(res.data);
 						//console.log(res.data.portrait,"555")
 					}
 				});
