@@ -547,7 +547,7 @@
 									that.showToast(res.data.msg);
 									orderNumber = res.data.data.orderNumber;
 									uni.navigateTo({
-										url: '../CZC/CallAndDrive?orderNumber=' + orderNumber,
+										url: '/pages_CZC/pages/CZC/CallAndDrive?orderNumber=' + orderNumber,
 										animationType: 'pop-in',
 										animationDuration: 200,
 										success: function() {
