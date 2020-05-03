@@ -129,6 +129,27 @@ const Interface = {
 		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
 	},
 	
+	gt_travelDetails:{
+		value: Url + '/api/ly/GetGroupTourDetailBycontentId',
+		name:'跟团游详情页-产品介绍-费用说明-预订须知',
+		method:'POST',
+		pages:["LYFW/currency/travelDetails"]
+	},
+	
+	gt_travelDetails2:{
+		value: Url + '/api/ly/GetGroupTourScheduleBycontentId',
+		name:'跟团游详情页-行程安排',
+		method:'POST',
+		pages:["LYFW/currency/travelDetails"]
+	},
+	
+	gt_groupTourList:{
+		value: Url + '/api/ly/GetGroupTour',
+		name:'跟团游列表',
+		method:'POST',
+		pages:["LYFW/groupTour/groupTourList"]
+	},
+	
 }
 
 

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-	import pickerAddress from '@/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue' 
+	import pickerAddress from '@/pages_GRZX/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue' 
 	export default {
 		components:{
 			pickerAddress
