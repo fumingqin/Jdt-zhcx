@@ -4,7 +4,7 @@
 
 //接口域名
 const Url = 'http://111.231.109.113:8004';
-const Url1="http://111.231.109.113:8002";
+const Url1="http://zntc.145u.net";
 //接口对象
 const Interface = {
 	//GET-POST
