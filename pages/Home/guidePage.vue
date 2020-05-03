@@ -13,20 +13,27 @@
 </template>
 
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
 				imageHeight: '', //手机屏幕高度
-				imageIndex: [{
-					src: '../../static/Home/guidePage/y1.png'
-				}, {
-					src: '../../static/Home/guidePage/y2.png'
-				}, {
-					src: '../../static/Home/guidePage/y3.png'
-				}],
+				imageIndex: '',
 			}
 		},
 		onLoad: function() {
+			uni.request({
+				url:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
+				method:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
+				data:{ 
+					// requestArea : this.regionWeixin,
+					requestArea : '南平市'
+				},
+				success:(res) => { 
+					console.log(res)
+					
+				},
+			})
 			// uni.getSystemInfo({//获取手机屏幕高度信息，让swiper的高度和手机屏幕一样高
 			uni.getSystemInfo({
 				success: (res) => {
