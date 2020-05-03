@@ -40,7 +40,7 @@
 			</view>
 		</view>
 		
-		<image src="../../static/GRZX/advert.png" class="advertClass"></image>
+		<image :src="advert" class="advertClass"></image>
 	
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
@@ -85,11 +85,13 @@
 				QQ:'2482549389',
 				nickname:'',
 				portrait:'',
+				advert:'',
 			}
 		},
 		computed: {
 		},
 		onLoad(){
+			this.loadImg();
 		},
 		onShow(){
 			this.loadData();
@@ -138,6 +140,25 @@
 		},
 		methods:{
 			// ---------------------------加载数据----------------------------
+			loadImg(){
+				var that=this;
+				console.log(that.$GrzxInter.GetImage.url,"144")
+				uni.request({
+					url:that.$GrzxInter.GetImage.url,
+					data:{
+						model:5,
+					},
+					method:'POST',
+					success(res) {
+						console.log(res,"153")
+						var image=res.data.data.filter(item => {
+							return item.type=='广告';
+						})
+						that.advert=image[0].imageUrl;
+						console.log(that.advert,'that.advert')
+					}
+				})
+			},
 			loadData(){
 				var that=this;
 				var user=uni.getStorageSync('userInfo');

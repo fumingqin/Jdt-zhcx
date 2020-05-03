@@ -103,6 +103,7 @@
 </template>
 
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue';
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue';
 	import QSTabs from '@/pages_LYFW/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue';
@@ -148,8 +149,8 @@
 			
 			routeData : function(){
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getPackageTourList',
-					method:'POST',
+					url:$lyfw.Interface.gt_groupTourList.value,
+					method:$lyfw.Interface.gt_groupTourList.method,
 					success: (e) => {
 						console.log(e)
 					}

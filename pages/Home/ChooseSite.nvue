@@ -138,7 +138,7 @@
 		<!-- 客运弹框 -->
 		<popup ref="popup" type="center" maskClick="false" style="z-index:99999;">
 			<view style="flex-direction: column;position: relative;display: flex;justify-content: center;">
-				<image src="../../static/CTKY/tipBackground.png" class="popupClass" style="height: 700rpx;width: 600rpx;"></image>
+				<image :src="kyPopImage" class="popupClass" style="height: 700rpx;width: 600rpx;"></image>
 				<view style="position: absolute; align-items: center;margin-top: 150rpx;">
 					<view class="popupTextContent" style="width: 600rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
 						<text class="popupText" style="text-align: center;font-size: 40rpx;font-weight: bold;">传统与定制班车的差异</text>
@@ -344,12 +344,15 @@
 				vehicleType: '出租车', //车辆类型
 				destinationArea: '', //目标区域
 				estimateTime: 0, //预计时长
-				estimateDistance: 0 //预计里程
+				estimateDistance: 0 ,//预计里程
+				kyPopImage:'',//客运弹框背景图
 			}
 		},
 
 		onLoad(options) {
 			var that = this;
+			//获取客运弹框图片
+			that.getPicture();
 			uni.getStorage({ //获取历史记录
 				key: "historyAddress",
 				success: function(res) {
@@ -424,6 +427,28 @@
 			
 		},
 		methods: {
+			//获取客运弹框背景图
+			getPicture() {
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
+					method:$KyInterface.KyInterface.Ky_AddPicture.method,
+					header:$KyInterface.KyInterface.Ky_AddPicture.header,
+					data:{
+						model:0,
+					},
+					success(res) {
+						if(res.data.status == true) {
+							that.kyPopImage = res.data.data[1].imageUrl
+						}else {
+							console.log(res.data.status)
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 			showToast: function(msg, icon = 'none') {
 				uni.showToast({
 					title: msg,

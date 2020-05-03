@@ -256,7 +256,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="info.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="info.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 
@@ -466,7 +466,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="finishArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="finishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
   
 		<!-- 进行中 -->
@@ -667,7 +667,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="goingArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="goingArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 
@@ -859,7 +859,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="unfinishArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="unfinishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 		<!-- 已取消 -->
@@ -1059,7 +1059,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="cancelArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="cancelArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 		<!-- 二维码弹框 -->
@@ -1223,6 +1223,7 @@
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import uQRCode from "@/common/uqrcode.js"
 	import $bcfw from '@/common/BCFW/bcfw.js'
+	import $KyInterface from "@/common/Ctky.js"
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1277,11 +1278,14 @@
 						checked: false
 					}
 				],
-				specialLineInfo: ''
+				specialLineInfo: '',
+				noDataImage:'',//客运弹框背景图
 			}
 		},
 		onLoad: function() {
 			var that = this;
+			//获取客运弹框图片
+			that.getPicture();
 			//读取用户ID
 			uni.getStorage({
 				key: 'userInfo',
@@ -1375,6 +1379,27 @@
 			},
 			//------------------------------------------------客运开始------------------------------------------------
 			//-------------------------客运用户详情-------------------------
+			getPicture() {
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
+					method:$KyInterface.KyInterface.Ky_AddPicture.method,
+					header:$KyInterface.KyInterface.Ky_AddPicture.header,
+					data:{
+						model:0,
+					},
+					success(res) {
+						if(res.data.status == true) {
+							that.noDataImage = res.data.data[2].imageUrl
+						}else {
+							console.log(res.data.status)
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 			getUserInfo() {
 				var that = this;
 				//读取用户ID
@@ -1396,11 +1421,9 @@
 			getKeYunOrderInfo: function() {
 				var that = this;
 				uni.request({
-					url: 'http://zntc.145u.net/api/ky/searchOrder',
-					method: 'GET',
-					header: {
-						'content-type': 'application/json'
-					},
+					url:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.Url,
+					method:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.method,
+					header:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.header,
 					data: {
 						clientID: that.userInfo.userId
 					},
@@ -1466,11 +1489,9 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url: 'http://zntc.145u.net/api/ky/RefundTicket_Flow',
-					method: 'GET',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
+					url:$KyInterface.KyInterface.Ky_RefundTicket.Url,
+					method:$KyInterface.KyInterface.Ky_RefundTicket.method,
+					header:$KyInterface.KyInterface.Ky_RefundTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -1506,11 +1527,9 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url: 'http://zntc.145u.net/api/ky/CancelTicket_Flow',
-					method: 'GET',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
+					url:$KyInterface.KyInterface.Ky_CancelTicket.Url,
+					method:$KyInterface.KyInterface.Ky_CancelTicket.method,
+					header:$KyInterface.KyInterface.Ky_CancelTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -1560,11 +1579,9 @@
 				uni.showLoading();
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
