@@ -5,7 +5,7 @@
 		</view>
 
 		<view class="cover-container">
-			<image class="okImage" mode="aspectFill" src='../../../../static/CZC/Fail.png'></image>
+			<image class="okImage" mode="aspectFill" src='../../../../static/CTKY/Fail.png'></image>
 			<text class="title">支付失败</text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
