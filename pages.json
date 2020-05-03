@@ -657,7 +657,24 @@
 			]
 		}
 	],
-
+	"preloadRule":{
+		"pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex": {
+		    "network": "all",
+		    "packages": ["__APP__"]
+		},
+		"pages_GJCX/pages/GJCX/busH5": {
+		    "network": "all",
+		    "packages": ["__APP__"]
+		},
+		"pages_BCFW/pages/BCFW/bf_chartered": {
+		    "network": "all",
+		    "packages": ["__APP__"]
+		},
+		"pages_LYFW/pages/LYFW/currency/ho_zhly":{
+			"network":"all",
+			"packages": ["__APP__"]
+		}
+	},
 
 
 	"globalStyle": {

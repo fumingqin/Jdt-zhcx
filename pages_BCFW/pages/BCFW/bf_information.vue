@@ -120,7 +120,7 @@
 </template>
 
 <script>
-	import uniPopup from "@/components/BCFW/choice/uni-popup/uni-popup.vue"
+	import uniPopup from "@/pages_BCFW/components/BCFW/uni-popup/uni-popup.vue"
 	import $bcfw from "@/common/BCFW/bcfw.js"
 
 	var name;
