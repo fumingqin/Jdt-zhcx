@@ -285,8 +285,8 @@
 	import uniSegmentedControl from "@/components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "@/components/HOME/h-timePicker/h-timePicker.vue";
 	import popup from "@/components/HOME/uni-popup/uni-popup.vue"; //弹框组件
-	import utils from "@/components/CTKY/shoyu-date/utils.filter.js"; //时间格式转换
-	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
+	import utils from "@/components/HOME/shoyu-date/utils.filter.js"; //时间格式转换
+	import emptyData from "@/components/Order/emptyData/emptyData.vue"; //无数据时显示内容
 	export default {
 		components: {
 			uniIcons,

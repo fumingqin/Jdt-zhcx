@@ -1217,7 +1217,7 @@
 	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
-	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
+	import emptyData from "@/components/Order/emptyData/emptyData.vue"; //无数据时显示内容
 	import $taxi from '../../common/Czc.js';
 	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
