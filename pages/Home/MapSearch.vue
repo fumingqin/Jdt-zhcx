@@ -24,7 +24,9 @@
 	var QQMapWX = require('@/libs/qqmap-wx-jssdk.min.js')
 	var qqmapsdk = new QQMapWX({
 		// key: 'LXCBZ-NNIKD-UZ64F-H6AFI-UNJLH-OCFGE'
-			key:'HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2'
+		//key:'JDFBZ-I5HHD-7IJ4M-PZDRR-4MDHE-4JFDS',
+		key:'ZURBZ-WWTL6-ZNDSL-M7YHC-L67Q3-HRB7V',//黄
+		//key:'HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2' //傅
 	})
 	export default {
 		data() {
