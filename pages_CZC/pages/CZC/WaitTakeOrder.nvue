@@ -86,8 +86,8 @@
 <script>
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
 	import $taxi from '@/common/Czc.js';
-	import uniPopup from "@/components/CZC/uni-popup/uni-popup.vue";
-	import uniIcons from "@/components/CZC/uni-icons/uni-icons.vue";
+	import uniPopup from "@/pages_CZC/components/CZC/uni-popup/uni-popup.vue";
+	import uniIcons from "@/pages_CZC/components/CZC/uni-icons/uni-icons.vue";
 
 
 	export default {
