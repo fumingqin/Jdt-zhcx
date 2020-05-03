@@ -177,37 +177,37 @@
 	"subPackages": [
 		//---------------------------------------------第一个包：传统客运------------------------------------------
 		{
-			"root": "pages_CTKY/pages/",
+			"root": "pages_CTKY/",
 			"pages": [
 				//----------------------------------定制巴士--------------------------------------------
 				{
-					"path": "CTKY/SpecialBus/Home/specialBusHome",
+					"path": "pages/CTKY/SpecialBus/Home/specialBusHome",
 					"style": {}
 				}, {
-					"path": "CTKY/SpecialBus/Home/specialLinePicker",
+					"path": "pages/CTKY/SpecialBus/Home/specialLinePicker",
 					"style": {}
 				}, {
-					"path": "CTKY/SpecialBus/Home/specialReserve",
+					"path": "pages/CTKY/SpecialBus/Home/specialReserve",
 					"style": {}
 				},
 				//----------------------------------传统班车/定制班车-----------------------------------
 				{
-					"path": "CTKY/TraditionSpecial/Home/ctkyIndex",
+					"path": "pages/CTKY/TraditionSpecial/Home/ctkyIndex",
 					"style": {
 						"navigationBarTitleText": "客运"
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/stationPicker/homeSattionPick",
+					"path": "pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick",
 					"style": {
 						"navigationBarTitleText": "选择站点"
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/Order/selectTickets",
+					"path": "pages/CTKY/TraditionSpecial/Order/selectTickets",
 					"style": {
 						"navigationBarTitleText": "班次列表"
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/Order/scheduleDetails",
+					"path": "pages/CTKY/TraditionSpecial/Order/scheduleDetails",
 					"style": {
 						"backgroundColor": "#F1F1F1",
 						"navigationBarBackgroundColor": "#FC4646",
@@ -216,7 +216,7 @@
 					}
 				},
 				{
-					"path": "CTKY/TraditionSpecial/seatSelection",
+					"path": "pages/CTKY/TraditionSpecial/seatSelection",
 					"style": {
 						"backgroundColor": "#F1F1F1",
 						"navigationBarBackgroundColor": "#FC4646",
@@ -224,46 +224,46 @@
 						"navigationBarTitleText": "选择座位"
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/Order/oederList",
+					"path": "pages/CTKY/TraditionSpecial/Order/oederList",
 					"style": {
 						"navigationBarTitleText": "订单列表"
 					}
 				},
 				{
-					"path": "CTKY/TraditionSpecial/Order/orderDetail",
+					"path": "pages/CTKY/TraditionSpecial/Order/orderDetail",
 					"style": {
 						"navigationBarTitleText": "订单详情"
 					}
 				},
 				{
-					"path": "CTKY/TraditionSpecial/issueView",
+					"path": "pages/CTKY/TraditionSpecial/issueView",
 					"style": {
 						"navigationBarTitleText": "订单评价"
 					}
 				},
 				{
-					"path": "CTKY/TraditionSpecial/MapMark/traditionCarMark",
+					"path": "pages/CTKY/TraditionSpecial/MapMark/traditionCarMark",
 					"style": {
 						"navigationBarTitleText": "传统地图标识"
 					}
 				},
 				{
-					"path": "CTKY/TraditionSpecial/MapMark/specialMark",
+					"path": "pages/CTKY/TraditionSpecial/MapMark/specialMark",
 					"style": {
 						"navigationBarTitleText": "定制标识"
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/MapMark/checkBusLocation",
+					"path": "pages/CTKY/TraditionSpecial/MapMark/checkBusLocation",
 					"style": {
 						"navigationBarTitleText": "查看班车位置"
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/PayMent/orderPayment",
+					"path": "pages/CTKY/TraditionSpecial/PayMent/orderPayment",
 					"style": {
 
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/stationPicker/selectStation", //上下车点选择
+					"path": "pages/CTKY/TraditionSpecial/stationPicker/selectStation", //上下车点选择
 					// #ifdef APP-PLUS
 					"navigationStyle": "custom",
 					// #endif
@@ -273,12 +273,12 @@
 					}
 				},
 				{
-					"path": "CTKY/TraditionSpecial/PayMent/CTKYPaySuccess",
+					"path": "pages/CTKY/TraditionSpecial/PayMent/CTKYPaySuccess",
 					"style": {
 
 					}
 				}, {
-					"path": "CTKY/TraditionSpecial/PayMent/CTKYPayFail",
+					"path": "pages/CTKY/TraditionSpecial/PayMent/CTKYPayFail",
 					"style": {
 
 					}
@@ -287,55 +287,55 @@
 		},
 		//---------------------------------------------第二个包：网络约车------------------------------------------
 		{
-			"root": "pages_CZC/pages/",
+			"root": "pages_CZC/",
 			"pages": [
 				//----------------------------------出租车--------------------------------------------
 				{
-					"path": "CZC/Index",
+					"path": "pages/CZC/Index",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				},
 				{
-					"path": "CZC/CallAndDrive",
+					"path": "pages/CZC/CallAndDrive",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				},
 				{
-					"path": "CZC/PrivateTaxi",
+					"path": "pages/CZC/PrivateTaxi",
 					"style": {
 
 						"navigationStyle": "custom"
 					}
 				},
 				{
-					"path": "CZC/WaitTakeOrder",
+					"path": "pages/CZC/WaitTakeOrder",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				},
 				{
 					//价格详情
-					"path": "CZC/PriceDetail",
+					"path": "pages/CZC/PriceDetail",
 					"style": {
 						"navigationBarTitleText": "费用明细"
 					}
 				}, {
-					"path": "CZC/PaymentSuccess",
+					"path": "pages/CZC/PaymentSuccess",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				}, {
-					"path": "CZC/PaymentFail",
+					"path": "pages/CZC/PaymentFail",
 					"style": {}
 				}, {
-					"path": "CZC/PrivateTaxiPayment",
+					"path": "pages/CZC/PrivateTaxiPayment",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				}, {
-					"path": "CZC/PrivatePaySuccess",
+					"path": "pages/CZC/PrivatePaySuccess",
 					"style": {
 						"navigationStyle": "custom"
 					}
@@ -345,22 +345,22 @@
 		},
 		//---------------------------------------------第三个包：公交查询------------------------------------------
 		{
-			"root": "pages_GJCX/pages/",
+			"root": "pages_GJCX/",
 			"pages": [
 				//----------------------------------公交查询--------------------------------------------
 				{
-					"path": "GJCX/busH5",
+					"path": "pages/GJCX/busH5",
 					"style": {}
 				}
 			]
 		},
 		//---------------------------------------------第四个包：包车服务------------------------------------------
 		{
-			"root": "pages_BCFW/pages/",
+			"root": "pages_BCFW/",
 			"pages": [
 				//----------------------------------包车服务--------------------------------------------
 				{
-					"path": "BCFW/bf_chartered",
+					"path": "pages/BCFW/bf_chartered",
 					"style": {
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
@@ -372,11 +372,11 @@
 						}
 					}
 				}, {
-					"path": "BCFW/bf_choice",
+					"path": "pages/BCFW/bf_choice",
 					"style": {}
 				},
 				{
-					"path": "BCFW/bf_information",
+					"path": "pages/BCFW/bf_information",
 					"style": {
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
@@ -389,7 +389,7 @@
 						"navigationBarTitleText": "用车信息"
 					}
 				}, {
-					"path": "BCFW/bf_choiceVehicleType",
+					"path": "pages/BCFW/bf_choiceVehicleType",
 					"style": {
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
@@ -402,33 +402,33 @@
 						"navigationBarTitleText": "选择车型"
 					}
 				},{
-					"path": "BCFW/bf_charterMap",
+					"path": "pages/BCFW/bf_charterMap",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				}, {
-					"path": "BCFW/BCsuccessfulPayment",
+					"path": "pages/BCFW/BCsuccessfulPayment",
 					"style": {}
 				},
 				{
-					"path": "BCFW/charteredBusPayment",
+					"path": "pages/BCFW/charteredBusPayment",
 					"style": {}
 				}
 			]
 		},
 		//---------------------------------------------第五个包：旅游服务------------------------------------------
 		{
-			"root": "pages_LYFW/pages/",
+			"root": "pages_LYFW/",
 			"pages": [
 				//----------------------------------通用页面----------------------------------
 				{
-					"path": "LYFW/currency/imglist",
+					"path": "pages/LYFW/currency/imglist",
 					"style": {
 						"navigationBarTitleText": "全部图片"
 					}
 				},
 				{
-					"path": "LYFW/currency/imgPreview",
+					"path": "pages/LYFW/currency/imgPreview",
 
 					"style": {
 						"navigationBarTitleText": "查看图片"
@@ -436,7 +436,7 @@
 				},
 				{
 
-					"path": "LYFW/currency/travelDetails",
+					"path": "pages/LYFW/currency/travelDetails",
 					"style": {
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
@@ -449,7 +449,7 @@
 					}
 				},
 				{
-					"path": "LYFW/currency/ho_zhly",
+					"path": "pages/LYFW/currency/ho_zhly",
 					"style": {
 						"navigationBarTitleText": "旅游服务",
 						// #ifdef APP-PLUS
@@ -464,22 +464,22 @@
 				},
 				//----------------------------------跟团游页面----------------------------------
 				{
-					"path": "LYFW/groupTour/groupTourList",
+					"path": "pages/LYFW/groupTour/groupTourList",
 					"style": {
 						"navigationBarTitleText": "跟团游列表"
 					}
 				}, {
-					"path": "LYFW/groupTour/viewMore",
+					"path": "pages/LYFW/groupTour/viewMore",
 					"style": {}
 				},
 				//----------------------------------自由行页面----------------------------------
 				{
-					"path": "LYFW/independentTravel/it_list",
+					"path": "pages/LYFW/independentTravel/it_list",
 					"style": {}
 				},
 				//----------------------------------景区门票页面----------------------------------
 				{
-					"path": "LYFW/scenicSpotTickets/ticketsList",
+					"path": "pages/LYFW/scenicSpotTickets/ticketsList",
 
 					"style": {
 						"navigationBarTitleText": "景区列表",
@@ -492,7 +492,7 @@
 					}
 				},
 				{
-					"path": "LYFW/scenicSpotTickets/ticketsDetails",
+					"path": "pages/LYFW/scenicSpotTickets/ticketsDetails",
 					"style": {
 						"navigationBarTitleText": "景区详情",
 						// #ifdef APP-PLUS
@@ -507,7 +507,7 @@
 				},
 
 				{
-					"path": "LYFW/scenicSpotTickets/selectivePayment",
+					"path": "pages/LYFW/scenicSpotTickets/selectivePayment",
 					"style": {
 						"navigationBarTitleText": "选择支付 ",
 						// #ifdef APP-PLUS
@@ -520,7 +520,7 @@
 						}
 					}
 				}, {
-					"path": "LYFW/scenicSpotTickets/successfulPayment",
+					"path": "pages/LYFW/scenicSpotTickets/successfulPayment",
 					"style": {
 						"navigationBarTitleText": "购票成功",
 						// #ifdef APP-PLUS
@@ -533,7 +533,7 @@
 						}
 					}
 				}, {
-					"path": "LYFW/scenicSpotTickets/orderAdd",
+					"path": "pages/LYFW/scenicSpotTickets/orderAdd",
 					"style": {
 						"navigationBarTitleText": "填写订单",
 						// #ifdef APP-PLUS
@@ -547,7 +547,7 @@
 					}
 				},
 				{
-					"path": "LYFW/scenicSpotTickets/orderDetails",
+					"path": "pages/LYFW/scenicSpotTickets/orderDetails",
 					"style": {
 						"navigationBarTitleText": "订单详情",
 						// #ifdef APP-PLUS
@@ -564,52 +564,52 @@
 		},
 		//---------------------------------------------第六个包：个人中心------------------------------------------
 		{
-			"root": "pages_GRZX/pages/",
+			"root": "pages_GRZX/",
 			"pages": [
 
 				{
-					"path": "GRZX/personal",
+					"path": "pages/GRZX/personal",
 					"style": {}
 				},
 				{
-					"path": "GRZX/address",
+					"path": "pages/GRZX/address",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				},
 				{
-					"path": "GRZX/set",
+					"path": "pages/GRZX/set",
 					"style": {
 						"navigationBarTitleText": "设置"
 					}
 				},
 				{
-					"path": "GRZX/addAddress", //添加邮寄地址
+					"path": "pages/GRZX/addAddress", //添加邮寄地址
 					"style": {
 						"navigationBarTitleText": "添加邮寄地址",
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
 				},
 				{
-					"path": "GRZX/aboutApp", //关于App
+					"path": "pages/GRZX/aboutApp", //关于App
 					"style": {
 						"navigationBarTitleText": "关于App"
 					}
 				},
 				{
-					"path": "GRZX/coupon", //卡券红包
+					"path": "pages/GRZX/coupon", //卡券红包
 					"style": {
 						"navigationBarTitleText": "卡券红包"
 					}
 				},
 				{
-					"path": "GRZX/myNews", //我的消息
+					"path": "pages/GRZX/myNews", //我的消息
 					"style": {
 						"navigationBarTitleText": "我的消息"
 					}
 				},
 				{
-					"path": "GRZX/infoList", //常用信息设置
+					"path": "pages/GRZX/infoList", //常用信息设置
 					"style": {
 						"enablePullDownRefresh": true,
 						"navigationStyle": "custom"
@@ -626,30 +626,30 @@
 					}
 				},
 				{
-					"path": "GRZX/complaint",
+					"path": "pages/GRZX/complaint",
 					"style": {
 						"navigationBarTitleText": "我要投诉"
 					}
 				},
 				{
-					"path": "GRZX/collection",
+					"path": "pages/GRZX/collection",
 					"style": {
 						"navigationBarTitleText": "我的收藏"
 					}
 				}, {
-					"path": "GRZX/history",
+					"path": "pages/GRZX/history",
 					"style": {
 						"navigationBarTitleText": "我的历史"
 					}
 				},
 				{
-					"path": "GRZX/detailTweet", //推文详情
+					"path": "pages/GRZX/detailTweet", //推文详情
 					"style": {
 						"navigationBarTitleText": "推送详情"
 					}
 				},
 				{
-					"path": "GRZX/feedback",
+					"path": "pages/GRZX/feedback",
 					"style": {
 						"navigationBarTitleText": "意见反馈"
 					}

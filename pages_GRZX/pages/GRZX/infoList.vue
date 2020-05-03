@@ -263,6 +263,8 @@
 	        },
 			// ---------添加乘车人---------
 			addPassenger(){
+				var that=this;
+				console.log(that.$GrzxInter.Route.addPassenger.url)
 				uni.getStorage({
 					key:'userInfo',
 					fail:function(){
@@ -274,7 +276,7 @@
 					success:function(res){
 						uni.navigateTo({
 							// url:'/pages/GRZX/addPassenger?type=ad'
-							url:this.$GrzxInter.Route.addPassenger.url+'?type=ad',
+							url:that.$GrzxInter.Route.addPassenger.url+'?type=ad',
 						})
 					}
 				})
@@ -387,7 +389,7 @@
 			// ---------返回按钮---------
 			returnClick(){
 				uni.switchTab({
-					// url:'/pages/GRZX/user',
+					//url:'/pages/GRZX/user',
 					url:this.$GrzxInter.Route.user.url,
 				})
 			},

@@ -25,7 +25,7 @@
 		
 		<!-- logo -->
 		<view v-if="loginType==1">
-			<image src="../../static/GRZX/login1.png" class="logoClass"></image>
+			<image src="../../static/GRZX/logo1.png" class="logoClass"></image>
 		</view>
 
 		<!-- <view class="loginMode">第三方登录</view>
@@ -197,7 +197,7 @@
 			},
 			wxLogin(){		//微信授权登录
 				var theSelf=this;
-				var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
+				//var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
 				//var address;
 				uni.login({
 					provider:'weixin',
