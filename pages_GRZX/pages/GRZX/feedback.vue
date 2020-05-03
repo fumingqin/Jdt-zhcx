@@ -20,7 +20,7 @@
 </template>
 
 <script>
-	import robbyImageUpload from '@/components/GRZX/robby-image-upload/robby-image-upload.vue'
+	import robbyImageUpload from '@/pages_GRZX/components/GRZX/robby-image-upload/robby-image-upload.vue'
 	export default {
 		components: {
 			robbyImageUpload,

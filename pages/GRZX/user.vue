@@ -97,7 +97,7 @@
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
 			//#ifndef H5
-			if(index === 2){
+			if(index === 1){
 				uni.navigateTo({
 					// url:'/pages/GRZX/set'
 					url:this.$GrzxInter.Route.set.url,
@@ -113,6 +113,12 @@
 					}
 				})
 			}
+			if(index === 2){
+				uni.navigateTo({
+					// url:'/pages/GRZX/myNews'
+					url:this.$GrzxInter.Route.myNews.url,
+				})
+			}
 			//#endif
 			//#ifdef H5
 			if(index === 0){
@@ -121,15 +127,17 @@
 					url:this.$GrzxInter.Route.set.url,
 				})
 			}
-			//#endif
 			if(index === 1){
 				uni.navigateTo({
 					// url:'/pages/GRZX/myNews'
 					url:this.$GrzxInter.Route.myNews.url,
 				})
 			}
+			//#endif
+			
 		},
 		methods:{
+			// ---------------------------加载数据----------------------------
 			loadData(){
 				var that=this;
 				var user=uni.getStorageSync('userInfo');
@@ -180,7 +188,7 @@
 				}
 				console.log(e)
 			},
-			//信息管理
+			// ---------------------------信息管理----------------------------
 			infoClick(){
 				uni.navigateTo({
 					//url:'/pages/GRZX/infoList',
@@ -200,12 +208,12 @@
 					url:this.$GrzxInter.Route.feedback.url,
 				})  				
 			},
+			// ---------------------------是否登录----------------------------
 			checkLogin(){
-				console.log(this.hasLogin,"6666")
 				var that=this;
 				//#ifndef H5
 				var user=uni.getStorageSync('userInfo');
-				if(!that.hasLogin){
+				if(user.userId==""||user.userId==null){
 					console.log(that.hasLogin,"7777")
 					uni.showToast({
 						title : '请先登录',
@@ -220,7 +228,7 @@
 						}) 
 					},500);
 				}else{
-					console.log(that.hasLogin,"8888")
+					console.log(that.$GrzxInter.Route.person.url,"8888")
 					uni.navigateTo({
 						url :that.$GrzxInter.Route.person.url,
 					})  
