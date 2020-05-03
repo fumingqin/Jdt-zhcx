@@ -447,7 +447,7 @@
 	.SearchBarBlock {
 		width: 750rpx;
 		position: fixed;
-		top: 60px;
+		top: 72px;
 		left: 0px;
 		right: 0px;
 		align-items: center;
@@ -455,7 +455,8 @@
 
 	.SearchBar {
 		background-color: #FFFFFF;
-		width: 700rpx;
+		width: 680rpx;
+		margin: 0 16upx;
 		box-shadow: 0px 4px 9px 1px rgba(204, 204, 204, 1);
 		display: flex;
 		border-radius: 9px;
