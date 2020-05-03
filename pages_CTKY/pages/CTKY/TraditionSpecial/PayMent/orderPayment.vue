@@ -270,11 +270,11 @@
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						// that.getOpenID();
+						that.getOpenID();
 
 
 						//-------------------------------下单-------------------------------
-						that.getOrder();
+						// that.getOrder();
 					},
 					fail() {
 						uni.showToast({
