@@ -3,8 +3,8 @@
 		<view class="backImg">
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
 			<!-- #ifdef MP-WEIXIN -->
-			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
-			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image>
+			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('set')"></image>
+			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('myNews')"></image>
 			<!-- #endif -->
 			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
 			 -->
@@ -145,6 +145,7 @@
 					method:that.$GrzxInter.Interface.login.method,
 					success(res) {
 						console.log(res,'res')
+						//uni.setStorageSync('userInfo',res.data.data);
 						that.nickname=res.data.data.nickname;
 						var base64=res.data.data.portrait;
 						if(that.isBase64(base64)){
@@ -167,11 +168,18 @@
 					url:'/pages/order/OrderList'
 				})
 			},
-			navTo(url){
-				uni.navigateTo({
-					url
-				})
-				console.log(url)
+			navTo(e){
+				if(e=='set'){
+					uni.navigateTo({
+						url:this.$GrzxInter.Route.set.url,
+					})
+				}
+				if(e=='myNews'){
+					uni.navigateTo({
+						url:this.$GrzxInter.Route.myNews.url,
+					})
+				}
+				console.log(e)
 			},
 			//信息管理
 			infoClick(){
@@ -194,9 +202,11 @@
 				})  				
 			},
 			checkLogin(){
-				// console.log(this.hasLogin,"6666")
+				console.log(this.hasLogin,"6666")
+				var that=this;
 				//#ifndef H5
-				if(!this.hasLogin){
+				if(!that.hasLogin){
+					console.log(that.hasLogin,"7777")
 					uni.showToast({
 						title : '请先登录',
 						icon : 'none',
@@ -206,12 +216,13 @@
 							//loginType=1,泉运登录界面
 							//loginType=2,今点通登录界面
 							//loginType=3,武夷股份登录界面
-							url  : '/pages/GRZX/userLogin?loginType=1&&urlData=1'
+							url:that.$GrzxInter.Route.userLogin.url +'?loginType=1&&urlData=1'
 						}) 
 					},500);
 				}else{
+					console.log(that.hasLogin,"8888")
 					uni.navigateTo({
-						url :'/pages/GRZX/personal'
+						url :that.$GrzxInter.Route.person.url,
 					})  
 				}
 				//#endif
@@ -225,13 +236,13 @@
 					setTimeout(function(){
 						uni.navigateTo({
 							// url:'/pages/GRZX/wxLogin',
-							url:this.$GrzxInter.Route.wxLogin.url,
+							url:that.$GrzxInter.Route.wxLogin.url,
 						})
 					},1000);
 				}else{
 					uni.navigateTo({
 						// url :'/pages/GRZX/personal'
-						url:this.$GrzxInter.Route.personal.url,
+						url:that.$GrzxInter.Route.personal.url,
 					})  
 				}
 				//#endif
