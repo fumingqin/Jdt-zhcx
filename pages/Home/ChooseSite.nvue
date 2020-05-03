@@ -161,7 +161,7 @@
 				</view>
 			</view>
 			<view style="align-items: center;text-align: center;">
-				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
+				<image src="../../static/Home/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
 		</popup>
 		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运开始 -->
@@ -194,7 +194,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="keYunList.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="keYunList.length == 0" text="暂无车票数据" :image="kyNoDataImage" textColor="#999999"></empty-data>
 		</view>
 		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运结束 -->
 		<view v-if="current == 2">
@@ -281,6 +281,7 @@
 	import $taxi from "@/common/Czc.js";
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
+	import $KyInterface from "@/common/Ctky.js"//客运接口
 	import uniIcons from "@/components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "@/components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "@/components/HOME/h-timePicker/h-timePicker.vue";
@@ -347,6 +348,7 @@
 				estimateTime: 0, //预计时长
 				estimateDistance: 0 ,//预计里程
 				kyPopImage:'',//客运弹框背景图
+				kyNoDataImage:'',//客运无数据图片
 				imageIndex : '',//banner图片
 			}
 		},
@@ -454,6 +456,7 @@
 					},
 					success(res) {
 						if(res.data.status == true) {
+							that.kyNoDataImage = res.data.data[2].imageUrl
 							that.kyPopImage = res.data.data[1].imageUrl
 						}else {
 							console.log(res.data.status)
