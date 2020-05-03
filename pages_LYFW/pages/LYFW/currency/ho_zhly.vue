@@ -2,7 +2,7 @@
 	<view>
 		<!-- 顶部图片 -->
 		<view class="zl_topPicture">
-			<image class="zl_image" src="../../../static/LYFW/currency/ho_zhly/kaiyuanshi.jpg" mode="aspectFill"></image>
+			<image class="zl_image" :src="imageIndex[0].imageUrl" mode="aspectFill"></image>
 		</view>
 
 		<!-- 顶部点击跳转栏 -->
@@ -111,6 +111,7 @@
 	export default {
 		data() {
 			return {
+				imageIndex : '', //banner图片
 				Announcement: '', //通知内容
 				recommendedContent: [{
 					rc_image: ''
@@ -159,6 +160,19 @@
 			}
 		},
 		onLoad() {
+			uni.request({
+				url:$lyfw.Interface.qg_GetImage.value,
+				method:$lyfw.Interface.qg_GetImage.method,
+				data:{ 
+					model : 2,
+					type:'旅游服务banner'
+				},
+				success:(res) => { 
+					// console.log(res)
+					this.imageIndex = res.data.data
+					
+				},
+			})
 			this.routeInit();
 			this.loadData();
 		},

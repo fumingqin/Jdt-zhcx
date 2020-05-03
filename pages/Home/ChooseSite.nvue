@@ -49,7 +49,7 @@
 		<view :style="{height:winheight}"></view>
 		<view v-if="current === 0" style="margin-top: 20rpx;">
 			<view>
-				<image src="../../static/Home/advertise.png" style="width: 750rpx;height: 150rpx;"></image>
+				<image :src="imageIndex[0].imageUrl" style="width: 750rpx;height: 150rpx;"></image>
 			</view>
 			<view style="background-color: #F5F7F9;" v-if="!IsSearch">
 				<scroll-view class="history" :scroll-y="true" :style="{height:historyheight}">
@@ -279,6 +279,7 @@
 
 <script>
 	import $taxi from "@/common/Czc.js";
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
 	import uniIcons from "@/components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "@/components/HOME/uni-segmented-control/uni-segmented-control.vue";
@@ -346,12 +347,26 @@
 				estimateTime: 0, //预计时长
 				estimateDistance: 0 ,//预计里程
 				kyPopImage:'',//客运弹框背景图
+				imageIndex : '',//banner图片
 			}
 		},
 
 		onLoad(options) {
 			var that = this;
 			//获取客运弹框图片
+			uni.request({
+				url:$lyfw.Interface.qg_GetImage.value,
+				method:$lyfw.Interface.qg_GetImage.method,
+				data:{ 
+					model : 6,
+					type:'首页搜索栏banner'
+				},
+				success:(res) => { 
+					// console.log(res)
+					this.imageIndex = res.data.data
+					
+				},
+			})
 			that.getPicture();
 			uni.getStorage({ //获取历史记录
 				key: "historyAddress",
