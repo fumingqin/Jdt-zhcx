@@ -92,7 +92,7 @@
 
 <script>
 	import $bcfw from '@/common/BCFW/bcfw.js';
-	import uniPopup from '@/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue';
+	import uniPopup from '@/pages_BCFW/components/BCFW/uni-popup/uni-popup.vue';
 	export default {
 		components: {
 			uniPopup, //加载多方弹框组件

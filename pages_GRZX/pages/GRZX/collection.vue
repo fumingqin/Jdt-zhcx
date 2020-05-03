@@ -66,7 +66,7 @@
 </template>
 
 <script>
-	import uniRate from '@/components/LYFW/ouristRoute/uni-rate/uni-rate.vue'
+	import uniRate from '@/pages_BCFW/components/BCFW/uni-rate/uni-rate.vue'
 	export default {
 		components: {
 			uniRate,
