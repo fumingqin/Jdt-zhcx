@@ -49,7 +49,7 @@
 	var QQMapWX = require('@/libs/qqmap-wx-jssdk.min.js')
 	var qqmapsdk = new QQMapWX({
 		//key: 'LXCBZ-NNIKD-UZ64F-H6AFI-UNJLH-OCFGE'
-		key: 'ZURBZ-WWTL6-ZNDSL-M7YHC-L67Q3-HRB7V'
+		key: 'HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2'
 	})
 	export default {
 		data() {
