@@ -127,6 +127,7 @@
 </template>
 
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
@@ -191,7 +192,7 @@
 				}
 
 			},
-
+			
 			getArticleInfo: function() {
 				var that =this;
 				uni.request({
@@ -205,6 +206,14 @@
 						console.log(res)
 					}
 				})
+				
+				// uni.request({
+				// 	url: $lyfw.Interface.gt_travelDetails.value,
+				// 	method: $lyfw.Interface.gt_travelDetails2.method,
+				// 	// data:{
+				// 	// 	contentId : '南平市'
+				// 	// },
+				// })
 			},
 			
 			//点击跳转付款页面
