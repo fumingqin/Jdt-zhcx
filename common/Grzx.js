@@ -1,52 +1,8 @@
 /* 接口参数区 */
 // 示例
-const user = {
-	status: 1,  //成功/失败提示返回值
-	data: {
-		chineseName:'张三',  		//中文姓名
-		englishSurname:'zhang', 	//英文姓
-		englishName:'san', 			//英文名
-		sex:0,						//性别，0代表男，1代表女
-		codeNum:'3333333', 			//身份证号
-		date:'1998-04-29', 			//有效期
-		person:0,					//是否设置为本人，0代表否，1代表是
-		phoneNum:'15260769766'		//电话号码
-	},
-	msg: '乘车人信息'		
-}
 
-const addressInfo = {
-	status:1,
-	data:{
-		receiver:'张三',							//收件人
-		phoneNum:'15260769766',					//手机号码
-		district:'福建省 丰泽区 泉秀路',	//所在地区
-		detailAddress:'丰泽区',					//详细地址
-		postalCode:'366300',					//邮政编码
-		defaultAddress:0						//是否设置为默认地址，0代表否，1代表是
-	},
-	msg:'地址详情'
-}
-/* 用户 */
-const userInfo = {
-	status: 1,
-	data: {
-		id: 1,
-		unid : 183252546,
-		mobile: 18888888888,
-		nickname: '茜茜爱玩',
-		gender:1,
-		birthday:'1994-01-19',
-		permanent:'福建省南平市武夷山市',
-		autograph:'喜欢可以点关注哦~',
-		portrait: '/static/user/touxiang2.jpg',
-		bg:'/static/index/banner2.jpg'
-	},
-	msg: '用户信息'
-}
-
-//const Url='http://111.231.109.113:8002';
 const Url='http://zntc.145u.net';
+const Url1='http://111.231.109.113:8002';
 const Interface={
 	login:{
 		value:Url+'/api/person/login',
@@ -114,10 +70,98 @@ const Interface={
 		method:'POST',
 		pages: [],
 	}, 
+	SearchVersion:{
+		value:Url+'/api/person/SearchVersion',
+		name:'获取版本号',
+		method:'POST',
+		pages: [],
+	}, 
 }
 
+const MainPackage='/pages/GRZX';   //主包
+const SubPackage='/pages_GRZX/pages/GRZX'; //分包
+const Route={
+	//主包里页面的路径
+	addPassenger:{
+		url:MainPackage+'/addPassenger',
+		name:'添加乘车人页面',
+	},
+	notice:{
+		url:MainPackage+'/notice',
+		name:'通知页面',
+	},
+	passengerInfo:{
+		url:MainPackage+'/passengerInfo',
+		name:'乘车人列表页面',
+	},
+	user:{
+		url:MainPackage+'user',
+		name:'个人主页页面',
+	},
+	userLogin:{
+		url:MainPackage+'/userLogin',
+		name:'登录页面',
+	},
+	wxLogin:{
+		url:MainPackage+'/wxLogin',
+		name:'绑定手机号页面',
+	},
+	//分包里页面的路径
+	aboutApp:{
+		url:SubPackage+'/aboutApp',
+		name:'关于app页面',
+	},
+	addAddress:{
+		url:SubPackage+'/addAddress',
+		name:'添加地址页面',
+	},
+	address:{
+		url:SubPackage+'/aboutApp',
+		name:'地址列表页面',
+	},
+	collection:{
+		url:SubPackage+'/collection',
+		name:'我的收藏页面',
+	},
+	complaint:{
+		url:SubPackage+'/complaint',
+		name:'我要投诉页面',
+	},
+	coupon:{
+		url:SubPackage+'/coupon',
+		name:'优惠券页面',
+	},
+	detailTweet:{
+		url:SubPackage+'/detailTweet',
+		name:'推文详情页面',
+	},
+	feedback:{
+		url:SubPackage+'/feedback',
+		name:'意见反馈页面',
+	},
+	history:{
+		url:SubPackage+'/history',
+		name:'我的历史页面',
+	},
+	infoList:{
+		url:SubPackage+'/infoList',
+		name:'信息管理页面',
+	},
+	myNews:{
+		url:SubPackage+'/myNews',
+		name:'我的消息页面',
+	},
+	person:{
+		url:SubPackage+'/person',
+		name:'个人信息页面',
+	},
+	set:{
+		url:SubPackage+'/set',
+		name:'设置页面',
+	},
+}
 
 // 接口声明区
 export default {
-	userInfo,addressInfo, user, Interface,
+	Interface,Route
 }

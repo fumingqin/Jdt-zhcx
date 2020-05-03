@@ -17,7 +17,7 @@
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
 			</view> -->
 			<view class="tabBlock">
-				<view class="tabItem" @click="godetail('/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
+				<view class="tabItem" @click="godetail('/pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
@@ -25,15 +25,15 @@
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/GJCX/busH5')">
+				<view class="tabItem" @click="godetail('/pages_GJCX/pages/GJCX/busH5')">
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
 					<view class="tabItem-font"><text >公交查询</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/BCFW/bf_chartered')">
+				<view class="tabItem" @click="godetail('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
-				<view class="tabItem" @click="godetail2('/pages/Home/ho_zhly')">
+				<view class="tabItem" @click="godetail2('../../pages_LYFW/pages/LYFW/currency/ho_zhly')">
 					<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
 					<view class="tabItem-font"><text >旅游服务</text></view>
 				</view>
@@ -46,6 +46,10 @@
 <script>
 	import taxi from '../../common/Czc.js'
     // import wx from 'http://res.wx.qq.com/open/js/jweixin-1.6.0.js'
+	import {
+		mapState,
+	    mapMutations  
+	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -60,61 +64,61 @@
 				mapHeight: '',
 				QQ: '450906905',
 				controls: [{
-						id: 'back',
-						position: {
-							left: 10,
-							top: 445,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Position.png',
-						clickable: true,
-					},
-					/* 			{
-									id: 'CallPollice',
-									position: {
-										left: 300,
-										top: 290,
-										width: 55,
-										height: 55
+										id: 'back',
+										position: {
+											left: 10,
+											top: 405,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Position.png',
+										clickable: true,
 									},
-									iconPath: '../../static/Home/CallPollice.png',
-									clickable: true,
-								}, */
-					{
-						id: 'Service',
-						position: {
-							left: 300,
-							top: 345,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Service.png',
-						clickable: true,
-					},
-					{
-						id: 'Big',
-						position: {
-							left: 300,
-							top: 405,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Big.png',
-						clickable: true,
-					},
-					{
-						id: 'Small',
-						position: {
-							left: 300,
-							top: 440,
-							width: 55,
-							height: 55
-						},
-						iconPath: '../../static/Home/Small.png',
-						clickable: true,
-					}
-				],
+									/* 			{
+													id: 'CallPollice',
+													position: {
+														left: 300,
+														top: 290,
+														width: 55,
+														height: 55
+													},
+													iconPath: '../../static/Home/CallPollice.png',
+													clickable: true,
+												}, */
+									/* {
+										id: 'Service',
+										position: {
+											left: 300,
+											top: 345,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Service.png',
+										clickable: true,
+									}, */
+									{
+										id: 'Big',
+										position: {
+											left: 300,
+											top: 365,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Big.png',
+										clickable: true,
+									},
+									{
+										id: 'Small',
+										position: {
+											left: 300,
+											top: 400,
+											width: 55,
+											height: 55
+										},
+										iconPath: '../../static/Home/Small.png',
+										clickable: true,
+									}
+								],
 			}
 		},
 		onLoad:function() {
@@ -160,7 +164,7 @@
 				}
 			})
 			// #ifdef  H5
-			// this.getCode();
+			 this.getCode();
 			//#endif
 		},
 		onReady() {
@@ -176,6 +180,7 @@
 			});
 		},
 		methods: {
+			...mapMutations(['login']),
 			getGaoDeKey: function() {
 				//获取高德key
 				var that = this;
@@ -188,13 +193,13 @@
 					type: 'gcj02',
 					geocode: true,
 					success: function(res) {
-						alert(0)
+						// alert(0)
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
 						console.log(that.longitude);
 					},
 					fail: function() {
-						alert(0)
+						// alert(0)
 					console.log(0)
 					},
 				}
@@ -202,7 +207,7 @@
 				uni.getLocation({
 					type: 'gcj02',
 					success: (res) => {
-						alert(10)
+						// alert(10)
 						that.longitude = res.longitude;
 						that.latitude = res.latitude;
 						console.log(res);
@@ -268,7 +273,6 @@
 			message: function() {
 				uni.navigateTo({
 					url: '../GRZX/notice'
-
 				})
 			},
 			camera: function(e) {
@@ -295,24 +299,21 @@
 
 			//路由统一事件
 			godetail: function(url) {
-				if(url != '/pages/CTKY/TraditionSpecial/Home/ctkyIndex'){
-					uni.showToast({
-						title:'正在测试中，敬请期待...',
-						icon:'none'
-					});
-					return;
-				}
 				uni.navigateTo({
 					url: url
 				});
 			},
-			//旅游服务专属路由
-			godetail2: function(url) {
+			
+			//路由统一事件
+			godetail3: function(url) {
 				uni.showToast({
 					title:'正在测试中，敬请期待...',
 					icon:'none'
 				});
-				return;
+			},
+			
+			//旅游服务专属路由
+			godetail2: function(url) {
 				// #ifdef MP-WEIXIN
 				uni.redirectTo({
 					url: url
@@ -348,42 +349,40 @@
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
-							uni.showToast({
-								title:res.data.openid,
-								icon:'none',
-								duration:100000
-							})
+							// uni.showToast({
+							// 	title:res.data.openid,
+							// 	icon:'none',
+							// 	duration:100000
+							// })
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
-							uni.setStorageSync('res',res.data)
+							uni.setStorageSync('wxuserInfo',res.data)
 							let user=res.data;
 							uni.request({
-								url:'http://zntc.145u.net/api/person/changeInfo',
+								//url:'http://zntc.145u.net/api/person/changeInfo',
+								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
 								data:{
-									nickname:user.nickname,
 									openId_wx:user.openid,
-									portrait:user.headimgurl,
-									userId:'',
-									openId_qq:'',
-									gender:'',
-									address:user.province+user.city,
-									birthday:'',
-									phoneNumber:'',
 								},
-								method:'POST',
+								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									if(res1.data.msg=="信息保存成功！"){
-										uni.setStorageSync('userInfo',res1.data.data)
-										if(res1.data.data.phoneNumber==null){
-											uni.navigateTo({
-												url:'/pages/GRZX/wxLogin',
-											})
-										}else{
-											that.logining=true;
-											that.login(res1.data.data)
-										}
-									}
 									console.log(res1,'res1')
+									//判断是否有绑定手机号
+									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+										uni.showToast({
+											title:'您未绑定手机号，请绑定手机号！',
+											icon:'none',
+										})
+										setTimeout(function(){
+											uni.navigateTo({
+												url:'/pages/GRZX/wxLogin'
+											})
+										},1000);
+									}else{
+										uni.setStorageSync('userInfo',res1.data.data)
+										that.logining=true;
+										that.login(res1.data.data)
+									}	
 								}
 							})
 						},

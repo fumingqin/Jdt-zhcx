@@ -5,42 +5,6 @@ const Url = 'http://111.231.109.113:8004';
 
 //接口对象
 const Interface = {
-	//GET-POST
-	// spt_GetticketSearchByrequestArea_Six:{
-	// 	value: Url + '/api/ly/GetticketSearchByrequestArea_Six',
-	// 	name:'景区列表-六宫格',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
-	// },
-	
-	// spt_GetticketSearchByrequestArea:{
-	// 	value: Url + '/api/ly/GetticketSearchByrequestArea',
-	// 	name:'景区列表-景区列表',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
-	// },
-	
-	// spt_GetticketSearchBysearchValue:{
-	// 	value: Url + '/api/ly/GetticketSearchBysearchValue',
-	// 	name:'景区列表-搜索',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
-	// },
-	
-	// spt_GetticketDetailByticketId:{
-	// 	value: Url + '/api/ly/GetticketDetailByticketId',
-	// 	name:'景区门票-详情',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/ticketsDetails.vue"]
-	// },
-	
-	// spt_GetticketSecurityByticketIde:{
-	// 	value: Url + '/api/ly/GetticketSecurityByticketId',
-	// 	name:'景区门票-门票须知',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
-	// },
-	
 	spt_GetcouponByuserId:{
 		value: Url + '/api/bc/GetcouponByuserId',
 		name:'包车订单-优惠券列表',
@@ -56,32 +20,18 @@ const Interface = {
 	},
 	
 	spt_AddtouristOrder:{
-		value: Url + '/api/bc/AddtouristOrder',
+		value: Url + '/api/Chartered/AddCharteredOrder_Passenger',
 		name:'包车订单-APP提交订单',
 		method:'POST',
 		pages:["BCFW/bf_information.vue"]
 	},
 	
 	spt_RequestTicketsList:{
-		value: Url + '/api/bc/RequestTicketsList',
+		value: Url + '/api/Chartered/QueryCharteredOrderByUserID_Passenger',
 		name:'订单列表',
 		method:'POST',
 		pages:["order/OrderList.vue"]
 	},
-	
-	// spt_RequestTicketsListDetail:{
-	// 	value: Url + '/api/ly/RequestTicketsListDetail',
-	// 	name:'订单详情',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/orderDetails.vue","LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
-	// },
-	
-	// spt_getIsPaySuccess:{
-	// 	value: Url + '/api/ly/getIsPaySuccess',
-	// 	name:'订单-去支付-查询是否出票',
-	// 	method:'POST',
-	// 	pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
-	// },
 	
 	spt_RequestTickets:{
 		value: Url + '/api/Chartered/QuerySpecialLineOrder_Passenger',
@@ -91,14 +41,14 @@ const Interface = {
 	},
 	
 	spt_CancelTickets:{
-		value: Url + '/api/bc/CancelTickets',
+		value: Url + '/api/Chartered/CancelCharteredOrder_Passenger',
 		name:'订单-取消',
 		method:'POST',
 		pages:["BCFW/charteredBusPayment.vue","order/OrderList.vue"]
 	},
 	
 	spt_DeleteTickets:{
-		value: Url + '/api/bc/DeleteTickets',
+		value: Url + '/api/Chartered/DeleteCharteredOrder_Passenger',
 		name:'订单-删除',
 		method:'POST',
 		pages:["order/OrderList.vue"]
@@ -111,10 +61,48 @@ const Interface = {
 		pages:["BCFW/charteredBusPayment.vue"]
 	},
 	
+	fw_selectSpecialLine:{
+		value: Url + '/api/Chartered/GetCharteredAllLine_Passenger',
+		name:'包车-选择专线',
+		method:'POST',
+		pages:["BCFW/bf_choice.vue"]
+	},
+	
+	fw_privateLineSearch:{
+		value: Url + '/api/Chartered/GetCharteredLineByLineName_Passenger',
+		name:'包车-选择专线搜索',
+		method:'POST',
+		pages:["BCFW/bf_choice.vue"]
+	},
+	
+	fw_selectVehicle:{
+		value: Url + '/api/Chartered/GetVehicleType_Passenger',
+		name:'包车-选择车辆',
+		method:'POST',
+		pages:["BCFW/bf_choiceVehicleType.vue"]
+	},
+	
+	fw_charterDetails:{
+		value: Url + '/api/Chartered/QueryCharteredOrderByOrderNumber_Passenger',
+		name:'包车-详情',
+		method:'POST',
+		pages:["BCFW/bf_charterMap.vue"]
+	}
+	
 }
 
+const InterfaceAddress = [
+	//根据起终点经纬度获取线路规划
+	//使用页面 - /CZC/CallAndDrive - 
+	'http://111.231.109.113:8002/api/zhcx/getPlanningLineByLonLat',
+	//获取所有车辆定位数据
+	'http://111.231.109.113:8002/api/zhcx/getAllVehiclePosition',
+	//根据经纬度获取附近一定范围的经纬度
+	'http://111.231.109.113:8002/api/zhcx/getLonLatRangeVehiclePosition',
+]
 
 // 接口声明区
 export default {
 	Interface,
+	InterfaceAddress,
 }
