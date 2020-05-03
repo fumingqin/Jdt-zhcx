@@ -112,11 +112,11 @@
 <script>
 	import $taxi from "@/common/Czc.js";
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
-	import uniIcons from "@/components/CZC/uni-icons/uni-icons.vue";
-	import uniSegmentedControl from "@/components/CZC/uni-segmented-control/uni-segmented-control.vue";
-	import hTimePicker from "@/components/CZC/h-timePicker/h-timePicker.vue";
-	import utils from "@/components/CTKY/shoyu-date/utils.filter.js"; //时间格式转换
-	import uniPopup from "@/components/CZC/uni-popup/uni-popup.vue";
+	import uniIcons from "@/pages_CZC/components/CZC/uni-icons/uni-icons.vue";
+	import uniSegmentedControl from "@/pages_CZC/components/CZC/uni-segmented-control/uni-segmented-control.vue";
+	import hTimePicker from "@/pages_CZC/components/CZC/h-timePicker/h-timePicker.vue";
+	import utils from "@/pages_CZC/components/CTKY/shoyu-date/utils.filter.js"; //时间格式转换
+	import uniPopup from "@/pages_CZC/components/CZC/uni-popup/uni-popup.vue";
 	export default {
 		components: {
 			uniIcons,
