@@ -76,9 +76,6 @@
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import listCell from '@/components/GRZX/mix-list-cell';
-	import {  
-	    mapState 
-	} from 'vuex'; 
 	export default{
 		components: {
 			listCell
@@ -91,7 +88,6 @@
 			}
 		},
 		computed: {
-			...mapState(['hasLogin','userInfo'])
 		},
 		onLoad(){
 		},
@@ -137,31 +133,34 @@
 			loadData(){
 				var that=this;
 				var user=uni.getStorageSync('userInfo');
-				uni.request({
-					url:that.$GrzxInter.Interface.login.value,
-					data:{
-						phoneNumber:user.phoneNumber,
-					},
-					method:that.$GrzxInter.Interface.login.method,
-					success(res) {
-						console.log(res,'res')
-						//uni.setStorageSync('userInfo',res.data.data);
-						that.nickname=res.data.data.nickname;
-						var base64=res.data.data.portrait;
-						if(that.isBase64(base64)){
-							base64ToPath(base64)
-							  .then(path => {
-							    that.portrait=path;
-							  })
-							  .catch(error => {
-							    console.error(error)
-							  })
-						}else{
-							that.portrait=base64;
+				console.log(user,'user')
+				if(user.phoneNumber!=""||user.phoneNumber!=null){
+					uni.request({
+						url:that.$GrzxInter.Interface.login.value,
+						data:{
+							phoneNumber:user.phoneNumber,
+						},
+						method:that.$GrzxInter.Interface.login.method,
+						success(res) {
+							console.log(res,'res')
+							//uni.setStorageSync('userInfo',res.data.data);
+							that.nickname=res.data.data.nickname;
+							var base64=res.data.data.portrait;
+							if(that.isBase64(base64)){
+								base64ToPath(base64)
+								  .then(path => {
+								    that.portrait=path;
+								  })
+								  .catch(error => {
+								    console.error(error)
+								  })
+							}else{
+								that.portrait=base64;
+							}
+							console.log(that.portrait,"that.portrait")
 						}
-						console.log(that.portrait,"that.portrait")
-					}
-				})
+					})
+				}
 			},
 			orderClick(){
 				uni.switchTab({
@@ -205,6 +204,7 @@
 				console.log(this.hasLogin,"6666")
 				var that=this;
 				//#ifndef H5
+				var user=uni.getStorageSync('userInfo');
 				if(!that.hasLogin){
 					console.log(that.hasLogin,"7777")
 					uni.showToast({
