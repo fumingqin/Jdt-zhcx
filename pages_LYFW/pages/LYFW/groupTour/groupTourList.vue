@@ -105,8 +105,8 @@
 <script>
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue';
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue';
-	import QSTabs from '@/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue';
-	import uniPopup from '@/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue';
+	import QSTabs from '@/pages_LYFW/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue';
+	import uniPopup from '@/pages_LYFW/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue';
 	export default {
 		components: {
 			citySelect,

@@ -132,7 +132,7 @@
 </template>	 
 
 <script>
-	import uniPopup from "@/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
+	import uniPopup from "@/pages_LYFW/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue"
 	import uQRCode from "@/common/uqrcode.js"
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {

@@ -25,7 +25,7 @@
 		
 		<!-- logo -->
 		<view v-if="loginType==1">
-			<image src="../../static/GRZX/logo1.png" class="logoClass"></image>
+			<image src="../../static/GRZX/login1.png" class="logoClass"></image>
 		</view>
 
 		<!-- <view class="loginMode">第三方登录</view>
@@ -39,10 +39,6 @@
 
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
-	import {
-		mapState,
-	    mapMutations  
-	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -59,7 +55,6 @@
 			this.load(options.loginType);
 		},
 		methods: {
-			...mapMutations(['login']),
 			async load(e){
 				var that=this;
 				uni.getSystemInfo({
@@ -109,7 +104,6 @@
 				uni.showLoading({
 					title:'登录中...'
 				})
-				this.logining=true;
 				var that=this;
 				const {phoneNumber, captchaCode} = this;		
 				var phone=this.phoneNumber;
@@ -139,52 +133,48 @@
 										method:that.$GrzxInter.Interface.login.method,
 										success(res) {
 											console.log(res)
-											uni.removeStorage({
-												key:'captchaCode',
+											uni.removeStorageSync('captchaCode');
+											uni.setStorageSync('userInfo',res.data.data);
+											uni.hideLoading();
+											uni.showToast({
+												title:"登录成功!",
+												icon:"none"
 											})
-											uni.setStorage({
-												key:'userInfo',
-												data:res.data.data
-											})
-											uni.getStorage({
-												key:'userInfo',
-												success:function(user){
-													//console.log(user,"user")
-													if(user.data.nickname==""||user.data.nickname==null){
-														user.data.nickname="用户"+user.data.phoneNumber;
-													}
-													var base64=res.data.data.portrait;
-													if(that.isBase64(base64)){
-														base64ToPath(base64)
-														  .then(path => {
-															user.data.portrait=path;
-															that.login(user.data);
-														  })
-														  .catch(error => {
-															console.error(error)
-														  })	
-													}else{
-														that.login(user.data);
-													}
-													uni.hideLoading();
-													uni.showToast({
-														title:"登录成功!",
-														icon:"none"
-													})
-													if(that.urlData==1){
-														uni.switchTab({  //返回首页
-															url:'/pages/Home/Index',
-														}) 
-													}else if(that.urlData==2){
-														uni.switchTab({  //返回订单页
-															url:'/pages/order/OrderList',
-														}) 
-													}else{
-														console.log("返回上一页")
-														uni.navigateBack();//返回上一页
-													}
-												}
-											})
+											if(that.urlData==1){
+												uni.switchTab({  //返回首页
+													url:'/pages/Home/Index',
+												}) 
+											}else if(that.urlData==2){
+												uni.switchTab({  //返回订单页
+													url:'/pages/order/OrderList',
+												}) 
+											}else{
+												console.log("返回上一页")
+												uni.navigateBack();//返回上一页
+											}
+											// uni.getStorage({
+											// 	key:'userInfo',
+											// 	success:function(user){
+											// 		//console.log(user,"user")
+											// 		if(user.data.nickname==""||user.data.nickname==null){
+											// 			user.data.nickname="用户"+user.data.phoneNumber;
+											// 		}
+											// 		var base64=res.data.data.portrait;
+											// 		if(that.isBase64(base64)){
+											// 			base64ToPath(base64)
+											// 			  .then(path => {
+											// 				user.data.portrait=path;
+											// 				that.login(user.data);
+											// 			  })
+											// 			  .catch(error => {
+											// 				console.error(error)
+											// 			  })	
+											// 		}else{
+											// 			that.login(user.data);
+											// 		}
+													
+											// 	}
+											// })
 										}
 									})
 									
@@ -223,7 +213,6 @@
 									key:"userInfo",
 									data:res.userInfo
 								});
-								theSelf.logining=true;
 								uni.showToast({
 									title: '授权成功',
 									icon:"none"
@@ -255,7 +244,7 @@
 								},1000); */	
 							},
 							fail:function(){
-								theSelf.logining=false;
+								
 							}
 						})
 					}
@@ -293,7 +282,7 @@
 												key:'userInfo',
 												data:list
 											})
-											theSelf.logining=true;
+											
 											if(list!=null||list!=""){
 												theSelf.login(list);						
 											}

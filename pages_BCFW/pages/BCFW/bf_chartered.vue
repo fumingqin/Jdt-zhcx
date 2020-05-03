@@ -134,7 +134,7 @@
 </template>
 
 <script>
-	import uniPopup from '@/components/LYFW/scenicSpotTickets/uni-popup/uni-popup.vue';
+	import uniPopup from '@/pages_BCFW/components/BCFW/uni-popup/uni-popup.vue';
 	import MxDatePicker from '@/components/BCFW/mx-datepicker/mx-datepicker.vue';
 	export default {
 		components: {
