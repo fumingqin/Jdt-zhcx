@@ -95,7 +95,7 @@ const Route={
 		name:'乘车人列表页面',
 	},
 	user:{
-		url:MainPackage+'user',
+		url:MainPackage+'/user',
 		name:'个人主页页面',
 	},
 	userLogin:{
@@ -152,7 +152,7 @@ const Route={
 		name:'我的消息页面',
 	},
 	person:{
-		url:SubPackage+'/person',
+		url:SubPackage+'/personal',
 		name:'个人信息页面',
 	},
 	set:{
@@ -161,7 +161,16 @@ const Route={
 	},
 }
 
+const GetImage={
+	url:Url+'/api/zhcx/GetImage',
+	name:'获取图片',
+	method:'POST',
+	pages: [],
+}
+
 // 接口声明区
 export default {
-	Interface,Route
+	Interface,
+	Route,
+	GetImage
 }

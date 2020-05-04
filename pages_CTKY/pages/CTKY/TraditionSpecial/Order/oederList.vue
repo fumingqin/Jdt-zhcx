@@ -6,7 +6,7 @@
 				<swiper-item v-for="(item,index) in QRCodeArray" :key="index">
 					<view class="u-f-ac" style="border-top-right-radius: 20rpx;border-top-left-radius: 20rpx; width: 100%; background: #FFFFFF;display: block; text-align: center;">
 						<!-- 显示二维码 -->
-						<image src="../../../../static/LYFW/scenicSpotTickets/orderDetails/erweima.png" 
+						<image src="../../../../static/CTKY/erweima.png" 
 							mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image>
 							
 						<!-- 检票口/座位号 -->
@@ -50,7 +50,7 @@
 								<!-- 类型/状态 -->
 								<view class="headClass u-f-jsb">
 									<view class="u-f-jsb">
-										<image src="../../../../static/Order/keche.png" class="busImage"></image>
+										<image src="../../../../static/CTKY/keche.png" class="busImage"></image>
 										<view>{{items.busType}}</view>
 									</view>
 									<view>{{items.state}}</view>
@@ -58,7 +58,7 @@
 								<!-- 时间/价格 -->
 								<view class="timePrice u-f-jsb">
 									<view class="u-f-jsb">
-										<image src="../../../../static/Order/time.png" class="timeImage"></image>
+										<image src="../../../../static/CTKY/time.png" class="timeImage"></image>
 										<view>{{items.Time}}出发</view>
 									</view>
 									<view>{{items.price}}</view>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-    import popup from '@/components/CTKY/uni-popup/uni-popup.vue'
+    import popup from '@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue'
 	let windowWidth = 0,
 		scrollTimer = false,
 		tabBar;

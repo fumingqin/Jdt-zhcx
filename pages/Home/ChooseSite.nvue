@@ -49,7 +49,7 @@
 		<view :style="{height:winheight}"></view>
 		<view v-if="current === 0" style="margin-top: 20rpx;">
 			<view>
-				<image src="../../static/Home/advertise.png" style="width: 750rpx;height: 150rpx;"></image>
+				<image :src="imageIndex[0].imageUrl" style="width: 750rpx;height: 150rpx;"></image>
 			</view>
 			<view style="background-color: #F5F7F9;" v-if="!IsSearch">
 				<scroll-view class="history" :scroll-y="true" :style="{height:historyheight}">
@@ -138,7 +138,7 @@
 		<!-- 客运弹框 -->
 		<popup ref="popup" type="center" maskClick="false" style="z-index:99999;">
 			<view style="flex-direction: column;position: relative;display: flex;justify-content: center;">
-				<image src="../../static/CTKY/tipBackground.png" class="popupClass" style="height: 700rpx;width: 600rpx;"></image>
+				<image :src="kyPopImage" class="popupClass" style="height: 700rpx;width: 600rpx;"></image>
 				<view style="position: absolute; align-items: center;margin-top: 150rpx;">
 					<view class="popupTextContent" style="width: 600rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
 						<text class="popupText" style="text-align: center;font-size: 40rpx;font-weight: bold;">传统与定制班车的差异</text>
@@ -161,7 +161,7 @@
 				</view>
 			</view>
 			<view style="align-items: center;text-align: center;">
-				<image src="../../static/CTKY/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
+				<image src="../../static/Home/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
 			</view>
 		</popup>
 		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运开始 -->
@@ -194,7 +194,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="keYunList.length == 0" text="暂无车票数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="keYunList.length == 0" text="暂无车票数据" :image="kyNoDataImage" textColor="#999999"></empty-data>
 		</view>
 		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运结束 -->
 		<view v-if="current == 2">
@@ -279,13 +279,15 @@
 
 <script>
 	import $taxi from "@/common/Czc.js";
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
+	import $KyInterface from "@/common/Ctky.js"//客运接口
 	import uniIcons from "@/components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "@/components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "@/components/HOME/h-timePicker/h-timePicker.vue";
 	import popup from "@/components/HOME/uni-popup/uni-popup.vue"; //弹框组件
-	import utils from "@/components/CTKY/shoyu-date/utils.filter.js"; //时间格式转换
-	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
+	import utils from "@/components/HOME/shoyu-date/utils.filter.js"; //时间格式转换
+	import emptyData from "@/components/Order/emptyData/emptyData.vue"; //无数据时显示内容
 	export default {
 		components: {
 			uniIcons,
@@ -344,12 +346,30 @@
 				vehicleType: '出租车', //车辆类型
 				destinationArea: '', //目标区域
 				estimateTime: 0, //预计时长
-				estimateDistance: 0 //预计里程
+				estimateDistance: 0 ,//预计里程
+				kyPopImage:'',//客运弹框背景图
+				kyNoDataImage:'',//客运无数据图片
+				imageIndex : '',//banner图片
 			}
 		},
 
 		onLoad(options) {
 			var that = this;
+			//获取客运弹框图片
+			uni.request({
+				url:$lyfw.Interface.qg_GetImage.value,
+				method:$lyfw.Interface.qg_GetImage.method,
+				data:{ 
+					model : 6,
+					type:'首页搜索栏banner'
+				},
+				success:(res) => { 
+					// console.log(res)
+					this.imageIndex = res.data.data
+					
+				},
+			})
+			that.getPicture();
 			uni.getStorage({ //获取历史记录
 				key: "historyAddress",
 				success: function(res) {
@@ -424,6 +444,29 @@
 			
 		},
 		methods: {
+			//获取客运弹框背景图
+			getPicture() {
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
+					method:$KyInterface.KyInterface.Ky_AddPicture.method,
+					header:$KyInterface.KyInterface.Ky_AddPicture.header,
+					data:{
+						model:0,
+					},
+					success(res) {
+						if(res.data.status == true) {
+							that.kyNoDataImage = res.data.data[2].imageUrl
+							that.kyPopImage = res.data.data[1].imageUrl
+						}else {
+							console.log(res.data.status)
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 			showToast: function(msg, icon = 'none') {
 				uni.showToast({
 					title: msg,
@@ -547,7 +590,7 @@
 									that.showToast(res.data.msg);
 									orderNumber = res.data.data.orderNumber;
 									uni.navigateTo({
-										url: '../CZC/CallAndDrive?orderNumber=' + orderNumber,
+										url: '/pages_CZC/pages/CZC/CallAndDrive?orderNumber=' + orderNumber,
 										animationType: 'pop-in',
 										animationDuration: 200,
 										success: function() {
@@ -1108,7 +1151,7 @@
 							key: "passengerList"
 						})
 						uni.navigateTo({
-							url: '../../pages_CZC/pages/CZC/PrivateTaxi',
+							url: '/pages_CZC/pages/CZC/PrivateTaxi',
 							animationType: 'pop-in',
 							animationDuration: 200,
 						});

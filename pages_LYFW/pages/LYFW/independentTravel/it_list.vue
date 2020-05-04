@@ -108,7 +108,7 @@
 <script>
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
-	import QSTabs from '@/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
+	import QSTabs from '@/pages_LYFW/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
 	export default {
 		data() {
 			return {

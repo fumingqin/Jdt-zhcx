@@ -9,7 +9,7 @@
 			<view style="width: 700rpx;margin-left: 25rpx;margin-right: 25rpx;">
 				<view style="flex-direction: row;background-color: #FFFFFF;width: 380rpx;border-radius: 48px;padding: 10rpx;align-items: center;">
 					<view>
-						<image src="../../static/CZC/HeadPhoto.png" style="width: 84rpx;height: 84rpx;"></image>
+						<image src="../../static/Order/HeadPhoto.png" style="width: 84rpx;height: 84rpx;"></image>
 					</view>
 					<view style="margin-left: 10rpx;">
 						<view>

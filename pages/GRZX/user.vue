@@ -3,8 +3,8 @@
 		<view class="backImg">
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
 			<!-- #ifdef MP-WEIXIN -->
-			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('/pages/GRZX/set')"></image>
-			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('/pages/GRZX/myNews')"></image>
+			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('set')"></image>
+			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('myNews')"></image>
 			<!-- #endif -->
 			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
 			 -->
@@ -40,7 +40,7 @@
 			</view>
 		</view>
 		
-		<image src="../../static/GRZX/advert.png" class="advertClass"></image>
+		<image :src="advert" class="advertClass"></image>
 	
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
@@ -76,9 +76,6 @@
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import listCell from '@/components/GRZX/mix-list-cell';
-	import {  
-	    mapState 
-	} from 'vuex'; 
 	export default{
 		components: {
 			listCell
@@ -88,12 +85,13 @@
 				QQ:'2482549389',
 				nickname:'',
 				portrait:'',
+				advert:'',
 			}
 		},
 		computed: {
-			...mapState(['hasLogin','userInfo'])
 		},
 		onLoad(){
+			this.loadImg();
 		},
 		onShow(){
 			this.loadData();
@@ -101,7 +99,7 @@
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
 			//#ifndef H5
-			if(index === 2){
+			if(index === 1){
 				uni.navigateTo({
 					// url:'/pages/GRZX/set'
 					url:this.$GrzxInter.Route.set.url,
@@ -117,6 +115,12 @@
 					}
 				})
 			}
+			if(index === 2){
+				uni.navigateTo({
+					// url:'/pages/GRZX/myNews'
+					url:this.$GrzxInter.Route.myNews.url,
+				})
+			}
 			//#endif
 			//#ifdef H5
 			if(index === 0){
@@ -125,55 +129,87 @@
 					url:this.$GrzxInter.Route.set.url,
 				})
 			}
-			//#endif
 			if(index === 1){
 				uni.navigateTo({
 					// url:'/pages/GRZX/myNews'
 					url:this.$GrzxInter.Route.myNews.url,
 				})
 			}
+			//#endif
+			
 		},
 		methods:{
+			// ---------------------------加载数据----------------------------
+			loadImg(){
+				var that=this;
+				console.log(that.$GrzxInter.GetImage.url,"144")
+				uni.request({
+					url:that.$GrzxInter.GetImage.url,
+					data:{
+						model:5,
+					},
+					method:'POST',
+					success(res) {
+						console.log(res,"153")
+						var image=res.data.data.filter(item => {
+							return item.type=='广告';
+						})
+						that.advert=image[0].imageUrl;
+						console.log(that.advert,'that.advert')
+					}
+				})
+			},
 			loadData(){
 				var that=this;
 				var user=uni.getStorageSync('userInfo');
-				uni.request({
-					url:that.$GrzxInter.Interface.login.value,
-					data:{
-						phoneNumber:user.phoneNumber,
-					},
-					method:that.$GrzxInter.Interface.login.method,
-					success(res) {
-						console.log(res,'res')
-						that.nickname=res.data.data.nickname;
-						var base64=res.data.data.portrait;
-						if(that.isBase64(base64)){
-							base64ToPath(base64)
-							  .then(path => {
-							    that.portrait=path;
-							  })
-							  .catch(error => {
-							    console.error(error)
-							  })
-						}else{
-							that.portrait=base64;
+				console.log(user,'user')
+				if(user.phoneNumber!=""||user.phoneNumber!=null){
+					uni.request({
+						url:that.$GrzxInter.Interface.login.value,
+						data:{
+							phoneNumber:user.phoneNumber,
+						},
+						method:that.$GrzxInter.Interface.login.method,
+						success(res) {
+							console.log(res,'res')
+							//uni.setStorageSync('userInfo',res.data.data);
+							that.nickname=res.data.data.nickname;
+							var base64=res.data.data.portrait;
+							if(that.isBase64(base64)){
+								base64ToPath(base64)
+								  .then(path => {
+								    that.portrait=path;
+								  })
+								  .catch(error => {
+								    console.error(error)
+								  })
+							}else{
+								that.portrait=base64;
+							}
+							console.log(that.portrait,"that.portrait")
 						}
-						console.log(that.portrait,"that.portrait")
-					}
-				})
+					})
+				}
 			},
 			orderClick(){
 				uni.switchTab({
 					url:'/pages/order/OrderList'
 				})
 			},
-			navTo(url){
-				uni.navigateTo({
-					url
-				})
-				console.log(url)
+			navTo(e){
+				if(e=='set'){
+					uni.navigateTo({
+						url:this.$GrzxInter.Route.set.url,
+					})
+				}
+				if(e=='myNews'){
+					uni.navigateTo({
+						url:this.$GrzxInter.Route.myNews.url,
+					})
+				}
+				console.log(e)
 			},
-			//信息管理
+			// ---------------------------信息管理----------------------------
 			infoClick(){
 				uni.navigateTo({
 					//url:'/pages/GRZX/infoList',
@@ -193,10 +229,13 @@
 					url:this.$GrzxInter.Route.feedback.url,
 				})  				
 			},
+			// ---------------------------是否登录----------------------------
 			checkLogin(){
-				// console.log(this.hasLogin,"6666")
+				var that=this;
 				//#ifndef H5
-				if(!this.hasLogin){
+				var user=uni.getStorageSync('userInfo');
+				if(user.userId==""||user.userId==null){
+					console.log(that.hasLogin,"7777")
 					uni.showToast({
 						title : '请先登录',
 						icon : 'none',
@@ -206,12 +245,13 @@
 							//loginType=1,泉运登录界面
 							//loginType=2,今点通登录界面
 							//loginType=3,武夷股份登录界面
-							url  : '/pages/GRZX/userLogin?loginType=1&&urlData=1'
+							url:that.$GrzxInter.Route.userLogin.url +'?loginType=1&&urlData=1'
 						}) 
 					},500);
 				}else{
+					console.log(that.$GrzxInter.Route.person.url,"8888")
 					uni.navigateTo({
-						url :'/pages/GRZX/personal'
+						url :that.$GrzxInter.Route.person.url,
 					})  
 				}
 				//#endif
@@ -225,13 +265,13 @@
 					setTimeout(function(){
 						uni.navigateTo({
 							// url:'/pages/GRZX/wxLogin',
-							url:this.$GrzxInter.Route.wxLogin.url,
+							url:that.$GrzxInter.Route.wxLogin.url,
 						})
 					},1000);
 				}else{
 					uni.navigateTo({
 						// url :'/pages/GRZX/personal'
-						url:this.$GrzxInter.Route.personal.url,
+						url:that.$GrzxInter.Route.personal.url,
 					})  
 				}
 				//#endif

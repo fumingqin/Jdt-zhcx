@@ -26,10 +26,6 @@
 </template>
 
 <script>
-	import {  
-		mapState,
-	    mapMutations  
-	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -40,9 +36,6 @@
 				currentSize:'',
 			};
 		},
-		computed: {
-			...mapState(['hasLogin','userInfo'])
-		},
 		onLoad(){
 			
 		},
@@ -50,8 +43,6 @@
 			this.load();
 		},
 		methods:{
-			...mapMutations(['logout']),
-
 			navTo(url){
 				uni.navigateTo({
 					url:url
@@ -84,34 +75,33 @@
 			},
 			//退出登录
 			toLogout(){				
-			/* 	console.log(this.hasLogin,"00000") */
-				if(this.hasLogin){
+				
+			var user=uni.getStorageSync('userInfo');
+			console.log(user,"00000")
+			// if(user==null)
 					uni.showModal({
 					    content: '确定要退出登录么',
 					    success: (e)=>{
 					    	if(e.confirm){
-					    		this.logout();
+								uni.removeStorageSync('userInfo');
 					    		setTimeout(()=>{
 					    			uni.switchTab({
-					    				// url:'/pages/GRZX/user'
-										url:this.$GrzxInter.Route.user.url,
+					    				url:'/pages/GRZX/user'
+										// url:that.$GrzxInter.Route.user.url,
 					    			})
 					    		}, 200)
 					    	}
 					    }
 					});
-				}else{
-					uni.showToast({
-						title : '请先登录',
-						icon : 'none',
-					})
-					/* setTimeout(function(){
-						uni.navigateTo({
-							url  : '/pages/GRZX/userLogin'
-						}) 
-					},1500); */
-				}
-				
+					// uni.showToast({
+					// 	title : '请先登录',
+					// 	icon : 'none',
+					// })
+					// setTimeout(function(){
+					// 	uni.navigateTo({
+					// 		url  : '/pages/GRZX/userLogin'
+					// 	}) 
+					// },1500);
 			},
 			//清除缓存
 			clearStorage(){

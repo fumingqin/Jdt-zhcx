@@ -1,7 +1,7 @@
 <template>
 	<view class="se_view">
 		<view class="sv_view">
-			<image class="sv_image" src="../../static/Home/serve/guanggao.png"></image>
+			<image class="sv_image" :src="imageIndex[0].imageUrl"></image>
 		</view>
 
 		<view class="sv_view2">
@@ -76,11 +76,27 @@
 </template>
 
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
-
+				imageIndex : '',//首页图片
 			}
+		},
+		onLoad:function(){
+			uni.request({
+				url:$lyfw.Interface.qg_GetImage.value,
+				method:$lyfw.Interface.qg_GetImage.method,
+				data:{ 
+					model : 6,
+					type:'服务banner'
+				},
+				success:(res) => { 
+					console.log(res)
+					this.imageIndex = res.data.data
+					
+				},
+			})
 		},
 		methods: {
 			natTo: function(url) {
