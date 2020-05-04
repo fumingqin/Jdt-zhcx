@@ -161,7 +161,16 @@ const Route={
 	},
 }
 
+const GetImage={
+	url:Url+'/api/zhcx/GetImage',
+	name:'获取图片',
+	method:'POST',
+	pages: [],
+}
+
 // 接口声明区
 export default {
-	Interface,Route
+	Interface,
+	Route,
+	GetImage
 }

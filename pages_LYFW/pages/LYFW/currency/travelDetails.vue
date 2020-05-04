@@ -12,7 +12,7 @@
 		<view class="titleClass">
 			<text class="title">{{titleClick.scenicName}}</text>
 			<view class="dateCost">
-				<view class="date">{{titleClick.date}}&nbsp;&nbsp;{{titleClick.time}}<text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text></view>
+				<view class="date">{{titleClick.date}}<text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text></view>
 			</view>
 			<!-- <view class="grClass">
 				<image class="txImage" :src="titleClick.image" mode="aspectFill"></image>
@@ -47,14 +47,14 @@
 			<!-- 内容 -->
 			<view class="scenicspotContent">
 				<view class="content2">
-					<rich-text :nodes="information[0].content"></rich-text>
+					<rich-text :nodes="titleClick.productIntroduction"></rich-text>
 				</view>
 			</view>
 		</view>
 
 		<!-- 行程安排 -->
 		<view v-if="type==1">
-			<view class="scheduling" v-for="(item,index) in arrangeText" :key="index">
+			<view class="scheduling" v-for="(item,index) in information" :key="index">
 				<view class="tripTitle">
 					<view class="circle" style="background-color: #D8F3FF;">
 						<text class="circleDay">D{{item.day}}</text>
@@ -62,26 +62,26 @@
 					<text class="title">{{item.title}}</text>
 				</view>
 				<view class="contentView">
-						<view class="hotel">
-							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/jiudian.png"></image>
-							<text class="hotelText">酒店:&nbsp;{{item.hotel}}</text>
-						</view>
-						<view class="hotel">
-							<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/yongcan.png"></image>
-							<text class="hotelText">用餐:&nbsp;{{item.dinnerTime}}</text>
-						</view>
-					<view class="content" v-for="(item2,index2) in information" :key="index2">
+					<view class="hotel">
+						<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/jiudian.png"></image>
+						<text class="hotelText">酒店:&nbsp;{{item.hotel}}</text>
+					</view>
+					<view class="hotel">
+						<image class="iconHotel" src="../../../static/LYFW/ouristRoute/SceneryTable/travelArrange/yongcan.png"></image>
+						<text class="hotelText">用餐:&nbsp;{{item.dinnerTime}}</text>
+					</view>
+					<view class="content" v-for="(item2,index2) in item.schedulingContent" :key="index2">
 						<view class="informationTitle">
 							<view class="titleDian"></view>
 							<view class="title2">
-								<rich-text :nodes="item2.title"></rich-text>
+								<rich-text :nodes="item2.contentTitle"></rich-text>
 							</view>
 						</view>
 						<view class="informationTime">
-							<rich-text :nodes="item2.createdTime"></rich-text>
+							<rich-text :nodes="item2.contentTime"></rich-text>
 						</view>
 						<view class="informationText">
-							<rich-text :nodes="item2.content"></rich-text>
+							<rich-text :nodes="item2.contentText"></rich-text>
 						</view>
 					</view>
 				</view>
@@ -131,14 +131,25 @@
 	export default {
 		data() {
 			return {
+				contentId: '',
 				picList: [], //相册图片数组
-				titleClick: '', //标题,点击量
+				titleClick: [{
+					scenicName:'',
+					date:'',
+					cost:'',
+				}], //标题,点击量
 				type: 0,
-				arrangeText: [], //行程安排标题内容数组
+				// arrangeText: [], //行程安排标题内容数组
 				information: [{
-					title: '', //标题
-					createdTime: '', //时间
-					content: '', //图文
+					day: '',
+					dinnerTime: '',
+					hotel: '',
+					title: '',
+					schedulingContent: [{
+						contentTitle: '', //标题
+						contentTime: '', //时间
+						contentText: '', //图文
+					}]
 				}],
 				costDescription: [], //费用明细
 				reserve: [], //预定须知
@@ -147,12 +158,13 @@
 		},
 
 		onLoad(options) {
+			this.getArticleInfo(options.contentId);
 			this.id = options.id;
 			this.routeInit();
-			this.getArticleInfo();
+			// this.getArticleInfo();
 			// this.dayInit();
 		},
-		
+
 		onNavigationBarButtonTap: function() {
 			this.share();
 		},
@@ -160,18 +172,18 @@
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
-				let routeComment2 = await this.$api.lyfwcwd('routeComment2');
-				this.picList = routeComment2.data.image;
-				let travel = await this.$api.lyfwcwd('travel');
-				this.titleClick = travel.data;
-				let arrange = await this.$api.lyfwcwd('arrange');
-				this.arrangeText = arrange.data;
+				// let routeComment2 = await this.$api.lyfwcwd('routeComment2');
+				// this.picList = routeComment2.data.image;
+				// let travel = await this.$api.lyfwcwd('travel');
+				// this.titleClick = travel.data;
+				// let arrange = await this.$api.lyfwcwd('arrange');
+				// this.arrangeText = arrange.data;
 				let description = await this.$api.lyfwcwd('description');
 				this.costDescription = description.data;
 				let reserve = await this.$api.lyfwcwd('reserve');
 				this.reserve = reserve.data;
 			},
-			
+
 			//保存图片至本地并打开新页面
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.picList);
@@ -192,37 +204,59 @@
 				}
 
 			},
-			
-			getArticleInfo: function() {
-				var that =this;
+
+			getArticleInfo: function(e) {
+				var that = this;
+				// uni.request({
+				// 	url: 'http://218.67.107.93:9210/api/app/getInformationList',
+				// 	method: "POST",
+				// 	success:function(res){
+				// 		that.information = res.data.data;
+				// 		for(var i=0;i<res.data.data.length;i++){
+				// 			that.information[i].content = res.data.data[i].content.replace(/\<img/g,'<img style="max-width:100%;height:auto;margin: 2px 0px;" ');
+				// 		}
+				// 		console.log(res)
+				// 	}
+				// })
+
 				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getInformationList',
-					method: "POST",
-					success:function(res){
-						that.information = res.data.data;
-						for(var i=0;i<res.data.data.length;i++){
-							that.information[i].content = res.data.data[i].content.replace(/\<img/g,'<img style="max-width:100%;height:auto;margin: 2px 0px;" ');
-						}
+					url: $lyfw.Interface.gt_travelDetails.value,
+					method: $lyfw.Interface.gt_travelDetails.method,
+					data: {
+						contentId: e,
+					},
+					success: (res) => {
 						console.log(res)
+						that.titleClick = res.data.data;
+						// that.costDescription = res.data.data;
+						that.picList = res.data.data;
+					},
+				})
+
+				uni.request({
+					url: $lyfw.Interface.gt_travelDetails2.value,
+					method: $lyfw.Interface.gt_travelDetails2.method,
+					data: {
+						contentId: e,
+					},
+					success: (res) => {
+						console.log(res)
+						that.information = res.data.data;
+						// for (var i = 0; i < res.data.data.length; i++) {
+						// 	that.information[i].schedulingContent.contentText = res.data.data[i].schedulingContent.contentText.replace(
+						// 		/\<img/g, '<img style="max-width:100%;height:auto;margin: 2px 0px;" ');
+						// }
 					}
 				})
-				
-				// uni.request({
-				// 	url: $lyfw.Interface.gt_travelDetails.value,
-				// 	method: $lyfw.Interface.gt_travelDetails2.method,
-				// 	// data:{
-				// 	// 	contentId : '南平市'
-				// 	// },
-				// })
 			},
-			
+
 			//点击跳转付款页面
 			submit: function() {
 				uni.navigateTo({
 					url: '../scenicSpotTickets/orderAdd',
 				})
 			},
-			
+
 			//点击客服
 			godetail: function() {
 				uni.showToast({
@@ -235,7 +269,7 @@
 					})
 				}, 500);
 			},
-			
+
 			//分享
 			share() {
 				uni.share({
@@ -243,7 +277,7 @@
 					scene: "WXSceneSession",
 					type: 0,
 					href: "pages/LYFW/ouristRoute/travelArrange",
-					title: "来自" + this.titleClick.name + "的分享", 
+					title: "来自" + this.titleClick.name + "的分享",
 					summary: this.titleClick.scenicName,
 					imageUrl: this.picList[0].ticketImage,
 					success: function() {
@@ -264,7 +298,7 @@
 
 		}
 	}
-</script> 
+</script>
 
 <style lang="scss">
 	//默认背景颜色
@@ -298,7 +332,7 @@
 		width: 100%;
 		background-color: #FFFFFF;
 		margin-top: -25upx;
-		padding-bottom: 47upx;//暂时的，事后有数据了之后要删除
+		padding-bottom: 47upx; //暂时的，事后有数据了之后要删除
 
 		.title {
 			display: flex;
@@ -309,22 +343,25 @@
 			margin-left: 40upx;
 			margin-top: 16upx;
 		}
-		
-		.dateCost{
+
+		.dateCost {
 			padding-top: 29upx;
 			padding-left: 40upx;
 			padding-right: 40upx;
+
 			.date {
 				position: relative;
 				display: flex;
 				font-size: 28upx;
 				color: #aba9aa;
+
 				.cost1 {
 					position: absolute;
 					font-size: 30upx;
 					color: #FC4646;
 					right: 0;
 					top: -11upx;
+
 					.cost2 {
 						font-size: 40upx;
 						color: #FC4646;
@@ -340,7 +377,7 @@
 			margin-left: 40upx;
 			margin-right: 40upx;
 			padding-bottom: 30upx;
-			
+
 			// padding-right: 40upx;
 			.txImage {
 				border-radius: 50%;
@@ -350,6 +387,7 @@
 
 			.grView {
 				margin-left: 25upx;
+
 				.name {
 					display: flex;
 					font-size: 32upx;
@@ -467,16 +505,17 @@
 		padding-left: 40upx;
 		padding-top: 56upx;
 		padding-bottom: 106upx;
-		
-		.tripTitle{
+
+		.tripTitle {
 			display: flex;
+
 			.circle {
 				position: relative;
 				width: 60upx;
 				height: 60upx;
 				border-radius: 50%;
 				border: 2px #06B4FD solid;
-			
+
 				.circleDay {
 					position: absolute;
 					font-size: 28upx;
@@ -485,7 +524,7 @@
 					left: 12upx;
 				}
 			}
-			
+
 			.title {
 				font-size: 40upx;
 				color: #333333;
@@ -499,23 +538,23 @@
 			margin-top: 50upx;
 			margin-left: 32upx;
 			border-left: 2upx dashed rgba(200, 200, 200, 1);
-			
-				.hotel {
-					padding-left: 71upx;
-					padding-bottom: 30upx;
-				
-					.iconHotel {
-						position: relative;
-						width: 39upx;
-						height: 33upx;
-					}
-				
-					.hotelText {
-						font-size: 30upx;
-						color: #aba9aa;
-						margin-left: 18upx;
-					}
+
+			.hotel {
+				padding-left: 71upx;
+				padding-bottom: 30upx;
+
+				.iconHotel {
+					position: relative;
+					width: 39upx;
+					height: 33upx;
 				}
+
+				.hotelText {
+					font-size: 30upx;
+					color: #aba9aa;
+					margin-left: 18upx;
+				}
+			}
 
 			.content {
 				// display: flex;
@@ -554,9 +593,8 @@
 					padding-left: 46upx;
 					line-height: 47upx;
 					letter-spacing: 4upx;
-					.time {
-						
-					}
+
+					.time {}
 				}
 
 				.informationText {
@@ -628,7 +666,7 @@
 			}
 		}
 	}
-	
+
 	//底部
 	.footer {
 		position: fixed;
@@ -645,10 +683,10 @@
 		z-index: 998;
 		color: #f85e52;
 		box-shadow: 0 -1px 5px rgba(0, 0, 0, .1);
-	
+
 		.footerPrice {
 			padding-left: 55upx;
-	
+
 			.kfIcon {
 				// position: relative;
 				width: 40upx;
@@ -656,7 +694,7 @@
 				color: rgba(44, 45, 45, 1);
 				// top: 7upx;
 			}
-	
+
 			.zfIcon {
 				padding-left: 50upx;
 				width: 32upx;
@@ -664,7 +702,7 @@
 				color: rgba(44, 45, 45, 1);
 			}
 		}
-	
+
 		.submitChange {
 			display: flex;
 			align-items: center;
@@ -672,12 +710,11 @@
 			width: 280upx;
 			height: 100%;
 			background: #06B4FD;
-	
+
 			.submit {
 				color: #fff;
 				font-size: 32upx;
 			}
 		}
 	}
-	
 </style>

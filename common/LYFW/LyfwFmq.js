@@ -150,6 +150,19 @@ const Interface = {
 		pages:["LYFW/groupTour/groupTourList"]
 	},
 	
+	gt_groupTourList:{
+		value: Url + '/api/ly/GetGroupTour',
+		name:'跟团游列表',
+		method:'POST',
+		pages:["LYFW/groupTour/groupTourList"]
+	},
+	
+	qg_GetImage:{
+		value: Url + '/api/zhcx/GetImage',
+		name:'全局-请求静态图片',
+		method:'POST',
+		pages:["pages/Home/guidePage.vue"]
+	}
 }
 
 

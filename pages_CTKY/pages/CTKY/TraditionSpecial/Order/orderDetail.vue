@@ -67,7 +67,7 @@
 </template>
 
 <script>
-	import uQRCode from '@/components/CTKY/uni-qrcode/uqrcode.js'
+	import uQRCode from '@/pages_CTKY/components/CTKY/uni-qrcode/uqrcode.js'
 	export default {
 		
 		data() {

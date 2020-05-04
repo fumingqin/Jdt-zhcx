@@ -55,8 +55,9 @@
 </template>
 
 <script>
-	import MxDatePicker from "@/components/CTKY/mx-datepicker/mx-datepicker.vue";
-	import utils from "@/components/CTKY/shoyu-date/utils.filter.js";
+	import $KyInterface from "@/common/Ctky.js"
+	import MxDatePicker from "@/pages_CTKY/components/CTKY/mx-datepicker/mx-datepicker.vue";
+	import utils from "@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components: {
 			MxDatePicker
@@ -98,18 +99,16 @@
 			//-------------------------------加载班次列表数据-------------------------------
 			getTicketInfo:function(date){
 				uni.showLoading();
-				// console.log(this.startStation,this.endStation,date);
 				uni.request({
-					url: "http://27.148.155.9:9056/CTKY/getListSchedulesInfo",
+					url:$KyInterface.KyInterface.Ky_ScheduleUrl.Url,
+					method:$KyInterface.KyInterface.Ky_ScheduleUrl.method,
+					header:$KyInterface.KyInterface.Ky_ScheduleUrl.header,
 					data: {
 						systemName:'泉运公司综合出行',
 						startPosition:this.startStation,
 						endPosition:this.endStation,
 						date:date,
 					},
-					
-					method:"POST",
-					header:{'content-type':'application/x-www-form-urlencoded'},
 					success: (res) => {6
 						uni.hideLoading();
 						console.log(res.data.data);
