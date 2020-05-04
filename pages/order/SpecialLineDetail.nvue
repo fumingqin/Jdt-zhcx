@@ -3,13 +3,13 @@
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
 		 :polyline="polyline" :markers="markers" :show-location="true" :include-points="includepoints">
 		</map>
-		<image @click="back" src="../../static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
+		<image @click="back" src="../../pages_CZC/static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
 		<scroll-view style="position: fixed;bottom:0;left: 0;right: 0;align-items: center;" class="map" :style="{height:viewHeight}"
 		 scroll-y='true'>
 			<view style="width: 700rpx;margin-left: 25rpx;margin-right: 25rpx;">
 				<view style="flex-direction: row;background-color: #FFFFFF;width: 380rpx;border-radius: 48px;padding: 10rpx;align-items: center;">
 					<view>
-						<image src="../../static/CZC/HeadPhoto.png" style="width: 84rpx;height: 84rpx;"></image>
+						<image src="../../static/Order/HeadPhoto.png" style="width: 84rpx;height: 84rpx;"></image>
 					</view>
 					<view style="margin-left: 10rpx;">
 						<view>
@@ -246,8 +246,8 @@
 								longitude: that.orderInfo.EndLon,
 								latitude: that.orderInfo.EndLat,
 							}]
-							that.setMarker(1, that.orderInfo.StartLon, that.orderInfo.StartLat, '../../static/CZC/Start.png');
-							that.setMarker(2, that.orderInfo.EndLon, that.orderInfo.EndLat, '../../static/CZC/End.png');
+							that.setMarker(1, that.orderInfo.StartLon, that.orderInfo.StartLat, '../../pages_CZC/static/CZC/Start.png');
+							that.setMarker(2, that.orderInfo.EndLon, that.orderInfo.EndLat, '../../pages_CZC/static/CZC/End.png');
 							// that.getDirectionDriving(that.orderInfo.startLon + ',' + that.orderInfo.startLat, that.orderInfo.endtLon + ',' + that.orderInfo.endLat);
 							if(that.orderInfo.Satisfied!="null"){
 								var arr=[]
@@ -311,6 +311,7 @@
 							title:res.data.msg,
 							icon:"none"
 						})
+						that.getOrderDetailInfo();
 					},
 					fail(res) {
 						uni.showToast({

@@ -1936,7 +1936,7 @@
 			SpecialLineOrderDetail: function(item) { //专线车详情
 				if (item.orderType == '进行中') {
 					uni.navigateTo({
-						url: '/pages/CZC/WaitTakeOrder?orderNumber=' + item.orderNumber,
+						url: '../../pages_CZC/pages/CZC/WaitTakeOrder?orderNumber=' + item.orderNumber,
 					})
 				} else {
 					uni.navigateTo({
@@ -1975,7 +1975,7 @@
 			},
 			GotoPay: function(value) {
 				uni.navigateTo({
-					url: "../CZC/PrivateTaxiPayment?orderNumber=" + value
+					url: "../../pages_CZC/pages/CZC/PrivateTaxiPayment?orderNumber=" + value
 				})
 			},
 			CheckPayState: function(orderNumber) { //检测支付状态
@@ -2074,7 +2074,7 @@
 					content: "您是否取消订单",
 					success(res) {
 						if (res.confirm) {
-							if(value.SpecialorderState==0&&value.SpecialorderState==1&&value.SpecialorderState==2){
+							if(value.SpecialorderState==0||value.SpecialorderState==1||value.SpecialorderState==2){
 								that.BouncePay(value.orderNumber);
 							}else{
 								that.CancelSpecialLineOrder1(value.orderNumber);

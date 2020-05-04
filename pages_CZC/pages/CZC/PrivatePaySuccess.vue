@@ -20,7 +20,7 @@
 	export default {
 		data() {
 			return {
-				timeout:"",
+				time:"",
 			}
 		},
 		onReady() {
@@ -32,7 +32,7 @@
 		methods: {
 			//路由统一事件
 			godetail: function(e) {
-				clearTimeout(timeout)
+				clearTimeout(this.time)
 				if(e==0){
 					uni.switchTab({
 						url:'../../../pages/order/OrderList'
@@ -44,7 +44,7 @@
 				}
 			},
 			backHome : function() {
-				this.timeout=setTimeout(() => { 
+				this.time=setTimeout(() => { 
 					uni.switchTab({
 						url:'../../../pages/Home/Index'
 					});
