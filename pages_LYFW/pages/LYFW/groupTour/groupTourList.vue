@@ -47,9 +47,9 @@
 			<view class="content" v-for="(item,index) in groupTitle" :key="index">
 				<view class="title">
 					<view style="background: #00B5FF;width: 56upx;height: 56upx;border-radius:4px;"><text class="titleId">{{item.groupId}}</text></view>
-					<text class="contentTitle">{{item.groupTItle}}</text>
+					<text class="contentTitle">{{item.groupTitle}}</text>
 				</view>
-				<view class="groupTour" v-for="(item2,index2) in item.content" :key="index2" v-if="index2<3" @click="details">
+				<view class="groupTour" v-for="(item2,index2) in item.content" :key="index2" v-if="index2<3" @click="details(item2.contentId)">
 					<view class="groupContent">
 						<image class="contentImage" :src="item2.contentImage" mode="aspectFill"></image>
 					</view>
@@ -58,7 +58,7 @@
 						<text class="contentLabel">{{item2.contentLabel}}</text>
 						<view class="groupCost">
 							<view class="cost">￥<text class="contentCost">{{item2.cost}}</text>元</view>
-							<text class="sellComment">已售{{item2.sell}}&nbsp;&nbsp;{{item2.comment}}评论</text>
+							<text class="sellComment">已售{{item2.sell}}</text>
 						</view>
 					</view>
 				</view>
@@ -80,7 +80,7 @@
 						<text class="contentLabel">{{item.contentLabel}}</text>
 						<view class="groupCost">
 							<view class="cost">￥<text class="contentCost">{{item.cost}}</text>元</view>
-							<text class="sellComment">已售{{item.sell}}&nbsp;&nbsp;{{item.comment}}评论</text>
+							<text class="sellComment">已售{{item.sell}}</text>
 						</view>
 					</view>
 				</view>
@@ -103,6 +103,7 @@
 </template>
 
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue';
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue';
 	import QSTabs from '@/pages_LYFW/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue';
@@ -116,6 +117,7 @@
 		},
 		data() {
 			return {
+				contentId:'',
 				searchValue: '', //搜索框值
 				regionWeixin: '请选择', //微信地区数值
 				regionApp : '请选择',//APP地区数值
@@ -134,24 +136,25 @@
 		},
 
 		onLoad() {
-			this.routeInit();
+			// this.routeInit();
 			this.Getpostion();
 			this.routeData();
 		},
 
 		methods: {
 			//读取静态数据json.js
-			async routeInit() {
-				let groupTour = await this.$api.lyfwcwd('groupTour');
-				this.groupTitle = groupTour.data;
-			},
+			// async routeInit() {
+			// 	let groupTour = await this.$api.lyfwcwd('groupTour');
+			// 	this.groupTitle = groupTour.data;
+			// },
 			
 			routeData : function(){
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getPackageTourList',
-					method:'POST',
+					url:$lyfw.Interface.gt_groupTourList.value,
+					method:$lyfw.Interface.gt_groupTourList.method,
 					success: (e) => {
 						console.log(e)
+						this.groupTitle=e.data.data;
 					}
 				})
 			},
@@ -255,8 +258,9 @@
 			
 			
 			details:function(e){
+				console.log(e)
 				uni.navigateTo({
-					url: '../currency/travelDetails'
+					url: '../currency/travelDetails?contentId='+e
 				})
 			},
 			
@@ -289,7 +293,6 @@
 			},
 			
 			changeCate: function(e){
-				console.log(e)
 				this.currentIndex = 1;
 				this.screenContent = e;	
 			}

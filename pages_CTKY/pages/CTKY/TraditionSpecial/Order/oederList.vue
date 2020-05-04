@@ -98,7 +98,7 @@
 </template>
 
 <script>
-    import popup from '@/components/CTKY/uni-popup/uni-popup.vue'
+    import popup from '@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue'
 	let windowWidth = 0,
 		scrollTimer = false,
 		tabBar;

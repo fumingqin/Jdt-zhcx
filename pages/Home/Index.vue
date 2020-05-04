@@ -4,14 +4,16 @@
 		 :show-location="true" :controls="controls" @controltap="controltap">
 
 		</map>
-
-		<!-- <view class="SearchBarBlock">
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="SearchBarBlock">
 			<view class="SearchBar" elevation='5px' style="">
 				<image class="topContent-image" src="../../static/Home/Search.png"></image>
 				<text @click="chooseSite" style="width: 500rpx;line-height: 45rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:400; color:rgba(153,153,153,1);">{{Address}}</text>
 				<image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image>
 			</view>
-		</view> -->
+		</view>
+		<!-- #endif -->
+		
 
 		<view class="bottomContent" elevation='5px' style="width: 100%;">
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
@@ -445,7 +447,7 @@
 	.SearchBarBlock {
 		width: 750rpx;
 		position: fixed;
-		top: 60px;
+		top: 104px;
 		left: 0px;
 		right: 0px;
 		align-items: center;
@@ -453,7 +455,8 @@
 
 	.SearchBar {
 		background-color: #FFFFFF;
-		width: 700rpx;
+		width: 680rpx;
+		margin: 0 16upx;
 		box-shadow: 0px 4px 9px 1px rgba(204, 204, 204, 1);
 		display: flex;
 		border-radius: 9px;

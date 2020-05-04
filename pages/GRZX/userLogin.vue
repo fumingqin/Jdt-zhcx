@@ -2,7 +2,7 @@
 	<view class="content" v-bind:style="{height:imgHeight+'px'}">
 		<!-- 背景图 -->
 		<view v-if="loginType==1">
-			<image src="../../static/GRZX/login1.png" class="backClass"></image>
+			<image :src="background" class="backClass"></image>
 		</view>
 		<image src="../../static/GRZX/loginReturn.png" class="returnClass" @click="returnClick"></image>
 		<view class="inputContent">
@@ -25,7 +25,7 @@
 		
 		<!-- logo -->
 		<view v-if="loginType==1">
-			<image src="../../static/GRZX/logo1.png" class="logoClass"></image>
+			<image :src="logo" class="logoClass"></image>
 		</view>
 
 		<!-- <view class="loginMode">第三方登录</view>
@@ -48,13 +48,38 @@
 				imgHeight:'',
 				loginType:'',
 				urlData:'',
+				background:'',
+				logo:'',
 			}
 		},
 		onLoad(options) {
+			this.loadImg();
 			this.urlData=options.urlData;
 			this.load(options.loginType);
 		},
 		methods: {
+			loadImg(){
+				var that=this;
+				console.log(that.$GrzxInter.GetImage.url,"144")
+				uni.request({
+					url:that.$GrzxInter.GetImage.url,
+					data:{
+						model:5,
+					},
+					method:'POST',
+					success(res) {
+						var image1=res.data.data.filter(item => {
+							return item.type=='背景图';
+						})
+						that.background=image1[0].imageUrl;
+						var image2=res.data.data.filter(item => {
+							return item.type=='logo';
+						})
+						that.logo=image2[0].imageUrl;
+						// console.log(that.logo,'that.logo')
+					}
+				})
+			},
 			async load(e){
 				var that=this;
 				uni.getSystemInfo({

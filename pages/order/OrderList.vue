@@ -42,7 +42,7 @@
 								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
 								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="CancelSpecialLineOrder(item.orderNumber)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
 							</view>
 						</view>
 					</view>
@@ -170,13 +170,13 @@
 							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
 							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
-				
-				
+
+
 						<!-- 已完成 -->
 						<view class="cm_buttonView" v-if="item.or_Type=='6'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>
-				
+
 						<!-- 待发车 -->
 						<view class="cm_buttonView" v-if="item.or_Type=='1'">
 							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
@@ -189,14 +189,14 @@
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view>
-				
+
 						<!-- 待支付 -->
 						<view class="cm_buttonView" v-if="item.or_Type=='5'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 							<view class="cm_button cm_btToPay" @click="topay(item.or_number)">去支付</view>
 						</view>
-				
+
 						<!-- 已取消 -->
 						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='9'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
@@ -216,7 +216,7 @@
 
 					<view class="kywhiteBg">
 						<!-- 站点-状态 -->
-						<view class="u-f-ac"> 
+						<view class="u-f-ac">
 							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
 							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
 								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
@@ -256,7 +256,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="info.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="info.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 
@@ -294,7 +294,7 @@
 								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
 								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="CancelSpecialLineOrder(item.orderNumber)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
 							</view>
 						</view>
 					</view>
@@ -417,8 +417,8 @@
 						<view class="cm_buttonView" v-if="item.or_Type=='6'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>
-						</view>
-						</view>
+					</view>
+				</view>
 
 
 				<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
@@ -466,9 +466,9 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="finishArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="finishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
-  
+
 		<!-- 进行中 -->
 		<view v-if="current === 2" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in goingArr" :key="index">
@@ -504,7 +504,7 @@
 								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
 								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="CancelSpecialLineOrder(item.orderNumber)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
 							</view>
 						</view>
 					</view>
@@ -603,8 +603,8 @@
 							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
 							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
-				
-				
+
+
 						<!-- 待发车 -->
 						<view class="cm_buttonView" v-if="item.or_Type=='1'">
 							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
@@ -617,7 +617,7 @@
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view>
-				
+
 					</view>
 				</view>
 
@@ -667,7 +667,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="goingArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="goingArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 
@@ -706,7 +706,7 @@
 								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
 								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="CancelSpecialLineOrder(item.orderNumber)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
 							</view>
 						</view>
 					</view>
@@ -788,35 +788,35 @@
 				<!-- 包车订单 -->
 				<!-- 标签class命名：;全称：Purchase Date -->
 				<!-- 内容class命名：cm;全称：custom made -->
-			<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
-				<view class="pd_view">{{item.or_date}}</view>
-				<view class="cm_view">
-					<view class="cm_titleView">
-						<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-						<text class="cm_title">{{item.or_class}}</text>
-						<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+					<view class="pd_view">{{item.or_date}}</view>
+					<view class="cm_view">
+						<view class="cm_titleView">
+							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.or_class}}</text>
+							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+						</view>
+						<view class="cm_contentView" style="display: flex;">
+							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
+						</view>
+						<view class="cm_contentView">
+							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
+						</view>
+
+
+						<!-- 待支付 -->
+						<view class="cm_buttonView" v-if="item.or_Type=='5'">
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btToPay" @click="topay(item.or_number)">去支付</view>
+						</view>
+
+
 					</view>
-					<view class="cm_contentView" style="display: flex;">
-						<text class="cm_contentPrice">¥{{item.cm_money}}</text>
-					</view>
-					<view class="cm_contentView">
-						<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
-						<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
-						<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
-						<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
-					</view>
-			
-			
-					<!-- 待支付 -->
-					<view class="cm_buttonView" v-if="item.or_Type=='5'">
-						<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-						<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-						<view class="cm_button cm_btToPay" @click="topay(item.or_number)">去支付</view>
-					</view>
-			
-			
 				</view>
-			</view>
 
 				<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
 				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
@@ -859,7 +859,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="unfinishArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="unfinishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 		<!-- 已取消 -->
@@ -896,7 +896,7 @@
 								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
 								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="CancelSpecialLineOrder(item.orderNumber)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
 							</view>
 						</view>
 					</view>
@@ -1007,13 +1007,13 @@
 							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
 							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
-				
-				
+
+
 						<!-- 已取消 -->
 						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='9'">
 							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-				
+
 						</view>
 					</view>
 				</view>
@@ -1059,7 +1059,7 @@
 					</view>
 				</view>
 			</view>
-			<empty-data :isShow="cancelArr.length == 0" text="暂无数据" image="/static/CTKY/empty.png" textColor="#999999"></empty-data>
+			<empty-data :isShow="cancelArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
 
 		<!-- 二维码弹框 -->
@@ -1086,7 +1086,7 @@
 				<swiper-item v-for="(item,index) in QRCodeArray" :key="index">
 					<view class="u-f-ac" style="border-top-right-radius: 20rpx;border-top-left-radius: 20rpx; width: 100%; background: #FFFFFF;display: block; text-align: center;">
 						<!-- 显示二维码 -->
-						<image src="../../static/Order/erweima.png" mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image>
+						<!-- <image src="../../static/Order/erweima.png" mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image> -->
 
 						<!-- 检票口/座位号 -->
 						<view style="display: flex; align-items: center;justify-content: space-between; font-size: 32rpx;color: #2C2D2D; padding: 20rpx 80rpx;font-weight: 300;">
@@ -1217,12 +1217,13 @@
 	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
-	import emptyData from "@/components/CTKY/emptyData/emptyData.vue"; //无数据时显示内容
+	import emptyData from "@/components/Order/emptyData/emptyData.vue"; //无数据时显示内容
 	import $taxi from '../../common/Czc.js';
 	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import uQRCode from "@/common/uqrcode.js"
 	import $bcfw from '@/common/BCFW/bcfw.js'
+	import $KyInterface from "@/common/Ctky.js"
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1277,11 +1278,14 @@
 						checked: false
 					}
 				],
-				specialLineInfo: ''
+				specialLineInfo: '',
+				noDataImage:'',//客运弹框背景图
 			}
 		},
 		onLoad: function() {
 			var that = this;
+			//获取客运弹框图片
+			that.getPicture();
 			//读取用户ID
 			uni.getStorage({
 				key: 'userInfo',
@@ -1366,7 +1370,6 @@
 					this.$refs['bottomPopup'].close();
 				});
 			},
-
 			back: function() {
 				var that = this;
 				uni.switchTab({
@@ -1375,6 +1378,27 @@
 			},
 			//------------------------------------------------客运开始------------------------------------------------
 			//-------------------------客运用户详情-------------------------
+			getPicture() {
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
+					method:$KyInterface.KyInterface.Ky_AddPicture.method,
+					header:$KyInterface.KyInterface.Ky_AddPicture.header,
+					data:{
+						model:0,
+					},
+					success(res) {
+						if(res.data.status == true) {
+							that.noDataImage = res.data.data[2].imageUrl
+						}else {
+							console.log(res.data.status)
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 			getUserInfo() {
 				var that = this;
 				//读取用户ID
@@ -1396,11 +1420,9 @@
 			getKeYunOrderInfo: function() {
 				var that = this;
 				uni.request({
-					url: 'http://zntc.145u.net/api/ky/searchOrder',
-					method: 'GET',
-					header: {
-						'content-type': 'application/json'
-					},
+					url:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.Url,
+					method:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.method,
+					header:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.header,
 					data: {
 						clientID: that.userInfo.userId
 					},
@@ -1466,28 +1488,26 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url: 'http://zntc.145u.net/api/ky/RefundTicket_Flow',
-					method: 'GET',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
+					url:$KyInterface.KyInterface.Ky_RefundTicket.Url,
+					method:$KyInterface.KyInterface.Ky_RefundTicket.method,
+					header:$KyInterface.KyInterface.Ky_RefundTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
 						console.log('删除结果', respones)
-						if(respones.data.status == true){
+						if (respones.data.status == true) {
 							uni.hideLoading()
 							uni.showToast({
-								title:'退票成功'
+								title: '退票成功'
 							})
 							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
-						}else {
+						} else {
 							uni.hideLoading()
 							uni.showToast({
-								title:'退票失败',
-								icon:'none'
+								title: '退票失败',
+								icon: 'none'
 							})
 							uni.startPullDownRefresh();
 						}
@@ -1496,7 +1516,7 @@
 						uni.hideLoading()
 						console.log(respones)
 						uni.showToast({
-							title:'服务器异常，请联系客服'
+							title: '服务器异常，请联系客服'
 						})
 					}
 				})
@@ -1506,29 +1526,27 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url: 'http://zntc.145u.net/api/ky/CancelTicket_Flow',
-					method: 'GET',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
+					url:$KyInterface.KyInterface.Ky_CancelTicket.Url,
+					method:$KyInterface.KyInterface.Ky_CancelTicket.method,
+					header:$KyInterface.KyInterface.Ky_CancelTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
 						// alert(respones.data)
 						console.log('取消结果', respones)
-						if(respones.data.status == true){
+						if (respones.data.status == true) {
 							uni.hideLoading()
 							uni.showToast({
-								title:'取消成功'
+								title: '取消成功'
 							})
 							this.$refs.popup3.close()
 							uni.startPullDownRefresh();
-						}else {
+						} else {
 							uni.hideLoading()
 							uni.showToast({
-								title:'取消失败',
-								icon:'none'
+								title: '取消失败',
+								icon: 'none'
 							})
 							this.$refs.popup3.close()
 							uni.startPullDownRefresh();
@@ -1539,7 +1557,7 @@
 						uni.hideLoading()
 						console.log(respones)
 						uni.showToast({
-							title:'服务器异常，请联系客服'
+							title: '服务器异常，请联系客服'
 						})
 						this.$refs.popup3.close()
 					}
@@ -1560,11 +1578,9 @@
 				uni.showLoading();
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
@@ -1575,8 +1591,8 @@
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									uni.showToast({
-										title:'订单已支付',
-										icon:'none'
+										title: '订单已支付',
+										icon: 'none'
 									})
 									clearInterval(timer);
 								} else {
@@ -1590,8 +1606,8 @@
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									uni.showToast({
-										title:'订单已超时',
-										icon:'none'
+										title: '订单已超时',
+										icon: 'none'
 									})
 									clearInterval(timer);
 								} else {
@@ -1673,7 +1689,7 @@
 								uni.showToast({
 									title: '支付成功',
 									icon: 'none',
-									success:function(){
+									success: function() {
 										uni.startPullDownRefresh();
 									}
 								})
@@ -1717,7 +1733,7 @@
 
 			//-------------------------出租车开始-------------------------
 			loadczcData: function() {
-				
+
 				var that = this;
 				uni.getStorage({
 					key: 'userInfo',
@@ -1962,6 +1978,118 @@
 					url: "../CZC/PrivateTaxiPayment?orderNumber=" + value
 				})
 			},
+			CheckPayState: function(orderNumber) { //检测支付状态
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CheckPayState.value,
+					method: $privateTaxi.Interface.CheckPayState.method,
+					data: {
+						orderNumber: orderNumber
+					},
+					success(res) {
+						console.log(res);
+						if (res.data.status) {
+							that.CancelSpecialLineOrder1(orderNumber);
+						} else {
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail() {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			BouncePay: function(orderNumber) {
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.BouncePay.value,
+					method: $privateTaxi.Interface.BouncePay.method,
+					data: {
+						orderNumber: orderNumber,
+						// price:that.FactPayPrice
+						price: 0.01
+					},
+					success(res) {
+						if (res.data.status) {
+							that.CheckPayState(orderNumber)
+						} else {
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			CancelSpecialLineOrder1: function(orderNumber) {
+				//取消订单
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
+					method: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.method,
+					data: {
+						OrderNumber: orderNumber,
+						UserId: that.userInfo.userId,
+					},
+					success: function(res) {
+						let data = res.data.data;
+						if (res.data.status) {
+							uni.showToast({
+								title: '取消成功',
+								icon: 'none',
+							});
+							uni.startPullDownRefresh();
+						} else {
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none'
+							})
+						}
+					},
+					fail: function(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
+					}
+				});
+
+			},
+			ConfirmCancel: function(value) {
+				let that = this;
+				uni.showModal({
+					title: "取消订单",
+					content: "您是否取消订单",
+					success(res) {
+						if (res.confirm) {
+							if(value.SpecialorderState==0&&value.SpecialorderState==1&&value.SpecialorderState==2){
+								that.BouncePay(value.orderNumber);
+							}else{
+								that.CancelSpecialLineOrder1(value.orderNumber);
+							}
+						}
+					},
+					fail: function(res) { 
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
+					}
+				})
+			},
+
 			//-------------------------出租车专线代码结束-------------------------
 
 
@@ -1998,7 +2126,8 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType =='支付超时') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
+												'支付超时') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}
@@ -2045,7 +2174,7 @@
 				this.$refs.popup5.close()
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
-			open2:function(e,exitindex) {
+			open2: function(e, exitindex) {
 				this.ticketOrderNumber = e;
 				this.exitindex = exitindex;
 				this.$refs.popup2.open()
@@ -2096,13 +2225,13 @@
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
-				var that =this
-				if(this.exitindex=='2'){
+				var that = this
+				if (this.exitindex == '2') {
 					uni.showLoading({
-						title:'请求退票中...'
+						title: '请求退票中...'
 					})
 					this.keYunRefundTicket(that.ticketOrderNumber)
-				}else if(this.exitindex=='3'){
+				} else if (this.exitindex == '3') {
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
@@ -2124,8 +2253,8 @@
 						}
 					})
 				}
-				
-				
+
+
 			},
 
 			//-------------------------景区门票-取消-------------------------
@@ -2207,7 +2336,7 @@
 					this.keYunCancelTicket(this.ticketOrderNumber);
 				}
 			},
-			
+
 			//-------------------------景区门票-删除-------------------------
 			del: function() {
 				if (this.exitindex == '3') {
@@ -2321,13 +2450,15 @@
 					success: (res) => {
 						this.userInfo = res.data;
 						uni.request({
-							url:$bcfw.Interface.spt_RequestTicketsList.value,
-							method:$bcfw.Interface.spt_RequestTicketsList.method,
+							url: $bcfw.Interface.spt_RequestTicketsList.value,
+							method: $bcfw.Interface.spt_RequestTicketsList.method,
 							data: {
 								userId: this.userInfo.userId
 							},
-							
-							header: {'content-type': 'application/json'},
+
+							header: {
+								'content-type': 'application/json'
+							},
 							success: (res) => {
 								console.log(this.userInfo.userId);
 								console.log(res);
@@ -2339,17 +2470,18 @@
 										for (var i = 0; i < res.data.data.length; i++) {
 											if (res.data.data[i].or_Type == '6') {
 												that.finishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '4'||res.data.data[i].or_type == '2' || res.data.data[i].or_type =='11') {
+											} else if (res.data.data[i].or_Type == '4' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
+												'11') {
 												that.goingArr.push(res.data.data[i]);
 											} else if (res.data.data[i].or_Type == '5') {
 												that.unfinishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '8'||res.data.data[i].or_Type == '9') {
+											} else if (res.data.data[i].or_Type == '8' || res.data.data[i].or_Type == '9') {
 												that.cancelArr.push(res.data.data[i]);
 											}
 										}
 									}
-									}
-									
+								}
+
 							}
 						})
 					},
@@ -2389,8 +2521,8 @@
 				} else if (param == '5') {
 					return '待支付'
 				} else if (param == '1') {
-				 	return '待发车'
-				 }else if (param == '8'||param == '9') {
+					return '待发车'
+				} else if (param == '8' || param == '9') {
 					return '已取消'
 				} else if (param == '11') {
 					return '待补款'
@@ -2654,6 +2786,7 @@
 			}
 		}
 	}
+
 	.kywhiteBg {
 		position: relative;
 		margin: 40rpx 26rpx;
@@ -2663,12 +2796,14 @@
 		background: #FFFFFF;
 		border-radius: 12rpx;
 	}
+
 	//客运按钮区
 	.CTKYBtnView {
 		margin-top: 30upx;
 		display: flex;
 		float: right;
 		margin-bottom: 20rpx;
+
 		.allBtn {
 			padding: 0 20upx;
 			// padding-top: 32upx;
@@ -2692,16 +2827,18 @@
 			color: #06B4FD;
 		}
 	}
+
 	//站点标题
 	.stationTitle {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
-		color: #2C2D2D; 
+		color: #2C2D2D;
 		font-size: 34rpx;
 		font-weight: bold;
 		width: 80%;
 	}
+
 	//预定日期---LJH
 	.reserveDate {
 		padding: 12rpx 25rpx;
@@ -2918,7 +3055,7 @@
 				background: #FF6600;
 				border: 1upx solid #FF6600;
 				color: #FFFFFF;
-				margin-right: 16upx;	
+				margin-right: 16upx;
 			}
 		}
 	}

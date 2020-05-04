@@ -1,24 +1,70 @@
 /* 接口参数区 */
 // 示例
-const userInfo = {
-	status: 1,  //成功/失败提示返回值
-	data: {
-		unid : 183252546,        //唯一ID标示
-		mobile: 18888888888,     //手机号码
-		nickname: '茜茜爱玩',    //姓名
-		gender:1,				//性别
-		birthday:'1994-01-19',  //生日
-		permanent:'福建省南平市武夷山市',  //地址
-		autograph:'喜欢可以点关注哦~',	  //签名
-		portrait: '/static/user/touxiang2.jpg',  //头像
-		bg:'/static/index/banner2.jpg'			//背景图
+
+
+//传统客运接口配置
+
+//接口域名
+const Url = 'http://zntc.145u.net';
+const scheduleUrl = 'http://27.148.155.9:9056';//班次列表
+
+//接口对象
+const KyInterface = {
+	//GET-POST
+	
+	Ky_AddPicture:{
+		Url: Url + '/api/zhcx/getImage',
+		name:'客运-添加图片',
+		method:'POST',
+		pages:["CTKY/TraditionSpecoal/Home/ctkyIndex.vue"],
+		header:{'content-type': 'application/json'}
 	},
-	msg: '提示'		
+	Ky_ScheduleUrl:{
+		Url: scheduleUrl + '/CTKY/getListSchedulesInfo',
+		name:'客运-班次列表',
+		method:'POST',
+		pages:["CTKY/TraditionSpecoal/Order/selectTickets.vue"],
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_PaymentUrl:{
+		Url: Url + '/api/ky/SellTicket_NoBill_Booking',
+		name:'客运-下单',
+		method:'GET',
+		pages:["CTKY/TraditionSpecoal/PayMent/orderPayment.vue"],
+		header:{'content-type': 'application/json'},
+	},
+	Ky_getTicketPaymentInfo:{
+		Url: Url + '/api/ky/SellTicket_Flow',
+		name:'客运-获取支付参数',
+		method:'GET',
+		pages:["CTKY/TraditionSpecoal/PayMent/orderPayment.vue"],
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_getKeYunOrderInfo:{
+		Url: Url + '/api/ky/searchOrder',
+		name:'客运-获取订单列表',
+		method:'GET',
+		pages:["pages/order/OrderList.vue"],
+		header:{'content-type': 'application/json'},
+	},
+	Ky_RefundTicket:{
+		Url: Url + '/api/ky/RefundTicket_Flow',
+		name:'客运-退票',
+		method:'GET',
+		pages:["pages/order/OrderList.vue"],
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_CancelTicket:{
+		Url: Url + '/api/ky/CancelTicket_Flow',
+		name:'客运-取消',
+		method:'GET',
+		pages:["pages/order/OrderList.vue"],
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	}
+	
+	
 }
-
-
-
 // 接口声明区
 export default {
-	userInfo,  
+	KyInterface
 }

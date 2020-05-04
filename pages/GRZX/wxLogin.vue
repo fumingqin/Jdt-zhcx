@@ -1,7 +1,7 @@
 <template>
     <view class="content">
 		<!-- <image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image> -->
-		<image src="../../static/GRZX/bindPhone.png" class="backClass"></image>
+		<image :src="bindPhoneImg" class="backClass"></image>
 		<text class="titleClass">手机绑定</text>
 		<view class="inputItem phoneNum">
 			<image src="../../static/GRZX/shouji.png" class="iconClass1"></image>
@@ -28,10 +28,11 @@
 				textCode:"获取验证码",
 				phoneNumber:'',
 				captchaCode:'',
+				bindPhoneImg:'',
 	        }
 	    },
 	    onLoad() {	
-			
+			this.loadImg();
 	    },
 		//#ifdef H5
 		onBackPress() {
@@ -51,6 +52,24 @@
 		//#endif
 	    methods: {
 			...mapMutations(['login']),
+			loadImg(){
+				var that=this;
+				console.log(that.$GrzxInter.GetImage.url,"144")
+				uni.request({
+					url:that.$GrzxInter.GetImage.url,
+					data:{
+						model:5,
+					},
+					method:'POST',
+					success(res) {
+						var image=res.data.data.filter(item => {
+							return item.type=='绑定手机号';
+						})
+						that.bindPhoneImg=image[0].imageUrl;
+						console.log(that.bindPhoneImg,'that.bindPhone')
+					}
+				})
+			},
 			returnClick(){		//返回个人中心
 				uni.switchTab({
 					// url:'/pages/GRZX/user',
