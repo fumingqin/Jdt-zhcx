@@ -71,7 +71,7 @@
 		<!-- 筛选内容 -->
 		<view :hidden="current == 0 ">
 			<view class="content">
-				<view class="groupTour" v-for="(item,index) in screenContent" :key="index">
+				<view class="groupTour" v-for="(item,index) in screenContent" :key="index" @click="details(item.contentId)">
 					<view class="groupContent">
 						<image class="contentImage" :src="item.contentImage" mode="aspectFill"></image>
 					</view>
@@ -92,7 +92,7 @@
 				<view class="cate-content">
 					<scroll-view scroll-y class="cate">
 						<view class="cate-list" v-for="item in groupTitle" :key="item.groupId" @click="changeCate(item.content)">
-							<text class="cate-Text">{{item.groupId}}&nbsp;&nbsp;{{item.groupTItle}}</text>
+							<text class="cate-Text">{{item.groupId}}&nbsp;&nbsp;{{item.groupTitle}}</text>
 						</view>
 					</scroll-view>
 				</view>
