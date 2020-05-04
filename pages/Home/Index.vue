@@ -382,8 +382,8 @@
 										},1000);
 									}else{
 										uni.setStorageSync('userInfo',res1.data.data)
-										that.logining=true;
-										that.login(res1.data.data)
+										// that.logining=true;
+										// that.login(res1.data.data)
 									}	
 								}
 							})
@@ -447,7 +447,7 @@
 	.SearchBarBlock {
 		width: 750rpx;
 		position: fixed;
-		top: 72px;
+		top: 104px;
 		left: 0px;
 		right: 0px;
 		align-items: center;
