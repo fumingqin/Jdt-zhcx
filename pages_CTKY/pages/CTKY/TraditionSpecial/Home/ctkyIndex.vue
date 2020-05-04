@@ -2,7 +2,7 @@
     <view class="myView">
 		<!-- 照片背景图 -->
 		<view>
-			<image src="../../../../static/CTKY/kangYi.png" class="imageTop" mode="aspectFill"></image>
+			<image :src="imageUrl" class="imageTop" mode="aspectFill"></image>
 			<!-- <image src="../../static/index/左-箭头.png" class="imageReturn"></image> -->
 		</view>
 		<!-- 车票查询 -->
@@ -54,7 +54,9 @@
 </template>
 
 <script>
-import MxDatePicker from "@/components/CTKY/mx-datepicker/mx-datepicker.vue";
+	import $KyInterface from "@/common/Ctky.js"
+    import MxDatePicker from "@/pages_CTKY/components/CTKY/mx-datepicker/mx-datepicker.vue";
+
 	export default {
 		components: {
 			MxDatePicker
@@ -76,6 +78,7 @@ import MxDatePicker from "@/components/CTKY/mx-datepicker/mx-datepicker.vue";
 				normalPickerNum:1,
 				specialPickerNum:0,
 				isNormal:0,//判断是普通购票还是定制班车默认是普通购票
+				imageUrl:'',
 			}
 		},
 		onLoad() {
@@ -86,6 +89,7 @@ import MxDatePicker from "@/components/CTKY/mx-datepicker/mx-datepicker.vue";
 			if (that.destination == '') {
 				that.destination = '选择下车点'
 			}
+			that.getPicture();
 			//读取历史记录
 			uni.getStorage({
 				key:'historyLines',
@@ -98,6 +102,30 @@ import MxDatePicker from "@/components/CTKY/mx-datepicker/mx-datepicker.vue";
 		},
 		methods: {
 			
+			//---------------------------------点击起点站---------------------------------
+			getPicture() {
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
+					method:$KyInterface.KyInterface.Ky_AddPicture.method,
+					header:$KyInterface.KyInterface.Ky_AddPicture.header,
+					data:{
+						model:0,
+					},
+					success(res) {
+						console.log(res)
+						if(res.data.status == true) {
+							that.imageUrl = res.data.data[0].imageUrl
+							console.log(that.imageUrl)
+						}else {
+							console.log(res.data.status)
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 			//---------------------------------点击起点站---------------------------------
 			startStationTap(){
 				var that = this;

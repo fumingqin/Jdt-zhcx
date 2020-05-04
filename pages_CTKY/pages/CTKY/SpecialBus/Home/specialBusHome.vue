@@ -36,8 +36,8 @@
 </template>
 
 <script>
-	import datePicker from '@/components/CTKY/mx-datepicker/ctkyDatePicker.vue'
-	import Popup from '@/components/CTKY/uni-popup/uni-popup.vue'
+	import datePicker from '@/pages_CTKY/components/CTKY/mx-datepicker/ctkyDatePicker.vue'
+	import Popup from '@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue'
 	export default {
 		components:{
 			datePicker,
