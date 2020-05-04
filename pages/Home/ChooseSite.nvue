@@ -1108,7 +1108,7 @@
 							key: "passengerList"
 						})
 						uni.navigateTo({
-							url: '../CZC/PrivateTaxi',
+							url: '/pages_CZC/pages/CZC/PrivateTaxi',
 							animationType: 'pop-in',
 							animationDuration: 200,
 						});
