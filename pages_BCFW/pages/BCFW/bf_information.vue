@@ -643,12 +643,17 @@
 	//出发内容
 	.cvt_content {
 		position: absolute;
+		/* #ifdef APP-NVUE */
 		top: 197upx;
+		/* #endif */
+		/* #ifndef APP-NVUE */
+		top: 100upx;
+		/* #endif */
 		width: 698upx;
 		margin: 0 26upx;
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
-		border-radius: 13px;
+		border-radius: 13rpx;
 
 		//内容样式
 		.ct_departureContents1 {
@@ -743,7 +748,13 @@
 		position: absolute;
 		border-radius: 13upx;
 		left: 25upx;
+		/* #ifdef APP-NVUE */
 		top: 420upx;
+		/* #endif */
+		/* #ifndef APP-NVUE */
+		top: 328upx;
+		/* #endif */
+
 
 		.cmv_selected {
 			font-size: 36upx;
@@ -798,12 +809,17 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
+		/* #ifdef APP-NVUE */
 		top: 880upx;
+		/* #endif */
+		/* #ifndef APP-NVUE */
+		top: 800upx;
+		/* #endif */
 
 		.cbv_charteredBusMessage {
 			font-size: 32upx;
 			color: #333333;
-			font-weight: 400;
+			font-weight: bold;
 			position: absolute;
 			left: 40upx;
 			top: 20upx;
@@ -891,7 +907,13 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
+		/* #ifdef APP-NVUE */
 		top: 1420upx;
+		/* #endif */
+		/* #ifndef APP-NVUE */
+		top: 1340upx;
+		/* #endif */
+		
 
 		.cv_coupon {
 			font-size: 30upx;
@@ -928,7 +950,12 @@
 		position: absolute;
 		border-radius: 15upx;
 		left: 25upx;
+		/* #ifdef APP-NVUE */
 		top: 1540upx;
+		/* #endif */
+		/* #ifndef APP-NVUE */
+		top: 1460upx;
+		/* #endif */
 
 		.nv_charteredBusNotice {
 			font-size: 30upx;
