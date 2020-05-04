@@ -3,7 +3,7 @@
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
 			<swiper-item class="swiItem" v-for="(item,index) in picList" :key="index" @click="goImgList">
-				<image :src="item.ticketImage" />
+				<image :src="item" />
 				<!-- <view class="view">{{imgnumber}}</view> -->
 			</swiper-item>
 		</swiper>
@@ -229,7 +229,7 @@
 						console.log(res)
 						that.titleClick = res.data.data;
 						// that.costDescription = res.data.data;
-						that.picList = res.data.data;
+						that.picList = res.data.data.ticketImage;
 					},
 				})
 

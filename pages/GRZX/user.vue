@@ -172,8 +172,12 @@
 						method:that.$GrzxInter.Interface.login.method,
 						success(res) {
 							console.log(res,'res')
-							//uni.setStorageSync('userInfo',res.data.data);
-							that.nickname=res.data.data.nickname;
+							uni.setStorageSync('userInfo',res.data.data);
+							if(res.data.data.nickname==""||res.data.data.nickname==null){
+								that.nickname="请输入昵称";	
+							}else{
+								that.nickname=res.data.data.nickname;	
+							}
 							var base64=res.data.data.portrait;
 							if(that.isBase64(base64)){
 								base64ToPath(base64)
@@ -235,7 +239,6 @@
 				//#ifndef H5
 				var user=uni.getStorageSync('userInfo');
 				if(user.userId==""||user.userId==null){
-					console.log(that.hasLogin,"7777")
 					uni.showToast({
 						title : '请先登录',
 						icon : 'none',

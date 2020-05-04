@@ -7,21 +7,21 @@ import Gjcx from 'common/Gjcx.js' //公交查询-测试用数据
 import GrzxInter from 'common/Grzx.js' //个人中心-测试用数据
 import Lyfwfmq from 'common/LYFW/LyfwFmq.js' //旅游服务-测试用数据-傅洺钦
 import Lyfwcwd from 'common/LYFW/LyfwCwd.js' //旅游服务-测试用数据-蔡伟达
-import store from 'common/login.js' //登录
+// import store from 'common/login.js' //登录
 import BcfwZyx from 'common/BCFW/BcfwZyx.js' //包车服务-测试用数据-郑育兴
 
 import Sceniclist from 'common/scenicSpotDistribution.js' //旅游服务-景区目录-测试用数据
 
 Vue.config.productionTip = false
 
-Vue.prototype.$store=store;  //登录
+// Vue.prototype.$store=store;  //登录
 Vue.prototype.$Czc=Czc;  //登录
 Vue.prototype.$GrzxInter=GrzxInter;  //个人中心
 
 App.mpType = 'app'
 
 const app = new Vue({
-	store,	//登录
+	// store,	//登录
 	GrzxInter,//个人中心
     ...App
 })

@@ -18,10 +18,6 @@
 
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
-	import {
-		mapState,
-	    mapMutations  
-	} from 'vuex';
 	export default {
 	    data() {
 	        return {
@@ -51,7 +47,6 @@
 		},
 		//#endif
 	    methods: {
-			...mapMutations(['login']),
 			loadImg(){
 				var that=this;
 				console.log(that.$GrzxInter.GetImage.url,"144")
@@ -175,8 +170,8 @@
 												icon:'success',
 											})
 											uni.setStorageSync('userInfo',res3.data.data)
-											that.logining=true;
-											that.login(res3.data.data)
+											// that.logining=true;
+											// that.login(res3.data.data)
 											setTimeout(function(){
 												uni.switchTab({
 													url:'/pages/Home/Index'

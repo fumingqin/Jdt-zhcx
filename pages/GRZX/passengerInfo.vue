@@ -224,10 +224,11 @@
 						icon:"none"
 					})
 				}else{
-					uni.setStorage({
-						key:"passengerList",
-						data:array
-					})
+					// uni.setStorage({
+					// 	key:"passengerList",
+					// 	data:array
+					// })
+					uni.setStorageSync('passengerList',array);
 					uni.navigateBack();	
 				}			
 			}

@@ -234,22 +234,22 @@
 
 			//金刚区各模块入口
 			route1: function() {
-				uni.showToast({
-					title: '正在测试中，敬请期待...',
-					icon: 'none'
-				})
-				// uni.navigateTo({
-				// 	url: '../independentTravel/it_list'
+				// uni.showToast({
+				// 	title: '正在测试中，敬请期待...',
+				// 	icon: 'none'
 				// })
+				uni.navigateTo({
+					url: '../independentTravel/it_list'
+				})
 			},
 			route2: function() {
-				uni.showToast({
-					title: '正在测试中，敬请期待...',
-					icon: 'none'
-				})
-				// uni.navigateTo({
-				// 	url: '../groupTour/groupTourList'
+				// uni.showToast({
+				// 	title: '正在测试中，敬请期待...',
+				// 	icon: 'none'
 				// })
+				uni.navigateTo({
+					url: '../groupTour/groupTourList'
+				})
 			},
 			route3: function() {
 				uni.navigateTo({

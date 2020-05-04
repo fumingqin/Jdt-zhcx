@@ -6,7 +6,7 @@
 			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait"></image>
 			<!-- #endif -->
 			<!-- #ifndef H5 -->
-			<image class="bg" :src="backImg||'/static/GRZX/login1.png'" mode="aspectFill" name="backImg"></image>
+			<image class="bg" :src="backImg||'/static/GRZX/backImg.png'" mode="aspectFill" name="backImg"></image>
 			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait" @click="getPhoto"></image>
 			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
 			<!-- #endif -->
@@ -119,7 +119,7 @@
 							method:theself.$GrzxInter.Interface.login.method,
 							success(res1) {
 								console.log(res1,"108")
-								uni.setStorageSync('userInfo',res1.data.data)
+								// uni.setStorageSync('userInfo',res1.data.data)
 								// ------------1.头像-------------
 								var base64=res1.data.data.portrait;
 								theself.port=res1.data.data.portrait;
