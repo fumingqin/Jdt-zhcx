@@ -2,7 +2,7 @@
 	<view class="ci_view">
 		<view class="ci_titleView">
 		</view>
-
+		<view class="ci_setOutContent">
 		<!-- 出发信息 -->
 		<view class="cvt_content" :hidden="startingContent==1">
 			<view class="ct_departureContents1">
@@ -13,110 +13,113 @@
 				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
 			</view>
 		</view>
-
+		
 		<view class="cvt_content" :hidden="startingContent==0">
 			<view class="ct_departureContents1">
 				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{destination}}</text></view>
 			</view>
 			<view class="ct_departureContents2">
-				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
+				<view class="ct_content9">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
 				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{dayContentObject}}天</text></view>
 			</view>
 		</view>
-
-		<!-- 车型信息 -->
-		<view class="ci_carModelView">
-			<text class="cmv_selected">已选车型</text>
-			<image class="cmv_car" :src="car"></image>
-			<text class="cmv_carName">{{carName}}</text>
-			<text class="cmv_carType">{{carNumberSeats}}</text>
-			<text class="cmv_carMoney">{{carprice}}元</text>
-		</view>
-
-		<!-- 包车人信息 -->
-		<view class="ci_charteredBusView">
-			<text class="cbv_charteredBusMessage">包车人信息</text>
-			<text class="cbv_explain">仅需填写一人信息，填写后自动保存至通讯录</text>
-			<view class="phoneClass">
-				<text class="cbv_tripMan">出行人</text>
-				<input placeholder="请输入姓名" class="cbv_name" name="nickName" maxlength="4" v-model="nickName" />
-				<image class="cbv_addressBook" src="../../static/BCFW/choice/tongxun.png" @click="choiceUser(1)"></image>
-			</view>
-			<view class="idView">
-				<view class="cbv_idCord">身份证</view>
-				<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" type="number" maxlength="18" v-model="nickId" />
-			</view>
-			<view class="phoneView">
-				<view class="cbv_mobile">联系电话</view>
-				<input placeholder="常用手机号" class="cbv_phone" name="nickPhone" type="number" maxlength="11" v-model="nickPhone" />
-			</view>
-		</view>
-
-		<view class="ci_couponView" @click="toggleMask('show')">
-			<text class="cv_coupon">优惠券</text>
-			<text class="cv_noUsable">无可用</text>
-			<text class="cv_symbol">></text>
-		</view>
-		<!-- 呼出优惠券面板 -->
-		<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
-			<view class="mask-content" @click.stop.prevent="stopPrevent">
-				<!-- 优惠券页面，仿mt -->
-				<view class="couponTitle">
-					<text class="Co_text1">优惠券</text>
-					<text class="Co_text2" @click="couponReset">不使用优惠券</text>
+			
+			<!-- 车型信息 -->
+			<view class="ci_carModelView">
+				<view class="cmv_selected">已选车型</view>
+				<image class="cmv_car" :src="car"></image>
+				<view class="cmv_carName">{{carName}}</view>
+				<view style="display: flex;">
+					<view class="cmv_carType">{{carNumberSeats}}</view>
+					<view class="cmv_carMoney">{{carprice}}元</view>
 				</view>
 
-				<view class="coupon-item" v-for="(item,index) in couponList" :key="index" @click="couponEvent(index)">
-					<view class="con">
-						<view class="left">
-							<text class="title">{{item.title}}</text>
-							<text class="time">有效期至2019-06-30</text>
-						</view>
-
-						<view class="right">
-							<text class="price">{{item.price}}</text>
-							<text>满{{couponList[index].condition}}可用</text>
-						</view>
-
-						<view class="circle l"></view>
-						<view class="circle r"></view>
+			</view>
+			
+			<!-- 包车人信息 -->
+			<view class="ci_charteredBusView">
+				<view class="cmv_selected">包车人信息</view>
+				<view class="cbv_explain">仅需填写一人信息，填写后自动保存至通讯录</view>
+				<view style="display: flex;">
+					<view class="cbv_tripMan">出行人</view>
+					<input placeholder="请输入姓名" class="cbv_name" name="nickName" maxlength="4" v-model="nickName" />
+					<image class="cbv_addressBook" src="../../static/BCFW/choice/tongxun.png" @click="choiceUser(1)"></image>
+				</view>
+				<view style="display: flex;">
+					<view class="cbv_idCord">身份证</view>
+					<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" type="number" maxlength="18" v-model="nickId" />
+				</view>
+				<view style="display: flex;">
+					<view class="cbv_mobile">联系电话</view>
+					<input placeholder="常用手机号" class="cbv_phone" name="nickPhone" type="number" maxlength="11" v-model="nickPhone" />
+				</view>
+			</view>
+			
+			<view class="ci_couponView" @click="toggleMask('show')">
+				<view class="cv_coupon">优惠券</view>
+				<view class="cv_noUsable">无可用</view>
+				<view class="cv_symbol">></view>
+			</view>
+			<!-- 呼出优惠券面板 -->
+			<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
+				<view class="mask-content" @click.stop.prevent="stopPrevent">
+					<!-- 优惠券页面，仿mt -->
+					<view class="couponTitle">
+						<view class="Co_text1">优惠券</view>
+						<view class="Co_text2" @click="couponReset">不使用优惠券</view>
 					</view>
-					<text class="tips">限新用户使用</text>
+			
+					<view class="coupon-item" v-for="(item,index) in couponList" :key="index" @click="couponEvent(index)">
+						<view class="con">
+							<view class="left">
+								<text class="title">{{item.title}}</text>
+								<text class="time">有效期至2019-06-30</text>
+							</view>
+			
+							<view class="right">
+								<text class="price">{{item.price}}</text>
+								<text>满{{couponList[index].condition}}可用</text>
+							</view>
+			
+							<view class="circle l"></view>
+							<view class="circle r"></view>
+						</view>
+						<text class="tips">限新用户使用</text>
+					</view>
+				</view>
+			</view>
+			
+			<!-- 包车须知 -->
+			<view class="ci_noticeView">
+				<text class="nv_charteredBusNotice">包车须知</text>
+				<text class="nv_all" @click="open()">点击查看全部</text>
+				<radio class="nv_radio" value="1" :color="'#ffaa7f'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
+			</view>
+			
+			<!-- 须知弹窗 -->
+			<uni-popup ref="popup2" type="bottom">
+				<view class="boxVlew">
+					<view class="titleView">
+						<text class="Nb_text1">包车须知</text>
+						<text class="Nb_text2 jdticon icon-fork " @click="close()"></text>
+					</view>
+					<scroll-view class="noticeBox" scroll-y="ture">
+						<text class="Nb_text4">
+							{{charteredBus.security}}
+						</text>
+					</scroll-view>
+				</view>
+			</uni-popup>
+			<view class="ci_affirmView">
+				<text class="av_money">￥{{carprice}}</text>
+				<view class="av_atOnceView" enabl :class="{submitColor: selectedValue===1 && nickName!==''}" @click="submitState">
+					<text class="aov_atOnce">立即包车</text>
 				</view>
 			</view>
 		</view>
-
-		<!-- 包车须知 -->
-		<view class="ci_noticeView">
-			<text class="nv_charteredBusNotice">包车须知</text>
-			<text class="nv_all" @click="open()">点击查看全部</text>
-			<radio class="nv_radio" value="1" :color="'#ffaa7f'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 		</view>
-
-		<!-- 须知弹窗 -->
-		<uni-popup ref="popup2" type="bottom">
-			<view class="boxVlew">
-				<view class="titleView">
-					<text class="Nb_text1">包车须知</text>
-					<text class="Nb_text2 jdticon icon-fork " @click="close()"></text>
-				</view>
-				<scroll-view class="noticeBox" scroll-y="ture">
-					<text class="Nb_text4">
-						{{charteredBus.security}}
-					</text>
-				</scroll-view>
-			</view>
-		</uni-popup>
-		<view class="ci_affirmView">
-			<text class="av_money">￥{{carprice}}</text>
-			<view class="av_atOnceView" enabl :class="{submitColor: selectedValue===1 && nickName!==''}" @click="submitState">
-				<text class="aov_atOnce">立即包车</text>
-			</view>
-		</view>
-
-	</view>
-	</view>
+		
 </template>
 
 <script>
@@ -629,7 +632,7 @@
 
 	.ci_view {
 		width: 100%;
-		height: 1740upx;
+		height:100%;
 	}
 
 	//顶部背景
@@ -638,32 +641,53 @@
 		height: 253upx;
 		background: #FC4646;
 		text-align: center;
+		position: absolute;
+		top: 0;
 	}
+	.ci_setOutContent{
+		position: relative;
+		margin-left: 26upx;
+		margin-right: 26upx;
+		margin-bottom: 135upx;
+		top: 148upx;
+	}
+	
+	/* #ifdef MP-WEIXIN */
+	//整体容器样式 -微信版
+	.ci_setOutContent {
+		top: 64upx;
+	}
+	
+	/* #endif */
 
 	//出发内容
 	.cvt_content {
-		position: absolute;
-		top: 197upx;
+		// position: absolute;
+		// /* #ifdef APP-NVUE */
+		// top: 197upx;
+		// /* #endif */
+		// /* #ifndef APP-NVUE */
+		// top: 100upx;
+		// /* #endif */
 		width: 698upx;
-		margin: 0 26upx;
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
-		border-radius: 13px;
+		border-radius: 13rpx;
 
 		//内容样式
 		.ct_departureContents1 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
-
+		
 			.ct_content1 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 320upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
+		
 				.ct_content2 {
 					width: 200upx;
 					font-size: 30upx;
@@ -672,16 +696,16 @@
 					font-weight: bold;
 				}
 			}
-
+		
 			.ct_content3 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 240upx;
-				padding-left: 68upx;
+				width: 310upx;
+				// padding-left: 68upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
+		
 				.ct_content4 {
 					width: 200upx;
 					font-size: 30upx;
@@ -691,39 +715,38 @@
 				}
 			}
 		}
-
+		
 		//内容样式
 		.ct_departureContents2 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
 			padding-bottom: 40upx;
-
+		
 			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
+				// width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
+		
 				.ct_content6 {
-					width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
 					font-weight: bold;
 				}
 			}
-
+		
 			.ct_content7 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 225upx;
-				padding-left: 68upx;
+				width: 310upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-
+		
 				.ct_content8 {
 					width: 200upx;
 					font-size: 30upx;
@@ -732,61 +755,72 @@
 					font-weight: bold;
 				}
 			}
+			.ct_content9 {
+				color: rgba(102, 102, 102, 1);
+				font-size: 30upx;
+				width: 310upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			
+				.ct_content10 {
+					font-size: 30upx;
+					color: rgba(44, 45, 45, 1);
+					margin-left: 15upx;
+					font-weight: bold;
+				}
+			}
 		}
 	}
-
+	.cmv_selected {
+		position: relative;
+		font-size: 36upx;
+		color: #333333;
+		font-weight: 800;
+		padding-top: 29upx;
+		padding-left: 41upx;
+	}
+	
 	//包车车型信息
 	.ci_carModelView {
 		width: 700upx;
 		height: 440upx;
 		background: #FFFFFF;
-		position: absolute;
+		margin-top: 20upx;
 		border-radius: 13upx;
-		left: 25upx;
-		top: 420upx;
-
-		.cmv_selected {
-			font-size: 36upx;
-			color: #333333;
-			font-weight: 800;
-			position: absolute;
-			left: 40upx;
-			top: 30upx;
-		}
-
+		
+		
+		
 		.cmv_car {
 			width: 345upx;
 			height: 185upx;
-			position: absolute;
-			left: 180upx;
-			top: 100upx;
+			padding-top: 34upx;
+			padding-left: 178upx;
+			display: block;
+			text-align: center;
 		}
 
 		.cmv_carName {
 			font-size: 32upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 300upx;
-			top: 290upx;
+			padding-left: 315upx;
+			display: block;
 		}
 
 		.cmv_carType {
 			font-size: 32upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 180upx;
-			top: 350upx;
+			padding-left: 184upx;
 		}
 
 		.cmv_carMoney {
 			font-size: 32upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 400upx;
-			top: 350upx;
+			padding-left:57upx;
+			
 		}
 	}
 
@@ -795,90 +829,72 @@
 		width: 700upx;
 		height: 520upx;
 		background: #FFFFFF;
-		position: absolute;
 		border-radius: 15upx;
-		left: 25upx;
-		top: 880upx;
-
-		.cbv_charteredBusMessage {
-			font-size: 32upx;
-			color: #333333;
-			font-weight: 400;
-			position: absolute;
-			left: 40upx;
-			top: 20upx;
-		}
+		margin-top: 20upx;
 
 		.cbv_explain {
 			font-size: 26upx;
 			color: #808080;
 			font-weight: 300;
-			position: absolute;
-			left: 40upx;
-			top: 80upx;
+			display: block;
+			padding-top: 18upx;
+			padding-left: 41upx;
 		}
 
 		.cbv_tripMan {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 40upx;
-			top: 170upx;
+			padding-top: 54upx;
+			padding-left: 41upx;
 		}
 
 		.cbv_name {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 300;
-			position: absolute;
-			left: 200upx;
-			top: 170upx;
+			padding-top: 54upx;
+			padding-left: 104upx;		
 		}
 
 		.cbv_addressBook {
 			width: 50upx;
 			height: 50upx;
-			position: absolute;
-			left: 625upx;
-			top: 165upx;
-
+			padding-top: 54upx;
+			padding-right:37upx;	
+			
 		}
 
 		.cbv_idCord {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 40upx;
-			top: 300upx;
+			padding-top: 74upx;
+			padding-left: 41upx;	
 		}
 
 		.cbv_id {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 300;
-			position: absolute;
-			left: 200upx;
-			top: 300upx;
+			padding-top: 54upx;
+			padding-left: 102upx;	
 		}
 
 		.cbv_mobile {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 40upx;
-			top: 430upx;
+			padding-top: 74upx;
+			padding-left: 41upx;	
 		}
 
 		.cbv_phone {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 300;
-			position: absolute;
-			left: 200upx;
-			top: 430upx;
+			padding-top: 74upx;
+			padding-left: 73upx;	
 		}
 
 	}
@@ -888,35 +904,31 @@
 		width: 700upx;
 		height: 100upx;
 		background: #FFFFFF;
-		position: absolute;
 		border-radius: 15upx;
-		left: 25upx;
-		top: 1420upx;
+		margin-top: 20upx;
+		display: flex;
 
 		.cv_coupon {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 40upx;
-			top: 28upx;
+			padding-top: 35upx;
+			padding-left: 41upx;
 		}
 
 		.cv_noUsable {
 			font-size: 28upx;
 			color: #C0C0C0;
 			font-weight: 300;
-			position: absolute;
-			left: 540upx;
-			top: 28upx;
+			padding-top: 35upx;
+			padding-left: 428upx;
 		}
 
 		.cv_symbol {
 			font-size: 28upx;
 			color: #999999;
-			position: absolute;
-			left: 650upx;
-			top: 28upx;
+			padding-top: 35upx;
+			padding-left: 2upx;
 		}
 	}
 
@@ -925,35 +937,29 @@
 		width: 700upx;
 		height: 100upx;
 		background: #FFFFFF;
-		position: absolute;
 		border-radius: 15upx;
-		left: 25upx;
-		top: 1540upx;
-
+		margin-top: 20upx;
+		
 		.nv_charteredBusNotice {
 			font-size: 30upx;
 			color: #333333;
 			font-weight: 400;
-			position: absolute;
-			left: 40upx;
-			top: 28upx;
+			padding-top: 35upx;
+			padding-left: 41upx;
 		}
 
 		.nv_all {
-
 			font-size: 26upx;
 			color: #19A0FF;
 			font-weight: 400;
-			position: absolute;
-			left: 200upx;
-			top: 30upx;
+			padding-top: 35upx;
+			padding-left: 20upx;
 		}
 
 		.nv_radio {
 			color: #FC4646;
-			position: absolute;
-			left: 620upx;
-			top: 30upx;
+			padding-top: 35upx;
+			padding-left: 254upx;
 		}
 	}
 

@@ -1,6 +1,6 @@
 <script>
 	import homeJS from 'common/Home.js';
-	import utils from '@/components/CTKY/shoyu-date/utils.filter.js'
+	import utils from '@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js'
 	import {
 		mapMutations
 	} from 'vuex';

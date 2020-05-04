@@ -2,7 +2,7 @@
 	<view>
 		<!-- 顶部图片 -->
 		<view class="zl_topPicture">
-			<image class="zl_image" src="../../../static/LYFW/currency/ho_zhly/kaiyuanshi.jpg" mode="aspectFill"></image>
+			<image class="zl_image" :src="imageIndex[0].imageUrl" mode="aspectFill"></image>
 		</view>
 
 		<!-- 顶部点击跳转栏 -->
@@ -111,6 +111,7 @@
 	export default {
 		data() {
 			return {
+				imageIndex : '', //banner图片
 				Announcement: '', //通知内容
 				recommendedContent: [{
 					rc_image: ''
@@ -159,6 +160,19 @@
 			}
 		},
 		onLoad() {
+			uni.request({
+				url:$lyfw.Interface.qg_GetImage.value,
+				method:$lyfw.Interface.qg_GetImage.method,
+				data:{ 
+					model : 2,
+					type:'旅游服务banner'
+				},
+				success:(res) => { 
+					// console.log(res)
+					this.imageIndex = res.data.data
+					
+				},
+			})
 			this.routeInit();
 			this.loadData();
 		},
@@ -220,22 +234,22 @@
 
 			//金刚区各模块入口
 			route1: function() {
-				uni.showToast({
-					title: '正在测试中，敬请期待...',
-					icon: 'none'
-				})
-				// uni.navigateTo({
-				// 	url: '../independentTravel/it_list'
+				// uni.showToast({
+				// 	title: '正在测试中，敬请期待...',
+				// 	icon: 'none'
 				// })
+				uni.navigateTo({
+					url: '../independentTravel/it_list'
+				})
 			},
 			route2: function() {
-				uni.showToast({
-					title: '正在测试中，敬请期待...',
-					icon: 'none'
-				})
-				// uni.navigateTo({
-				// 	url: '../groupTour/groupTourList'
+				// uni.showToast({
+				// 	title: '正在测试中，敬请期待...',
+				// 	icon: 'none'
 				// })
+				uni.navigateTo({
+					url: '../groupTour/groupTourList'
+				})
 			},
 			route3: function() {
 				uni.navigateTo({
