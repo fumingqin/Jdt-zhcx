@@ -344,9 +344,9 @@
 		height: 100%;
 		.bg{
 			width: 100%;
-			height: 464upx;
+			height: 500upx;
 			filter: blur(0.5px);
-			opacity: .7;
+			// opacity: .7;
 		}
 		.tx{
 			position: absolute;
