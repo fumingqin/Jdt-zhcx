@@ -1507,14 +1507,14 @@
 						if (respones.data.status == true) {
 							uni.hideLoading()
 							uni.showToast({
-								title: '退票成功'
+								title: respones.data.msg
 							})
 							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
 						} else {
 							uni.hideLoading()
 							uni.showToast({
-								title: '退票失败',
+								title: respones.data.msg,
 								icon: 'none'
 							})
 							uni.startPullDownRefresh();
