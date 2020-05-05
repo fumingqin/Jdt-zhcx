@@ -150,13 +150,6 @@ const Interface = {
 		pages:["LYFW/groupTour/groupTourList"]
 	},
 	
-	gt_groupTourList:{
-		value: Url + '/api/ly/GetGroupTour',
-		name:'跟团游列表',
-		method:'POST',
-		pages:["LYFW/groupTour/groupTourList"]
-	},
-	
 	qg_GetImage:{
 		value: Url + '/api/zhcx/GetImage',
 		name:'全局-请求静态图片',
@@ -174,6 +167,13 @@ const Interface = {
 	zyx_GetFreeTourByRegionWeixinTitle:{
 		value: Url + '/api/ly/GetFreeTourByRegionWeixinTitle',
 		name:'自由行-搜索',
+		method:'POST',
+		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
+	},
+	
+	zyx_GetCityInfo:{
+		value: Url + '/api/ly/GetCityInfo',
+		name:'自由行-地区列表',
 		method:'POST',
 		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
 	}

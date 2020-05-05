@@ -279,19 +279,19 @@
 									//loginType=1,泉运登录界面
 									//loginType=2,今点通登录界面
 									//loginType=3,武夷股份登录界面
-									url:'../../../../pages/GRZX/userLogin?loginType=1'
+									url: '../../../../pages/GRZX/userLogin?loginType=1'
 								})
 							}, 500);
 						},
 						success() {
 							uni.navigateTo({
-								url:'../../../../pages/GRZX/addPassenger?type=add',
+								url: '../../../../pages/GRZX/addPassenger?type=add',
 							})
 						}
 					})
 				} else if (e == 1) {
 					uni.navigateTo({
-						url:'../../../../pages/GRZX/passengerInfo?submitType=1'
+						url: '../../../../pages/GRZX/passengerInfo?submitType=1'
 					})
 				}
 
@@ -386,7 +386,6 @@
 			submitState: function() {
 				//这边还得加上是否选择人数和勾选同意的判断
 				if (this.selectedValue == 1 && this.addressData.length > 0) {
-
 					if (this.submissionState == false) {
 						this.submissionState = true;
 						this.submit();
@@ -414,13 +413,15 @@
 			//提交表单
 			submit: function() {
 				var that = this;
+				
 				uni.showLoading({
 					title: '提交订单中...'
 				})
+				
 				// #ifdef H5
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
-					success:function(openid){
+					success: function(openid) {
 						// console.log(openid)
 						uni.request({
 							url: $lyfw.Interface.spt_AddtouristOrder.value,
@@ -444,12 +445,13 @@
 							success: (res) => {
 								console.log(res)
 								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
+									uni.hideLoading()
 									uni.showToast({
 										title: '当日已取消订单次数超过限额',
 										icon: 'none',
 									})
 									that.submissionState = false;
-									uni.hideLoading()
+
 								} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
 									uni.showToast({
 										title: '下单失败,您当前有未支付订单',
@@ -466,27 +468,36 @@
 
 								} else if (res.data.msg == '订单下单成功') {
 									uni.redirectTo({
-										url:'selectivePayment?orderNumber=' + res.data.data.orderNumber
+										url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
 									})
 									uni.hideLoading()
-								} else {
+								} else if (res.data.msg == '抱歉,订单下单失败') {
+									uni.hideLoading()
 									uni.showToast({
-										title: '网络延迟，请重试！',
+										title: '下单失败，请联系客服',
 										icon: 'none',
 									})
 									that.submissionState = false;
+								} else {
 									uni.hideLoading()
+									uni.showToast({
+										title: '下单失败，请返回并重进页面',
+										icon: 'none',
+									})
+									that.submissionState = false;
+
 								}
 
 							}
 						})
 					},
 					fail: function() {
+						uni.hideLoading()
 						uni.showToast({
 							title: '请授权微信公众号！'
 						})
 						that.submissionState = false;
-						uni.hideLoading()
+
 					}
 				})
 
@@ -512,44 +523,55 @@
 						addressData: this.addressData,
 					},
 					header: {
-						'content-type': 'application/json' 
+						'content-type': 'application/json'
 					},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
 						console.log(res)
 						if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
+							uni.hideLoading()
 							uni.showToast({
 								title: '当日已取消订单次数超过限额',
 								icon: 'none',
 							})
 							that.submissionState = false;
-							uni.hideLoading()
+
 						} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
 							uni.showToast({
 								title: '下单失败,您当前有未支付订单',
 								icon: 'none',
 								duration: 2000,
 								success: function() {
+									uni.hideLoading()
 									uni.switchTab({
 										url: '../../../../pages/order/OrderList'
 									})
 									that.submissionState = false;
-									uni.hideLoading()
+
 								}
 							})
 
 						} else if (res.data.msg == '订单下单成功') {
+							uni.hideLoading()
 							uni.redirectTo({
 								url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
 							})
+
+						} else if (res.data.msg == '抱歉,订单下单失败') {
 							uni.hideLoading()
-						} else {
-							uni.showToast({
-								title: '网络延迟，请重试！',
+							uni.showToast({ 
+								title: '下单失败，请联系客服',
 								icon: 'none',
 							})
 							that.submissionState = false;
+						} else {
 							uni.hideLoading()
+							uni.showToast({
+								title: '下单失败，请返回并重进页面',
+								icon: 'none',
+							})
+							that.submissionState = false;
+
 						}
 
 					},

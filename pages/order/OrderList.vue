@@ -84,12 +84,13 @@
 						</view>
 					</view>
 				</view>
-
+				
+				
 				<!-- 景区门票 -->
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -104,7 +105,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -350,7 +351,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -363,41 +364,17 @@
 							</view>
 							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 						</view>
-						<view class="whiteBg">
-							<view style="display: flex; margin-top: -40rpx;">
-								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -72rpx;">
-								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -16rpx;">
-								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: 36rpx;">
-								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
-							</view>
-
-							<view class="CTKYBtnView">
-								<button class="allBtn">删除</button>
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn" v-if="item.state=='已使用'">投诉</button>
-							</view>
+				
+						<view class="at_contentView">
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
-
+				
 						<!-- 已使用 -->
 						<view class="at_buttonView" v-if="item.orderType=='已使用'">
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
 						</view>
-
+						
 					</view>
 				</view>
 
@@ -561,7 +538,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.orderDate}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -576,7 +553,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -763,7 +740,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -778,7 +755,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -953,7 +930,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -968,7 +945,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -2726,14 +2703,14 @@
 
 	// 购买时间
 	.pd_view {
-		width: 200rpx;
+		width: 400upx;
 		margin: 40rpx 28rpx;
 		margin-bottom: 0upx;
 		border-radius: 32rpx;
 		background: #06B4FD;
 		text-align: center;
 		padding: 16upx 0;
-		font-size: 26upx;
+		font-size: 25upx;
 		color: #FFFFFF;
 	}
 

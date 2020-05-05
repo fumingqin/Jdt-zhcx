@@ -9,7 +9,7 @@
 		<view class="Dx_View">
 			<view class="Dx_viewAndView">
 			<text class="Dx_title">{{orderInfo.orderType}}</text>
-			<text class="Dx_text" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' " >预订成功，旅途愉快！</text>
+			<text class="Dx_text" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时'  " >预订成功，旅途愉快！</text>
 			<image class="Dx_image" src="../../../static/LYFW/scenicSpotTickets/orderDetails/gantan.png" @click="open"></image>
 			<text class="Dx_price" @click="open" >{{orderInfo.orderActualPayment}}</text>
 			<text class="Dx_priceIcon" @click="open">¥</text>
@@ -88,10 +88,10 @@
 				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">支付后生成二维码及取票码</view>
 				
 				<!-- 空白二维码区域 -->
-				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '已退票'">二维码已失效</view>
+				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '已退票' || orderInfo.orderType == '已失效'">二维码已失效</view>
 				
 				<!-- 二维码 -->
-				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' ">
+				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' || orderInfo.orderType == '已失效' ">
 					<view class="Xx_QRcodeBlock1"> 
 						<text class="Xx_QRcodeContentTitle">取票码</text>
 					</view>
