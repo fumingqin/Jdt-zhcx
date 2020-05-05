@@ -118,39 +118,49 @@
 			},
 			loadData(){
 				var that=this;
-				var user=uni.getStorageSync('userInfo');
-				console.log(user,'user')
-				if(user.phoneNumber!=""||user.phoneNumber!=null){
-					uni.request({
-						url:that.$GrzxInter.Interface.login.value,
-						data:{
-							phoneNumber:user.phoneNumber,
-						},
-						method:that.$GrzxInter.Interface.login.method,
-						success(res) {
-							console.log(res,'res')
-							uni.setStorageSync('userInfo',res.data.data);
-							if(res.data.data.nickname==""||res.data.data.nickname==null){
-								that.nickname="请输入昵称";	
-							}else{
-								that.nickname=res.data.data.nickname;	
-							}
-							var base64=res.data.data.portrait;
-							if(that.isBase64(base64)){
-								base64ToPath(base64)
-								  .then(path => {
-								    that.portrait=path;
-								  })
-								  .catch(error => {
-								    console.error(error)
-								  })
-							}else{
-								that.portrait=base64;
-							}
-							console.log(that.portrait,"that.portrait")
+				uni.getStorage({
+					key:'userInfo',
+					success(user){
+						console.log(user,"user")
+						if(user.data.phoneNumbe!=""||user.data.phoneNumber!=null){
+							uni.request({
+								url:that.$GrzxInter.Interface.login.value,
+								data:{
+									phoneNumber:user.data.phoneNumber,
+								},
+								method:that.$GrzxInter.Interface.login.method,
+								success(res) {
+									console.log(res,'res')
+									uni.setStorageSync('userInfo',res.data.data);
+									if(res.data.data.nickname==""||res.data.data.nickname==null){
+										that.nickname="请输入昵称";	
+									}else{
+										that.nickname=res.data.data.nickname;	
+									}
+									var base64=res.data.data.portrait;
+									if(that.isBase64(base64)){
+										base64ToPath(base64)
+										  .then(path => {
+										    that.portrait=path;
+										  })
+										  .catch(error => {
+										    console.error(error)
+										  })
+									}else{
+										that.portrait=base64;
+									}
+									console.log(that.portrait,"that.portrait")
+								}
+							})
+						}else{
+							//未绑定手机号
 						}
-					})
-				}
+					},
+					fail(){
+						that.nickname="";
+						that.portrait="";
+					}
+				})
 			},
 			orderClick(){
 				uni.switchTab({

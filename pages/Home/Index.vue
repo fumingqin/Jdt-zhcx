@@ -151,18 +151,18 @@
 			that.getMyLocation();
 			uni.getSystemInfo({
 				success: function(res) {
+					for(var index in that.controls){
+						if(index > 0){
+							that.controls[index].position.left = 640 * res.windowWidth / 750;
+						}
+					}
 					// that.controls[0].position.top = 845 * res.windowWidth / 750;
-					//-
-					that.controls[1].position.left = 640 * res.windowWidth / 750;
+					//that.controls[1].position.left = 640 * res.windowWidth / 750;//5.5注释
 					// that.controls[1].position.top = 655 * res.windowWidth / 750;
-					//+
-					that.controls[2].position.left = 640 * res.windowWidth / 750;
+					//that.controls[2].position.left = 640 * res.windowWidth / 750;//5.5注释
 					// that.controls[2].position.top = 770 * res.windowWidth / 750;
-					//客服
-					that.controls[3].position.left = 640 * res.windowWidth / 750;
+					//that.controls[3].position.left = 640 * res.windowWidth / 750;//5.5注释
 					// that.controls[3].position.top = 835 * res.windowWidth / 750;
-					
-
 				}
 			})
 			// #ifdef  H5
