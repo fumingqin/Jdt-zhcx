@@ -23,7 +23,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
@@ -151,18 +151,18 @@
 			that.getMyLocation();
 			uni.getSystemInfo({
 				success: function(res) {
+					for(var index in that.controls){
+						if(index > 0){
+							that.controls[index].position.left = 640 * res.windowWidth / 750;
+						}
+					}
 					// that.controls[0].position.top = 845 * res.windowWidth / 750;
-					//-
-					that.controls[1].position.left = 640 * res.windowWidth / 750;
+					//that.controls[1].position.left = 640 * res.windowWidth / 750;//5.5注释
 					// that.controls[1].position.top = 655 * res.windowWidth / 750;
-					//+
-					that.controls[2].position.left = 640 * res.windowWidth / 750;
+					//that.controls[2].position.left = 640 * res.windowWidth / 750;//5.5注释
 					// that.controls[2].position.top = 770 * res.windowWidth / 750;
-					//客服
-					that.controls[3].position.left = 640 * res.windowWidth / 750;
+					//that.controls[3].position.left = 640 * res.windowWidth / 750;//5.5注释
 					// that.controls[3].position.top = 835 * res.windowWidth / 750;
-					
-
 				}
 			})
 			// #ifdef  H5
@@ -309,7 +309,7 @@
 			//路由统一事件
 			godetail3: function(url) {
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'网络约车仅支持小程序或APP!',
 					icon:'none'
 				});
 			},

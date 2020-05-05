@@ -15,7 +15,7 @@
 			<text style="font-size: 28upx;">{{currentSize}}</text>
 			<text class="cell-more jdticon icon-you"></text>
 		</view>
-		<!-- #ifdef APP-PLUS -->
+	
 		<view class="list-cell b-b b-l" @click="navTo('aboutApp')">
 			<text class="cell-tit">关于APP</text>
 			<text class="cell-more jdticon icon-you"></text>
@@ -23,7 +23,7 @@
 		<view class="list-cell log-out-btn" @click="toLogout">
 			<text class="cell-tit">退出登录</text>
 		</view>
-		
+			<!-- #ifdef APP-PLUS -->
 		<!-- #endif -->
 	</view>
 </template>
@@ -78,34 +78,41 @@
 			},
 			//退出登录
 			toLogout(){				
-				var user=uni.getStorageSync('userInfo');
-				console.log(user,"00000")
-				if(user==null||user==""){
-					uni.showModal({
-						content: '确定要退出登录么',
-						success: (e)=>{
-							if(e.confirm){
-								uni.removeStorageSync('userInfo');
-								setTimeout(()=>{
-									uni.switchTab({
-										url:'/pages/GRZX/user'
-										// url:that.$GrzxInter.Route.user.url,
-									})
-								}, 200)
+				// var user=uni.getStorageSync('userInfo');
+				// console.log(user,"00000")
+				// if(user!=null||user!=""){
+				var that=this;
+				uni.getStorage({
+					key:'userInfo',
+					success(){
+						uni.showModal({
+							content: '确定要退出登录么',
+							success: (e)=>{
+								if(e.confirm){
+									uni.removeStorageSync('userInfo');
+									setTimeout(()=>{
+										uni.switchTab({
+											url:'/pages/GRZX/user'
+											// url:that.$GrzxInter.Route.user.url,
+										})
+									}, 200)
+								}
 							}
-						}
-					});
-				}else{
-					uni.showToast({
-						title : '请先登录',
-						icon : 'none',
-					})
-					setTimeout(function(){
-						uni.navigateTo({
-							url  : '/pages/GRZX/userLogin'
-						}) 
-					},1000);
-				}
+						});
+					},
+					fail(){
+						uni.showToast({
+							title : '请先登录',
+							icon : 'none',
+						})
+						setTimeout(function(){
+							uni.navigateTo({
+								// url  : '/pages/GRZX/userLogin',
+								url:that.$GrzxInter.Route.userLogin.url +'?loginType=1&&urlData=1'
+							}) 
+						},1000);
+					}
+				})
 			},
 			//清除缓存
 			clearStorage(){
@@ -114,8 +121,9 @@
 				    content: '是否清除数据',
 				    success: (e)=>{
 				    	if(e.confirm){
-							uni.clearStorage();
+							uni.clearStorageSync();
 							uni.setStorageSync('userInfo',user);
+							var user1=uni.getStorageSync('userInfo');
 							uni.redirectTo({
 								// url:'/pages/GRZX/set'
 								url:this.$GrzxInter.Route.set.url,

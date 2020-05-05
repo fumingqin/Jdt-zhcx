@@ -150,6 +150,28 @@ const Interface = {
 		pages:["LYFW/groupTour/groupTourList"]
 	},
 	
+	qg_GetImage:{
+		value: Url + '/api/zhcx/GetImage',
+		name:'全局-请求静态图片',
+		method:'POST',
+		pages:["pages/Home/guidePage.vue"]
+	},
+	
+	//--------------------------------跟团游-------------------------------
+	gt_travelDetails:{
+		value: Url + '/api/ly/GetGroupTourDetailBycontentId',
+		name:'跟团游详情页-产品介绍-费用说明-预订须知',
+		method:'POST',
+		pages:["LYFW/currency/travelDetails"]
+	},
+	
+	gt_travelDetails2:{
+		value: Url + '/api/ly/GetGroupTourScheduleBycontentId',
+		name:'跟团游详情页-行程安排',
+		method:'POST',
+		pages:["LYFW/currency/travelDetails"]
+	},
+	
 	gt_groupTourList:{
 		value: Url + '/api/ly/GetGroupTour',
 		name:'跟团游列表',
@@ -157,11 +179,33 @@ const Interface = {
 		pages:["LYFW/groupTour/groupTourList"]
 	},
 	
-	qg_GetImage:{
-		value: Url + '/api/zhcx/GetImage',
-		name:'全局-请求静态图片',
+	gt_groupTourList2:{
+		value: Url + '/api/ly/GetGroupTourByGroupTitle',
+		name:'跟团游列表-搜索',
 		method:'POST',
-		pages:["pages/Home/guidePage.vue"]
+		pages:["LYFW/groupTour/groupTourList"]
+	},
+	
+	//--------------------------------自由行-------------------------------
+	zyx_GetFreeTourByRegionWeixin:{
+		value: Url + '/api/ly/GetFreeTourByRegionWeixin',
+		name:'自由行-列表',
+		method:'POST',
+		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
+	},
+	
+	zyx_GetFreeTourByRegionWeixinTitle:{
+		value: Url + '/api/ly/GetFreeTourByRegionWeixinTitle',
+		name:'自由行-搜索',
+		method:'POST',
+		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
+	},
+	
+	zyx_GetCityInfo:{
+		value: Url + '/api/ly/GetCityInfo',
+		name:'自由行-地区列表',
+		method:'POST',
+		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
 	}
 }
 

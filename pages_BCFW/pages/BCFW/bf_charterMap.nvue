@@ -9,21 +9,46 @@
 			 @click="callPolice"></image>
 			<!-- 行程信息   -->
 			<scroll-view class="cm_content" scroll-y="true">
-				<view class="ct_state" v-if="driverInformation.or_Type == 4">
-					<text class="sa_text">进行中</text>
+				<view class="ct_state" v-if="driverInformation.or_Type == 0">
+					<text class="sa_text">等待接单</text>
 				</view>
 				<view class="ct_state" v-if="driverInformation.or_Type == 1">
-					<text class="sa_text">待发车</text>
+					<text class="sa_text">司机已接单</text>
 				</view>
-				<view class="ct_state" v-if="driverInformation.or_Type == 6">
-					<text class="sa_text">已完成</text>
+				<view class="ct_state" v-if="driverInformation.or_Type == 2">
+					<text class="sa_text">司机已出发</text>
 				</view>
-				<view class="ct_state" v-if="driverInformation.or_Type == 8 ||driverInformation.or_Type == 9">
-					<text class="sa_text">已取消</text>
+				<view class="ct_state" v-if="driverInformation.or_Type == 3">
+					<text class="sa_text">司机已到出发地</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 4">
+					<text class="sa_text">订单执行中</text>
 				</view>
 				<view class="ct_state" v-if="driverInformation.or_Type == 5">
 					<text class="sa_text">待支付</text>
 					<text class="sa_popu" @click="open">去支付></text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 6">
+					<text class="sa_text">支付完成</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 7 ||driverInformation.or_Type == 8">
+					<text class="sa_text">已取消</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 9">
+					<text class="sa_text">支付失败</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 10">
+					<text class="sa_text">到达目的地</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 11">
+					<text class="sa_text">待补款</text>
+					<text class="sa_popu" @click="open">去支付></text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 12">
+					<text class="sa_text">补款完成</text>
+				</view>
+				<view class="ct_state" v-if="driverInformation.or_Type == 13">
+					<text class="sa_text">订单完成</text>
 				</view>
 				<!-- <uni-popup ref="popup" type="bottom">
 					<view class="po_boxVlew">
@@ -78,8 +103,8 @@
 					<view class="if_text">
 						<text class="te_text">电话:{{driverInformation.or_driverTelephone}}</text>
 					</view>
-					<view class="if_button" v-if="driverInformation.or_Type == 4 || driverInformation.or_Type == 1 || driverInformation.or_Type == 8 
-					 || driverInformation.or_Type == 9 || driverInformation.or_Type == 5 || driverInformation.or_Type == 6">
+					<view class="if_button" v-if="driverInformation.or_Type == 1 || driverInformation.or_Type == 2 || driverInformation.or_Type == 3 
+					 || driverInformation.or_Type == 4 || driverInformation.or_Type == 7 || driverInformation.or_Type == 8">
 						<button class="bt_remind3" type="warn">联系司机</button>
 					</view>
 				</view>
@@ -90,15 +115,15 @@
 					<text class="if_topTitle2">费用详情</text>
 					<view class="if_text">
 						<text class="te_text">包车天数:{{driverInformation.cm_day}}天</text>
-						<text class="te_text">已包时长:{{driverInformation.cm_duration}}时</text>
+						<!-- <text class="te_text">已包时长:{{driverInformation.cm_duration}}时</text> -->
 					</view>
-					<view class="if_text">
+					<!-- <view class="if_text">
 						<text class="te_text">包车费用:{{driverInformation.cm_money}}元</text>
 						<text class="te_text">超时费用:{{driverInformation.cm_timeout}}元</text>
 					</view>
 					<view class="if_text">
 						<text class="te_text">总计:{{driverInformation.cm_totalCost}}元</text>
-					</view>
+					</view> -->
 				</view>
 				<!-- 路线信息 -->
 				<view class="ct_routeInformation">

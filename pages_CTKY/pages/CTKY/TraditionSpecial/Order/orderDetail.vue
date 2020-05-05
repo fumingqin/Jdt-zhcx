@@ -54,7 +54,7 @@
 					</view>
 					
 					<view style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
-						  取票号 {{orderInfo.ticketNumber}}
+						  取票号 {{getOneTicketNum(orderInfo.ticketNumber,index)}}
 					</view>
 					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
 						出示二维码，检票上车
@@ -81,6 +81,7 @@
 				qrcodeText: 'uQRCode',
 				qrcodeSize: 150,
 				ticketNumber:'',
+				ticktIndex:'',//车票下标
 			}
 		},
 		onLoad(res) {
@@ -92,12 +93,13 @@
 			that.stringTurnArray(orderInfo.iDNameType);
 			that.getTicketNum(orderInfo);
 			that.make(this.orderInfo.ticketNumber);
+			that.getOneTicketNum();
 		},
 		methods: {
 			//-------------------------------生成二维码-------------------------------
 			make(param) {
 				if(param) {
-					console.log(param);
+					// console.log(param);
 					uQRCode.make({
 						canvasId: 'ctkyQrcode',
 						text: param,
@@ -117,12 +119,17 @@
 			//-------------------------------获取乘车人信息-------------------------------
 			stringTurnArray(param){
 				var that = this;
-				console.log(param)
 				
 				let a = param.indexOf('|')
 				var singleArray = [];
-				console.log(a)
-				if(param.indexOf('|')) {
+				if(a == -1) {//不存在'|' 只有一张车票
+					var array = param.split(',');
+					var passenger = {
+						userName:array[1],
+						userCodeNum:array[0],
+					}
+					that.passageInfo.push(passenger);
+				}else {//多人订票
 					//存在'|'
 					var array = param.split('|');
 					for(let i = 0;i < array.length; i++) {
@@ -133,14 +140,19 @@
 						}
 						that.passageInfo.push(passenger);
 					}
-				}else {//不存在'|'
-					var array = param.split(',');
-					var passenger = {
-						userName:array[1],
-						userCodeNum:array[0],
-					}
-					that.passageInfo.push(passenger);
-					console.log(that.passageInfo)
+				}
+			},
+			//-------------------------------获取取票号-------------------------------
+			getOneTicketNum(ticketNum,index){
+				let a = ticketNum.indexOf(',')
+				if(a == -1) {
+					return ticketNum;
+				}else {
+					var array = ticketNum.split('-');
+					let ticketHeader = array[0];
+					var array2 = array[1];
+					var array3 = array2.split(',');
+					return ticketHeader + '-' + array3[index];
 				}
 			},
 			//-------------------------------计算车票数量-------------------------------

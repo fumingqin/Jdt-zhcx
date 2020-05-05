@@ -163,6 +163,11 @@
                     "key" : "HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2"
                 }
             }
+        },
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
         }
     }
 }

@@ -84,12 +84,13 @@
 						</view>
 					</view>
 				</view>
-
+				
+				
 				<!-- 景区门票 -->
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -104,7 +105,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -147,6 +148,14 @@
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
+						
+						<!-- 已失效 -->
+						<view class="at_buttonView" v-if="item.orderType=='已失效'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
+						
 					</view>
 				</view>
 
@@ -173,18 +182,17 @@
 
 
 						<!-- 已完成 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='6'">
+						<view class="cm_buttonView" v-if="item.or_Type=='13'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>
 
-						<!-- 待发车 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='1'">
-							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+						<!-- 订单执行中 -->
+						<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view>
 						<!-- 进行中 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='4'">
+						<view class="cm_buttonView" v-if="item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='1'">
 							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
@@ -198,7 +206,7 @@
 						</view>
 
 						<!-- 已取消 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='9'">
+						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='7'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
 						</view>
@@ -342,7 +350,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -355,41 +363,17 @@
 							</view>
 							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 						</view>
-						<view class="whiteBg">
-							<view style="display: flex; margin-top: -40rpx;">
-								<image v-if='item.titleIndex == 2' style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/keche.png"></image>
-								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.state}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -72rpx;">
-								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{item.setOutTime}}</view>
-								<view style="width: 160rpx; height: 44rpx;text-align: center;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">¥{{item.totalPrice}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: -16rpx;">
-								<view class="bluering"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.startSiteName}}</view>
-							</view>
-
-							<view style="display: flex; margin-top: 36rpx;">
-								<view class="redring"></view>
-								<view style="width: 480rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: -14rpx -80rpx;">{{item.endSiteName}}</view>
-							</view>
-
-							<view class="CTKYBtnView">
-								<button class="allBtn">删除</button>
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn" v-if="item.state=='已使用'">投诉</button>
-							</view>
+				
+						<view class="at_contentView">
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
-
+				
 						<!-- 已使用 -->
 						<view class="at_buttonView" v-if="item.orderType=='已使用'">
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
 						</view>
-
+						
 					</view>
 				</view>
 
@@ -553,7 +537,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.orderDate}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -568,7 +552,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -577,7 +561,7 @@
 						<view class="at_buttonView" v-if="item.orderType=='待使用'">
 							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<!-- <view class="at_button at_btQrCode" @click="open5(item)">二维码</view> -->
+							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 						</view>
 
 					</view>
@@ -755,7 +739,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -770,7 +754,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -945,7 +929,7 @@
 				<!-- 标签class命名：pd;全称：Purchase Date -->
 				<!-- 内容class命名：at;全称：Admission ticket -->
 				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">{{item.orderDate}}</view>
+					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 					<view class="at_view">
 						<view class="at_titleView">
 							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
@@ -960,7 +944,7 @@
 						</view>
 
 						<view class="at_contentView">
-							<text class="at_contentText">预订时间：&nbsp;{{item.orderDate}}</text>
+							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 						</view>
 
@@ -980,6 +964,13 @@
 
 						<!-- 支付超时 -->
 						<view class="at_buttonView" v-if="item.orderType=='支付超时'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
+						
+						<!-- 支付超时 -->
+						<view class="at_buttonView" v-if="item.orderType=='已失效'">
 							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
@@ -1436,7 +1427,7 @@
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
-						// console.log('11111', res.data);
+						console.log('11111', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
@@ -1507,14 +1498,14 @@
 						if (respones.data.status == true) {
 							uni.hideLoading()
 							uni.showToast({
-								title: '退票成功'
+								title: respones.data.msg
 							})
 							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
 						} else {
 							uni.hideLoading()
 							uni.showToast({
-								title: '退票失败',
+								title: respones.data.msg,
 								icon: 'none'
 							})
 							uni.startPullDownRefresh();
@@ -2176,8 +2167,7 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
-												'支付超时') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType == '支付超时' || that.info[i].orderType == '已失效') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}
@@ -2275,11 +2265,11 @@
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
+				uni.showLoading({
+					title: '请求退票中...'
+				})
 				var that = this
 				if (this.exitindex == '2') {
-					uni.showLoading({
-						title: '请求退票中...'
-					})
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
 					uni.request({
@@ -2293,13 +2283,20 @@
 						},
 						success: (e) => {
 							// console.log(e)
+							uni.hideLoading()
 							uni.showToast({
 								title: '退票成功',
 								icon: 'success',
-								duration: 1500,
 							})
 							this.close2()
 							this.toFinished();
+						},
+						fail:function(){
+							uni.showToast({
+								title: '退票失败',
+								icon: 'none',
+							})
+							uni.hideLoading()
 						}
 					})
 				}
@@ -2510,7 +2507,6 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								console.log(this.userInfo.userId);
 								console.log(res);
 								if (res.data.msg == '订单查询完成') {
 									for (var i = 0; i < res.data.data.length; i++) {
@@ -2518,14 +2514,14 @@
 									}
 									if (res.data.data !== '') {
 										for (var i = 0; i < res.data.data.length; i++) {
-											if (res.data.data[i].or_Type == '6') {
+											if (res.data.data[i].or_Type == '13') {
 												that.finishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '4' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
-												'11') {
+											} else if (res.data.data[i].or_Type == '1' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
+												'3'||res.data.data[i].or_Type == '4'||res.data.data[i].or_Type == '10'||res.data.data[i].or_Type == '11') {
 												that.goingArr.push(res.data.data[i]);
 											} else if (res.data.data[i].or_Type == '5') {
 												that.unfinishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '8' || res.data.data[i].or_Type == '9') {
+											} else if (res.data.data[i].or_Type == '8' || res.data.data[i].or_Type == '7') {
 												that.cancelArr.push(res.data.data[i]);
 											}
 										}
@@ -2562,17 +2558,29 @@
 					url: '../../pages_BCFW/pages/BCFW/bf_charterMap?or_number=' + JSON.stringify(e)
 				})
 			},
+			//-------------------------包车-去支付-------------------------
+			topay(e) {
+				uni.navigateTo({
+					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?orderNumber=' +JSON.stringify(e)
+				})
+			},
 			//-------------------------判断订单状态-------------------------
 			getBCstate(param) {
-				if (param == '4') {
-					return '进行中'
-				} else if (param == '6') {
+				if (param == '1') {
+					return '已接单'
+				}else if (param == '0') {
+					return '等待接单'
+				} else if (param == '13') {
 					return '已完成'
 				} else if (param == '5') {
 					return '待支付'
-				} else if (param == '1') {
-					return '待发车'
-				} else if (param == '8' || param == '9') {
+				} else if (param == '4') {
+					return '进行中'
+				}else if (param == '10') {
+					return '到达目的地'
+				}else if (param == '2') {
+					return '已出发'
+				} else if (param == '8' || param == '7') {
 					return '已取消'
 				} else if (param == '11') {
 					return '待补款'
@@ -2719,14 +2727,14 @@
 
 	// 购买时间
 	.pd_view {
-		width: 200rpx;
+		width: 400upx;
 		margin: 40rpx 28rpx;
 		margin-bottom: 0upx;
 		border-radius: 32rpx;
 		background: #06B4FD;
 		text-align: center;
 		padding: 16upx 0;
-		font-size: 26upx;
+		font-size: 25upx;
 		color: #FFFFFF;
 	}
 
