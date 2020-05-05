@@ -3,7 +3,7 @@
 		<view>
 			<map id="map1" ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="StartLon" :latitude="StartLat"
 			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
-			<image @click="back" src="../../pages_CZC/static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
+			<image @click="back" src="../../static/CZC/back.png" style="width: 120rpx;height: 120rpx;position: fixed;top: 50px;left: 10px;"></image>
 		</view>
 		<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;">
 			<view style="margin:20rpx;">
