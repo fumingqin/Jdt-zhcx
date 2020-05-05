@@ -16,8 +16,8 @@
 					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
 					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.userauditState=='待审核'" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.userauditState=='审核通过'" class="fontClass" style="width: 100upx;">审核通过</text>
-					<text v-if="item.userauditState=='审核未通过'" class="fontClass" style="width: 120upx;">审核未通过</text>	
+					<text v-if="item.userauditState=='审核通过'" class="fontClass" style="width: 110upx;">审核通过</text>
+					<text v-if="item.userauditState=='审核未通过'" class="fontClass" style="width: 140upx;">审核未通过</text>	
 				</view>
 			</view>
 			<view class="boxClass" v-if="submitType == 0" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
@@ -33,8 +33,8 @@
 					<text v-if="item.userDefault=='true'" class="fontClass" style="width: 80upx;">本人</text>
 					<text v-if="item.userEmergencyContact=='true'" class="fontClass" style="width: 80upx;">联系人</text>
 					<text v-if="item.userauditState==1" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.userauditState==2" class="fontClass" style="width: 100upx;">审核通过</text>
-					<text v-if="item.userauditState==3" class="fontClass" style="width: 120upx;">审核未通过</text>	
+					<text v-if="item.userauditState==2" class="fontClass" style="width: 110upx;">审核通过</text>
+					<text v-if="item.userauditState==3" class="fontClass" style="width: 140upx;">审核未通过</text>	
 				</view>
 			</view>
 		</view>	

@@ -29,7 +29,7 @@
 		methods: {
 			//路由统一事件
 			godetail: function(e) {
-				clearTimeout(timeout)
+				clearTimeout(this.timeout)
 				if(e==0){
 					uni.switchTab({
 						url:'../../../pages/order/OrderList'

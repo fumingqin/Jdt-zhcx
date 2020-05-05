@@ -63,7 +63,7 @@
 					<image class="newDiscoveryConentImage" mode="aspectFill" :src="item.imageUrl[0]"></image>
 					<text class="newDiscoveryConentText1">{{item.title}}</text>
 					<!-- <text class="newDiscoveryConentText2">销售量：{{item.salesVolume}}</text> -->
-					<text class="newDiscoveryConentText2">销售量：{{item.synopsis}}</text>
+					<text class="newDiscoveryConentText2">{{item.synopsis}}</text>
 				</view>
 			</view>
 		</view>
@@ -130,7 +130,7 @@
 				itText: '',//六宫格
 				newDiscovery : '',//新发现
 				
-				ifyFirst: '',//分类产品首个
+				ifyFirst: {imageUrl:['']},//分类产品首个
 				ifyList:'',//分类产品列表
 				
 				
@@ -145,16 +145,19 @@
 			QSTabs
 		},
 		onLoad:function() {
+			uni.showLoading({
+				title:'加载中...',
+				icon:'loading'
+			})
 			this.Getpostion();
-			this.classifyList();
 		},
 		onPullDownRefresh:function(){
 			this.textData();
-			
 		},
 		methods: {
 			//请求列表接口数据
 			textData:function() {
+				//请求列表
 				uni.request({
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
@@ -163,25 +166,30 @@
 					},
 					success: (res) => {
 						// console.log(res)
-						if(res.data.data){
+						if(res.data.status == true){
 							this.itText = res.data.data;
 							uni.hideLoading()
 						}else{
+							uni.hideLoading()
 							uni.showToast({
 								title:'该地区暂无数据',
 								icon:'none'
 							})
-							uni.hideLoading()
+							
 						}
+						
 					},
 					fail:function(){
+						uni.hideLoading()
 						uni.showToast({
 							title:'网络异常，请检查网络后尝试',
 							icon:'none'
 						})
-						uni.hideLoading()
-					}
+						
+					} 
 				})
+				
+				//新发现
 				uni.request({
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
@@ -189,28 +197,58 @@
 						regionWeixin : this.regionWeixin
 					},
 					success: (res) => {
-						if(res.data.data){
+						if(res.data.status == true){
 							var sc = res.data.data;;
 							sc.sort((a, b) => a.id - b.id)
 							this.newDiscovery = sc;
 							uni.hideLoading()
 						}else{
+							uni.hideLoading()
 							uni.showToast({
 								title:'该地区暂无数据',
 								icon:'none'
 							})
-							uni.hideLoading()
 						}
-						
+					
 					},
 					fail:function(){
+						uni.hideLoading()
 						uni.showToast({
 							title:'网络异常，请检查网络后尝试',
 							icon:'none'
 						})
-						uni.hideLoading()
+						
 					}
 				})
+				
+				//请求地区数据
+				uni.request({
+					url:$lyfw.Interface.zyx_GetCityInfo.value,
+					method:$lyfw.Interface.zyx_GetCityInfo.method,
+					success: (res) => {
+						if(res.data.status == true){
+							this.stationArray = res.data.data
+							this.classifyList()
+						}else(
+						uni.hideLoading(),
+						uni.showToast({
+							title:'暂无相关地区数据',
+							icon:'none'
+						})
+						)
+						
+					},
+					fail:function(){
+						uni.hideLoading()
+						uni.showToast({
+							title:'网络异常，请检查网络后尝试',
+							icon:'none'
+						})
+						
+					}
+				})
+				
+				
 			},
 			
 			//全部按钮，请求地区接口数据
@@ -223,19 +261,20 @@
 							regionWeixin : e
 						},
 						success: (res) => {
-							console.log(res)
-							if(res.data.data){
+							// console.log(res)
+							if(res.data.status == true){
 								this.ifyFirst =res.data.data[0];
 								var sc = res.data.data;
 								sc.shift();
 								this.ifyList = sc;
 								uni.hideLoading();
 							}else if(res.data.status == false){
+								uni.hideLoading();
 								uni.showToast({
 									title:'查不到该地区相关信息！',
 									icon:'none'
 								})
-								uni.hideLoading();
+								
 							}
 						},
 						fail:function(){
@@ -307,7 +346,6 @@
 							// console.log(res)
 							if(res.data !== undefined){
 								this.regionApp = res.data.city;
-								this.textData();
 							}
 						},
 						fail:function(){
@@ -317,9 +355,8 @@
 							})
 						}
 					})
-					
-					
 				},500)
+				
 			},
 
 			//打开地区选择器
@@ -606,6 +643,7 @@
 				font-size: 26upx;
 				color: #999;
 				margin-top: 8upx;
+				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				width: 332upx;
