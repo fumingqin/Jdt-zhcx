@@ -95,48 +95,6 @@
 		onShow(){
 			this.loadData();
 		},
-		// onNavigationBarButtonTap(e) {
-		// 	const index = e.index;
-		// 	//#ifndef H5
-		// 	if(index === 1){
-		// 		uni.navigateTo({
-		// 			// url:'/pages/GRZX/set'
-		// 			url:this.$GrzxInter.Route.set.url,
-		// 		})
-		// 	}
-		// 	if(index === 0){
-		// 		uni.scanCode({
-		// 			onlyFromCamera:true,
-		// 			success:function(res){
-		// 				void plus.runtime.openWeb(res.result,function(){
-		// 					//识别失败
-		// 				});
-		// 			}
-		// 		})
-		// 	}
-		// 	if(index === 2){
-		// 		uni.navigateTo({
-		// 			// url:'/pages/GRZX/myNews'
-		// 			url:this.$GrzxInter.Route.myNews.url,
-		// 		})
-		// 	}
-		// 	//#endif
-		// 	//#ifdef H5
-		// 	if(index === 0){
-		// 		uni.navigateTo({
-		// 			//url:'/pages/GRZX/set',
-		// 			url:this.$GrzxInter.Route.set.url,
-		// 		})
-		// 	}
-		// 	if(index === 1){
-		// 		uni.navigateTo({
-		// 			// url:'/pages/GRZX/myNews'
-		// 			url:this.$GrzxInter.Route.myNews.url,
-		// 		})
-		// 	}
-		// 	//#endif
-			
-		// },
 		methods:{
 			// ---------------------------加载数据----------------------------
 			loadImg(){
