@@ -382,8 +382,8 @@
 										},1000);
 									}else{
 										uni.setStorageSync('userInfo',res1.data.data)
-										that.logining=true;
-										that.login(res1.data.data)
+										// that.logining=true;
+										// that.login(res1.data.data)
 									}	
 								}
 							})

@@ -6,7 +6,7 @@
 			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait"></image>
 			<!-- #endif -->
 			<!-- #ifndef H5 -->
-			<image class="bg" :src="backImg||'/static/GRZX/login1.png'" mode="aspectFill" name="backImg"></image>
+			<image class="bg" :src="backImg||'/static/GRZX/backImg.png'" mode="aspectFill" name="backImg"></image>
 			<image class="tx" :src="portrait||'/static/GRZX/missing-face.png'" name="portrait" @click="getPhoto"></image>
 			<button class="xgbg"  plain="" @click="reviseBackground">修改背景</button>
 			<!-- #endif -->
@@ -43,7 +43,7 @@
 				<text class="bz">签&nbsp;名：</text>
 				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
 			</view>
-			<button class="an" type="primary" form-type="submit">保存</button>
+			<button class="an" type="warn" form-type="submit">保存</button>
 			
 		</form>
 	</view>
@@ -119,7 +119,7 @@
 							method:theself.$GrzxInter.Interface.login.method,
 							success(res1) {
 								console.log(res1,"108")
-								uni.setStorageSync('userInfo',res1.data.data)
+								// uni.setStorageSync('userInfo',res1.data.data)
 								// ------------1.头像-------------
 								var base64=res1.data.data.portrait;
 								theself.port=res1.data.data.portrait;
@@ -253,8 +253,8 @@
 				})
 				console.log(this.userId)
 				console.log(this.nickname)
-				console.log(this.portrait)
-				console.log(this.port,"port")
+				// console.log(this.portrait)
+				// console.log(this.port,"port")
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
 				if(this.selector=='男'){
@@ -344,9 +344,9 @@
 		height: 100%;
 		.bg{
 			width: 100%;
-			height: 464upx;
+			height: 500upx;
 			filter: blur(0.5px);
-			opacity: .7;
+			// opacity: .7;
 		}
 		.tx{
 			position: absolute;

@@ -147,6 +147,14 @@
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
+						
+						<!-- 已失效 -->
+						<view class="at_buttonView" v-if="item.orderType=='已失效'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
+						
 					</view>
 				</view>
 
@@ -577,7 +585,7 @@
 						<view class="at_buttonView" v-if="item.orderType=='待使用'">
 							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<!-- <view class="at_button at_btQrCode" @click="open5(item)">二维码</view> -->
+							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 						</view>
 
 					</view>
@@ -984,6 +992,13 @@
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
+						
+						<!-- 支付超时 -->
+						<view class="at_buttonView" v-if="item.orderType=='已失效'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
 					</view>
 				</view>
 
@@ -1297,9 +1312,17 @@
 		onShow: function() {
 			//请求景区门票数据
 			this.toFinished();
+			//客运刷新状态
+			if(this.ctkyOrderNum) {
+				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
+			}
 		},
 		onPullDownRefresh: function() {
 			this.toFinished();
+			//客运刷新状态
+			if(this.ctkyOrderNum) {
+				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
+			}
 		},
 		methods: {
 			changeTime: function(value) { //时间格式转换
@@ -1720,6 +1743,41 @@
 					// #endif
 				}
 			},
+			//--------------------------成功之后重新获取车票支付参数--------------------------
+			getTicketPaymentInfo_ticketIssue: function(orderNumber) {
+				var that = this;
+				var timer = null;
+				that.timer = timer;
+				uni.showLoading({
+					title: '加载中...'
+				});
+				timer = setInterval(function() {
+					uni.request({
+						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
+						method: 'GET',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							orderNumber: orderNumber,
+						},
+						success: (res) => {
+							console.log('支付参数返回数据', res);
+							if (res.data.status == true) {
+								uni.hideLoading();
+								clearInterval(timer);
+							} else if (res.data.status == false) {
+								clearInterval(timer);
+							}
+						},
+						fail(res) {
+							uni.hideLoading();
+							//回调失败，取消定时器
+							clearInterval(timer);
+						}
+					})
+				}, 3000)
+			},
 			//-------------------------客运二维码弹框-------------------------
 			QRCodeTap: function() {
 				this.$refs.popup.open()
@@ -2126,8 +2184,7 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
-												'支付超时') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType == '支付超时' || that.info[i].orderType == '已失效') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}

@@ -2,7 +2,7 @@
 	<view class="content">
 		<!-- 头部背景图 -->
 		<view>
-			<image class="banner" src="../../../../static/CTKY/specialBus.png" lazy-load mode="aspectFit"></image>
+			<!-- <image class="banner" src="../../../../static/CTKY/specialBus.png" lazy-load mode="aspectFit"></image> -->
 		</view>
 		<!-- 内容 -->
 		<view class="center">
