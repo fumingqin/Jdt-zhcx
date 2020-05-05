@@ -2259,11 +2259,11 @@
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
+				uni.showLoading({
+					title: '请求退票中...'
+				})
 				var that = this
 				if (this.exitindex == '2') {
-					uni.showLoading({
-						title: '请求退票中...'
-					})
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
 					uni.request({
@@ -2277,13 +2277,20 @@
 						},
 						success: (e) => {
 							// console.log(e)
+							uni.hideLoading()
 							uni.showToast({
 								title: '退票成功',
 								icon: 'success',
-								duration: 1500,
 							})
 							this.close2()
 							this.toFinished();
+						},
+						fail:function(){
+							uni.showToast({
+								title: '退票失败',
+								icon: 'none',
+							})
+							uni.hideLoading()
 						}
 					})
 				}
