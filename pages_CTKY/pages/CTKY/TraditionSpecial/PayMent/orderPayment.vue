@@ -445,7 +445,11 @@
 										uni.hideLoading();
 										uni.showModal({
 											content: '请在2分钟内完成支付',
-											showCancel: false
+											success(res) {
+												if(res.confirm) {
+													that.payment();
+												}
+											}
 										})
 										//回调失败，取消定时器
 										clearInterval(timer);
