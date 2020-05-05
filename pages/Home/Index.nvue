@@ -21,7 +21,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<text class="tabItem-font">车票订购</text>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<text class="tabItem-font">网络约车</text>
 				</view>
@@ -265,10 +265,17 @@
 			
 			//路由统一事件
 			godetail3: function(url) {
+				// #ifdef H5
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'网络约车仅支持小程序或APP!',
 					icon:'none'
 				})
+				// #endif
+				// #ifndef H5
+				uni.navigateTo({
+					url
+				})
+				// #endif
 			},
 			
 			//旅游服务专属路由
