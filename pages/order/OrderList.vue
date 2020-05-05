@@ -1297,9 +1297,17 @@
 		onShow: function() {
 			//请求景区门票数据
 			this.toFinished();
+			//客运刷新状态
+			if(this.ctkyOrderNum) {
+				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
+			}
 		},
 		onPullDownRefresh: function() {
 			this.toFinished();
+			//客运刷新状态
+			if(this.ctkyOrderNum) {
+				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
+			}
 		},
 		methods: {
 			changeTime: function(value) { //时间格式转换
@@ -1428,7 +1436,7 @@
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
-						console.log('11111', res.data);
+						// console.log('11111', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
@@ -1719,6 +1727,41 @@
 					})
 					// #endif
 				}
+			},
+			//--------------------------成功之后重新获取车票支付参数--------------------------
+			getTicketPaymentInfo_ticketIssue: function(orderNumber) {
+				var that = this;
+				var timer = null;
+				that.timer = timer;
+				uni.showLoading({
+					title: '加载中...'
+				});
+				timer = setInterval(function() {
+					uni.request({
+						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
+						method: 'GET',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							orderNumber: orderNumber,
+						},
+						success: (res) => {
+							console.log('支付参数返回数据', res);
+							if (res.data.status == true) {
+								uni.hideLoading();
+								clearInterval(timer);
+							} else if (res.data.status == false) {
+								clearInterval(timer);
+							}
+						},
+						fail(res) {
+							uni.hideLoading();
+							//回调失败，取消定时器
+							clearInterval(timer);
+						}
+					})
+				}, 3000)
 			},
 			//-------------------------客运二维码弹框-------------------------
 			QRCodeTap: function() {
