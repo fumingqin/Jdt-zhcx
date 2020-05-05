@@ -147,6 +147,14 @@
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
 						</view>
+						
+						<!-- 已失效 -->
+						<view class="at_buttonView" v-if="item.orderType=='已失效'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
+						
 					</view>
 				</view>
 
@@ -577,7 +585,7 @@
 						<view class="at_buttonView" v-if="item.orderType=='待使用'">
 							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<!-- <view class="at_button at_btQrCode" @click="open5(item)">二维码</view> -->
+							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 						</view>
 
 					</view>
@@ -980,6 +988,13 @@
 
 						<!-- 支付超时 -->
 						<view class="at_buttonView" v-if="item.orderType=='支付超时'">
+							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+						</view>
+						
+						<!-- 支付超时 -->
+						<view class="at_buttonView" v-if="item.orderType=='已失效'">
 							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
 							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
 							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
@@ -2169,8 +2184,7 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
-												'支付超时') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType == '支付超时' || that.info[i].orderType == '已失效') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}

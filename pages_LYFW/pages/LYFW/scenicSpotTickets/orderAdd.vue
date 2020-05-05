@@ -512,7 +512,7 @@
 						addressData: this.addressData,
 					},
 					header: {
-						'content-type': 'application/json'
+						'content-type': 'application/json' 
 					},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
@@ -560,6 +560,7 @@
 				// #endif
 
 				// #ifdef MP-WEIXIN
+				console.log()
 				uni.request({
 					url: $lyfw.Interface.spt_AddtouristOrder.value,
 					method: $lyfw.Interface.spt_AddtouristOrder.method,

@@ -25,11 +25,13 @@
 		<view :hidden="searchIndex==0" v-for="(item,index) in searchData" :key="index">
 			<view class="Tk_scrollview" @click="godetail(item.ticketId)">
 				<view class="Tk_item">
-					<image class="Tk_image" :src="item.ticketImage" />
+					<image class="Tk_image" :src="item.imageUrl[0]" />
 					<view class="Tk_bacg">
-						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-						<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
+						<text class="Tk_text1">{{item.title}}</text>
+						<view style="display: flex; margin-top: 8upx;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 216upx;">
+							<text class="Tk_text2" v-for="(item2,index2) in item.label" :key="index2">{{item2}}&nbsp;|&nbsp;</text>
+						</view>
+						<text class="Tk_text3">{{item.synopsis}}</text>
 					</view>
 				</view>
 			</view>
@@ -43,10 +45,12 @@
 		<view :hidden="current==1">
 			<!-- 六宫格列表栏 -->
 			<view class="listBarViewSpace">
-				<view class="listBarView" v-for="(item,index) in itText" :key="index" @click="natTo">
-					<image class="listBarImage" mode="aspectFill" :src="item.src"></image>
+				<view class="listBarView" v-for="(item,index) in itText" :key="index" @click="natTo(item.productID)">
+					<image class="listBarImage" mode="aspectFill" :src="item.imageUrl[0]"></image>
 					<text class="listBarText1">{{item.title}}</text>
-					<text class="listBarText2">{{item.conut_1}}|{{item.conut_2}}</text>
+					<view style="display: flex; margin-top: 8upx;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 216upx;">
+						<text class="listBarText2" v-for="(item2,index2) in item.label" :key="index2">{{item2}}&nbsp;|&nbsp;</text>
+					</view>
 				</view>
 			</view>
 
@@ -55,10 +59,11 @@
 				<view class="newDiscoveryTitleView">
 					<text class="newDiscoveryTitle">新发现</text>
 				</view>
-				<view class="newDiscoveryConentView" v-for="(item,index) in newDiscovery" :key="index" @click="natTo">
-					<image class="newDiscoveryConentImage" mode="aspectFill" :src="item.src"></image>
+				<view class="newDiscoveryConentView" v-for="(item,index) in newDiscovery" :key="index" @click="natTo(item.productID)">
+					<image class="newDiscoveryConentImage" mode="aspectFill" :src="item.imageUrl[0]"></image>
 					<text class="newDiscoveryConentText1">{{item.title}}</text>
-					<text class="newDiscoveryConentText2">销售量：{{item.salesVolume}}</text>
+					<!-- <text class="newDiscoveryConentText2">销售量：{{item.salesVolume}}</text> -->
+					<text class="newDiscoveryConentText2">销售量：{{item.synopsis}}</text>
 				</view>
 			</view>
 		</view>
@@ -79,20 +84,20 @@
 				<view class="main">
 					<scroll-view class="mainScView" scroll-y="true">
 							<!-- 大图样式，命名：big -->
-							<view @click="natTo">
-								<image class="big_image" :src="ifyFirst.src"></image>
+							<view @click="natTo(ifyFirst.productID)">
+								<image class="big_image" :src="ifyFirst.imageUrl[0]"></image>
 								<view style="margin: 0upx 32upx;">
 									<text class="big_title" >{{ifyFirst.title}}</text>
-									<text class="big_text" >京城上下五千年 历史沉淀</text>
+									<text class="big_text" >{{ifyFirst.synopsis}}</text>
 								</view>
 							</view>
 							
 							<!-- 小图样式，命名:sma -->
 							<view class="sma_view" >
-								<view style="float: left;" v-for="(item,index) in ifyList" :key="index" @click="natTo">
-									<image class="sma_image" :src="item.src" ></image>
+								<view style="float: left;" v-for="(item,index) in ifyList" :key="index" @click="natTo(item.productID)">
+									<image class="sma_image" :src="item.imageUrl[0]" ></image>
 									<text class="sma_title">{{item.title}}</text>
-									<text class="sma_text" >销售量：{{item.salesVolume}}</text>
+									<text class="sma_text" >{{item.synopsis}}</text>
 								</view>
 							</view>
 							
@@ -109,6 +114,7 @@
 	import citySelect from '@/components/HOME/uni-location/linzq-citySelect/linzq-citySelect.vue'
 	import popupLayer from '@/components/HOME/uni-location/popup-layer/popup-layer.vue'
 	import QSTabs from '@/pages_LYFW/components/LYFW/independentTravel/QS-tabs/QS-tabs.vue'
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //引用路径
 	export default {
 		data() {
 			return {
@@ -130,7 +136,7 @@
 				
 				scrollHeight:'500px',
 				leftIndex:0, //左边列表值
-				stationArray:['南平','泉州','石狮','顺昌'], //左边数据内容
+				stationArray:['南平市','泉州市','龙岩市','厦门市'], //左边数据内容
 			}
 		},
 		components: {
@@ -138,43 +144,141 @@
 			popupLayer,
 			QSTabs
 		},
-		onLoad() {
+		onLoad:function() {
 			this.Getpostion();
-			this.textData();
 			this.classifyList();
 		},
+		onPullDownRefresh:function(){
+			this.textData();
+			
+		},
 		methods: {
+			//请求列表接口数据
 			textData:function() {
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
-					method:'POST',
+					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
+					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
+					data:{
+						regionWeixin : this.regionWeixin
+					},
 					success: (res) => {
 						// console.log(res)
-						this.itText = res.data.data;
+						if(res.data.data){
+							this.itText = res.data.data;
+							uni.hideLoading()
+						}else{
+							uni.showToast({
+								title:'该地区暂无数据',
+								icon:'none'
+							})
+							uni.hideLoading()
+						}
+					},
+					fail:function(){
+						uni.showToast({
+							title:'网络异常，请检查网络后尝试',
+							icon:'none'
+						})
+						uni.hideLoading()
 					}
 				})
 				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
-					method:'POST',
+					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
+					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
+					data:{
+						regionWeixin : this.regionWeixin
+					},
 					success: (res) => {
-						var sc = res.data.data;;
-						sc.sort((a, b) => a.id - b.id)
-						this.newDiscovery = sc;
+						if(res.data.data){
+							var sc = res.data.data;;
+							sc.sort((a, b) => a.id - b.id)
+							this.newDiscovery = sc;
+							uni.hideLoading()
+						}else{
+							uni.showToast({
+								title:'该地区暂无数据',
+								icon:'none'
+							})
+							uni.hideLoading()
+						}
+						
+					},
+					fail:function(){
+						uni.showToast({
+							title:'网络异常，请检查网络后尝试',
+							icon:'none'
+						})
+						uni.hideLoading()
 					}
 				})
 			},
-			classifyList:function(){
-				uni.request({
-					url:'http://218.67.107.93:9210/api/app/getFreeWalkerTourList',
-					method:'POST',
-					success: (res) => {
-						this.ifyFirst =res.data.data[0];
-						var sc = res.data.data;
-						sc.shift();
-						this.ifyList = sc;
-						uni.hideLoading();
-					}
-				})
+			
+			//全部按钮，请求地区接口数据
+			classifyList:function(e){
+				if(e){
+					uni.request({
+						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
+						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
+						data:{
+							regionWeixin : e
+						},
+						success: (res) => {
+							console.log(res)
+							if(res.data.data){
+								this.ifyFirst =res.data.data[0];
+								var sc = res.data.data;
+								sc.shift();
+								this.ifyList = sc;
+								uni.hideLoading();
+							}else if(res.data.status == false){
+								uni.showToast({
+									title:'查不到该地区相关信息！',
+									icon:'none'
+								})
+								uni.hideLoading();
+							}
+						},
+						fail:function(){
+							uni.hideLoading();
+							uni.showToast({
+								title:'网络异常，请检查网络后尝试',
+								icon:'none'
+							})
+						}
+					})
+				}else{
+					uni.request({
+						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
+						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
+						data:{
+							regionWeixin : this.stationArray[this.leftIndex]
+						},
+						success: (res) => {
+							if(res.data.data){
+								this.ifyFirst =res.data.data[0];
+								var sc = res.data.data;
+								sc.shift();
+								this.ifyList = sc;
+								uni.hideLoading();
+							}else if(res.data.status == false){
+								uni.showToast({
+									title:'查不到该地区相关信息！',
+									icon:'none'
+								})
+								uni.hideLoading();
+							}
+						},
+						fail:function(){
+							uni.hideLoading();
+							uni.showToast({
+								title:'网络异常，请检查网络后尝试',
+								icon:'none'
+							})
+							
+						}
+					})
+				}
+				
 			},
 			
 
@@ -187,6 +291,13 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+							this.textData();
+						},
+						fail:function(){
+							uni.showToast({
+								title:'请打开定位',
+								icon:'none'
+							})
 						}
 					}),
 					
@@ -196,7 +307,14 @@
 							// console.log(res)
 							if(res.data !== undefined){
 								this.regionApp = res.data.city;
+								this.textData();
 							}
+						},
+						fail:function(){
+							uni.showToast({
+								title:'请打开定位',
+								icon:'none'
+							})
 						}
 					})
 					
@@ -216,7 +334,7 @@
 					this.regionWeixin = e.cityName
 					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
-					// this.lyfwData();
+					this.textData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if(e == 'yes'){
@@ -225,6 +343,7 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+							this.textData();
 						}
 					}),
 					
@@ -234,6 +353,7 @@
 							// console.log(res)
 							if(res.data !== undefined){
 								this.regionApp = res.data.city;
+								this.textData();
 							}
 						}
 					})
@@ -261,20 +381,24 @@
 					title: '正在搜索',
 				})
 				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/searchScenicspotList?searchValue=' + this.searchValue,
-					method: 'POST',
+					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.value,
+					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.method,
+					data:{
+						regionWeixin :  this.regionWeixin,
+						title : this.searchValue
+					},
 					success: (res) => {
-						if (res.data.msg == '搜索景区信息成功！') {
+						console.log(res)
+						if (res.data.data) {
 							this.searchData = res.data.data;
 							this.searchValue = ''
 							this.searchIndex = 1;
 							uni.hideLoading()
-						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
+						} else if (res.data.status == false) {
 							uni.hideLoading()
 							uni.showToast({
-								title: '查不到相关景区！如:武夷/武夷山',
+								title: '查不到相关景区或无相关景区!',
 								icon: 'none',
-								duration: 1500
 							});
 							this.searchValue = ''
 
@@ -289,14 +413,16 @@
 			},
 			
 			//跳转
-			natTo(){
+			natTo:function(e){
+				console.log(e)
 				uni.navigateTo({
-					url:'../currency/travelDetails'
+					url:'../currency/travelDetails?contentId=' +e
 				})
 			},
 			
 			/* 左侧导航点击 */
 			leftTap:function(item,index){
+				console.log(item)
 				this.leftIndex=index;
 				this.classifyList(item);
 				uni.showLoading({
@@ -394,8 +520,8 @@
 			.Tk_text3 {
 				font-size: 24upx;
 				margin-top: 24upx;
-				text-align: right;
-				color: #FF6600;
+				// text-align: left;	
+				color: #AAAAAA;
 				display: block; // 让字体换行
 			}
 		}
@@ -434,13 +560,9 @@
 			}
 
 			.listBarText2 {
-				display: block;
+				// display: block;
 				font-size: 26upx;
 				color: #999;
-				margin-top: 8upx;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				width: 216upx;
 			}
 
 		}
@@ -517,7 +639,7 @@
 					margin-top: 16upx;
 				}
 				.itemText{
-					padding-left: 56rpx;
+					padding-left: 40rpx;
 				}
 				&:not(:first-child) {
 				margin-top: 4px;
@@ -560,6 +682,10 @@
 					color: #888;
 					display: block; 
 					margin-top: 16upx;
+					overflow: hidden;
+					text-overflow: ellipsis; 
+					white-space: nowrap; 
+					width: 490upx;
 				}
 				.sma_view{
 					padding:8upx 20upx;
@@ -580,6 +706,10 @@
 						font-size: 26upx; 
 						color: #888;
 						display: block;
+						overflow: hidden; 
+						text-overflow: ellipsis; 
+						white-space: nowrap; 
+						width: 234upx;
 					}
 				}
 			}

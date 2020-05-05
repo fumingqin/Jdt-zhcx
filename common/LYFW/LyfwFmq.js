@@ -162,6 +162,20 @@ const Interface = {
 		name:'全局-请求静态图片',
 		method:'POST',
 		pages:["pages/Home/guidePage.vue"]
+	},
+	
+	zyx_GetFreeTourByRegionWeixin:{
+		value: Url + '/api/ly/GetFreeTourByRegionWeixin',
+		name:'自由行-列表',
+		method:'POST',
+		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
+	},
+	
+	zyx_GetFreeTourByRegionWeixinTitle:{
+		value: Url + '/api/ly/GetFreeTourByRegionWeixinTitle',
+		name:'自由行-搜索',
+		method:'POST',
+		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
 	}
 }
 
