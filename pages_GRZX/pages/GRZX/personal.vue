@@ -43,7 +43,7 @@
 				<text class="bz">签&nbsp;名：</text>
 				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
 			</view>
-			<button class="an" type="primary" form-type="submit">保存</button>
+			<button class="an" type="warn" form-type="submit">保存</button>
 			
 		</form>
 	</view>
@@ -253,8 +253,8 @@
 				})
 				console.log(this.userId)
 				console.log(this.nickname)
-				console.log(this.portrait)
-				console.log(this.port,"port")
+				// console.log(this.portrait)
+				// console.log(this.port,"port")
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
 				if(this.selector=='男'){
