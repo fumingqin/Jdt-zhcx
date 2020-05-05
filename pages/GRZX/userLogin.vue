@@ -1,9 +1,7 @@
 <template>
 	<view class="content" v-bind:style="{height:imgHeight+'px'}">
 		<!-- 背景图 -->
-		<view v-if="loginType==1">
-			<image :src="background" class="backClass"></image>
-		</view>
+		<image :src="background" class="backClass"></image>
 		<image src="../../static/GRZX/loginReturn.png" class="returnClass" @click="returnClick"></image>
 		<view class="inputContent">
 			<view class="inputItem phoneNum">
@@ -16,17 +14,13 @@
 			</view>
 			
 			<!-- 按钮颜色和发送验证码的样式 -->
-			<view v-if="loginType==1">
-				<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
-				<image src="../../static/GRZX/btnLogin1.png" class="btnLogin" ></image>
-			</view>		
+			<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
+			<image src="../../static/GRZX/btnLogin1.png" class="btnLogin" ></image>
 			<text class="fontStyle" @click="loginClick">确定</text>
 		</view>
 		
 		<!-- logo -->
-		<view v-if="loginType==1">
-			<image :src="logo" class="logoClass"></image>
-		</view>
+		<image :src="logo" class="logoClass"></image>
 
 		<!-- <view class="loginMode">第三方登录</view>
 		<view class="leftLine"></view>
