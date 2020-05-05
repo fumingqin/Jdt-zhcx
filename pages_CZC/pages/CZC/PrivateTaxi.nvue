@@ -199,7 +199,6 @@
 					that.mapheight = res.windowHeight + 'px';
 				}
 			});
-			that.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		onReady() {
 			var that = this;
@@ -215,6 +214,7 @@
 			}else{
 				that.Passenger=[{userName: "选择乘车人"}]
 			}
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		methods: {
 			showToast: function(msg, icon = 'none') {
@@ -311,7 +311,7 @@
 									that.showToast(res.data.msg);
 									setTimeout(function() {
 										uni.switchTab({
-											url: "../order/OrderList"
+											url: "../../../pages/order/OrderList"
 										})
 									}, 1000)
 								}
