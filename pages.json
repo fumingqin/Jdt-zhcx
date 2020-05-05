@@ -98,7 +98,7 @@
 				"navigationStyle": "custom"
 			}
 		},
-		
+
 		//----------------------------公共页面----------------------
 		{
 			"path": "pages/Home/InformationDetails",
@@ -365,7 +365,7 @@
 						},
 						"navigationBarTitleText": "选择车型"
 					}
-				},{
+				}, {
 					"path": "pages/BCFW/bf_charterMap",
 					"style": {
 						"navigationStyle": "custom"
@@ -430,7 +430,9 @@
 				{
 					"path": "pages/LYFW/groupTour/groupTourList",
 					"style": {
-						"navigationBarTitleText": "跟团游列表"
+						"navigationBarTitleText": "跟团游列表",
+						"enablePullDownRefresh": true, //设置为true表示当前页面开启下拉刷新
+						"backgroundTextStyle": "dark" //下拉 loading 的样式，仅支持 dark/light
 					}
 				}, {
 					"path": "pages/LYFW/groupTour/viewMore",
@@ -662,7 +664,7 @@
 				"text": "我的"
 			}
 		]
-	}, 
+	},
 
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)

@@ -121,8 +121,9 @@
 				    content: '是否清除数据',
 				    success: (e)=>{
 				    	if(e.confirm){
-							uni.clearStorage();
+							uni.clearStorageSync();
 							uni.setStorageSync('userInfo',user);
+							var user1=uni.getStorageSync('userInfo');
 							uni.redirectTo({
 								// url:'/pages/GRZX/set'
 								url:this.$GrzxInter.Route.set.url,
