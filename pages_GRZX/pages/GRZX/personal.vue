@@ -43,7 +43,7 @@
 				<text class="bz">签&nbsp;名：</text>
 				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
 			</view>
-			<button class="an" type="primary" form-type="submit">保存</button>
+			<button class="an" type="default" form-type="submit">保存</button>
 			
 		</form>
 	</view>

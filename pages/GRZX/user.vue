@@ -2,12 +2,11 @@
 	<view class="content">
 		<view class="backImg">
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
-			<!-- #ifdef MP-WEIXIN -->
 			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('set')"></image>
 			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('myNews')"></image>
+			<!-- #ifdef APP-PLUS -->
+			<image src="../../static/GRZX/scan.png" class="scanClass" @click="navTo('scan')"></image>
 			<!-- #endif -->
-			<!-- <image src="../../static/GRZX/scan.png" class="scanClass" @click="scanClick"></image>
-			 -->
 			<view class="userInfoClass" @click="checkLogin">
 				<image class="portraitClass" :src="portrait || '/static/GRZX/missing-face.png'"></image>
 				<text class="usernameClass">{{nickname || '游客'}}</text>
@@ -96,48 +95,6 @@
 		onShow(){
 			this.loadData();
 		},
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			//#ifndef H5
-			if(index === 1){
-				uni.navigateTo({
-					// url:'/pages/GRZX/set'
-					url:this.$GrzxInter.Route.set.url,
-				})
-			}
-			if(index === 0){
-				uni.scanCode({
-					onlyFromCamera:true,
-					success:function(res){
-						void plus.runtime.openWeb(res.result,function(){
-							//识别失败
-						});
-					}
-				})
-			}
-			if(index === 2){
-				uni.navigateTo({
-					// url:'/pages/GRZX/myNews'
-					url:this.$GrzxInter.Route.myNews.url,
-				})
-			}
-			//#endif
-			//#ifdef H5
-			if(index === 0){
-				uni.navigateTo({
-					//url:'/pages/GRZX/set',
-					url:this.$GrzxInter.Route.set.url,
-				})
-			}
-			if(index === 1){
-				uni.navigateTo({
-					// url:'/pages/GRZX/myNews'
-					url:this.$GrzxInter.Route.myNews.url,
-				})
-			}
-			//#endif
-			
-		},
 		methods:{
 			// ---------------------------加载数据----------------------------
 			loadImg(){
@@ -209,6 +166,16 @@
 				if(e=='myNews'){
 					uni.navigateTo({
 						url:this.$GrzxInter.Route.myNews.url,
+					})
+				}
+				if(e=='scan'){
+					uni.scanCode({
+						onlyFromCamera:true,
+						success:function(res){
+							void plus.runtime.openWeb(res.result,function(){
+								//识别失败
+							});
+						}
 					})
 				}
 				console.log(e)
@@ -340,14 +307,14 @@
 		height: 45upx;
 		position: absolute;
 		left: 4.67%;
-		top: 74upx;
+		top: 80upx;
 	}
 	.scanClass{ //扫一扫按钮
 		width: 44upx;
 		height: 41upx;
 		position: absolute;
-		left: 14.8%;
-		top: 74upx;
+		left: 86.8%;
+		top: 80upx;
 	}
 	.infoClass{ 	//消息按钮
 		width: 47upx;
@@ -355,7 +322,7 @@
 		position: absolute;
 		//left: 87.73%;
 		left: 20%;
-		top: 74upx;
+		top: 80upx;
 	}
 	.userInfoClass{ 	//包括头像昵称
 		position: absolute;

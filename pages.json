@@ -31,43 +31,7 @@
 		{
 			"path": "pages/GRZX/user",
 			"style": {
-				"navigationStyle": "custom",
-				"app-plus": {
-					"bounce": "none",
-					"titleNView": {
-						"type": "transparent",
-						"buttons": [
-							// #ifndef	H5
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
-							},
-							// #endif
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60f",
-								"fontSize": "24",
-								"color": "#303133",
-								"width": "46px",
-								"background": "rgba(0,0,0,0)",
-								"float": "left"
-							},
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue744",
-								"fontSize": "28",
-								"color": "#303133",
-								"background": "rgba(0,0,0,0)",
-								"redDot": true
-							}
-
-						]
-					}
-				}
+				"navigationStyle": "custom"
 			}
 		},
 		{
