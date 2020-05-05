@@ -91,6 +91,7 @@
 </template>
 
 <script>
+	import $bcfw from "@/common/BCFW/bcfw.js"
 	export default {
 		data() {
 			return {
@@ -109,6 +110,7 @@
 					or_number: '',//订单编号
 					or_type: '',//订单状态
 					or_class: '',//包车类型
+					billDescript:'',//订单描述
 					
 					cm_totalCost:'',//总计
 					or_dateString:'',//出发时间
@@ -144,6 +146,7 @@
 			}
 		},
 		onLoad: function(options) {
+			that.or_number=JSON.parse(options.or_number);
 			uni.showLoading({
 				title: '拉起订单中...'
 			})
@@ -153,15 +156,21 @@
 				data: this.returnIndex,
 			}),
 			uni.request({
-				url: 'http://111.231.109.113:8004/api/Chartered/QueryCharteredOrderByOrderNumber_Passenger',
+				url: $bcfw.Interface.fw_charterDetails.value,
+				method: $bcfw.Interface.fw_charterDetails.method,
 				data:{
 					or_number :options.orderNumber
 				},
-				method: 'POST',
+				
 				success: (res) => {
 					console.log(res)
 					this.orderInfo = res.data.data;
-					
+					if(this.orderInfo.or_class=='包车-定制'){
+						this.orderInfo.billDescript='包车定制费用'
+						}else{
+						this.orderInfo.billDescript='包车专线费用'
+						}
+					console.log(this.orderInfo.billDescript)
 					// this.getDate();
 					uni.hideLoading()
 				}
@@ -203,12 +212,7 @@
 					this.channeIndex = 0;
 				}
 			},
-			// async getArrayInfo(){
-			// 	var that=this;
-			// 	let orderInfo = await this.$api.bcfwzyx('orderInfo');
-			// 	that.orderInfo=orderInfo.data;
-			// 	console.log('1235',orderInfo)
-			// 	},
+
 
 			// //数组提取
 			// screenUser: function() {
@@ -272,13 +276,13 @@
 			//倒计时结束
 			countDownEnd: function() {
 				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + this.orderInfo.orderNumber,
+					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + this.orderInfo.or_number,
 					method: 'POST',
 					success: (res) => {
 						// console.log(res)
 						if (res.data.data.orderType == '待支付') {
 							uni.request({
-								url: 'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' + res.data.data.orderNumber,
+								url: 'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' + res.data.data.or_number,
 								method: 'POST',
 								success() {
 									// console.log('取消成功')
@@ -349,78 +353,87 @@
 				
 				// #ifdef H5
 					uni.request({
-						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+						url:$bcfw.Interface.spt_Pay.value,
+						method:$bcfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
-							price: this.orderInfo.orderActualPayment,
-							orderNum: this.orderInfo.orderNumber,
+							price: that.orderInfo.cm_totalCost,
+							orderNumber: that.orderInfo.or_number,
+							goodsName: that.orderInfo.or_class,
+							billDescript: that.orderInfo.billDescript
 						},
-						method: 'POST',
-						success:function(res){
-							// console.log(res)
-							WeixinJSBridge.invoke('getBrandWCPayRequest', {
-								"appId": res.data.data.appId, //公众号名称，由商户传入
-								"timeStamp": res.data.data.timeStamp, //时间戳
-								"nonceStr": res.data.data.nonceStr, //随机串
-								"package": res.data.data.package, //扩展包
-								"signType":'MD5', //微信签名方式:MD5
-								"paySign": res.data.data.paySign ,//微信签名
-							}, function(res) {
-								if (res.err_msg == "get_brand_wcpay_request:ok") {
-									//支付成功再进计时器查询状态
-									// location.href = "/Order/BaseCallback/" + flowID;
-									// alert("支付成功");
+						success:function(e){
+							console.log(e)
+							uni.hideLoading()
+							uni.requestPayment({
+								provider: 'wxpay',
+								orderInfo: e.data.data,
+								success: function(res) {
+									console.log(res)
 									uni.request({
-										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber='+that.orderInfo.orderNumber,
-										method:'POST',
-										success:function(res){
-											if(res.data.msg == '出票成功'){
+										url:$bcfw.Interface.spt_CheckPayState.value,
+										method:$bcfw.Interface.spt_CheckPayState.method,
+										data: {
+											or_number: that.orderInfo.or_number,
+											factPayPrice: that.orderInfo.cm_totalCost,
+										},
+										header: {'content-type': 'application/json'},
+										success: function(res) {
+											console.log(res)
+											if (res.data.status ==true) {
 												uni.redirectTo({
-													url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+													url: 'BCsuccessfulPayment'
 												})
-											}else{
+											} else {
 												uni.showToast({
-													title:'出票失败，联系客服出示订单编号',
-													icon:'none',
-													duration:3000
+													title: '下单失败，联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
 												})
 											}
 										},
-										fail:function(){
+										fail: function() {
 											uni.showToast({
-												title:'出票失败，请联系客服出示订单编号',
-												icon:'none',
-												duration:3000
+												title: '下单失败，请联系客服出示订单编号',
+												icon: 'none',
+												duration: 3000
 											})
 										}
 									})
-									
-								} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-									// alert("您取消了支付，请重新支付");
-									uni.showToast({
-										title: '您取消了支付，请重新支付',
-										icon: 'none'
-									})
-								} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-									// alert("支付失败，请重新支付"); 
-									uni.showToast({
-										title: '支付失败，请重新支付',
-										icon: 'none',
-										success:function(){
-											uni.switchTab({
-												url: '../../../pages/order/OrderList'
-											})
-										}
-									})
-									
-								} else {
-									// location.href = "/Coach/GetCoach";
+								},
+					
+								fail: function(e) {
+									console.log(e)
+									if (e.errMsg == 'requestPayment:fail canceled') {
+										uni.showToast({
+											title: '您放弃了支付',
+											icon: 'none',
+											duration: 3000
+										})
+									} else if (e.errMsg == 'requestPayment:fail errors') {
+										uni.showToast({
+											title: '支付失败，请重试',
+											icon: 'none',
+											duration: 3000
+										})
+									} else {
+										uni.showToast({
+											title: '网络异常，请检查网络后重试',
+											icon: 'none',
+											duration: 3000
+										})
+									}
+					
 								}
-							});
+							})
 						},
-						fail:function(){
+						fail: () => {
+							uni.hideLoading()
 							uni.showToast({
-								title:'请求支付参数失败，请查看网络状态'
+								// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
+								title: '请求支付参数失败，请检查网络后重试',
+								icon: 'none',
+								duration: 3000
 							})
 						}
 					})
@@ -432,75 +445,80 @@
 
 				// #ifdef APP-PLUS
 				if (this.channeIndex == 0) {
-					var payTypeIndex = 3;
+					that=this;
 					uni.hideLoading()
 					uni.request({
-						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
+						url:$bcfw.Interface.spt_Pay.value,
+						method:$bcfw.Interface.spt_Pay.method,
 						data: {
-							payType: payTypeIndex,
-							price: this.orderInfo.orderActualPayment,
-							orderNum: this.orderInfo.orderNumber,
+							payType: 3,
+							price: that.orderInfo.cm_totalCost,
+							orderNumber: that.orderInfo.or_number,
+							goodsName: that.orderInfo.or_class,
+							billDescript: that.orderInfo.billDescript
 						},
-						method: 'POST',
 						success:function(e){
 							console.log(e)
-							let wxData = {
-								appid: e.data.data.appId,
-								partnerid: e.data.data.partnerId, 
-								prepayid: e.data.data.prepayId,
-								package: 'Sign=WXPay',
-								noncestr: e.data.data.nonceStr,
-								timestamp: e.data.data.timeStamp,
-								sign: e.data.data.paySign,
-							}
 							uni.hideLoading()
 							uni.requestPayment({
 								provider: 'wxpay',
-								orderInfo: wxData,
-								success:function(res){
+								orderInfo: e.data.data,
+								success: function(res) {
 									console.log(res)
 									uni.request({
-										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber='+that.orderInfo.orderNumber,
-										method:'POST',
-										success:function(res){
-											if(res.data.msg == '出票成功'){
+										url:$bcfw.Interface.spt_CheckPayState.value,
+										method:$bcfw.Interface.spt_CheckPayState.method,
+										data: {
+											or_number: that.orderInfo.or_number,
+											factPayPrice: that.orderInfo.cm_totalCost,
+										},
+										header: {'content-type': 'application/json'},
+										success: function(res) {
+											console.log(res)
+											if (res.data.status ==true) {
 												uni.redirectTo({
-													url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+													url: 'BCsuccessfulPayment'
 												})
-											}else{
+											} else {
 												uni.showToast({
-													title:'出票失败，联系客服出示订单编号',
-													icon:'none',
-													duration:3000
+													title: '下单失败，联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
 												})
 											}
 										},
-										fail:function(){
+										fail: function() {
 											uni.showToast({
-												title:'出票失败，请联系客服出示订单编号',
-												icon:'none',
-												duration:3000
+												title: '下单失败，请联系客服出示订单编号',
+												icon: 'none',
+												duration: 3000
 											})
 										}
 									})
 								},
-						
+					
 								fail: function(e) {
 									console.log(e)
-									if(e.errMsg=='requestPayment:fail canceled'){
+									if (e.errMsg == 'requestPayment:fail canceled') {
 										uni.showToast({
 											title: '您放弃了支付',
 											icon: 'none',
 											duration: 3000
 										})
-									}else{
+									} else if (e.errMsg == 'requestPayment:fail errors') {
 										uni.showToast({
-											title: '拉起支付失败，请检查网络后重试',
+											title: '支付失败，请重试',
+											icon: 'none',
+											duration: 3000
+										})
+									} else {
+										uni.showToast({
+											title: '网络异常，请检查网络后重试',
 											icon: 'none',
 											duration: 3000
 										})
 									}
-									
+					
 								}
 							})
 						},
@@ -520,8 +538,8 @@
 						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
 						data: {
 							payType: payTypeIndex,
-							price: this.orderInfo.orderActualPayment,
-							orderNum: this.orderInfo.orderNumber,
+							price: this.orderInfo.cm_totalCost,
+							orderNum: this.orderInfo.or_number,
 						},
 						method: 'POST',
 						success:function(e){
@@ -533,7 +551,7 @@
 								success:function(res){
 									console.log(res)
 									uni.request({
-										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber='+that.orderInfo.orderNumber,
+										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber='+that.orderInfo.or_number,
 										method:'POST',
 										success:function(res){
 											if(res.data.msg == '出票成功'){

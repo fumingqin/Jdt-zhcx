@@ -7,7 +7,7 @@
 
 		<view class="cover-container">
 			<image class="okImage" mode="aspectFill" src="../../static/BCFW/choice/ok.png"></image>
-			<text class="title">购票成功</text>
+			<text class="title">下单成功</text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
 				<view class="orderButton" @click="godetail(0)">查看订单</view>
@@ -120,7 +120,7 @@
 				width: 280upx;
 				height: 104upx;
 				font-size: 34upx;
-				background: #3EABFC;
+				background: #FC4646;
 				border-radius: 16upx;
 				color: #fff;
 			}
@@ -131,8 +131,8 @@
 				height: 104upx;
 				font-size: 34upx;
 				border-radius: 16upx;
-				color: #3EABFC;
-				border: 1px solid #3EABFC;
+				color: #FC4646;
+				border: 1px solid #FC4646;
 			}
 		}
 

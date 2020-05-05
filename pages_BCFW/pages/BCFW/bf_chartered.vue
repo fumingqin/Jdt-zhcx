@@ -179,6 +179,7 @@
 					de_Latitude:'',//目的地纬度
 					dl_Longitude:'',//专线经度
 					dl_Latitude:'',//专线经度
+					isNormal:'',
 
 				},
 			}
@@ -375,6 +376,7 @@
 							icon: 'none'
 						})
 					}else{
+						this.homePageInfo.isNormal = this.isNormal;
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
 						this.homePageInfo.destination = this.destination;
@@ -415,6 +417,7 @@
 							icon: 'none'
 						})
 					}else{
+						this.homePageInfo.isNormal = this.isNormal;
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
 						this.homePageInfo.destination = this.destination;
