@@ -1984,6 +1984,7 @@
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
+						payType:3,
 						orderNumber: orderNumber
 					},
 					success(res) {
@@ -2011,6 +2012,7 @@
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
+						payType:3,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
 						price: 0.01
@@ -2074,10 +2076,15 @@
 					content: "您是否取消订单",
 					success(res) {
 						if (res.confirm) {
+							uni.showLoading({
+								mask:true,
+							})
 							if(value.SpecialorderState==0||value.SpecialorderState==1||value.SpecialorderState==2){
 								that.BouncePay(value.orderNumber);
+								uni.hideLoading()
 							}else{
 								that.CancelSpecialLineOrder1(value.orderNumber);
+								uni.hideLoading()
 							}
 						}
 					},
