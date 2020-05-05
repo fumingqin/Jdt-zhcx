@@ -23,14 +23,26 @@
 			</popup-layer>
 		
 			<!-- 搜索内容 -->
-			<view :hidden="searchIndex==0" v-for="(item,index) in searchData" :key="index">
-				<view class="Tk_scrollview" @click="godetail(item.ticketId)">
-					<view class="Tk_item">
-						<image class="Tk_image" :src="item.ticketImage" />
-						<view class="Tk_bacg">
-							<text class="Tk_text1">{{item.ticketTitle}}</text>
-							<text class="Tk_text2">{{item.ticketComment_s1}}&nbsp;|&nbsp;{{item.ticketComment_s2}}&nbsp;|&nbsp;{{item.ticketComment_s3}}</text>
-							<text class="Tk_text3">¥{{item.ticketAdultPrice}}元起</text>
+			<view :hidden="searchIndex==0">
+				<view class="content2">
+					<view class="groupTour2" v-for="(item,index) in searchData" :key="index">
+						<view style="
+						display: flex;
+						padding-bottom: 40upx;
+						padding-top: 20upx;
+						border-bottom: 1px #F5F5F5 dotted;" 
+						v-for="(itemContent,indexContent) in item.content" :key='indexContent' @click="details(item.contentId)">
+							<view class="groupContent2">
+								<image class="contentImage2" :src="itemContent.contentImage[0]" mode="aspectFill"></image>
+							</view>
+							<view class="groupText2">
+								<text class="contentText2">{{itemContent.contentTitle}}</text>
+								<text class="contentLabel2">{{itemContent.contentLabel}}</text>
+								<view class="groupCost2">
+									<view class="cost2">￥<text class="contentCost2">{{itemContent.cost}}</text>元</view>
+									<text class="sellComment2">已售{{itemContent.sell}}</text>
+								</view>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -138,20 +150,20 @@
 		onLoad() {
 			// this.routeInit();
 			this.Getpostion();
-			this.routeData();
 		},
-
+		
+		onPullDownRefresh:function(){
+			this.routeData(); //请求接口数据
+		},
+		
 		methods: {
-			//读取静态数据json.js
-			// async routeInit() {
-			// 	let groupTour = await this.$api.lyfwcwd('groupTour');
-			// 	this.groupTitle = groupTour.data;
-			// },
-			
 			routeData : function(){
 				uni.request({
 					url:$lyfw.Interface.gt_groupTourList.value,
 					method:$lyfw.Interface.gt_groupTourList.method,
+					data:{
+						regionWeixin : this.regionWeixin,
+					},
 					success: (e) => {
 						console.log(e)
 						this.groupTitle=e.data.data;
@@ -168,6 +180,7 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+							this.routeData()
 						}
 					}),
 					
@@ -194,7 +207,7 @@
 					this.regionWeixin = e.cityName
 					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
-					this.lyfwData();
+					this.routeData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if(e == 'yes'){
@@ -203,6 +216,7 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+							this.routeData()
 						}
 					}),
 					uni.getStorage({
@@ -220,6 +234,7 @@
 
 			//搜索框-搜索
 			searchNow: function() {
+				var that=this;
 				if (this.searchValue == '') {
 					uni.showToast({
 						title: '未输入搜索关键字',
@@ -234,25 +249,33 @@
 					title: '正在搜索',
 				})
 				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/searchScenicspotList?searchValue=' + this.searchValue,
-					method: 'POST',
-					success: (res) => {
-						if (res.data.msg == '搜索景区信息成功！') {
-							this.searchData = res.data.data;
-							this.searchValue = ''
-							this.searchIndex = 1;
+					url: $lyfw.Interface.gt_groupTourList2.value,
+					method: $lyfw.Interface.gt_groupTourList2.method,
+					data:{
+						GroupTitle:this.searchValue,
+					},
+					header: {'content-type': 'application/json'},
+					
+					success:function (res) {
+						console.log(res)
+						if (res.data.data) {
+							that.searchData = res.data.data;
+							console.log(268,that.searchData)
+							that.searchValue = ''
+							that.searchIndex = 1;
+							console.log(that.searchData)
 							uni.hideLoading()
-						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
+						} else if (res.data.status==false) {
 							uni.hideLoading()
 							uni.showToast({
-								title: '查不到相关景区！如:武夷/武夷山',
+								title: '查不到相关景区！如:北京/天津',
 								icon: 'none',
 								duration: 1500
 							});
-							this.searchValue = ''
+							that.searchValue = ''
 
 						}
-					}
+					},
 				})
 			},
 			
@@ -558,6 +581,72 @@
 			.cate-Text{
 				color: #333333;
 				font-size: 34upx;
+			}
+		}
+	}
+	
+	//内容1
+	.content2 {
+		padding: 0upx 32upx;
+		margin-bottom: 20upx;
+	
+		.groupTour2 {
+			border-bottom: 1px #F5F5F5 dotted;
+	
+			.groupContent2 {
+	
+				.contentImage2 {
+					width: 228upx;
+					height: 190upx;
+					border-radius: 8px;
+				}
+			}
+	
+			.groupText2 {
+				margin-left: 25upx;
+	
+				.contentText2 {
+					font-size: 32upx;
+					font-weight: 40;
+					font-family: Source Han Sans SC;
+					overflow: hidden; //超出溢出
+					-webkit-line-clamp: 2; //限制2行
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					text-align: justify;
+				}
+	
+				.contentLabel2 {
+					display: block;
+					font-size: 28upx;
+					color: #aba9aa;
+					margin-top: 21upx;
+				}
+	
+				.groupCost2 {
+					margin-top: 12upx;
+					display: flex;
+					position: relative;
+	
+					.cost2 {
+						font-size: 28upx;
+						color: #FF6600;
+	
+						.contentCost2 {
+							font-size: 36upx;
+							color: #FF6600;
+						}
+					}
+	
+					.sellComment2 {
+						position: absolute;
+						font-size: 28upx;
+						line-height: 53upx;
+						color: #aba9aa;
+						right: 0;
+					}
+				}
 			}
 		}
 	}

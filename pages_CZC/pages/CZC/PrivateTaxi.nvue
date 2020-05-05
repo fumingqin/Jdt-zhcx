@@ -34,7 +34,7 @@
 				</view>
 				<view style="padding-top: 20rpx;flex-direction: row;justify-content: space-between;border-top-width: 1px;border-color:#EAEAEA;">
 					<view style="align-items: center;justify-content: center;flex-direction: row;">
-						<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
+						<image src="../../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
 						<view>
 							<text style="font-size: 28rpx;">{{VehicleType}}</text>
 						</view>

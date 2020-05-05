@@ -57,7 +57,7 @@
 		</view>
 		<view v-if='state == 4' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;">
 			<view style="padding-left: 10rpx;" elevation='0px'>
-				<image @click="callPolice" src="../../static/Home/CallPollice.png" style="width: 120rpx;height: 120rpx;"></image>
+				<image @click="callPolice" src="../../../static/Home/CallPollice.png" style="width: 120rpx;height: 120rpx;"></image>
 			</view>
 			<view style="align-items: center;height: 300rpx;">
 				<!-- <view elevation='5px' class="orderBottomContent">

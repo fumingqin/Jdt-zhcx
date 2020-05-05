@@ -31,43 +31,7 @@
 		{
 			"path": "pages/GRZX/user",
 			"style": {
-				"navigationStyle": "custom",
-				"app-plus": {
-					"bounce": "none",
-					"titleNView": {
-						"type": "transparent",
-						"buttons": [
-							// #ifndef	H5
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
-							},
-							// #endif
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue60f",
-								"fontSize": "24",
-								"color": "#303133",
-								"width": "46px",
-								"background": "rgba(0,0,0,0)",
-								"float": "left"
-							},
-							{
-								"fontSrc": "/static/GRZX/jdticon.ttf",
-								"text": "\ue744",
-								"fontSize": "28",
-								"color": "#303133",
-								"background": "rgba(0,0,0,0)",
-								"redDot": true
-							}
-
-						]
-					}
-				}
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -134,7 +98,7 @@
 				"navigationStyle": "custom"
 			}
 		},
-		
+
 		//----------------------------公共页面----------------------
 		{
 			"path": "pages/Home/InformationDetails",
@@ -401,7 +365,7 @@
 						},
 						"navigationBarTitleText": "选择车型"
 					}
-				},{
+				}, {
 					"path": "pages/BCFW/bf_charterMap",
 					"style": {
 						"navigationStyle": "custom"
@@ -466,7 +430,9 @@
 				{
 					"path": "pages/LYFW/groupTour/groupTourList",
 					"style": {
-						"navigationBarTitleText": "跟团游列表"
+						"navigationBarTitleText": "跟团游列表",
+						"enablePullDownRefresh": true, //设置为true表示当前页面开启下拉刷新
+						"backgroundTextStyle": "dark" //下拉 loading 的样式，仅支持 dark/light
 					}
 				}, {
 					"path": "pages/LYFW/groupTour/viewMore",
@@ -475,7 +441,9 @@
 				//----------------------------------自由行页面----------------------------------
 				{
 					"path": "pages/LYFW/independentTravel/it_list",
-					"style": {}
+					"style": {
+						"enablePullDownRefresh": true
+					}
 				},
 				//----------------------------------景区门票页面----------------------------------
 				{
@@ -696,7 +664,7 @@
 				"text": "我的"
 			}
 		]
-	}, 
+	},
 
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
