@@ -114,7 +114,7 @@
 				</view>
 			</uni-popup>
 			<view class="ci_affirmView">
-				<text class="av_money">￥{{carprice}}</text>
+				<!-- <text class="av_money">￥{{carprice}}</text> -->
 				<view class="av_atOnceView" enabl :class="{submitColor: selectedValue===1 && nickName!==''}" @click="submitState">
 					<text class="aov_atOnce">立即包车</text>
 				</view>
