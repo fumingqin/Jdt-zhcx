@@ -170,8 +170,6 @@
 												icon:'success',
 											})
 											uni.setStorageSync('userInfo',res3.data.data)
-											// that.logining=true;
-											// that.login(res3.data.data)
 											setTimeout(function(){
 												uni.switchTab({
 													url:'/pages/Home/Index'
