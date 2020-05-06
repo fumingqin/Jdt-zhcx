@@ -191,7 +191,9 @@
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-								this.routeData()
+							},
+							complete:function(){
+								this.routeData();
 							}
 						}),
 
