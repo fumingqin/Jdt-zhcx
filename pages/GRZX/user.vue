@@ -155,6 +155,16 @@
 							})
 						}else{
 							//未绑定手机号
+							uni.showToast({
+								title:"请绑定手机号",
+								icon:'none'
+							})
+							setTimeout(function(){
+								uni.navigateTo({
+									// url:'/pages/GRZX/wxLogin',
+									url:that.$GrzxInter.Route.wxLogin.url,
+								})
+							},1000);
 						}
 					},
 					fail(){
@@ -242,15 +252,15 @@
 				if(user1==""||user1==null){
 					console.log(user1,"2222")
 					uni.showToast({
-						title:"请绑定手机号",
+						title:"登录失败，请重新进入公众号",
 						icon:'none'
 					})
-					setTimeout(function(){
-						uni.navigateTo({
-							// url:'/pages/GRZX/wxLogin',
-							url:that.$GrzxInter.Route.wxLogin.url,
-						})
-					},1000);
+					// setTimeout(function(){
+					// 	uni.navigateTo({
+					// 		// url:'/pages/GRZX/wxLogin',
+					// 		url:that.$GrzxInter.Route.wxLogin.url,
+					// 	})
+					// },1000);
 				}else{
 					console.log(user1,"3333")
 					uni.navigateTo({
