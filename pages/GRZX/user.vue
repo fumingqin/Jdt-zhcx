@@ -122,11 +122,12 @@
 					key:'userInfo',
 					success(user){
 						console.log(user,"user")
-						if(user.data.phoneNumbe!=""||user.data.phoneNumber!=null){
+						var phone=user.data.phoneNumber;
+						if(phone!=""&&phone!=null&&user.data!=""){
 							uni.request({
 								url:that.$GrzxInter.Interface.login.value,
 								data:{
-									phoneNumber:user.data.phoneNumber,
+									phoneNumber:phone,
 								},
 								method:that.$GrzxInter.Interface.login.method,
 								success(res) {

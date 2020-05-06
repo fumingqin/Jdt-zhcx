@@ -15,7 +15,7 @@
 			<text style="font-size: 28upx;">{{currentSize}}</text>
 			<text class="cell-more jdticon icon-you"></text>
 		</view>
-	
+		<!-- #ifdef APP-PLUS -->
 		<view class="list-cell b-b b-l" @click="navTo('aboutApp')">
 			<text class="cell-tit">关于APP</text>
 			<text class="cell-more jdticon icon-you"></text>
@@ -23,7 +23,11 @@
 		<view class="list-cell log-out-btn" @click="toLogout">
 			<text class="cell-tit">退出登录</text>
 		</view>
-			<!-- #ifdef APP-PLUS -->
+		<!-- #endif -->
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="list-cell log-out-btn" @click="toLogout">
+			<text class="cell-tit">退出登录</text>
+		</view>
 		<!-- #endif -->
 	</view>
 </template>
