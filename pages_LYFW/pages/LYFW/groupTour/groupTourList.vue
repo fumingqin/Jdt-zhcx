@@ -4,10 +4,10 @@
 			<!-- 搜索栏 -->
 			<view class="searchTopBox">
 				<!-- #ifdef MP -->
-				<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
+				<text class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
 				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
-				<text  class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
+				<text class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
 				<!-- #endif -->
 				<view class="searchBoxRadius">
 					<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
@@ -21,7 +21,7 @@
 					<citySelect @back_city="backCity"></citySelect>
 				</view>
 			</popup-layer>
-		
+
 			<!-- 搜索内容 -->
 			<view :hidden="searchIndex==0">
 				<view class="content2">
@@ -30,8 +30,8 @@
 						display: flex;
 						padding-bottom: 40upx;
 						padding-top: 20upx;
-						border-bottom: 1px #F5F5F5 dotted;" 
-						v-for="(itemContent,indexContent) in item.content" :key='indexContent' @click="details(item.contentId)">
+						border-bottom: 1px #F5F5F5 dotted;"
+						 v-for="(itemContent,indexContent) in item.content" :key='indexContent' @click="details(item.contentId)">
 							<view class="groupContent2">
 								<image class="contentImage2" :src="itemContent.contentImage[0]" mode="aspectFill"></image>
 							</view>
@@ -79,7 +79,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<!-- 筛选内容 -->
 		<view :hidden="current == 0 ">
 			<view class="content">
@@ -110,7 +110,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 	</view>
 </template>
 
@@ -129,18 +129,18 @@
 		},
 		data() {
 			return {
-				contentId:'',
+				contentId: '',
 				searchValue: '', //搜索框值
 				regionWeixin: '请选择', //微信地区数值
-				regionApp : '请选择',//APP地区数值
-				
+				regionApp: '请选择', //APP地区数值
+
 				searchIndex: 0, //搜索框是否启用状态值
 				searchData: '', //搜索后的值
 				current: 0, //标题下标
-				currentIndex : 0,//弹框默认值
-				
-				screenContent : [],
-				
+				currentIndex: 0, //弹框默认值
+
+				screenContent: [],
+
 				tabs: ['推荐', '全部'], //选项标题
 				groupTitle: [], //内容标题
 				cateMaskState: 0, //分类面板展开状态
@@ -150,51 +150,64 @@
 		onLoad() {
 			// this.routeInit();
 			this.Getpostion();
+			// #ifdef H5
+			this.routeData();
+			// #endif
 		},
-		
-		onPullDownRefresh:function(){
+
+		onPullDownRefresh: function() {
 			this.routeData(); //请求接口数据
+			setTimeout(function() {
+				uni.stopPullDownRefresh(); //停止下拉刷新动画
+			}, 1000);
 		},
-		
+
 		methods: {
-			routeData : function(){
+			routeData: function() {
 				uni.request({
-					url:$lyfw.Interface.gt_groupTourList.value,
-					method:$lyfw.Interface.gt_groupTourList.method,
-					data:{
-						regionWeixin : this.regionWeixin,
+					url: $lyfw.Interface.gt_groupTourList.value,
+					method: $lyfw.Interface.gt_groupTourList.method,
+					data: {
+						// #ifdef H5
+						regionWeixin: '泉州市',
+						// #endif
+						// #ifndef H5
+						regionWeixin: this.regionWeixin,
+						// #endif
 					},
 					success: (e) => {
 						console.log(e)
-						this.groupTitle=e.data.data;
+						this.groupTitle = e.data.data;
 					}
 				})
 			},
-			
-			
+
+
 			//获取定位数据
-			Getpostion:function(){
-				setTimeout(()=>{
+			Getpostion: function() {
+				setTimeout(() => {
 					uni.getStorage({
-						key:'wx_position',
-						success:(res)=>{
-							// console.log(res)
-							this.regionWeixin = res.data;
-							this.routeData()
-						}
-					}),
-					
-					uni.getStorage({
-						key:'app_position',
-						success: (res) => {
-							// console.log(res)
-							this.regionApp = res.data;
-						}
-					})
-				},500)
-				
+							key: 'wx_position',
+							success: (res) => {
+								// console.log(res)
+								this.regionWeixin = res.data;
+							},
+							complete:function(){
+								this.routeData();
+							}
+						}),
+
+						uni.getStorage({
+							key: 'app_position',
+							success: (res) => {
+								// console.log(res)
+								this.regionApp = res.data;
+							}
+						})
+				}, 500)
+
 			},
-			
+
 			//打开地区选择器
 			oncity() {
 				this.$refs.popupRef.show();
@@ -210,31 +223,31 @@
 					this.routeData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
-				} else if(e == 'yes'){
+				} else if (e == 'yes') {
 					uni.getStorage({
-						key:'wx_position',
-						success:(res)=>{
-							// console.log(res)
-							this.regionWeixin = res.data;
-							this.routeData()
-						}
-					}),
-					uni.getStorage({
-						key:'app_position',
-						success: (res) => {
-							// console.log(res)
-							this.regionApp = res.data;
-						}
-					})
+							key: 'wx_position',
+							success: (res) => {
+								// console.log(res)
+								this.regionWeixin = res.data;
+								this.routeData()
+							}
+						}),
+						uni.getStorage({
+							key: 'app_position',
+							success: (res) => {
+								// console.log(res)
+								this.regionApp = res.data;
+							}
+						})
 					this.$refs.popupRef.close();
-				}else{
+				} else {
 					this.$refs.popupRef.close();
 				}
 			},
 
 			//搜索框-搜索
 			searchNow: function() {
-				var that=this;
+				var that = this;
 				if (this.searchValue == '') {
 					uni.showToast({
 						title: '未输入搜索关键字',
@@ -251,22 +264,29 @@
 				uni.request({
 					url: $lyfw.Interface.gt_groupTourList2.value,
 					method: $lyfw.Interface.gt_groupTourList2.method,
-					data:{
+					data: {
+						// #ifdef H5
+						regionWeixin: '泉州市',
+						// #endif
+						// #ifndef H5
 						regionWeixin: this.regionWeixin,
-						GroupTitle:this.searchValue,
+						// #endif
+						GroupTitle: this.searchValue,
 					},
-					header: {'content-type': 'application/json'},
-					
-					success:function (res) {
+					header: {
+						'content-type': 'application/json'
+					},
+
+					success: function(res) {
 						console.log(res)
 						if (res.data.data) {
 							that.searchData = res.data.data;
-							console.log(268,that.searchData)
+							console.log(268, that.searchData)
 							that.searchValue = ''
 							that.searchIndex = 1;
 							console.log(that.searchData)
 							uni.hideLoading()
-						} else if (res.data.status==false) {
+						} else if (res.data.status == false) {
 							uni.hideLoading()
 							uni.showToast({
 								title: '查不到相关景区！如:北京/天津',
@@ -279,32 +299,32 @@
 					},
 				})
 			},
-			
-			
-			details:function(e){
+
+
+			details: function(e) {
 				console.log(e)
 				uni.navigateTo({
-					url: '../currency/travelDetails?contentId='+e
+					url: '../currency/travelDetails?contentId=' + e
 				})
 			},
-			
-			
+
+
 			//tabbar筛选点击
 			change(e) {
 				console.log(e)
-				if(e==0){
+				if (e == 0) {
 					this.current = e;
 					this.currentIndex = 0;
-				}else if(e==1){
+				} else if (e == 1) {
 					this.current = e;
 					this.currentIndex = 1;
 				}
-				
+
 			},
-			close(){
+			close() {
 				this.currentIndex = 0;
 			},
-			
+
 			selete(e) {
 				// console.log(e)
 				uni.setStorage({
@@ -315,12 +335,12 @@
 					url: '/pages/LYFW/groupTour/viewMore'
 				})
 			},
-			
-			changeCate: function(e){
+
+			changeCate: function(e) {
 				this.currentIndex = 1;
-				this.screenContent = e;	
+				this.screenContent = e;
 			}
-		
+
 		}
 	}
 </script>
@@ -359,7 +379,12 @@
 			}
 
 			.searchBoxRadius {
+				/* #ifdef H5 */
+				width: 100%;
+				/* #endif */
+				/* #ifndef H5 */
 				width: 76%;
+				/* #endif */
 				height: 78upx;
 				background-color: #fff;
 				border-radius: 46upx;
@@ -573,39 +598,40 @@
 			}
 		}
 	}
-	
-	.cate{
-		.cate-list{
+
+	.cate {
+		.cate-list {
 			display: block;
 			padding: 40upx 40upx;
 			border-bottom: 1px #F5F5F5 dotted;
-			.cate-Text{
+
+			.cate-Text {
 				color: #333333;
 				font-size: 34upx;
 			}
 		}
 	}
-	
+
 	//内容1
 	.content2 {
 		padding: 0upx 32upx;
 		margin-bottom: 20upx;
-	
+
 		.groupTour2 {
 			border-bottom: 1px #F5F5F5 dotted;
-	
+
 			.groupContent2 {
-	
+
 				.contentImage2 {
 					width: 228upx;
 					height: 190upx;
 					border-radius: 8px;
 				}
 			}
-	
+
 			.groupText2 {
 				margin-left: 25upx;
-	
+
 				.contentText2 {
 					font-size: 32upx;
 					font-weight: 40;
@@ -617,29 +643,29 @@
 					-webkit-box-orient: vertical;
 					text-align: justify;
 				}
-	
+
 				.contentLabel2 {
 					display: block;
 					font-size: 28upx;
 					color: #aba9aa;
 					margin-top: 21upx;
 				}
-	
+
 				.groupCost2 {
 					margin-top: 12upx;
 					display: flex;
 					position: relative;
-	
+
 					.cost2 {
 						font-size: 28upx;
 						color: #FF6600;
-	
+
 						.contentCost2 {
 							font-size: 36upx;
 							color: #FF6600;
 						}
 					}
-	
+
 					.sellComment2 {
 						position: absolute;
 						font-size: 28upx;

@@ -359,34 +359,37 @@
 							console.log(res,"res")
 							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
 							uni.setStorageSync('wxuserInfo',res.data)
-							let user=res.data;
-							uni.request({
-								//url:'http://zntc.145u.net/api/person/changeInfo',
-								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
-								data:{
-									openId_wx:user.openid,
-								},
-								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
-								success(res1) {
-									console.log(res1,'res1')
-									//判断是否有绑定手机号
-									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
-										uni.showToast({
-											title:'您未绑定手机号，请绑定手机号！',
-											icon:'none',
-										})
-										setTimeout(function(){
-											uni.navigateTo({
-												url:'/pages/GRZX/wxLogin'
+							let openid=res.data.openid;
+							console.log(openid,"openid")
+							if(openid!=""&&openid!=null&&openid!=undefined){
+								uni.request({
+									//url:'http://zntc.145u.net/api/person/changeInfo',
+									url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
+									data:{
+										openId_wx:openid,
+									},
+									method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
+									success(res1) {
+										console.log(res1,'res1')
+										//判断是否有绑定手机号
+										if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+											uni.showToast({
+												title:'您未绑定手机号，请绑定手机号！',
+												icon:'none',
 											})
-										},1000);
-									}else{
-										uni.setStorageSync('userInfo',res1.data.data)
-										// that.logining=true;
-										// that.login(res1.data.data)
-									}	
-								}
-							})
+											setTimeout(function(){
+												uni.navigateTo({
+													url:'/pages/GRZX/wxLogin'
+												})
+											},1000);
+										}
+										console.log(openid,'openid1')
+										if(openid==res1.data.data.openId_wx&&openid!=""){
+											uni.setStorageSync('userInfo',res1.data.data)
+										}	
+									}
+								})
+							}
 						},
 						fail(err){
 							console.log(err)

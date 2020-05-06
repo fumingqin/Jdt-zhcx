@@ -3,17 +3,17 @@
 		<!-- 搜索栏 -->
 		<view class="searchTopBox">
 			<!-- #ifdef MP -->
-			<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
+			<text class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
 			<!-- #endif -->
 			<!-- #ifdef APP-PLUS -->
-			<text  class="locationTxt" @click="oncity">{{regionApp}}<text class="icon jdticon icon-xia"></text></text>
+			<text class="locationTxt" @click="oncity">{{regionApp}}<text class="icon jdticon icon-xia"></text></text>
 			<!-- #endif -->
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
 				<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
 			</view>
 		</view>
-		 
+
 		<popup-layer ref="popupRef" :direction="'right'">
 			<view style="width:750upx;height: 100%;">
 				<citySelect @back_city="backCity"></citySelect>
@@ -27,11 +27,11 @@
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<view style="display: flex;" >
-							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}</text>
+						<view style="display: flex;">
+							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2">{{item2}}</text>
 						</view>
-						<text class="Tk_text3" >{{priceConversion(item.ticketAdultPrice)}}</text>
-						
+						<text class="Tk_text3">{{priceConversion(item.ticketAdultPrice)}}</text>
+
 					</view>
 				</view>
 			</view>
@@ -68,9 +68,9 @@
 					<text :class="{active: priceOrder === 2 && screenIndex === 2}" class="jdticon icon-shang xia"></text>
 				</view>
 			</view>
-			<text :class="{active:screenIndex === 3}" class="cate-item jdticon icon-fenlei1"   @click="toggleCateMask('show')"></text>
+			<text :class="{active:screenIndex === 3}" class="cate-item jdticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
-	
+
 		<!-- 景区列表 -->
 		<view :hidden="screenIndex == 3">
 			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" v-if="index < scenicListIndex " @click="godetail(item.ticketId)">
@@ -78,10 +78,10 @@
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<view style="display: flex;" >
-							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}</text>
+						<view style="display: flex;">
+							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2">{{item2}}</text>
 						</view>
-						<text class="Tk_text3" >{{priceConversion(item.ticketAdultPrice)}}</text>
+						<text class="Tk_text3">{{priceConversion(item.ticketAdultPrice)}}</text>
 					</view>
 				</view>
 			</view>
@@ -89,7 +89,7 @@
 				<text>{{loadingType=== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
 			</view>
 		</view>
-		
+
 		<!-- 筛选的景区列表 -->
 		<view :hidden="screenIndex !== 3 ">
 			<view class="Tk_scrollview" v-for="(item,index) in scenicListCate" :key="index" @click="godetail(item.ticketId)">
@@ -97,15 +97,15 @@
 					<image class="Tk_image" :src="item.ticketImage" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
-						<view style="display: flex;" >
-							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}</text>
+						<view style="display: flex;">
+							<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2">{{item2}}</text>
 						</view>
-						<text class="Tk_text3" >{{priceConversion(item.ticketAdultPrice)}}</text>
+						<text class="Tk_text3">{{priceConversion(item.ticketAdultPrice)}}</text>
 					</view>
 				</view>
 			</view>
 		</view>
-		
+
 		<!-- 分类面板 -->
 		<view class="cate-mask" :class="cateMaskState===0 ? 'none' : cateMaskState===1 ? 'show' : ''" @click="toggleCateMask">
 			<view class="cate-content">
@@ -137,146 +137,154 @@
 				searchIndex: 0, //搜索框是否启用状态值
 				searchValue: '', //搜索框值
 				searchData: '', //搜索后的值
-				
+
 				sixPalaceList: [], //六宫格列表
 				screenIndex: 0, //筛选框默认值
 				priceOrder: 0, //1 价格从低到高  2价格从高到低
 				cateMaskState: 0, //分类面板展开状态
-				
+
 				scenicList: [], //景区列表
-				scenicListCate : [],//筛选后的景区列表
-				scenicListIndex : 10, //列表默认数量
-				
+				scenicListCate: [], //筛选后的景区列表
+				scenicListIndex: 10, //列表默认数量
+
 				loadingType: 0, //加载更多状态
-				loadingText:{
-					down :'上拉加载更多',
-					refresh : '正在加载...',
-					nomore : '没有更多了',
+				loadingText: {
+					down: '上拉加载更多',
+					refresh: '正在加载...',
+					nomore: '没有更多了',
 				},
-				
+
 				cateId: 0, //已选三级分类id
 				cateList: [], //分类数组
-				cateValue : '', //分类筛选值
-				
+				cateValue: '', //分类筛选值
+
 				regionWeixin: '请选择', //微信地区数值
-				regionApp : '请选择',//APP地区数值
+				regionApp: '请选择', //APP地区数值
 			}
 		},
-		
+
 		components: {
 			citySelect,
 			popupLayer
 		},
-		
+
 		mounted() {
 			this.$refs.popupRef.close();
 		},
-		
-		onLoad:function(options) {
+
+		onLoad: function(options) {
 			this.cateId = options.tid;
 			this.loadCateList(options.fid, options.sid);
 			this.Getpostion();
 		},
-		
-		onPullDownRefresh:function(){
+
+		onPullDownRefresh: function() {
 			this.lyfwData(); //请求接口数据
 		},
-		
+
 		onReachBottom() {
 			this.getMore();
 		},
-		
+
 		methods: {
 			//请求模拟接口数据
-			lyfwData:function() {
+			lyfwData: function() {
 				// console.log(this.regionWeixin)
 				// 六宫格
 				console.log($lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value)
 				uni.request({
-					url:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
-					method:$lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
-					data:{ 
-						// requestArea : this.regionWeixin,
-						requestArea : '南平市'
+					url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
+					method: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
+					data: {
+						// #ifdef H5
+						requestArea: '泉州市',
+						// #endif
+						// #ifndef H5
+						requestArea: this.regionWeixin,
+						// #endif
 					},
 					// header: {'content-type': 'application/x-www-form-urlencoded'},
-					success:(res) => { 
+					success: (res) => {
 						console.log(res)
-						
-						if(res.data.msg == '搜索景区信息成功！'){
-							this.sixPalaceList = res.data.data; 
-						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
+
+						if (res.data.msg == '搜索景区信息成功！') {
+							this.sixPalaceList = res.data.data;
+						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
 							uni.showToast({
-								title:'该地区暂无景点信息', 
-								icon:'none'
+								title: '该地区暂无景点信息',
+								icon: 'none'
 							})
 						}
-						
+
 					},
-					fail:function(ee){
+					fail: function(ee) {
 						console.log(ee)
 					}
 				})
-				
+
 				// 请求景区列表
 				uni.request({
-					url:$lyfw.Interface.spt_GetticketSearchByrequestArea.value,
-					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
-					data:{
-						// requestArea : this.regionWeixin,
-						requestArea : '南平市'
+					url: $lyfw.Interface.spt_GetticketSearchByrequestArea.value,
+					method: $lyfw.Interface.spt_GetticketSearchByrequestArea.method,
+					data: {
+						// #ifdef H5
+						requestArea: '泉州市',
+						// #endif
+						// #ifndef H5
+						requestArea: this.regionWeixin,
+						// #endif
 					},
 					// header: {'content-type': 'application/x-www-form-urlencoded'},
-					success:(res) => {
+					success: (res) => {
 						// console.log(res)
-						if(res.data.msg == '搜索景区信息成功'){
+						if (res.data.msg == '搜索景区信息成功') {
 							this.scenicList = res.data.data;
-						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
+						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
 							uni.showToast({
-								title:'该地区暂无景点信息',
-								icon:'none'
+								title: '该地区暂无景点信息',
+								icon: 'none'
 							})
 						}
 					}
 				})
-				setTimeout(()=>{
+				setTimeout(() => {
 					uni.stopPullDownRefresh();
-				},1000)
-			},	
-			
-			//获取定位数据
-			Getpostion:function(){
-				setTimeout(()=>{
-					uni.getStorage({
-						key:'wx_position',
-						success:(res)=>{
-							// console.log(res)
-							this.regionWeixin = res.data;
-						},
-						complete: () => {
-							this.lyfwData(); //请求接口数据
-						}
-					}),
-					
-					uni.getStorage({
-						key:'app_position',
-						success: (res) => {
-							// console.log(res)
-							if(res.data !== undefined){
-								this.regionApp = res.data.city;
-							}
-						}
-					})
-					
-				},500)
-				
+				}, 1000)
 			},
-			
+
+			//获取定位数据
+			Getpostion: function() {
+				setTimeout(() => {
+					uni.getStorage({
+							key: 'wx_position',
+							success: (res) => {
+								// console.log(res)
+								this.regionWeixin = res.data;
+							},
+							complete: () => {
+								this.lyfwData(); //请求接口数据
+							}
+						}),
+
+						uni.getStorage({
+							key: 'app_position',
+							success: (res) => {
+								// console.log(res)
+								if (res.data !== undefined) {
+									this.regionApp = res.data.city;
+								}
+							}
+						})
+
+				}, 500)
+
+			},
+
 			//打开地区选择器
 			oncity() {
-				this.$refs.popupRef.show(); 
+				this.$refs.popupRef.show();
 			},
-			
+
 			//地区获取
 			backCity(e) {
 				if (e !== 'no' && e !== 'yes') {
@@ -287,31 +295,31 @@
 					this.lyfwData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
-				} else if(e == 'yes'){
+				} else if (e == 'yes') {
 					uni.getStorage({
-						key:'wx_position',
-						success:(res)=>{
-							// console.log(res)
-							this.regionWeixin = res.data;
-							this.lyfwData(); //请求接口数据
-						}
-					}),
-					uni.getStorage({
-						key:'app_position',
-						success: (res) => {
-							// console.log(res)
-							if(res.data !== undefined){
-								this.regionApp = res.data.city;
+							key: 'wx_position',
+							success: (res) => {
+								// console.log(res)
+								this.regionWeixin = res.data;
+								this.lyfwData(); //请求接口数据
 							}
-						}
-					})
+						}),
+						uni.getStorage({
+							key: 'app_position',
+							success: (res) => {
+								// console.log(res)
+								if (res.data !== undefined) {
+									this.regionApp = res.data.city;
+								}
+							}
+						})
 					this.$refs.popupRef.close();
-				}else{
+				} else {
 					this.$refs.popupRef.close();
 				}
 			},
-			
-			
+
+
 
 			//加载分类
 			async loadCateList(fid, sid) {
@@ -337,32 +345,34 @@
 				//搜索请求
 				uni.hideKeyboard()
 				uni.showLoading({
-					title:'正在搜索',
+					title: '正在搜索',
 				})
-				uni.request ({
-					url:$lyfw.Interface.spt_GetticketSearchBysearchValue.value,
-					method:$lyfw.Interface.spt_GetticketSearchBysearchValue.method,
-					data:{
-						searchValue : this.searchValue,
+				uni.request({
+					url: $lyfw.Interface.spt_GetticketSearchBysearchValue.value,
+					method: $lyfw.Interface.spt_GetticketSearchBysearchValue.method,
+					data: {
+						searchValue: this.searchValue,
 					},
-					header: {'content-type': 'application/json'},
-					
-					success : (res) => {
+					header: {
+						'content-type': 'application/json'
+					},
+
+					success: (res) => {
 						console.log(res)
-						if(res.data.msg =='搜索景区信息成功！'){
+						if (res.data.msg == '搜索景区信息成功！') {
 							this.searchData = res.data.data;
-							this.searchValue = '' 
+							this.searchValue = ''
 							this.searchIndex = 1;
 							uni.hideLoading()
-						}else if(res.data.msg =='查不到相关景区，请确认景区名！'){
-							uni.hideLoading() 
+						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
+							uni.hideLoading()
 							uni.showToast({
 								title: '查不到相关景区！如:武夷/武夷山',
 								icon: 'none',
 								duration: 2000
 							});
 							this.searchValue = ''
-							
+
 						}
 					}
 				})
@@ -372,7 +382,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					url: './ticketsDetails?ticketId='+JSON.stringify(e)
+					url: './ticketsDetails?ticketId=' + JSON.stringify(e)
 				})
 			},
 
@@ -403,7 +413,7 @@
 					this.cateMaskState = state;
 				}, timer)
 			},
-			
+
 			//分类点击
 			changeCate: function(item) {
 				// console.log(item)
@@ -416,15 +426,15 @@
 					scrollTop: 0
 				})
 				uni.showLoading({
-					title:'正在搜索',
+					title: '正在搜索',
 				})
 				this.clickSork();
-				
+
 			},
 
 
 			//点击排序
-			clickSork :function(){
+			clickSork: function() {
 				var sc = this.scenicList;
 				this.scenicList = [];
 				//筛选，测试数据直接前端筛选了
@@ -445,39 +455,39 @@
 					})
 					this.cateId = '';
 				}
-				if(this.screenIndex == 3) {
+				if (this.screenIndex == 3) {
 					let screen = sc.filter(item => {
 						return item.ticketTitle == this.cateValue;
 					})
 					this.scenicListCate = screen;
-					uni.hideLoading() 
+					uni.hideLoading()
 				}
-				
+
 				this.scenicList = this.scenicList.concat(sc);
 			},
-			 
+
 			//价格转换
-			priceConversion:function(data){
+			priceConversion: function(data) {
 				// console.log(data)
-				if(data == ''){
+				if (data == '') {
 					return '开放景区'
-				}else{
-					return '¥'+data+'元起'
+				} else {
+					return '¥' + data + '元起'
 				}
 			},
-			 
 
-			
+
+
 			//加载信息
-			getMore(){
+			getMore() {
 				this.loadingType = 1;
-				
-				if(this.scenicListIndex < this.scenicList.length){
-					var a = this.scenicListIndex +10;
+
+				if (this.scenicListIndex < this.scenicList.length) {
+					var a = this.scenicListIndex + 10;
 					this.scenicListIndex = a;
 					this.loadingType = 0;
 				}
-				if(this.scenicListIndex >= this.scenicList.length){
+				if (this.scenicListIndex >= this.scenicList.length) {
 					this.loadingType = 2;
 				}
 			}
@@ -490,49 +500,53 @@
 	//搜索框
 	.searchTopBox {
 		display: flex;
-		text-overflow:ellipsis;//文本溢出：省略号
+		text-overflow: ellipsis; //文本溢出：省略号
 		margin: 32upx 32upx;
-		.locationTxt{
-			color: #333333; 
+
+		.locationTxt {
+			color: #333333;
 			font-size: 36upx;
 			font-weight: bold;
 			text-overflow: ellipsis;
 			margin-top: 16upx;
 			width: 25%;
-			text-overflow:ellipsis;//文本溢出：省略号
+			text-overflow: ellipsis; //文本溢出：省略号
 		}
+
 		/* 向下小图标 */
 		.icon {
 			font-size: 20upx;
 			color: #AAAAAA;
 			margin-left: 15upx;
 		}
+
 		.searchBoxRadius {
 			/* #ifdef H5 */
-				width: 100%;
+			width: 100%;
 			/* #endif */
 			/* #ifndef H5 */
-				width: 76%;
+			width: 76%;
 			/* #endif */
 			height: 78upx;
 			background-color: #fff;
 			border-radius: 46upx;
 			background: #f5f5f5;
-			
+
 			.searchImage {
 				padding-left: 24upx;
 				padding-top: 18upx;
 				width: 48upx;
 				height: 48upx;
 			}
+
 			.inputIocale {
 				position: absolute;
 				height: 72upx;
-				padding-top : 4upx;
+				padding-top: 4upx;
 				padding-left: 88upx;
 				font-size: 30upx;
 			}
-			
+
 		}
 	}
 
@@ -650,7 +664,7 @@
 				&.active {
 					color: #06B4FD;
 				}
-				
+
 			}
 
 			.xia {

@@ -52,10 +52,6 @@
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
-	import {
-	    mapState,  
-	    mapMutations  
-	} from 'vuex'; 
 	export default {
 		data() {
 			return {
@@ -82,7 +78,6 @@
 			
 		},
 		computed:{
-			//...mapState(['userInfo']),
 			
 			startDate() {
 			            return this.getDate('start');
@@ -95,8 +90,7 @@
 		     wPicker
 		},
 		methods:{
-			...mapMutations(['login']),
-			async loadUserInfo(){
+			loadUserInfo(){
 				uni.showLoading({
 					title:'加载中...'
 				})
@@ -296,8 +290,6 @@
 							method:that.$GrzxInter.Interface.changeInfoPortrait.method,
 							success(res1) {
 								console.log(res1,"290")
-								//uni.setStorageSync('userInfo',res1.data.data)
-								//that.login(res1.data.data);
 								uni.hideLoading();
 								uni.navigateBack();
 							}
