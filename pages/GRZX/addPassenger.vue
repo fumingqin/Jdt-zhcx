@@ -586,18 +586,26 @@
 		display: flex;
 		flex-direction: row;
 		position: absolute;
+		/* #ifdef H5 */
+		top: 30upx;
+		/* #endif */
+		/* #ifndef H5 */
 		top: 100upx;
+		/* #endif */
 	}
 	.textClass{
 		color: #333333;
 		font-size: 38upx;
 		height: 44upx;
 		line-height: 44upx;
-		margin-top: 0upx;
-		margin-left: 0upx;
 		position: absolute;
 		left: 36upx;
+		/* #ifdef H5 */
+		top: 25upx;
+		/* #endif */
+		/* #ifndef H5 */
 		top: 95upx;
+		/* #endif */
 	}
 	
 	.box1{ //姓名，性别，手机号
