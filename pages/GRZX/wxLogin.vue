@@ -171,9 +171,7 @@
 											})
 											uni.setStorageSync('userInfo',res3.data.data)
 											setTimeout(function(){
-												uni.switchTab({
-													url:'/pages/Home/Index'
-												})
+												uni.navigateBack();
 											},500);
 										}
 									})
