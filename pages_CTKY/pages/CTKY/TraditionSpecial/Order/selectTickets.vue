@@ -84,33 +84,18 @@
 			//获取openid
 			this.getOpenID();
 			// #endif
-			uni.showToast({
-				title: param.date,
-				icon: 'none'
-			})
 			var that = this;
 			//如果传过来的参数没有时间就获取当前时间
-			if (!param.date) {
-				uni.showModal({
-					content: param.date,
-					success(res) {
-						if (res.confirm) {
-							var date = new Date();
-							uni.showToast({
-								title: date,
-								icon: 'none'
-							})
-							//初始化时间轴
-							that.loadDate(date);
-							that.getTicketInfo(date);
-						}
-					}
-				})
+			if (param.date == 'date') {//二维码扫码进来
+				var date = new Date();
+				//初始化时间轴
+				that.loadDate(param.date);
+				that.getTicketInfo(date);
 			} else {
 				//班次列表数据参数，从上一个页面传过来的时间，上下车点
 				that.date = param.date;
 				//初始化时间轴
-				that.loadDate();
+				that.loadDate(param.date);
 				//加载班次列表数据
 				that.getTicketInfo(this.date);
 			}
@@ -313,13 +298,14 @@
 			},
 			//-------------------------------初始化时间轴-------------------------------
 			loadDate(param) {
-				
+				console.log('当前时间2',param);
 				var date = '';
 				//从首页进来，对时间格式进行操作
-				if (param) {
+				if (param.date == 'date') {
 					var subStr = new RegExp('-', 'ig');
 					var result = this.date.replace(subStr, "/");
 					date = new Date(result);
+					console.log('result',date);
 				} else { //从二维码进到这个页面，使用系统时间
 					date = new Date();
 				}
