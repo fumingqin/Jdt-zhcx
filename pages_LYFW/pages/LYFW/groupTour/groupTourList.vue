@@ -150,6 +150,9 @@
 		onLoad() {
 			// this.routeInit();
 			this.Getpostion();
+			// #ifdef H5
+			this.routeData();
+			// #endif
 		},
 
 		onPullDownRefresh: function() {
