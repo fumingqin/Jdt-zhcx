@@ -85,10 +85,17 @@
 			
 			//如果传过来的参数没有时间就获取当前时间
 			if(!param.date) {
-				var date = new Date();
-				//初始化时间轴
-				this.loadDate(date);
-				this.getTicketInfo(date);
+				uni.showModal({
+					content:param.date,
+					success(res) {
+						if(res.confirm) {
+							var date = new Date();
+							//初始化时间轴
+							this.loadDate(date);
+							this.getTicketInfo(date);
+						}
+					}
+				})
 			}else {
 				//班次列表数据参数，从上一个页面传过来的时间，上下车点
 				this.date = param.date;
@@ -134,7 +141,7 @@
 					},
 					success: (res) => {
 						uni.hideLoading();
-						console.log(res.data.data);
+						console.log(res.data);
 						let that = this;
 						
 						//非空判断
@@ -306,6 +313,9 @@
 					date = new Date(result);
 				}else {//从二维码进到这个页面，使用系统时间
 					date = new Date();
+					uni.showModal({
+						content:date
+					})
 				}
 				// var mydate = this.date;
 				this.selectIndex = 0;
@@ -368,7 +378,6 @@
 								},
 								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									console.log(res1,'res1')
 									//判断是否有绑定手机号
 									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
 										uni.showToast({
@@ -380,9 +389,11 @@
 												url:'/pages/GRZX/wxLogin'
 											})
 										},1000);
-									}else{
+									}
+									console.log(openid,'openid1')
+									if(openid==res1.data.data.openId_wx&&openid!=""){
 										uni.setStorageSync('userInfo',res1.data.data)
-									}	
+									}
 								}
 							})
 						},
