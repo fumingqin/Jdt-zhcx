@@ -4,7 +4,7 @@
 		<view>
 			<image class="ho_imageTop" src="../../static/BCFW/choice/baocheguanggao.jpg" mode="aspectFill"></image>
 		</view>
-		
+
 		<!-- 专线/定制 -->
 		<view class="ho_queryTickets">
 			<view class="qt_typePickerView">
@@ -86,13 +86,13 @@
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap" v-model="initialPoint">{{initialPoint}}</text>
 					</view>
-					
+
 					<!-- 目的地 -->
 					<view class="dl_choice">目的地</view>
 					<view class="dl_place">
 						<text class="pl_text" @click="boardingPointTap2" v-model="destination">{{destination}}</text>
 					</view>
-					
+
 					<!-- 出发时间 -->
 					<view class="dl_selectionTime">出发时间</view>
 					<view class="dl_time">
@@ -156,17 +156,17 @@
 				type: 'rangetime',
 				value: '',
 				Week: '', //周期
-				
+
 				st_Longitude: '', //出发点纬度
 				st_Latitude: '', //出发点纬度
-				de_Longitude:'',//目的地经度
-				de_Latitude:'',//目的地纬度
-				dl_Longitude:'',//专线经度
-				dl_Latitude:'',//专线经度
+				de_Longitude: '', //目的地经度
+				de_Latitude: '', //目的地纬度
+				dl_Longitude: '', //专线经度
+				dl_Latitude: '', //专线经度
 				dayContent: [], //选择天数
-				
+
 				isNormal: 0, //判断是普通购票还是定制班车默认是普通购票
-				
+
 				homePageInfo: {
 					initialPoint: '', //出发地
 					destination: '', //目的地
@@ -175,11 +175,11 @@
 					privateSite: '', //专线
 					st_Longitude: '', //出发点纬度
 					st_Latitude: '', //出发点纬度
-					de_Longitude:'',//目的地经度
-					de_Latitude:'',//目的地纬度
-					dl_Longitude:'',//专线经度
-					dl_Latitude:'',//专线经度
-					isNormal:'',
+					de_Longitude: '', //目的地经度
+					de_Latitude: '', //目的地纬度
+					dl_Longitude: '', //专线经度
+					dl_Latitude: '', //专线经度
+					isNormal: '',
 
 				},
 			}
@@ -187,12 +187,12 @@
 		onLoad() {
 			// #ifdef H5
 			uni.showToast({
-				title:'定位功能在公众号较为缓慢，可步移至小程序或APP下单！',
-				icon:'none',
-				duration:5000
+				title: '定位功能在公众号较为缓慢，可步移至小程序或APP下单！',
+				icon: 'none',
+				duration: 5000
 			})
 			// #endif
-			
+
 			var that = this;
 			if (that.privateSite == '') {
 				that.privateSite = '请选择专线'
@@ -206,6 +206,7 @@
 			that.routeInit();
 			that.getTodayDate();
 		},
+
 		methods: {
 			//---------------------------------模拟接口数据---------------------------------
 			async routeInit() {
@@ -222,7 +223,7 @@
 			},
 
 			//---------------------------------点击起点站---------------------------------
-			startStationTap:function() {
+			startStationTap: function() {
 				var that = this;
 				//监听事件,监听下个页面返回的值
 				uni.$on('startstaionChange', function(data) {
@@ -258,6 +259,13 @@
 								console.log(that.st_Longitude + "," + that.st_Latitude)
 							}
 						});
+						// uni.getLocation({
+						//     type: 'gcj02',
+						//     success: function (res) {
+						//         console.log('当前位置的经度：' + res.longitude);
+						//         console.log('当前位置的纬度：' + res.latitude);
+						//     }
+						// });
 					}
 				});
 			},
@@ -372,18 +380,18 @@
 
 			//------------------------------提交数据-------------------------------------
 			subit: function() {
-				if(this.isNormal == 0){
-					if(this.privateSite == '请选择专线'){
+				if (this.isNormal == 0) {
+					if (this.privateSite == '请选择专线') {
 						uni.showToast({
 							title: '请选择专线',
 							icon: 'none'
 						})
-					}else if(this.initialPoint == '请选择上车点'){
+					} else if (this.initialPoint == '请选择上车点') {
 						uni.showToast({
 							title: '请选择上车点',
 							icon: 'none'
 						})
-					}else{
+					} else {
 						this.homePageInfo.isNormal = this.isNormal;
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
@@ -396,7 +404,7 @@
 						this.homePageInfo.dl_Longitude = this.dl_Longitude;
 						this.homePageInfo.dl_Latitude = this.dl_Latitude;
 						this.homePageInfo.dayContentObject = this.dayContent[this.index];
-						console.log(this.homePageInfo.dl_Longitude+" "+this.homePageInfo.dl_Latitude)
+						console.log(this.homePageInfo.dl_Longitude + " " + this.homePageInfo.dl_Latitude)
 						// console.log(this.vehicleSelection[this.value])
 						uni.setStorage({
 							key: 'homePageInfo',
@@ -408,23 +416,23 @@
 							}
 						})
 					}
-				}else if(this.isNormal == 1){
-					if(this.initialPoint == '请选择上车点'){
+				} else if (this.isNormal == 1) {
+					if (this.initialPoint == '请选择上车点') {
 						uni.showToast({
 							title: '请选择上车点',
 							icon: 'none'
 						})
-					}else if(this.destination == '请选择目的点'){
+					} else if (this.destination == '请选择目的点') {
 						uni.showToast({
 							title: '请选择目的点',
 							icon: 'none'
 						})
-					} else if(this.dayContent[this.index] == '请选择'){
+					} else if (this.dayContent[this.index] == '请选择') {
 						uni.showToast({
 							title: '请选择包车天数',
 							icon: 'none'
 						})
-					}else{
+					} else {
 						this.homePageInfo.isNormal = this.isNormal;
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
@@ -451,6 +459,60 @@
 					}
 				}
 			},
+
+			//------------------------------开启定位功能----------------------------------
+			getAuthorizeInfo() {
+				const that = this;
+				uni.authorize({
+					scope: 'scope.userLocation',
+					success() { // 允许授权
+						that.getLocationInfo();
+						console.log("你允许授权")
+					},
+					fail() { // 拒绝授权
+						that.openConfirm();
+						// console.log("你拒绝了授权，无法获得周边信息")
+					}
+				})
+			},
+			// 获取地理位置
+			getLocationInfo() {
+				uni.getLocation({
+					type: 'wgs84',
+					success(res) {
+						console.log(res);
+					}
+				});
+			},
+
+			// 再次获取授权
+			// 当用户第一次拒绝后再次请求授权
+			openConfirm() {
+				uni.showModal({
+					title: '请求授权当前位置',
+					content: '需要获取您的地理位置，请确认授权',
+					success: (res) => {
+						console.log(res)
+						if (res.confirm) {
+							uni.openSetting(); // 打开地图权限设置
+						} else if (res.confirm) {
+							uni.showToast({
+								title: '你拒绝了授权，无法获得周边信息',
+								icon: 'none',
+								duration: 1000
+							})
+						}
+					}
+				});
+			},
+
+			onShow() {
+				// 动态设置标题
+				// uni.setNavigationBarTitle({
+				//     title: this.$t('买金'),
+				// })
+				this.getAuthorizeInfo();
+			}
 		}
 	}
 </script>

@@ -79,9 +79,9 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
 							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
@@ -173,9 +173,9 @@
 							<text class="cm_title">{{item.or_class}}</text>
 							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
 						</view>
-						<view class="cm_contentView" style="display: flex;">
+						<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
-						</view>
+						</view> -->
 						<view class="cm_contentView">
 							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
 							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
@@ -188,7 +188,12 @@
 						<view class="cm_buttonView" v-if="item.or_Type=='13'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>
-
+						
+						<!-- 待补款 -->
+						<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+						</view> -->
 						<!-- 订单执行中 -->
 						<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
@@ -205,7 +210,7 @@
 						<view class="cm_buttonView" v-if="item.or_Type=='5'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-							<view class="cm_button cm_btToPay" @click="topay(item.or_number)">去支付</view>
+							<view class="cm_button cm_btToPay" @click="topay2(item.or_number)">去支付</view>
 						</view>
 
 						<!-- 已取消 -->
@@ -340,9 +345,9 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
 							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
@@ -391,9 +396,9 @@
 							<text class="cm_title">{{item.or_class}}</text>
 							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
 						</view>
-						<view class="cm_contentView" style="display: flex;">
+						<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
-						</view>
+						</view> -->
 						<view class="cm_contentView">
 							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
 							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
@@ -401,7 +406,7 @@
 							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
 						<!-- 已完成 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='6'">
+						<view class="cm_buttonView" v-if="item.or_Type=='13'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>
 					</view>
@@ -526,9 +531,9 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
 							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
@@ -581,25 +586,28 @@
 							<text class="cm_title">{{item.or_class}}</text>
 							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
 						</view>
-						<view class="cm_contentView" style="display: flex;">
+						<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
-						</view>
+						</view> -->
 						<view class="cm_contentView">
 							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
 							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
 							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
 							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 						</view>
+						<!-- 待补款 -->
+						<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
+							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+						</view> -->
 
-
-						<!-- 待发车 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='1'">
-							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+						<!-- 订单进行中 -->
+						<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view>
 						<!-- 进行中 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='4'">
+						<view class="cm_buttonView" v-if="item.or_Type=='1'||item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='10'">
 							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
@@ -728,9 +736,9 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
 							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
@@ -783,9 +791,9 @@
 							<text class="cm_title">{{item.or_class}}</text>
 							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
 						</view>
-						<view class="cm_contentView" style="display: flex;">
+						<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
-						</view>
+						</view> -->
 						<view class="cm_contentView">
 							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
 							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
@@ -798,7 +806,7 @@
 						<view class="cm_buttonView" v-if="item.or_Type=='5'">
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btToPay" @click="topay(item.or_number)">去支付</view>
+							<view class="cm_button cm_btToPay" @click="topay2(item.or_number)">去支付</view>
 						</view>
 
 
@@ -918,9 +926,9 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='未支付'">详情</button>
+							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
 							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 						</view>
@@ -992,9 +1000,9 @@
 							<text class="cm_title">{{item.or_class}}</text>
 							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
 						</view>
-						<view class="cm_contentView" style="display: flex;">
+						<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
-						</view>
+						</view> -->
 						<view class="cm_contentView">
 							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
 							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
@@ -1004,7 +1012,7 @@
 
 
 						<!-- 已取消 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='9'">
+						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='7'">
 							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 
@@ -1827,7 +1835,7 @@
 				if (param == 0 || param == 1 || param == 2 || param == 3 || param == 4) {
 					return '进行中';
 				} else if (param == 5 || param == 9) {
-					return '未支付';
+					return '待计价';
 				} else if (param == 7 || param == 8) {
 					return '已取消';
 				} else if (param == 6) {
@@ -2514,13 +2522,17 @@
 								console.log(res);
 								if (res.data.msg == '订单查询完成') {
 									for (var i = 0; i < res.data.data.length; i++) {
-										that.info.push(res.data.data[i]);
+										if(res.data.data[i].or_Type == '6'||res.data.data[i].or_Type == '9'||res.data.data[i].or_Type == '12'){
+										}else{
+											that.info.push(res.data.data[i]);
+											}
+									
 									}
 									if (res.data.data !== '') {
 										for (var i = 0; i < res.data.data.length; i++) {
 											if (res.data.data[i].or_Type == '13') {
 												that.finishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '1' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
+											} else if (res.data.data[i].or_Type == '0' ||res.data.data[i].or_Type == '1' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
 												'3'||res.data.data[i].or_Type == '4'||res.data.data[i].or_Type == '10'||res.data.data[i].or_Type == '11') {
 												that.goingArr.push(res.data.data[i]);
 											} else if (res.data.data[i].or_Type == '5') {
@@ -2574,21 +2586,24 @@
 					return '已接单'
 				}else if (param == '0') {
 					return '等待接单'
-				} else if (param == '13') {
-					return '已完成'
-				} else if (param == '5') {
-					return '待支付'
-				} else if (param == '4') {
-					return '进行中'
-				}else if (param == '10') {
-					return '到达目的地'
 				}else if (param == '2') {
 					return '已出发'
-				} else if (param == '8' || param == '7') {
+				} else if (param == '3') {
+					return '司机已到出发地'
+				}else if (param == '4') {
+					return '进行中'
+				} else if (param == '5') {
+					return '待支付'
+				} else if (param == '10') {
+					return '到达目的地'
+				}else if (param == '8' || param == '7') {
 					return '已取消'
-				} else if (param == '11') {
-					return '待补款'
 				}
+				else if (param == '13') {
+					return '已完成'
+				}// else if (param == '11') {
+				// 	return '待补款'
+				 // }
 			}
 		}
 	}

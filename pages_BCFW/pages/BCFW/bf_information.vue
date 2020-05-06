@@ -6,21 +6,23 @@
 		<!-- 出发信息 -->
 		<view class="cvt_content" :hidden="isNormal==1">
 			<view class="ct_departureContents1">
-				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
-				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{privateSite}}</text></view>
+				<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
+				<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{privateSite}}</text></view>
 			</view>
 			<view class="ct_departureContents2">
-				<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
+				<view class="ct_content5" style="padding-bottom: 40upx;">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
 			</view>
 		</view>
 		
 		<view class="cvt_content" :hidden="isNormal==0">
 			<view class="ct_departureContents1">
-				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
+				<view class="ct_content1">上车点 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{destination}}</text></view>
 			</view>
 			<view class="ct_departureContents2">
-				<view class="ct_content9">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
+				<view class="ct_content9">出发时间 &nbsp;<text class="ct_content10">{{datestring}}</text></view>
+			</view>
+			<view class="ct_departureContents2" style="padding-bottom: 40upx;">
 				<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{dayContentObject}}天</text></view>
 			</view>
 		</view>
@@ -492,7 +494,7 @@
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
-											url: './BCsuccessfulPayment'
+											url: './charteredBusPayment?orderNumber=' +res.data.data.OrderNumber
 										})
 									}
 								},
@@ -503,50 +505,6 @@
 							// #endif
 
 							// #ifdef APP-PLUS
-							
-							uni.request({
-								url: $bcfw.Interface.spt_AddtouristOrder.value,
-								method:$bcfw.Interface.spt_AddtouristOrder.method,
-								data: {
-									userId: that.userInfo.userId,
-									privateSite:that.privateSite, //专线目的地
-									datestring:that.datestring, //选择时间
-									or_boardingPoint:that.initialPoint,
-									or_destination:that.destination,
-									cm_day: that.dayContentObject,
-									carNumberSeats:that.carNumberSeats,
-									carName: that.carName,
-									carprice:that.carprice,
-									nickName:that.nickName,
-									nickId:that.nickId,
-									nickPhone: that.nickPhone,								
-									couponID:that.couponColor,
-									st_Longitude:that.st_Longitude,
-									st_Latitude:that.st_Latitude,
-									de_Longitude:that.de_Longitude,
-									de_Latitude:that.de_Latitude,
-									dl_Longitude:that.dl_Longitude,
-									dl_Latitude:that.dl_Latitude,
-									isNormal:that.isNormal,
-								
-								},
-								header: {'content-type': 'application/json'},
-								success:(res)=>{
-									console.log(res)
-									uni.hideLoading()
-									if (res.data.status) {
-										uni.redirectTo({
-											url: './BCsuccessfulPayment'
-										})
-									}
-								},
-								fail:(res)=>{
-									console.log('shibai')
-								}
-							})
-							// #endif
-							
-							// #ifdef MP-WEIXIN
 							
 							uni.request({
 								url: $bcfw.Interface.spt_AddtouristOrder.value,
@@ -660,24 +618,18 @@
 
 	//出发内容
 	.cvt_content {
-		// position: absolute;
-		// /* #ifdef APP-NVUE */
-		// top: 197upx;
-		// /* #endif */
-		// /* #ifndef APP-NVUE */
-		// top: 100upx;
-		// /* #endif */
 		width: 698upx;
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
-		border-radius: 13rpx;
+		border-radius: 13px;
 
 		//内容样式
 		.ct_departureContents1 {
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
-		
+			padding-right: 40upx;
+
 			.ct_content1 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
@@ -685,27 +637,28 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-		
+
 				.ct_content2 {
-					width: 200upx;
+					// width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
 					font-weight: bold;
 				}
 			}
-		
+
 			.ct_content3 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 310upx;
+				width: 329upx;
+				// text-align: right;
 				// padding-left: 68upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-		
+
 				.ct_content4 {
-					width: 200upx;
+					// width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
@@ -719,8 +672,8 @@
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
-			padding-bottom: 40upx;
-		
+			// padding-bottom: 40upx;
+
 			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
@@ -728,7 +681,7 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-		
+
 				.ct_content6 {
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
@@ -736,7 +689,7 @@
 					font-weight: bold;
 				}
 			}
-		
+
 			.ct_content7 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
@@ -744,7 +697,7 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
-		
+
 				.ct_content8 {
 					width: 200upx;
 					font-size: 30upx;
@@ -756,10 +709,10 @@
 			.ct_content9 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 310upx;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				overflow: hidden;
+				// width: 310upx;
+				// text-overflow: ellipsis;
+				// white-space: nowrap;
+				// overflow: hidden;
 			
 				.ct_content10 {
 					font-size: 30upx;
