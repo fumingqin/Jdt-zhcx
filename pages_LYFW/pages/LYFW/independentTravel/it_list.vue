@@ -171,8 +171,9 @@
 							uni.hideLoading()
 						}else{
 							uni.hideLoading()
+							this.itText = '';
 							uni.showToast({
-								title:'该地区暂无数据',
+								title:'该地区暂无自由行数据',
 								icon:'none'
 							})
 							
@@ -204,8 +205,9 @@
 							uni.hideLoading()
 						}else{
 							uni.hideLoading()
+							this.newDiscovery = '';
 							uni.showToast({
-								title:'该地区暂无数据',
+								title:'该地区暂无自由行数据',
 								icon:'none'
 							})
 						}
@@ -270,6 +272,7 @@
 								uni.hideLoading();
 							}else if(res.data.status == false){
 								uni.hideLoading();
+								this.ifyList = '';
 								uni.showToast({
 									title:'查不到该地区相关信息！',
 									icon:'none'
@@ -300,11 +303,13 @@
 								this.ifyList = sc;
 								uni.hideLoading();
 							}else if(res.data.status == false){
+								uni.hideLoading();
+								this.ifyList = '';
 								uni.showToast({
 									title:'查不到该地区相关信息！',
 									icon:'none'
 								})
-								uni.hideLoading();
+								
 							}
 						},
 						fail:function(){
