@@ -564,6 +564,7 @@
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
+						payType:3,
 						orderNumber:that.orderNumber
 					},
 					success(res) {
@@ -591,6 +592,7 @@
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
+						payType:3,
 						orderNumber: that.orderNumber,
 						// price:that.FactPayPrice
 						price:0.01

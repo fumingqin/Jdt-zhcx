@@ -12,7 +12,7 @@
 					<text class="sv_text">车票订购</text>
 				</view>
 
-				<view class="sv_view3" @click="natTo('/pages/Home/ChooseSite?current=2')">
+				<view class="sv_view3" @click="natTo2('/pages/Home/ChooseSite?current=2')">
 					<image class="sv_print" src="../../static/Home/serve/wlyueche.png" mode="aspectFit"></image>
 					<text class="sv_text">网络约车</text>
 				</view>
@@ -105,10 +105,18 @@
 				})
 			},
 			natTo2: function(url) {
+				// #ifdef H5
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'网络约车仅支持小程序或APP!',
 					icon:'none'
 				})
+				// #endif
+				// #ifndef H5
+				uni.navigateTo({
+					url
+				})
+				// #endif
+				
 			},
 			natTo3: function(url) {
 				uni.navigateTo({

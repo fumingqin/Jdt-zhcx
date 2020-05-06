@@ -102,7 +102,7 @@
 		},
 		onLoad: function(options) {
 			this.orderNumber = options.orderNumber;
-			this.getOrderDetail();
+			this.CheckPayState();
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		methods: {
@@ -258,17 +258,27 @@
 			},
 			CheckPayState: function() {
 				let that = this;
+				uni.showLoading({
+					mask:true,					
+				})
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
+						payType:3,
 						orderNumber:that.orderNumber
 					},
 					success(res) {
-						console.log(res);
 						if (res.data.status) {
 							that.paymentSuccess();
+							uni.hideLoading();
+						}else{
+							that.getOrderDetail();
+							uni.hideLoading();
 						}
+					},
+					fail() {
+						uni.hideLoading();
 					}
 				})
 			},
