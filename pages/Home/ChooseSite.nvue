@@ -867,7 +867,7 @@
 					longitude: that.startLon,
 					title: '在这上车',
 					zIndex: '1',
-					iconPath: '../../static/CZC/Start.png',
+					iconPath: '../../pages_CZC/static/CZC/Start.png',
 					rotate: 0,
 					width: 20,
 					height: 20,
@@ -893,7 +893,7 @@
 					longitude: that.endLon,
 					title: '在这下车',
 					zIndex: '1',
-					iconPath: '../../static/CZC/End.png',
+					iconPath: '../../pages_CZC/static/CZC/End.png',
 					rotate: 0,
 					width: 20,
 					height: 20,
@@ -1099,7 +1099,7 @@
 								//console.log(res.data);
 								for (var i = 0; i < carArr.length; i++) {
 									that.setMarker('car_' + i, carArr[i].longitude, carArr[i].latitude,
-										'../../static/CZC/Car.png');
+										'../../pages_CZC/static/CZC/Car.png');
 								}
 								// console.log(that.markers);
 								// console.log(carArr.length + '-' + that.markers.length);
