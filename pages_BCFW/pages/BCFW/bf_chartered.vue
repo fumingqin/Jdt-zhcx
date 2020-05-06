@@ -185,6 +185,14 @@
 			}
 		},
 		onLoad() {
+			// #ifdef H5
+			uni.showToast({
+				title:'定位功能在公众号较为缓慢，可步移至小程序或APP下单！',
+				icon:'none',
+				duration:5000
+			})
+			// #endif
+			
 			var that = this;
 			if (that.privateSite == '') {
 				that.privateSite = '请选择专线'
