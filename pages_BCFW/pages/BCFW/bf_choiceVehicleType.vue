@@ -21,7 +21,7 @@
 				</view>
 				<view class="ct_departureContents2">
 					<view class="ct_content9">出发时间 &nbsp;<text class="ct_content10">{{addressContent.datestring}}</text></view>
-					<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.dayContentObject}}</text></view>
+					<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.dayContentObject}}天</text></view>
 				</view>
 			</view>
 			<!-- 车型选择 -->
