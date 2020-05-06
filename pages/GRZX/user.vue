@@ -231,7 +231,7 @@
 				}else{
 					console.log(that.$GrzxInter.Route.person.url,"8888")
 					uni.navigateTo({
-						url :that.$GrzxInter.Route.person.url,
+						url :that.$GrzxInter.Route.personal.url,
 					})  
 				}
 				//#endif
