@@ -4,7 +4,7 @@
 		</view>
 		<view class="ci_setOutContent">
 		<!-- 出发信息 -->
-		<view class="cvt_content" :hidden="startingContent==1">
+		<view class="cvt_content" :hidden="isNormal==1">
 			<view class="ct_departureContents1">
 				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{privateSite}}</text></view>
@@ -14,7 +14,7 @@
 			</view>
 		</view>
 		
-		<view class="cvt_content" :hidden="startingContent==0">
+		<view class="cvt_content" :hidden="isNormal==0">
 			<view class="ct_departureContents1">
 				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{destination}}</text></view>
@@ -492,7 +492,7 @@
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
-											url: './charteredBusPayment?orderNumber=' +res.data.data.OrderNumber
+											url: './BCsuccessfulPayment'
 										})
 									}
 								},
@@ -503,6 +503,50 @@
 							// #endif
 
 							// #ifdef APP-PLUS
+							
+							uni.request({
+								url: $bcfw.Interface.spt_AddtouristOrder.value,
+								method:$bcfw.Interface.spt_AddtouristOrder.method,
+								data: {
+									userId: that.userInfo.userId,
+									privateSite:that.privateSite, //专线目的地
+									datestring:that.datestring, //选择时间
+									or_boardingPoint:that.initialPoint,
+									or_destination:that.destination,
+									cm_day: that.dayContentObject,
+									carNumberSeats:that.carNumberSeats,
+									carName: that.carName,
+									carprice:that.carprice,
+									nickName:that.nickName,
+									nickId:that.nickId,
+									nickPhone: that.nickPhone,								
+									couponID:that.couponColor,
+									st_Longitude:that.st_Longitude,
+									st_Latitude:that.st_Latitude,
+									de_Longitude:that.de_Longitude,
+									de_Latitude:that.de_Latitude,
+									dl_Longitude:that.dl_Longitude,
+									dl_Latitude:that.dl_Latitude,
+									isNormal:that.isNormal,
+								
+								},
+								header: {'content-type': 'application/json'},
+								success:(res)=>{
+									console.log(res)
+									uni.hideLoading()
+									if (res.data.status) {
+										uni.redirectTo({
+											url: './BCsuccessfulPayment'
+										})
+									}
+								},
+								fail:(res)=>{
+									console.log('shibai')
+								}
+							})
+							// #endif
+							
+							// #ifdef MP-WEIXIN
 							
 							uni.request({
 								url: $bcfw.Interface.spt_AddtouristOrder.value,

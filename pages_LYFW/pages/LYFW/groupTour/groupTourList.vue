@@ -252,6 +252,7 @@
 					url: $lyfw.Interface.gt_groupTourList2.value,
 					method: $lyfw.Interface.gt_groupTourList2.method,
 					data:{
+						regionWeixin: this.regionWeixin,
 						GroupTitle:this.searchValue,
 					},
 					header: {'content-type': 'application/json'},
