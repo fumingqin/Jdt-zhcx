@@ -248,10 +248,13 @@
 				uni.scanCode({
 					onlyFromCamera: true,
 					success: function(res) {
-						console.log(res);
-						uni.navigateTo({
-							url: res
-						});
+						// console.log(res);
+						var UrlSrc = encodeURI(res.result); 
+						plus.runtime.openURL(UrlSrc);
+						// plus.runtime.openURL('http://zntc.145u.net/h5/?state=STATE#/pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?startStation=石狮&endStation=晋江&date=2020-5-6');
+						// uni.navigateTo({
+						// 	url: 'generalWeb?date=' +JSON.stringify(res.result)
+						// });
 					}
 				})
 			},
