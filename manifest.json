@@ -160,8 +160,13 @@
             "maps" : {
                 "qqmap" : {
                     //腾讯地图秘钥（key）
-                    "key" : "HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2"
+                    "key" : "ZURBZ-WWTL6-ZNDSL-M7YHC-L67Q3-HRB7V"
                 }
+            }
+        },
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
             }
         }
     }

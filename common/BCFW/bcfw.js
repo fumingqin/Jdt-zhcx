@@ -1,7 +1,8 @@
 
 
 //接口域名
-const Url = 'http://111.231.109.113:8004';
+
+const Url = 'http://zntc.145u.net';
 
 //接口对象
 const Interface = {
@@ -55,8 +56,14 @@ const Interface = {
 	},
 	
 	spt_Pay:{
-		value: Url + '/api/bc/Pay',
+		value: Url + '/api/Pay/getCommonPayparameter',
 		name:'订单-请求支付参数',
+		method:'POST',
+		pages:["BCFW/charteredBusPayment.vue"]
+	},
+	spt_CheckPayState:{
+		value: Url + '/api/Chartered/CharteredOrderPay_Passenger',
+		name:'订单-去支付-出票',
 		method:'POST',
 		pages:["BCFW/charteredBusPayment.vue"]
 	},

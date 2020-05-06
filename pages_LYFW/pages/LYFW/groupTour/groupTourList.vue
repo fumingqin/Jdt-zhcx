@@ -150,14 +150,20 @@
 		onLoad() {
 			// this.routeInit();
 			this.Getpostion();
-			this.routeData();
 		},
-
+		
+		onPullDownRefresh:function(){
+			this.routeData(); //请求接口数据
+		},
+		
 		methods: {
 			routeData : function(){
 				uni.request({
 					url:$lyfw.Interface.gt_groupTourList.value,
 					method:$lyfw.Interface.gt_groupTourList.method,
+					data:{
+						regionWeixin : this.regionWeixin,
+					},
 					success: (e) => {
 						console.log(e)
 						this.groupTitle=e.data.data;
@@ -174,6 +180,7 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+							this.routeData()
 						}
 					}),
 					
@@ -200,7 +207,7 @@
 					this.regionWeixin = e.cityName
 					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
-					this.lyfwData();
+					this.routeData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if(e == 'yes'){
@@ -209,6 +216,7 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
+							this.routeData()
 						}
 					}),
 					uni.getStorage({
@@ -244,6 +252,7 @@
 					url: $lyfw.Interface.gt_groupTourList2.value,
 					method: $lyfw.Interface.gt_groupTourList2.method,
 					data:{
+						regionWeixin: this.regionWeixin,
 						GroupTitle:this.searchValue,
 					},
 					header: {'content-type': 'application/json'},

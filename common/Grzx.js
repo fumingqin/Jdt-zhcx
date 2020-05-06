@@ -151,7 +151,7 @@ const Route={
 		url:SubPackage+'/myNews',
 		name:'我的消息页面',
 	},
-	person:{
+	personal:{
 		url:SubPackage+'/personal',
 		name:'个人信息页面',
 	},

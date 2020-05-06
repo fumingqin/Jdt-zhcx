@@ -23,7 +23,7 @@
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
 					<view class="tabItem-font"><text >车票订购</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('/pages/Home/ChooseSite?current=2')">
+				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
 					<view class="tabItem-font"><text >网络约车</text></view>
 				</view>
@@ -309,7 +309,7 @@
 			//路由统一事件
 			godetail3: function(url) {
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'网络约车仅支持小程序或APP!',
 					icon:'none'
 				});
 			},
@@ -447,7 +447,15 @@
 	.SearchBarBlock {
 		width: 750rpx;
 		position: fixed;
-		top: 104px;
+		/* #ifdef APP-PLUS */
+		top: 64px; 
+		/* #endif */
+		/* #ifdef H5 */
+		top: 104px; 
+		/* #endif */
+		/* #ifdef MP-WEIXIN */
+		top: 84px; 
+		/* #endif */
 		left: 0px;
 		right: 0px;
 		align-items: center;

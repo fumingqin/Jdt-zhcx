@@ -4,7 +4,7 @@
 		</view>
 		<view class="ci_setOutContent">
 		<!-- 出发信息 -->
-		<view class="cvt_content" :hidden="startingContent==1">
+		<view class="cvt_content" :hidden="isNormal==1">
 			<view class="ct_departureContents1">
 				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{privateSite}}</text></view>
@@ -14,7 +14,7 @@
 			</view>
 		</view>
 		
-		<view class="cvt_content" :hidden="startingContent==0">
+		<view class="cvt_content" :hidden="isNormal==0">
 			<view class="ct_departureContents1">
 				<view class="ct_content1">出发地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
 				<view class="ct_content3">目的地 &nbsp;<text class="ct_content4">{{destination}}</text></view>
@@ -56,11 +56,11 @@
 				</view>
 			</view>
 			
-			<view class="ci_couponView" @click="toggleMask('show')">
+			<!-- <view class="ci_couponView" @click="toggleMask('show')">
 				<view class="cv_coupon">优惠券</view>
 				<view class="cv_noUsable">无可用</view>
 				<view class="cv_symbol">></view>
-			</view>
+			</view> -->
 			<!-- 呼出优惠券面板 -->
 			<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
 				<view class="mask-content" @click.stop.prevent="stopPrevent">
@@ -92,8 +92,8 @@
 			
 			<!-- 包车须知 -->
 			<view class="ci_noticeView">
-				<text class="nv_charteredBusNotice">包车须知</text>
-				<text class="nv_all" @click="open()">点击查看全部</text>
+				<view class="nv_charteredBusNotice">包车须知</view>
+				<view class="nv_all" @click="open()">点击查看全部</view>
 				<radio class="nv_radio" value="1" :color="'#ffaa7f'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 			</view>
 			
@@ -112,7 +112,7 @@
 				</view>
 			</uni-popup>
 			<view class="ci_affirmView">
-				<text class="av_money">￥{{carprice}}</text>
+				<!-- <text class="av_money">￥{{carprice}}</text> -->
 				<view class="av_atOnceView" enabl :class="{submitColor: selectedValue===1 && nickName!==''}" @click="submitState">
 					<text class="aov_atOnce">立即包车</text>
 				</view>
@@ -167,36 +167,10 @@
 				de_Latitude: '', //目的地纬度
 				dl_Longitude: '', //专线经度
 				dl_Latitude: '', //专线纬度
-
-				couponList: [{
-						couponID: '0',
-						title: '新用户专享优惠券',
-						price: 5,
-						condition: 10,
-					},
-					{
-						couponID: '1',
-						title: '春节限时限量优惠券',
-						price: 50,
-						condition: 400,
-					},
-					{
-						couponID: '2',
-						title: '大型团购优惠券-今点通限量版',
-						price: 100,
-						condition: 800,
-					},
-					{
-						couponID: '3',
-						title: '大型团购优惠券-今点通限量版',
-						price: 200,
-						condition: 1000,
-					}
-				],
+				couponList: []
 			}
 		},
-		onLoad(options) {
-			this.isNormal = options.isNormal;
+		onLoad() {
 			this.getcharteredBus();
 		},
 		onShow() {
@@ -234,11 +208,6 @@
 					success: (res) => {
 						this.addressContent = res.data;
 						console.log(res)
-						if (this.isNormal == 0) {
-							this.startingContent = 0;
-						} else {
-							this.startingContent = 1;
-						}
 
 					}
 				}, 500)
@@ -272,21 +241,13 @@
 								that.destination = res.data.destination;
 								that.datestring = res.data.datestring;
 								that.dayContentObject = res.data.dayContentObject;
-								a =res.data.dayContentObject.slice(0,2);
-								console.log(a);
-								if(a==that.dayContentObject){
-									that.dayContentObject=that.dayContentObject.slice(0,1);
-									console.log(that.dayContentObject);
-									}else{
-										that.dayContentObject=a
-										console.log(that.dayContentObject);
-									}
 								that.st_Longitude=res.data.st_Longitude;
 								that.st_Latitude=res.data.st_Latitude;
 								that.de_Longitude=res.data.de_Longitude;
 								that.de_Latitude=res.data.de_Latitude;
 								that.dl_Longitude=res.data.dl_Longitude;
 								that.dl_Latitude=res.data.dl_Latitude;
+								that.isNormal=res.data.isNormal;
 								console.log(res.data);
 								console.log(that.de_Longitude);
 							}
@@ -438,7 +399,7 @@
 					})
 				} else {
 					uni.showToast({
-						title: '请同意购买须知',
+						title: '请同意包车须知',
 						icon: 'none'
 					})
 				}
@@ -470,9 +431,7 @@
 								return item.orderType == '待支付';
 							})
 						}
-						console.log(a);
 						if (a == '') {
-							console.log('3');
 							// console.log(that.userInfo.userId);
 							// console.log(that.privateSite);
 							// console.log(that.datestring);
@@ -493,66 +452,16 @@
 							// console.log(that.de_Latitude);
 							// console.log(that.dl_Longitude);
 							// console.log(that.dl_Latitude);
-							// console.log(that.startingContent);
+							if(that.isNormal===0){
+								that.destination=that.privateSite;
+								
+							}
 							 
 							
 							// #ifdef H5
 							uni.request({
-								url: 'http://218.67.107.93:9210/api/app/scenicSpotSetOrder',
-								data: {
-									// userId: this.userInfo.unid,
-									destination: that.destination,
-									or_boardingPoint: or_boardingPoint,
-									datestring: datestring, //定制目的地
-									privateSite: privateSite, //专线目的地
-									dayContentObject: this.dayContentObject,
-									carNumberSeats: this.carNumberSeats,
-									carName: this.carName,
-									carprice: this.carprice,
-									nickName: this.nickName,
-									nickId: this.nickId,
-									nickPhone: this.nickPhone,
-									couponID: this.couponColor,
-									st_Longitude: this.st_Longitude,
-									st_Latitude: this.st_Latitude,
-									de_Longitude: this.de_Longitude,
-									de_Latitude: this.de_Latitude,
-									dl_Longitude: this.dl_Longitude,
-									dl_Latitude: this.dl_Latitude,
-								},
-
-
-								//向服务器发送订单数据，返回订单编号
-								success: (res) => {
-									uni.hideLoading()
-									console.log(res)
-									if (res.data.msg == '下单失败，联系管理员！') {
-										uni.showToast({
-											title: '下单失败，联系管理员！',
-											icon: 'none',
-										})
-									} else if (res.data.msg == '下单成功') {
-										uni.setStorage({
-											key: 'submitH5Data',
-											data: res.data.data,
-											success: function() {
-												uni.redirectTo({
-													url: '/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + res.data.data.orderNumber
-												})
-											}
-										})
-
-									}
-
-								}
-							})
-							// #endif
-
-							// #ifdef APP-PLUS
-							
-							uni.request({
-								url: 'http://111.231.109.113:8004/api/Chartered/AddCharteredOrder_Passenger',
-								method:'POST',
+								url: $bcfw.Interface.spt_AddtouristOrder.value,
+								method:$bcfw.Interface.spt_AddtouristOrder.method,
 								data: {
 									userId: that.userInfo.userId,
 									privateSite:that.privateSite, //专线目的地
@@ -573,7 +482,52 @@
 									de_Latitude:that.de_Latitude,
 									dl_Longitude:that.dl_Longitude,
 									dl_Latitude:that.dl_Latitude,
-									type:that.startingContent,
+									isNormal:that.isNormal,								
+								},
+
+
+								//向服务器发送订单数据，返回订单编号
+								success: (res) => {
+									console.log(res)
+									uni.hideLoading()
+									if (res.data.status) {
+										uni.redirectTo({
+											url: './BCsuccessfulPayment'
+										})
+									}
+								},
+								fail:(res)=>{
+									console.log('shibai')
+								}
+							})
+							// #endif
+
+							// #ifdef APP-PLUS
+							
+							uni.request({
+								url: $bcfw.Interface.spt_AddtouristOrder.value,
+								method:$bcfw.Interface.spt_AddtouristOrder.method,
+								data: {
+									userId: that.userInfo.userId,
+									privateSite:that.privateSite, //专线目的地
+									datestring:that.datestring, //选择时间
+									or_boardingPoint:that.initialPoint,
+									or_destination:that.destination,
+									cm_day: that.dayContentObject,
+									carNumberSeats:that.carNumberSeats,
+									carName: that.carName,
+									carprice:that.carprice,
+									nickName:that.nickName,
+									nickId:that.nickId,
+									nickPhone: that.nickPhone,								
+									couponID:that.couponColor,
+									st_Longitude:that.st_Longitude,
+									st_Latitude:that.st_Latitude,
+									de_Longitude:that.de_Longitude,
+									de_Latitude:that.de_Latitude,
+									dl_Longitude:that.dl_Longitude,
+									dl_Latitude:that.dl_Latitude,
+									isNormal:that.isNormal,
 								
 								},
 								header: {'content-type': 'application/json'},
@@ -582,7 +536,51 @@
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
-											url: './charteredBusPayment?orderNumber=' +res.data.data.OrderNumber
+											url: './BCsuccessfulPayment'
+										})
+									}
+								},
+								fail:(res)=>{
+									console.log('shibai')
+								}
+							})
+							// #endif
+							
+							// #ifdef MP-WEIXIN
+							
+							uni.request({
+								url: $bcfw.Interface.spt_AddtouristOrder.value,
+								method:$bcfw.Interface.spt_AddtouristOrder.method,
+								data: {
+									userId: that.userInfo.userId,
+									privateSite:that.privateSite, //专线目的地
+									datestring:that.datestring, //选择时间
+									or_boardingPoint:that.initialPoint,
+									or_destination:that.destination,
+									cm_day: that.dayContentObject,
+									carNumberSeats:that.carNumberSeats,
+									carName: that.carName,
+									carprice:that.carprice,
+									nickName:that.nickName,
+									nickId:that.nickId,
+									nickPhone: that.nickPhone,								
+									couponID:that.couponColor,
+									st_Longitude:that.st_Longitude,
+									st_Latitude:that.st_Latitude,
+									de_Longitude:that.de_Longitude,
+									de_Latitude:that.de_Latitude,
+									dl_Longitude:that.dl_Longitude,
+									dl_Latitude:that.dl_Latitude,
+									isNormal:that.isNormal,
+								
+								},
+								header: {'content-type': 'application/json'},
+								success:(res)=>{
+									console.log(res)
+									uni.hideLoading()
+									if (res.data.status) {
+										uni.redirectTo({
+											url: './BCsuccessfulPayment'
 										})
 									}
 								},
@@ -939,6 +937,7 @@
 		background: #FFFFFF;
 		border-radius: 15upx;
 		margin-top: 20upx;
+		display: flex;
 		
 		.nv_charteredBusNotice {
 			font-size: 30upx;
@@ -958,7 +957,7 @@
 
 		.nv_radio {
 			color: #FC4646;
-			padding-top: 35upx;
+			padding-top: 20upx;
 			padding-left: 254upx;
 		}
 	}

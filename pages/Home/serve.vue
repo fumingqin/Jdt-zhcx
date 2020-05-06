@@ -105,10 +105,18 @@
 				})
 			},
 			natTo2: function(url) {
+				// #ifdef H5
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'网络约车仅支持小程序或APP!',
 					icon:'none'
 				})
+				// #endif
+				// #ifndef H5
+				uni.navigateTo({
+					url
+				})
+				// #endif
+				
 			},
 			natTo3: function(url) {
 				uni.navigateTo({

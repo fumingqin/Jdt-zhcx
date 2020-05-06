@@ -34,7 +34,7 @@
 				</view>
 				<view style="padding-top: 20rpx;flex-direction: row;justify-content: space-between;border-top-width: 1px;border-color:#EAEAEA;">
 					<view style="align-items: center;justify-content: center;flex-direction: row;">
-						<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
+						<image src="../../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
 						<view>
 							<text style="font-size: 28rpx;">{{VehicleType}}</text>
 						</view>
@@ -133,6 +133,7 @@
 				Passenger: [{
 					userName: "选择乘车人"
 				}],
+				PassengerNum: 0, //人数
 				countdown: '', //倒计时
 				TaxiCost: 0,
 				Distance: '',
@@ -166,7 +167,13 @@
 					// }
 				],
 				payInformation: '',
+				EstimatePrice: '', //价格
 			}
+		},
+		onUnload() {
+			uni.removeStorage({
+				key:'passengerList'
+			})
 		},
 		onLoad() {
 			//动态设置高度
@@ -181,6 +188,7 @@
 					that.startLonLat = res.data.StartLon + ',' + res.data.StartLat;
 					that.endLonLat = res.data.EndLon + ',' + res.data.EndLat;
 					that.TaxiCost = res.data.EstimatePrice; //价格
+					that.EstimatePrice = res.data.EstimatePrice; //价格
 					that.SpecialLineInf = res.data;
 					that.setMarkers();
 				}
@@ -191,7 +199,6 @@
 					that.mapheight = res.windowHeight + 'px';
 				}
 			});
-			that.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		onReady() {
 			var that = this;
@@ -199,12 +206,15 @@
 		},
 		onShow() {
 			var that = this;
-			uni.getStorage({ //获取乘车人
-				key: "passengerList",
-				success: function(res) {
-					that.Passenger = res.data;
-				}
-			});
+			that.Passenger= uni.getStorageSync('passengerList');
+			if(that.Passenger.length>0){
+				console.log(that.Passenger)
+				that.PassengerNum = that.Passenger.length;
+				that.TaxiCost = that.EstimatePrice * that.PassengerNum
+			}else{
+				that.Passenger=[{userName: "选择乘车人"}]
+			}
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		methods: {
 			showToast: function(msg, icon = 'none') {
@@ -217,13 +227,13 @@
 				var that = this;
 				uni.navigateBack();
 			},
-			
+
 			changeTime: function(e) { //选择预约时间
 				this.selecttime = e;
 			},
 			selectPassenger: function() { //选择乘车人
 				uni.navigateTo({
-					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=2',
+					url: '/pages/GRZX/passengerInfo?submitType=2&&limitNum=3',
 					animationType: 'pop-in',
 					animationDuration: 200
 				});
@@ -238,7 +248,7 @@
 					url: '../order/OrderList'
 				});
 			},
-			
+
 			promptlyCall: function() { //立即预约、生成订单
 				let that = this;
 				if (this.selecttime == "点击选择时间") {
@@ -295,13 +305,13 @@
 										key: "passengerList"
 									})
 									uni.navigateTo({
-										url:"PrivateTaxiPayment?orderNumber="+res.data.data.OrderNumber,
+										url: "PrivateTaxiPayment?orderNumber=" + res.data.data.OrderNumber,
 									})
 								} else if (!res.data.status) {
 									that.showToast(res.data.msg);
 									setTimeout(function() {
 										uni.switchTab({
-											url: "../order/OrderList"
+											url: "../../../pages/order/OrderList"
 										})
 									}, 1000)
 								}

@@ -122,11 +122,12 @@
 					key:'userInfo',
 					success(user){
 						console.log(user,"user")
-						if(user.data.phoneNumbe!=""||user.data.phoneNumber!=null){
+						var phone=user.data.phoneNumber;
+						if(phone!=""&&phone!=null&&user.data!=""){
 							uni.request({
 								url:that.$GrzxInter.Interface.login.value,
 								data:{
-									phoneNumber:user.data.phoneNumber,
+									phoneNumber:phone,
 								},
 								method:that.$GrzxInter.Interface.login.method,
 								success(res) {
@@ -229,15 +230,17 @@
 						}) 
 					},500);
 				}else{
-					console.log(that.$GrzxInter.Route.person.url,"8888")
+					// console.log(that.$GrzxInter.Route.personal.url,"8888")
 					uni.navigateTo({
-						url :that.$GrzxInter.Route.person.url,
+						url :that.$GrzxInter.Route.personal.url,
 					})  
 				}
 				//#endif
 				//#ifdef H5
 				var user1=uni.getStorageSync('userInfo');
+				console.log(user1,"1111")
 				if(user1==""||user1==null){
+					console.log(user1,"2222")
 					uni.showToast({
 						title:"请绑定手机号",
 						icon:'none'
@@ -249,6 +252,7 @@
 						})
 					},1000);
 				}else{
+					console.log(user1,"3333")
 					uni.navigateTo({
 						// url :'/pages/GRZX/personal'
 						url:that.$GrzxInter.Route.personal.url,
