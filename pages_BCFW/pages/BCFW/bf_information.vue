@@ -494,7 +494,7 @@
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
-											url: '../../../pages/order/OrderList'
+											url: './BCsuccessfulPayment'
 										})
 									}
 								},
