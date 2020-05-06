@@ -500,7 +500,7 @@
 					success() {
 						//跳转到添加乘客页面
 						uni.navigateTo({
-							url: '../../../../../pages/GRZX/passengerInfo?type=add',
+							url: '../../../../../pages/GRZX/addPassenger?type=add',
 						})
 					}
 				})
