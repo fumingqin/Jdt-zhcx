@@ -162,7 +162,12 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 					data:{
-						regionWeixin : this.regionWeixin
+						// #ifdef H5
+						regionWeixin : '泉州市',
+						// #endif
+						// #ifndef H5
+						regionWeixin : this.regionWeixin,
+						// #endif
 					},
 					success: (res) => {
 						// console.log(res)
@@ -171,8 +176,9 @@
 							uni.hideLoading()
 						}else{
 							uni.hideLoading()
+							this.itText = '';
 							uni.showToast({
-								title:'该地区暂无数据',
+								title:'该地区暂无自由行数据',
 								icon:'none'
 							})
 							
@@ -194,7 +200,12 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 					data:{
-						regionWeixin : this.regionWeixin
+						// #ifdef H5
+						regionWeixin : '泉州市',
+						// #endif
+						// #ifndef H5
+						regionWeixin : this.regionWeixin,
+						// #endif
 					},
 					success: (res) => {
 						if(res.data.status == true){
@@ -204,8 +215,9 @@
 							uni.hideLoading()
 						}else{
 							uni.hideLoading()
+							this.newDiscovery = '';
 							uni.showToast({
-								title:'该地区暂无数据',
+								title:'该地区暂无自由行数据',
 								icon:'none'
 							})
 						}
@@ -258,7 +270,12 @@
 						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 						data:{
-							regionWeixin : e
+							// #ifdef H5
+							regionWeixin : '泉州市',
+							// #endif
+							// #ifndef H5
+							regionWeixin : e,
+							// #endif
 						},
 						success: (res) => {
 							// console.log(res)
@@ -270,6 +287,7 @@
 								uni.hideLoading();
 							}else if(res.data.status == false){
 								uni.hideLoading();
+								this.ifyList = '';
 								uni.showToast({
 									title:'查不到该地区相关信息！',
 									icon:'none'
@@ -290,7 +308,13 @@
 						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 						data:{
+							// #ifdef H5
+							regionWeixin : '泉州市',
+							// #endif
+							// #ifndef H5
 							regionWeixin : this.stationArray[this.leftIndex]
+							// #endif
+							
 						},
 						success: (res) => {
 							if(res.data.data){
@@ -300,11 +324,13 @@
 								this.ifyList = sc;
 								uni.hideLoading();
 							}else if(res.data.status == false){
+								uni.hideLoading();
+								this.ifyList = '';
 								uni.showToast({
 									title:'查不到该地区相关信息！',
 									icon:'none'
 								})
-								uni.hideLoading();
+								
 							}
 						},
 						fail:function(){
@@ -330,13 +356,15 @@
 						success:(res)=>{
 							// console.log(res)
 							this.regionWeixin = res.data;
-							this.textData();
 						},
 						fail:function(){
 							uni.showToast({
-								title:'请打开定位',
+								title:'定位失败',
 								icon:'none'
 							})
+						},
+						complete: () => {
+							this.textData(); //请求接口数据
 						}
 					}),
 					
@@ -350,7 +378,7 @@
 						},
 						fail:function(){
 							uni.showToast({
-								title:'请打开定位',
+								title:'定位失败',
 								icon:'none'
 							})
 						}
@@ -390,7 +418,6 @@
 							// console.log(res)
 							if(res.data !== undefined){
 								this.regionApp = res.data.city;
-								this.textData();
 							}
 						}
 					})
@@ -421,7 +448,12 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.method,
 					data:{
+						// #ifdef H5
+						regionWeixin : '泉州市',
+						// #endif
+						// #ifndef H5
 						regionWeixin :  this.regionWeixin,
+						// #endif
 						title : this.searchValue
 					},
 					success: (res) => {
@@ -495,7 +527,13 @@
 		}
 
 		.searchBoxRadius {
+			/* #ifdef H5 */
+			width: 100%;
+			/* #endif */
+			/* #ifndef H5 */
 			width: 76%;
+			/* #endif */
+			
 			height: 78upx;
 			background-color: #fff;
 			border-radius: 46upx;
