@@ -229,7 +229,7 @@
 						}) 
 					},500);
 				}else{
-					console.log(that.$GrzxInter.Route.person.url,"8888")
+					// console.log(that.$GrzxInter.Route.personal.url,"8888")
 					uni.navigateTo({
 						url :that.$GrzxInter.Route.personal.url,
 					})  
@@ -237,7 +237,9 @@
 				//#endif
 				//#ifdef H5
 				var user1=uni.getStorageSync('userInfo');
+				console.log(user1,"1111")
 				if(user1==""||user1==null){
+					console.log(user1,"2222")
 					uni.showToast({
 						title:"请绑定手机号",
 						icon:'none'
@@ -249,6 +251,7 @@
 						})
 					},1000);
 				}else{
+					console.log(user1,"3333")
 					uni.navigateTo({
 						// url :'/pages/GRZX/personal'
 						url:that.$GrzxInter.Route.personal.url,
