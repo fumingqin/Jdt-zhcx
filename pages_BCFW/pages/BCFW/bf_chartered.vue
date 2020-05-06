@@ -179,11 +179,20 @@
 					de_Latitude:'',//目的地纬度
 					dl_Longitude:'',//专线经度
 					dl_Latitude:'',//专线经度
+					isNormal:'',
 
 				},
 			}
 		},
 		onLoad() {
+			// #ifdef H5
+			uni.showToast({
+				title:'定位功能在公众号较为缓慢，可步移至小程序或APP下单！',
+				icon:'none',
+				duration:5000
+			})
+			// #endif
+			
 			var that = this;
 			if (that.privateSite == '') {
 				that.privateSite = '请选择专线'
@@ -375,6 +384,7 @@
 							icon: 'none'
 						})
 					}else{
+						this.homePageInfo.isNormal = this.isNormal;
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
 						this.homePageInfo.destination = this.destination;
@@ -415,6 +425,7 @@
 							icon: 'none'
 						})
 					}else{
+						this.homePageInfo.isNormal = this.isNormal;
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
 						this.homePageInfo.destination = this.destination;

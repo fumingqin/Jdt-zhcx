@@ -6,8 +6,9 @@
 				<swiper-item v-for="(item,index) in QRCodeArray" :key="index">
 					<view class="u-f-ac" style="border-top-right-radius: 20rpx;border-top-left-radius: 20rpx; width: 100%; background: #FFFFFF;display: block; text-align: center;">
 						<!-- 显示二维码 -->
+						
 						<!-- <image src="../../../../static/CTKY/erweima.png" -->
-							mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image>
+							<!-- mode="aspectFill" lazy-load style="width: 250rpx; height: 250rpx;padding-top: 70rpx;"></image> -->
 							
 						<!-- 检票口/座位号 -->
 						<view class="u-f-jsb" style="font-size: 32rpx;color: #2C2D2D; padding: 20rpx 80rpx;font-weight: 300;">

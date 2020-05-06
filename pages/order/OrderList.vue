@@ -8,7 +8,10 @@
 		<view class="tab">
 			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#3DABFC"></uni-segmented-control>
 		</view>
-
+		<!-- 最外层view，用于底部拉大 -->
+		<view class="pageView">
+		
+		<!-- 全部 -->
 		<view v-if="current === 0" style="margin-top: 20rpx;">
 			<view v-for="(item,index) in info" :key="index">
 				<!-- <view  v-if="item.title=='出租车-专线'"> -->
@@ -182,18 +185,17 @@
 
 
 						<!-- 已完成 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='6'">
+						<view class="cm_buttonView" v-if="item.or_Type=='13'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 						</view>
 
-						<!-- 待发车 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='1'">
-							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+						<!-- 订单执行中 -->
+						<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view>
 						<!-- 进行中 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='4'">
+						<view class="cm_buttonView" v-if="item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='1'">
 							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
@@ -207,7 +209,7 @@
 						</view>
 
 						<!-- 已取消 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='9'">
+						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='7'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
 						</view>
@@ -1053,7 +1055,8 @@
 			</view>
 			<empty-data :isShow="cancelArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
-
+		</view>
+		
 		<!-- 二维码弹框 -->
 		<uni-popup2 ref="popup5" type="bottom">
 			<view class="box_Vlew">
@@ -2019,6 +2022,7 @@
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
+						payType:3,
 						orderNumber: orderNumber
 					},
 					success(res) {
@@ -2046,6 +2050,7 @@
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
+						payType:3,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
 						price: 0.01
@@ -2109,10 +2114,15 @@
 					content: "您是否取消订单",
 					success(res) {
 						if (res.confirm) {
+							uni.showLoading({
+								mask:true,
+							})
 							if(value.SpecialorderState==0||value.SpecialorderState==1||value.SpecialorderState==2){
 								that.BouncePay(value.orderNumber);
+								uni.hideLoading()
 							}else{
 								that.CancelSpecialLineOrder1(value.orderNumber);
+								uni.hideLoading()
 							}
 						}
 					},
@@ -2501,7 +2511,6 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								console.log(this.userInfo.userId);
 								console.log(res);
 								if (res.data.msg == '订单查询完成') {
 									for (var i = 0; i < res.data.data.length; i++) {
@@ -2509,14 +2518,14 @@
 									}
 									if (res.data.data !== '') {
 										for (var i = 0; i < res.data.data.length; i++) {
-											if (res.data.data[i].or_Type == '6') {
+											if (res.data.data[i].or_Type == '13') {
 												that.finishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '4' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
-												'11') {
+											} else if (res.data.data[i].or_Type == '1' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
+												'3'||res.data.data[i].or_Type == '4'||res.data.data[i].or_Type == '10'||res.data.data[i].or_Type == '11') {
 												that.goingArr.push(res.data.data[i]);
 											} else if (res.data.data[i].or_Type == '5') {
 												that.unfinishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '8' || res.data.data[i].or_Type == '9') {
+											} else if (res.data.data[i].or_Type == '8' || res.data.data[i].or_Type == '7') {
 												that.cancelArr.push(res.data.data[i]);
 											}
 										}
@@ -2553,17 +2562,29 @@
 					url: '../../pages_BCFW/pages/BCFW/bf_charterMap?or_number=' + JSON.stringify(e)
 				})
 			},
+			//-------------------------包车-去支付-------------------------
+			topay2:function(e) {
+				uni.navigateTo({
+					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?orderNumber=' +JSON.stringify(e)
+				})
+			},
 			//-------------------------判断订单状态-------------------------
 			getBCstate(param) {
-				if (param == '4') {
-					return '进行中'
-				} else if (param == '6') {
+				if (param == '1') {
+					return '已接单'
+				}else if (param == '0') {
+					return '等待接单'
+				} else if (param == '13') {
 					return '已完成'
 				} else if (param == '5') {
 					return '待支付'
-				} else if (param == '1') {
-					return '待发车'
-				} else if (param == '8' || param == '9') {
+				} else if (param == '4') {
+					return '进行中'
+				}else if (param == '10') {
+					return '到达目的地'
+				}else if (param == '2') {
+					return '已出发'
+				} else if (param == '8' || param == '7') {
 					return '已取消'
 				} else if (param == '11') {
 					return '待补款'
@@ -2605,7 +2626,13 @@
 		background-color: #F5F5F5;
 		padding-bottom: 48upx;
 	}
-
+	
+	.pageView{
+		/* #ifdef H5 */
+		padding-bottom: 112upx;
+		/* #endif */
+	}
+	
 	.Btn {
 		// padding-top: 32upx; 
 		margin: 0 0 0 20rpx;

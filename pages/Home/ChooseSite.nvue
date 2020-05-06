@@ -61,7 +61,7 @@
 						 v-for="(item,index) in historyAddress" :key="index" @click="getHistory(index)">
 							<view style="flex-direction: row;align-items: center;">
 								<view>
-									<image src="../../static/CZC/position.png" style="width: 37rpx;height: 37rpx;"></image>
+									<image src="../../static/Home/position2.png" style="width: 37rpx;height: 37rpx;"></image>
 								</view>
 								<view style="padding-left: 20rpx;width: 560rpx;">
 									<view><text style="font-size: 30rpx;">{{item.addressName}}</text></view>
@@ -70,7 +70,7 @@
 								</view>
 							</view>
 							<view>
-								<image src="../../static/CZC/arrow.png" style="width: 30rpx;height: 30rpx;"></image>
+								<image src="../../static/Home/arrow.png" style="width: 30rpx;height: 30rpx;"></image>
 							</view>
 							<!-- <uni-icons type="arrowright" size="26"></uni-icons> -->
 						</view>
@@ -172,12 +172,12 @@
 						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">{{item.shuttleType}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
-						<image src="../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<image src="../../static/Home/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
 						color: #333333;">{{item.startStaion}}</text>
 					</view>
 					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
-						<image src="../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<image src="../../static/Home/endDot.png" style="width: 10upx ;height: 10upx;"></image>
 						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
 						color: #333333;">{{item.endStation}}</text>
 					</view>
@@ -259,7 +259,7 @@
 							<view style="border-radius: 100px;background-color: #309FF7;width: 10rpx;height: 10rpx;"></view>
 							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.StartSiteName}}</text>
 						</view>
-						<text style="font-size: 36rpx;color: #FC4646;">￥{{item.EstimatePrice}}</text>
+						<text style="font-size: 36rpx;color: #FC4646;">￥{{item.EstimatePrice}}/人</text>
 					</view>
 					<view style="flex-direction: row;justify-content: space-between;padding-top: 10rpx;">
 						<view style=" flex-direction: row;align-items:center;">
