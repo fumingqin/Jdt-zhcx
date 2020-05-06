@@ -442,7 +442,8 @@
 				{
 					"path": "pages/LYFW/independentTravel/it_list",
 					"style": {
-						"enablePullDownRefresh": true
+						"enablePullDownRefresh": true,
+						"navigationBarTitleText": "自由行" 
 					}
 				},
 				//----------------------------------景区门票页面----------------------------------
