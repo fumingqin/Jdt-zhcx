@@ -569,7 +569,12 @@
 	}
 	.title{
 		width: 100%;
+		/* #ifdef H5 */
+		height: 74upx;
+		/* #endif */
+		/* #ifndef H5 */
 		height: 144upx;
+		/* #endif */
 		position: fixed;
 		left: 3.47%;
 		top: 0upx;
@@ -600,7 +605,12 @@
 		flex-direction: column;
 		width: 93.07%;
 		height: 330upx;
+		/* #ifdef H5 */
+		margin-top: 100upx;
+		/* #endif */
+		/* #ifndef H5 */
 		margin-top: 170upx;
+		/* #endif */
 		margin-left: 3.47%;
 		background-color: #FFFFFF;
 		border-radius: 25upx;
