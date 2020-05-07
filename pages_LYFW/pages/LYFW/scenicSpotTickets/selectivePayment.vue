@@ -591,7 +591,7 @@
 													console.log(res)
 													if (res.data.msg == '出票成功') {
 														uni.redirectTo({
-															url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
+															url: 'successfulPayment'
 														})
 													} else {
 														uni.showToast({
