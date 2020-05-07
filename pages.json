@@ -397,6 +397,18 @@
 					"style": {
 						"navigationBarTitleText": "查看图片"
 					}
+				},{
+					"path": "pages/LYFW/currency/imglist2",
+					"style": {
+						"navigationBarTitleText": "全部图片"
+					}
+				},
+				{
+					"path": "pages/LYFW/currency/imgPreview2",
+
+					"style": {
+						"navigationBarTitleText": "查看图片"
+					}
 				},
 				{
 

@@ -2,7 +2,7 @@
 	<view>
 		<view class="pic_list">
 			<view @tap="clickPic(y)" v-for="(x, y) in picList" :key="x">
-				<image :src="x.ticketImage"></image>
+				<image :src="x"></image>
 			</view>
 		</view>
 	</view>
@@ -27,7 +27,7 @@ export default {
 		clickPic(index) {
 			uni.setStorageSync("currentImgIndex",index);
 			uni.navigateTo({
-				url: 'imgPreview'
+				url: 'imgPreview2'
 			});
 		}
 	}
