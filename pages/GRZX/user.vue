@@ -295,7 +295,9 @@
 				})
 			},
 			QQClick(){
+				// #ifdef APP-PLUS
 				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
+				//#endif
 				// #ifdef MP-WEIXIN
 				uni.showToast({
 					title:'正在测试中，敬请期待...',
