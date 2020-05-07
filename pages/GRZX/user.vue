@@ -122,11 +122,12 @@
 					key:'userInfo',
 					success(user){
 						console.log(user,"user")
-						if(user.data.phoneNumbe!=""||user.data.phoneNumber!=null){
+						var phone=user.data.phoneNumber;
+						if(phone!=""&&phone!=null&&user.data!=""){
 							uni.request({
 								url:that.$GrzxInter.Interface.login.value,
 								data:{
-									phoneNumber:user.data.phoneNumber,
+									phoneNumber:phone,
 								},
 								method:that.$GrzxInter.Interface.login.method,
 								success(res) {
@@ -154,6 +155,16 @@
 							})
 						}else{
 							//未绑定手机号
+							uni.showToast({
+								title:"请绑定手机号",
+								icon:'none'
+							})
+							setTimeout(function(){
+								uni.navigateTo({
+									// url:'/pages/GRZX/wxLogin',
+									url:that.$GrzxInter.Route.wxLogin.url,
+								})
+							},1000);
 						}
 					},
 					fail(){
@@ -229,26 +240,29 @@
 						}) 
 					},500);
 				}else{
-					console.log(that.$GrzxInter.Route.person.url,"8888")
+					// console.log(that.$GrzxInter.Route.personal.url,"8888")
 					uni.navigateTo({
-						url :that.$GrzxInter.Route.person.url,
+						url :that.$GrzxInter.Route.personal.url,
 					})  
 				}
 				//#endif
 				//#ifdef H5
 				var user1=uni.getStorageSync('userInfo');
+				console.log(user1,"1111")
 				if(user1==""||user1==null){
+					console.log(user1,"2222")
 					uni.showToast({
-						title:"请绑定手机号",
+						title:"登录失败，请重新进入公众号",
 						icon:'none'
 					})
-					setTimeout(function(){
-						uni.navigateTo({
-							// url:'/pages/GRZX/wxLogin',
-							url:that.$GrzxInter.Route.wxLogin.url,
-						})
-					},1000);
+					// setTimeout(function(){
+					// 	uni.navigateTo({
+					// 		// url:'/pages/GRZX/wxLogin',
+					// 		url:that.$GrzxInter.Route.wxLogin.url,
+					// 	})
+					// },1000);
 				}else{
+					console.log(user1,"3333")
 					uni.navigateTo({
 						// url :'/pages/GRZX/personal'
 						url:that.$GrzxInter.Route.personal.url,
@@ -281,7 +295,15 @@
 				})
 			},
 			QQClick(){
+				// #ifdef APP-PLUS
 				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
+				//#endif
+				// #ifdef MP-WEIXIN
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon : 'none',
+				})
+				//#endif
 			},
 			//------------判断是否为base64格式-----------
 			isBase64:function(str) {

@@ -24,10 +24,9 @@
 					<text class="Tk_text1">{{item.admissionTicketName}}</text>
 					<text class="Tk_text3">¥{{item.ticketAdultPrice}}元</text>
 					<text class="Tk_text2">包含：{{item.ticketContain}}</text>
-					<view style="display: block;">
+					<view style="display: block;text-overflow: ellipsis; white-space: nowrap; overflow: hidden; width: 400upx;">
 						<text class="Tk_text2" v-for="(item2,index2) in item.ticketComment" :key="index2" >{{item2}}&nbsp;|&nbsp;</text>
 					</view>
-					
 					<view class="Tk_butter">立即预订</view>
 				</view>
 			</view>
@@ -274,10 +273,6 @@
 						font-size: 26upx;
 						margin-top: 20upx;
 						margin-left: 12upx;
-						text-overflow: ellipsis; //文章超出宽度隐藏并用...表示
-						white-space: nowrap;
-						overflow: hidden;
-						width: 400upx; //内容宽度
 					}
 
 					.Tk_text3 {

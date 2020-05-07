@@ -140,7 +140,7 @@
 			</view>
 
 			<!-- 购票须知 -->
-			<view class="orderCommonClass">
+			<view class="orderCommonClass" style="margin-bottom: 112rpx;">
 				<view style="display: flex; align-items: center;">
 					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">同意购票须知</view>
 					<view @tap="checkAttention" style="margin-left: 16upx;color:#19A0FF ; font-size:30upx ;">点击查看须知</view>
@@ -500,7 +500,7 @@
 					success() {
 						//跳转到添加乘客页面
 						uni.navigateTo({
-							url: '../../../../../pages/GRZX/passengerInfo?type=add',
+							url: '../../../../../pages/GRZX/addPassenger?type=add',
 						})
 					}
 				})
@@ -532,7 +532,7 @@
 					for (var i = 0; i < that.passengerInfo.length; i++) {
 						that.passengerNum++;
 						//把儿童票筛选出来
-						if (that.passengerInfo.userType == '儿童') {
+						if (that.passengerInfo[i].userType == '儿童') {
 							//将儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;

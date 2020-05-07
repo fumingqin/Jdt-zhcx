@@ -10,7 +10,7 @@
 					<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{addressContent.initialPoint}}</text></view>
 				</view>
 				<view class="ct_departureContents2">
-					<view class="ct_content5">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
+					<view class="ct_content5" style="padding-bottom: 40upx;">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
 				</view>
 			</view>
 			
@@ -21,7 +21,9 @@
 				</view>
 				<view class="ct_departureContents2">
 					<view class="ct_content9">出发时间 &nbsp;<text class="ct_content10">{{addressContent.datestring}}</text></view>
-					<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.dayContentObject}}</text></view>
+				</view>
+				<view class="ct_departureContents2" style="padding-bottom: 40upx;">
+					<view class="ct_content7">包车天数 &nbsp;<text class="ct_content8">{{addressContent.dayContentObject}}天</text></view>
 				</view>
 			</view>
 			<!-- 车型选择 -->
@@ -311,6 +313,7 @@
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
+			padding-right: 40upx;
 
 			.ct_content1 {
 				color: rgba(102, 102, 102, 1);
@@ -321,7 +324,7 @@
 				overflow: hidden;
 
 				.ct_content2 {
-					width: 200upx;
+					// width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
@@ -332,14 +335,15 @@
 			.ct_content3 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 310upx;
+				width: 329upx;
+				// text-align: right;
 				// padding-left: 68upx;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
 
 				.ct_content4 {
-					width: 200upx;
+					// width: 200upx;
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
 					margin-left: 15upx;
@@ -353,7 +357,7 @@
 			display: flex;
 			padding-top: 40upx;
 			padding-left: 40upx;
-			padding-bottom: 40upx;
+			// padding-bottom: 40upx;
 
 			.ct_content5 {
 				color: rgba(102, 102, 102, 1);
@@ -390,10 +394,10 @@
 			.ct_content9 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
-				width: 310upx;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				overflow: hidden;
+				// width: 310upx;
+				// text-overflow: ellipsis;
+				// white-space: nowrap;
+				// overflow: hidden;
 			
 				.ct_content10 {
 					font-size: 30upx;

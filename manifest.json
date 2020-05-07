@@ -129,8 +129,7 @@
         "appid" : "wxf64bf945b37a9939",
         "setting" : {
             "urlCheck" : false,
-            "minified" : true,
-            "es6" : true
+            "minified" : true
         },
         "usingComponents" : true,
         "permission" : {
@@ -150,18 +149,19 @@
     },
     "h5" : {
         "title" : "泉运出行综合平台",
-        "domain" : "http://zntc.145u.net",
+        "domain" : "https://zntc.145u.net",
         "router" : {
-            "base" : ""
+            "base" : "/h55/"
         },
         "devServer" : {
-            "https" : false,
-            "disableHostCheck" : true
+            "https" : true,
+            "port" : 9099
         },
         "sdkConfigs" : {
             "maps" : {
                 "qqmap" : {
-                    "key" : "HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2"
+                    //腾讯地图秘钥（key）
+                    "key" : "ZURBZ-WWTL6-ZNDSL-M7YHC-L67Q3-HRB7V"
                 }
             }
         },

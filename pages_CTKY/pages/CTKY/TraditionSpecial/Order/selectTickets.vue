@@ -18,7 +18,7 @@
 			<mx-date-picker :show="showPicker" :type="type" :value="value" :show-tips="true" :begin-text="'入住'" :end-text="'离店'"
 			 :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
 		</view>
-		
+
 		<!-- 车票内容部分 -->
 		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(departureData[index])">
 			<view class="ctky_View_Left">
@@ -38,9 +38,11 @@
 					color: #333333;">{{item.endStation}}</view>
 				</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;" v-if="item.shuttleType == '普通班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票</view>
+				font-size: 28upx;color: #666666;"
+				 v-if="item.shuttleType == '普通班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
-				font-size: 28upx;color: #666666;" v-if="item.shuttleType == '定制班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票/站外上车</view>
+				font-size: 28upx;color: #666666;"
+				 v-if="item.shuttleType == '定制班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票/站外上车</view>
 			</view>
 			<view class="ctky_View_Right">
 				<view>
@@ -71,63 +73,87 @@
 				showPicker: false,
 				type: 'rangetime',
 				value: '',
-				startStation:'',//出发站
-				endStation:'',//终点站
-				departureData:[],//班次数据
-				stationArray:[],
+				startStation: '', //出发站
+				endStation: '', //终点站
+				departureData: [], //班次数据
+				stationArray: [],
 			}
 		},
 		onLoad(param) {
-			//班次列表数据参数，从上一个页面传过来的时间，上下车点
-			this.date = param.date;
-			// console.log(this.date)
-			// console.log(param.date)
-			this.startStation=param.startStation;
-			this.endStation=param.endStation;
-			
-			//初始化时间轴
-			this.loadDate();
-			
+			// #ifdef H5
+			//获取openid
+			this.getOpenID();
+			// #endif
+			var that = this;
+			//如果传过来的参数没有时间就获取当前时间
+			if (param.date == 'date') {//二维码扫码进来
+				var date = new Date();
+				//初始化时间轴
+				that.loadDate(param.date);
+				that.getTicketInfo(date);
+			} else {
+				//班次列表数据参数，从上一个页面传过来的时间，上下车点
+				that.date = param.date;
+				//初始化时间轴
+				that.loadDate(param.date);
+				//加载班次列表数据
+				that.getTicketInfo(this.date);
+			}
+			this.startStation = param.startStation;
+			this.endStation = param.endStation;
+
 			//点击顶部时间，请求该时间的班次列表
-            this.getDeparture();
-			
-			//加载班次列表数据
-			this.getTicketInfo(this.date);
-			
+			this.getDeparture();
+
 		},
 		methods: {
+			getOpenID() {
+				var that = this;
+				uni.getStorage({
+					key: 'scenicSpotOpenId',
+					success: function(response) {
+						console.log('当前有openid');
+					},
+					fail: function(fail) {
+						uni.hideLoading();
+						//无openid，请求openid
+						that.getCode();
+					}
+				})
+			},
 			//-------------------------------加载班次列表数据-------------------------------
-			getTicketInfo:function(date){
+			getTicketInfo: function(date) {
 				uni.showLoading();
 				uni.request({
-					url:$KyInterface.KyInterface.Ky_ScheduleUrl.Url,
-					method:$KyInterface.KyInterface.Ky_ScheduleUrl.method,
-					header:$KyInterface.KyInterface.Ky_ScheduleUrl.header,
+					url: $KyInterface.KyInterface.Ky_ScheduleUrl.Url,
+					method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
+					header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
 					data: {
-						systemName:'泉运公司综合出行',
-						startPosition:this.startStation,
-						endPosition:this.endStation,
-						date:date,
+						systemName: '泉运公司综合出行',
+						startPosition: this.startStation,
+						endPosition: this.endStation,
+						date: date,
 					},
-					success: (res) => {6
+					success: (res) => {
 						uni.hideLoading();
-						console.log(res.data.data);
+						console.log(res.data);
 						let that = this;
+
 						//非空判断
-						if(res.data.data.length != 0) {
+						if (res.data.data.length != 0) {
 							that.departureData = res.data.data;
-						}else {
+						} else {
 							that.departureData = res.data.data;
 							uni.showToast({
-								title:'暂无班次信息',
-								icon:'none'
+								title: '暂无班次信息',
+								icon: 'none'
 							})
 						}
 					},
 					fail(res) {
 						uni.hideLoading();
 					}
-				});	
+				});
 			},
 			viewClick: function(e, item) {
 				this.selectIndex = e;
@@ -136,7 +162,7 @@
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
-				var setTime = date.replace('T',' ');
+				var setTime = date.replace('T', ' ');
 				return setTime;
 			},
 			//-------------------------------显示日期-------------------------------
@@ -146,7 +172,7 @@
 				this.value = this[type];
 			},
 			//-------------------------------选择日期-------------------------------
-			onSelected(e) { 
+			onSelected(e) {
 				this.showPicker = false;
 				if (e) {
 					this[this.type] = e.value;
@@ -197,7 +223,7 @@
 			//-------------------------------点击班次进行缓存，并打开页面-------------------------------
 			ticketDetail(item) {
 				var that = this;
-				
+
 				uni.setStorage({
 					key: 'ticketDate',
 					data: item,
@@ -233,7 +259,7 @@
 				//当前 时间
 				currentTime = hour + ":" + minute + ":" + second;
 				sortDate = month + "/" + day;
-				monthAndDay= month + "月" + day+"日";
+				monthAndDay = month + "月" + day + "日";
 				// 输出格式 为 2018-8-27 14:45:33
 				// console.log(currentDate +" "+ currentTime);
 				if (type == 0) {
@@ -264,25 +290,30 @@
 					}
 				} else if (type == 3) {
 					return sortDate;
-				}else if(type==4)
-				{
+				} else if (type == 4) {
 					return monthAndDay;
-				}
-				 else {
+				} else {
 					return currentDate + " " + currentTime;
 				}
 			},
 			//-------------------------------初始化时间轴-------------------------------
-			loadDate() {
-				var subStr= new RegExp('-','ig');
-				var result= this.date.replace(subStr,"/");
-				
-				var date = new Date(result);
+			loadDate(param) {
+				console.log('当前时间2',param);
+				var date = '';
+				//从首页进来，对时间格式进行操作
+				if (param.date == 'date') {
+					var subStr = new RegExp('-', 'ig');
+					var result = this.date.replace(subStr, "/");
+					date = new Date(result);
+					console.log('result',date);
+				} else { //从二维码进到这个页面，使用系统时间
+					date = new Date();
+				}
 				// var mydate = this.date;
 				this.selectIndex = 0;
 				for (var i = 0; i < 7; i++) {
 					var mydate = new Date(date.getTime() + 24 * i * 60 * 60 * 1000);
-					
+
 					var nowdate = this.getTime(3, mydate);
 					var week = this.getTime(2, mydate);
 					var longdate = this.getTime(0, mydate);
@@ -298,10 +329,99 @@
 			},
 
 			//点击顶部时间，请求该时间的班次列表
-			getDeparture(){
+			getDeparture() {
 				this.getTicketInfo(this.date);
-			}
-			
+			},
+			// #ifdef  H5
+			//获取openid
+			getCode() {
+				let that = this;
+				let Appid = "wx14af28006f937f6e"; //appid
+				let code = this.getUrlParam('code'); //是否存在code
+				console.log(code);
+				let local = "http://zntc.145u.net/h5/#/pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets";
+				if (code == null || code === "") {
+					//不存在就打开上面的地址进行授权
+					window.location.href =
+						"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+						Appid +
+						"&redirect_uri=" +
+						encodeURIComponent(local) +
+						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+				} else {
+					// 存在则通过code传向后台调用接口返回微信的个人信息
+					uni.request({
+						url: 'http://27.148.155.9:9056/CTKY/getWxUserinfo?code=' + code + '&Appid=' + Appid +
+							'&Appsecret=9cda28b050341aca1f674d2043b01358',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						method: 'POST',
+						success(res) {
+							// uni.showToast({
+							// 	title:res.data.openid,
+							// 	icon:'none',
+							// 	duration:100000
+							// })
+							console.log(res, "res")
+							uni.setStorageSync('scenicSpotOpenId', res.data.openid)
+							uni.setStorageSync('wxuserInfo', res.data)
+							let openid = res.data.openid;
+							console.log(openid, "openid")
+							if (openid != "" && openid != null && openid != undefined) {
+								uni.request({
+									//url:'http://zntc.145u.net/api/person/changeInfo',
+									url: that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
+									data: {
+										openId_wx: openid,
+									},
+									method: that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
+									success(res1) {
+										console.log(res1, 'res1')
+										//判断是否有绑定手机号
+										if (res1.data.msg == "获取用户信息失败,不存在该openID用户信息") {
+											uni.showToast({
+												title: '您未绑定手机号，请绑定手机号！',
+												icon: 'none',
+											})
+											setTimeout(function() {
+												uni.navigateTo({
+													url: '/pages/GRZX/wxLogin'
+												})
+											}, 1000);
+										}
+										console.log(openid, 'openid1')
+										if (openid == res1.data.data.openId_wx && openid != "") {
+											uni.setStorageSync('userInfo', res1.data.data)
+										}
+									}
+								})
+							}
+						},
+						fail(err) {
+							console.log(err)
+							uni.showToast({
+								title: "err是" + err.errMsg,
+								icon: 'none'
+							})
+						}
+					})
+				}
+			},
+			//判断code信息是否存在
+			getUrlParam(name) {
+				var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+				let url = window.location.href.split('#')[0]
+				let search = url.split('?')[1]
+				if (search) {
+					var r = search.substr(0).match(reg)
+					if (r !== null) return unescape(r[2])
+					return null
+				} else {
+					return null
+				}
+			},
+			//#endif  
 		}
 	}
 </script>
@@ -339,8 +459,9 @@
 		border-radius: 8upx;
 		display: inline-block; //里层写这个
 	}
+
 	.markType {
-		width:65upx;
+		width: 65upx;
 		height: 37upx;
 		line-height: 37rpx;
 		border-radius: 14upx;
@@ -349,6 +470,7 @@
 		font-size: 24upx;
 		font-family: SourceHanSansSC-Light;
 	}
+
 	.textCLass {
 		margin: 9upx 17upx;
 	}

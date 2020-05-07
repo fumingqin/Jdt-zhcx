@@ -1,7 +1,8 @@
 /* 接口参数区 */
 // 示例
 
-const Url='http://zntc.145u.net';
+// const Url='http://zntc.145u.net';
+const Url='https://zntc.145u.net:9099';
 const Url1='http://111.231.109.113:8002';
 const Interface={
 	login:{
@@ -151,7 +152,7 @@ const Route={
 		url:SubPackage+'/myNews',
 		name:'我的消息页面',
 	},
-	person:{
+	personal:{
 		url:SubPackage+'/personal',
 		name:'个人信息页面',
 	},
