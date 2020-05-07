@@ -150,10 +150,16 @@
 		onLoad() {
 			// this.routeInit();
 			this.Getpostion();
+			// #ifdef H5
+			this.routeData();
+			// #endif
 		},
 
 		onPullDownRefresh: function() {
 			this.routeData(); //请求接口数据
+			setTimeout(function() {
+				uni.stopPullDownRefresh(); //停止下拉刷新动画
+			}, 1000);
 		},
 
 		methods: {
@@ -185,7 +191,9 @@
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-								this.routeData()
+							},
+							complete:function(){
+								this.routeData();
 							}
 						}),
 

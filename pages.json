@@ -136,7 +136,7 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
-	],
+    ],
 
 	"subPackages": [
 		//---------------------------------------------第一个包：传统客运------------------------------------------
@@ -432,6 +432,7 @@
 					"style": {
 						"navigationBarTitleText": "跟团游列表",
 						"enablePullDownRefresh": true, //设置为true表示当前页面开启下拉刷新
+						"onReachBottomDistance": 0,
 						"backgroundTextStyle": "dark" //下拉 loading 的样式，仅支持 dark/light
 					}
 				}, {
