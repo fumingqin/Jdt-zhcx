@@ -1,7 +1,7 @@
 //司机端全局参数定义
 
 //接口域名
-const Url = 'http://111.231.109.113:8002';
+const Url = 'https://zntc.145u.net:9099';
 
 //接口对象
 const Interface = {

@@ -138,7 +138,7 @@
 						let that = this;
 
 						//非空判断
-						if (res.data.data.length != 0) {
+						if (res.data.status == true) {
 							that.departureData = res.data.data;
 						} else {
 							that.departureData = res.data.data;
@@ -297,6 +297,7 @@
 			//-------------------------------初始化时间轴-------------------------------
 			loadDate(param) {
 				console.log('当前时间2',param);
+				var that = this;
 				var date = '';
 				//从首页进来，对时间格式进行操作
 				if (param.date == 'date') {
