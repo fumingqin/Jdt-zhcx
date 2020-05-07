@@ -343,10 +343,10 @@
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
 				var companyCode = '';
 				// #ifdef H5
-				companyCode = '泉运公司综合出行H5';
+				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
 				// #ifdef APP-PLUS
-				companyCode = '泉运公司综合出行APP';
+				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
 				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({
@@ -516,7 +516,6 @@
 
 
 				// #ifdef APP-PLUS
-				console.log('进入app支付', that.paymentData);
 				uni.hideLoading()
 				uni.requestPayment({
 					provider: 'wxpay',
@@ -530,7 +529,6 @@
 						prepayid: that.paymentData.jsapi.PrepayId,
 					},
 					success: function(res) {
-						console.log(res)
 						uni.showModal({
 							title: '提示',
 							content: res,
@@ -556,12 +554,6 @@
 					},
 
 					fail: function(ee) {
-						console.log(ee)
-						uni.showModal({
-							title: '提示',
-							content: ee,
-							showCancel: false
-						})
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
 							icon: 'none',
@@ -569,6 +561,9 @@
 						})
 					}
 				})
+				// #endif
+				// #ifdef MP-WEIXIN
+				
 				// #endif
 			},
 			//--------------------------成功之后重新获取车票支付参数--------------------------

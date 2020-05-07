@@ -129,7 +129,7 @@
 					method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
 					header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
 					data: {
-						systemName: '泉运公司综合出行',
+						systemName: $KyInterface.KyInterface.Ky_ScheduleUrl.systemName,
 						startPosition: this.startStation,
 						endPosition: this.endStation,
 						date: date,
@@ -338,8 +338,8 @@
 				let that = this;
 				let Appid = "wx14af28006f937f6e"; //appid
 				let code = this.getUrlParam('code'); //是否存在code
-				console.log(code);
-				let local = "http://zntc.145u.net/h5/#/pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets";
+				
+				let local = $KyInterface.KyInterface.Ky_ScheduleUrl.Url;
 				if (code == null || code === "") {
 					//不存在就打开上面的地址进行授权
 					window.location.href =
@@ -351,18 +351,11 @@
 				} else {
 					// 存在则通过code传向后台调用接口返回微信的个人信息
 					uni.request({
-						url: 'http://27.148.155.9:9056/CTKY/getWxUserinfo?code=' + code + '&Appid=' + Appid +
+						url: 'https://27.148.155.9:9056/CTKY/getWxUserinfo?code=' + code + '&Appid=' + Appid +
 							'&Appsecret=9cda28b050341aca1f674d2043b01358',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
-						method: 'POST',
+						header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
+						method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
 						success(res) {
-							// uni.showToast({
-							// 	title:res.data.openid,
-							// 	icon:'none',
-							// 	duration:100000
-							// })
 							console.log(res, "res")
 							uni.setStorageSync('scenicSpotOpenId', res.data.openid)
 							uni.setStorageSync('wxuserInfo', res.data)
