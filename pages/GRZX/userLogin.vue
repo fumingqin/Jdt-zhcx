@@ -402,6 +402,33 @@
 			        return false;
 			    }
 			},
+			//------------获得7日后的日期-----------
+			getSpecialTime() {
+				var date=new Date();
+				var currentDate=JSON.stringify(date).substring(1,11);
+				var arry  = currentDate.split("-");
+				var year = parseInt(arry[0],10);
+				var month = parseInt(arry[1],10);
+				var day = parseInt(arry[2],10); 
+				//月份的方法：getMonth()从 Date 对象返回月份 (0 ~ 11)。
+				var structDate = new Date(year , month - 1, day);
+				var num  = parseInt(7,10);
+				//setDate增减天数
+				structDate.setDate(structDate.getDate()+num); 
+				 //如果月份长度少于2，则前加 0 补位   
+				 if((structDate.getMonth() + 1).toString().length == 1) {  
+					month = 0 + "" + (structDate.getMonth() + 1).toString();  
+				 } else {    
+					 month = (structDate.getMonth() + 1).toString();  
+				 }   
+				 //如果天数长度少于2，则前加 0 补位   
+				 if (structDate.getDate().toString().length == 1) {   
+					day = 0 + "" + structDate.getDate().toString();   
+				 } else {    
+					 day = structDate.getDate().toString();   
+				 }    
+				 var newDate = structDate.getFullYear() + "-" + month + "-" + day;   
+			}
 		}
 	}
 </script>
