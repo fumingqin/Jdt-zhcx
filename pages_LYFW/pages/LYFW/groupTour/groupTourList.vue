@@ -150,6 +150,9 @@
 		onLoad() {
 			// this.routeInit();
 			this.Getpostion();
+			// #ifdef H5
+			this.routeData();
+			// #endif
 		},
 
 		onPullDownRefresh: function() {
@@ -188,8 +191,8 @@
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-								this.routeData()
-							}
+								this.routeData();
+							},
 						}),
 
 						uni.getStorage({
