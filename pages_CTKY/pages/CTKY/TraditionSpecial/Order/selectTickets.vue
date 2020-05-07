@@ -87,10 +87,8 @@
 			var that = this;
 			//如果传过来的参数没有时间就获取当前时间
 			if (param.date == 'date') {//二维码扫码进来
-				var date = new Date();
 				//初始化时间轴
 				that.loadDate(param.date);
-				that.getTicketInfo(date);
 			} else {
 				//班次列表数据参数，从上一个页面传过来的时间，上下车点
 				that.date = param.date;
@@ -308,6 +306,7 @@
 					console.log('result',date);
 				} else { //从二维码进到这个页面，使用系统时间
 					date = new Date();
+					that.getTicketInfo(date);
 				}
 				// var mydate = this.date;
 				this.selectIndex = 0;

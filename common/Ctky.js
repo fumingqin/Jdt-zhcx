@@ -13,8 +13,8 @@ const systemName = '泉运公司综合出行';
 //接口对象
 const KyInterface = {
 	//GET-POST
-	systemName{
-		systemName:'泉运公司综合出行'
+	systemName:{
+		systemName:'泉运公司综合出行',
 		systemNameApp:'泉运公司综合出行APP',
 		systemNameH5:'泉运公司综合出行H5',
 	},
@@ -75,7 +75,7 @@ const KyInterface = {
 		systemName:systemName,
 	}
 	Ky_getOpenid:{
-		Url: Url + 'pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets',
+		Url: Url + '/pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets',
 		name:'客运-获取openid',
 		method:'POST',
 		pages:["CTKY/TraditionSpecoal/Order/selectTickets.vue"],
