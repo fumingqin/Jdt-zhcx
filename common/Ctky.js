@@ -4,9 +4,14 @@
 
 //传统客运接口配置
 
+
 //接口域名
-// const Url = 'http://zntc.145u.net';
-const Url = 'https://zntc.145u.net:9099';
+// #ifdef H5
+	const Url = 'http://zntc.145u.net'; //http请求
+// #endif
+// #ifndef H5
+	const Url = 'https://zntc.145u.net:9099'; //https请求
+// #endif
 const scheduleUrl = 'http://27.148.155.9:9056';//班次列表
 const systemName = '泉运公司综合出行';
 
