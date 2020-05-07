@@ -191,10 +191,8 @@
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-							},
-							complete:function(){
 								this.routeData();
-							}
+							},
 						}),
 
 						uni.getStorage({
