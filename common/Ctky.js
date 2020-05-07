@@ -73,7 +73,7 @@ const KyInterface = {
 		pages:["pages/order/OrderList.vue"],
 		header:{'content-type':'application/x-www-form-urlencoded'},
 		systemName:systemName,
-	}
+	},
 	Ky_getOpenid:{
 		Url: Url + '/pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets',
 		name:'客运-获取openid',
