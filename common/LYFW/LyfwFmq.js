@@ -14,7 +14,14 @@ const notice = {
 
 
 //接口域名
-const Url = 'https://zntc.145u.net:9099';
+// #ifdef H5
+	const Url = 'http://zntc.145u.net'; //http请求
+// #endif
+// #ifndef H5
+	const Url = 'https://zntc.145u.net:9099'; //https请求
+// #endif
+
+
 
 //引入模板
 	// url:$lyfw.Interface.spt_tl_six.value,
