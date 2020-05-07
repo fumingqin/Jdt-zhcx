@@ -89,6 +89,7 @@
 			if (param.date == 'date') {//二维码扫码进来
 				//初始化时间轴
 				that.loadDate(param.date);
+				that.getTicketInfo(param.date);
 			} else {
 				//班次列表数据参数，从上一个页面传过来的时间，上下车点
 				that.date = param.date;
@@ -122,6 +123,9 @@
 			//-------------------------------加载班次列表数据-------------------------------
 			getTicketInfo: function(date) {
 				uni.showLoading();
+				if (date == 'date') {
+					date = new Date();
+				}
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_ScheduleUrl.Url,
 					method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
@@ -134,11 +138,11 @@
 					},
 					success: (res) => {
 						uni.hideLoading();
-						console.log(res.data);
+						// console.log(res.data);
 						let that = this;
 
 						//非空判断
-						if (res.data.status == true) {
+						if (res.data.status == true) { 
 							that.departureData = res.data.data;
 						} else {
 							that.departureData = res.data.data;
@@ -296,7 +300,6 @@
 			},
 			//-------------------------------初始化时间轴-------------------------------
 			loadDate(param) {
-				console.log('当前时间2',param);
 				var that = this;
 				var date = '';
 				//从首页进来，对时间格式进行操作
