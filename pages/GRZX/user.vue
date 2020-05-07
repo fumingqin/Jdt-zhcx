@@ -296,6 +296,12 @@
 			},
 			QQClick(){
 				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
+				// #ifdef MP-WEIXIN
+				uni.showToast({
+					title:'正在测试中，敬请期待...',
+					icon : 'none',
+				})
+				//#endif
 			},
 			//------------判断是否为base64格式-----------
 			isBase64:function(str) {
