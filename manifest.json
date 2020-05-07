@@ -126,10 +126,11 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wxf64bf945b37a9939",
         "setting" : {
             "urlCheck" : false,
-            "minified" : true
+            "minified" : true,
+            "es6" : true
         },
         "usingComponents" : true,
         "permission" : {
@@ -151,15 +152,15 @@
         "title" : "泉运出行综合平台",
         "domain" : "http://zntc.145u.net",
         "router" : {
-            "base" : "/h5/"
+            "base" : ""
         },
         "devServer" : {
-            "https" : false
+            "https" : false,
+            "disableHostCheck" : true
         },
         "sdkConfigs" : {
             "maps" : {
                 "qqmap" : {
-                    //腾讯地图秘钥（key）
                     "key" : "HKLBZ-WM4KF-QYEJF-JANQ6-OPPMV-5IFS2"
                 }
             }

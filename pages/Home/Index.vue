@@ -13,7 +13,7 @@
 			</view>
 		</view>
 		<!-- #endif -->
-		
+
 
 		<view class="bottomContent" elevation='5px' style="width: 100%;">
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
@@ -21,23 +21,23 @@
 			<view class="tabBlock">
 				<view class="tabItem" @click="godetail('/pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
 					<image class="tabItem-image" src="../../static/Home/CPDG.png"></image>
-					<view class="tabItem-font"><text >车票订购</text></view>
+					<view class="tabItem-font"><text>车票订购</text></view>
 				</view>
 				<view class="tabItem" @click="godetail3('/pages/Home/ChooseSite?current=2')">
 					<image class="tabItem-image" src="../../static/Home/WLYC.png"></image>
-					<view class="tabItem-font"><text >网络约车</text></view>
+					<view class="tabItem-font"><text>网络约车</text></view>
 				</view>
 				<view class="tabItem" @click="godetail('/pages_GJCX/pages/GJCX/busH5')">
 					<image class="tabItem-image" src="../../static/Home/GJCX.png"></image>
-					<view class="tabItem-font"><text >公交查询</text></view>
+					<view class="tabItem-font"><text>公交查询</text></view>
 				</view>
 				<view class="tabItem" @click="godetail('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
-					<view class="tabItem-font"><text >包车服务</text></view>
+					<view class="tabItem-font"><text>包车服务</text></view>
 				</view>
 				<view class="tabItem" @click="godetail2('../../pages_LYFW/pages/LYFW/currency/ho_zhly')">
 					<image class="tabItem-image" src="../../static/Home/LVFW.png"></image>
-					<view class="tabItem-font"><text >旅游服务</text></view>
+					<view class="tabItem-font"><text>旅游服务</text></view>
 				</view>
 			</view>
 		</view>
@@ -47,10 +47,10 @@
 
 <script>
 	import taxi from '../../common/Czc.js'
-    // import wx from 'http://res.wx.qq.com/open/js/jweixin-1.6.0.js'
+	// import wx from 'http://res.wx.qq.com/open/js/jweixin-1.6.0.js'
 	import {
 		mapState,
-	    mapMutations  
+		mapMutations
 	} from 'vuex';
 	export default {
 		data() {
@@ -66,64 +66,64 @@
 				mapHeight: '',
 				QQ: '450906905',
 				controls: [{
-										id: 'back',
-										position: {
-											left: 10,
-											top: 405,
-											width: 55,
-											height: 55
-										},
-										iconPath: '../../static/Home/Position.png',
-										clickable: true,
+						id: 'back',
+						position: {
+							left: 10,
+							top: 405,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Position.png',
+						clickable: true,
+					},
+					/* 			{
+									id: 'CallPollice',
+									position: {
+										left: 300,
+										top: 290,
+										width: 55,
+										height: 55
 									},
-									/* 			{
-													id: 'CallPollice',
-													position: {
-														left: 300,
-														top: 290,
-														width: 55,
-														height: 55
-													},
-													iconPath: '../../static/Home/CallPollice.png',
-													clickable: true,
-												}, */
-									/* {
-										id: 'Service',
-										position: {
-											left: 300,
-											top: 345,
-											width: 55,
-											height: 55
-										},
-										iconPath: '../../static/Home/Service.png',
-										clickable: true,
-									}, */
-									{
-										id: 'Big',
-										position: {
-											left: 300,
-											top: 365,
-											width: 55,
-											height: 55
-										},
-										iconPath: '../../static/Home/Big.png',
-										clickable: true,
-									},
-									{
-										id: 'Small',
-										position: {
-											left: 300,
-											top: 400,
-											width: 55,
-											height: 55
-										},
-										iconPath: '../../static/Home/Small.png',
-										clickable: true,
-									}
-								],
+									iconPath: '../../static/Home/CallPollice.png',
+									clickable: true,
+								}, */
+					/* {
+						id: 'Service',
+						position: {
+							left: 300,
+							top: 345,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Service.png',
+						clickable: true,
+					}, */
+					{
+						id: 'Big',
+						position: {
+							left: 300,
+							top: 365,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Big.png',
+						clickable: true,
+					},
+					{
+						id: 'Small',
+						position: {
+							left: 300,
+							top: 400,
+							width: 55,
+							height: 55
+						},
+						iconPath: '../../static/Home/Small.png',
+						clickable: true,
+					}
+				],
 			}
 		},
-		onLoad:function() {
+		onLoad: function() {
 			var that = this;
 			// wx.config({
 			//   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -145,14 +145,14 @@
 			//    }
 			//  });
 			// });
-			
-			
+
+
 			that.getGaoDeKey();
 			that.getMyLocation();
 			uni.getSystemInfo({
 				success: function(res) {
-					for(var index in that.controls){
-						if(index > 0){
+					for (var index in that.controls) {
+						if (index > 0) {
 							that.controls[index].position.left = 640 * res.windowWidth / 750;
 						}
 					}
@@ -166,7 +166,7 @@
 				}
 			})
 			// #ifdef  H5
-			 this.getCode();
+			this.getCode();
 			//#endif
 		},
 		onReady() {
@@ -202,7 +202,7 @@
 					},
 					fail: function() {
 						// alert(0)
-					console.log(0)
+						console.log(0)
 					},
 				}
 				// uni.getLocation(ojb);
@@ -305,15 +305,15 @@
 					url: url
 				});
 			},
-			
+
 			//路由统一事件
 			godetail3: function(url) {
 				uni.showToast({
-					title:'网络约车仅支持小程序或APP!',
-					icon:'none'
+					title: '网络约车仅支持小程序或APP!',
+					icon: 'none'
 				});
 			},
-			
+
 			//旅游服务专属路由
 			godetail2: function(url) {
 				// #ifdef MP-WEIXIN
@@ -331,68 +331,71 @@
 			// #ifdef  H5
 			//获取openid
 			getCode() {
-				let that=this;
-			    let Appid = "wx14af28006f937f6e";//appid
+				let that = this;
+				let Appid = "wx14af28006f937f6e"; //appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
 				let local = "http://zntc.145u.net/h5/#/";
 				if (code == null || code === "") {
-				  //不存在就打开上面的地址进行授权
+					//不存在就打开上面的地址进行授权
 					window.location.href =
 						"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
 						Appid +
 						"&redirect_uri=" +
 						encodeURIComponent(local) +
-						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"; 
+						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
 				} else {
-				  // 存在则通过code传向后台调用接口返回微信的个人信息
+					// 存在则通过code传向后台调用接口返回微信的个人信息
 					uni.request({
-						url:'http://27.148.155.9:9056/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=9cda28b050341aca1f674d2043b01358',
-						header: {'content-type': 'application/x-www-form-urlencoded'},
-						method:'POST',
+						url: 'http://27.148.155.9:9056/CTKY/getWxUserinfo?code=' + code + '&Appid=' + Appid +
+							'&Appsecret=9cda28b050341aca1f674d2043b01358',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						method: 'POST',
 						success(res) {
 							// uni.showToast({
 							// 	title:res.data.openid,
 							// 	icon:'none',
 							// 	duration:100000
 							// })
-							console.log(res,"res")
-							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
-							uni.setStorageSync('wxuserInfo',res.data)
-							let user=res.data;
+							console.log(res, "res")
+							uni.setStorageSync('scenicSpotOpenId', res.data.openid)
+							uni.setStorageSync('wxuserInfo', res.data)
+							let user = res.data;
 							uni.request({
 								//url:'http://zntc.145u.net/api/person/changeInfo',
-								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
-								data:{
-									openId_wx:user.openid,
+								url: that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
+								data: {
+									openId_wx: user.openid,
 								},
-								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
+								method: that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 								success(res1) {
-									console.log(res1,'res1')
+									console.log(res1, 'res1')
 									//判断是否有绑定手机号
-									if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+									if (res1.data.msg == "获取用户信息失败,不存在该openID用户信息") {
 										uni.showToast({
-											title:'您未绑定手机号，请绑定手机号！',
-											icon:'none',
+											title: '您未绑定手机号，请绑定手机号！',
+											icon: 'none',
 										})
-										setTimeout(function(){
+										setTimeout(function() {
 											uni.navigateTo({
-												url:'/pages/GRZX/wxLogin'
+												url: '/pages/GRZX/wxLogin'
 											})
-										},1000);
-									}else{
-										uni.setStorageSync('userInfo',res1.data.data)
+										}, 1000);
+									} else {
+										uni.setStorageSync('userInfo', res1.data.data)
 										// that.logining=true;
 										// that.login(res1.data.data)
-									}	
+									}
 								}
 							})
 						},
-						fail(err){
+						fail(err) {
 							console.log(err)
 							uni.showToast({
-								title:"err是"+err.errMsg,
-								icon:'none'
+								title: "err是" + err.errMsg,
+								icon: 'none'
 							})
 						}
 					})
@@ -400,18 +403,18 @@
 			},
 			//判断code信息是否存在
 			getUrlParam(name) {
-				  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')  
-				  let url = window.location.href.split('#')[0]   
-				  let search = url.split('?')[1]  
-				  if (search) {  
-				    var r = search.substr(0).match(reg)  
-				    if (r !== null) return unescape(r[2])  
-				    return null  
-				  } else {  
-				    return null  
-				  }  
+				var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+				let url = window.location.href.split('#')[0]
+				let search = url.split('?')[1]
+				if (search) {
+					var r = search.substr(0).match(reg)
+					if (r !== null) return unescape(r[2])
+					return null
+				} else {
+					return null
+				}
 			},
-			 //#endif  
+			//#endif  
 		}
 	}
 </script>
@@ -478,8 +481,8 @@
 		/* #ifdef APP-PLUS */
 		margin: 10rpx 0;
 		/* #endif */
-		
-		
+
+
 		text-align: center;
 		align-items: center;
 		/* margin-top: 50rpx;

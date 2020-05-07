@@ -47,6 +47,9 @@
 				geocode:true,
 				success: function(res) {
 					this.city=res.altitude.city;
+				},
+				fail() {
+					this.city="泉州";
 				}
 			});
 		},

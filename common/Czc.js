@@ -9,17 +9,17 @@ const GaoDeWebKey = [
 const InterfaceAddress = [
 	//根据起终点经纬度获取线路规划
 	//使用页面 - /CZC/CallAndDrive - 
-	'http://zntc.145u.net/api/zhcx/getPlanningLineByLonLat' ,
+	'https://zntc.145u.net:9099/api/zhcx/getPlanningLineByLonLat' ,
 	//获取所有车辆定位数据
-	'http://zntc.145u.net/api/zhcx/getAllVehiclePosition',
+	'https://zntc.145u.net:9099/api/zhcx/getAllVehiclePosition',
 	//根据经纬度获取附近一定范围的经纬度
-	'http://zntc.145u.net/api/zhcx/getLonLatRangeVehiclePosition',
+	'https://zntc.145u.net:9099/api/zhcx/getLonLatRangeVehiclePosition',
 ]
 
 //旅客端出租车接口配置
 
 //接口域名
-const Url = 'http://zntc.145u.net';
+const Url = 'https://zntc.145u.net:9099';
 
 //接口对象
 const Interface = {
