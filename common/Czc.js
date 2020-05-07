@@ -19,7 +19,13 @@ const InterfaceAddress = [
 //旅客端出租车接口配置
 
 //接口域名
-const Url = 'https://zntc.145u.net:9099';
+//接口域名
+// #ifdef H5
+	const Url = 'http://zntc.145u.net'; //http请求
+// #endif
+// #ifndef H5
+	const Url = 'https://zntc.145u.net:9099'; //https请求
+// #endif
 
 //接口对象
 const Interface = {

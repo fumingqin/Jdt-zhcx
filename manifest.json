@@ -151,11 +151,11 @@
         "title" : "泉运出行综合平台",
         "domain" : "https://zntc.145u.net",
         "router" : {
-            "base" : "/h55/"
+            "base" : "/h5/"
         },
         "devServer" : {
-            "https" : true,
-            "port" : 9099
+            "https" : false,
+            "port" : ""
         },
         "sdkConfigs" : {
             "maps" : {
@@ -167,7 +167,7 @@
         },
         "optimization" : {
             "treeShaking" : {
-                "enable" : true
+                "enable" : false
             }
         }
     }
