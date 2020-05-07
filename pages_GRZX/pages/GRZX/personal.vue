@@ -44,7 +44,6 @@
 				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
 			</view>
 			<button class="an" type="warn" form-type="submit">保存</button>
-			
 		</form>
 	</view>
 	 
@@ -401,7 +400,6 @@
 			width: 90%;
 			height: 104upx;
 			line-height: 104upx;
-			padding-top: 12upx;
 			font-size: 40upx;
 			margin-top: 48upx; 
 			margin-bottom: 48upx;

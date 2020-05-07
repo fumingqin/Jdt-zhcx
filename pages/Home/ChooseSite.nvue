@@ -349,7 +349,9 @@
 				estimateDistance: 0 ,//预计里程
 				kyPopImage:'',//客运弹框背景图
 				kyNoDataImage:'',//客运无数据图片
-				imageIndex : '',//banner图片
+				imageIndex : {
+					imageUrl : ''
+					},//banner图片
 			}
 		},
 

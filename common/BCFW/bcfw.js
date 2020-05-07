@@ -2,7 +2,7 @@
 
 //接口域名
 
-const Url = 'http://zntc.145u.net';
+const Url = 'https://zntc.145u.net:9099';
 
 //接口对象
 const Interface = {

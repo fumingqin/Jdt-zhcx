@@ -6,8 +6,8 @@
 		<!-- 出发信息 -->
 		<view class="cvt_content" :hidden="isNormal==1">
 			<view class="ct_departureContents1">
-				<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{initialPoint}}</text></view>
-				<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{privateSite}}</text></view>
+				<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{privateSite}}</text></view>
+				<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{initialPoint}}</text></view>
 			</view>
 			<view class="ct_departureContents2">
 				<view class="ct_content5" style="padding-bottom: 40upx;">出发时间 &nbsp;<text class="ct_content6">{{datestring}}</text></view>
@@ -50,7 +50,7 @@
 				</view>
 				<view style="display: flex;">
 					<view class="cbv_idCord">身份证</view>
-					<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" type="number" maxlength="18" v-model="nickId" />
+					<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" maxlength="18" v-model="nickId" />
 				</view>
 				<view style="display: flex;">
 					<view class="cbv_mobile">联系电话</view>
@@ -648,7 +648,12 @@
 		position: relative;
 		margin-left: 26upx;
 		margin-right: 26upx;
+		/* #ifdef H5 */
+		margin-bottom: 240upx;
+		/* #endif */
+		/* #ifndef H5 */
 		margin-bottom: 135upx;
+		/* #endif */
 		top: 148upx;
 	}
 	

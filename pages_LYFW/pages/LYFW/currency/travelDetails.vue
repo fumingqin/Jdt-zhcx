@@ -185,10 +185,10 @@
 			},
 
 			//保存图片至本地并打开新页面
-			goImgList() {
+			goImgList:function() {
 				uni.setStorageSync('imagePiclist', this.picList);
 				uni.navigateTo({
-					url: '/pages/LYFW/currency/imglist'
+					url: './imglist2',
 				})
 			},
 
