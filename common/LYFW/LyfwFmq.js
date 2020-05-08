@@ -201,6 +201,13 @@ const Interface = {
 		name:'自由行-地区列表',
 		method:'POST',
 		pages:["pages_LYFW/pages/LYFW/independentTravel/it_list"]
+	},
+	
+	zhcx_addComplaint:{
+		value: Url + '/api/zhcx/addComplaint',
+		name:'订单 - 投诉',
+		method:'POST',
+		pages:["pages/order/complaint"]
 	}
 }
 

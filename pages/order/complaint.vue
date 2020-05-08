@@ -8,14 +8,14 @@
 					<text class="sfdText">模块</text>
 					<!-- <pickerAddress class="regionSelector" @change="change" v-model="detailInfo.txt">{{detailInfo.txt}}<text class="jdticon icon-xia"></text></pickerAddress> -->
 					<view>
-						<text class="regionSelector">{{tsTitle}}</text>
+						<text class="regionSelector">{{detailInfo.tsTitle}}</text>
 					</view>
 				</view>
 				<!-- 投诉对象 -->
 				<view class="complaintDX">
 					<text class="tsdxText">投诉对象</text>
 					<view>
-						<text class="tsnrText">{{tsDate}}</text>
+						<text class="tsnrText">{{detailInfo.tsDate}}</text>
 					</view>
 				</view>
 			</view>
@@ -49,7 +49,7 @@
 			<view class="contactInformation">
 				<view class="lxClass">
 					<text class="lxText">投诉人&nbsp;(加密保护)</text>
-					<input class="lxTitle" name="nickName" placeholder-style="#AAAAAA" placeholder="请输入" v-model="detailInfo.nickName" adjust-position="" />
+					<input class="lxTitle" name="nickName" placeholder-style="#AAAAAA" placeholder="请输入" v-model="detailInfo.nickname" adjust-position="" />
 				</view>
 <!-- 				<view class="dhClass">
 					<text class="dhText">联系电话&nbsp;(加密保护)</text>
@@ -64,6 +64,7 @@
 <script>
 	// import pickerAddress from '@/pages_GRZX/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue'
 	// import robbyImageUpload from '@/pages_GRZX/components/GRZX/robby-image-upload/robby-image-upload.vue'
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		// components: {
 		// 	pickerAddress,
@@ -72,8 +73,6 @@
 
 		data() {
 			return {
-				tsTitle : '',
-				tsDate: '',
 				enableDel : true,//是否启动del
 				enableAdd : true,//是否启动删除
 				enableDrag : false,//是否启动拖动
@@ -92,8 +91,8 @@
 				detailInfo : {//详细信息
 					tsTitle : '',
 					tsDate: '',
-					nickName : '',//用户姓名
-					mobile : '',//用户电话
+					nickname : '',//用户姓名
+					// mobile : '',//用户电话
 					// txt: '请选择',//事件选择
 					// complaintObject : '',//投诉
 					a:'',//投诉原因
@@ -115,9 +114,9 @@
 		
 		// 返回数据
 		onLoad:function(options) {
-			// this.tsTitle = options.title;
-			// this.tsDate = options.tsData;
-			this.routeInit();
+			this.detailInfo.tsTitle = options.tsTitle;
+			this.detailInfo.tsDate = options.tsData;
+			// this.routeInit();
 			this.loadUserInfo();
 			
 		},
@@ -129,7 +128,7 @@
 				uni.getStorage({
 					key: 'userInfo',			
 					success: function (res) {
-						theself.detailInfo.nickName = res.data.nickName; 
+						theself.detailInfo.nickname = res.data.nickname; 
 						theself.detailInfo.mobile = res.data.mobile;
 						console.log(res)
 					}
@@ -137,11 +136,11 @@
 			},
 			
 			//读取静态数据json.js
-			async routeInit() {
-				let complaint = await this.$api.lyfwcwd('complaint');
-				this.complaint = complaint.data;
-				// console.log(this.complaint)
-			},
+			// async routeInit() {
+			// 	let complaint = await this.$api.lyfwcwd('complaint');
+			// 	this.complaint = complaint.data;
+			// 	// console.log(this.complaint)
+			// },
 
 			//投诉对象内容点击.
 			godetail:function(e){
@@ -181,11 +180,33 @@
 			},
 			
 			formSubmit: function(e) {
-			    uni.showModal({
-			        //content: '表单数据内容：' + JSON.stringify(this.detailInfo),
-					content: '提交成功',
-			        showCancel: false
-			    });
+				uni.showLoading({
+					title:'提交投诉中...'
+				})
+			    uni.request({
+			    	url:$lyfw.Interface.zhcx_addComplaint.value,
+			    	method:$lyfw.Interface.zhcx_addComplaint.method,
+					data:{
+						complaintContent : this.detailInfo.a,
+						complainant : this.detailInfo.nickName,
+						beComplainant : this.detailInfo.tsDate,
+						model : this.detailInfo.tsTitle,
+					},
+					success: (res) => {
+							console.log(res)
+							uni.hideLoading()
+							uni.showToast({
+								title:'投诉成功'
+							})
+					},
+					fail:function(){
+						uni.hideLoading()
+						uni.showToast({
+							title:'投诉失败',
+							icon:'none'
+						})
+					}
+			    })
 			}
 			
 			//上传图片事件
