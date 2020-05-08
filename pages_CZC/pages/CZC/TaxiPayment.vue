@@ -10,13 +10,15 @@
 			<view style="margin:0 30rpx;;">
 				<view style="padding: 30rpx 0;border-bottom:solid 1px #F5F5F5 ;">
 					<view style="display: flex;justify-content: space-between;align-items: center;">
-						<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">专线出租车</view>
-						<view style="color: #2C2D2D; font-size: 26rpx;text-align: end;">倒计时：{{countDownDate}}秒</view>
+						<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">出租车</view>
+						<!-- <view style="color: #2C2D2D; font-size: 26rpx;text-align: end;">倒计时：{{countDownDate}}秒</view> -->
 					</view>
-					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">线路名称：{{SpecialLineName}}</view>
+					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">司机姓名：{{driverName}}</view>
+					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">车牌号：{{vehicleNumber}}</view>
 					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">上车点：{{StartAddress}}</view>
 					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">下车点：{{EndAddress}}</view>
-					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">预约时间：{{AppointmentTime}}</view>
+					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">下单时间：{{AppointmentTime}}</view>
+					<!-- <view style="color: #888;font-size: 30rpx;line-height: 60rpx;">预约时间：{{AppointmentTime}}</view> -->
 				</view>
 				<view style="padding-top:30rpx;" v-show="isHidden">
 					<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">乘车人信息</view>
@@ -68,6 +70,7 @@
 
 <script>
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
+	import $Taxi from "@/common/Czc.js"; //出租车专线
 	export default {
 		data() {
 			return {
@@ -80,6 +83,8 @@
 				AppointmentTime: '',
 				orderTime: '',
 				TaxiCost: '',
+				driverName: '',
+				vehicleNumber: '',
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
@@ -98,7 +103,7 @@
 				countDownInterval: '',
 				SpecialLineName: '',
 				userInfo: '',
-				scenicSpotOpenId:'',//oppenid
+				scenicSpotOpenId: '', //oppenid
 			}
 		},
 		onLoad: function(options) {
@@ -107,7 +112,7 @@
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		onShow() {
-			this.scenicSpotOpenId=uni.getStorageSync('scenicSpotOpenId')|| '';//获取Oppenid
+			this.scenicSpotOpenId = uni.getStorageSync('scenicSpotOpenId') || ''; //获取Oppenid
 		},
 		methods: {
 			change: function(value) {
@@ -115,7 +120,9 @@
 			},
 			back: function() {
 				var that = this;
-				uni.navigateBack();
+				uni.switchTab({
+					url: "../../pages/order/OrderList"
+				})
 			},
 			showToast: function(msg, icon = 'none') {
 				uni.showToast({
@@ -123,85 +130,29 @@
 					icon: icon
 				})
 			},
-			countDown: function() { //支付倒计时
-				let that = this;
-				that.countDownInterval = setInterval(function() {
-					if (that.countDownDate > 0) {
-						that.countDownDate--;
-					} else {
-						that.cancelOrder();
-						clearInterval(that.countDownInterval);
-						that.countDownDate = '';
-					}
-				}, 1000);
-			},
 			getTimeRemain: function(value) { //获取时间
 				var time = new Date(value + "+08:00").getTime();
 				this.countDownDate = (180 - (new Date().getTime() - time) / 1000).toFixed(0);
 				this.countDown();
 			},
-			cancelOrder: function() { //取消订单
-				let that = this;
-				uni.request({
-					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
-					method: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.method,
-					data: {
-						OrderNumber: that.orderNumber,
-						UserId: that.userInfo.userId,
-					},
-					success: function(res) {
-						if (res.data.status) {
-							that.showToast("超时未支付，订单自动取消");
-							clearInterval(that.countDownInterval); //清除倒计时
-							setTimeout(function() {
-								uni.switchTab({
-									url: "../../pages/order/OrderList"
-								})
-							}, 1000)
-						} else {
-							
-							
-							that.showToast(res.data.msg);
-						}
-					},
-					fail: function(res) {
-						that.showToast('网络连接失败');
-					}
-				})
-			},
-			GetSpecialLineByLineID: function(value) { //获取线路信息
-				let that = this;
-				uni.request({
-					url: $privateTaxi.Interface.GetSpecialLineByLineID.value,
-					method: $privateTaxi.Interface.GetSpecialLineByLineID.method,
-					data: {
-						SpecialLineID: value,
-					},
-					success(res) {
-						if (res.data.status) {
-							that.SpecialLineName = res.data.data[0].SpecialLineName;
-						}
-					}
-				})
-			},
 			getOrderDetail: function() { //获取订单信息
 				let that = this;
 				uni.request({
-					url: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.value,
-					method: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.method,
+					url: $Taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
+					method: $Taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber
 					},
 					success: function(res) {
 						if (res.data.status) {
-							that.personArr = JSON.parse(res.data.data.Passengers);
-							that.StartAddress = res.data.data.StartAddress;
-							that.EndAddress = res.data.data.EndAddress;
-							that.AppointmentTime = res.data.data.AppointmentTime.replace("T", " ");
-							that.orderTime = res.data.data.OrderTime;
-							that.TaxiCost = res.data.data.EstimatePrice; //价格
-							that.GetSpecialLineByLineID(res.data.data.SpecialLineID);
-							that.getTimeRemain(res.data.data.OrderTime);
+							that.personArr = JSON.parse(res.data.data.passengers);
+							that.StartAddress = res.data.data.startAddress;
+							that.EndAddress = res.data.data.endAddress;
+							that.AppointmentTime = res.data.data.appointmentTime.replace("T", " ");
+							that.orderTime = res.data.data.orderTime;
+							that.TaxiCost = res.data.data.factPayPrice; //价格
+							that.driverName = res.data.data.driverName.substr(0, 1) + "师傅";
+							that.vehicleNumber = res.data.data.vehicleNumber;
 						} else {
 							uni.showToast({
 								title: res.data.msg,
@@ -217,7 +168,6 @@
 						})
 					}
 				})
-
 			},
 			// ------------------------------------支付开始------------------------------------------
 			getPaymentInformation: function() { //获取支付信息
@@ -236,13 +186,13 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						openId:that.scenicSpotOpenId,
+						openId: that.scenicSpotOpenId,
 						payType: payPlatform,
 						// price: that.TaxiCost,
 						price: 0.01,
 						orderNumber: that.orderNumber,
-						goodsName: that.SpecialLineName,
-						billDescript: "出租车专车车费",
+						goodsName: that.driverName,
+						billDescript: "出租车车费",
 					},
 					success(res) {
 						that.payment(res.data.data)
@@ -255,11 +205,9 @@
 					provider: "wxpay",
 					orderInfo: orderInfo,
 					success(res) {
-						clearInterval(that.countDownInterval); //清除倒计时
 						that.CheckPayState();
 					},
 					fail(res) {
-						that.CheckPayState();
 						if (res.errMsg == "requestPayment:fail canceled") {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")
@@ -335,6 +283,7 @@
 		background: #F5F5F5;
 		padding-bottom: 40upx;
 	}
+
 
 	.status_bar {
 		height: var(--status-bar-height);

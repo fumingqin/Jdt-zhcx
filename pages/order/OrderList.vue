@@ -50,12 +50,48 @@
 							</view>
 						</view>
 					</view>
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
-						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx;line-height: ; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+						<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<view class="whiteBg">
+						<view class="CZCwhiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -197,10 +233,10 @@
 							</view>
 							
 							<!-- 待选车 -->
-							<view class="at_buttonView" v-if="item.orderType=='待使用'">
+							<view class="at_buttonView" v-if="item.orderType=='待选车'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="details(item.orderNumber)">选班车</view>
+								<view class="at_button at_btQrCode" @click="chooseShuttle(item.orderNumber)">选班车</view>
 							</view>
 					
 							<!-- 待支付 -->
@@ -336,18 +372,16 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-
-							<view class="CTKYBtnView">
-								<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
-								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
-								<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
-								<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
-								<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
-								<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
-								<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
-							</view>
+						<view class="CTKYBtnView">
+							<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
+							<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
+							<button class="allBtn" v-if="item.state=='7'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+							<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
+							<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+							<!-- <button class="allBtn" v-if="item.state=='6'" @click="endorse(item)">改签</button> -->
+							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
 						</view>
 					</view>
 				</view>
@@ -394,13 +428,50 @@
 							</view>
 						</view>
 					</view>
-
+					
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+					
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
-						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+						<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<view class="whiteBg">
+						<view class="CZCwhiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -526,14 +597,15 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 
-							<view class="CTKYBtnView">
-								<!-- <button class="allBtn">车辆位置</button> -->
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<!-- <button class="allBtn QRCode">二维码</button>
+
+						<view class="CTKYBtnView">
+							<button class="allBtn">车辆位置</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+							<!-- <button class="allBtn QRCode">二维码</button>
 							<button class="allBtn">选座</button>
-							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
-							<button class="allBtn">联系司机</button> -->
-							</view>
+							<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
+
 						</view>
 					</view>
 				</view>
@@ -581,12 +653,49 @@
 						</view>
 					</view>
 
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
-						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+						<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<view class="whiteBg">
+						<view class="CZCwhiteBg">">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -729,15 +838,10 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 
-							<view class="CTKYBtnView">
-								<!-- <button class="allBtn">车辆位置</button> -->
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<!-- <button class="allBtn QRCode">二维码</button> -->
-								<!-- <button class="allBtn">选座</button> -->
-								<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
-								<!-- <button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button> -->
-								<!-- <button class="allBtn">联系司机</button> -->
-							</view>
+						<view class="CTKYBtnView">
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
+							<button class="allBtn" @tap="endorse(item)">改签</button>
 						</view>
 					</view>
 				</view>
@@ -786,12 +890,49 @@
 						</view>
 					</view>
 
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
-						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+						<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<view class="whiteBg">
+						<view class="CZCwhiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -976,12 +1117,49 @@
 						</view>
 					</view>
 
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
-						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+						<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<view class="whiteBg">
+						<view class="CZCwhiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -1185,7 +1363,46 @@
 				</swiper-item>
 			</swiper>
 		</uni-popup2>
-
+		<!-- 满意弹出框 -->
+		<uni-popup2 ref="judgeBottomPopup" type="bottom">
+			<form @submit="submit">
+				<view style="height: 780rpx; background-color: #FFFFFF; border-top-left-radius: 20rpx; border-top-right-radius: 20rpx;">
+					<view style="display: flex; flex-direction: row;justify-content: space-between; margin-top: 20rpx;">
+						<view>
+							<!-- 请勿删除 -->
+						</view>
+						<view>
+							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
+						</view>
+						<view style="right: 30rpx;">
+							<uni-icons @click="closePopup('judgeBottomPopup')" type="closeempty" size="30"></uni-icons>
+						</view>
+					</view>
+					<!-- 五角星 -->
+					<view style="margin-top: 60rpx; margin-left: 92rpx;">
+						<uni-rate size="28" margin="20" :value="num" @change="onchange" />
+					</view>
+					<!-- 评价框 -->
+					<view style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
+						<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate"
+						 :key="index">
+							<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
+						</view>
+					</view>
+					<!-- 文本框 -->
+					<view>
+						<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;"
+						 name="textareaValue" />
+						</view>
+				<!-- 提交按钮 -->
+				<view>
+					<button form-type="submit" style="width:648rpx;height:84rpx; border-radius:12rpx; background-color: #FC4646;border-color: #AAAAAA; margin-top: 30rpx; margin-left: 40rpx;">
+						<text style="color: #FFFFFF;align-items: center;line-height: 84rpx; font-size: 34rpx; font-weight:400; font-family:Source Han Sans SC;">提交</text>
+					</button>
+				</view>
+			</view>
+			</form>
+		</uni-popup2>
 		<!-- 退票弹框 -->
 		<uni-popup2 ref="popup2" type="bottom">
 			<view class="box_Vlew">
@@ -1306,6 +1523,7 @@
 	import uQRCode from "@/common/uqrcode.js"
 	import $bcfw from '@/common/BCFW/bcfw.js'
 	import $KyInterface from "@/common/Ctky.js"
+	import uniRate from '@/components/Order/StarJudge/uni-rate/uni-rate.vue';
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1313,7 +1531,8 @@
 			//加载多方弹框组件
 			uniPopup2,
 			uniIcons,
-			emptyData
+			emptyData,
+			uniRate,
 		},
 		data() {
 			return {
@@ -1341,6 +1560,9 @@
 				keYunTicketArray: [], //客运订单
 				keYunTicket: [], //客运订单
 				keYunPaymentData: '', //客运支付
+				evaluate: ['干净', '服务态度好', '热情', '开车技术超好', '开车平稳', '亲切', '成熟稳重', '笑容满面','没有绕路'],
+				rSelect:[],
+				num:'5',
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				orderType1: '',
@@ -1361,7 +1583,11 @@
 					}
 				],
 				specialLineInfo: '',
-				noDataImage: '', //客运弹框背景图
+
+				noDataImage:'',//客运弹框背景图
+				textareaValue:"",
+
+				SfcInfo: '',
 			}
 		},
 		onLoad: function() {
@@ -1499,6 +1725,7 @@
 						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
 						that.getArrayInfo();
+						that.tp_orderListData();
 					},
 					fail(res) {
 						// console.log('错误', res);
@@ -1573,9 +1800,16 @@
 					url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
 				})
 			},
+			// -------------------------客运改签-------------------------
+			endorse:function(item) {
+				console.log(item)
+				uni.navigateTo({
+					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				})
+			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				console.log(orderNumber)
+				// console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -1653,6 +1887,7 @@
 					}
 				})
 			},
+			
 			// -------------------------客运支付-------------------------
 			keYunPay: function(orderNumber) {
 				// var orderInfo = this.info[index];
@@ -1848,6 +2083,77 @@
 			//-------------------------客运二维码弹框-------------------------
 			QRCodeTap: function() {
 				this.$refs.popup.open()
+			},
+			//-------------------------客运开启评价弹窗-------------------------
+			openPopup: function(orderNumber,value) {
+				this.$nextTick(function() {
+					this.$refs[value].open();
+				});
+				this.ctkyOrderNum = orderNumber;
+			},
+			//-------------------------关闭评价弹窗-------------------------
+			closePopup: function(value) {
+				this.$nextTick(function() {
+					this.$refs[value].close();
+				});
+			},
+			onchange(e){
+				this.num = e.value;
+			},
+			tapInfo(e) {
+				if (this.rSelect.indexOf(e) == -1) {
+				    this.rSelect.push(e);//选中添加到数组里
+				} else {
+				    this.rSelect.splice(this.rSelect.indexOf(e), 1); //取消
+				}
+			},
+			/**
+			 * @name 满意评价提交
+			 */
+			submit(e){
+				var that = this;
+				this.textareaValue = e.detail.value.textareaValue;
+				that.closePopup("judgeBottomPopup");
+				that.getOrderValuate(that.ctkyOrderNum,'是');
+			},
+			//-------------------------------客运订单评价-------------------------------
+			getOrderValuate:function(param,manyi){
+				var that = this;
+				var str = '';
+				if(manyi=="是"){
+					for(let item of that.rSelect){
+						str += item + ',';
+					}
+				}else{
+					for(let item of that.rSelect1){
+						str += item + ',';
+					}
+				}
+				uni.request({
+					url: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.Url,
+					method: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.method,
+					data: {
+						orderNumber:param,
+						userId: that.userInfo.userId,
+						satisfied :manyi,
+						starClass:that.num,
+					    selectionTags:str,
+						evaluateContent:that.textareaValue
+					},
+					success(res) {
+						uni.showToast({
+							title:res.data.msg,
+							icon:"none"
+						})
+						// that.getOrderDetailInfo();
+					},
+					fail(res) {
+						uni.showToast({
+							title:"网络连接失败",
+							icon:"none"
+						})
+					}
+				})
 			},
 			//------------------------------------------------客运结束------------------------------------------------
 			onClickItem(e) { //tab点击事件
@@ -2225,6 +2531,259 @@
 			//-------------------------出租车专线代码结束-------------------------
 
 
+			//-------------------------顺风车代码开始-------------------------
+			getSfcOrderList: function() { //获取顺风车订单
+				var that = this;
+				uni.request({
+					url: 'http://111.231.109.113:8004/api/Hitchhiker/QueryHitchhikerOrderByUserID_Passenger',
+					method: 'POST',
+					data: {
+						UserID: that.userInfo.userId,
+					},
+					success: function(res) {
+						uni.stopPullDownRefresh();
+						if (res.data.status) {
+							for (var i = 0; i < res.data.data.length; i++) {
+								var data = res.data.data[i];
+								var orderType = '';
+								if (data.State == 0 || data.State == 1 || data.State == 2 || data.State == 3 || data.State == 4) {
+									orderType = '进行中';
+								} else if (data.State == 5 || data.State == 9) {
+									orderType = '未支付';
+								} else if (data.State == 7 || data.State == 8) {
+									orderType = '已取消';
+								} else if (data.State == 6) {
+									orderType = '已完成';
+								}
+								var obj = {
+									title: '出租车-顺风车',
+									titleIndex: '1',
+									SpecialorderState: data.State,
+									time: data.OrderTime,
+									orderType: orderType,
+									appointmentTime: data.AppointmentTime,
+									money: data.EstimatePrice,
+									startAddress: data.StartAddress,
+									endAddress: data.EndAddress,
+									orderNumber: data.OrderNumber,
+									appointment: true,
+								}
+								that.info.push(obj);
+								if (orderType == '已完成') {
+									that.finishArr.push(obj);
+								} else if (orderType == '等待司机接单' || orderType == '进行中' || orderType == '待上车') {
+									that.goingArr.push(obj);
+								} else if (orderType == '未支付') {
+									that.unfinishArr.push(obj);
+								} else if (orderType == '已取消') {
+									that.cancelArr.push(obj);
+								}
+							}
+						}
+					},
+					fail() {
+						uni.stopPullDownRefresh();
+					}
+				})
+			},
+			CancelSfcOrder: function(OrderNumber) { //取消顺风车订单
+				let that = this;
+				uni.showModal({
+					content: "您确定要取消订单吗",
+					success(res) {
+						if (res.confirm) {
+							uni.request({
+								url: 'http://111.231.109.113:8004/api/Hitchhiker/CancelHitchhikerOrder_Passenger',
+								method: 'POST',
+								data: {
+									OrderNumber: OrderNumber,
+									UserID: that.userInfo.userId,
+								},
+								success(res) {
+									if (res.data.status) {
+										uni.showToast({
+											title: res.data.msg,
+											icon: "none"
+										})
+										uni.startPullDownRefresh();
+									}
+								},
+								fail() {
+									uni.showToast({
+										title: "网络连接失败",
+										icon: "none"
+									})
+								}
+							})
+						}
+					}
+				})
+			},
+			SfcOrderDetail: function(item) { //顺风车详情
+				if (item.orderType == '进行中') {
+					uni.navigateTo({
+						url: '../../pages_CZC/pages/CZC/WaitTakeOrder?orderNumber=' + item.orderNumber,
+					})
+				} else {
+					uni.navigateTo({
+						url: '/pages/order/DownWindCarDetail?orderNumber=' + item.orderNumber,
+					})
+				}
+			},
+			DeleteSfcOrder: function(OrderNumber) { //顺风车删除订单
+				let that = this;
+				uni.showModal({
+					content: "您确定要删除订单吗",
+					success(res) {
+						if (res.confirm) {
+							uni.request({
+								url: 'http://111.231.109.113:8004/api/Hitchhiker/DeleteHitchhikerOrder_Passenger',
+								method: 'POST',
+								data: {
+									OrderNumber: OrderNumber,
+									UserID: that.userInfo.userId,
+								},
+								success(res) {
+									// console.log(res)
+									if (res.data.status) {
+
+										uni.showToast({
+											title: res.data.msg,
+											icon: "none"
+										})
+										uni.startPullDownRefresh();
+									}
+								}
+							})
+						}
+					}
+				})
+			},
+			GotoSfcPay: function(value) {
+				uni.navigateTo({
+					url: "../../pages_CZC/pages/CZC/PrivateTaxiPayment?orderNumber=" + value
+				})
+			},
+			CheckSfcPayState: function(orderNumber) { //检测支付状态
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CheckPayState.value,
+					method: $privateTaxi.Interface.CheckPayState.method,
+					data: {
+						payType: 3,
+						orderNumber: orderNumber
+					},
+					success(res) {
+						console.log(res);
+						if (res.data.status) {
+							that.CancelSpecialLineOrder1(orderNumber);
+						} else {
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail() {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			SfcBouncePay: function(orderNumber) {
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.BouncePay.value,
+					method: $privateTaxi.Interface.BouncePay.method,
+					data: {
+						payType: 3,
+						orderNumber: orderNumber,
+						// price:that.FactPayPrice
+						price: 0.01
+					},
+					success(res) {
+						if (res.data.status) {
+							that.CheckPayState(orderNumber)
+						} else {
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			CancelSfcOrder1: function(orderNumber) {
+				//取消订单
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
+					method: 'POST',
+					data: {
+						OrderNumber: orderNumber,
+						UserId: that.userInfo.userId,
+					},
+					success: function(res) {
+						let data = res.data.data;
+						if (res.data.status) {
+							uni.showToast({
+								title: '取消成功',
+								icon: 'none',
+							});
+							uni.startPullDownRefresh();
+						} else {
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none'
+							})
+						}
+					},
+					fail: function(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
+					}
+				});
+
+			},
+			SfcConfirmCancel: function(value) {
+				let that = this;
+				uni.showModal({
+					title: "取消订单",
+					content: "您是否取消订单",
+					success(res) {
+						if (res.confirm) {
+							uni.showLoading({
+								mask: true,
+							})
+							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
+								that.BouncePay(value.orderNumber);
+								uni.hideLoading()
+							} else {
+								that.CancelSpecialLineOrder1(value.orderNumber);
+								uni.hideLoading()
+							}
+						}
+					},
+					fail: function(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
+					}
+				})
+			},
+			//-------------------------顺风车专线代码结束-------------------------
+
 			//-------------------------景区门票代码开始-------------------------
 			//-------------------------请求订单列表-------------------------
 			toFinished: function() {
@@ -2293,6 +2852,63 @@
 					}
 				})
 			},
+			
+			//-------------------------请求旅游产品订单列表-------------------------
+			tp_orderListData: function() {
+				var that = this;
+				uni.getStorage({
+					key: 'userInfo',
+					success: (res) => {
+						this.userInfo = res.data;
+			// 			uni.request({
+			// 				url: $bcfw.Interface.spt_RequestTicketsList.value,
+			// 				method: $bcfw.Interface.spt_RequestTicketsList.method,
+			// 				data: {
+			// 					userId: this.userInfo.userId
+			// 				},
+			
+			// 				header: {
+			// 					'content-type': 'application/json'
+			// 				},
+			// 				success: (res) => {
+			// 					console.log(res);
+			// 					if (res.data.data) {
+			// 						for (var i = 0; i < res.data.data.length; i++) {
+			// 								that.info.push(res.data.data[i]);
+			// 						}
+									
+			// 						for (var i = 0; i < res.data.data.length; i++) {
+			// 							if (res.data.data[i].orderType == '已使用') {
+			// 								that.finishArr.push(that.info[i]);
+			// 							} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待使用') {
+			// 								that.goingArr.push(that.info[i]);
+			// 							} else if (res.data.data[i].orderType == '待支付') {
+			// 								that.unfinishArr.push(res.data.data[i]);
+			// 							} else if (res.data.data[i].orderType == '已取消' || res.data.data[i].orderType == '已退票' || res.data.data[i].orderType == '支付超时' || res.data.data[i].orderType == '已失效') {
+			// 								that.cancelArr.push(res.data.data[i]);
+			// 							}
+			// 						}
+									
+			// 					}
+			
+			// 				}
+			// 			})
+					},
+					fail() {
+						//请求数据失败，停止刷新
+						uni.stopPullDownRefresh();
+						uni.showToast({
+							title: '暂无订单数据，请先登录后查看订单',
+							icon: 'none',
+							success: function() {
+								uni.redirectTo({
+									url: '../GRZX/userLogin?loginType=1&&urlData=2'
+								})
+							}
+						})
+					}
+				})
+			},
 			//-------------------------景区门票-打开二维码弹框-------------------------
 			open5: function(e) {
 				uni.showLoading({
@@ -2336,24 +2952,52 @@
 				this.$refs.popup4.close()
 			},
 
-
+			//-------------------------旅游产品-选车班车-------------------------
+			chooseShuttle:function(e){
+				uni.navigateTo({
+					url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?orderNumber=' +e
+				})
+			},
 			//-------------------------景区门票-详情跳转-------------------------
 			details(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
-				})
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_orderDetails?orderNumber=' + e,
+					})
+				}
 			},
 			//-------------------------景区门票-去支付跳转-------------------------
 			topay(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
-				})
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_selectivePayment?orderNumber=' + e
+					})
+				}
+				
 			},
 			//-------------------------景区门票-再次购买-------------------------
-			repurchase(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
-				})
+			repurchase(e,index) {
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' + JSON.stringify(e)
+					})
+				}
+
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
@@ -2364,6 +3008,34 @@
 				if (this.exitindex == '2') {
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
+					uni.request({
+						url: $lyfw.Interface.spt_BounceTickets.value,
+						method: $lyfw.Interface.spt_BounceTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber,
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.hideLoading()
+							uni.showToast({
+								title: '退票成功',
+								icon: 'success',
+							})
+							this.close2()
+							this.toFinished();
+						},
+						fail: function() {
+							uni.showToast({
+								title: '退票失败',
+								icon: 'none',
+							})
+							uni.hideLoading()
+						}
+					})
+				}else if (this.exitindex == '5'){
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
@@ -2473,6 +3145,42 @@
 					})
 				} else if (this.exitindex == '2') {
 					this.keYunCancelTicket(this.ticketOrderNumber);
+				}else if (this.exitindex == '5') {
+					uni.request({
+						url: $lyfw.Interface.spt_CancelTickets.value,
+						method: $lyfw.Interface.spt_CancelTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							if (e.data.msg == '订单取消成功') {
+								uni.showToast({
+									title: '订单取消成功',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							} else if (e.data.msg == '订单取消失败') {
+								uni.showToast({
+									title: '订单取消失败',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							}
+						},
+						fail() {
+							uni.showToast({
+								title: '取消失败！请检查网络状态',
+								icon: 'none',
+								duration: 1500,
+							})
+						}
+					})
 				}
 			},
 
@@ -2512,6 +3220,34 @@
 						method: $bcfw.Interface.spt_DeleteTickets.method,
 						data: {
 							or_number: this.ticketOrderNumber
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.showToast({
+								title: '删除成功',
+								icon: 'success',
+								duration: 1500,
+							})
+							this.close4();
+							this.toFinished();
+						},
+						fail() {
+							uni.showToast({
+								title: '删除失败！订单已删除',
+								icon: 'none',
+								duration: 1500,
+							})
+						}
+					})
+				}else if (this.exitindex == '5') {
+					uni.request({
+						url: $lyfw.Interface.spt_DeleteTickets.value,
+						method: $lyfw.Interface.spt_DeleteTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber
 						},
 						header: {
 							'content-type': 'application/json'
@@ -2999,7 +3735,51 @@
 			color: #06B4FD;
 		}
 	}
-
+	/* 点击文字框后样式 */
+	.cur {
+		height:54rpx;
+		border-width: 1px;
+		border-radius:8rpx; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+		background-color: #FC4646;
+		border-color: #FC4646;
+	}
+	/* 客运评价弹框点击文字后样式 */
+	.color{
+		color: #FFFFFF;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.unCur{
+		height:54rpx;
+		border-width: 1px;
+		border-color: #AAAAAA;
+		border-radius:8rpx; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+	}
+	.unColor{
+		color:#AAAAAA;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.textArea{
+		height:164rpx;
+		border-width: 1px;
+		padding: 10rpx;
+		border-color: #AAAAAA;
+		border-radius:6rpx;
+		margin-top: 30rpx;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+		color:#999999;
+	}
 	//站点标题
 	.stationTitle {
 		text-overflow: ellipsis;

@@ -77,33 +77,53 @@
 				endStation: '', //终点站
 				departureData: [], //班次数据
 				stationArray: [],
+				isEndores:'',//是否是改签
+				endoresDate:'',//改签日期
+				endoresOrderNum:'',//改签的订单编号
+				endorescompanyCode:'',
 			}
 		},
 		onLoad(param) {
-			// #ifdef H5
-			//获取openid
-			this.getOpenID();
-			// #endif
+			
 			var that = this;
-			//如果传过来的参数没有时间就获取当前时间
-			if (param.date == 'date') {//二维码扫码进来
+			if(param.isEndores) {
+				that.isEndores = param.isEndores;
+				var array = JSON.parse(param.orderInfo);
+				that.startStation = array.startSiteName;
+				that.endStation = array.endSiteName;
+				that.endoresOrderNum = array.orderNumber;
+				that.endorescompanyCode = array.companyCode;
+				var dateArray = array.setOutTime.split(' ');
+				that.endoresDate = dateArray[0];
+				console.log(dateArray[0])
 				//初始化时间轴
-				that.loadDate(param.date);
-				that.getTicketInfo(param.date);
-			} else {
-				//班次列表数据参数，从上一个页面传过来的时间，上下车点
-				that.date = param.date;
-				//初始化时间轴
-				that.loadDate(param.date);
+				that.loadDate(dateArray[0]);
 				//加载班次列表数据
-				that.getTicketInfo(this.date);
+				that.getTicketInfo(dateArray[0]);
+				
+			}else {
+				// #ifdef H5
+				//获取openid
+				this.getOpenID();
+				// #endif
+				that.startStation = param.startStation;
+				that.endStation = param.endStation;
+				//如果传过来的参数没有时间就获取当前时间
+				if (param.date == 'date') {//二维码扫码进来
+					//初始化时间轴
+					that.loadDate(param.date);
+					that.getTicketInfo(param.date);
+				} else {
+					//班次列表数据参数，从上一个页面传过来的时间，上下车点
+					that.date = param.date;
+					//初始化时间轴
+					that.loadDate(param.date);
+					//加载班次列表数据
+					that.getTicketInfo(this.date);
+				}
+				//点击顶部时间，请求该时间的班次列表
+				// this.getDeparture();
 			}
-			this.startStation = param.startStation;
-			this.endStation = param.endStation;
-
-			//点击顶部时间，请求该时间的班次列表
-			this.getDeparture();
-
 		},
 		methods: {
 			getOpenID() {
@@ -114,7 +134,6 @@
 						console.log('当前有openid');
 					},
 					fail: function(fail) {
-						uni.hideLoading();
 						//无openid，请求openid
 						that.getCode();
 					}
@@ -122,6 +141,7 @@
 			},
 			//-------------------------------加载班次列表数据-------------------------------
 			getTicketInfo: function(date) {
+				var that = this;
 				uni.showLoading();
 				if (date == 'date') {
 					date = new Date();
@@ -132,19 +152,17 @@
 					header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
 					data: {
 						systemName: $KyInterface.KyInterface.Ky_ScheduleUrl.systemName,
-						startPosition: this.startStation,
-						endPosition: this.endStation,
+						startPosition: that.startStation,
+						endPosition: that.endStation,
 						date: date,
 					},
 					success: (res) => {
 						uni.hideLoading();
-						// console.log(res.data);
-						let that = this;
-
+						console.log(res.data);
 						//非空判断
-						if (res.data.status == true) { 
+						if (res.data.status == true) {
 							that.departureData = res.data.data;
-						} else {
+						} else if (res.data.status == false){
 							that.departureData = res.data.data;
 							uni.showToast({
 								title: '暂无班次信息',
@@ -153,7 +171,8 @@
 						}
 					},
 					fail(res) {
-						uni.hideLoading();
+						console.log(res);
+						// uni.hideLoading();
 					}
 				});
 			},
@@ -173,6 +192,7 @@
 				this.showPicker = true;
 				this.value = this[type];
 			},
+			
 			//-------------------------------选择日期-------------------------------
 			onSelected(e) {
 				this.showPicker = false;
@@ -222,22 +242,72 @@
 					}
 				}
 			},
+			//-------------------------------改签请求-------------------------------
+			endores:function(item){
+				var that = this;
+				uni.showLoading();
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_endorse.Url,
+					method:$KyInterface.KyInterface.Ky_endorse.method,
+					header:$KyInterface.KyInterface.Ky_endorse.header,
+					data: {
+						orderNumber:that.endoresOrderNum,
+						CompanyCode:that.endorescompanyCode,
+						executeDate:item.setTime,
+						sheduleCompanyCode:item.scheduleCompanyCode,
+						executeScheduleID:item.executeScheduleID,
+						startSiteID:item.startSiteID,
+						endSiteID:item.endSiteID,
+					},
+					success: (res) => {
+						uni.hideLoading();
+						console.log(res);
+						if(res.data) {
+							if(res.data.status == true) {
+								uni.showToast({
+									title:res.data.msg
+								})
+							}else if(res.data.status == false) {
+								uni.showToast({
+									title:res.data.msg,
+									icon:'none'
+								})
+							}
+						}
+					},
+					fail(res) {
+						console.log(res);
+						// uni.hideLoading();
+					}
+				})
+			},
 			//-------------------------------点击班次进行缓存，并打开页面-------------------------------
 			ticketDetail(item) {
 				var that = this;
-
-				uni.setStorage({
-					key: 'ticketDate',
-					data: item,
-					success() {
-						uni.navigateTo({
-							url: './scheduleDetails'
-						})
-					},
-					fail() {
-						console.log('123');
-					}
-				});
+				if(that.isEndores == 'true') {
+					let content = that.startStation + '-' + that.endStation + '-' + that.endoresDate
+					uni.showModal({
+						content:'是否改签到当前班次' + content,
+						success(res) {
+							if(res.confirm) {
+								that.endores(item)
+							}
+						}
+					})
+				}else {
+					uni.setStorage({
+						key: 'ticketDate',
+						data: item,
+						success() {
+							uni.navigateTo({
+								url: './scheduleDetails'
+							})
+						},
+						fail() {
+							console.log('123');
+						}
+					});
+				}
 			},
 			//日期时间转换函数   type 0 年月日 ，1 时分秒 ， 2 星期 ，3 月/日  4几月几日
 			getTime: function(type, date1) {
@@ -304,13 +374,13 @@
 				var date = '';
 				//从首页进来，对时间格式进行操作
 				if (param.date == 'date') {
-					var subStr = new RegExp('-', 'ig');
-					var result = this.date.replace(subStr, "/");
-					date = new Date(result);
-					console.log('result',date);
-				} else { //从二维码进到这个页面，使用系统时间
 					date = new Date();
 					that.getTicketInfo(date);
+					console.log('二维码');
+				} else { //从二维码进到这个页面，使用系统时间
+					// var subStr = new RegExp('-', 'ig');
+					// var result = this.date.replace(subStr, "/");
+					date = new Date(param);
 				}
 				// var mydate = this.date;
 				this.selectIndex = 0;

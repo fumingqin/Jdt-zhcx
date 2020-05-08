@@ -81,7 +81,31 @@
 				</view>
 				<view class="Xx_contentBlock">
 					<text class="Xx_contentTitle" >使用方法</text>
-					<text class="Xx_contentTitle2">凭身份证或订单二维码扫码入园</text>
+					<text class="Xx_contentTitle2">凭订单二维码扫码上车</text>
+				</view>
+				<view class="Xx_contentBlock">
+					<text class="Xx_contentTitle" >出发时间</text>
+					<text class="Xx_contentTitle2">05-09 09:00</text>
+				</view>
+				<view class="Xx_contentBlock">
+					<text class="Xx_contentTitle" >上车点</text>
+					<text class="Xx_contentTitle2">泉州客运中心站</text>
+				</view>
+				<view class="Xx_contentBlock">
+					<text class="Xx_contentTitle" >下车点</text>
+					<text class="Xx_contentTitle2">安溪清水岩</text>
+				</view>
+				<view class="Xx_contentBlock">
+					<text class="Xx_contentTitle" >返程时间</text>
+					<text class="Xx_contentTitle2">05-09 18:00</text>
+				</view>
+				<view class="Xx_contentBlock">
+					<text class="Xx_contentTitle" >上车点</text>
+					<text class="Xx_contentTitle2">安溪清水岩</text>
+				</view>
+				<view class="Xx_contentBlock">
+					<text class="Xx_contentTitle" >下车点</text>
+					<text class="Xx_contentTitle2">泉州客运中心站</text>
 				</view>
 				
 				<!-- 空白二维码区域 -->
@@ -90,8 +114,11 @@
 				<!-- 空白二维码区域 -->
 				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '已退票' || orderInfo.orderType == '已失效'">二维码已失效</view>
 				
+				<!-- 空白二维码区域 -->
+				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待选车'">选择起返班车后生成二维码</view>
+				
 				<!-- 二维码 -->
-				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' || orderInfo.orderType == '已失效' ">
+				<view class="Xx_QRcodeView" :hidden="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '已退票' || orderInfo.orderType == '支付超时' || orderInfo.orderType == '已失效' || orderInfo.orderType == '待选车' ">
 					<view class="Xx_QRcodeBlock1"> 
 						<text class="Xx_QRcodeContentTitle">取票码</text>
 					</view>

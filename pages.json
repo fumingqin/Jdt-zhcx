@@ -107,14 +107,19 @@
 				"navigationStyle": "custom"
 			}
 		},
-		//----------------------------投诉页面----------------------------
+{
+			"path": "pages/order/DownWindCarDetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+//----------------------------投诉页面----------------------------
 		{
 			"path": "pages/order/complaint",
 			"style": {
 				"navigationBarTitleText": "我要投诉"
 			}
 		},
-
 		//----------------------------公共页面----------------------
 		{
 			"path": "pages/Home/InformationDetails",
@@ -152,7 +157,7 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
-	],
+    ],
 
 	"subPackages": [
 		//---------------------------------------------第一个包：传统客运------------------------------------------
@@ -321,7 +326,31 @@
 					}
 				}
 
-			]
+			    ,{
+                    "path" : "pages/CZC/TaxiPayment",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownwindCar",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownWindCarOrder",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownWindCarPay",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+            ]
 		},
 		//---------------------------------------------第三个包：公交查询------------------------------------------
 		{
@@ -644,8 +673,10 @@
 							}
 						}
 					}
+				},{
+					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle",
+					"style" : {}
 				}
-				
 			]
 		},
 		//---------------------------------------------第六个包：个人中心------------------------------------------
