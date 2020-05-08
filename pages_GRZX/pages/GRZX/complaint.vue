@@ -61,9 +61,6 @@
 <script>
 	import pickerAddress from '@/pages_GRZX/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue'
 	import robbyImageUpload from '@/pages_GRZX/components/GRZX/robby-image-upload/robby-image-upload.vue'
-	import {
-		mapState
-	} from 'vuex';
 	export default {
 		components: {
 			pickerAddress,
@@ -115,11 +112,6 @@
 			this.loadUserInfo();
 			
 		},
-		
-		computed:{
-			...mapState(['userInfo']),
-		},
-		
 		methods: {
 			
 			//模拟接口拿值
@@ -181,7 +173,8 @@
 			
 			formSubmit: function(e) {
 			    uni.showModal({
-			        content: '表单数据内容：' + JSON.stringify(this.detailInfo),
+			        //content: '表单数据内容：' + JSON.stringify(this.detailInfo),
+					content: '提交成功',
 			        showCancel: false
 			    });
 			}

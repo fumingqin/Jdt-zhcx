@@ -27,6 +27,15 @@
 				"navigationStyle": "custom"
 			}
 		},
+		//--------------------微信授权登录--------------------
+		//#ifdef MP-WEIXIN
+		{
+			"path": "pages/Home/wxAuthorize",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//#endif
 		//----------------------------个人中心模块----------------------------
 		{
 			"path": "pages/GRZX/user",
