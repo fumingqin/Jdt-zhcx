@@ -3,7 +3,7 @@
 		<map id="map1" class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude" :markers="markers" :show-location="showLocation"
 		:scale="scale" :polyline="polyline" :controls="controls">
 		</map>
-		<view class="orderInfo">
+		<view class="orderInfo" v-if="false">
 			<text style="font-size:32rpx; margin-left: 30rpx; margin-top: 20rpx;">{{orderInfo.station}}</text>
 			<text class="textView">出发时间：{{orderInfo.time}}</text>
 			<text class="textView">当前所在站点：{{orderInfo.currentStation}}</text>
@@ -49,11 +49,15 @@
 				showLocation:true,
 				mapContext: '', //mapContext对象
 				index: 0,
-				latLonArray:[]
+				latLonArray:[],
+				busInfo:[],
 			}
 		},
-		onLoad() {
+		onLoad(item) {
 			var that = this;
+			console.log(item.busInfo)
+			that.busInfo = JSON.parse(item.busInfo);
+			console.log(that.busInfo)
 			//获取系统信息
 			uni.getSystemInfo({
 				success:function(res){
@@ -66,7 +70,7 @@
 			//获取坐标，绘制路线
 			// that.getPoint();
 			//设置班车位置
-			that.getBusLocation();
+			that.getBusLocation(item);
 		},
 		methods: {
 			//获取坐标，绘制路线
@@ -90,6 +94,7 @@
 			//-----------------------------获取自身位置-----------------------------
 			getMyLocation:function() {
 				console.log('自身定位');
+				
 				var that = this;
 				uni.getLocation({
 					//type默认为wgs84返回gps坐标,gcj02返回国测局坐标,可用于uni.openLocation的坐标
@@ -113,7 +118,7 @@
 				//创建绘制坐标点的对象marker
 				var marker = new Object();
 				marker = {
-					id : res.data[i].AID,
+					// id : res.data[i].AID,
 					latitude : res.data[i].Bst_Latitude,
 					longitude : res.data[i].Bst_Longitude,
 				    iconPath : '',//标识显示的图片
@@ -148,10 +153,12 @@
 <style>
 	.content {
 		width: 750rpx;
+		height: 1624rpx;
 		background-color: #FFFFFF;
 	}
 	.map{
 		width: 750rpx;
+		height: 1624rpx;
 	}
 	.orderInfo {
 		background-color: #FFFFFF;

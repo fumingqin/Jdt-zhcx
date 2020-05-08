@@ -598,7 +598,7 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 							<view class="CTKYBtnView">
-								<button class="allBtn">车辆位置</button>
+								<button class="allBtn" @click="busLocation(item)">车辆位置</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
 								<!-- <button class="allBtn QRCode">二维码</button>
@@ -1808,8 +1808,12 @@
 			},
 			// -------------------------客运查看车辆位置-------------------------
 			busLocation:function(item) {
+				var loaction = {
+					latitude:item.lat,
+					longitude:item.lon
+				}
 				uni.navigateTo({
-					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation?busInfo=' + item
+					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation?busInfo=' + JSON.stringify(loaction)
 				})
 			},
 			// -------------------------客运退票-------------------------
