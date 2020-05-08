@@ -553,7 +553,7 @@
 													console.log(res)
 													if (res.data.msg == '出票成功') {
 														uni.redirectTo({
-															url: 'successfulPayment'
+															url: 'tp_successfulPayment'
 														})
 													} else {
 														uni.showToast({
@@ -606,7 +606,7 @@
 								icon:'none'
 							})
 							uni.switchTab({
-								url:'@/pages/Home/Index'
+								url:'../../pages/Home/Index'
 							})
 						}
 					})

@@ -11,11 +11,11 @@
 				<image src="../../static/CZC/radar.png" style="width: 100rpx;height: 100rpx;"></image>
 				<view style="margin-top: 50rpx;align-items: center;">
 					<text class="isWaitText">正在等待司机接单...</text>
-					<text style="color: #999999;font-size: 32rpx;padding-top: 10rpx;" @click="cancleOrder">取消订单</text>
+					<text style="color: #999999;font-size: 32rpx;padding-top: 10rpx;" @click="BouncePay">取消订单</text>
 				</view>
 			</view>
 		</view>
-		<view v-if='state == 1 ||state == 2 || state == 4' style="width: 100%;position: fixed;top: 60px;left: 0px;right: 0px;align-items: center;">
+		<view v-if='state == 1 || state == 2 || state == 4' style="width: 100%;position: fixed;top: 60px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
 			<view elevation='5px' class="comeTopContent">
 				<view style="flex-direction: row; ">
@@ -52,7 +52,7 @@
 				<view @click="callPolice" style="width: 300rpx;align-items: center;border-right:1px solid #2C2D2D;">
 					<text class="callPolice" style="">一键报警</text>
 				</view>
-				<view @click="cancleOrder" style="width: 300rpx;align-items: center;">
+				<view @click="BouncePay" style="width: 300rpx;align-items: center;">
 					<text class="cancle">取消订单</text>
 				</view>
 			</view>
@@ -60,7 +60,7 @@
 		<view v-if='state == 1' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
 			<view elevation='5px' style="width: 300rpx;padding-top: 30rpx;padding-bottom: 30rpx;background-color: #FFFFFF;border-radius: 9px;flex-direction: row;box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);">
-				<view @click="cancleOrder" style="width: 300rpx;align-items: center;">
+				<view @click="BouncePay" style="width: 300rpx;align-items: center;">
 					<text class="cancle">取消订单</text>
 				</view>
 			</view>
@@ -76,7 +76,7 @@
 							<text class="orderTitleFont">车费合计{{totalPrice}}元</text>
 						</view>
 						<view>
-							<text @click="payDetail" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用疑问</text>
+							 <text @click="payDetail" style="font-size:26rpx;font-family:Source Han Sans SC;font-weight:400;color:#4281FF;">费用疑问</text>
 						</view>
 					</view>
 					<view v-for="item in priceArr" :key='item.key' style="flex-direction: row;justify-content: space-between;padding-bottom: 30rpx;">
@@ -90,66 +90,13 @@
 				</view> -->
 			</view>
 		</view>
-		<uni-popup ref="bottomPopup" :maskClick='false' type="bottom">
-			<form @submit="payment">
-				<view style="background-color: #FFFFFF;padding: 20px;box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);border-top-left-radius: 9px;border-top-right-radius: 9px;">
-					<!--<view style="flex-direction: row;justify-content: flex-end;	">
-						</view> -->
-					<view style="flex-direction: row;justify-content: space-between;">
-						<view>
-							<!-- 勿删 -->
-						</view>
-						<view>
-							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">支付{{driverName}}车费</text>
-						</view>
-						<view>
-							<uni-icons @click="close" type="closeempty" size="19"></uni-icons>
-						</view>
-					</view>
-					<view style="margin-top: 30px;flex-direction: row;justify-content: center;align-items: center;">
-						<text style="font-size:60rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{totalPrice}}</text><text
-						 style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:Light;color:#2C2D2D;">元</text>
-					</view>
-					<view style="flex-direction: row;justify-content: center;align-items: center;">
-						<text @click="payDetail" style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#727272;">费用明细</text>
-						<uni-icons @click="payDetail" type="arrowright" size="15" color="#727272"></uni-icons>
-					</view>
-					<!-- <view style="flex-direction: row;justify-content: space-between;margin-top: 20px;">
-						<view>
-							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000">优惠券</text>
-						</view>
-						<view style="flex-direction: row;align-items: center;" @click="choosEcoupon">
-							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#666666;">请选择优惠券</text>
-							<uni-icons type="arrowright" size="15" color="#666666"></uni-icons>
-						</view>
-					</view> -->
-					<view style="border-top-width: 1px;border-color: #EAEAEA;margin-top: 20px;padding-top: 20px;">
-						<radio-group name='chooseType'>
-							<view v-for='item in payType' :key='item.typeName' style="flex-direction: row;justify-content: space-between;padding-bottom: 20px;">
-								<view style="flex-direction: row;justify-content: center;align-items: center;">
-									<image :src='item.iconPath' style="height: 42rpx;width: 42rpx;"></image>
-									<text style="margin-left: 5rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:300;color:#000000;">{{item.typeName}}</text>
-								</view>
-								<view>
-									<radio :value="item.value" :checked="item.checked" :color="item.typeColor" />
-								</view>
-							</view>
-						</radio-group>
-					</view>
-					<view>
-						<button form-type="submit" style="width: 100%;height: 100rpx;background-color: #FE4644;color: #FFFFFF;">
-							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">确定支付{{totalPrice}}元</text>
-						</button>
-					</view>
-				</view>
-			</form>
-		</uni-popup>
-
 	</view>
 </template>
 
 <script>
+	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
 	import $taxi from '@/common/Czc.js';
+	import $downwindCar from "@/common/downwindCar.js"; //顺风车
 	import uniPopup from "@/pages_CZC/components/CZC/uni-popup/uni-popup.vue";
 	import uniIcons from "@/pages_CZC/components/CZC/uni-icons/uni-icons.vue";
 
@@ -176,6 +123,7 @@
 				markers: [], //标记点
 				mapHeight: '', //地图高度
 				hintIndex: -1, //提示状态值
+				hintIndex1: -1, //提示状态值
 				mapContext: '', //mapContext对象
 				isShow: false,
 				index: 0,
@@ -223,16 +171,17 @@
 						checked: false
 					},
 				],
+				FactPayPrice: '', //订单价格
 				AppointmentTime:'',//预约时间
-				StartAddress:'',//出发地点
+				StartAddress:'',//上车点
 				UrgentPhone:"110",//紧急联系人电话
 			}
 		},
 		onLoad(option) {
 			let that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
-			that.orderNumber = option.orderNumber;	
-			getApp().globalData.orderNumber = that.orderNumber; //更改当前订单号 
+			that.orderNumber = option.orderNumber;
+			getApp().globalData.orderNumber = that.orderNumber; //更改当前订单号
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
@@ -250,7 +199,6 @@
 		},
 		onUnload() {
 			let that = this;
-			console.log('onUnload');
 			clearInterval(that.orderInterval);
 			clearInterval(that.directionInterval);
 			clearInterval(that.comingInterval);
@@ -278,8 +226,8 @@
 					title: '加载中'
 				})
 				uni.request({
-					url: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
-					method: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
+					url: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.value,
+					method: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber
 					},
@@ -291,24 +239,26 @@
 						// console.log(res);
 						if (res.data.status) {
 							//赋值结束点经纬度
-							that.startLon = data.startLon; //起点
-							that.startLat = data.startLat;
-							that.endLon = data.endLon; //终点
-							that.endLat = data.endLat;
-							that.thisDriverLon = data.thisDriverLon; //司机
-							that.thisDriverLat = data.thisDriverLat;
-							that.driverPhone = data.driverPhone; //司机电话
-							that.driverName = data.driverName;
-							that.vehicleNumber = data.vehicleNumber; //车牌号
-							that.state = data.state; //订单状态
-							that.StartAddress = data.startAddress;
-							that.AppointmentTime = data.appointmentTime.replace("T"," "); 
+							that.startLon = data.StartLon; //起点
+							that.startLat = data.StartLat;
+							that.endLon = data.EndLon; //终点
+							that.endLat = data.EndLat;
+							that.thisDriverLon = data.DriverLon;
+							that.thisDriverLat = data.DriverLat;
+							that.driverPhone = data.DriverPhone; //司机电话
+							that.driverName = data.DriverName;
+							that.vehicleNumber = data.VehicleNumber; //车牌号
+							that.state = data.State; //订单状态
+							that.FactPayPrice = data.FactPayPrice;
+							that.StartAddress = data.StartAddress; 
+							that.AppointmentTime = data.AppointmentTime.replace("T"," "); 
 							//绘制起终点标记
 							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
 							that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
 							if (that.state == 0) {
 								//等待接单
 								that.hintIndex = 0;
+								that.hintIndex1 = 0;
 							} else if (that.state == 1) {
 								//司机已接单
 
@@ -346,22 +296,22 @@
 								})
 								//开启时时规划
 								that.openRealDirection();
-							} else if (that.state == 5) {
-								//state == 15
-								getApp().globalData.closeUpload();
-								// uni.showToast({
-								// 	title: '请支付订单',
-								// 	icon: 'none'
-								// })
-								uni.redirectTo({
-									url:"./TaxiPayment?orderNumber="+that.orderNumber
-								})
+								// }else if (that.state == 5) {
+								// 	//state == 15
+								// 	getApp().globalData.closeUpload();
+								// 	// uni.showToast({
+								// 	// 	title: '请支付订单',
+								// 	// 	icon: 'none'
+								// 	// })
+								// 	uni.redirectTo({
+								// 		url:"./PaymentSuccess"
+								// 	})
 							} else if (that.state == 6) {
 								//支付完成
 								//关闭旅客上传定位
 								getApp().globalData.closeUpload();
 								uni.redirectTo({
-									url:"./PaymentSuccess"
+									url: "./PaymentSuccess"
 								})
 							} else if (that.state == 7) {
 								//司机取消订单
@@ -398,28 +348,38 @@
 				let that = this;
 				that.orderInterval = setInterval(function() {
 					uni.request({
-						url: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.value,
-						method: $taxi.Interface.SearchExpressOrderByOrderNum_Passenger.method,
+						url: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.value,
+						method: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.method,
 						data: {
 							OrderNumber: that.orderNumber
 						},
 						success: function(res) {
 							let data = res.data.data;
+							// console.log(res)
 							if (res.data.status) {
-								that.thisDriverLon = data.thisDriverLon;
-								that.thisDriverLat = data.thisDriverLat;
-								that.driverPhone = data.driverPhone; //司机电话
-								that.driverName = data.driverName;
-								that.state = data.state; //订单状态
-								that.vehicleNumber = data.vehicleNumber; //车牌号
+								that.thisDriverLon = data.DriverLon;
+								that.thisDriverLat = data.DriverLat;
+								that.driverPhone = data.DriverPhone; //司机电话
+								that.driverName = data.DriverName;
+								that.state = data.State; //订单状态
+								that.vehicleNumber = data.VehicleNumber; //车牌号
 								// console.log(res)
 								// console.log(data.thisDriverLon);
 								// console.log(data.thisDriverLat);
 								if (that.state == 0) {
 									//等待司机接单中
 									that.hintIndex = 0;
+									that.hintIndex1 = 0;
+
 								} else if (that.state == 1) {
 									//司机已接单
+									if (that.hintIndex1 == 0) {
+										uni.showToast({
+											title: '已有司机接单',
+											icon: 'none'
+										});
+										that.hintIndex1 = 1;
+									}
 								} else if (that.state == 2) {
 									//司机已出发
 									//state == 5
@@ -427,7 +387,7 @@
 									getApp().globalData.constantly();
 									if (that.hintIndex == 0) {
 										uni.showToast({
-											title: '已有司机接单',
+											title: '司机已出发',
 											icon: 'none'
 										});
 										that.hintIndex = 1;
@@ -462,30 +422,35 @@
 										//开启到达目的地定时器。
 										that.openRealDirection();
 									}
-								} else if (that.state == 5) {
-									//待支付
-									//state == 15
+									// }else if (that.state == 5) {
+									// 	//待支付
+									// 	//state == 15
+									// 	//关闭旅客上传定位
+									// 	getApp().globalData.closeUpload();
+									// 	//清除定时器
+									// 	clearInterval(that.directionInterval);
+									// 	that.directionInterval = 0;
+									// 	clearInterval(that.orderInterval);
+									// 	that.orderInterval = 0;
+									// 	that.polyline = [];
+									// 	if (!that.isShow) {
+									// 		// that.openBottomPopup();
+									// 	}
+									// 	that.isShow = true;
+									// 	uni.redirectTo({
+									// 		url:"./PaymentSuccess"
+									// 	})
+								} else if (that.state == 6) {
+									//支付完成
 									//关闭旅客上传定位
 									getApp().globalData.closeUpload();
-									//清除定时器
 									clearInterval(that.directionInterval);
 									that.directionInterval = 0;
 									clearInterval(that.orderInterval);
 									that.orderInterval = 0;
 									that.polyline = [];
-									if (!that.isShow) {
-										// that.openBottomPopup();
-									}
-									that.isShow = true;
 									uni.redirectTo({
-										url:"./TaxiPayment?orderNumber="+that.orderNumber
-									})
-								} else if (that.state == 6) {
-									//支付完成
-									//关闭旅客上传定位
-									getApp().globalData.closeUpload();
-									uni.redirectTo({
-										url:"./PaymentSuccess"
+										url: "./PaymentSuccess"
 									})
 								} else if (that.state == 7) {
 									//司机取消订单
@@ -529,7 +494,6 @@
 			callPolice: function() {
 				//一键报警
 				let that = this;
-				console.log(that.userInfo.autograph) 
 				if(that.userInfo.autograph!=""){
 					that.UrgentPhone=that.userInfo.autograph
 				}
@@ -544,7 +508,6 @@
 								type: 'gcj02',
 								geocode: true,
 								success: function(res) {
-									console.log(res)
 									uni.request({
 										url: $taxi.Interface.addPassengerOneTouchAlarm.value,
 										method: $taxi.Interface.addPassengerOneTouchAlarm.method,
@@ -559,7 +522,6 @@
 											uni.makePhoneCall({//拨打紧急联系人电话
 												phoneNumber: that.UrgentPhone
 											});
-											console.log(res);
 											if (res.data.status) {
 												uni.showToast({
 													title: res.data.msg,
@@ -620,10 +582,38 @@
 				}
 				return country + province + city + district + street + streetNum + poiName;
 			},
-			cancleOrder: function() {
-				//取消订单
+			CheckPayState: function() { //检测支付状态
 				let that = this;
-				//关闭所有的定时器
+				uni.request({
+					url: $privateTaxi.Interface.CheckPayState.value,
+					method: $privateTaxi.Interface.CheckPayState.method,
+					data: {
+						payType: 3,
+						orderNumber: that.orderNumber
+					},
+					success(res) {
+						console.log(res);
+						if (res.data.status) {
+							that.cancleOrder();
+						} else {
+							uni.hideLoading();
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail() {
+						uni.hideLoading();
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			BouncePay: function() {
+				let that = this;
 				uni.showModal({
 					title: "取消订单",
 					content: "您是否取消订单",
@@ -632,51 +622,84 @@
 							uni.showLoading({
 								mask: true,
 							})
+							uni.request({
+								url: $privateTaxi.Interface.BouncePay.value,
+								method: $privateTaxi.Interface.BouncePay.method,
+								data: {
+									payType: 3,
+									orderNumber: that.orderNumber,
+									// price:that.FactPayPrice
+									price: 0.01
+								},
+								success(res) {
+									console.log(res)
+									if (res.data.status) {
+										console.log(11)
+										that.CheckPayState()
+									} else {
+										uni.hideLoading();
+										uni.showToast({
+											title: '取消失败',
+											icon: 'none',
+										});
+									}
+								},
+								fail(res) {
+									uni.hideLoading();
+									uni.showToast({
+										title: '网络连接失败',
+										icon: 'none',
+									});
+								}
+							})
+						}
+					}
+				})
+			},
+			cancleOrder: function() {
+				//取消订单
+				let that = this;
+				//关闭所有的定时器				
+				uni.request({
+					url: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.value,
+					method: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.method,
+					data: {
+						OrderNumber: that.orderNumber,
+						UserId: that.userInfo.userId,
+					},
+					success: function(res) {
+						let data = res.data.data;
+						if (res.data.status) {
 							clearInterval(that.directionInterval);
 							that.directionInterval = 0;
 							clearInterval(that.orderInterval);
 							that.orderInterval = 0;
 							getApp().globalData.closeUpload();
-							uni.request({
-								url: $taxi.Interface.CancelExpressOrderByOrderNum_Passenger.value,
-								method: $taxi.Interface.CancelExpressOrderByOrderNum_Passenger.method,
-								data: {
-									OrderNumber: that.orderNumber,
-									userId: that.userInfo.userId,
-								},
-								success: function(res) {
-									let data = res.data.data;
-									if (res.data.status) {
-										uni.hideLoading();
-										uni.showToast({
-											title: '取消成功',
-											icon: 'none',
-											success: function() {}
-										});
-										setTimeout(function() {
-											uni.navigateBack({});
-										}, 1500)
-									} else {
-										uni.hideLoading();
-										uni.showToast({
-											title: res.data.msg,
-											icon: 'none'
-										})
-									}
-								},
-								fail: function(res) {
-									uni.hideLoading();
-									uni.showToast({
-										title: '网络连接失败',
-										icon: 'none'
-									})
-									console.log(res);
-								}
+							uni.hideLoading();
+							uni.showToast({
+								title: '取消成功',
+								icon: 'none',
 							});
+							setTimeout(function() {
+								uni.navigateBack({});
+							}, 1500)
+						} else {
+							uni.hideLoading();
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none'
+							})
 						}
-
+					},
+					fail: function(res) {
+						uni.hideLoading();
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
 					}
-				})
+				});
+
 			},
 			//--------前往终点
 			problem: function() {

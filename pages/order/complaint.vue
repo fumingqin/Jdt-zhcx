@@ -5,15 +5,18 @@
 			<view class="selectAddress">
 				<!-- 选择市区 -->
 				<view class="choiceSQ">
-					<text class="sfdText">事发地</text>
-					<pickerAddress class="regionSelector" @change="change" v-model="detailInfo.txt">{{detailInfo.txt}}<text class="jdticon icon-xia"></text></pickerAddress>
+					<text class="sfdText">模块</text>
+					<!-- <pickerAddress class="regionSelector" @change="change" v-model="detailInfo.txt">{{detailInfo.txt}}<text class="jdticon icon-xia"></text></pickerAddress> -->
+					<view>
+						<text class="regionSelector">{{detailInfo.tsTitle}}</text>
+					</view>
 				</view>
 				<!-- 投诉对象 -->
 				<view class="complaintDX">
 					<text class="tsdxText">投诉对象</text>
-					<picker @change="godetail" :value="index" :range="complaint">
-						<text class="tsnrText">{{complaint[index]}}<text class="jdticon icon-xia"></text></text>
-					</picker>
+					<view>
+						<text class="tsnrText">{{detailInfo.tsDate}}</text>
+					</view>
 				</view>
 			</view>
 
@@ -35,23 +38,23 @@
 			</view>
 			
 			<!-- 上传证据 -->
-			<view class="uploadEvidence">
+<!-- 			<view class="uploadEvidence">
 				<text class="zjText">上传证据</text>
 				<view class="scClass">
 					<robby-image-upload v-model="detailInfo.imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
 				</view>
-			</view>
+			</view> -->
 			
 			<!-- 联系信息 -->
 			<view class="contactInformation">
 				<view class="lxClass">
-					<text class="lxText">联系人&nbsp;(加密保护)</text>
-					<input class="lxTitle" name="nickName" placeholder-style="#AAAAAA" placeholder="请输入" v-model="detailInfo.nickName" adjust-position="" />
+					<text class="lxText">投诉人&nbsp;(加密保护)</text>
+					<input class="lxTitle" name="nickName" placeholder-style="#AAAAAA" placeholder="请输入" v-model="detailInfo.nickname" adjust-position="" />
 				</view>
-				<view class="dhClass">
+<!-- 				<view class="dhClass">
 					<text class="dhText">联系电话&nbsp;(加密保护)</text>
 					<input class="dhTitle" name="mobile" placeholder-style="#AAAAAA" placeholder="请输入" v-model="detailInfo.mobile" adjust-position="" />
-				</view>
+				</view> -->
 				<button class="tjButton" type="primary" :color="'#2b9df2'" form-type="submit" >提交</button>
 			</view>
 		</form>
@@ -59,16 +62,14 @@
 </template>
 
 <script>
-	import pickerAddress from '@/pages_GRZX/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue'
-	import robbyImageUpload from '@/pages_GRZX/components/GRZX/robby-image-upload/robby-image-upload.vue'
-	import {
-		mapState
-	} from 'vuex';
+	// import pickerAddress from '@/pages_GRZX/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue'
+	// import robbyImageUpload from '@/pages_GRZX/components/GRZX/robby-image-upload/robby-image-upload.vue'
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
-		components: {
-			pickerAddress,
-			robbyImageUpload,
-		},
+		// components: {
+		// 	pickerAddress,
+		// 	robbyImageUpload,
+		// },
 
 		data() {
 			return {
@@ -88,12 +89,14 @@
 				b:'本人于 #填写时间  在#填写事发地详细地址# 发生 了 #描述投诉原因# ， 本人希望 #填写您的述求， 如退票#',
 				complaint: [], //投诉对象
 				detailInfo : {//详细信息
-					nickName : '',//用户姓名
-					mobile : '',//用户电话
-					txt: '请选择',//事件选择
-					complaintObject : '',//投诉
+					tsTitle : '',
+					tsDate: '',
+					nickname : '',//用户姓名
+					// mobile : '',//用户电话
+					// txt: '请选择',//事件选择
+					// complaintObject : '',//投诉
 					a:'',//投诉原因
-					imageData : [],//图像日期
+					// imageData : [],//图像日期
 				}
 			}
 		},
@@ -110,16 +113,13 @@
 		// },
 		
 		// 返回数据
-		onLoad:function() {
-			this.routeInit();
+		onLoad:function(options) {
+			this.detailInfo.tsTitle = options.tsTitle;
+			this.detailInfo.tsDate = options.tsData;
+			// this.routeInit();
 			this.loadUserInfo();
 			
 		},
-		
-		computed:{
-			...mapState(['userInfo']),
-		},
-		
 		methods: {
 			
 			//模拟接口拿值
@@ -128,7 +128,7 @@
 				uni.getStorage({
 					key: 'userInfo',			
 					success: function (res) {
-						theself.detailInfo.nickName = res.data.nickName; 
+						theself.detailInfo.nickname = res.data.nickname; 
 						theself.detailInfo.mobile = res.data.mobile;
 						console.log(res)
 					}
@@ -136,11 +136,11 @@
 			},
 			
 			//读取静态数据json.js
-			async routeInit() {
-				let complaint = await this.$api.lyfwcwd('complaint');
-				this.complaint = complaint.data;
-				// console.log(this.complaint)
-			},
+			// async routeInit() {
+			// 	let complaint = await this.$api.lyfwcwd('complaint');
+			// 	this.complaint = complaint.data;
+			// 	// console.log(this.complaint)
+			// },
 
 			//投诉对象内容点击.
 			godetail:function(e){
@@ -180,10 +180,33 @@
 			},
 			
 			formSubmit: function(e) {
-			    uni.showModal({
-			        content: '表单数据内容：' + JSON.stringify(this.detailInfo),
-			        showCancel: false
-			    });
+				uni.showLoading({
+					title:'提交投诉中...'
+				})
+			    uni.request({
+			    	url:$lyfw.Interface.zhcx_addComplaint.value,
+			    	method:$lyfw.Interface.zhcx_addComplaint.method,
+					data:{
+						complaintContent : this.detailInfo.a,
+						complainant : this.detailInfo.nickName,
+						beComplainant : this.detailInfo.tsDate,
+						model : this.detailInfo.tsTitle,
+					},
+					success: (res) => {
+							console.log(res)
+							uni.hideLoading()
+							uni.showToast({
+								title:'投诉成功'
+							})
+					},
+					fail:function(){
+						uni.hideLoading()
+						uni.showToast({
+							title:'投诉失败',
+							icon:'none'
+						})
+					}
+			    })
 			}
 			
 			//上传图片事件

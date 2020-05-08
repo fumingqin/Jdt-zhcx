@@ -308,10 +308,18 @@
 			
 			//路由统一事件
 			godetail3: function(url) {
+				// #ifdef H5
 				uni.showToast({
 					title:'网络约车仅支持小程序或APP!',
 					icon:'none'
 				});
+				// #endif
+				
+				// #ifndef H5
+				uni.navigateTo({
+					url: url
+				});
+				// #endif
 			},
 			
 			//旅游服务专属路由
