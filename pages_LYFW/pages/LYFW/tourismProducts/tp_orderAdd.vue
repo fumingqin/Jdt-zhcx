@@ -204,8 +204,8 @@
 					success: (res) => {
 						this.admissionTicket = res.data;
 						uni.request({
-							url: $lyfw.Interface.spt_GetticketSecurityByticketIde.value,
-							method: $lyfw.Interface.spt_GetticketSecurityByticketIde.method,
+							url: $lyfw.Interface.lyky_GetticketSecurityByticketIde.value,
+							method: $lyfw.Interface.lyky_GetticketSecurityByticketIde.method,
 							data: {
 								ticketId: res.data.ticketId
 							},
@@ -227,8 +227,8 @@
 						this.userInfo = res.data;
 
 						uni.request({
-							url: $lyfw.Interface.spt_GetcouponByuserId.value,
-							method: $lyfw.Interface.spt_GetcouponByuserId.method,
+							url: $lyfw.Interface.lyky_GetcouponByuserId.value,
+							method: $lyfw.Interface.lyky_GetcouponByuserId.method,
 							data: {
 								userId: res.data.userId
 							},
@@ -424,8 +424,8 @@
 					success: function(openid) {
 						// console.log(openid)
 						uni.request({
-							url: $lyfw.Interface.spt_AddtouristOrder.value,
-							method: $lyfw.Interface.spt_AddtouristOrder.method,
+							url: $lyfw.Interface.lyky_AddtouristOrder.value,
+							method: $lyfw.Interface.lyky_AddtouristOrder.method,
 							data: {
 								userId: that.userInfo.userId,
 								ticketId: that.admissionTicket.ticketId,
@@ -505,8 +505,8 @@
 
 				// #ifdef APP-PLUS
 				uni.request({
-					url: $lyfw.Interface.spt_AddtouristOrder.value,
-					method: $lyfw.Interface.spt_AddtouristOrder.method,
+					url: $lyfw.Interface.lyky_AddtouristOrder.value,
+					method: $lyfw.Interface.lyky_AddtouristOrder.method,
 					data: {
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
@@ -537,12 +537,12 @@
 							that.submissionState = false;
 
 						} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
+							uni.hideLoading()
 							uni.showToast({
 								title: '下单失败,您当前有未支付订单',
 								icon: 'none',
 								duration: 2000,
 								success: function() {
-									uni.hideLoading()
 									uni.switchTab({
 										url: '../../../../pages/order/OrderList'
 									})
@@ -552,6 +552,7 @@
 							})
 
 						} else if (res.data.msg == '订单下单成功') {
+							console.log(res.data.data.orderNumber)
 							uni.hideLoading()
 							uni.redirectTo({
 								url: 'tp_selectivePayment?orderNumber=' + res.data.data.orderNumber
@@ -584,8 +585,8 @@
 				// #ifdef MP-WEIXIN
 				console.log()
 				uni.request({
-					url: $lyfw.Interface.spt_AddtouristOrder.value,
-					method: $lyfw.Interface.spt_AddtouristOrder.method,
+					url: $lyfw.Interface.lyky_AddtouristOrder.value,
+					method: $lyfw.Interface.lyky_AddtouristOrder.method,
 					data: {
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
@@ -608,20 +609,23 @@
 					success: (res) => {
 						console.log(res)
 						if (res.data.msg == '无可售门票！') {
+							uni.hideLoading()
 							uni.showToast({
 								title: '该景区无可售门票！',
 								icon: 'none',
 							})
 							that.submissionState = false;
-							uni.hideLoading()
+							
 						} else if (res.data.msg == '下单失败，联系管理员！') {
+							uni.hideLoading()
 							uni.showToast({
 								title: '下单失败，联系管理员！',
 								icon: 'none',
 							})
 							that.submissionState = false;
-							uni.hideLoading()
+							
 						} else if (res.data.msg == "抱歉!下单失败,您当前有未支付完成的订单") {
+							uni.hideLoading()
 							uni.showToast({
 								title: '下单失败,您当前有未支付订单',
 								icon: 'none',
@@ -631,15 +635,16 @@
 										url: '../../../../pages/order/OrderList'
 									})
 									that.submissionState = false;
-									uni.hideLoading()
+									
 								}
 							})
 
 						} else if (res.data.msg == '订单下单成功') {
+							uni.hideLoading()
 							uni.redirectTo({
 								url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
 							})
-							uni.hideLoading()
+							
 						}
 
 					},

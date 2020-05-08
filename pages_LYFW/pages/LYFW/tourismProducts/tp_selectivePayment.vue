@@ -174,8 +174,8 @@
 			})
 
 			uni.request({
-				url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
-				method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
+				url:$lyfw.Interface.lyky_RequestTicketsListDetail.value,
+				method:$lyfw.Interface.lyky_RequestTicketsListDetail.method,
 				data: {
 					orderNumber: options.orderNumber
 				},
@@ -315,8 +315,8 @@
 			//倒计时结束
 			countDownEnd: function() {
 				uni.request({
-					url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
-					method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
+					url:$lyfw.Interface.lyky_RequestTicketsListDetail.value,
+					method:$lyfw.Interface.lyky_RequestTicketsListDetail.method,
 					data: {
 						orderNumber: this.orderInfo.orderNumber
 					},
@@ -327,8 +327,8 @@
 						console.log(res)
 						if (res.data.data[0].orderType == '待支付') {
 							uni.request({
-								url:$lyfw.Interface.spt_CancelTickets.value,
-								method:$lyfw.Interface.spt_CancelTickets.method,
+								url:$lyfw.Interface.lyky_CancelTickets.value,
+								method:$lyfw.Interface.lyky_CancelTickets.method,
 								data: {
 									orderNumber: res.data.data[0].orderNumber
 								},
@@ -403,8 +403,8 @@
 						key:'scenicSpotOpenId',
 						success:()=>{
 							uni.request({
-								url:$lyfw.Interface.spt_getCommonPayparameter.value,
-								method:$lyfw.Interface.spt_getCommonPayparameter.method,
+								url:$lyfw.Interface.lyky_getCommonPayparameter.value,
+								method:$lyfw.Interface.lyky_getCommonPayparameter.method,
 								data: {
 									payType: 5,
 									openId : res.data,
@@ -427,8 +427,8 @@
 							// 				console.log(res)
 							// 				// if(res.errMsg == 'requestPayment:ok'){
 							// 				// 	uni.request({
-							// 				// 		url:$lyfw.Interface.spt_RequestTickets.value,
-							// 				// 		method:$lyfw.Interface.spt_RequestTickets.method,
+							// 				// 		url:$lyfw.Interface.lyky_RequestTickets.value,
+							// 				// 		method:$lyfw.Interface.lyky_RequestTickets.method,
 							// 				// 		data: {
 							// 				// 			orderNumber: that.orderInfo.orderNumber
 							// 				// 		},
@@ -521,8 +521,8 @@
 						key:'scenicSpotOpenId',
 						success:(res)=>{
 							uni.request({
-								url:$lyfw.Interface.spt_Pay.value,
-								method:$lyfw.Interface.spt_Pay.method,
+								url:$lyfw.Interface.lyky_Pay.value,
+								method:$lyfw.Interface.lyky_Pay.method,
 								data: {
 									payType: 4,
 									price: that.orderInfo.orderActualPayment,
@@ -543,8 +543,8 @@
 									}, function(res) {
 										if (res.err_msg == "get_brand_wcpay_request:ok") {
 											uni.request({
-												url:$lyfw.Interface.spt_RequestTickets.value,
-												method:$lyfw.Interface.spt_RequestTickets.method,
+												url:$lyfw.Interface.lyky_RequestTickets.value,
+												method:$lyfw.Interface.lyky_RequestTickets.method,
 												data: {
 													orderNumber: that.orderInfo.orderNumber
 												},
@@ -624,8 +624,8 @@
 				//--------------------------------------微信APP支付-------------------------------------
 				if (this.channeIndex == 0) {
 					uni.request({
-						url:$lyfw.Interface.spt_Pay.value,
-						method:$lyfw.Interface.spt_Pay.method,
+						url:$lyfw.Interface.lyky_Pay.value,
+						method:$lyfw.Interface.lyky_Pay.method,
 						data: {
 							payType: 3,
 							price: that.orderInfo.orderActualPayment,
@@ -643,8 +643,8 @@
 								success: function(res) {
 									if(res.errMsg == 'requestPayment:ok'){
 										uni.request({
-											url:$lyfw.Interface.spt_RequestTickets.value,
-											method:$lyfw.Interface.spt_RequestTickets.method,
+											url:$lyfw.Interface.lyky_RequestTickets.value,
+											method:$lyfw.Interface.lyky_RequestTickets.method,
 											data: {
 												orderNumber: that.orderInfo.orderNumber
 											},
@@ -717,8 +717,8 @@
 					console.log(that.orderInfo.orderNumber)
 					//--------------------------------------支付宝APP支付-------------------------------------
 					uni.request({
-						url:$lyfw.Interface.spt_Pay.value,
-						method:$lyfw.Interface.spt_Pay.method,
+						url:$lyfw.Interface.lyky_Pay.value,
+						method:$lyfw.Interface.lyky_Pay.method,
 						data: {
 							payType: 2,
 							price: that.orderInfo.orderActualPayment,
@@ -736,8 +736,8 @@
 								success: function(res) {
 									console.log(res)
 									uni.request({
-										url:$lyfw.Interface.spt_RequestTickets.value,
-										method:$lyfw.Interface.spt_RequestTickets.method,
+										url:$lyfw.Interface.lyky_RequestTickets.value,
+										method:$lyfw.Interface.lyky_RequestTickets.method,
 										data: {
 											orderNumber: that.orderInfo.orderNumber
 										},
@@ -810,8 +810,8 @@
 			retrievePayment:function(){
 				var that = this;
 				uni.request({
-					url:$lyfw.Interface.spt_getIsPaySuccess.value,
-					method:$lyfw.Interface.spt_getIsPaySuccess.method,
+					url:$lyfw.Interface.lyky_getIsPaySuccess.value,
+					method:$lyfw.Interface.lyky_getIsPaySuccess.method,
 					data: {
 						orderNumber: that.orderInfo.orderNumber,
 					},
@@ -820,8 +820,8 @@
 						console.log(res)
 							if(res.data.msg =='当前订单已支付成功,请勿重复支付'){
 								uni.request({
-									url:$lyfw.Interface.spt_RequestTickets.value,
-									method:$lyfw.Interface.spt_RequestTickets.method,
+									url:$lyfw.Interface.lyky_RequestTickets.value,
+									method:$lyfw.Interface.lyky_RequestTickets.method,
 									data: {
 										orderNumber: that.orderInfo.orderNumber
 									},

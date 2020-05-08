@@ -59,7 +59,13 @@ const Interface = {
 		name:'旅客端-添加评价',
 		method:'POST',
 		page:["CZC/OrderDetail.nvue","CZC/SpecialLineDetail.nvue"]
-	}
+	},
+	InputAmountExpressOrder_Driver: {
+		value: Url + '/api/taxi/InputAmountExpressOrder_Driver',
+		name: '司机端-出租车-订单支付',
+		method: 'POST', //GET-POST
+		pages: []
+	},
 }
 
 const dateFormat = {

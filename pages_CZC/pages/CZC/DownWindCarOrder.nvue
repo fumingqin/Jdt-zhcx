@@ -232,6 +232,7 @@
 						OrderNumber: that.orderNumber
 					},
 					success: function(res) {
+						console.log(res)
 						uni.hideLoading();
 						// console.log(res.data);
 						let data = res.data.data;
@@ -261,7 +262,6 @@
 								that.hintIndex1 = 0;
 							} else if (that.state == 1) {
 								//司机已接单
-
 							} else if (that.state == 2) {
 								//司机已出发
 								//state == 5
@@ -659,7 +659,9 @@
 			cancleOrder: function() {
 				//取消订单
 				let that = this;
-				//关闭所有的定时器				
+				//关闭所有的定时器	
+							console.log(that.orderNumber)
+							console.log(that.userInfo.userId)
 				uni.request({
 					url: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.value,
 					method: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.method,
@@ -668,7 +670,9 @@
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
+						
 						let data = res.data.data;
+						console.log(res)
 						if (res.data.status) {
 							clearInterval(that.directionInterval);
 							that.directionInterval = 0;
