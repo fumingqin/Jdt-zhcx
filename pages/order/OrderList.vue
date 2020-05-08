@@ -150,51 +150,51 @@
 
 							<!-- 已使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='已使用'">
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')" style="margin-right: 0upx;">详情</view>
 							</view>
 
 							<!-- 待使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='待使用'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
 								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 							</view>
 
 							<!-- 待支付 -->
 							<view class="at_buttonView" v-if="item.orderType=='待支付'">
 								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber,'3')">去支付</view>
 							</view>
 
 							<!-- 已退票 -->
 							<view class="at_buttonView" v-if="item.orderType=='已退票'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
 
 							<!-- 已取消 -->
 							<view class="at_buttonView" v-if="item.orderType=='已取消'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
 
 							<!-- 支付超时 -->
 							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
 
 							<!-- 已失效 -->
 							<view class="at_buttonView" v-if="item.orderType=='已失效'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
-
+ 
 						</view>
 					</view>
 					
@@ -204,7 +204,7 @@
 						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
 						<view class="at_view">
 							<view class="at_titleView">
-								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<image class="at_icon" src="../../static/Order/chanping.png" mode="aspectFill"></image>
 								<text class="at_title">{{item.ticketTitle}}</text>
 								<text class="at_status">{{item.orderType}}</text>
 							</view>
@@ -228,50 +228,50 @@
 							<!-- 待使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='待使用'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 							</view>
 							
 							<!-- 待选车 -->
 							<view class="at_buttonView" v-if="item.orderType=='待选车'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="chooseShuttle(item.orderNumber)">选班车</view>
 							</view>
 					
 							<!-- 待支付 -->
 							<view class="at_buttonView" v-if="item.orderType=='待支付'">
 								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'5')">取消</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber,'5')">去支付</view>
 							</view>
 					
 							<!-- 已退票 -->
 							<view class="at_buttonView" v-if="item.orderType=='已退票'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
 					
 							<!-- 已取消 -->
 							<view class="at_buttonView" v-if="item.orderType=='已取消'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
 					
 							<!-- 支付超时 -->
 							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
 					
 							<!-- 已失效 -->
 							<view class="at_buttonView" v-if="item.orderType=='已失效'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
 					
 						</view>
@@ -372,18 +372,16 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-
-							<view class="CTKYBtnView">
-								<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
-								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
-								<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
-								<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
-								<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
-								<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
-								<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
-							</view>
+						<view class="CTKYBtnView">
+							<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
+							<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
+							<button class="allBtn" v-if="item.state=='7'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+							<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
+							<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+							<!-- <button class="allBtn" v-if="item.state=='6'" @click="endorse(item)">改签</button> -->
+							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
 						</view>
 					</view>
 				</view>
@@ -531,9 +529,40 @@
 
 							<!-- 已使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='已使用'">
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')" style="margin-right: 0upx;">详情</view>
 							</view>
 
+						</view>
+					</view>
+					
+					<!-- 旅游产品 -->
+					<!-- 同景区门票 -->
+					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/chanping.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+					
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+					
+							<!-- 已使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='已使用'">
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+							</view>
+					
+					
 						</view>
 					</view>
 
@@ -599,14 +628,15 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 
-							<view class="CTKYBtnView">
-								<!-- <button class="allBtn">车辆位置</button> -->
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<!-- <button class="allBtn QRCode">二维码</button>
+
+						<view class="CTKYBtnView">
+							<button class="allBtn">车辆位置</button>
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+							<!-- <button class="allBtn QRCode">二维码</button>
 							<button class="allBtn">选座</button>
-							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
-							<button class="allBtn">联系司机</button> -->
-							</view>
+							<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
+
 						</view>
 					</view>
 				</view>
@@ -757,13 +787,56 @@
 							<!-- 待使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='待使用'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
 								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 							</view>
 
 						</view>
 					</view>
+					
+					<!-- 旅游产品 -->
+					<!-- 同景区门票 -->
+					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/chanping.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+					
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+					
 
+					
+							<!-- 待使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='待使用'">
+								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
+							</view>
+							
+							<!-- 待选车 -->
+							<view class="at_buttonView" v-if="item.orderType=='待选车'">
+								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="chooseShuttle(item.orderNumber)">选班车</view>
+							</view>
+					
+
+					
+						</view>
+					</view>
+					
 					<!-- 包车订单 -->
 					<!-- 标签class命名：;全称：Purchase Date -->
 					<!-- 内容class命名：cm;全称：custom made -->
@@ -839,15 +912,10 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 
-							<view class="CTKYBtnView">
-								<!-- <button class="allBtn">车辆位置</button> -->
-								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<!-- <button class="allBtn QRCode">二维码</button> -->
-								<!-- <button class="allBtn">选座</button> -->
-								<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
-								<!-- <button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button> -->
-								<!-- <button class="allBtn">联系司机</button> -->
-							</view>
+						<view class="CTKYBtnView">
+							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
+							<button class="allBtn" @tap="endorse(item)">改签</button>
 						</view>
 					</view>
 				</view>
@@ -998,13 +1066,47 @@
 							<!-- 待支付 -->
 							<view class="at_buttonView" v-if="item.orderType=='待支付'">
 								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber,'3')">去支付</view>
 							</view>
 
 
 						</view>
 					</view>
+					
+					<!-- 旅游产品 -->
+					<!-- 同景区门票 -->
+					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/chanping.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+					
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+					
+					
+							<!-- 待支付 -->
+							<view class="at_buttonView" v-if="item.orderType=='待支付'">
+								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'5')">取消</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber,'5')">去支付</view>
+							</view>
+					
+						</view>
+					</view>
+					
 
 					<!-- 包车订单 -->
 					<!-- 标签class命名：;全称：Purchase Date -->
@@ -1225,8 +1327,8 @@
 							<!-- 已退票 -->
 							<view class="at_buttonView" v-if="item.orderType=='已退票'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
 
 							<!-- 已取消 -->
@@ -1239,16 +1341,70 @@
 							<!-- 支付超时 -->
 							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
 
 							<!-- 支付超时 -->
 							<view class="at_buttonView" v-if="item.orderType=='已失效'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
+						</view>
+					</view>
+					
+					
+					<!-- 旅游产品 -->
+					<!-- 同景区门票 -->
+					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/chanping.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+					
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+					
+							<!-- 已退票 -->
+							<view class="at_buttonView" v-if="item.orderType=='已退票'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
+							</view>
+					
+							<!-- 已取消 -->
+							<view class="at_buttonView" v-if="item.orderType=='已取消'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
+							</view>
+					
+							<!-- 支付超时 -->
+							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
+							</view>
+					
+							<!-- 已失效 -->
+							<view class="at_buttonView" v-if="item.orderType=='已失效'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
+							</view>
+					
 						</view>
 					</view>
 
@@ -1369,7 +1525,46 @@
 				</swiper-item>
 			</swiper>
 		</uni-popup2>
-
+		<!-- 满意弹出框 -->
+		<uni-popup2 ref="judgeBottomPopup" type="bottom">
+			<form @submit="submit">
+				<view style="height: 780rpx; background-color: #FFFFFF; border-top-left-radius: 20rpx; border-top-right-radius: 20rpx;">
+					<view style="display: flex; flex-direction: row;justify-content: space-between; margin-top: 20rpx;">
+						<view>
+							<!-- 请勿删除 -->
+						</view>
+						<view>
+							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
+						</view>
+						<view style="right: 30rpx;">
+							<uni-icons @click="closePopup('judgeBottomPopup')" type="closeempty" size="30"></uni-icons>
+						</view>
+					</view>
+					<!-- 五角星 -->
+					<view style="margin-top: 60rpx; margin-left: 92rpx;">
+						<uni-rate size="28" margin="20" :value="num" @change="onchange" />
+					</view>
+					<!-- 评价框 -->
+					<view style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
+						<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate"
+						 :key="index">
+							<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
+						</view>
+					</view>
+					<!-- 文本框 -->
+					<view>
+						<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;"
+						 name="textareaValue" />
+						</view>
+				<!-- 提交按钮 -->
+				<view>
+					<button form-type="submit" style="width:648rpx;height:84rpx; border-radius:12rpx; background-color: #FC4646;border-color: #AAAAAA; margin-top: 30rpx; margin-left: 40rpx;">
+						<text style="color: #FFFFFF;align-items: center;line-height: 84rpx; font-size: 34rpx; font-weight:400; font-family:Source Han Sans SC;">提交</text>
+					</button>
+				</view>
+			</view>
+			</form>
+		</uni-popup2>
 		<!-- 退票弹框 -->
 		<uni-popup2 ref="popup2" type="bottom">
 			<view class="box_Vlew">
@@ -1491,6 +1686,7 @@
 	import uQRCode from "@/common/uqrcode.js"
 	import $bcfw from '@/common/BCFW/bcfw.js'
 	import $KyInterface from "@/common/Ctky.js"
+	import uniRate from '@/components/Order/StarJudge/uni-rate/uni-rate.vue';
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1498,7 +1694,8 @@
 			//加载多方弹框组件
 			uniPopup2,
 			uniIcons,
-			emptyData
+			emptyData,
+			uniRate,
 		},
 		data() {
 			return {
@@ -1526,6 +1723,9 @@
 				keYunTicketArray: [], //客运订单
 				keYunTicket: [], //客运订单
 				keYunPaymentData: '', //客运支付
+				evaluate: ['干净', '服务态度好', '热情', '开车技术超好', '开车平稳', '亲切', '成熟稳重', '笑容满面','没有绕路'],
+				rSelect:[],
+				num:'5',
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				orderType1: '',
@@ -1546,8 +1746,11 @@
 					}
 				],
 				specialLineInfo: '',
+
+				noDataImage:'',//客运弹框背景图
+				textareaValue:"",
+
 				SfcInfo: '',
-				noDataImage: '', //客运弹框背景图
 			}
 		},
 		onLoad: function() {
@@ -1685,7 +1888,7 @@
 						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
 						that.getArrayInfo();
-						that.tp_orderListData();
+						
 					},
 					fail(res) {
 						// console.log('错误', res);
@@ -1760,9 +1963,16 @@
 					url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
 				})
 			},
+			// -------------------------客运改签-------------------------
+			endorse:function(item) {
+				console.log(item)
+				uni.navigateTo({
+					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				})
+			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				console.log(orderNumber)
+				// console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -1840,6 +2050,7 @@
 					}
 				})
 			},
+			
 			// -------------------------客运支付-------------------------
 			keYunPay: function(orderNumber) {
 				// var orderInfo = this.info[index];
@@ -2035,6 +2246,77 @@
 			//-------------------------客运二维码弹框-------------------------
 			QRCodeTap: function() {
 				this.$refs.popup.open()
+			},
+			//-------------------------客运开启评价弹窗-------------------------
+			openPopup: function(orderNumber,value) {
+				this.$nextTick(function() {
+					this.$refs[value].open();
+				});
+				this.ctkyOrderNum = orderNumber;
+			},
+			//-------------------------关闭评价弹窗-------------------------
+			closePopup: function(value) {
+				this.$nextTick(function() {
+					this.$refs[value].close();
+				});
+			},
+			onchange(e){
+				this.num = e.value;
+			},
+			tapInfo(e) {
+				if (this.rSelect.indexOf(e) == -1) {
+				    this.rSelect.push(e);//选中添加到数组里
+				} else {
+				    this.rSelect.splice(this.rSelect.indexOf(e), 1); //取消
+				}
+			},
+			/**
+			 * @name 满意评价提交
+			 */
+			submit(e){
+				var that = this;
+				this.textareaValue = e.detail.value.textareaValue;
+				that.closePopup("judgeBottomPopup");
+				that.getOrderValuate(that.ctkyOrderNum,'是');
+			},
+			//-------------------------------客运订单评价-------------------------------
+			getOrderValuate:function(param,manyi){
+				var that = this;
+				var str = '';
+				if(manyi=="是"){
+					for(let item of that.rSelect){
+						str += item + ',';
+					}
+				}else{
+					for(let item of that.rSelect1){
+						str += item + ',';
+					}
+				}
+				uni.request({
+					url: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.Url,
+					method: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.method,
+					data: {
+						orderNumber:param,
+						userId: that.userInfo.userId,
+						satisfied :manyi,
+						starClass:that.num,
+					    selectionTags:str,
+						evaluateContent:that.textareaValue
+					},
+					success(res) {
+						uni.showToast({
+							title:res.data.msg,
+							icon:"none"
+						})
+						// that.getOrderDetailInfo();
+					},
+					fail(res) {
+						uni.showToast({
+							title:"网络连接失败",
+							icon:"none"
+						})
+					}
+				})
 			},
 			//------------------------------------------------客运结束------------------------------------------------
 			onClickItem(e) { //tab点击事件
@@ -2713,14 +2995,18 @@
 									}
 									//客运
 									//获取用户信息
+									that.tp_orderListData();
 									that.getUserInfo();
+									
 								} else {
 									that.info = [];
 									that.finishArr = [];
 									that.goingArr = [];
 									that.unfinishArr = [];
 									that.cancelArr = [];
+									that.tp_orderListData();
 									that.getUserInfo();
+									
 								}
 							}
 						})
@@ -2744,56 +3030,37 @@
 			//-------------------------请求旅游产品订单列表-------------------------
 			tp_orderListData: function() {
 				var that = this;
-				uni.getStorage({
-					key: 'userInfo',
-					success: (res) => {
-						this.userInfo = res.data;
-			// 			uni.request({
-			// 				url: $bcfw.Interface.spt_RequestTicketsList.value,
-			// 				method: $bcfw.Interface.spt_RequestTicketsList.method,
-			// 				data: {
-			// 					userId: this.userInfo.userId
-			// 				},
-			
-			// 				header: {
-			// 					'content-type': 'application/json'
-			// 				},
-			// 				success: (res) => {
-			// 					console.log(res);
-			// 					if (res.data.data) {
-			// 						for (var i = 0; i < res.data.data.length; i++) {
-			// 								that.info.push(res.data.data[i]);
-			// 						}
-									
-			// 						for (var i = 0; i < res.data.data.length; i++) {
-			// 							if (res.data.data[i].orderType == '已使用') {
-			// 								that.finishArr.push(that.info[i]);
-			// 							} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待使用') {
-			// 								that.goingArr.push(that.info[i]);
-			// 							} else if (res.data.data[i].orderType == '待支付') {
-			// 								that.unfinishArr.push(res.data.data[i]);
-			// 							} else if (res.data.data[i].orderType == '已取消' || res.data.data[i].orderType == '已退票' || res.data.data[i].orderType == '支付超时' || res.data.data[i].orderType == '已失效') {
-			// 								that.cancelArr.push(res.data.data[i]);
-			// 							}
-			// 						}
-									
-			// 					}
-			
-			// 				}
-			// 			})
+				uni.request({
+					url: $lyfw.Interface.lyky_RequestTicketsList.value,
+					method: $lyfw.Interface.lyky_RequestTicketsList.method,
+					data: {
+						userId: this.userInfo.userId
 					},
-					fail() {
-						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
-						uni.showToast({
-							title: '暂无订单数据，请先登录后查看订单',
-							icon: 'none',
-							success: function() {
-								uni.redirectTo({
-									url: '../GRZX/userLogin?loginType=1&&urlData=2'
-								})
+							
+					header: {
+						'content-type': 'application/json'
+					},
+					success: (res) => {
+						console.log(res);
+						if (res.data.status == true) {
+							for (var i = 0; i < res.data.data.length; i++) {
+									that.info.push(res.data.data[i]);
 							}
-						})
+							
+							for (var i = 0; i < res.data.data.length; i++) {
+								if (res.data.data[i].orderType == '已使用') {
+									that.finishArr.push(res.data.data[i]);
+								} else if (res.data.data[i].orderType == '待使用') {
+									that.goingArr.push(res.data.data[i]);
+								} else if (res.data.data[i].orderType == '待支付') {
+									that.unfinishArr.push(res.data.data[i]);
+								} else if (res.data.data[i].orderType == '已取消' || res.data.data[i].orderType == '已退票' || res.data.data[i].orderType == '支付超时' || res.data.data[i].orderType == '已失效') {
+									that.cancelArr.push(res.data.data[i]);
+								}
+							}
+							
+						}
+							
 					}
 				})
 			},
@@ -2847,7 +3114,7 @@
 				})
 			},
 			//-------------------------景区门票-详情跳转-------------------------
-			details(e) {
+			details(e,index) {
 				if(index =='3'){
 					uni.navigateTo({
 						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
@@ -2860,7 +3127,7 @@
 				}
 			},
 			//-------------------------景区门票-去支付跳转-------------------------
-			topay(e) {
+			topay(e,index) {
 				if(index =='3'){
 					uni.navigateTo({
 						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
@@ -2925,8 +3192,8 @@
 					})
 				}else if (this.exitindex == '5'){
 					uni.request({
-						url: $lyfw.Interface.spt_BounceTickets.value,
-						method: $lyfw.Interface.spt_BounceTickets.method,
+						url: $lyfw.Interface.lyky_BounceTickets.value,
+						method: $lyfw.Interface.lyky_BounceTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber,
 						},
@@ -3035,8 +3302,8 @@
 					this.keYunCancelTicket(this.ticketOrderNumber);
 				}else if (this.exitindex == '5') {
 					uni.request({
-						url: $lyfw.Interface.spt_CancelTickets.value,
-						method: $lyfw.Interface.spt_CancelTickets.method,
+						url: $lyfw.Interface.lyky_CancelTickets.value,
+						method: $lyfw.Interface.lyky_CancelTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
@@ -3132,8 +3399,8 @@
 					})
 				}else if (this.exitindex == '5') {
 					uni.request({
-						url: $lyfw.Interface.spt_DeleteTickets.value,
-						method: $lyfw.Interface.spt_DeleteTickets.method,
+						url: $lyfw.Interface.lyky_DeleteTickets.value,
+						method: $lyfw.Interface.lyky_DeleteTickets.method,
 						data: {
 							orderNumber: this.ticketOrderNumber
 						},
@@ -3634,7 +3901,51 @@
 			color: #06B4FD;
 		}
 	}
-
+	/* 点击文字框后样式 */
+	.cur {
+		height:54rpx;
+		border-width: 1px;
+		border-radius:8rpx; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+		background-color: #FC4646;
+		border-color: #FC4646;
+	}
+	/* 客运评价弹框点击文字后样式 */
+	.color{
+		color: #FFFFFF;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.unCur{
+		height:54rpx;
+		border-width: 1px;
+		border-color: #AAAAAA;
+		border-radius:8rpx; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+	}
+	.unColor{
+		color:#AAAAAA;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.textArea{
+		height:164rpx;
+		border-width: 1px;
+		padding: 10rpx;
+		border-color: #AAAAAA;
+		border-radius:6rpx;
+		margin-top: 30rpx;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+		color:#999999;
+	}
 	//站点标题
 	.stationTitle {
 		text-overflow: ellipsis;

@@ -480,7 +480,10 @@
 							"titleNView": {
 								"type": "transparent"
 							}
-						}
+						},
+						"enablePullDownRefresh": true, //设置为true表示当前页面开启下拉刷新
+						"onReachBottomDistance": 0,
+						"backgroundTextStyle": "dark" //下拉 loading 的样式，仅支持 dark/light
 					}
 				},
 				//----------------------------------跟团游页面----------------------------------

@@ -83,30 +83,17 @@
 					<text class="Xx_contentTitle" >使用方法</text>
 					<text class="Xx_contentTitle2">凭订单二维码扫码上车</text>
 				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >出发时间</text>
-					<text class="Xx_contentTitle2">05-09 09:00</text>
+				
+				<view class="Xx_contentBlock" @click="open2">
+					<text class="Xx_contentTitle" >出发班次信息</text>
+					<text class="Xx_contentTitle2" style="color: #007AFF;">点击查看 > </text>
 				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >上车点</text>
-					<text class="Xx_contentTitle2">泉州客运中心站</text>
+				
+				<view class="Xx_contentBlock" @click="open2">
+					<text class="Xx_contentTitle" >返程班次信息</text>
+					<text class="Xx_contentTitle2" style="color: #007AFF;">点击查看 > </text>
 				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >下车点</text>
-					<text class="Xx_contentTitle2">安溪清水岩</text>
-				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >返程时间</text>
-					<text class="Xx_contentTitle2">05-09 18:00</text>
-				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >上车点</text>
-					<text class="Xx_contentTitle2">安溪清水岩</text>
-				</view>
-				<view class="Xx_contentBlock">
-					<text class="Xx_contentTitle" >下车点</text>
-					<text class="Xx_contentTitle2">泉州客运中心站</text>
-				</view>
+				
 				
 				<!-- 空白二维码区域 -->
 				<view class="Xx_QRcodeViewBlank" v-if="orderInfo.orderType == '待支付' || orderInfo.orderType == '已取消' || orderInfo.orderType == '支付超时'">支付后生成二维码及取票码</view>
@@ -133,6 +120,8 @@
 					</view>  
 				</view>
 				
+				
+				
 				<!-- 出行人+退改+保险 -->
 				<view style="margin-top: 20upx;" v-for="(item,index) in orderInfo.addressData" :key="index">
 					<text class="Xx_contentTitle" >出行人</text>
@@ -147,6 +136,7 @@
 						<text class="Xx_contentTitle2">{{item.userPhoneNum}}</text>
 					</view>
 				</view>
+				
 				<view class="Xx_contentBlock" v-if="orderInfo.orderInsure == true">
 					<text class="Xx_contentTitle" >附加保险</text>
 					<text class="Xx_contentTitle2">太平洋门票意外险 经济款×{{orderInfo.addressData.length}}份</text>
@@ -154,6 +144,43 @@
 			</view>
 		</view>
 		
+		<!-- 嵌套弹框组件popup -->
+		<uni-popup ref="popup2" type="bottom">
+			
+				<view class="box_Vlew2">
+					<scroll-view scroll-y="true">
+					<view class="box_titleView">
+						<text class="box_title">出发班次信息</text> 
+						<text class="box_icon jdticon icon-fork " @click="close2"></text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >出发时间</text>
+						<text class="MP_cost">2020-05-09 09:00</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >上车点</text>
+						<text class="MP_cost">泉州客运中心站</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >下车点</text>
+						<text class="MP_cost">安溪清水岩</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >驾驶员</text>
+						<text class="MP_cost">王师傅</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >车牌号</text>
+						<text class="MP_cost">闽C15245</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >联系电话</text>
+						<text class="MP_cost" style="color: #007AFF;" @click="makeCall">13481858714 (点击拨打电话)</text>
+					</view>
+					</scroll-view>
+				</view>
+			
+		</uni-popup>
 		
 	</view>
 </template>	 
@@ -208,8 +235,8 @@
 			//访问接口数据
 			lyfwData(e) {
 				uni.request({
-					url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
-					method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
+					url:$lyfw.Interface.lyky_RequestTicketsListDetail.value,
+					method:$lyfw.Interface.lyky_RequestTicketsListDetail.method,
 					data:{
 						orderNumber : e
 					},
@@ -233,6 +260,16 @@
 			close() {
 				this.$refs.popup.close()
 			},
+			
+			//查看出发班次弹框
+			open2() {
+				this.$refs.popup2.open()
+			},
+			//关闭出发班次弹框
+			close2() {
+				this.$refs.popup2.close()
+			},
+			
 			//数组提取
 			screenUser: function() {
 				let adult = this.orderInfo.addressData.filter(item => {
@@ -266,7 +303,15 @@
 			        fileType: 'jpg',
 			        correctLevel: uQRCode.defaults.correctLevel,
 			      })
-			    }
+			    },
+				
+				
+			// 拨打电话
+			makeCall :function(e){
+				uni.makePhoneCall({
+					phoneNumber:'13481858714'
+				})
+			}
 			
 			
 		}
@@ -379,6 +424,7 @@
 				color: #888;
 				font-size: 28upx;
 				display: block; // 让字体换行
+				margin-top: 16rpx;
 			}
 		
 			.MP_cost {
@@ -399,6 +445,49 @@
 					color: #f85e52;
 					float: right;
 				}
+			}
+		}
+	}
+	
+	//须知弹框
+	.box_Vlew2{
+		// width: 90%;
+		padding: 16upx 40upx;
+		padding-bottom: 92upx;
+		background: #FFFFFF;
+		.box_titleView{
+			margin: 24upx 0;
+			//弹框标题
+			.box_title {
+				position: relative;
+				font-size: 38upx;
+				font-weight: bold;
+				top: 8upx;
+				margin-bottom: 16upx;
+			}
+			//弹框关闭按钮
+			.box_icon {
+				margin-top: 8upx;
+				float: right;
+				color: #333;
+				font-size: 32upx;
+			}
+		}
+		//使用时间/费用详情
+		.MP_selectionDate {
+			margin-top: 24upx;
+			margin-bottom: 24upx;
+			border-top: 1px #F5F5F5 dashed;
+			.MP_text {
+				font-size: 30upx;
+				display: block; // 让字体换行
+			}
+		
+			.MP_cost {
+				display: block; // 让字体换行
+				margin: 20upx 0;
+				font-size: 28upx;
+				color: #888;
 			}
 		}
 	}

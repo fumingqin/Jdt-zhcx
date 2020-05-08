@@ -183,12 +183,17 @@
 				uni.showLoading({
 					title:'提交投诉中...'
 				})
+				console.log(this.detailInfo.a)
+				console.log(this.detailInfo.nickname)
+				console.log(this.detailInfo.tsDate)
+				console.log(this.detailInfo.tsTitle)
+				
 			    uni.request({
-			    	url:$lyfw.Interface.zhcx_addComplaint.value,
-			    	method:$lyfw.Interface.zhcx_addComplaint.method,
+			    	url:$lyfw.Interface.person_addComplaint.value,
+			    	method:$lyfw.Interface.person_addComplaint.method,
 					data:{
 						complaintContent : this.detailInfo.a,
-						complainant : this.detailInfo.nickName,
+						complainant : this.detailInfo.nickname,
 						beComplainant : this.detailInfo.tsDate,
 						model : this.detailInfo.tsTitle,
 					},
