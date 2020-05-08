@@ -372,16 +372,17 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-						<view class="CTKYBtnView">
-							<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
-							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
-							<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
-							<button class="allBtn" v-if="item.state=='7'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
-							<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
-							<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
-							<!-- <button class="allBtn" v-if="item.state=='6'" @click="endorse(item)">改签</button> -->
-							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
+							<view class="CTKYBtnView">
+								<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
+								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
+								<button class="allBtn" v-if="item.state=='7'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
+								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- <button class="allBtn" v-if="item.state=='6'" @click="endorse(item)">改签</button> -->
+								<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
+							</view>
 						</view>
 					</view>
 				</view>
@@ -627,16 +628,14 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-
-
-						<view class="CTKYBtnView">
-							<button class="allBtn">车辆位置</button>
-							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
-							<!-- <button class="allBtn QRCode">二维码</button>
-							<button class="allBtn">选座</button>
-							<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
-
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="busLocation(item)">车辆位置</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+								<!-- <button class="allBtn QRCode">二维码</button>
+								<button class="allBtn">选座</button>
+								<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
+							</view>
 						</view>
 					</view>
 				</view>
@@ -911,11 +910,11 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
-							<button class="allBtn" @tap="endorse(item)">改签</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
+								<button class="allBtn" @tap="endorse(item)">改签</button>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -1968,6 +1967,16 @@
 				console.log(item)
 				uni.navigateTo({
 					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				})
+			},
+			// -------------------------客运查看车辆位置-------------------------
+			busLocation:function(item) {
+				var loaction = {
+					latitude:item.lat,
+					longitude:item.lon
+				}
+				uni.navigateTo({
+					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation?busInfo=' + JSON.stringify(loaction)
 				})
 			},
 			// -------------------------客运退票-------------------------

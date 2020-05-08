@@ -11,7 +11,10 @@
 				<view>{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
 			</view>
 			<!-- 发车时间 -->
-			<view> 发车时间：{{orderInfo.setOutTime}}</view>
+			<view class="headText"> 发车时间：{{orderInfo.setOutTime}}</view>
+			<view class="headText"> 司机姓名：{{getDetailInfo(orderInfo.driverName)}}</view>
+			<view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view>
+			<view class="headText"> 车牌号：{{getDetailInfo(orderInfo.vehicleNumber)}}</view>
 		</view>
 		<!-- 乘客信息 -->
 		<scroll-view class="scrollBox" scroll-y="true">
@@ -89,6 +92,7 @@
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
 			console.log(orderInfo);
+			
 			this.ticketNumber = orderInfo.ticketNumber;
 			that.stringTurnArray(orderInfo.iDNameType);
 			that.getTicketNum(orderInfo);
@@ -114,6 +118,12 @@
 							// console.log('完成')
 						}
 					})
+				}
+			},
+			//-------------------------------报班信息-------------------------------
+			getDetailInfo(param){
+				if(!param) {
+					return '该车未报班，无法获取详细信息'
 				}
 			},
 			//-------------------------------获取乘车人信息-------------------------------
@@ -144,15 +154,17 @@
 			},
 			//-------------------------------获取取票号-------------------------------
 			getOneTicketNum(ticketNum,index){
-				let a = ticketNum.indexOf(',')
-				if(a == -1) {
-					return ticketNum;
-				}else {
-					var array = ticketNum.split('-');
-					let ticketHeader = array[0];
-					var array2 = array[1];
-					var array3 = array2.split(',');
-					return ticketHeader + '-' + array3[index];
+				if(ticketNum) {
+					let a = ticketNum.indexOf(',')
+					if(a == -1) {
+						return ticketNum;
+					}else {
+						var array = ticketNum.split('-');
+						let ticketHeader = array[0];
+						var array2 = array[1];
+						var array3 = array2.split(',');
+						return ticketHeader + '-' + array3[index];
+					}
 				}
 			},
 			//-------------------------------计算车票数量-------------------------------
@@ -233,7 +245,7 @@
 		font-weight: 500;
 	}
 	/* 发车时间 */
-	.head>view:last-child {
+	.headText {
 		padding: 10rpx 20rpx;
 		font-size: 25rpx;
 		color: #666666;
