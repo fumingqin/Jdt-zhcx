@@ -134,7 +134,7 @@
 					data:e,
 					success() {
 						uni.navigateTo({
-							url: 'orderAdd'
+							url: 'tp_orderAdd'
 						})
 					}
 				})

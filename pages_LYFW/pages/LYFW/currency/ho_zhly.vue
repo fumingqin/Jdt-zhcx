@@ -228,7 +228,7 @@
 			//资讯详情页
 			informationTo: function(e) {
 				uni.navigateTo({
-					url: 'InformationDetails?id=' + e
+					url:'../../../../pages/Home/InformationDetails?id=' + e
 				})
 			},
 

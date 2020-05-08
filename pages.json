@@ -557,7 +557,7 @@
 					"path": "pages/LYFW/tourismProducts/tp_ticketsList",
 				
 					"style": {
-						"navigationBarTitleText": "景区列表",
+						"navigationBarTitleText": "产品列表",
 						"enablePullDownRefresh": true,
 						"navigationBarBackgroundColor": "#FFFFFF",
 						"onReachBottomDistance": 0,
@@ -569,7 +569,7 @@
 				{
 					"path": "pages/LYFW/tourismProducts/tp_ticketsDetails",
 					"style": {
-						"navigationBarTitleText": "景区详情",
+						"navigationBarTitleText": "产品详情",
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
 						// #endif
@@ -597,7 +597,7 @@
 				}, {
 					"path": "pages/LYFW/tourismProducts/tp_successfulPayment",
 					"style": {
-						"navigationBarTitleText": "购票成功",
+						"navigationBarTitleText": "购买成功",
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
 						// #endif
