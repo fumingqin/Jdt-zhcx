@@ -136,6 +136,10 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
+        ,{
+            "path" : "pages_LYFW/pages/LYFW/touristBus/tb_shuttleHome",
+            "style" : {}
+        }
     ],
 
 	"subPackages": [
