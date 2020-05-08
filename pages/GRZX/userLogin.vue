@@ -82,7 +82,7 @@
 				       }
 				});
 				that.loginType=e;
-				console.log(e)
+				// console.log(e)
 			},
 			judgeNum(val){  //只能输入数字
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
@@ -171,29 +171,6 @@
 												console.log("返回上一页")
 												uni.navigateBack();//返回上一页
 											}
-											// uni.getStorage({
-											// 	key:'userInfo',
-											// 	success:function(user){
-											// 		//console.log(user,"user")
-											// 		if(user.data.nickname==""||user.data.nickname==null){
-											// 			user.data.nickname="用户"+user.data.phoneNumber;
-											// 		}
-											// 		var base64=res.data.data.portrait;
-											// 		if(that.isBase64(base64)){
-											// 			base64ToPath(base64)
-											// 			  .then(path => {
-											// 				user.data.portrait=path;
-											// 				that.login(user.data);
-											// 			  })
-											// 			  .catch(error => {
-											// 				console.error(error)
-											// 			  })	
-											// 		}else{
-											// 			that.login(user.data);
-											// 		}
-													
-											// 	}
-											// })
 										}
 									})
 									
@@ -216,17 +193,12 @@
 			},
 			wxLogin(){		//微信授权登录
 				var theSelf=this;
-				//var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
-				//var address;
 				uni.login({
 					provider:'weixin',
 					success:function(loginRes){
 						uni.getUserInfo({	
 							provider: 'weixin',
 							success:function(res){			
-								//address=getChina.pinyin(res.userInfo.province)+" "+getChina.pinyin(res.userInfo.city);
-								address=res.userInfo.province+" "+res.userInfo.city;
-								res.userInfo.address=address;
 								res.userInfo.phoneNumber="";
 								uni.setStorage({
 									key:"userInfo",
@@ -236,9 +208,6 @@
 									title: '授权成功',
 									icon:"none"
 								});
-								if(res!=null||res!=""){
-									theSelf.login(res.userInfo);						
-								}
 								//绑定手机号
 								uni.getStorage({
 									key:'userInfo',
@@ -256,11 +225,6 @@
 										}
 									}
 								})
-								/* setTimeout(function(){
-									uni.navigateBack({
-										delta: 2
-									})
-								},1000); */	
 							},
 							fail:function(){
 								
