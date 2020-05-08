@@ -9,22 +9,22 @@
 		<view class="ctky_View" :class="{ctky_ViewBorder : index==statusIndex}"  v-for="(item,index) in departureData" :key="index" @click="selection(item,index)" >
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >景区</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">2020-05-09 09:00</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >出发</view>
+					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.setOutDate}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../../static/LYFW/tourismProducts/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">泉州客运中心站</view>
+					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.startStation}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../../static/LYFW/tourismProducts/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">安溪清水岩</view>
+					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.endStation}}</view>
 				</view>
-				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;font-size: 28upx;color: #666666;">座席小型中级/约61.3分钟</view>
+				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;font-size: 28upx;color: #666666;">{{item.lineContent}}</view>
 			</view>
 			<view class="ctky_View_Right">
 				<view>
-					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:SourceHanSansSC-Light; color: #FF6600;">余20座</view>
+					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:SourceHanSansSC-Light; color: #FF6600;">余{{item.count}}座</view>
 				</view>
 			</view>
 		</view>
@@ -40,17 +40,29 @@
 		data() {
 			return {
 				originIndex : 0,//页面传参 0是出发班车 1是返程班车
-				statusIndex : '', //选中状态值
+				statusIndex : 0, //选中状态值
 				selectionData: '',//选中的班次信息
-				departureData :'',
+				orderNumber : '',//订单编号
+				departureData :'', //循环班次列表
 				setOutDate : '',//时间
 				startStation : '',//起始站
 				endStation : '',//终点站
 			}
 		},
 		onLoad:function(options){
+			this.originIndex = options.originIndex;
+			uni.getStorage({
+				key:'chooseShuttleData',
+				success: (res) => {
+					this.orderNumber = res.data.orderNumber;
+					this.setOutDate = res.data.orderDate;
+					this.startStation = res.data.planStart;
+					this.endStation = res.data.planEnd;
+					this.GetSchedule();
+				}
+			})
 			
-			this.GetSchedule();
+			
 		},
 		methods: {
 			selection:function(item,index){
@@ -59,33 +71,43 @@
 			},
 			//提交绑定班次
 			paymentSatas: function(){
-				// uni.request({
-				// 	url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
-				// 	method: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
-				// 	data:{
-						
-				// 	},
-				// 	success: (res) => {
-				// 		console.log(res)
-				// 	},
-				// 	fail: (ee) => {
-				// 		uni.showToast({
-				// 			title:'网络异常，请检查网络后重试',
-				// 			icon:'none'
-				// 		})
-				// 	}
-				// })
+				var that = this;
+					uni.request({
+						url: $lyfw.Interface.lyky_BindGoInfo.value,
+						method: $lyfw.Interface.lyky_BindGoInfo.method,
+						data:{
+							orderNumber : this.orderNumber,
+							scheduleID : this.departureData[that.statusIndex].scheduleID
+						},
+						success: (res) => {
+							// console.log(res)
+							uni.showToast({
+								title:'选择班次成功'
+							})
+							uni.redirectTo({
+								url:'tp_chooseShuttle2?originIndex=1'
+							})
+						},
+						fail: (ee) => {
+							uni.showToast({
+								title:'网络异常，请检查网络后重试',
+								icon:'none'
+							})
+						}
+					})
+				
+				
 			},
 			
 			//获取班次发车信息
 			GetSchedule:function(){
 				uni.request({
-						url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
-						method: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
+						url: $lyfw.Interface.lyky_GetScheduleByDateStartStationEndStation.value,
+						method: $lyfw.Interface.lyky_GetScheduleByDateStartStationEndStation.method,
 						data:{
 							setOutDate : this.setOutDate,
 							startStation : this.startStation,
-							endStation : this.endStation
+							endStation : this.endStation,
 						},
 						success: (res) => {
 							console.log(res)
@@ -144,9 +166,10 @@
 	}
 	
 	.MP_information3 {
-		position: absolute;
-		bottom: 48upx;
-		width: 672upx;
+		position: fixed;
+		bottom: 32upx;
+		left: 0;
+		right: 0;
 		padding: 24upx 0;
 		border-radius: 64upx;
 		margin: 0 40upx;
