@@ -29,10 +29,14 @@
 								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 							</view>
 							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+								<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.time}}</view>
+							</view>
+							<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+							<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 							</view>
@@ -52,10 +56,10 @@
 				</view>
 				<!-- 出租车 -->
 				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx;line-height: ; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+					<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 					</view>
-					<view class="whiteBg">
+					<view class="CZCwhiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
 							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -294,6 +298,10 @@
 								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 							</view>
 							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+								<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.time}}</view>
+							</view>
+							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
 								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 							</view>
@@ -318,10 +326,10 @@
 
 				<!-- 出租车 -->
 				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+					<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 					</view>
-					<view class="whiteBg">
+					<view class="CZCwhiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
 							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -480,6 +488,10 @@
 								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 							</view>
 							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+								<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.time}}</view>
+							</view>
+							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
 								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 							</view>
@@ -504,10 +516,10 @@
 
 				<!-- 出租车 -->
 				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+					<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 					</view>
-					<view class="whiteBg">
+					<view class="CZCwhiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
 							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -685,6 +697,10 @@
 								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 							</view>
 							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+								<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.time}}</view>
+							</view>
+							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
 								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 							</view>
@@ -709,10 +725,10 @@
 
 				<!-- 出租车 -->
 				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+					<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 					</view>
-					<view class="whiteBg">
+					<view class="CZCwhiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
 							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -875,6 +891,10 @@
 								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 							</view>
 							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+								<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.time}}</view>
+							</view>
+							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
 								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 							</view>
@@ -899,10 +919,10 @@
 
 				<!-- 出租车 -->
 				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+					<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 					</view>
-					<view class="whiteBg">
+					<view class="CZCwhiteBg">
 						<view style="display: flex; margin-top: -40rpx;">
 							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -1779,7 +1799,6 @@
 
 			//-------------------------出租车开始-------------------------
 			loadczcData: function() {
-
 				var that = this;
 				uni.getStorage({
 					key: 'userInfo',
@@ -1919,7 +1938,7 @@
 									title: '出租车-专线',
 									titleIndex: '1',
 									SpecialorderState: data.State,
-									time: data.OrderTime,
+									time: data.OrderTime.replace("T"," ").substr(0,19),
 									orderType: orderType,
 									appointmentTime: data.AppointmentTime,
 									money: data.EstimatePrice,
@@ -2672,6 +2691,17 @@
 		// box-shadow: 0 0 5rpx 0rpx #aaa;
 	}
 
+	.CZCwhiteBg {
+		position: relative;
+		margin: 30rpx;
+		// margin-top: -20rpx;
+		padding: 20rpx 0;
+		padding-bottom: 140rpx;
+		width: 698rpx;
+		background: #FFFFFF;
+		border-radius: 12rpx;
+		// box-shadow: 0 0 5rpx 0rpx #aaa;
+	}
 	.bluering {
 		width: 8rpx;
 		height: 8rpx;

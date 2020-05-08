@@ -305,7 +305,31 @@
 					}
 				}
 
-			]
+			    ,{
+                    "path" : "pages/CZC/TaxiPayment",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownwindCar",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownWindCarOrder",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownWindCarPay",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+            ]
 		},
 		//---------------------------------------------第三个包：公交查询------------------------------------------
 		{
