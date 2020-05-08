@@ -2491,7 +2491,7 @@
 				if (item.vehicleType == '出租车') {
 					if (item.state == '0' || item.state == '1' || item.state == '2' || item.state == '3' || item.state == '4') {
 						uni.navigateTo({
-							url: '/pages/CZC/CallAndDrive?orderNumber=' + item.orderNumber,
+							url: '../../pages_CZC/pages/CZC/CallAndDrive?orderNumber=' + item.orderNumber,
 						})
 					} else {
 						uni.navigateTo({

@@ -46,13 +46,13 @@ const Interface = {
 		value:Url + '/api/taxi/CancelExpressOrderByOrderNum_Passenger',
 		name:'旅客端-根据订单号取消订单',
 		method:'POST',
-		page:["CZC/CallAndDrive.nvue"]
+		page:["CZC/CallAndDrive.nvue","order/OrderList"]
 	},
 	addPassengerOneTouchAlarm:{
 		value:Url + '/api/taxi/addPassengerOneTouchAlarm',
 		name:'旅客端-一键报警',
 		method:'POST',
-		page:["CZC/CallAndDrive.nvue"]
+		page:["CZC/CallAndDrive.nvue","CZC/WaitTakeOrder"]
 	},
 	addPassengerEvaluate_Passenger:{
 		value:Url + '/api/taxi/addPassengerEvaluate_Passenger',

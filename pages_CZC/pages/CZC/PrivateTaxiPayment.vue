@@ -98,12 +98,16 @@
 				countDownInterval: '',
 				SpecialLineName: '',
 				userInfo: '',
+				scenicSpotOpenId:'',//oppenid
 			}
 		},
 		onLoad: function(options) {
 			this.orderNumber = options.orderNumber;
 			this.CheckPayState();
 			this.userInfo = uni.getStorageSync('userInfo') || '';
+		},
+		onShow() {
+			this.scenicSpotOpenId=uni.getStorageSync('scenicSpotOpenId')|| '';//获取Oppenid
 		},
 		methods: {
 			change: function(value) {
@@ -216,6 +220,13 @@
 			// ------------------------------------支付开始------------------------------------------
 			getPaymentInformation: function() { //获取支付信息
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.getCommonPayparameter.value,
 					method: $privateTaxi.Interface.getCommonPayparameter.method,
@@ -223,12 +234,13 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						payType: 3,
+						openId:that.scenicSpotOpenId,
+						payType: payPlatform,
 						// price: that.TaxiCost,
 						price: 0.01,
 						orderNumber: that.orderNumber,
 						goodsName: that.SpecialLineName,
-						billDescript: "出租车专车费",
+						billDescript: "出租车专车车费",
 					},
 					success(res) {
 						that.payment(res.data.data)
@@ -258,21 +270,28 @@
 			},
 			CheckPayState: function() {
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.showLoading({
-					mask:true,					
+					mask: true,
 				})
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType:3,
-						orderNumber:that.orderNumber
+						payType: payPlatform,
+						orderNumber: that.orderNumber
 					},
 					success(res) {
 						if (res.data.status) {
 							that.paymentSuccess();
 							uni.hideLoading();
-						}else{
+						} else {
 							that.getOrderDetail();
 							uni.hideLoading();
 						}
