@@ -2,284 +2,310 @@
 	<scroll-view style="background-color: #F5F7F9;" :style="{height:pageheight}" :scroll-y="true">
 		<!-- #ifdef APP-NVUE -->
 		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;">
-		<!-- #endif -->
-		<!-- #ifdef MP-WEIXIN -->
-		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;"
-		 :style="{'padding-top':TopHeight+'px'}">
-		<!-- #endif -->
-			<!-- <view class="status_bar"></view> -->
-			<view style="background-color: #FFF; ">
-				<view style="padding-bottom: 30rpx;">
-					<view style="flex-direction: row;justify-content: center;">
-						<view style="width: 60rpx;align-items: flex-start">
-							<uni-icons type="arrowleft" size="26" @click="goBack"></uni-icons>
-						</view>
-						<view style="width: 634rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
-							<view style="flex-grow:1">
-								<view>
-									<view style="flex-direction: row; align-items: center;padding-top: 15rpx;">
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;"
+			 :style="{'padding-top':TopHeight+'px'}">
+				<!-- #endif -->
+				<!-- <view class="status_bar"></view> -->
+				<view style="background-color: #FFF; ">
+					<view style="padding-bottom: 30rpx;">
+						<view style="flex-direction: row;justify-content: center;">
+							<view style="width: 60rpx;align-items: flex-start">
+								<uni-icons type="arrowleft" size="26" @click="goBack"></uni-icons>
+							</view>
+							<view style="width: 634rpx;background-color: #F7F7F7;flex-direction: row;align-items: center;border-radius: 11rpx;">
+								<view style="flex-grow:1">
+									<view>
+										<view style="flex-direction: row; align-items: center;padding-top: 15rpx;">
+											<view style="width: 60rpx;flex-direction: row;justify-content: center;align-items: center;">
+												<view class="bluering"></view>
+											</view>
+											<view>
+												<input placeholder="请输入起点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectInitial('qidian')"
+												 v-model="startAddress" />
+											</view>
+										</view>
+									</view>
+									<view style="border-bottom-width: 2rpx;border-color: #EAEAEA;border-style: solid;margin-top: 10rpx;margin-bottom: 10rpx;margin-left: 60rpx;margin-right: 30rpx;"></view>
+									<view style="flex-direction: row;align-items: center;padding-bottom: 10rpx;">
 										<view style="width: 60rpx;flex-direction: row;justify-content: center;align-items: center;">
-											<view class="bluering"></view>
+											<view class="redring"></view>
 										</view>
 										<view>
-											<input placeholder="请输入起点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectInitial('qidian')"
-											 v-model="startAddress" />
+											<input placeholder="请输入终点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectDestination('zhongdian')"
+											 v-model="endAddress" />
 										</view>
 									</view>
 								</view>
-								<view style="border-bottom-width: 2rpx;border-color: #EAEAEA;border-style: solid;margin-top: 10rpx;margin-bottom: 10rpx;margin-left: 60rpx;margin-right: 30rpx;"></view>
-								<view style="flex-direction: row;align-items: center;padding-bottom: 10rpx;">
-									<view style="width: 60rpx;flex-direction: row;justify-content: center;align-items: center;">
-										<view class="redring"></view>
-									</view>
+								<view style="flex-direction: row;align-items: center;padding-right: 20rpx;">
+									<image src="../../static/Home/exchange.png" style="height: 40rpx;width: 40rpx;" @click="exchange"></image>
+								</view>
+								<view style="flex-direction: row;align-items: center;padding-right: 20rpx;">
+									<image src="../../static/Home/Search.png" style="height: 40rpx;width: 40rpx;" @click="search"></image>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="tab">
+						<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#FC4646"></uni-segmented-control>
+					</view>
+				</view>
+			</view>
+			<view :style="{height:winheight}"></view>
+			<view v-if="current === 0" style="margin-top: 20rpx;">
+				<view>
+					<image :src="imageIndex[0].imageUrl" style="width: 750rpx;height: 150rpx;"></image>
+				</view>
+				<view style="background-color: #F5F7F9;" v-if="!IsSearch">
+					<scroll-view class="history" :scroll-y="true" :style="{height:historyheight}">
+						<view style="margin-left: 30rpx;margin-right: 30rpx;">
+							<view style="border-style: solid;border-bottom-width: 1px;border-color: #EAEAEA;padding: 30rpx;">
+								<text style="text-align: center;font-size: 30rpx;">历史记录</text>
+							</view>
+							<view style="flex-direction: row;align-items: center;justify-content: space-between;padding-top: 30rpx;padding-bottom: 30rpx; border-bottom-width: 1px;border-color:#EAEAEA;;"
+							 v-for="(item,index) in historyAddress" :key="index" @click="getHistory(index)">
+								<view style="flex-direction: row;align-items: center;">
 									<view>
-										<input placeholder="请输入终点" style="width: 450rpx;font-size: 30rpx;" :disabled="disabled" @click="selectDestination('zhongdian')"
-										 v-model="endAddress" />
+										<image src="../../static/Home/position2.png" style="width: 37rpx;height: 37rpx;"></image>
+									</view>
+									<view style="padding-left: 20rpx;width: 560rpx;">
+										<view><text style="font-size: 30rpx;">{{item.addressName}}</text></view>
+										<view style="height: 10rpx;"></view>
+										<view><text style="color: #999999;font-size: 30rpx;">{{item.address}}</text></view>
 									</view>
 								</view>
-							</view>
-							<view style="flex-direction: row;align-items: center;padding-right: 20rpx;">
-								<image src="../../static/Home/exchange.png" style="height: 40rpx;width: 40rpx;" @click="exchange"></image>
-							</view>
-							<view style="flex-direction: row;align-items: center;padding-right: 20rpx;">
-								<image src="../../static/Home/Search.png" style="height: 40rpx;width: 40rpx;" @click="search"></image>
-							</view>
-						</view>
-					</view>
-				</view>
-				<view class="tab">
-					<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#FC4646"></uni-segmented-control>
-				</view>
-			</view>
-		</view>
-		<view :style="{height:winheight}"></view>
-		<view v-if="current === 0" style="margin-top: 20rpx;">
-			<view>
-				<image :src="imageIndex[0].imageUrl" style="width: 750rpx;height: 150rpx;"></image>
-			</view>
-			<view style="background-color: #F5F7F9;" v-if="!IsSearch">
-				<scroll-view class="history" :scroll-y="true" :style="{height:historyheight}">
-					<view style="margin-left: 30rpx;margin-right: 30rpx;">
-						<view style="border-style: solid;border-bottom-width: 1px;border-color: #EAEAEA;padding: 30rpx;">
-							<text style="text-align: center;font-size: 30rpx;">历史记录</text>
-						</view>
-						<view style="flex-direction: row;align-items: center;justify-content: space-between;padding-top: 30rpx;padding-bottom: 30rpx; border-bottom-width: 1px;border-color:#EAEAEA;;"
-						 v-for="(item,index) in historyAddress" :key="index" @click="getHistory(index)">
-							<view style="flex-direction: row;align-items: center;">
 								<view>
-									<image src="../../static/Home/position2.png" style="width: 37rpx;height: 37rpx;"></image>
+									<image src="../../static/Home/arrow.png" style="width: 30rpx;height: 30rpx;"></image>
 								</view>
-								<view style="padding-left: 20rpx;width: 560rpx;">
-									<view><text style="font-size: 30rpx;">{{item.addressName}}</text></view>
-									<view style="height: 10rpx;"></view>
-									<view><text style="color: #999999;font-size: 30rpx;">{{item.address}}</text></view>
+								<!-- <uni-icons type="arrowright" size="26"></uni-icons> -->
+							</view>
+							<view @click="clearHistpry" v-if="historyAddress.length>0">
+								<text style="padding: 20rpx;color: #999999;font-size: 24rpx;text-align: center;">清除历史记录</text>
+							</view>
+						</view>
+					</scroll-view>
+				</view>
+				<view v-if="IsSearch">
+					<view class="history">
+						<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
+							<view style="flex-direction: row;align-items: center;justify-content: space-between;">
+								<view style="flex-direction: row;align-items: center;">
+									<view><text style="font-size: 36rpx; font-weight: bold;">客运&nbsp;</text></view>
+									<view style="border-width: 1px;border-color: #FF5A00;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; "><text
+										 style="font-size: 18rpx;color: #FF5A00;">舒适</text></view>
 								</view>
+								<view><text style="font-size: 28rpx;"> 约34元</text></view>
+								<view><text style="font-size: 28rpx;"> 1小时34分钟</text></view>
 							</view>
 							<view>
-								<image src="../../static/Home/arrow.png" style="width: 30rpx;height: 30rpx;"></image>
+								<text style="font-size: 28rpx;color: #666666;"> 2公里&nbsp;等待接驾4分钟&nbsp;步行30分钟</text>
 							</view>
-							<!-- <uni-icons type="arrowright" size="26"></uni-icons> -->
-						</view>
-						<view @click="clearHistpry" v-if="historyAddress.length>0">
-							<text style="padding: 20rpx;color: #999999;font-size: 24rpx;text-align: center;">清除历史记录</text>
 						</view>
 					</view>
-				</scroll-view>
-			</view>
-			<view v-if="IsSearch">
-				<view class="history">
-					<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
-						<view style="flex-direction: row;align-items: center;justify-content: space-between;">
-							<view style="flex-direction: row;align-items: center;">
-								<view><text style="font-size: 36rpx; font-weight: bold;">客运&nbsp;</text></view>
-								<view style="border-width: 1px;border-color: #FF5A00;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; "><text
-									 style="font-size: 18rpx;color: #FF5A00;">舒适</text></view>
+					<view class="history">
+						<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
+							<view style="flex-direction: row;align-items: center;justify-content: space-between;">
+								<view style="flex-direction: row;align-items: center;">
+									<view><text style="font-size: 36rpx; font-weight: bold;">出租车&nbsp;</text></view>
+									<view style="border-width: 1px;border-color: #007AFF;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; "><text
+										 style="font-size: 18rpx;color: #007AFF;">最快</text></view>
+								</view>
+								<view><text style="font-size: 28rpx;"> 约{{estimatePrice}}元</text></view>
+								<view><text style="font-size: 28rpx;"> {{Duration}}</text></view>
 							</view>
-							<view><text style="font-size: 28rpx;"> 约34元</text></view>
-							<view><text style="font-size: 28rpx;"> 1小时34分钟</text></view>
-						</view>
-						<view>
-							<text style="font-size: 28rpx;color: #666666;"> 2公里&nbsp;等待接驾4分钟&nbsp;步行30分钟</text>
+							<view>
+								<text style="font-size: 28rpx;color: #666666;">{{Distance}}</text>
+							</view>
 						</view>
 					</view>
-				</view>
-				<view class="history">
-					<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
-						<view style="flex-direction: row;align-items: center;justify-content: space-between;">
-							<view style="flex-direction: row;align-items: center;">
-								<view><text style="font-size: 36rpx; font-weight: bold;">出租车&nbsp;</text></view>
-								<view style="border-width: 1px;border-color: #007AFF;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; "><text
-									 style="font-size: 18rpx;color: #007AFF;">最快</text></view>
+					<view class="history">
+						<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;border-bottom-width: 1px;border-color:#EAEAEA;padding-top: 30rpx;padding-bottom: 20rpx;">
+							<view style="flex-direction: row;align-items: center;justify-content: space-between;">
+								<view style="flex-direction: row;align-items: center;">
+									<view><text style="font-size: 36rpx; font-weight: bold;">公交&nbsp;</text></view>
+									<view style="border-width: 1px;border-color: #007AFF;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; ">
+										<text style="font-size: 18rpx;color: #007AFF;">k602</text></view>
+								</view>
+								<view><text style="font-size: 28rpx;"> 1小时34分钟</text></view>
 							</view>
-							<view><text style="font-size: 28rpx;"> 约{{estimatePrice}}元</text></view>
-							<view><text style="font-size: 28rpx;"> {{Duration}}</text></view>
-						</view>
-						<view>
-							<text style="font-size: 28rpx;color: #666666;">{{Distance}}</text>
-						</view>
-					</view>
-				</view>
-				<view class="history">
-					<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;border-bottom-width: 1px;border-color:#EAEAEA;padding-top: 30rpx;padding-bottom: 20rpx;">
-						<view style="flex-direction: row;align-items: center;justify-content: space-between;">
-							<view style="flex-direction: row;align-items: center;">
-								<view><text style="font-size: 36rpx; font-weight: bold;">公交&nbsp;</text></view>
-								<view style="border-width: 1px;border-color: #007AFF;border-radius: 6rpx;padding-left: 5rpx;padding-right: 5rpx; ">
-									<text style="font-size: 18rpx;color: #007AFF;">k602</text></view>
+							<view>
+								<text style="font-size: 28rpx;color: #666666;"> 2公里&nbsp;等待接驾4分钟&nbsp;步行30分钟</text>
 							</view>
-							<view><text style="font-size: 28rpx;"> 1小时34分钟</text></view>
 						</view>
-						<view>
-							<text style="font-size: 28rpx;color: #666666;"> 2公里&nbsp;等待接驾4分钟&nbsp;步行30分钟</text>
+						<view style="margin-left: 30rpx;margin-right: 30rpx;flex-direction: row;height: 70rpx;align-items: center;">
+							<view style="height: 30rpx;width: 30rpx;border-width: 1px;border-color: #007AFF;border-radius: 100px;"><text
+								 style="color: #007AFF;font-size: 24rpx;text-align: center;line-height: 24rpx;">!</text></view>
+							<view><text style="font-size: 28rpx;">&nbsp;k602路约8分钟/趟</text></view>
 						</view>
-					</view>
-					<view style="margin-left: 30rpx;margin-right: 30rpx;flex-direction: row;height: 70rpx;align-items: center;">
-						<view style="height: 30rpx;width: 30rpx;border-width: 1px;border-color: #007AFF;border-radius: 100px;"><text
-							 style="color: #007AFF;font-size: 24rpx;text-align: center;line-height: 24rpx;">!</text></view>
-						<view><text style="font-size: 28rpx;">&nbsp;k602路约8分钟/趟</text></view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<!-- 客运弹框 -->
-		<popup ref="popup" type="center" maskClick="false" style="z-index:99999;">
-			<view style="flex-direction: column;position: relative;display: flex;justify-content: center;">
-				<image :src="kyPopImage" class="popupClass" style="height: 700rpx;width: 600rpx;"></image>
-				<view style="position: absolute; align-items: center;margin-top: 150rpx;">
-					<view class="popupTextContent" style="width: 600rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
-						<text class="popupText" style="text-align: center;font-size: 40rpx;font-weight: bold;">传统与定制班车的差异</text>
-					</view>
-					<view class="popupTextContent" style="width: 500rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
-						<text class="popupText">传统：只能在车票的起终点进行上车</text>
-					</view>
-					<view class="popupTextContent" style="width: 500rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
-						<text class="popupText" style="line-height: 50rpx;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详细可见班次详情对应的地</text>
-					</view>
-					<!-- #ifdef APP-PLUS -->
-					<text style="top: 5rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;"
-					 @click="noPupop">下次不弹出</text>
-					<!-- #endif -->
-					<!-- #ifdef MP-WEIXIN -->
-					<text style="margin-bottom: 80rpx; top: 10rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
-					 @click="noPupop">下次不弹出</text>
-					<!-- #endif -->
+			<!-- 客运弹框 -->
+			<popup ref="popup" type="center" maskClick="false" style="z-index:99999;">
+				<view style="flex-direction: column;position: relative;display: flex;justify-content: center;">
+					<image :src="kyPopImage" class="popupClass" style="height: 700rpx;width: 600rpx;"></image>
+					<view style="position: absolute; align-items: center;margin-top: 150rpx;">
+						<view class="popupTextContent" style="width: 600rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
+							<text class="popupText" style="text-align: center;font-size: 40rpx;font-weight: bold;">传统与定制班车的差异</text>
+						</view>
+						<view class="popupTextContent" style="width: 500rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
+							<text class="popupText">传统：只能在车票的起终点进行上车</text>
+						</view>
+						<view class="popupTextContent" style="width: 500rpx;font-style:SourceHanSansSC-Bold;margin-bottom: 20rpx;">
+							<text class="popupText" style="line-height: 50rpx;">定制：车票除起终点可以上车之外，还可以在定制线路途中的站点进行上车，详细可见班次详情对应的地</text>
+						</view>
+						<!-- #ifdef APP-PLUS -->
+						<text style="top: 5rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;"
+						 @click="noPupop">下次不弹出</text>
+						<!-- #endif -->
+						<!-- #ifdef MP-WEIXIN -->
+						<text style="margin-bottom: 80rpx; top: 10rpx;border-radius: 18upx;width: 350upx;height: 100upx;line-height:100upx;color: #7EC075;font-size: 38upx;text-align: center;align-items: center;background-color: #FFFFFF;z-index:10015"
+						 @click="noPupop">下次不弹出</text>
+						<!-- #endif -->
 
-				</view>
-			</view>
-			<view style="align-items: center;text-align: center;">
-				<image src="../../static/Home/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
-			</view>
-		</popup>
-		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运开始 -->
-		<view v-if="current == 1" style="margin-top: 10upx;">
-			<view class="ctky_View" v-for="(item,index) in keYunList" :key="index" @click="queryTickets(keYunList[index])">
-				<view class="ctky_View_Left">
-					<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
-						<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">{{item.shuttleType}}</text>
 					</view>
-					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
-						<image src="../../static/Home/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-						<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+				</view>
+				<view style="align-items: center;text-align: center;">
+					<image src="../../static/Home/close.png" style="width: 74upx;height: 74upx ;margin-top: 42upx;" @click="close"></image>
+				</view>
+			</popup>
+			<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运开始 -->
+			<view v-if="current == 1" style="margin-top: 10upx;">
+				<view class="ctky_View" v-for="(item,index) in keYunList" :key="index" @click="queryTickets(keYunList[index])">
+					<view class="ctky_View_Left">
+						<view style="margin-left:25upx;margin-top: 28upx ;margin-bottom: 28upx;">
+							<text style="font-style: SourceHanSansSC-Regular; font-size:36upx ;color: #2C2D2D;padding: 0;">{{item.shuttleType}}</text>
+						</view>
+						<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
+							<image src="../../static/Home/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+							<text style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
 						color: #333333;">{{item.startStaion}}</text>
-					</view>
-					<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
-						<image src="../../static/Home/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-						<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						</view>
+						<view style="margin-left: 25upx;flex-direction: row;align-items: center;margin-bottom: 18upx;">
+							<image src="../../static/Home/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+							<text style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
 						color: #333333;">{{item.endStation}}</text>
-					</view>
-					<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
+						</view>
+						<text style="margin-left: 25upx;margin-bottom: 30upx;font-style: SourceHanSansSC-Light;
 					font-size: 28upx;color: #666666;">共{{item.Trips}}趟
-						{{utils.timeTodate('Y-m-d H:i:s',item.firstDepartureTime)}}发车</text>
-				</view>
-				<view class="ctky_View_Right">
-					<view style="text-align: right;">
-						<text style="margin-right: 28upx;font-size: 36upx;font-style:
+							{{utils.timeTodate('Y-m-d H:i:s',item.firstDepartureTime)}}发车</text>
+					</view>
+					<view class="ctky_View_Right">
+						<view style="text-align: right;">
+							<text style="margin-right: 28upx;font-size: 36upx;font-style:
                        SourceHanSansSC-Regular; color: #FC4646;">￥{{item.fare}}</text>
-						<text style="margin-right: 28upx;font-size: 24upx;font-style:
+							<text style="margin-right: 28upx;font-size: 24upx;font-style:
                        SourceHanSansSC-Light; color: #666666;margin-top: 18upx;">余{{item.remainingVotes}}张</text>
+						</view>
 					</view>
 				</view>
+				<empty-data :isShow="keYunList.length == 0" text="暂无车票数据" :image="kyNoDataImage" textColor="#999999"></empty-data>
 			</view>
-			<empty-data :isShow="keYunList.length == 0" text="暂无车票数据" :image="kyNoDataImage" textColor="#999999"></empty-data>
-		</view>
-		<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运结束 -->
-		<view v-if="current == 2">
-			<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startLon" :latitude="startLat"
-			 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
-			<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
-			 v-if="IsSearch">
-				<view style="margin:20rpx;">
-					<view style="height: 80rpx;flex-direction: row;border-bottom-width: 1px;border-color: #EAEAEA;">
-						<button class="bt_now" @click="click_btnow"><text style="font-size: 30rpx;" :class="IsClick ? 'bt_text' : ''">现在</text></button>
-						<button class="bt_booking" @click="click_btbooking"><text style="font-size: 30rpx;" :class="IsClick ? '' : 'bt_text'">预约</text></button>
-					</view>
-					<view style="flex-direction: row;justify-content: space-between;margin-top: 30rpx;margin-bottom: 30rpx;" v-if="!IsClick">
-						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;border-right-width: 1px;border-color: #EAEAEA;">
-							<!-- <text style="font-size: 28rpx;">预约时间</text> -->
-							<hTimePicker interval="5" @changeTime="changeTime">
-								<view slot="pCon" class="changeTime">
-									<text style="font-size: 28rpx;">{{selecttime}}</text>
-								</view>
-							</hTimePicker>
-							<uni-icons type="arrowright" size="19"></uni-icons>
+			<!-- 客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运客运结束 -->
+			<view v-if="current == 2">
+				<map id='map1' ref="map1" :style="{height:mapheight}" style="width: 750rpx;" :longitude="startLon" :latitude="startLat"
+				 :polyline="polyline" :show-location="showlocation" :markers="markers"></map>
+				<view style="width: 698rpx;background-color: #FFFFFF;position: fixed;bottom: 40rpx;left: 26rpx;right: 26rpx;border-radius: 12rpx;"
+				 v-if="IsSearch">
+					<view style="margin:20rpx;">
+						<view style="height: 80rpx;flex-direction: row;border-bottom-width: 1px;border-color: #EAEAEA;">
+							<button class="bt_now" @click="click_btnow"><text style="font-size: 30rpx;" :class="IsClick ? 'bt_text' : ''">现在</text></button>
+							<button class="bt_booking" @click="click_btbooking"><text style="font-size: 30rpx;" :class="IsClick ? '' : 'bt_text'">预约</text></button>
 						</view>
-						<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;"
-						 @click="selectPassenger">
-							<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
-							<uni-icons type="arrowright" size="19"></uni-icons>
-						</view>
-					</view>
-					<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
-						<view style="flex-direction: row;justify-content: center;align-items: center;">
-							<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
-							<uni-icons type="arrowright" size="19"></uni-icons>
-						</view>
-					</view>
-					<view style="padding-top: 20rpx;flex-direction: row;justify-content: space-between;border-top-width: 1px;border-color:#EAEAEA;">
-						<view style="align-items: center;justify-content: center;flex-direction: row;">
-							<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
-							<view>
-								<text style="font-size: 28rpx;">{{vehicleType}}</text>
+						<view style="flex-direction: row;justify-content: space-between;margin-top: 30rpx;margin-bottom: 30rpx;" v-if="!IsClick">
+							<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;border-right-width: 1px;border-color: #EAEAEA;">
+								<!-- <text style="font-size: 28rpx;">预约时间</text> -->
+								<hTimePicker interval="5" @changeTime="changeTime">
+									<view slot="pCon" class="changeTime">
+										<text style="font-size: 28rpx;">{{selecttime}}</text>
+									</view>
+								</hTimePicker>
+								<uni-icons type="arrowright" size="19"></uni-icons>
+							</view>
+							<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;"
+							 @click="selectPassenger">
+								<text style="font-size: 28rpx; word-break: break-word;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
+								<uni-icons type="arrowright" size="19"></uni-icons>
 							</view>
 						</view>
-						<view style="align-items: center;justify-content: center;flex-direction: row;">
-							<text style="font-size: 30rpx;font-weight: 300;">预估&nbsp;&nbsp;</text>
-							<text style="font-size: 36rpx;padding-right: 20rpx;font-weight: 300;">{{estimatePrice}}&nbsp;元</text>
+						<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
+							<view style="flex-direction: row;justify-content: center;align-items: center;">
+								<text style="font-size: 28rpx;" v-for="(item,index) in Passenger" :key="index">{{item.userName}}&nbsp;</text>
+								<uni-icons type="arrowright" size="19"></uni-icons>
+							</view>
 						</view>
-					</view>
-					<view style="margin-top: 40rpx;align-items: center;">
-						<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;line-height: 84rpx;">
-							<text style="color: #FFFFFF;font-size: 34rpx;">立即呼叫</text>
-						</button>
+						<view style="padding-top: 20rpx;flex-direction: row;justify-content: space-between;border-top-width: 1px;border-color:#EAEAEA;">
+							<view style="align-items: center;justify-content: center;flex-direction: row;">
+								<image src="../../static/Home/car1.png" style="width: 194rpx;height: 70rpx;"></image>
+								<view>
+									<text style="font-size: 28rpx;">{{vehicleType}}</text>
+								</view>
+							</view>
+							<view style="align-items: center;justify-content: center;flex-direction: row;">
+								<text style="font-size: 30rpx;font-weight: 300;">预估&nbsp;&nbsp;</text>
+								<text style="font-size: 36rpx;padding-right: 20rpx;font-weight: 300;">{{estimatePrice}}&nbsp;元</text>
+							</view>
+						</view>
+						<view style="margin-top: 40rpx;align-items: center;">
+							<button @click="promptlyCall" style="width: 640rpx;height: 84rpx;background-color:#FC4646;border-radius:12rpx;border-color:#FC4646;line-height: 84rpx;">
+								<text style="color: #FFFFFF;font-size: 34rpx;">立即呼叫</text>
+							</button>
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<view v-if="current == 4">我是公交</view>
-		<view v-if="current == 3" style="margin-top: 10rpx;">
-			<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick(item)">
-				<text style="font-size: 36rpx;font-weight: bold;">{{item.SpecialLineName}}</text>
-				<view style="justify-content: space-between;padding-top: 20rpx;">
-					<view style="flex-direction: row;justify-content: space-between;">
-						<view style="flex-direction: row;align-items: center;">
-							<view style="border-radius: 100px;background-color: #309FF7;width: 10rpx;height: 10rpx;"></view>
-							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.StartSiteName}}</text>
+			<view v-if="current == 3" style="margin-top: 10rpx;">
+				<view class='privatetaxi' v-for="(item,index) in privateTaxi" :key="index" @click="privateTaxiClick(item)">
+					<text style="font-size: 36rpx;font-weight: bold;">{{item.SpecialLineName}}</text>
+					<view style="justify-content: space-between;padding-top: 20rpx;">
+						<view style="flex-direction: row;justify-content: space-between;">
+							<view style="flex-direction: row;align-items: center;">
+								<view style="border-radius: 100px;background-color: #309FF7;width: 10rpx;height: 10rpx;"></view>
+								<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.StartSiteName}}</text>
+							</view>
+							<text style="font-size: 36rpx;color: #FC4646;">￥{{item.EstimatePrice}}/人</text>
 						</view>
-						<text style="font-size: 36rpx;color: #FC4646;">￥{{item.EstimatePrice}}/人</text>
+						<view style="flex-direction: row;justify-content: space-between;padding-top: 10rpx;">
+							<view style=" flex-direction: row;align-items:center;">
+								<view style="border-radius: 100px;background-color: #E3424B;width: 10rpx;height: 10rpx;"></view>
+								<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.EndSiteName}}</text>
+							</view>
+						</view>
 					</view>
-					<view style="flex-direction: row;justify-content: space-between;padding-top: 10rpx;">
-						<view style=" flex-direction: row;align-items:center;">
-							<view style="border-radius: 100px;background-color: #E3424B;width: 10rpx;height: 10rpx;"></view>
-							<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.EndSiteName}}</text>
-						</view>
+					<view style="padding-top: 20rpx;flex-direction: row;">
+						<text style="font-size: 28rpx;color: #666666;" v-if="item.Distance>0">约{{item.Distance}}公里</text>
+						<text style="font-size: 28rpx;color: #666666;" v-if="item.EstimatedTime>0">，预计{{item.EstimatedTime}}分钟</text>
 					</view>
 				</view>
-				<view style="padding-top: 20rpx;flex-direction: row;">
+			</view>
+			<view v-if="current == 4" style="margin-top: 10rpx;">
+				<view class='privatetaxi' v-for="(item,index) in downwindCar" :key="index" @click="downwindCarClick(item)">
+					<text style="font-size: 36rpx;font-weight: bold;">{{item.DepartureTime.replace("T"," ").substr(0,16)}}&nbsp;出发</text>
+					<view style="padding-top: 20rpx;flex-direction: row;">
+						<text style="font-size: 30rpx;">&nbsp;&nbsp;&nbsp;司机：{{item.DriverName.substr(0,1)}}师傅</text>
+					</view>
+					<view style="justify-content: space-between;padding-top: 10rpx;">
+						<view style="flex-direction: row;justify-content: space-between;">
+							<view style="flex-direction: row;align-items: center;">
+								<view style="border-radius: 100px;background-color: #309FF7;width: 10rpx;height: 10rpx;"></view>
+								<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.StartSiteName}}</text>
+							</view>
+							<text style="font-size: 36rpx;color: #FC4646;">￥{{item.Price}}</text>
+						</view>
+						<view style="flex-direction: row;justify-content: space-between;padding-top: 10rpx;">
+							<view style=" flex-direction: row;align-items:center;">
+								<view style="border-radius: 100px;background-color: #E3424B;width: 10rpx;height: 10rpx;"></view>
+								<text style="font-size: 30rpx;padding-left: 10rpx;"> {{item.EndSiteName}}</text>
+							</view>
+						</view>
+					</view>
+					<!-- <view style="padding-top: 20rpx;flex-direction: row;">
 					<text style="font-size: 28rpx;color: #666666;" v-if="item.Distance>0">约{{item.Distance}}公里</text>
 					<text style="font-size: 28rpx;color: #666666;" v-if="item.EstimatedTime>0">，预计{{item.EstimatedTime}}分钟</text>
+				</view> -->
 				</view>
 			</view>
-		</view>
 	</scroll-view>
 </template>
 
@@ -287,6 +313,7 @@
 	import $taxi from "@/common/Czc.js";
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
+	import $downwindCar from "@/common/downwindCar.js"; //顺风车
 	import $KyInterface from "@/common/Ctky.js" //客运接口
 	import uniIcons from "@/components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "@/components/HOME/uni-segmented-control/uni-segmented-control.vue";
@@ -310,6 +337,7 @@
 				Passenger: [{
 					userName: "选择乘车人"
 				}],
+				downwindCar: [], //顺风车
 				privateTaxi: [],
 				polyline: [],
 				tabIndex: 0,
@@ -319,7 +347,7 @@
 				startlocation: {},
 				endlocation: {},
 				IsClick: true,
-				items: ['智能', '客运', '出租车', '专线车'],
+				items: ['智能', '客运', '出租车', '专线车', '顺风车'],
 				points: [],
 				IsSearch: false,
 				markers: [],
@@ -355,9 +383,9 @@
 				estimateDistance: 0, //预计里程
 				kyPopImage: '', //客运弹框背景图
 				kyNoDataImage: '', //客运无数据图片
-				imageIndex: [
-					{imageUrl: ''}
-				], //banner图片
+				imageIndex: [{
+					imageUrl: ''
+				}], //banner图片
 				TopHeight: 0, //小程序距离顶部的距离
 			}
 		},
@@ -366,7 +394,7 @@
 			var that = this;
 			// #ifdef MP-WEIXIN
 			var MenuButton = uni.getMenuButtonBoundingClientRect(); //获取小程序胶囊按钮的信息
-				that.TopHeight = MenuButton.top + MenuButton.height;
+			that.TopHeight = MenuButton.top + MenuButton.height;
 			// #endif
 			//获取客运弹框图片
 			uni.request({
@@ -525,6 +553,9 @@
 				}
 				if (that.current == 3) {
 					that.getprivateTaxiLine();
+				}
+				if (that.current == 4) {
+					that.getDownwindCar();
 				}
 			},
 			goBack: function() { //返回上一页
@@ -1170,8 +1201,63 @@
 						});
 					}
 				})
-			}
+			},
 			///////////////////////////专线出租车代码结束/////////////////////////////////////////////////////
+			///////////////////////////顺风车开始/////////////////////////////////////////////////////
+			getDownwindCar: function() {
+				let that = this;
+				uni.showLoading({
+					mask: true
+				})
+				uni.request({
+					url: $downwindCar.Interface.GetHitchhiker_Passenger.value,
+					method: $downwindCar.Interface.GetHitchhiker_Passenger.method,
+					header: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success(res) {
+						console.log(res)
+						if (res.data.status) {
+							uni.hideLoading();
+							that.downwindCar = res.data.data;
+						} else {
+							uni.hideLoading();
+							console.log(res)
+						}
+					},
+					fail(res) {
+						console.log(res)
+						uni.hideLoading();
+						that.showToast('网络连接失败');
+					}
+				})
+			},
+			downwindCarClick: function(value) { //点击顺风车 
+			console.log(value)
+				var that = this;
+				if (that.startAddress == '' || that.endAddress == '') {
+					uni.showToast({
+						title: "请输入起点或终点",
+						icon: 'none',
+						duration: 2000,
+					})
+				} else {
+					uni.setStorage({ //顺风车信息
+						key: "downwindCarstartlocation",
+						data: that.startlocation,
+					})
+					uni.setStorage({ //顺风车信息
+						key: "downwindCarendlocation",
+						data: that.endlocation,
+						success(){
+							uni.navigateTo({
+								url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price,
+							})
+						}
+					})
+				}
+			}
+			///////////////////////////顺风车结束/////////////////////////////////////////////////////
 		}
 	}
 </script>

@@ -10,13 +10,12 @@
 			<view style="margin:0 30rpx;;">
 				<view style="padding: 30rpx 0;border-bottom:solid 1px #F5F5F5 ;">
 					<view style="display: flex;justify-content: space-between;align-items: center;">
-						<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">专线出租车</view>
+						<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">顺风车</view>
 						<view style="color: #2C2D2D; font-size: 26rpx;text-align: end;">倒计时：{{countDownDate}}秒</view>
 					</view>
-					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">线路名称：{{SpecialLineName}}</view>
 					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">上车点：{{StartAddress}}</view>
 					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">下车点：{{EndAddress}}</view>
-					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">预约时间：{{AppointmentTime}}</view>
+					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">出发时间：{{AppointmentTime}}</view>
 				</view>
 				<view style="padding-top:30rpx;" v-show="isHidden">
 					<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">乘车人信息</view>
@@ -68,6 +67,7 @@
 
 <script>
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
+	import $downwindCar from "@/common/downwindCar.js"; //顺风车
 	export default {
 		data() {
 			return {
@@ -169,26 +169,11 @@
 					}
 				})
 			},
-			GetSpecialLineByLineID: function(value) { //获取线路信息
-				let that = this;
-				uni.request({
-					url: $privateTaxi.Interface.GetSpecialLineByLineID.value,
-					method: $privateTaxi.Interface.GetSpecialLineByLineID.method,
-					data: {
-						SpecialLineID: value,
-					},
-					success(res) {
-						if (res.data.status) {
-							that.SpecialLineName = res.data.data[0].SpecialLineName;
-						}
-					}
-				})
-			},
 			getOrderDetail: function() { //获取订单信息
 				let that = this;
 				uni.request({
-					url: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.value,
-					method: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.method,
+					url: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.value,
+					method: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber
 					},
@@ -200,7 +185,6 @@
 							that.AppointmentTime = res.data.data.AppointmentTime.replace("T", " ");
 							that.orderTime = res.data.data.OrderTime;
 							that.TaxiCost = res.data.data.EstimatePrice; //价格
-							that.GetSpecialLineByLineID(res.data.data.SpecialLineID);
 							that.getTimeRemain(res.data.data.OrderTime);
 						} else {
 							uni.showToast({
@@ -241,8 +225,8 @@
 						// price: that.TaxiCost,
 						price: 0.01,
 						orderNumber: that.orderNumber,
-						goodsName: that.SpecialLineName,
-						billDescript: "出租车专车车费",
+						goodsName: "顺风车车费",
+						billDescript: "顺风车车费",
 					},
 					success(res) {
 						that.payment(res.data.data)
@@ -306,8 +290,8 @@
 			paymentSuccess: function() { //支付成功订单变成待接单
 				let that = this;
 				uni.request({
-					url: $privateTaxi.Interface.SpecialLineOrderPay_Passenger.value,
-					method: $privateTaxi.Interface.SpecialLineOrderPay_Passenger.method,
+					url: $downwindCar.Interface.HitchhikerOrderOrderPay_Passenger.value,
+					method: $downwindCar.Interface.HitchhikerOrderOrderPay_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber,
 						FactPayPrice: that.TaxiCost,
