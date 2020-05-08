@@ -26,7 +26,7 @@
 				<!-- 景区商品 -->
 				<view class="zl_commodity" @click="route4">
 					<image class="zl_coImage" src="../../../static/LYFW/currency/ho_zhly/jinqushangpin.png"></image>
-					<text class="zl_coText">景区商品</text>
+					<text class="zl_coText">旅游产品</text>
 				</view>
 			</view>
 		</view>
@@ -257,9 +257,8 @@
 				})
 			},
 			route4: function() {
-				uni.showToast({
-					title: '正在开发中...',
-					icon: 'none'
+				uni.navigateTo({
+					url: '../tourismProducts/tp_ticketsList'
 				})
 			},
 			
