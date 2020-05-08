@@ -1,6 +1,12 @@
 <template>
 	<scroll-view style="background-color: #F5F7F9;" :style="{height:pageheight}" :scroll-y="true">
+		<!-- #ifdef APP-NVUE -->
 		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;">
+		<!-- #endif -->
+		<!-- #ifdef MP-WEIXIN -->
+		<view id="ceshi" style="position: fixed;top: 0;right: 0;left: 0; z-index: 99999;overflow: hidden;background-color: #FFFFFF;padding-top: 40px;"
+		 :style="{'padding-top':TopHeight+'px'}">
+		<!-- #endif -->
 			<!-- <view class="status_bar"></view> -->
 			<view style="background-color: #FFF; ">
 				<view style="padding-bottom: 30rpx;">
@@ -281,7 +287,7 @@
 	import $taxi from "@/common/Czc.js";
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
-	import $KyInterface from "@/common/Ctky.js"//客运接口
+	import $KyInterface from "@/common/Ctky.js" //客运接口
 	import uniIcons from "@/components/HOME/uni-icons/uni-icons.vue";
 	import uniSegmentedControl from "@/components/HOME/uni-segmented-control/uni-segmented-control.vue";
 	import hTimePicker from "@/components/HOME/h-timePicker/h-timePicker.vue";
@@ -346,29 +352,34 @@
 				vehicleType: '出租车', //车辆类型
 				destinationArea: '', //目标区域
 				estimateTime: 0, //预计时长
-				estimateDistance: 0 ,//预计里程
-				kyPopImage:'',//客运弹框背景图
-				kyNoDataImage:'',//客运无数据图片
-				imageIndex : {
-					imageUrl : ''
-					},//banner图片
+				estimateDistance: 0, //预计里程
+				kyPopImage: '', //客运弹框背景图
+				kyNoDataImage: '', //客运无数据图片
+				imageIndex: [
+					{imageUrl: ''}
+				], //banner图片
+				TopHeight: 0, //小程序距离顶部的距离
 			}
 		},
 
 		onLoad(options) {
 			var that = this;
+			// #ifdef MP-WEIXIN
+			var MenuButton = uni.getMenuButtonBoundingClientRect(); //获取小程序胶囊按钮的信息
+				that.TopHeight = MenuButton.top + MenuButton.height;
+			// #endif
 			//获取客运弹框图片
 			uni.request({
-				url:$lyfw.Interface.qg_GetImage.value,
-				method:$lyfw.Interface.qg_GetImage.method,
-				data:{ 
-					model : 6,
-					type:'首页搜索栏banner'
+				url: $lyfw.Interface.qg_GetImage.value,
+				method: $lyfw.Interface.qg_GetImage.method,
+				data: {
+					model: 6,
+					type: '首页搜索栏banner'
 				},
-				success:(res) => { 
+				success: (res) => {
 					// console.log(res)
 					this.imageIndex = res.data.data
-					
+
 				},
 			})
 			that.getPicture();
@@ -443,24 +454,24 @@
 
 		},
 		onReady: function() {
-			
+
 		},
 		methods: {
 			//获取客运弹框背景图
 			getPicture() {
 				var that = this;
 				uni.request({
-					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
-					method:$KyInterface.KyInterface.Ky_AddPicture.method,
-					header:$KyInterface.KyInterface.Ky_AddPicture.header,
-					data:{
-						model:0,
+					url: $KyInterface.KyInterface.Ky_AddPicture.Url,
+					method: $KyInterface.KyInterface.Ky_AddPicture.method,
+					header: $KyInterface.KyInterface.Ky_AddPicture.header,
+					data: {
+						model: 0,
 					},
 					success(res) {
-						if(res.data.status == true) {
+						if (res.data.status == true) {
 							that.kyNoDataImage = res.data.data[2].imageUrl
 							that.kyPopImage = res.data.data[1].imageUrl
-						}else {
+						} else {
 							console.log(res.data.status)
 						}
 					},
@@ -546,13 +557,13 @@
 				if (this.selecttime == "点击选择时间" && !this.IsClick) {
 					uni.showToast({
 						title: "请选择时间",
-						icon:"none"
+						icon: "none"
 					})
 				} else {
-					if (this.Passenger[0].userName  == '选择乘车人'||this.Passenger[0].userName  == '') {
+					if (this.Passenger[0].userName == '选择乘车人' || this.Passenger[0].userName == '') {
 						uni.showToast({
 							title: "请选择乘车人",
-							icon:"none"
+							icon: "none"
 						})
 					} else {
 						uni.showLoading({
@@ -1118,22 +1129,22 @@
 			},
 			///////////////////////////专线出租车代码开始/////////////////////////////////////////////////////
 			getprivateTaxiLine: function() {
-				let that=this;
+				let that = this;
 				uni.showLoading({
-					mask:true
+					mask: true
 				})
 				uni.request({
-					url:$privateTaxi.Interface.GetSpecialLine.value,
+					url: $privateTaxi.Interface.GetSpecialLine.value,
 					method: $privateTaxi.Interface.GetSpecialLine.method,
-					header:{
-					'Content-Type':'application/x-www-form-urlencoded'
+					header: {
+						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					success(res) {
 						console.log(res)
 						if (res.data.status) {
 							uni.hideLoading();
 							that.privateTaxi = res.data.data;
-						}else{
+						} else {
 							uni.hideLoading();
 							console.log(res)
 						}
@@ -1145,9 +1156,9 @@
 				})
 			},
 			privateTaxiClick: function(value) { //点击专线车 
-			    uni.setStorage({//专线车信息
-			    	key:"SpecialLineInf",
-					data:value,
+				uni.setStorage({ //专线车信息
+					key: "SpecialLineInf",
+					data: value,
 					success() {
 						uni.removeStorage({
 							key: "passengerList"
@@ -1158,7 +1169,7 @@
 							animationDuration: 200,
 						});
 					}
-			    })
+				})
 			}
 			///////////////////////////专线出租车代码结束/////////////////////////////////////////////////////
 		}

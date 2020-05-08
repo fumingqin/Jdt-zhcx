@@ -29,7 +29,7 @@ const Interface = {
 		value: Url + '/api/SpecialLine/CancelSpecialLineOrder_Passenger',
 		name:'旅客端-取消订单',
 		method:'POST',
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["order/OrderList","CZC/PrivateTaxiPayment.vue","CZC/WaitTakeOrder"]
 	},
 	getCommonPayparameter:{ 
 		value: Url+'/api/Pay/getCommonPayparameter',
@@ -41,13 +41,13 @@ const Interface = {
 		value: Url+'/api/Pay/BouncePay',
 		name:'旅客端-退款',
 		method:'POST', 
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["CZC/OrderList","CZC/WaitTakeOrder"]
 	},
 	CheckPayState:{
 		value: Url+'/api/Pay/CheckPayState',
 		name:'旅客端-检测支付是否成功',
 		method:'POST', 
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["order/OrderList","CZC/PrivateTaxiPayment","CZC/WaitTakeOrder"]
 	},
 	SpecialLineOrderPay_Passenger:{
 		value: Url+'/api/ly/SpecialLineOrderPay_Passenger',
@@ -71,13 +71,13 @@ const Interface = {
 		value: Url + '/api/SpecialLine/SpecialLineOrderPay_Passenger',
 		name:'旅客端-支付完成',
 		method:'POST',
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["CZC/PrivateTaxiPayment.nvue"]
 	},
 	DeleteSpecialLineOrder_Passenger:{
 		value: Url + '/api/SpecialLine/DeleteSpecialLineOrder_Passenger',
-		name:'旅客端-支付完成',
+		name:'旅客端-删除订单',
 		method:'POST',
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["order/OrderList"]
 	},
 }
 

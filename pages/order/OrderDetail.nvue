@@ -304,7 +304,7 @@
 							title:res.data.msg,
 							icon:"none"
 						})
-						that.getOrderDetailInfo();
+						that.getOrderDetailInfo(that.orderNumber); 
 					},
 					fail(res) {
 						uni.showToast({
