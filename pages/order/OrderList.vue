@@ -10,1133 +10,1133 @@
 		</view>
 		<!-- 最外层view，用于底部拉大 -->
 		<view class="pageView">
-		
-		<!-- 全部 -->
-		<view v-if="current === 0" style="margin-top: 20rpx;">
-			<view v-for="(item,index) in info" :key="index">
-				<!-- <view  v-if="item.title=='出租车-专线'"> -->
-				<view v-if="item.title=='出租车-专线'">
-					<view style="margin:30rpx;">
-						<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-						</view>
-						<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
-							<view style="display: flex;justify-content: space-between;">
-								<view style="display: flex;">
-									<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
-									<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+
+			<!-- 全部 -->
+			<view v-if="current === 0" style="margin-top: 20rpx;">
+				<view v-for="(item,index) in info" :key="index">
+					<!-- <view  v-if="item.title=='出租车-专线'"> -->
+					<view v-if="item.title=='出租车-专线'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
-								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
-								<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
-							</view>
-							<view style="display: flex;justify-content: flex-end;">
-								<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
-								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
-								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
-								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
-				<!-- 出租车 -->
-				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx;line-height: ; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-					</view>
-					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
+					<!-- 出租车 -->
+					<view v-if="item.vehicleType=='出租车'">
+						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx;line-height: ; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
-							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
-						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
-							<view class="bluering"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
-						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
-							<view class="redring"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
-						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
-							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
-							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
-						</view>
-					</view>
-				</view>
-				
-				
-				<!-- 景区门票 -->
-				<!-- 标签class命名：pd;全称：Purchase Date -->
-				<!-- 内容class命名：at;全称：Admission ticket -->
-				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
-					<view class="at_view">
-						<view class="at_titleView">
-							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
-							<text class="at_title">{{item.ticketTitle}}</text>
-							<text class="at_status">{{item.orderType}}</text>
-						</view>
-						<view class="at_contentView" style="display: flex;">
-							<view v-for="(item2,index2) in item.ticketComment" :key="index2">
-								<view class="at_contentFrame">{{item2}}</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 							</view>
-							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
-						</view>
 
-						<view class="at_contentView">
-							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
-
-						<!-- 已使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='已使用'">
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
-						</view>
-
-						<!-- 待使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='待使用'">
-							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
-						</view>
-
-						<!-- 待支付 -->
-						<view class="at_buttonView" v-if="item.orderType=='待支付'">
-							<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
-						</view>
-
-						<!-- 已退票 -->
-						<view class="at_buttonView" v-if="item.orderType=='已退票'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-
-						<!-- 已取消 -->
-						<view class="at_buttonView" v-if="item.orderType=='已取消'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-
-						<!-- 支付超时 -->
-						<view class="at_buttonView" v-if="item.orderType=='支付超时'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-						
-						<!-- 已失效 -->
-						<view class="at_buttonView" v-if="item.orderType=='已失效'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-						
-					</view>
-				</view>
-				
-				<!-- 旅游产品 -->
-				<!-- 样式与 -->
-				<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
-					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
-					<view class="at_view">
-						<view class="at_titleView">
-							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
-							<text class="at_title">{{item.ticketTitle}}</text>
-							<text class="at_status">{{item.orderType}}</text>
-						</view>
-						<view class="at_contentView" style="display: flex;">
-							<view v-for="(item2,index2) in item.ticketComment" :key="index2">
-								<view class="at_contentFrame">{{item2}}</view>
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
+								<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
 							</view>
-							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
-						</view>
-				
-						<view class="at_contentView">
-							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
-				
-						<!-- 已使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='已使用'">
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
-						</view>
-				
-						<!-- 待使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='待使用'">
-							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
-						</view>
-				
-						<!-- 待支付 -->
-						<view class="at_buttonView" v-if="item.orderType=='待支付'">
-							<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
-						</view>
-				
-						<!-- 已退票 -->
-						<view class="at_buttonView" v-if="item.orderType=='已退票'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-				
-						<!-- 已取消 -->
-						<view class="at_buttonView" v-if="item.orderType=='已取消'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-				
-						<!-- 支付超时 -->
-						<view class="at_buttonView" v-if="item.orderType=='支付超时'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-						
-						<!-- 已失效 -->
-						<view class="at_buttonView" v-if="item.orderType=='已失效'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-						
-					</view>
-				</view>
 
-				<!-- 包车订单 -->
-				<!-- 标签class命名：;全称：Purchase Date -->
-				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
-					<view class="pd_view">{{item.or_date}}</view>
-					<view class="cm_view">
-						<view class="cm_titleView">
-							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.or_class}}</text>
-							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
+							</view>
+
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
+							</view>
+
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
+								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
+								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+							</view>
 						</view>
-						<!-- <view class="cm_contentView" style="display: flex;">
+					</view>
+
+
+					<!-- 景区门票 -->
+					<!-- 标签class命名：pd;全称：Purchase Date -->
+					<!-- 内容class命名：at;全称：Admission ticket -->
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+
+							<!-- 已使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='已使用'">
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+							</view>
+
+							<!-- 待使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='待使用'">
+								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
+							</view>
+
+							<!-- 待支付 -->
+							<view class="at_buttonView" v-if="item.orderType=='待支付'">
+								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+							</view>
+
+							<!-- 已退票 -->
+							<view class="at_buttonView" v-if="item.orderType=='已退票'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+
+							<!-- 已取消 -->
+							<view class="at_buttonView" v-if="item.orderType=='已取消'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+
+							<!-- 支付超时 -->
+							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+
+							<!-- 已失效 -->
+							<view class="at_buttonView" v-if="item.orderType=='已失效'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+
+						</view>
+					</view>
+					
+					<!-- 旅游产品 -->
+					<!-- 同景区门票 -->
+					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+					
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+					
+							<!-- 已使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='已使用'">
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+							</view>
+					
+							<!-- 待使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='待使用'">
+								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
+							</view>
+					
+							<!-- 待支付 -->
+							<view class="at_buttonView" v-if="item.orderType=='待支付'">
+								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+							</view>
+					
+							<!-- 已退票 -->
+							<view class="at_buttonView" v-if="item.orderType=='已退票'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+							<!-- 已取消 -->
+							<view class="at_buttonView" v-if="item.orderType=='已取消'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+							<!-- 支付超时 -->
+							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+							<!-- 已失效 -->
+							<view class="at_buttonView" v-if="item.orderType=='已失效'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+						</view>
+					</view>
+
+					<!-- 包车订单 -->
+					<!-- 标签class命名：;全称：Purchase Date -->
+					<!-- 内容class命名：cm;全称：custom made -->
+					<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+						<view class="pd_view">{{item.or_date}}</view>
+						<view class="cm_view">
+							<view class="cm_titleView">
+								<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+								<text class="cm_title">{{item.or_class}}</text>
+								<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+							</view>
+							<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
 						</view> -->
-						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
-							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
-						</view>
+							<view class="cm_contentView">
+								<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+								<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+								<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+								<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
+							</view>
 
 
-						<!-- 已完成 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='13'">
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
-						</view>
-						
-						<!-- 待补款 -->
-						<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
+							<!-- 已完成 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='13'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
+							</view>
+
+							<!-- 待补款 -->
+							<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view> -->
-						<!-- 订单执行中 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+							<!-- 订单执行中 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+							</view>
+							<!-- 进行中 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='1'">
+								<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+							</view>
+
+							<!-- 待支付 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='5'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+								<view class="cm_button cm_btToPay" @click="topay2(item.or_number)">去支付</view>
+							</view>
+
+							<!-- 已取消 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='7'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+								<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
+							</view>
 						</view>
-						<!-- 进行中 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='1'">
-							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+					</view>
+
+
+					<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
+
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
+							<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 						</view>
 
-						<!-- 待支付 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='5'">
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-							<view class="cm_button cm_btToPay" @click="topay2(item.or_number)">去支付</view>
-						</view>
+						<view class="kywhiteBg">
+							<!-- 站点-状态 -->
+							<view class="u-f-ac">
+								<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+								<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+									<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
+									<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+								</view>
+							</view>
+							<!-- 时间-价格 -->
+							<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+								<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+								<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+									<view>{{item.setOutTime}}</view>
+									<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+								</view>
+							</view>
+							<!-- 上车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="bluering"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
+							</view>
+							<!-- 下车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="redring"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
+							</view>
 
-						<!-- 已取消 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='7'">
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
+							<view class="CTKYBtnView">
+								<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
+								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
+								<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
+								<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
+								<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
+								<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
+								<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
+							</view>
 						</view>
 					</view>
 				</view>
-
-
-				<!-- （全部）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
-
-					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
-					</view>
-
-					<view class="kywhiteBg">
-						<!-- 站点-状态 -->
-						<view class="u-f-ac">
-							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
-							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
-							</view>
-						</view>
-						<!-- 时间-价格 -->
-						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
-							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
-							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
-								<view>{{item.setOutTime}}</view>
-								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
-							</view>
-						</view>
-						<!-- 上车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="bluering"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
-						</view>
-						<!-- 下车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="redring"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
-						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
-							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
-							<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
-							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
-							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
-							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
-							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
-							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
-						</view>
-					</view>
-				</view>
+				<empty-data :isShow="info.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 			</view>
-			<empty-data :isShow="info.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
-		</view>
 
 
-		<!-- 已完成 -->
-		<view v-if="current === 1" style="margin-top: 20rpx; ">
-			<view v-for="(item,index) in finishArr" :key="index">
-				<!-- <view  v-if="item.title=='出租车-专线'"> -->
-				<view v-if="item.title=='出租车-专线'">
-					<view style="margin:30rpx;">
-						<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-						</view>
-						<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
-							<view style="display: flex;justify-content: space-between;">
-								<view style="display: flex;">
-									<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
-									<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+			<!-- 已完成 -->
+			<view v-if="current === 1" style="margin-top: 20rpx; ">
+				<view v-for="(item,index) in finishArr" :key="index">
+					<!-- <view  v-if="item.title=='出租车-专线'"> -->
+					<view v-if="item.title=='出租车-专线'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
-								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
-								<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
-							</view>
-							<view style="display: flex;justify-content: flex-end;">
-								<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成' ">详情</button>
-								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
-								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
-								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成' ">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
 
-				<!-- 出租车 -->
-				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-					</view>
-					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
+					<!-- 出租车 -->
+					<view v-if="item.vehicleType=='出租车'">
+						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
-							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
-						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
-							<view class="bluering"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
-						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
-							<view class="redring"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
-						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
-							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
-							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
-						</view>
-					</view>
-				</view>
-
-				<!-- 景区门票 -->
-				<!-- 标签class命名：pd;全称：Purchase Date -->
-				<!-- 内容class命名：at;全称：Admission ticket -->
-				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
-					<view class="at_view">
-						<view class="at_titleView">
-							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
-							<text class="at_title">{{item.ticketTitle}}</text>
-							<text class="at_status">{{item.orderType}}</text>
-						</view>
-						<view class="at_contentView" style="display: flex;">
-							<view v-for="(item2,index2) in item.ticketComment" :key="index2">
-								<view class="at_contentFrame">{{item2}}</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 							</view>
-							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
-						</view>
-				
-						<view class="at_contentView">
-							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
-				
-						<!-- 已使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='已使用'">
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
-						</view>
-						
-					</view>
-				</view>
 
-				<!-- 包车订单 -->
-				<!-- 标签class命名：;全称：Purchase Date -->
-				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
-					<view class="pd_view">{{item.or_date}}</view>
-					<view class="cm_view">
-						<view class="cm_titleView">
-							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.or_class}}</text>
-							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
+								<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
+							</view>
+
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
+							</view>
+
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
+							</view>
+
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
+								<button class="allBtn" @click="czcComplaint(item.driverName)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
+								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+							</view>
 						</view>
-						<!-- <view class="cm_contentView" style="display: flex;">
+					</view>
+
+					<!-- 景区门票 -->
+					<!-- 标签class命名：pd;全称：Purchase Date -->
+					<!-- 内容class命名：at;全称：Admission ticket -->
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+
+							<!-- 已使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='已使用'">
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+							</view>
+
+						</view>
+					</view>
+
+					<!-- 包车订单 -->
+					<!-- 标签class命名：;全称：Purchase Date -->
+					<!-- 内容class命名：cm;全称：custom made -->
+					<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+						<view class="pd_view">{{item.or_date}}</view>
+						<view class="cm_view">
+							<view class="cm_titleView">
+								<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+								<text class="cm_title">{{item.or_class}}</text>
+								<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+							</view>
+							<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
 						</view> -->
-						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
-							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
-						</view>
-						<!-- 已完成 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='13'">
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
-						</view>
-					</view>
-				</view>
-
-
-				<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
-					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
-					</view>
-					<view class="kywhiteBg">
-						<!-- 站点-状态 -->
-						<view class="u-f-ac">
-							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
-							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+							<view class="cm_contentView">
+								<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+								<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+								<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+								<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
+							</view>
+							<!-- 已完成 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='13'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
 							</view>
 						</view>
-						<!-- 时间-价格 -->
-						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
-							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
-							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
-								<view>{{item.setOutTime}}</view>
-								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
-							</view>
-						</view>
-						<!-- 上车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="bluering"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
-						</view>
-						<!-- 下车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="redring"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
-						</view>
+					</view>
 
-						<view class="CTKYBtnView">
-							<!-- <button class="allBtn">车辆位置</button> -->
-							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<!-- <button class="allBtn QRCode">二维码</button>
+
+					<!-- （已完成）客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
+							<view class="reserveDate">预定日期：{{item.bookTime}}</view>
+						</view>
+						<view class="kywhiteBg">
+							<!-- 站点-状态 -->
+							<view class="u-f-ac">
+								<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+								<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+									<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
+									<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+								</view>
+							</view>
+							<!-- 时间-价格 -->
+							<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+								<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+								<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+									<view>{{item.setOutTime}}</view>
+									<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+								</view>
+							</view>
+							<!-- 上车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="bluering"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
+							</view>
+							<!-- 下车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="redring"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
+							</view>
+
+							<view class="CTKYBtnView">
+								<!-- <button class="allBtn">车辆位置</button> -->
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<!-- <button class="allBtn QRCode">二维码</button>
 							<button class="allBtn">选座</button>
 							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
 							<button class="allBtn">联系司机</button> -->
+							</view>
 						</view>
 					</view>
 				</view>
+				<empty-data :isShow="finishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 			</view>
-			<empty-data :isShow="finishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
-		</view>
 
-		<!-- 进行中 -->
-		<view v-if="current === 2" style="margin-top: 20rpx;">
-			<view v-for="(item,index) in goingArr" :key="index">
+			<!-- 进行中 -->
+			<view v-if="current === 2" style="margin-top: 20rpx;">
+				<view v-for="(item,index) in goingArr" :key="index">
 
-				<!-- <view  v-if="item.title=='出租车-专线'"> -->
-				<view v-if="item.title=='出租车-专线'">
-					<view style="margin:30rpx;">
-						<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-						</view>
-						<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
-							<view style="display: flex;justify-content: space-between;">
-								<view style="display: flex;">
-									<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
-									<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+					<!-- <view  v-if="item.title=='出租车-专线'"> -->
+					<view v-if="item.title=='出租车-专线'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
-								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
-							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
-								<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
-							</view>
-							<view style="display: flex;justify-content: flex-end;">
-								<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成' ">详情</button>
-								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
-								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
-								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成' ">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
+									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
 
-				<!-- 出租车 -->
-				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-					</view>
-					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
+					<!-- 出租车 -->
+					<view v-if="item.vehicleType=='出租车'">
+						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
-							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
-						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
-							<view class="bluering"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
-						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
-							<view class="redring"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
-						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
-							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
-							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
-						</view>
-					</view>
-				</view>
-
-
-				<!-- 景区门票 -->
-				<!-- 标签class命名：pd;全称：Purchase Date -->
-				<!-- 内容class命名：at;全称：Admission ticket -->
-				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">下单时间：{{item.orderDate}}</view>
-					<view class="at_view">
-						<view class="at_titleView">
-							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
-							<text class="at_title">{{item.ticketTitle}}</text>
-							<text class="at_status">{{item.orderType}}</text>
-						</view>
-						<view class="at_contentView" style="display: flex;">
-							<view v-for="(item2,index2) in item.ticketComment" :key="index2">
-								<view class="at_contentFrame">{{item2}}</view>
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
 							</view>
-							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
+								<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
+							</view>
+
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
+							</view>
+
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
+							</view>
+
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
+								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
+								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+							</view>
 						</view>
-
-						<view class="at_contentView">
-							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
-
-
-						<!-- 待使用 -->
-						<view class="at_buttonView" v-if="item.orderType=='待使用'">
-							<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
-						</view>
-
 					</view>
-				</view>
 
-				<!-- 包车订单 -->
-				<!-- 标签class命名：;全称：Purchase Date -->
-				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
-					<view class="pd_view">{{item.or_date}}</view>
-					<view class="cm_view">
-						<view class="cm_titleView">
-							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.or_class}}</text>
-							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+
+					<!-- 景区门票 -->
+					<!-- 标签class命名：pd;全称：Purchase Date -->
+					<!-- 内容class命名：at;全称：Admission ticket -->
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.orderDate}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+
+
+							<!-- 待使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='待使用'">
+								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'3')">退票</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
+							</view>
+
 						</view>
-						<!-- <view class="cm_contentView" style="display: flex;">
+					</view>
+
+					<!-- 包车订单 -->
+					<!-- 标签class命名：;全称：Purchase Date -->
+					<!-- 内容class命名：cm;全称：custom made -->
+					<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+						<view class="pd_view">{{item.or_date}}</view>
+						<view class="cm_view">
+							<view class="cm_titleView">
+								<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+								<text class="cm_title">{{item.or_class}}</text>
+								<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+							</view>
+							<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
 						</view> -->
-						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
-							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
-						</view>
-						<!-- 待补款 -->
-						<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
+							<view class="cm_contentView">
+								<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+								<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+								<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+								<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
+							</view>
+							<!-- 待补款 -->
+							<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 						</view> -->
 
-						<!-- 订单进行中 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-						</view>
-						<!-- 进行中 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='1'||item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='10'">
-							<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-						</view>
-
-					</view>
-				</view>
-
-				<!-- (进行中)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
-					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
-					</view>
-					<view class="kywhiteBg">
-						<!-- 站点-状态 -->
-						<view class="u-f-ac">
-							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
-							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+							<!-- 订单进行中 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 							</view>
-						</view>
-						<!-- 时间-价格 -->
-						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
-							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
-							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
-								<view>{{item.setOutTime}}</view>
-								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+							<!-- 进行中 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='1'||item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='10'">
+								<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 							</view>
-						</view>
-						<!-- 上车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="bluering"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
-						</view>
-						<!-- 下车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="redring"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
-						</view>
 
-						<view class="CTKYBtnView">
-							<!-- <button class="allBtn">车辆位置</button> -->
-							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<!-- <button class="allBtn QRCode">二维码</button> -->
-							<!-- <button class="allBtn">选座</button> -->
-							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
-							<!-- <button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button> -->
-							<!-- <button class="allBtn">联系司机</button> -->
 						</view>
 					</view>
-				</view>
-			</view>
-			<empty-data :isShow="goingArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
-		</view>
 
-
-		<!-- 未支付 -->
-		<view v-if="current === 3" style="margin-top: 20rpx;">
-			<view v-for="(item,index) in unfinishArr" :key="index">
-
-				<!-- <view  v-if="item.title=='出租车-专线'"> -->
-				<view v-if="item.title=='出租车-专线'">
-					<view style="margin:30rpx;">
-						<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+					<!-- (进行中)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
+							<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 						</view>
-						<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
-							<view style="display: flex;justify-content: space-between;">
-								<view style="display: flex;">
-									<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
-									<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+						<view class="kywhiteBg">
+							<!-- 站点-状态 -->
+							<view class="u-f-ac">
+								<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+								<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+									<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
+									<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 								</view>
-								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 							</view>
-							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+							<!-- 时间-价格 -->
+							<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+								<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+								<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+									<view>{{item.setOutTime}}</view>
+									<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+								</view>
 							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+							<!-- 上车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="bluering"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
 							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
-								<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+							<!-- 下车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="redring"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-							<view style="display: flex;justify-content: flex-end;">
-								<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
-								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
-								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
-								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+
+							<view class="CTKYBtnView">
+								<!-- <button class="allBtn">车辆位置</button> -->
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<!-- <button class="allBtn QRCode">二维码</button> -->
+								<!-- <button class="allBtn">选座</button> -->
+								<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
+								<!-- <button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button> -->
+								<!-- <button class="allBtn">联系司机</button> -->
 							</view>
 						</view>
 					</view>
 				</view>
-
-				<!-- 出租车 -->
-				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-					</view>
-					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
-						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
-							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
-						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
-							<view class="bluering"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
-						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
-							<view class="redring"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
-						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
-							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
-							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
-						</view>
-					</view>
-				</view>
+				<empty-data :isShow="goingArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
+			</view>
 
 
-				<!-- 景区门票 -->
-				<!-- 标签class命名：pd;全称：Purchase Date -->
-				<!-- 内容class命名：at;全称：Admission ticket -->
-				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
-					<view class="at_view">
-						<view class="at_titleView">
-							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
-							<text class="at_title">{{item.ticketTitle}}</text>
-							<text class="at_status">{{item.orderType}}</text>
-						</view>
-						<view class="at_contentView" style="display: flex;">
-							<view v-for="(item2,index2) in item.ticketComment" :key="index2">
-								<view class="at_contentFrame">{{item2}}</view>
+			<!-- 未支付 -->
+			<view v-if="current === 3" style="margin-top: 20rpx;">
+				<view v-for="(item,index) in unfinishArr" :key="index">
+
+					<!-- <view  v-if="item.title=='出租车-专线'"> -->
+					<view v-if="item.title=='出租车-专线'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 							</view>
-							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
+									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
 						</view>
-
-						<view class="at_contentView">
-							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
-
-						<!-- 待支付 -->
-						<view class="at_buttonView" v-if="item.orderType=='待支付'">
-							<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
-						</view>
-
-
 					</view>
-				</view>
 
-				<!-- 包车订单 -->
-				<!-- 标签class命名：;全称：Purchase Date -->
-				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
-					<view class="pd_view">{{item.or_date}}</view>
-					<view class="cm_view">
-						<view class="cm_titleView">
-							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.or_class}}</text>
-							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+					<!-- 出租车 -->
+					<view v-if="item.vehicleType=='出租车'">
+						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<!-- <view class="cm_contentView" style="display: flex;">
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
+							</view>
+
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
+								<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
+							</view>
+
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
+							</view>
+
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
+							</view>
+
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
+								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
+								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+							</view>
+						</view>
+					</view>
+
+
+					<!-- 景区门票 -->
+					<!-- 标签class命名：pd;全称：Purchase Date -->
+					<!-- 内容class命名：at;全称：Admission ticket -->
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+
+							<!-- 待支付 -->
+							<view class="at_buttonView" v-if="item.orderType=='待支付'">
+								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'3')">取消</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+							</view>
+
+
+						</view>
+					</view>
+
+					<!-- 包车订单 -->
+					<!-- 标签class命名：;全称：Purchase Date -->
+					<!-- 内容class命名：cm;全称：custom made -->
+					<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+						<view class="pd_view">{{item.or_date}}</view>
+						<view class="cm_view">
+							<view class="cm_titleView">
+								<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+								<text class="cm_title">{{item.or_class}}</text>
+								<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+							</view>
+							<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
 						</view> -->
-						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
-							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
-						</view>
-
-
-						<!-- 待支付 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='5'">
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btToPay" @click="topay2(item.or_number)">去支付</view>
-						</view>
-
-
-					</view>
-				</view>
-
-				<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
-					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
-					</view>
-					<view class="kywhiteBg">
-						<!-- 站点-状态 -->
-						<view class="u-f-ac">
-							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
-							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+							<view class="cm_contentView">
+								<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+								<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+								<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+								<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 							</view>
-						</view>
-						<!-- 时间-价格 -->
-						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
-							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
-							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
-								<view>{{item.setOutTime}}</view>
-								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+
+
+							<!-- 待支付 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='5'">
+								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+								<view class="cm_button cm_btToPay" @click="topay2(item.or_number)">去支付</view>
 							</view>
-						</view>
-						<!-- 上车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="bluering"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
-						</view>
-						<!-- 下车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="redring"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
-						</view>
-						<view class="CTKYBtnView">
-							<button class="allBtn" @tap="open3(item.orderNumber,'2')">取消</button>
-							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>
+
+
 						</view>
 					</view>
-				</view>
-			</view>
-			<empty-data :isShow="unfinishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
-		</view>
 
-		<!-- 已取消 -->
-		<view v-if="current === 4" style="margin-top: 20rpx;">
-			<view v-for="(item,index) in cancelArr" :key="index">
-				<!-- <view  v-if="item.title=='出租车-专线'"> -->
-				<view v-if="item.title=='出租车-专线'">
-					<view style="margin:30rpx;">
-						<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
-							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+					<!-- (未支付)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
+							<view class="reserveDate">预定日期：{{item.bookTime}}</view>
 						</view>
-						<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
-							<view style="display: flex;justify-content: space-between;">
-								<view style="display: flex;">
-									<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
-									<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+						<view class="kywhiteBg">
+							<!-- 站点-状态 -->
+							<view class="u-f-ac">
+								<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+								<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+									<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
+									<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
 								</view>
-								<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 							</view>
-							<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+							<!-- 时间-价格 -->
+							<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+								<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+								<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+									<view>{{item.setOutTime}}</view>
+									<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+								</view>
 							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
-								<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
-								<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+							<!-- 上车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="bluering"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
 							</view>
-							<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
-								<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
-								<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+							<!-- 下车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="redring"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-							<view style="display: flex;justify-content: flex-end;">
-								<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
-								<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
-								<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
-								<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
-								<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+							<view class="CTKYBtnView">
+								<button class="allBtn" @tap="open3(item.orderNumber,'2')">取消</button>
+								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>
 							</view>
 						</view>
 					</view>
 				</view>
+				<empty-data :isShow="unfinishArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
+			</view>
 
-				<!-- 出租车 -->
-				<view v-if="item.vehicleType=='出租车'">
-					<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
-						<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
-					</view>
-					<view class="whiteBg">
-						<view style="display: flex; margin-top: -40rpx;">
-							<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
-							<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
-							<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
-						</view>
-
-						<view style="display: flex; margin-top: -72rpx;">
-							<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
-							<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
-							<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
-						</view>
-
-						<view style="display: flex; margin-top: -16rpx;">
-							<view class="bluering"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
-						</view>
-
-						<view style="display: flex; margin-top: 36rpx;">
-							<view class="redring"></view>
-							<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
-						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
-							<!-- <button class="allBtn" @click="detail(item.titleIndex)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button> -->
-							<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
-							<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
-							<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
-						</view>
-					</view>
-				</view>
-
-
-				<!-- 景区门票 -->
-				<!-- 标签class命名：pd;全称：Purchase Date -->
-				<!-- 内容class命名：at;全称：Admission ticket -->
-				<view v-if="item.title=='景区门票' && item.isDel !== '是'">
-					<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
-					<view class="at_view">
-						<view class="at_titleView">
-							<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
-							<text class="at_title">{{item.ticketTitle}}</text>
-							<text class="at_status">{{item.orderType}}</text>
-						</view>
-						<view class="at_contentView" style="display: flex;">
-							<view v-for="(item2,index2) in item.ticketComment" :key="index2">
-								<view class="at_contentFrame">{{item2}}</view>
+			<!-- 已取消 -->
+			<view v-if="current === 4" style="margin-top: 20rpx;">
+				<view v-for="(item,index) in cancelArr" :key="index">
+					<!-- <view  v-if="item.title=='出租车-专线'"> -->
+					<view v-if="item.title=='出租车-专线'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 							</view>
-							<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
-						</view>
-
-						<view class="at_contentView">
-							<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
-							<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
-						</view>
-
-						<!-- 已退票 -->
-						<view class="at_buttonView" v-if="item.orderType=='已退票'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-
-						<!-- 已取消 -->
-						<view class="at_buttonView" v-if="item.orderType=='已取消'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-
-						<!-- 支付超时 -->
-						<view class="at_buttonView" v-if="item.orderType=='支付超时'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
-						</view>
-						
-						<!-- 支付超时 -->
-						<view class="at_buttonView" v-if="item.orderType=='已失效'">
-							<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
-							<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-							<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">投诉</button> -->
+									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
 						</view>
 					</view>
-				</view>
 
-				<!-- 包车定制 -->
-				<!-- 标签class命名：;全称：Purchase Date -->
-				<!-- 内容class命名：cm;全称：custom made -->
-				<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
-					<view class="pd_view">{{item.or_date}}</view>
-					<view class="cm_view">
-						<view class="cm_titleView">
-							<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
-							<text class="cm_title">{{item.or_class}}</text>
-							<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+					<!-- 出租车 -->
+					<view v-if="item.vehicleType=='出租车'">
+						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
+							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;text-align: center; margin-left: 28rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<!-- <view class="cm_contentView" style="display: flex;">
+						<view class="whiteBg">
+							<view style="display: flex; margin-top: -40rpx;">
+								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
+								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
+								<view style="width: 160rpx; height: 44rpx;color: #666666; font-size: 28rpx;margin: 48rpx 0rpx;">{{taxiOrderState(item.state)}}</view>
+							</view>
+
+							<view style="display: flex; margin-top: -72rpx;">
+								<image style="width: 22rpx; height: 22rpx; margin:58rpx 92rpx;" src="../../static/Order/time.png"></image>
+								<view style="width: 540rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx -76rpx;">{{changeTime(item.orderTime)}}</view>
+								<!-- <view style="width: 160rpx; height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin: 48rpx 0rpx;">{{item.money}}</view> -->
+							</view>
+
+							<view style="display: flex; margin-top: -16rpx;">
+								<view class="bluering"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.startAddress}}</view>
+							</view>
+
+							<view style="display: flex; margin-top: 36rpx;">
+								<view class="redring"></view>
+								<view style=" height: 44rpx;color: #AAAAAA; font-size: 28rpx;margin-top: -12rpx;margin-left: 16rpx;">{{item.endAddress}}</view>
+							</view>
+
+							<view class="CTKYBtnView">
+								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
+								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
+								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
+							</view>
+						</view>
+					</view>
+
+
+					<!-- 景区门票 -->
+					<!-- 标签class命名：pd;全称：Purchase Date -->
+					<!-- 内容class命名：at;全称：Admission ticket -->
+					<view v-if="item.title=='景区门票' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+
+							<!-- 已退票 -->
+							<view class="at_buttonView" v-if="item.orderType=='已退票'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+
+							<!-- 已取消 -->
+							<view class="at_buttonView" v-if="item.orderType=='已取消'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+
+							<!-- 支付超时 -->
+							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+
+							<!-- 支付超时 -->
+							<view class="at_buttonView" v-if="item.orderType=='已失效'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'3')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+						</view>
+					</view>
+
+					<!-- 包车定制 -->
+					<!-- 标签class命名：;全称：Purchase Date -->
+					<!-- 内容class命名：cm;全称：custom made -->
+					<view v-if="item.or_class=='包车-定制' || item.or_class=='包车-专线'">
+						<view class="pd_view">{{item.or_date}}</view>
+						<view class="cm_view">
+							<view class="cm_titleView">
+								<image class="cm_icon" src="../../static/Order/baoche.png" mode="aspectFill"></image>
+								<text class="cm_title">{{item.or_class}}</text>
+								<text class="cm_status">{{getBCstate(item.or_Type)}}</text>
+							</view>
+							<!-- <view class="cm_contentView" style="display: flex;">
 							<text class="cm_contentPrice">¥{{item.cm_money}}</text>
 						</view> -->
-						<view class="cm_contentView">
-							<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
-							<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
-							<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
-							<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
+							<view class="cm_contentView">
+								<text class="cm_contentText">发车时间：&nbsp;{{item.or_dateString}}</text>
+								<text class="cm_contentText">上车点：&nbsp;{{item.or_boardingPoint}}</text>
+								<text class="cm_contentText">目的地：&nbsp;{{item.or_destination}}</text>
+								<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
+							</view>
+
+
+							<!-- 已取消 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='7'">
+								<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+
+							</view>
 						</view>
+					</view>
 
+					<!-- (已取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
+					<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
+						<!-- 预定日期 -->
+						<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
+							<view class="reserveDate">预定日期：{{item.bookTime}}</view>
+						</view>
+						<view class="kywhiteBg">
+							<!-- 站点-状态 -->
+							<view class="u-f-ac">
+								<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
+								<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
+									<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
+									<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
+								</view>
+							</view>
+							<!-- 时间-价格 -->
+							<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
+								<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
+								<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
+									<view>{{item.setOutTime}}</view>
+									<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
+								</view>
+							</view>
+							<!-- 上车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="bluering"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
+							</view>
+							<!-- 下车点 -->
+							<view class="u-f-ac" style="margin-top: 20rpx;">
+								<view class="redring"></view>
+								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
+							</view>
 
-						<!-- 已取消 -->
-						<view class="cm_buttonView" v-if="item.or_Type=='8'||item.or_Type=='7'">
-							<view class="cm_button cm_btDelete" @click="open4(item.or_number,'4')">删除</view>
-							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-
+							<view class="CTKYBtnView">
+								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
+								<!-- <button class="allBtn" @tap="del(index)">删除</button> -->
+							</view>
 						</view>
 					</view>
 				</view>
-
-				<!-- (已取消)客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车客车 -->
-				<view v-if="item.carType=='普通班车' || item.carType=='定制班车'">
-					<!-- 预定日期 -->
-					<view style="display: flex; margin-bottom: 40rpx; margin-left: 28rpx;">
-						<view class="reserveDate">预定日期：{{item.bookTime}}</view>
-					</view>
-					<view class="kywhiteBg">
-						<!-- 站点-状态 -->
-						<view class="u-f-ac">
-							<image style="width: 48rpx; height: 45rpx; margin-left: 20rpx;" src="../../static/Order/keche.png"></image>
-							<view class="u-f-jsb" style="margin-left: 20rpx; width: 100%;">
-								<view class="stationTitle">{{item.startSiteName}}-{{item.endSiteName}}</view>
-								<view style="color: #666666; font-size: 28rpx;margin-right: 20rpx;">{{getCtkyOrderStatus(item.state)}}</view>
-							</view>
-						</view>
-						<!-- 时间-价格 -->
-						<view class="u-f-ac" style="margin-left: 96rpx; margin-top: 20rpx;color: #AAAAAA; font-size: 28rpx;">
-							<image style="width: 22rpx; height: 22rpx;" src="../../static/Order/time.png"></image>
-							<view class="u-f-jsb" style="margin-left: 15rpx; width: 100%;">
-								<view>{{item.setOutTime}}</view>
-								<view style="margin-right: 20rpx;">¥{{item.totalPrice}}</view>
-							</view>
-						</view>
-						<!-- 上车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="bluering"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.startSiteName}}</view>
-						</view>
-						<!-- 下车点 -->
-						<view class="u-f-ac" style="margin-top: 20rpx;">
-							<view class="redring"></view>
-							<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
-						</view>
-
-						<view class="CTKYBtnView">
-							<button class="allBtn" @tap="keYunDetail(item)">详情</button>
-							<!-- <button class="allBtn" @tap="del(index)">删除</button> -->
-						</view>
-					</view>
-				</view>
+				<empty-data :isShow="cancelArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 			</view>
-			<empty-data :isShow="cancelArr.length == 0" text="暂无数据" :image="noDataImage" textColor="#999999"></empty-data>
 		</view>
-		</view>
-		
+
 		<!-- 二维码弹框 -->
 		<uni-popup2 ref="popup5" type="bottom">
 			<view class="box_Vlew">
@@ -1354,7 +1354,7 @@
 					}
 				],
 				specialLineInfo: '',
-				noDataImage:'',//客运弹框背景图
+				noDataImage: '', //客运弹框背景图
 			}
 		},
 		onLoad: function() {
@@ -1373,14 +1373,14 @@
 			//请求景区门票数据
 			this.toFinished();
 			//客运刷新状态
-			if(this.ctkyOrderNum) {
+			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
 		},
 		onPullDownRefresh: function() {
 			this.toFinished();
 			//客运刷新状态
-			if(this.ctkyOrderNum) {
+			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
 		},
@@ -1464,16 +1464,16 @@
 			getPicture() {
 				var that = this;
 				uni.request({
-					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
-					method:$KyInterface.KyInterface.Ky_AddPicture.method,
-					header:$KyInterface.KyInterface.Ky_AddPicture.header,
-					data:{
-						model:0,
+					url: $KyInterface.KyInterface.Ky_AddPicture.Url,
+					method: $KyInterface.KyInterface.Ky_AddPicture.method,
+					header: $KyInterface.KyInterface.Ky_AddPicture.header,
+					data: {
+						model: 0,
 					},
 					success(res) {
-						if(res.data.status == true) {
+						if (res.data.status == true) {
 							that.noDataImage = res.data.data[2].imageUrl
-						}else {
+						} else {
 							console.log(res.data.status)
 						}
 					},
@@ -1503,9 +1503,9 @@
 			getKeYunOrderInfo: function() {
 				var that = this;
 				uni.request({
-					url:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.Url,
-					method:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.method,
-					header:$KyInterface.KyInterface.Ky_getKeYunOrderInfo.header,
+					url: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.Url,
+					method: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.method,
+					header: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.header,
 					data: {
 						clientID: that.userInfo.userId
 					},
@@ -1571,9 +1571,9 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url:$KyInterface.KyInterface.Ky_RefundTicket.Url,
-					method:$KyInterface.KyInterface.Ky_RefundTicket.method,
-					header:$KyInterface.KyInterface.Ky_RefundTicket.header,
+					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
+					method: $KyInterface.KyInterface.Ky_RefundTicket.method,
+					header: $KyInterface.KyInterface.Ky_RefundTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -1609,9 +1609,9 @@
 				console.log(orderNumber)
 				var that = this;
 				uni.request({
-					url:$KyInterface.KyInterface.Ky_CancelTicket.Url,
-					method:$KyInterface.KyInterface.Ky_CancelTicket.method,
-					header:$KyInterface.KyInterface.Ky_CancelTicket.header,
+					url: $KyInterface.KyInterface.Ky_CancelTicket.Url,
+					method: $KyInterface.KyInterface.Ky_CancelTicket.method,
+					header: $KyInterface.KyInterface.Ky_CancelTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -1661,9 +1661,9 @@
 				uni.showLoading();
 				timer = setInterval(function() {
 					uni.request({
-						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
-						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
-						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
+						url: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						header: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
@@ -2102,7 +2102,7 @@
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType:3,
+						payType: 3,
 						orderNumber: orderNumber
 					},
 					success(res) {
@@ -2130,7 +2130,7 @@
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
-						payType:3,
+						payType: 3,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
 						price: 0.01
@@ -2195,18 +2195,18 @@
 					success(res) {
 						if (res.confirm) {
 							uni.showLoading({
-								mask:true,
+								mask: true,
 							})
-							if(value.SpecialorderState==0||value.SpecialorderState==1||value.SpecialorderState==2){
+							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
 								that.BouncePay(value.orderNumber);
 								uni.hideLoading()
-							}else{
+							} else {
 								that.CancelSpecialLineOrder1(value.orderNumber);
 								uni.hideLoading()
 							}
 						}
 					},
-					fail: function(res) { 
+					fail: function(res) {
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none'
@@ -2251,7 +2251,8 @@
 												that.goingArr.push(that.info[i]);
 											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
 												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType == '支付超时' || that.info[i].orderType == '已失效') {
+											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
+												'支付超时' || that.info[i].orderType == '已失效') {
 												that.cancelArr.push(that.info[i]);
 											}
 										}
@@ -2375,7 +2376,7 @@
 							this.close2()
 							this.toFinished();
 						},
-						fail:function(){
+						fail: function() {
 							uni.showToast({
 								title: '退票失败',
 								icon: 'none',
@@ -2572,7 +2573,14 @@
 					}
 				}
 			},
-
+			czcComplaint: function(item) {
+				console.log(item)
+				if (item.vehicleType == '出租车') {
+					uni.navigateTo({
+						url: '/pages/order/complaint?tsTitle=出租车&tsData=' + item
+					})
+				}
+			},
 			//-------------------包车订单添加-------------------------
 			getArrayInfo: function() {
 				var that = this;
@@ -2594,18 +2602,20 @@
 								console.log(res);
 								if (res.data.msg == '订单查询完成') {
 									for (var i = 0; i < res.data.data.length; i++) {
-										if(res.data.data[i].or_Type == '6'||res.data.data[i].or_Type == '9'||res.data.data[i].or_Type == '12'){
-										}else{
+										if (res.data.data[i].or_Type == '6' || res.data.data[i].or_Type == '9' || res.data.data[i].or_Type ==
+											'12') {} else {
 											that.info.push(res.data.data[i]);
-											}
-									
+										}
+
 									}
 									if (res.data.data !== '') {
 										for (var i = 0; i < res.data.data.length; i++) {
 											if (res.data.data[i].or_Type == '13') {
 												that.finishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '0' ||res.data.data[i].or_Type == '1' || res.data.data[i].or_type == '2' || res.data.data[i].or_type ==
-												'3'||res.data.data[i].or_Type == '4'||res.data.data[i].or_Type == '10'||res.data.data[i].or_Type == '11') {
+											} else if (res.data.data[i].or_Type == '0' || res.data.data[i].or_Type == '1' || res.data.data[i].or_type ==
+												'2' || res.data.data[i].or_type ==
+												'3' || res.data.data[i].or_Type == '4' || res.data.data[i].or_Type == '10' || res.data.data[i].or_Type ==
+												'11') {
 												that.goingArr.push(res.data.data[i]);
 											} else if (res.data.data[i].or_Type == '5') {
 												that.unfinishArr.push(res.data.data[i]);
@@ -2647,35 +2657,34 @@
 				})
 			},
 			//-------------------------包车-去支付-------------------------
-			topay2:function(e) {
+			topay2: function(e) {
 				uni.navigateTo({
-					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?orderNumber=' +JSON.stringify(e)
+					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?orderNumber=' + JSON.stringify(e)
 				})
 			},
 			//-------------------------判断订单状态-------------------------
 			getBCstate(param) {
 				if (param == '1') {
 					return '已接单'
-				}else if (param == '0') {
+				} else if (param == '0') {
 					return '等待接单'
-				}else if (param == '2') {
+				} else if (param == '2') {
 					return '已出发'
 				} else if (param == '3') {
 					return '司机已到出发地'
-				}else if (param == '4') {
+				} else if (param == '4') {
 					return '进行中'
 				} else if (param == '5') {
 					return '待支付'
 				} else if (param == '10') {
 					return '到达目的地'
-				}else if (param == '8' || param == '7') {
+				} else if (param == '8' || param == '7') {
 					return '已取消'
-				}
-				else if (param == '13') {
+				} else if (param == '13') {
 					return '已完成'
-				}// else if (param == '11') {
+				} // else if (param == '11') {
 				// 	return '待补款'
-				 // }
+				// }
 			}
 		}
 	}
@@ -2713,13 +2722,13 @@
 		background-color: #F5F5F5;
 		padding-bottom: 48upx;
 	}
-	
-	.pageView{
+
+	.pageView {
 		/* #ifdef H5 */
 		padding-bottom: 112upx;
 		/* #endif */
 	}
-	
+
 	.Btn {
 		// padding-top: 32upx; 
 		margin: 0 0 0 20rpx;
