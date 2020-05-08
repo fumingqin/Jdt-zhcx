@@ -263,10 +263,10 @@
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
 							<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item.orderNumber)">去支付</button>
 							<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
-							<!-- <button class="allBtn" v-if="item.state=='订单未支付'" @tap="cancelTap(item.orderId)">取消</button> -->
-							<!-- <button class="allBtn" v-if="item.state=='已完成'">投诉</button> -->
-							<!-- <button class="allBtn" @tap="keYunDel(item.orderId)" v-if="item.state=='已取消'">删除</button> -->
-							<!-- <button class="allBtn" v-if="item.state=='待使用'" @tap="QRCodeTap">二维码</button> -->
+							<button class="allBtn" v-if="item.state=='7'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+							<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
+							<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+							<!-- <button class="allBtn" v-if="item.state=='6'" @click="endorse(item)">改签</button> -->
 							<!-- <button class="allBtn" v-if="item.state=='待使用'"@tap="">选座</button> -->
 						</view>
 					</view>
@@ -448,12 +448,12 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<!-- <button class="allBtn">车辆位置</button> -->
+							<button class="allBtn">车辆位置</button>
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
+							<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
 							<!-- <button class="allBtn QRCode">二维码</button>
 							<button class="allBtn">选座</button>
-							<button class="allBtn" @tap="keYunRefundTicket()">退票</button>
-							<button class="allBtn">联系司机</button> -->
+							<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
 						</view>
 					</view>
 				</view>
@@ -651,13 +651,9 @@
 						</view>
 
 						<view class="CTKYBtnView">
-							<!-- <button class="allBtn">车辆位置</button> -->
 							<button class="allBtn" @click="keYunDetail(item)">详情</button>
-							<!-- <button class="allBtn QRCode">二维码</button> -->
-							<!-- <button class="allBtn">选座</button> -->
 							<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
-							<!-- <button class="allBtn" @tap="keYunRefundTicket(item.orderNumber)">退票</button> -->
-							<!-- <button class="allBtn">联系司机</button> -->
+							<button class="allBtn" @tap="endorse(item)">改签</button>
 						</view>
 					</view>
 				</view>
@@ -1106,7 +1102,46 @@
 				</swiper-item>
 			</swiper>
 		</uni-popup2>
-
+		<!-- 满意弹出框 -->
+		<uni-popup2 ref="judgeBottomPopup" type="bottom">
+			<form @submit="submit">
+				<view style="height: 780rpx; background-color: #FFFFFF; border-top-left-radius: 20rpx; border-top-right-radius: 20rpx;">
+					<view style="display: flex; flex-direction: row;justify-content: space-between; margin-top: 20rpx;">
+						<view>
+							<!-- 请勿删除 -->
+						</view>
+						<view>
+							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
+						</view>
+						<view style="right: 30rpx;">
+							<uni-icons @click="closePopup('judgeBottomPopup')" type="closeempty" size="30"></uni-icons>
+						</view>
+					</view>
+					<!-- 五角星 -->
+					<view style="margin-top: 60rpx; margin-left: 92rpx;">
+						<uni-rate size="28" margin="20" :value="num" @change="onchange" />
+					</view>
+					<!-- 评价框 -->
+					<view style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
+						<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate"
+						 :key="index">
+							<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
+						</view>
+					</view>
+					<!-- 文本框 -->
+					<view>
+						<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;"
+						 name="textareaValue" />
+						</view>
+				<!-- 提交按钮 -->
+				<view>
+					<button form-type="submit" style="width:648rpx;height:84rpx; border-radius:12rpx; background-color: #FC4646;border-color: #AAAAAA; margin-top: 30rpx; margin-left: 40rpx;">
+						<text style="color: #FFFFFF;align-items: center;line-height: 84rpx; font-size: 34rpx; font-weight:400; font-family:Source Han Sans SC;">提交</text>
+					</button>
+				</view>
+			</view>
+			</form>
+		</uni-popup2>
 		<!-- 退票弹框 -->
 		<uni-popup2 ref="popup2" type="bottom">
 			<view class="box_Vlew">
@@ -1227,6 +1262,7 @@
 	import uQRCode from "@/common/uqrcode.js"
 	import $bcfw from '@/common/BCFW/bcfw.js'
 	import $KyInterface from "@/common/Ctky.js"
+	import uniRate from '@/components/Order/StarJudge/uni-rate/uni-rate.vue';
 	export default {
 		components: {
 			uniSegmentedControl,
@@ -1234,7 +1270,8 @@
 			//加载多方弹框组件
 			uniPopup2,
 			uniIcons,
-			emptyData
+			emptyData,
+			uniRate,
 		},
 		data() {
 			return {
@@ -1262,6 +1299,9 @@
 				keYunTicketArray: [], //客运订单
 				keYunTicket: [], //客运订单
 				keYunPaymentData: '', //客运支付
+				evaluate: ['干净', '服务态度好', '热情', '开车技术超好', '开车平稳', '亲切', '成熟稳重', '笑容满面','没有绕路'],
+				rSelect:[],
+				num:'5',
 				driverName: '张师傅', //司机姓名
 				totalPrice: 32.5,
 				orderType1: '',
@@ -1283,6 +1323,7 @@
 				],
 				specialLineInfo: '',
 				noDataImage:'',//客运弹框背景图
+				textareaValue:"",
 			}
 		},
 		onLoad: function() {
@@ -1494,9 +1535,16 @@
 					url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
 				})
 			},
+			// -------------------------客运改签-------------------------
+			endorse:function(item) {
+				console.log(item)
+				uni.navigateTo({
+					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				})
+			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				console.log(orderNumber)
+				// console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -1574,6 +1622,7 @@
 					}
 				})
 			},
+			
 			// -------------------------客运支付-------------------------
 			keYunPay: function(orderNumber) {
 				// var orderInfo = this.info[index];
@@ -1769,6 +1818,77 @@
 			//-------------------------客运二维码弹框-------------------------
 			QRCodeTap: function() {
 				this.$refs.popup.open()
+			},
+			//-------------------------客运开启评价弹窗-------------------------
+			openPopup: function(orderNumber,value) {
+				this.$nextTick(function() {
+					this.$refs[value].open();
+				});
+				this.ctkyOrderNum = orderNumber;
+			},
+			//-------------------------关闭评价弹窗-------------------------
+			closePopup: function(value) {
+				this.$nextTick(function() {
+					this.$refs[value].close();
+				});
+			},
+			onchange(e){
+				this.num = e.value;
+			},
+			tapInfo(e) {
+				if (this.rSelect.indexOf(e) == -1) {
+				    this.rSelect.push(e);//选中添加到数组里
+				} else {
+				    this.rSelect.splice(this.rSelect.indexOf(e), 1); //取消
+				}
+			},
+			/**
+			 * @name 满意评价提交
+			 */
+			submit(e){
+				var that = this;
+				this.textareaValue = e.detail.value.textareaValue;
+				that.closePopup("judgeBottomPopup");
+				that.getOrderValuate(that.ctkyOrderNum,'是');
+			},
+			//-------------------------------客运订单评价-------------------------------
+			getOrderValuate:function(param,manyi){
+				var that = this;
+				var str = '';
+				if(manyi=="是"){
+					for(let item of that.rSelect){
+						str += item + ',';
+					}
+				}else{
+					for(let item of that.rSelect1){
+						str += item + ',';
+					}
+				}
+				uni.request({
+					url: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.Url,
+					method: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.method,
+					data: {
+						orderNumber:param,
+						userId: that.userInfo.userId,
+						satisfied :manyi,
+						starClass:that.num,
+					    selectionTags:str,
+						evaluateContent:that.textareaValue
+					},
+					success(res) {
+						uni.showToast({
+							title:res.data.msg,
+							icon:"none"
+						})
+						// that.getOrderDetailInfo();
+					},
+					fail(res) {
+						uni.showToast({
+							title:"网络连接失败",
+							icon:"none"
+						})
+					}
+				})
 			},
 			//------------------------------------------------客运结束------------------------------------------------
 			onClickItem(e) { //tab点击事件
@@ -2910,7 +3030,51 @@
 			color: #06B4FD;
 		}
 	}
-
+	/* 点击文字框后样式 */
+	.cur {
+		height:54rpx;
+		border-width: 1px;
+		border-radius:8rpx; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+		background-color: #FC4646;
+		border-color: #FC4646;
+	}
+	/* 客运评价弹框点击文字后样式 */
+	.color{
+		color: #FFFFFF;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.unCur{
+		height:54rpx;
+		border-width: 1px;
+		border-color: #AAAAAA;
+		border-radius:8rpx; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+	}
+	.unColor{
+		color:#AAAAAA;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.textArea{
+		height:164rpx;
+		border-width: 1px;
+		padding: 10rpx;
+		border-color: #AAAAAA;
+		border-radius:6rpx;
+		margin-top: 30rpx;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+		color:#999999;
+	}
 	//站点标题
 	.stationTitle {
 		text-overflow: ellipsis;
