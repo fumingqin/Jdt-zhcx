@@ -50,6 +50,42 @@
 							</view>
 						</view>
 					</view>
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
 						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx;line-height: ; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
@@ -315,7 +351,44 @@
 							</view>
 						</view>
 					</view>
-
+					
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+					
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
 						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
@@ -497,6 +570,43 @@
 									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
 									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
 								</view>
 							</view>
 						</view>
@@ -707,6 +817,43 @@
 						</view>
 					</view>
 
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
 						<view v-if="item.appointment" style="width: 222rpx; height: 62rpx; border-radius: 32rpx; border: 1px solid #06B4FD; background-color: #06B4FD;margin: 50rpx 28rpx;">
@@ -892,6 +1039,43 @@
 									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
 									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
+								</view>
+							</view>
+						</view>
+					</view>
+
+					<!-- 顺风车 -->
+					<view v-if="item.title=='出租车-顺风车'">
+						<view style="margin:30rpx;">
+							<view v-if="item.appointment" style="width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
+								<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
+							</view>
+							<view style="background-color: #FFF;border-radius: 12rpx;margin:20rpx 0;padding: 20rpx 42rpx;box-shadow: 0 0 5rpx 0rpx #aaa;">
+								<view style="display: flex;justify-content: space-between;">
+									<view style="display: flex;">
+										<image v-if='item.titleIndex == 1' style="width: 40rpx; height: 45rpx; " src="../../static/Order/Car1.png"></image>
+										<view style="color: #2C2D2D; font-size: 34rpx;font-weight: bold;padding-left: 20rpx;">{{item.title}}</view>
+									</view>
+									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
+									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
+									<view style="color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;margin-left: 40rpx;">金额：</view>
+									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.money}}元</view>
+								</view>
+								<view style="display: flex;justify-content: flex-end;">
+									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
+									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
+									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
+									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
 								</view>
 							</view>
 						</view>
@@ -1282,6 +1466,7 @@
 					}
 				],
 				specialLineInfo: '',
+				SfcInfo: '',
 				noDataImage: '', //客运弹框背景图
 			}
 		},
@@ -2145,6 +2330,259 @@
 
 			//-------------------------出租车专线代码结束-------------------------
 
+
+			//-------------------------顺风车代码开始-------------------------
+			getSfcOrderList: function() { //获取顺风车订单
+				var that = this;
+				uni.request({
+					url: 'http://111.231.109.113:8004/api/Hitchhiker/QueryHitchhikerOrderByUserID_Passenger',
+					method: 'POST',
+					data: {
+						UserID: that.userInfo.userId,
+					},
+					success: function(res) {
+						uni.stopPullDownRefresh();
+						if (res.data.status) {
+							for (var i = 0; i < res.data.data.length; i++) {
+								var data = res.data.data[i];
+								var orderType = '';
+								if (data.State == 0 || data.State == 1 || data.State == 2 || data.State == 3 || data.State == 4) {
+									orderType = '进行中';
+								} else if (data.State == 5 || data.State == 9) {
+									orderType = '未支付';
+								} else if (data.State == 7 || data.State == 8) {
+									orderType = '已取消';
+								} else if (data.State == 6) {
+									orderType = '已完成';
+								}
+								var obj = {
+									title: '出租车-顺风车',
+									titleIndex: '1',
+									SpecialorderState: data.State,
+									time: data.OrderTime,
+									orderType: orderType,
+									appointmentTime: data.AppointmentTime,
+									money: data.EstimatePrice,
+									startAddress: data.StartAddress,
+									endAddress: data.EndAddress,
+									orderNumber: data.OrderNumber,
+									appointment: true,
+								}
+								that.info.push(obj);
+								if (orderType == '已完成') {
+									that.finishArr.push(obj);
+								} else if (orderType == '等待司机接单' || orderType == '进行中' || orderType == '待上车') {
+									that.goingArr.push(obj);
+								} else if (orderType == '未支付') {
+									that.unfinishArr.push(obj);
+								} else if (orderType == '已取消') {
+									that.cancelArr.push(obj);
+								}
+							}
+						}
+					},
+					fail() {
+						uni.stopPullDownRefresh();
+					}
+				})
+			},
+			CancelSfcOrder: function(OrderNumber) { //取消顺风车订单
+				let that = this;
+				uni.showModal({
+					content: "您确定要取消订单吗",
+					success(res) {
+						if (res.confirm) {
+							uni.request({
+								url: 'http://111.231.109.113:8004/api/Hitchhiker/CancelHitchhikerOrder_Passenger',
+								method: 'POST',
+								data: {
+									OrderNumber: OrderNumber,
+									UserID: that.userInfo.userId,
+								},
+								success(res) {
+									if (res.data.status) {
+										uni.showToast({
+											title: res.data.msg,
+											icon: "none"
+										})
+										uni.startPullDownRefresh();
+									}
+								},
+								fail() {
+									uni.showToast({
+										title: "网络连接失败",
+										icon: "none"
+									})
+								}
+							})
+						}
+					}
+				})
+			},
+			SfcOrderDetail: function(item) { //顺风车详情
+				if (item.orderType == '进行中') {
+					uni.navigateTo({
+						url: '../../pages_CZC/pages/CZC/WaitTakeOrder?orderNumber=' + item.orderNumber,
+					})
+				} else {
+					uni.navigateTo({
+						url: '/pages/order/DownWindCarDetail?orderNumber=' + item.orderNumber,
+					})
+				}
+			},
+			DeleteSfcOrder: function(OrderNumber) { //顺风车删除订单
+				let that = this;
+				uni.showModal({
+					content: "您确定要删除订单吗",
+					success(res) {
+						if (res.confirm) {
+							uni.request({
+								url: 'http://111.231.109.113:8004/api/Hitchhiker/DeleteHitchhikerOrder_Passenger',
+								method: 'POST',
+								data: {
+									OrderNumber: OrderNumber,
+									UserID: that.userInfo.userId,
+								},
+								success(res) {
+									// console.log(res)
+									if (res.data.status) {
+
+										uni.showToast({
+											title: res.data.msg,
+											icon: "none"
+										})
+										uni.startPullDownRefresh();
+									}
+								}
+							})
+						}
+					}
+				})
+			},
+			GotoSfcPay: function(value) {
+				uni.navigateTo({
+					url: "../../pages_CZC/pages/CZC/PrivateTaxiPayment?orderNumber=" + value
+				})
+			},
+			CheckSfcPayState: function(orderNumber) { //检测支付状态
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CheckPayState.value,
+					method: $privateTaxi.Interface.CheckPayState.method,
+					data: {
+						payType: 3,
+						orderNumber: orderNumber
+					},
+					success(res) {
+						console.log(res);
+						if (res.data.status) {
+							that.CancelSpecialLineOrder1(orderNumber);
+						} else {
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail() {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			SfcBouncePay: function(orderNumber) {
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.BouncePay.value,
+					method: $privateTaxi.Interface.BouncePay.method,
+					data: {
+						payType: 3,
+						orderNumber: orderNumber,
+						// price:that.FactPayPrice
+						price: 0.01
+					},
+					success(res) {
+						if (res.data.status) {
+							that.CheckPayState(orderNumber)
+						} else {
+							uni.showToast({
+								title: '取消失败',
+								icon: 'none',
+							});
+						}
+					},
+					fail(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none',
+						});
+					}
+				})
+			},
+			CancelSfcOrder1: function(orderNumber) {
+				//取消订单
+				let that = this;
+				uni.request({
+					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
+					method: 'POST',
+					data: {
+						OrderNumber: orderNumber,
+						UserId: that.userInfo.userId,
+					},
+					success: function(res) {
+						let data = res.data.data;
+						if (res.data.status) {
+							uni.showToast({
+								title: '取消成功',
+								icon: 'none',
+							});
+							uni.startPullDownRefresh();
+						} else {
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none'
+							})
+						}
+					},
+					fail: function(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
+					}
+				});
+
+			},
+			SfcConfirmCancel: function(value) {
+				let that = this;
+				uni.showModal({
+					title: "取消订单",
+					content: "您是否取消订单",
+					success(res) {
+						if (res.confirm) {
+							uni.showLoading({
+								mask: true,
+							})
+							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
+								that.BouncePay(value.orderNumber);
+								uni.hideLoading()
+							} else {
+								that.CancelSpecialLineOrder1(value.orderNumber);
+								uni.hideLoading()
+							}
+						}
+					},
+					fail: function(res) {
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
+					}
+				})
+			},
+			//-------------------------顺风车专线代码结束-------------------------
 
 			//-------------------------景区门票代码开始-------------------------
 			//-------------------------请求订单列表-------------------------
