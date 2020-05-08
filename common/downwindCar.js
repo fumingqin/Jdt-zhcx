@@ -62,6 +62,18 @@ const Interface = {
 		method:'POST',
 		pages:["Home/ChooseSite.nvue"]
 	},
+	DeleteHitchhikerOrder_Passenger:{
+		value: Url + '/api/Hitchhiker/DeleteHitchhikerOrder_Passenger',
+		name:'旅客端-删除订单',
+		method:'POST',
+		pages:["Home/ChooseSite.nvue"]
+	},
+	QueryHitchhikerOrderByUserID_Passenger:{
+		value: Url + '/api/Hitchhiker/QueryHitchhikerOrderByUserID_Passenger',
+		name:'旅客端-根据用户ID订单',
+		method:'POST',
+		pages:["Home/ChooseSite.nvue"]
+	},
 }
 
 const dateFormat = {

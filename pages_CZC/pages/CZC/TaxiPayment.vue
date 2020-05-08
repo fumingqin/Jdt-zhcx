@@ -251,11 +251,11 @@
 					}
 				})
 			},
-			paymentSuccess: function() { //支付成功订单变成待接单
+			paymentSuccess: function() { //支付成功订单变成已完成
 				let that = this;
 				uni.request({
-					url: $privateTaxi.Interface.SpecialLineOrderPay_Passenger.value,
-					method: $privateTaxi.Interface.SpecialLineOrderPay_Passenger.method,
+					url: $Taxi.Interface.InputAmountExpressOrder_Driver.value,
+					method: $Taxi.Interface.InputAmountExpressOrder_Driver.method,
 					data: {
 						OrderNumber: that.orderNumber,
 						FactPayPrice: that.TaxiCost,

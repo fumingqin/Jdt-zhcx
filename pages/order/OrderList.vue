@@ -696,7 +696,7 @@
 						<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
 							<text style="font-size: 24rpx; color: #FFFFFF;font-weight: 400;line-height: 62rpx;">预定时间:{{changeTime(item.appointmentTime)}}</text>
 						</view>
-						<view class="CZCwhiteBg">">
+						<view class="CZCwhiteBg">
 							<view style="display: flex; margin-top: -40rpx;">
 								<image style="width: 48rpx; height: 45rpx; margin:48rpx 45rpx;" src="../../static/Order/Car1.png"></image>
 								<view style="width: 600rpx; height: 44rpx;color: #2C2D2D; font-size: 34rpx;margin: 48rpx -28rpx;font-weight: bold;">{{item.vehicleType}}</view>
@@ -720,9 +720,9 @@
 							</view>
 
 							<view class="CTKYBtnView">
-								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
+								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<button class="allBtn payBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 							</view>
@@ -1483,6 +1483,7 @@
 	import uniPopup from "@/components/Order/uni-popup/uni-popup.vue";
 	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	import uniPopup2 from "@/components/Order/uni-popup/uni-popup2.vue";
+	import $downwindCar from "@/common/downwindCar.js"; //顺风车
 	import emptyData from "@/components/Order/emptyData/emptyData.vue"; //无数据时显示内容
 	import $taxi from '../../common/Czc.js';
 	import $privateTaxi from "../../common/Czcprivate.js"; //出租车专线
@@ -2108,6 +2109,11 @@
 				}
 			},
 			//-------------------------出租车订单取消-------------------------
+			czcGotoPay: function(value) {
+				uni.navigateTo({
+					url: "../../pages_CZC/pages/CZC/TaxiPayment?orderNumber=" + value
+				})
+			},
 			cancleOrder: function(item) {
 				//取消订单
 				let that = this;
@@ -2415,7 +2421,7 @@
 			getSfcOrderList: function() { //获取顺风车订单
 				var that = this;
 				uni.request({
-					url: 'http://111.231.109.113:8004/api/Hitchhiker/QueryHitchhikerOrderByUserID_Passenger',
+					url:$downwindCar.Interface.QueryHitchhikerOrderByUserID_Passenger.value,
 					method: 'POST',
 					data: {
 						UserID: that.userInfo.userId,
@@ -2473,7 +2479,7 @@
 					success(res) {
 						if (res.confirm) {
 							uni.request({
-								url: 'http://111.231.109.113:8004/api/Hitchhiker/CancelHitchhikerOrder_Passenger',
+								url:$downwindCar.Interface.CancelHitchhikerOrder_Passenger.value,
 								method: 'POST',
 								data: {
 									OrderNumber: OrderNumber,
@@ -2502,7 +2508,7 @@
 			SfcOrderDetail: function(item) { //顺风车详情
 				if (item.orderType == '进行中') {
 					uni.navigateTo({
-						url: '../../pages_CZC/pages/CZC/WaitTakeOrder?orderNumber=' + item.orderNumber,
+						url: '../../pages_CZC/pages/CZC/DownWindCarOrder?orderNumber=' + item.orderNumber,
 					})
 				} else {
 					uni.navigateTo({
@@ -2517,7 +2523,7 @@
 					success(res) {
 						if (res.confirm) {
 							uni.request({
-								url: 'http://111.231.109.113:8004/api/Hitchhiker/DeleteHitchhikerOrder_Passenger',
+								url: $downwindCar.Interface.DeleteHitchhikerOrder_Passenger.value,
 								method: 'POST',
 								data: {
 									OrderNumber: OrderNumber,
@@ -2541,7 +2547,7 @@
 			},
 			GotoSfcPay: function(value) {
 				uni.navigateTo({
-					url: "../../pages_CZC/pages/CZC/PrivateTaxiPayment?orderNumber=" + value
+					url: "../../pages_CZC/pages/CZC/DownWindCarPay?orderNumber=" + value
 				})
 			},
 			CheckSfcPayState: function(orderNumber) { //检测支付状态
@@ -2556,7 +2562,7 @@
 					success(res) {
 						console.log(res);
 						if (res.data.status) {
-							that.CancelSpecialLineOrder1(orderNumber);
+							that.CancelSfcOrder1(orderNumber);
 						} else {
 							uni.showToast({
 								title: '取消失败',
@@ -2584,8 +2590,9 @@
 						price: 0.01
 					},
 					success(res) {
+						console.log(res)
 						if (res.data.status) {
-							that.CheckPayState(orderNumber)
+							that.CheckSfcPayState(orderNumber)
 						} else {
 							uni.showToast({
 								title: '取消失败',
@@ -2605,13 +2612,14 @@
 				//取消订单
 				let that = this;
 				uni.request({
-					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
+					url:$downwindCar.Interface.CancelHitchhikerOrder_Passenger.value,
 					method: 'POST',
 					data: {
 						OrderNumber: orderNumber,
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
+						console.log(res)
 						let data = res.data.data;
 						if (res.data.status) {
 							uni.showToast({
@@ -2646,10 +2654,10 @@
 								mask: true,
 							})
 							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
-								that.BouncePay(value.orderNumber);
+								that.SfcBouncePay(value.orderNumber);
 								uni.hideLoading()
 							} else {
-								that.CancelSpecialLineOrder1(value.orderNumber);
+								that.CancelSfcOrder1(value.orderNumber);
 								uni.hideLoading()
 							}
 						}
@@ -3249,7 +3257,7 @@
 										}
 									}
 								}
-
+								that.getSfcOrderList();
 							}
 						})
 					},
@@ -3265,6 +3273,7 @@
 								})
 							}
 						})
+						that.getSfcOrderList();
 					}
 				})
 			},
@@ -3352,7 +3361,17 @@
 		padding-bottom: 112upx;
 		/* #endif */
 	}
-
+	.CZCwhiteBg {
+		position: relative;
+		margin: 30rpx;
+		// margin-top: -20rpx;
+		padding: 20rpx 0;
+		padding-bottom: 140rpx;
+		width: 698rpx;
+		background: #FFFFFF;
+		border-radius: 12rpx;
+		// box-shadow: 0 0 5rpx 0rpx #aaa;
+	}
 	.Btn {
 		// padding-top: 32upx; 
 		margin: 0 0 0 20rpx;
