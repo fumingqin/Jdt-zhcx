@@ -42,14 +42,22 @@
 				originIndex : 0,//页面传参 0是出发班车 1是返程班车
 				statusIndex : '', //选中状态值
 				selectionData: '',//选中的班次信息
-				departureData :['','']
+				departureData :'',
+				setOutDate : '',//时间
+				startStation : '',//起始站
+				endStation : '',//终点站
 			}
+		},
+		onLoad:function(options){
+			
+			this.GetSchedule();
 		},
 		methods: {
 			selection:function(item,index){
 				this.statusIndex = index;
 				this.selectionData = item;
 			},
+			//提交绑定班次
 			paymentSatas: function(){
 				// uni.request({
 				// 	url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
@@ -67,6 +75,23 @@
 				// 		})
 				// 	}
 				// })
+			},
+			
+			//获取班次发车信息
+			GetSchedule:function(){
+				uni.request({
+						url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
+						method: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
+						data:{
+							setOutDate : this.setOutDate,
+							startStation : this.startStation,
+							endStation : this.endStation
+						},
+						success: (res) => {
+							console.log(res)
+							this.departureData = res.data.data;
+						}
+				})
 			}
 		}
 	}

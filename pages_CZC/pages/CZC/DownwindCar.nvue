@@ -215,6 +215,7 @@
 				}]
 			}
 			that.userInfo = uni.getStorageSync('userInfo') || '';
+			that.setMarkers();
 		},
 		methods: {
 			showToast: function(msg, icon = 'none') {
@@ -309,8 +310,8 @@
 				var that = this;
 				var startmarker = { //起点
 					id: 0,
-					latitude: that.downwindCarstartlocation.lat,
 					longitude: that.downwindCarstartlocation.lng,
+					latitude: that.downwindCarstartlocation.lat,
 					title: '在这上车',
 					zIndex: '1',
 					iconPath: '../../static/CZC/Start.png',
@@ -335,7 +336,6 @@
 				};
 				var endmarker = {
 					id: 1,
-					
 					longitude: that.downwindCarendlocation.lng,
 					latitude: that.downwindCarendlocation.lat,
 					title: '在这下车',
@@ -366,12 +366,14 @@
 				that.markers.push(startmarker);
 				that.markers.push(endmarker);
 				that.showlocation = false;
-				that.startLonLat=that.downwindCarstartlocation.lat+','+that.downwindCarstartlocation.lng,
-				that.endLonLat=that.downwindCarendlocation.lat+','+that.downwindCarendlocation.lng,
+				that.startLonLat=that.downwindCarstartlocation.lng+','+that.downwindCarstartlocation.lat,
+				that.endLonLat=that.downwindCarendlocation.lng+','+that.downwindCarendlocation.lat,
 				that.getDirectionDriving(that.startLonLat, that.endLonLat);
 			},
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
+				console.log(startLonLat)
+				console.log(endLonLat)
 				var that = this;
 				uni.request({
 					url: $taxi.InterfaceAddress[0],
@@ -381,6 +383,7 @@
 					},
 					method: "GET",
 					success: function(res) {
+						console.log(res)
 						//日后会加入定时，此处需清空
 						that.points = [];
 						that.polyline = [];
