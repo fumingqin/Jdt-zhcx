@@ -107,7 +107,19 @@
 				"navigationStyle": "custom"
 			}
 		},
-
+{
+			"path": "pages/order/DownWindCarDetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+//----------------------------投诉页面----------------------------
+		{
+			"path": "pages/order/complaint",
+			"style": {
+				"navigationBarTitleText": "我要投诉"
+			}
+		},
 		//----------------------------公共页面----------------------
 		{
 			"path": "pages/Home/InformationDetails",
@@ -314,7 +326,31 @@
 					}
 				}
 
-			]
+			    ,{
+                    "path" : "pages/CZC/TaxiPayment",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownwindCar",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownWindCarOrder",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+                ,{
+                    "path" : "pages/CZC/DownWindCarPay",
+                    "style" : {
+						"navigationStyle": "custom"
+					}
+                }
+            ]
 		},
 		//---------------------------------------------第三个包：公交查询------------------------------------------
 		{
@@ -406,7 +442,7 @@
 					"style": {
 						"navigationBarTitleText": "查看图片"
 					}
-				},{
+				}, {
 					"path": "pages/LYFW/currency/imglist2",
 					"style": {
 						"navigationBarTitleText": "全部图片"
@@ -444,7 +480,10 @@
 							"titleNView": {
 								"type": "transparent"
 							}
-						}
+						},
+						"enablePullDownRefresh": true, //设置为true表示当前页面开启下拉刷新
+						"onReachBottomDistance": 0,
+						"backgroundTextStyle": "dark" //下拉 loading 的样式，仅支持 dark/light
 					}
 				},
 				//----------------------------------跟团游页面----------------------------------
@@ -465,7 +504,7 @@
 					"path": "pages/LYFW/independentTravel/it_list",
 					"style": {
 						"enablePullDownRefresh": true,
-						"navigationBarTitleText": "自由行" 
+						"navigationBarTitleText": "自由行"
 					}
 				},
 				//----------------------------------景区门票页面----------------------------------
@@ -550,6 +589,93 @@
 							}
 						}
 					}
+				},
+				
+				//----------------------------------旅游产品页面----------------------------------
+				{
+					"path": "pages/LYFW/tourismProducts/tp_ticketsList",
+				
+					"style": {
+						"navigationBarTitleText": "产品列表",
+						"enablePullDownRefresh": true,
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"onReachBottomDistance": 0,
+						"app-plus": {
+							"softinputNavBar": "none"
+						}
+					}
+				},
+				{
+					"path": "pages/LYFW/tourismProducts/tp_ticketsDetails",
+					"style": {
+						"navigationBarTitleText": "产品详情",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				},
+				
+				{
+					"path": "pages/LYFW/tourismProducts/tp_selectivePayment",
+					"style": {
+						"navigationBarTitleText": "选择支付 ",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				}, {
+					"path": "pages/LYFW/tourismProducts/tp_successfulPayment",
+					"style": {
+						"navigationBarTitleText": "购买成功",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				}, {
+					"path": "pages/LYFW/tourismProducts/tp_orderAdd",
+					"style": {
+						"navigationBarTitleText": "填写订单",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				},
+				{
+					"path": "pages/LYFW/tourismProducts/tp_orderDetails",
+					"style": {
+						"navigationBarTitleText": "订单详情",
+						// #ifdef APP-PLUS
+						"navigationStyle": "custom",
+						// #endif
+						"app-plus": {
+							"titleNView": {
+								"type": "transparent"
+							}
+						}
+					}
+				},{
+					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle",
+					"style" : {}
 				}
 			]
 		},
@@ -614,12 +740,6 @@
 						// 		"background": "rgba(0,0,0,0)",
 						// 		"float": "left"
 						// 	}]
-					}
-				},
-				{
-					"path": "pages/GRZX/complaint",
-					"style": {
-						"navigationBarTitleText": "我要投诉"
 					}
 				},
 				{

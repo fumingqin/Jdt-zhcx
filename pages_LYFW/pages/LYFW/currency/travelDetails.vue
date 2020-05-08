@@ -12,7 +12,9 @@
 		<view class="titleClass">
 			<text class="title">{{titleClick.scenicName}}</text>
 			<view class="dateCost">
-				<view class="date">{{titleClick.date}}<text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text></view>
+				<view class="date">{{titleClick.date}}
+				<!-- <text class="cost1">￥<text class="cost2">{{titleClick.cost}}</text>元</text> -->
+				</view>
 			</view>
 			<!-- <view class="grClass">
 				<image class="txImage" :src="titleClick.image" mode="aspectFill"></image>

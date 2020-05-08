@@ -144,7 +144,6 @@
 				</view>
 			</form>
 		</uni-popup>
-
 	</view>
 </template>
 
@@ -223,15 +222,17 @@
 						checked: false
 					},
 				],
-				AppointmentTime:'',//预约时间
-				StartAddress:'',//出发地点
+				AppointmentTime: '', //预约时间
+				StartAddress: '', //出发地点
+				UrgentPhone: "110", //紧急联系人电话
+				paystate: "",
 			}
 		},
 		onLoad(option) {
 			let that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
 			that.orderNumber = option.orderNumber;
-			getApp().globalData.orderNumber = that.orderNumber; //更改当前订单号
+			getApp().globalData.orderNumber = that.orderNumber; //更改当前订单号 
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
@@ -301,7 +302,7 @@
 							that.vehicleNumber = data.vehicleNumber; //车牌号
 							that.state = data.state; //订单状态
 							that.StartAddress = data.startAddress;
-							that.AppointmentTime = data.appointmentTime.replace("T"," "); 
+							that.AppointmentTime = data.appointmentTime.replace("T", " ");
 							//绘制起终点标记
 							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
 							that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
@@ -352,15 +353,23 @@
 								// 	title: '请支付订单',
 								// 	icon: 'none'
 								// })
-								uni.redirectTo({
-									url:"./PaymentSuccess"
-								})
+								if (data.payType == "线上支付") {
+									uni.redirectTo({
+										url: "./TaxiPayment?orderNumber=" + that.orderNumber
+									})
+								}
+								if (data.payType == "线下支付") {
+									uni.redirectTo({
+										url: "./PaymentSuccess"
+									})
+								}
+
 							} else if (that.state == 6) {
 								//支付完成
 								//关闭旅客上传定位
 								getApp().globalData.closeUpload();
 								uni.redirectTo({
-									url:"./PaymentSuccess"
+									url: "./PaymentSuccess"
 								})
 							} else if (that.state == 7) {
 								//司机取消订单
@@ -403,6 +412,7 @@
 							OrderNumber: that.orderNumber
 						},
 						success: function(res) {
+							console.log(res)
 							let data = res.data.data;
 							if (res.data.status) {
 								that.thisDriverLon = data.thisDriverLon;
@@ -476,15 +486,22 @@
 										// that.openBottomPopup();
 									}
 									that.isShow = true;
-									uni.redirectTo({
-										url:"./PaymentSuccess"
-									})
+									if (data.payType == "线上支付") {
+										uni.redirectTo({
+											url: "./TaxiPayment?orderNumber=" + that.orderNumber
+										})
+									}
+									if (data.payType == "线下支付") {
+										uni.redirectTo({
+											url: "./PaymentSuccess"
+										})
+									}
 								} else if (that.state == 6) {
 									//支付完成
 									//关闭旅客上传定位
 									getApp().globalData.closeUpload();
 									uni.redirectTo({
-										url:"./PaymentSuccess"
+										url: "./PaymentSuccess"
 									})
 								} else if (that.state == 7) {
 									//司机取消订单
@@ -528,6 +545,10 @@
 			callPolice: function() {
 				//一键报警
 				let that = this;
+				console.log(that.userInfo.autograph)
+				if (that.userInfo.autograph != "") {
+					that.UrgentPhone = that.userInfo.autograph
+				}
 				uni.showModal({
 					title: "一键报警",
 					content: "注意：恶意报警将承担相关法律责任",
@@ -551,6 +572,9 @@
 											Address: that.packAddress(res.address),
 										},
 										success(res) {
+											uni.makePhoneCall({ //拨打紧急联系人电话
+												phoneNumber: that.UrgentPhone
+											});
 											console.log(res);
 											if (res.data.status) {
 												uni.showToast({
@@ -565,6 +589,9 @@
 											}
 										},
 										fail() {
+											uni.makePhoneCall({ //拨打紧急联系人电话
+												phoneNumber: that.UrgentPhone
+											});
 											uni.showToast({
 												title: "网络连接失败",
 												icon: "none"

@@ -7,7 +7,7 @@
 		<view class="info">
 			<text class="title">{{info.startStaion}} - {{info.endStation}}</text>
 			<view style="margin-top: 10rpx;">
-				<text class="text">{{utils.timeTodate('Y-m-d H:i',info.setTime)}}出发</text>
+				<text class="text">{{turnDate(info.setTime)}}出发</text>
 				<text class="text">上车点：{{info.startStaion}}</text>
 				<text class="text">下车点：{{info.endStation}}</text>
 			</view>
@@ -155,7 +155,14 @@
 						console.log(res);
 					}
 				});
-			}
+			},
+			//-------------------------------时间转换-------------------------------
+			turnDate(date) {
+				if(date) {
+					var setTime = date.replace('T',' ');
+					return setTime;
+				}
+			},
 		}
 	}
 </script>

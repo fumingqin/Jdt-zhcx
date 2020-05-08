@@ -7,7 +7,7 @@
 
 //接口域名
 // #ifdef H5
-	const Url = 'http://zntc.145u.net'; //http请求
+	// const Url = 'http://zntc.145u.net';
 // #endif
 // #ifndef H5
 	const Url = 'https://zntc.145u.net:9099'; //https请求
@@ -85,6 +85,19 @@ const KyInterface = {
 		method:'POST',
 		pages:["CTKY/TraditionSpecoal/Order/selectTickets.vue"],
 		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_addPassengerEvaluate_Passenger:{
+		Url:Url + '/api/taxi/addPassengerEvaluate_Passenger',
+		name:'客运-添加评价',
+		method:'POST',
+		page:["CZC/OrderDetail.nvue","CZC/SpecialLineDetail.nvue"]
+	},
+	Ky_endorse:{
+		Url:Url + '/api/ky/ChangeSignClick',
+		name:'客运-改签',
+		method:'GET',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+		page:["pages/order/OrderList.vue"],
 	}
 	
 }
