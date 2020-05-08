@@ -191,10 +191,9 @@
 			lyfwData: function() {
 				// console.log(this.regionWeixin)
 				// 六宫格
-				console.log($lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value)
 				uni.request({
-					url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
-					method: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
+					url: $lyfw.Interface.lyky_GetticketSearchByrequestArea_Six.value,
+					method: $lyfw.Interface.lyky_GetticketSearchByrequestArea_Six.method,
 					data: {
 						// #ifdef H5
 						requestArea: '泉州市',
@@ -224,8 +223,8 @@
 
 				// 请求景区列表
 				uni.request({
-					url: $lyfw.Interface.spt_GetticketSearchByrequestArea.value,
-					method: $lyfw.Interface.spt_GetticketSearchByrequestArea.method,
+					url: $lyfw.Interface.lyky_GetticketSearchByrequestArea.value,
+					method: $lyfw.Interface.lyky_GetticketSearchByrequestArea.method,
 					data: {
 						// #ifdef H5
 						requestArea: '泉州市',
@@ -348,8 +347,8 @@
 					title: '正在搜索',
 				})
 				uni.request({
-					url: $lyfw.Interface.spt_GetticketSearchBysearchValue.value,
-					method: $lyfw.Interface.spt_GetticketSearchBysearchValue.method,
+					url: $lyfw.Interface.lyky_GetticketSearchBysearchValue.value,
+					method: $lyfw.Interface.lyky_GetticketSearchBysearchValue.method,
 					data: {
 						searchValue: this.searchValue,
 					},

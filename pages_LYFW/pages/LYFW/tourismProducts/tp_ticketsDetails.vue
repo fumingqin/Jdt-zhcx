@@ -101,8 +101,8 @@
 			lyfwData: function(e) {
 				// 请求景区图片
 				uni.request({
-					url:$lyfw.Interface.spt_GetticketDetailByticketId.value,
-					method:$lyfw.Interface.spt_GetticketDetailByticketId.method,
+					url:$lyfw.Interface.lyky_GetticketDetailByticketId.value,
+					method:$lyfw.Interface.lyky_GetticketDetailByticketId.method,
 					data:{
 						ticketId : e,
 					},

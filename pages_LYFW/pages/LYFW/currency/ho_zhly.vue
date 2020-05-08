@@ -25,7 +25,7 @@
 				</view>
 				<!-- 景区商品 -->
 				<view class="zl_commodity" @click="route4">
-					<image class="zl_coImage" src="../../../static/LYFW/currency/ho_zhly/jinqushangpin.png"></image>
+					<image class="zl_coImage" src="../../../static/LYFW/currency/ho_zhly/lvyouchanping.png"></image>
 					<text class="zl_coText">旅游产品</text>
 				</view>
 			</view>
