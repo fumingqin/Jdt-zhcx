@@ -197,10 +197,10 @@
 							</view>
 							
 							<!-- 待选车 -->
-							<view class="at_buttonView" v-if="item.orderType=='待使用'">
+							<view class="at_buttonView" v-if="item.orderType=='待选车'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
-								<view class="at_button at_btQrCode" @click="details(item.orderNumber)">选班车</view>
+								<view class="at_button at_btQrCode" @click="chooseShuttle(item.orderNumber)">选班车</view>
 							</view>
 					
 							<!-- 待支付 -->
@@ -1499,6 +1499,7 @@
 						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
 						that.getArrayInfo();
+						that.tp_orderListData();
 					},
 					fail(res) {
 						// console.log('错误', res);
@@ -2293,6 +2294,63 @@
 					}
 				})
 			},
+			
+			//-------------------------请求旅游产品订单列表-------------------------
+			tp_orderListData: function() {
+				var that = this;
+				uni.getStorage({
+					key: 'userInfo',
+					success: (res) => {
+						this.userInfo = res.data;
+			// 			uni.request({
+			// 				url: $bcfw.Interface.spt_RequestTicketsList.value,
+			// 				method: $bcfw.Interface.spt_RequestTicketsList.method,
+			// 				data: {
+			// 					userId: this.userInfo.userId
+			// 				},
+			
+			// 				header: {
+			// 					'content-type': 'application/json'
+			// 				},
+			// 				success: (res) => {
+			// 					console.log(res);
+			// 					if (res.data.data) {
+			// 						for (var i = 0; i < res.data.data.length; i++) {
+			// 								that.info.push(res.data.data[i]);
+			// 						}
+									
+			// 						for (var i = 0; i < res.data.data.length; i++) {
+			// 							if (res.data.data[i].orderType == '已使用') {
+			// 								that.finishArr.push(that.info[i]);
+			// 							} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待使用') {
+			// 								that.goingArr.push(that.info[i]);
+			// 							} else if (res.data.data[i].orderType == '待支付') {
+			// 								that.unfinishArr.push(res.data.data[i]);
+			// 							} else if (res.data.data[i].orderType == '已取消' || res.data.data[i].orderType == '已退票' || res.data.data[i].orderType == '支付超时' || res.data.data[i].orderType == '已失效') {
+			// 								that.cancelArr.push(res.data.data[i]);
+			// 							}
+			// 						}
+									
+			// 					}
+			
+			// 				}
+			// 			})
+					},
+					fail() {
+						//请求数据失败，停止刷新
+						uni.stopPullDownRefresh();
+						uni.showToast({
+							title: '暂无订单数据，请先登录后查看订单',
+							icon: 'none',
+							success: function() {
+								uni.redirectTo({
+									url: '../GRZX/userLogin?loginType=1&&urlData=2'
+								})
+							}
+						})
+					}
+				})
+			},
 			//-------------------------景区门票-打开二维码弹框-------------------------
 			open5: function(e) {
 				uni.showLoading({
@@ -2336,24 +2394,52 @@
 				this.$refs.popup4.close()
 			},
 
-
+			//-------------------------旅游产品-选车班车-------------------------
+			chooseShuttle:function(e){
+				uni.navigateTo({
+					url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?orderNumber=' +e
+				})
+			},
 			//-------------------------景区门票-详情跳转-------------------------
 			details(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
-				})
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_orderDetails?orderNumber=' + e,
+					})
+				}
 			},
 			//-------------------------景区门票-去支付跳转-------------------------
 			topay(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
-				})
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_selectivePayment?orderNumber=' + e
+					})
+				}
+				
 			},
 			//-------------------------景区门票-再次购买-------------------------
-			repurchase(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
-				})
+			repurchase(e,index) {
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' + JSON.stringify(e)
+					})
+				}
+
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
@@ -2364,6 +2450,34 @@
 				if (this.exitindex == '2') {
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
+					uni.request({
+						url: $lyfw.Interface.spt_BounceTickets.value,
+						method: $lyfw.Interface.spt_BounceTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber,
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.hideLoading()
+							uni.showToast({
+								title: '退票成功',
+								icon: 'success',
+							})
+							this.close2()
+							this.toFinished();
+						},
+						fail: function() {
+							uni.showToast({
+								title: '退票失败',
+								icon: 'none',
+							})
+							uni.hideLoading()
+						}
+					})
+				}else if (this.exitindex == '5'){
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
@@ -2473,6 +2587,42 @@
 					})
 				} else if (this.exitindex == '2') {
 					this.keYunCancelTicket(this.ticketOrderNumber);
+				}else if (this.exitindex == '5') {
+					uni.request({
+						url: $lyfw.Interface.spt_CancelTickets.value,
+						method: $lyfw.Interface.spt_CancelTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							if (e.data.msg == '订单取消成功') {
+								uni.showToast({
+									title: '订单取消成功',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							} else if (e.data.msg == '订单取消失败') {
+								uni.showToast({
+									title: '订单取消失败',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							}
+						},
+						fail() {
+							uni.showToast({
+								title: '取消失败！请检查网络状态',
+								icon: 'none',
+								duration: 1500,
+							})
+						}
+					})
 				}
 			},
 
@@ -2512,6 +2662,34 @@
 						method: $bcfw.Interface.spt_DeleteTickets.method,
 						data: {
 							or_number: this.ticketOrderNumber
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.showToast({
+								title: '删除成功',
+								icon: 'success',
+								duration: 1500,
+							})
+							this.close4();
+							this.toFinished();
+						},
+						fail() {
+							uni.showToast({
+								title: '删除失败！订单已删除',
+								icon: 'none',
+								duration: 1500,
+							})
+						}
+					})
+				}else if (this.exitindex == '5') {
+					uni.request({
+						url: $lyfw.Interface.spt_DeleteTickets.value,
+						method: $lyfw.Interface.spt_DeleteTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber
 						},
 						header: {
 							'content-type': 'application/json'
