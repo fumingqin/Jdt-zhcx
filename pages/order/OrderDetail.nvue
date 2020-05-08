@@ -28,7 +28,7 @@
 
 				<view style="flex-direction: row;background-color: #FFFFFF;justify-content: space-between;align-items: center;padding: 20rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
 					<view style="flex-direction: row;align-items: center;">
-						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">总价：{{orderInfo.estimatePrice}}元</text>
+						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">总价：{{orderInfo.factPayPrice}}元</text>
 						<!-- <text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">元（已优惠9.45元）</text> -->
 					</view>
 					<!-- <view>
@@ -234,6 +234,7 @@
 					success(res) {
 						if(res.data.status){
 							that.orderInfo = res.data.data
+							console.log(res.data)
 							that.setMarker(1, that.orderInfo.startLon, that.orderInfo.startLat, '../../static/Order/Start.png');
 							that.setMarker(2, that.orderInfo.endLon, that.orderInfo.endLat, '../../static/Order/End.png');
 							// that.getDirectionDriving(that.orderInfo.startLon + ',' + that.orderInfo.startLat, that.orderInfo.endtLon + ',' + that.orderInfo.endLat);
@@ -304,7 +305,7 @@
 							title:res.data.msg,
 							icon:"none"
 						})
-						that.getOrderDetailInfo(that.orderNumber); 
+						that.getOrderDetailInfo(that.orderNumber);
 					},
 					fail(res) {
 						uni.showToast({

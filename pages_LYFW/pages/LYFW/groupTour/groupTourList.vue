@@ -31,7 +31,7 @@
 						padding-bottom: 40upx;
 						padding-top: 20upx;
 						border-bottom: 1px #F5F5F5 dotted;"
-						 v-for="(itemContent,indexContent) in item.content" :key='indexContent' @click="details(item.contentId)">
+						 v-for="(itemContent,indexContent) in item.content" :key='indexContent' @click="details(itemContent.contentId)">
 							<view class="groupContent2">
 								<image class="contentImage2" :src="itemContent.contentImage[0]" mode="aspectFill"></image>
 							</view>
