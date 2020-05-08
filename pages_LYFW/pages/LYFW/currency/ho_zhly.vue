@@ -176,6 +176,15 @@
 			this.routeInit();
 			this.loadData();
 		},
+		
+		onPullDownRefresh: function() {
+			this.routeInit();
+			this.loadData();
+			setTimeout(function() {
+				uni.stopPullDownRefresh(); //停止下拉刷新动画
+			}, 1000);
+		},
+		
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
