@@ -121,7 +121,7 @@
 			back: function() {
 				var that = this;
 				uni.switchTab({
-					url: "../../pages/order/OrderList"
+					url: "../../../pages/order/OrderList"
 				})
 			},
 			showToast: function(msg, icon = 'none') {
@@ -129,11 +129,6 @@
 					title: msg,
 					icon: icon
 				})
-			},
-			getTimeRemain: function(value) { //获取时间
-				var time = new Date(value + "+08:00").getTime();
-				this.countDownDate = (180 - (new Date().getTime() - time) / 1000).toFixed(0);
-				this.countDown();
 			},
 			getOrderDetail: function() { //获取订单信息
 				let that = this;
@@ -144,6 +139,7 @@
 						OrderNumber: that.orderNumber
 					},
 					success: function(res) {
+						console.log(res)
 						if (res.data.status) {
 							that.personArr = JSON.parse(res.data.data.passengers);
 							that.StartAddress = res.data.data.startAddress;
@@ -195,6 +191,7 @@
 						billDescript: "出租车车费",
 					},
 					success(res) {
+						console.log(res)
 						that.payment(res.data.data)
 					}
 				})
@@ -205,9 +202,11 @@
 					provider: "wxpay",
 					orderInfo: orderInfo,
 					success(res) {
+						console.log(res)
 						that.CheckPayState();
 					},
 					fail(res) {
+						console.log(res)
 						if (res.errMsg == "requestPayment:fail canceled") {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")
@@ -220,6 +219,7 @@
 			},
 			CheckPayState: function() {
 				let that = this;
+				console.log(that.orderNumber)
 				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
 				// #ifdef H5
 				payPlatform = 4;
@@ -230,6 +230,7 @@
 				uni.showLoading({
 					mask: true,
 				})
+				console.log(payPlatform)
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
@@ -238,6 +239,7 @@
 						orderNumber: that.orderNumber
 					},
 					success(res) {
+						console.log(res);
 						if (res.data.status) {
 							that.paymentSuccess();
 							uni.hideLoading();
