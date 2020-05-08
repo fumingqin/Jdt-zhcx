@@ -197,6 +197,85 @@
 
 						</view>
 					</view>
+					
+					<!-- 旅游产品 -->
+					<!-- 同景区门票 -->
+					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
+						<view class="pd_view">下单时间：{{item.setOrderTime}}</view>
+						<view class="at_view">
+							<view class="at_titleView">
+								<image class="at_icon" src="../../static/Order/menpiao.png" mode="aspectFill"></image>
+								<text class="at_title">{{item.ticketTitle}}</text>
+								<text class="at_status">{{item.orderType}}</text>
+							</view>
+							<view class="at_contentView" style="display: flex;">
+								<view v-for="(item2,index2) in item.ticketComment" :key="index2">
+									<view class="at_contentFrame">{{item2}}</view>
+								</view>
+								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
+							</view>
+					
+							<view class="at_contentView">
+								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
+								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
+							</view>
+					
+							<!-- 已使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='已使用'">
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
+							</view>
+					
+							<!-- 待使用 -->
+							<view class="at_buttonView" v-if="item.orderType=='待使用'">
+								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
+							</view>
+							
+							<!-- 待选车 -->
+							<view class="at_buttonView" v-if="item.orderType=='待选车'">
+								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="chooseShuttle(item.orderNumber)">选班车</view>
+							</view>
+					
+							<!-- 待支付 -->
+							<view class="at_buttonView" v-if="item.orderType=='待支付'">
+								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'5')">取消</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btToPay" @click="topay(item.orderNumber)">去支付</view>
+							</view>
+					
+							<!-- 已退票 -->
+							<view class="at_buttonView" v-if="item.orderType=='已退票'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+							<!-- 已取消 -->
+							<view class="at_buttonView" v-if="item.orderType=='已取消'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+							<!-- 支付超时 -->
+							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+							<!-- 已失效 -->
+							<view class="at_buttonView" v-if="item.orderType=='已失效'">
+								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
+								<view class="at_button at_btDetails" @click="details(item.orderNumber)">详情</view>
+								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId)">再次预订</view>
+							</view>
+					
+						</view>
+					</view>
 
 					<!-- 包车订单 -->
 					<!-- 标签class命名：;全称：Purchase Date -->
@@ -419,7 +498,7 @@
 
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
-								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+								<button class="allBtn" @click="czcComplaint(item.driverName)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
@@ -1605,6 +1684,7 @@
 						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
 						that.getArrayInfo();
+						that.tp_orderListData();
 					},
 					fail(res) {
 						// console.log('错误', res);
@@ -2652,6 +2732,63 @@
 					}
 				})
 			},
+			
+			//-------------------------请求旅游产品订单列表-------------------------
+			tp_orderListData: function() {
+				var that = this;
+				uni.getStorage({
+					key: 'userInfo',
+					success: (res) => {
+						this.userInfo = res.data;
+			// 			uni.request({
+			// 				url: $bcfw.Interface.spt_RequestTicketsList.value,
+			// 				method: $bcfw.Interface.spt_RequestTicketsList.method,
+			// 				data: {
+			// 					userId: this.userInfo.userId
+			// 				},
+			
+			// 				header: {
+			// 					'content-type': 'application/json'
+			// 				},
+			// 				success: (res) => {
+			// 					console.log(res);
+			// 					if (res.data.data) {
+			// 						for (var i = 0; i < res.data.data.length; i++) {
+			// 								that.info.push(res.data.data[i]);
+			// 						}
+									
+			// 						for (var i = 0; i < res.data.data.length; i++) {
+			// 							if (res.data.data[i].orderType == '已使用') {
+			// 								that.finishArr.push(that.info[i]);
+			// 							} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待使用') {
+			// 								that.goingArr.push(that.info[i]);
+			// 							} else if (res.data.data[i].orderType == '待支付') {
+			// 								that.unfinishArr.push(res.data.data[i]);
+			// 							} else if (res.data.data[i].orderType == '已取消' || res.data.data[i].orderType == '已退票' || res.data.data[i].orderType == '支付超时' || res.data.data[i].orderType == '已失效') {
+			// 								that.cancelArr.push(res.data.data[i]);
+			// 							}
+			// 						}
+									
+			// 					}
+			
+			// 				}
+			// 			})
+					},
+					fail() {
+						//请求数据失败，停止刷新
+						uni.stopPullDownRefresh();
+						uni.showToast({
+							title: '暂无订单数据，请先登录后查看订单',
+							icon: 'none',
+							success: function() {
+								uni.redirectTo({
+									url: '../GRZX/userLogin?loginType=1&&urlData=2'
+								})
+							}
+						})
+					}
+				})
+			},
 			//-------------------------景区门票-打开二维码弹框-------------------------
 			open5: function(e) {
 				uni.showLoading({
@@ -2695,24 +2832,52 @@
 				this.$refs.popup4.close()
 			},
 
-
+			//-------------------------旅游产品-选车班车-------------------------
+			chooseShuttle:function(e){
+				uni.navigateTo({
+					url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?orderNumber=' +e
+				})
+			},
 			//-------------------------景区门票-详情跳转-------------------------
 			details(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
-				})
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/orderDetails?orderNumber=' + e,
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_orderDetails?orderNumber=' + e,
+					})
+				}
 			},
 			//-------------------------景区门票-去支付跳转-------------------------
 			topay(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
-				})
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/selectivePayment?orderNumber=' + e
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_selectivePayment?orderNumber=' + e
+					})
+				}
+				
 			},
 			//-------------------------景区门票-再次购买-------------------------
-			repurchase(e) {
-				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
-				})
+			repurchase(e,index) {
+				if(index =='3'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
+					})
+					
+				}else if(index =='5'){
+					uni.navigateTo({
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' + JSON.stringify(e)
+					})
+				}
+
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
@@ -2723,6 +2888,34 @@
 				if (this.exitindex == '2') {
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
+					uni.request({
+						url: $lyfw.Interface.spt_BounceTickets.value,
+						method: $lyfw.Interface.spt_BounceTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber,
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.hideLoading()
+							uni.showToast({
+								title: '退票成功',
+								icon: 'success',
+							})
+							this.close2()
+							this.toFinished();
+						},
+						fail: function() {
+							uni.showToast({
+								title: '退票失败',
+								icon: 'none',
+							})
+							uni.hideLoading()
+						}
+					})
+				}else if (this.exitindex == '5'){
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
@@ -2832,6 +3025,42 @@
 					})
 				} else if (this.exitindex == '2') {
 					this.keYunCancelTicket(this.ticketOrderNumber);
+				}else if (this.exitindex == '5') {
+					uni.request({
+						url: $lyfw.Interface.spt_CancelTickets.value,
+						method: $lyfw.Interface.spt_CancelTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							if (e.data.msg == '订单取消成功') {
+								uni.showToast({
+									title: '订单取消成功',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							} else if (e.data.msg == '订单取消失败') {
+								uni.showToast({
+									title: '订单取消失败',
+									icon: 'none'
+								})
+								this.close3();
+								this.toFinished();
+							}
+						},
+						fail() {
+							uni.showToast({
+								title: '取消失败！请检查网络状态',
+								icon: 'none',
+								duration: 1500,
+							})
+						}
+					})
 				}
 			},
 
@@ -2871,6 +3100,34 @@
 						method: $bcfw.Interface.spt_DeleteTickets.method,
 						data: {
 							or_number: this.ticketOrderNumber
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						success: (e) => {
+							// console.log(e)
+							uni.showToast({
+								title: '删除成功',
+								icon: 'success',
+								duration: 1500,
+							})
+							this.close4();
+							this.toFinished();
+						},
+						fail() {
+							uni.showToast({
+								title: '删除失败！订单已删除',
+								icon: 'none',
+								duration: 1500,
+							})
+						}
+					})
+				}else if (this.exitindex == '5') {
+					uni.request({
+						url: $lyfw.Interface.spt_DeleteTickets.value,
+						method: $lyfw.Interface.spt_DeleteTickets.method,
+						data: {
+							orderNumber: this.ticketOrderNumber
 						},
 						header: {
 							'content-type': 'application/json'
@@ -2940,14 +3197,13 @@
 				}
 			},
 			czcComplaint: function(item) {
-				// console.log(item)
-				var state = this.taxiOrderState(item.state)
-				// console.log(state)
-				if (item.vehicleType == '出租车') {
-					uni.navigateTo({
-						url: '/pages/order/OrderDetail?orderNumber=' + item.orderNumber,
-					})
-				}
+				console.log(item)
+				uni.navigateTo({
+					url:'complaint?tsTitle=出租车&tsData=' + item
+				})
+				// if (item.vehicleType == '出租车') {
+					
+				// }
 			},
 			//-------------------包车订单添加-------------------------
 			getArrayInfo: function() {

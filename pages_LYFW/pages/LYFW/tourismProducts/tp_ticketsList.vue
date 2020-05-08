@@ -40,7 +40,7 @@
 
 		<!-- 六宫格景区 -->
 		<!-- 命名：six -->
-		<view class="currencyTitle">热门景点</view>
+		<view class="currencyTitle">热门产品</view>
 		<view class="sixBackground">
 			<view v-for="(item,index) in sixPalaceList" v-if="index < 6" :key="index" @click="godetail(item.ticketId)">
 				<view class="darkCurtain"></view>

@@ -107,13 +107,19 @@
 				"navigationStyle": "custom"
 			}
 		},
-		{
+{
 			"path": "pages/order/DownWindCarDetail",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
-
+//----------------------------投诉页面----------------------------
+		{
+			"path": "pages/order/complaint",
+			"style": {
+				"navigationBarTitleText": "我要投诉"
+			}
+		},
 		//----------------------------公共页面----------------------
 		{
 			"path": "pages/Home/InformationDetails",
@@ -412,7 +418,7 @@
 					"style": {
 						"navigationBarTitleText": "查看图片"
 					}
-				},{
+				}, {
 					"path": "pages/LYFW/currency/imglist2",
 					"style": {
 						"navigationBarTitleText": "全部图片"
@@ -471,7 +477,7 @@
 					"path": "pages/LYFW/independentTravel/it_list",
 					"style": {
 						"enablePullDownRefresh": true,
-						"navigationBarTitleText": "自由行" 
+						"navigationBarTitleText": "自由行"
 					}
 				},
 				//----------------------------------景区门票页面----------------------------------
@@ -563,7 +569,7 @@
 					"path": "pages/LYFW/tourismProducts/tp_ticketsList",
 				
 					"style": {
-						"navigationBarTitleText": "景区列表",
+						"navigationBarTitleText": "产品列表",
 						"enablePullDownRefresh": true,
 						"navigationBarBackgroundColor": "#FFFFFF",
 						"onReachBottomDistance": 0,
@@ -575,7 +581,7 @@
 				{
 					"path": "pages/LYFW/tourismProducts/tp_ticketsDetails",
 					"style": {
-						"navigationBarTitleText": "景区详情",
+						"navigationBarTitleText": "产品详情",
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
 						// #endif
@@ -603,7 +609,7 @@
 				}, {
 					"path": "pages/LYFW/tourismProducts/tp_successfulPayment",
 					"style": {
-						"navigationBarTitleText": "购票成功",
+						"navigationBarTitleText": "购买成功",
 						// #ifdef APP-PLUS
 						"navigationStyle": "custom",
 						// #endif
@@ -640,8 +646,10 @@
 							}
 						}
 					}
+				},{
+					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle",
+					"style" : {}
 				}
-				
 			]
 		},
 		//---------------------------------------------第六个包：个人中心------------------------------------------
@@ -705,12 +713,6 @@
 						// 		"background": "rgba(0,0,0,0)",
 						// 		"float": "left"
 						// 	}]
-					}
-				},
-				{
-					"path": "pages/GRZX/complaint",
-					"style": {
-						"navigationBarTitleText": "我要投诉"
 					}
 				},
 				{
