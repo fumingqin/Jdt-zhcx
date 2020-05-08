@@ -12,6 +12,8 @@
 			</view>
 			<!-- 发车时间 -->
 			<view> 发车时间：{{orderInfo.setOutTime}}</view>
+			<view> 随车手机号：{{orderInfo.setOutTime}}</view>
+			<view> 车牌号：{{orderInfo.setOutTime}}</view>
 		</view>
 		<!-- 乘客信息 -->
 		<scroll-view class="scrollBox" scroll-y="true">
