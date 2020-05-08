@@ -287,6 +287,7 @@
 								uni.hideLoading();
 							}else if(res.data.status == false){
 								uni.hideLoading();
+								this.ifyFirst = '';
 								this.ifyList = '';
 								uni.showToast({
 									title:'查不到该地区相关信息！',
@@ -325,6 +326,7 @@
 								uni.hideLoading();
 							}else if(res.data.status == false){
 								uni.hideLoading();
+								this.ifyFirst = '';
 								this.ifyList = '';
 								uni.showToast({
 									title:'查不到该地区相关信息！',
