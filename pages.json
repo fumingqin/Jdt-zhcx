@@ -107,6 +107,13 @@
 				"navigationStyle": "custom"
 			}
 		},
+		//----------------------------投诉页面----------------------------
+		{
+			"path": "pages/order/complaint",
+			"style": {
+				"navigationBarTitleText": "我要投诉"
+			}
+		},
 
 		//----------------------------公共页面----------------------
 		{
@@ -145,7 +152,7 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
-    ],
+	],
 
 	"subPackages": [
 		//---------------------------------------------第一个包：传统客运------------------------------------------
@@ -406,7 +413,7 @@
 					"style": {
 						"navigationBarTitleText": "查看图片"
 					}
-				},{
+				}, {
 					"path": "pages/LYFW/currency/imglist2",
 					"style": {
 						"navigationBarTitleText": "全部图片"
@@ -465,7 +472,7 @@
 					"path": "pages/LYFW/independentTravel/it_list",
 					"style": {
 						"enablePullDownRefresh": true,
-						"navigationBarTitleText": "自由行" 
+						"navigationBarTitleText": "自由行"
 					}
 				},
 				//----------------------------------景区门票页面----------------------------------
@@ -614,12 +621,6 @@
 						// 		"background": "rgba(0,0,0,0)",
 						// 		"float": "left"
 						// 	}]
-					}
-				},
-				{
-					"path": "pages/GRZX/complaint",
-					"style": {
-						"navigationBarTitleText": "我要投诉"
 					}
 				},
 				{
