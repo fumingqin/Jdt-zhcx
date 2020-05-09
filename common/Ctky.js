@@ -7,7 +7,7 @@
 
 //接口域名
 // #ifdef H5
-	// const Url = 'http://zntc.145u.net';
+	const Url = 'http://zntc.145u.net';
 // #endif
 // #ifndef H5
 	const Url = 'https://zntc.145u.net:9099'; //https请求
