@@ -86,7 +86,7 @@
 		onLoad(param) {
 			
 			var that = this;
-			if(param.isEndores) {
+			if(param.isEndores) {//当前是改签
 				that.isEndores = param.isEndores;
 				var array = JSON.parse(param.orderInfo);
 				that.startStation = array.startSiteName;
@@ -97,7 +97,7 @@
 				that.endoresDate = dateArray[0];
 				console.log(dateArray[0])
 				//初始化时间轴
-				that.loadDate(dateArray[0]);
+				that.loadDate('date');
 				//加载班次列表数据
 				that.getTicketInfo(dateArray[0]);
 				
@@ -372,15 +372,22 @@
 			loadDate(param) {
 				var that = this;
 				var date = '';
-				//从首页进来，对时间格式进行操作
+				
+				//从二维码进到这个页面，使用系统时间
 				if (param.date == 'date') {
 					date = new Date();
 					that.getTicketInfo(date);
 					console.log('二维码');
-				} else { //从二维码进到这个页面，使用系统时间
-					// var subStr = new RegExp('-', 'ig');
-					// var result = this.date.replace(subStr, "/");
-					date = new Date(param);
+				} else { 
+					//从首页进来，对时间格式进行操作
+					if(param == 'date'){
+						date = new Date();
+						that.getTicketInfo(date);
+					}else {
+						var subStr = new RegExp('-', 'ig');
+						var result = this.date.replace(subStr, "/");
+						date = new Date(result);
+					}
 				}
 				// var mydate = this.date;
 				this.selectIndex = 0;
