@@ -157,6 +157,7 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
+        
     ],
 
 	"subPackages": [
@@ -675,6 +676,9 @@
 					}
 				},{
 					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle",
+					"style" : {}
+				},{
+					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle2",
 					"style" : {}
 				}
 			]

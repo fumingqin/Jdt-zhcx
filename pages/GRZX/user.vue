@@ -58,9 +58,14 @@
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<view class="boxClass borderTop" @click="complaintClick">
+			<!-- <view class="boxClass borderTop" @click="complaintClick">
 				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
 				<text class="fontStyle">我要投诉</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view> -->
+			<view class="boxClass borderTop" @click="addContact">
+				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<text class="fontStyle">紧急联系人</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="feedbackClick">
@@ -69,6 +74,18 @@
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 		</view>
+		
+		
+		<view :hidden="userFeedbackHidden" class="popup_content">
+			<view class="popup_title">添加</view>
+			<view class="popup_textarea_item">
+				<input class="inputClass" v-model="contantPhone" placeholder="输入紧急联系人的手机号码" type="number" maxlength="11"/>
+				<view>
+					<button class="popup_button" @click="submit">确定</button>
+				</view>
+			</view>
+		</view>
+		<view class="popup_overlay" :hidden="userFeedbackHidden" @click="hideDiv"></view>
 	</view>
 </template>
 
@@ -85,6 +102,17 @@
 				nickname:'',
 				portrait:'',
 				advert:'',
+				userFeedbackHidden:true,
+				//加载信息
+				contantPhone:'',
+				userId:'',
+				phoneNumber:'',
+				openId_qq:'',
+				openId_wx:'',
+				address:'',
+				birthday:'',
+				gender:'',
+				port:'',
 			}
 		},
 		computed: {
@@ -99,7 +127,7 @@
 			// ---------------------------加载图片----------------------------
 			loadImg(){
 				var that=this;
-				console.log(that.$GrzxInter.GetImage.url,"144")
+				// console.log(that.$GrzxInter.GetImage.url,"144")
 				uni.request({
 					url:that.$GrzxInter.GetImage.url,
 					data:{
@@ -107,12 +135,12 @@
 					},
 					method:'POST',
 					success(res) {
-						console.log(res,"153")
+						// console.log(res,"153")
 						var image=res.data.data.filter(item => {
 							return item.type=='广告';
 						})
 						that.advert=image[0].imageUrl;
-						console.log(that.advert,'that.advert')
+						// console.log(that.advert,'that.advert')
 					}
 				})
 			},
@@ -122,7 +150,7 @@
 				uni.getStorage({
 					key:'userInfo',
 					success(user){
-						console.log(user,"user")
+						// console.log(user,"user")
 						var phone=user.data.phoneNumber;
 						if(phone!=""&&phone!=null&&user.data!=""){
 							uni.request({
@@ -132,7 +160,7 @@
 								},
 								method:that.$GrzxInter.Interface.login.method,
 								success(res) {
-									console.log(res,'res')
+									// console.log(res,'res')
 									uni.setStorageSync('userInfo',res.data.data);
 									if(res.data.data.nickname==""||res.data.data.nickname==null){
 										that.nickname="请输入昵称";	
@@ -146,12 +174,21 @@
 										    that.portrait=path;
 										  })
 										  .catch(error => {
-										    console.error(error)
+										    // console.error(error)
 										  })
 									}else{
 										that.portrait=base64;
 									}
-									console.log(that.portrait,"that.portrait")
+									that.contantPhone=res.data.data.autograph;
+									that.userId=res.data.data.userId;
+									that.phoneNumber=res.data.data.phoneNumber;
+									that.openId_qq=res.data.data.openId_qq;
+									that.openId_wx=res.data.data.openId_wx;
+									that.address=res.data.data.address;
+									that.birthday=res.data.data.birthday;
+									that.gender=res.data.data.gender;
+									that.port=res.data.data.portrait;
+									// console.log(that.portrait,"that.portrait")
 								}
 							})
 						}else{
@@ -202,7 +239,7 @@
 						}
 					})
 				}
-				console.log(e)
+				// console.log(e)
 			},
 			// ---------------------------信息管理----------------------------
 			infoClick(){
@@ -211,7 +248,75 @@
 					url:this.$GrzxInter.Route.infoList.url,
 				})
 			},
-			// 投诉
+			//--------------------添加紧急联系人的电话号码--------------------
+			addContact(){				
+				var that=this;
+				uni.getStorage({
+					key:'userInfo',
+					success(){
+						that.userFeedbackHidden=false;
+					},
+					fail() {
+						uni.showToast({
+							title:'请您先登录',
+							icon:'none',
+						})
+					}
+				})
+			},
+			submit(){
+				var that=this;
+				console.log(that.phoneNumber)
+				if(that.contantPhone==""){
+					uni.showToast({
+						title:'请输入手机号码',
+						icon:'none',
+					})
+				}else if(!that.judgeNum(that.contantPhone)||that.contantPhone.length!=11){
+					uni.showToast({
+						title:'请输入正确的手机号码',
+						icon:'none',
+					})
+				}else{
+					uni.request({
+						url:that.$GrzxInter.Interface.changeInfo.value,
+						data:{
+							userId:that.userId,
+							gender:that.gender,
+							openId_qq:that.openId_qq,
+							openId_wx:that.openId_wx,
+							address:that.address,
+							nickname:that.nickname,
+							birthday:that.birthday,
+							autograph:that.contantPhone,
+							phoneNumber:that.phoneNumber,
+						},
+						method:that.$GrzxInter.Interface.changeInfo.method,
+						success(res) {
+							console.log(res,'271')
+							uni.request({
+								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+								data:{
+									portrait:that.port,
+									userId:that.userId,
+								},
+								method:that.$GrzxInter.Interface.changeInfoPortrait.method,
+								success(res1) {
+									if(res.data.data!=""){
+										console.log(res.data.data,'296')
+										uni.setStorageSync('userInfo',res1.data.data)
+									}
+									that.userFeedbackHidden=true;
+								}
+							})
+						}
+					})
+				}
+			},
+			hideDiv(){
+				this.userFeedbackHidden=true;
+			},
+			//------------------------------投诉---------------------------
 			complaintClick(){
 				uni.navigateTo({
 					// url:'/pages/GRZX/complaint'
@@ -316,6 +421,15 @@
 			    } catch (err) {
 			        return false;
 			    }
+			},
+			judgeNum(val){  //只能输入数字
+				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+				    if(regPos.test(val) || regNeg.test(val)) {
+				        return true;
+				    } else {
+				        return false;
+				    }
 			},
 		}
 		
@@ -587,5 +701,70 @@
 	}
 	.borderTop{
 		border-top: 1upx solid #EAEAEA;
+	}
+	
+	//弹窗
+	.popup_overlay {
+		position: fixed;
+		top: 0%;
+		left: 0%;
+		width: 100%;
+		height: 100%;
+		background-color: black;
+		z-index: 1001;
+		-moz-opacity: 0.8;
+		opacity: .80;
+		filter: alpha(opacity=88);
+	}
+	.popup_content {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		width: 520upx;
+		height: 400upx;
+		margin-left: -270upx;
+		margin-top: -270upx;
+		border: 10px solid white;
+		background-color: white;
+		z-index: 1002;
+		overflow: auto;
+		border-radius: 20upx;
+	}
+ 
+	.popup_title {
+		padding-top: 20upx;
+		width: 480upx;
+		text-align: center;
+		font-size: 32upx;
+	}
+ 
+	.popup_textarea_item {
+		padding-top: 5upx;
+		height: 240upx;
+		width: 440upx;
+		// background-color: #F1F1F1;
+		margin-top: 30upx;
+		margin-left: 20upx;
+	}
+ 
+	.popup_textarea {
+		width: 410upx;
+		font-size: 26upx;
+		margin-left: 20upx;
+	}
+ 
+	.popup_button {
+		color: white;
+		background-color: #4399FC;
+		border-radius: 20upx;
+		margin-top: 83upx;
+		margin-left: 5%;
+	}
+	.inputClass{
+		height: 40upx;
+		line-height: 40upx;
+		font-size: 32upx;
+		margin-top: 50upx;
+		margin-left: 8%;
 	}
 </style>

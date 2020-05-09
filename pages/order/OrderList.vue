@@ -236,7 +236,7 @@
 							<view class="at_buttonView" v-if="item.orderType=='待选车'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
-								<view class="at_button at_btQrCode" @click="chooseShuttle(item.orderNumber)">选班车</view>
+								<view class="at_button at_btQrCode" @click="chooseShuttle(item)">选班车</view>
 							</view>
 					
 							<!-- 待支付 -->
@@ -828,7 +828,7 @@
 							<view class="at_buttonView" v-if="item.orderType=='待选车'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
-								<view class="at_button at_btQrCode" @click="chooseShuttle(item.orderNumber)">选班车</view>
+								<view class="at_button at_btQrCode" @click="chooseShuttle(item)">选班车</view>
 							</view>
 					
 
@@ -3118,9 +3118,33 @@
 
 			//-------------------------旅游产品-选车班车-------------------------
 			chooseShuttle:function(e){
-				uni.navigateTo({
-					url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?orderNumber=' +e
+				uni.showLoading({
+					title:'正在加载班次...'
 				})
+				uni.setStorage({
+					key:'chooseShuttleData',
+					data:e,
+					success: () => {
+						if(e.startStation == null){
+							uni.navigateTo({
+								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'
+							})
+							uni.hideLoading()
+						}else if(e.backstartStation == null){
+							uni.navigateTo({
+								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle2?originIndex=1'
+							})
+							uni.hideLoading()
+						}
+					},
+					fail:function(){
+						uni.showToast({
+							title:'网络异常',
+							icon:'none'
+						})
+					}
+				})
+				
 			},
 			//-------------------------景区门票-详情跳转-------------------------
 			details(e,index) {
