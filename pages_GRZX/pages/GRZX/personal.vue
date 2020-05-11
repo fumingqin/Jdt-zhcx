@@ -39,12 +39,11 @@
 					:timeout="true"
 				></w-picker>
 			</view>
-			<view class="Cr_slk2">
+			<!-- <view class="Cr_slk2">
 				<text class="bz">签&nbsp;名：</text>
 				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
-			</view>
+			</view> -->
 			<button class="an" type="warn" form-type="submit">保存</button>
-			
 		</form>
 	</view>
 	 
@@ -75,10 +74,8 @@
 		},
 		onLoad:function(){
 			this.loadUserInfo();
-			
 		},
 		computed:{
-			
 			startDate() {
 			            return this.getDate('start');
 			        }, 
@@ -91,85 +88,94 @@
 		},
 		methods:{
 			loadUserInfo(){
+				console.log(1)
 				uni.showLoading({
 					title:'加载中...'
 				})
 				var theself=this;
 				uni.getStorage({
 					key:'backUrl',
-					success:function(res){
-						theself.backImg=res.data;
+					success:function(res1){
+						theself.backImg=res1.data;
 					}
 				})
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
-						uni.request({
-							//url:'http://111.231.109.113:8002/api/person/login',
-							url:theself.$GrzxInter.Interface.login.value,
-							data:{
-								phoneNumber:res.data.phoneNumber,
-							},
-							method:theself.$GrzxInter.Interface.login.method,
-							success(res1) {
-								console.log(res1,"108")
-								// uni.setStorageSync('userInfo',res1.data.data)
-								// ------------1.头像-------------
-								var base64=res1.data.data.portrait;
-								theself.port=res1.data.data.portrait;
-								if(theself.isBase64(base64)){
-									base64ToPath(base64)
-									  .then(path => {
-									    theself.portrait=path;
-									  })
-									  .catch(error => {
-									    console.error(error)
-									  })
-								}else{
-									theself.portrait=base64;
+						var phone=res.data.phoneNumber;
+						if(phone!=""&&phone!=null&&res.data!=""){
+							uni.request({
+								//url:'http://111.231.109.113:8002/api/person/login',
+								url:theself.$GrzxInter.Interface.login.value,
+								data:{
+									phoneNumber:res.data.phoneNumber,
+								},
+								method:theself.$GrzxInter.Interface.login.method,
+								success(res1) {
+									console.log(res1,"108")
+									// uni.setStorageSync('userInfo',res1.data.data)
+									// ------------1.头像-------------
+									var base64=res1.data.data.portrait;
+									theself.port=res1.data.data.portrait;
+									if(theself.isBase64(base64)){
+										base64ToPath(base64)
+										  .then(path => {
+										    theself.portrait=path;
+										  })
+										  .catch(error => {
+										    console.error(error)
+										  })
+									}else{
+										theself.portrait=base64;
+									}
+									console.log(theself.portrait,"128")
+									// ------------2.昵称-------------
+									if(res1.data.data.nickname==null||res1.data.data.nickname==""){
+										theself.nickname="";
+									}else{
+										theself.nickname =res1.data.data.nickname;
+									}
+									// ------------3.性别-------------
+									if(res1.data.data.gender==null||res1.data.data.gender==""){
+										theself.selector="请选择";
+									}else{
+										theself.selector=theself.genderSex[res1.data.data.gender];
+									}
+									// ------------4.生日-------------
+									if(res1.data.data.birthday==null||res1.data.data.birthday==""){
+										theself.birthday="请选择";
+									}else{
+										theself.birthday =res1.data.data.birthday.substring(0,10);
+									}
+									// ------------5.地址-------------
+									if(res1.data.data.address==null||res1.data.data.address==""){
+										theself.address="";
+									}else{
+										theself.address =res1.data.data.address;
+									}
+									// ------------6.签名-------------
+									if(res1.data.data.autograph==null||res1.data.data.autograph==""){
+										theself.autograph="";
+									}else{
+										theself.autograph =res1.data.data.autograph;
+									}
+									// ------------7.用户Id-------------
+									theself.userId=res1.data.data.userId;
+									// ------------8.openId_qq-------------
+									theself.openId_qq=res1.data.data.openId_qq;
+									// ------------9.openId_wx-------------
+									theself.openId_wx=res1.data.data.openId_wx;
+									// ------------10.手机号-------------
+									theself.phoneNumber=res1.data.data.phoneNumber;
+									uni.hideLoading();
 								}
-								console.log(theself.portrait,"128")
-								// ------------2.昵称-------------
-								if(res1.data.data.nickname==null||res1.data.data.nickname==""){
-									theself.nickname="";
-								}else{
-									theself.nickname =res1.data.data.nickname;
-								}
-								// ------------3.性别-------------
-								if(res1.data.data.gender==null||res1.data.data.gender==""){
-									theself.selector="请选择";
-								}else{
-									theself.selector=theself.genderSex[res1.data.data.gender];
-								}
-								// ------------4.生日-------------
-								if(res1.data.data.birthday==null||res1.data.data.birthday==""){
-									theself.birthday="请选择";
-								}else{
-									theself.birthday =res1.data.data.birthday.substring(0,10);
-								}
-								// ------------5.地址-------------
-								if(res1.data.data.address==null||res1.data.data.address==""){
-									theself.address="";
-								}else{
-									theself.address =res1.data.data.address;
-								}
-								// ------------6.签名-------------
-								if(res1.data.data.autograph==null||res1.data.data.autograph==""){
-									theself.autograph="";
-								}else{
-									theself.autograph =res1.data.data.autograph;
-								}
-								// ------------7.用户Id-------------
-								theself.userId=res1.data.data.userId;
-								// ------------8.openId_qq-------------
-								theself.openId_qq=res1.data.data.openId_qq;
-								// ------------9.openId_wx-------------
-								theself.openId_wx=res1.data.data.openId_wx;
-								// ------------10.手机号-------------
-								theself.phoneNumber=res1.data.data.phoneNumber;
-								uni.hideLoading();
-							}
-						})
+							})
+						}else{
+							uni.showToast({
+								title:'信息获取失败',
+								icon:'none'
+							})
+						}
 					}
 				})	
 			},
@@ -401,7 +407,6 @@
 			width: 90%;
 			height: 104upx;
 			line-height: 104upx;
-			padding-top: 12upx;
 			font-size: 40upx;
 			margin-top: 48upx; 
 			margin-bottom: 48upx;

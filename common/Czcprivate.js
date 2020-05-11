@@ -3,8 +3,7 @@
 // 示例
 
 //接口域名
-const Url = 'http://111.231.109.113:8004';
-const Url1="http://zntc.145u.net";
+const Url = 'https://zntc.145u.net:9099';
 //接口对象
 const Interface = {
 	//GET-POST
@@ -30,28 +29,28 @@ const Interface = {
 		value: Url + '/api/SpecialLine/CancelSpecialLineOrder_Passenger',
 		name:'旅客端-取消订单',
 		method:'POST',
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["order/OrderList","CZC/PrivateTaxiPayment.vue","CZC/WaitTakeOrder"]
 	},
 	getCommonPayparameter:{ 
-		value: Url1+'/api/Pay/getCommonPayparameter',
+		value: Url+'/api/Pay/getCommonPayparameter',
 		name:'旅客端-获取支付信息',
 		method:'POST', 
 		pages:["CZC/PrivateTaxiPayment.vue"]
 	},
 	BouncePay:{
-		value: Url1+'/api/Pay/BouncePay',
+		value: Url+'/api/Pay/BouncePay',
 		name:'旅客端-退款',
 		method:'POST', 
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["CZC/OrderList","CZC/WaitTakeOrder"]
 	},
 	CheckPayState:{
-		value: Url1+'/api/Pay/CheckPayState',
+		value: Url+'/api/Pay/CheckPayState',
 		name:'旅客端-检测支付是否成功',
 		method:'POST', 
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["order/OrderList","CZC/PrivateTaxiPayment","CZC/WaitTakeOrder"]
 	},
 	SpecialLineOrderPay_Passenger:{
-		value: Url1+'/api/ly/SpecialLineOrderPay_Passenger',
+		value: Url+'/api/ly/SpecialLineOrderPay_Passenger',
 		name:'旅客端-订单支付完成',
 		method:'POST', 
 		pages:["CZC/PrivateTaxiPayment.vue"]
@@ -72,13 +71,13 @@ const Interface = {
 		value: Url + '/api/SpecialLine/SpecialLineOrderPay_Passenger',
 		name:'旅客端-支付完成',
 		method:'POST',
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["CZC/PrivateTaxiPayment.nvue"]
 	},
 	DeleteSpecialLineOrder_Passenger:{
 		value: Url + '/api/SpecialLine/DeleteSpecialLineOrder_Passenger',
-		name:'旅客端-支付完成',
+		name:'旅客端-删除订单',
 		method:'POST',
-		pages:["CZC/PrivateTaxi.nvue"]
+		pages:["order/OrderList"]
 	},
 }
 

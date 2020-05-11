@@ -4,20 +4,32 @@
 
 //传统客运接口配置
 
+
 //接口域名
-const Url = 'http://zntc.145u.net';
+// #ifdef H5
+	const Url = 'http://zntc.145u.net';
+// #endif
+// #ifndef H5
+	const Url = 'https://zntc.145u.net:9099'; //https请求
+// #endif
 const scheduleUrl = 'http://27.148.155.9:9056';//班次列表
+const systemName = '泉运公司综合出行';
 
 //接口对象
 const KyInterface = {
 	//GET-POST
-	
+	systemName:{
+		systemName:'泉运公司综合出行',
+		systemNameApp:'泉运公司综合出行APP',
+		systemNameH5:'泉运公司综合出行H5',
+	},
 	Ky_AddPicture:{
 		Url: Url + '/api/zhcx/getImage',
 		name:'客运-添加图片',
 		method:'POST',
 		pages:["CTKY/TraditionSpecoal/Home/ctkyIndex.vue"],
-		header:{'content-type': 'application/json'}
+		header:{'content-type': 'application/json'},
+		systemName:systemName,
 	},
 	Ky_ScheduleUrl:{
 		Url: scheduleUrl + '/CTKY/getListSchedulesInfo',
@@ -25,6 +37,7 @@ const KyInterface = {
 		method:'POST',
 		pages:["CTKY/TraditionSpecoal/Order/selectTickets.vue"],
 		header:{'content-type':'application/x-www-form-urlencoded'},
+		systemName:systemName,
 	},
 	Ky_PaymentUrl:{
 		Url: Url + '/api/ky/SellTicket_NoBill_Booking',
@@ -32,6 +45,7 @@ const KyInterface = {
 		method:'GET',
 		pages:["CTKY/TraditionSpecoal/PayMent/orderPayment.vue"],
 		header:{'content-type': 'application/json'},
+		systemName:systemName,
 	},
 	Ky_getTicketPaymentInfo:{
 		Url: Url + '/api/ky/SellTicket_Flow',
@@ -39,6 +53,7 @@ const KyInterface = {
 		method:'GET',
 		pages:["CTKY/TraditionSpecoal/PayMent/orderPayment.vue"],
 		header:{'content-type':'application/x-www-form-urlencoded'},
+		systemName:systemName,
 	},
 	Ky_getKeYunOrderInfo:{
 		Url: Url + '/api/ky/searchOrder',
@@ -46,6 +61,7 @@ const KyInterface = {
 		method:'GET',
 		pages:["pages/order/OrderList.vue"],
 		header:{'content-type': 'application/json'},
+		systemName:systemName,
 	},
 	Ky_RefundTicket:{
 		Url: Url + '/api/ky/RefundTicket_Flow',
@@ -53,6 +69,7 @@ const KyInterface = {
 		method:'GET',
 		pages:["pages/order/OrderList.vue"],
 		header:{'content-type':'application/x-www-form-urlencoded'},
+		systemName:systemName,
 	},
 	Ky_CancelTicket:{
 		Url: Url + '/api/ky/CancelTicket_Flow',
@@ -60,8 +77,28 @@ const KyInterface = {
 		method:'GET',
 		pages:["pages/order/OrderList.vue"],
 		header:{'content-type':'application/x-www-form-urlencoded'},
+		systemName:systemName,
+	},
+	Ky_getOpenid:{
+		Url: Url + '/pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets',
+		name:'客运-获取openid',
+		method:'POST',
+		pages:["CTKY/TraditionSpecoal/Order/selectTickets.vue"],
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_addPassengerEvaluate_Passenger:{
+		Url:Url + '/api/taxi/addPassengerEvaluate_Passenger',
+		name:'客运-添加评价',
+		method:'POST',
+		page:["CZC/OrderDetail.nvue","CZC/SpecialLineDetail.nvue"]
+	},
+	Ky_endorse:{
+		Url:Url + '/api/ky/ChangeSignClick',
+		name:'客运-改签',
+		method:'GET',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+		page:["pages/order/OrderList.vue"],
 	}
-	
 	
 }
 // 接口声明区

@@ -96,6 +96,7 @@
 <script>
 	import $privateTaxi from "@/common/Czcprivate.js"; //出租车专线
 	import $taxi from '@/common/Czc.js';
+	import $downwindCar from "@/common/downwindCar.js"; //顺风车
 	import uniPopup from "@/pages_CZC/components/CZC/uni-popup/uni-popup.vue";
 	import uniIcons from "@/pages_CZC/components/CZC/uni-icons/uni-icons.vue";
 
@@ -225,12 +226,13 @@
 					title: '加载中'
 				})
 				uni.request({
-					url: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.value,
-					method: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.method,
+					url: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.value,
+					method: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber
 					},
 					success: function(res) {
+						console.log(res)
 						uni.hideLoading();
 						// console.log(res.data);
 						let data = res.data.data;
@@ -260,7 +262,6 @@
 								that.hintIndex1 = 0;
 							} else if (that.state == 1) {
 								//司机已接单
-
 							} else if (that.state == 2) {
 								//司机已出发
 								//state == 5
@@ -347,8 +348,8 @@
 				let that = this;
 				that.orderInterval = setInterval(function() {
 					uni.request({
-						url: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.value,
-						method: $privateTaxi.Interface.QuerySpecialLineOrder_Passenger.method,
+						url: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.value,
+						method: $downwindCar.Interface.QueryHitchhikerOrder_Passenger.method,
 						data: {
 							OrderNumber: that.orderNumber
 						},
@@ -658,16 +659,20 @@
 			cancleOrder: function() {
 				//取消订单
 				let that = this;
-				//关闭所有的定时器				
+				//关闭所有的定时器	
+							console.log(that.orderNumber)
+							console.log(that.userInfo.userId)
 				uni.request({
-					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
-					method: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.method,
+					url: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.value,
+					method: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber,
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
+						
 						let data = res.data.data;
+						console.log(res)
 						if (res.data.status) {
 							clearInterval(that.directionInterval);
 							that.directionInterval = 0;

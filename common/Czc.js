@@ -9,17 +9,23 @@ const GaoDeWebKey = [
 const InterfaceAddress = [
 	//根据起终点经纬度获取线路规划
 	//使用页面 - /CZC/CallAndDrive - 
-	'http://zntc.145u.net/api/zhcx/getPlanningLineByLonLat' ,
+	'https://zntc.145u.net:9099/api/zhcx/getPlanningLineByLonLat' ,
 	//获取所有车辆定位数据
-	'http://zntc.145u.net/api/zhcx/getAllVehiclePosition',
+	'https://zntc.145u.net:9099/api/zhcx/getAllVehiclePosition',
 	//根据经纬度获取附近一定范围的经纬度
-	'http://zntc.145u.net/api/zhcx/getLonLatRangeVehiclePosition',
+	'https://zntc.145u.net:9099/api/zhcx/getLonLatRangeVehiclePosition',
 ]
 
 //旅客端出租车接口配置
 
 //接口域名
-const Url = 'http://zntc.145u.net';
+//接口域名
+// #ifdef H5
+	const Url = 'http://zntc.145u.net'; //http请求
+// #endif
+// #ifndef H5
+	const Url = 'https://zntc.145u.net:9099'; //https请求
+// #endif
 
 //接口对象
 const Interface = {
@@ -40,20 +46,26 @@ const Interface = {
 		value:Url + '/api/taxi/CancelExpressOrderByOrderNum_Passenger',
 		name:'旅客端-根据订单号取消订单',
 		method:'POST',
-		page:["CZC/CallAndDrive.nvue"]
+		page:["CZC/CallAndDrive.nvue","order/OrderList"]
 	},
 	addPassengerOneTouchAlarm:{
 		value:Url + '/api/taxi/addPassengerOneTouchAlarm',
 		name:'旅客端-一键报警',
 		method:'POST',
-		page:["CZC/CallAndDrive.nvue"]
+		page:["CZC/CallAndDrive.nvue","CZC/WaitTakeOrder"]
 	},
 	addPassengerEvaluate_Passenger:{
 		value:Url + '/api/taxi/addPassengerEvaluate_Passenger',
 		name:'旅客端-添加评价',
 		method:'POST',
 		page:["CZC/OrderDetail.nvue","CZC/SpecialLineDetail.nvue"]
-	}
+	},
+	InputAmountExpressOrder_Driver: {
+		value: Url + '/api/taxi/InputAmountExpressOrder_Driver',
+		name: '司机端-出租车-订单支付',
+		method: 'POST', //GET-POST
+		pages: []
+	},
 }
 
 const dateFormat = {

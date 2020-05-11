@@ -26,7 +26,7 @@
 			</view>
 
 			<!-- 地图标点 -->
-			<view class="orderCommonClass" v-if="false">
+			<view class="orderCommonClass" v-if="true">
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<view @tap="checkLocation" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>

@@ -82,7 +82,7 @@
 				       }
 				});
 				that.loginType=e;
-				console.log(e)
+				// console.log(e)
 			},
 			judgeNum(val){  //只能输入数字
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
@@ -171,29 +171,6 @@
 												console.log("返回上一页")
 												uni.navigateBack();//返回上一页
 											}
-											// uni.getStorage({
-											// 	key:'userInfo',
-											// 	success:function(user){
-											// 		//console.log(user,"user")
-											// 		if(user.data.nickname==""||user.data.nickname==null){
-											// 			user.data.nickname="用户"+user.data.phoneNumber;
-											// 		}
-											// 		var base64=res.data.data.portrait;
-											// 		if(that.isBase64(base64)){
-											// 			base64ToPath(base64)
-											// 			  .then(path => {
-											// 				user.data.portrait=path;
-											// 				that.login(user.data);
-											// 			  })
-											// 			  .catch(error => {
-											// 				console.error(error)
-											// 			  })	
-											// 		}else{
-											// 			that.login(user.data);
-											// 		}
-													
-											// 	}
-											// })
 										}
 									})
 									
@@ -216,17 +193,12 @@
 			},
 			wxLogin(){		//微信授权登录
 				var theSelf=this;
-				//var getChina = require('../../components/GRZX/wfgo-getChina/getChina.js');
-				//var address;
 				uni.login({
 					provider:'weixin',
 					success:function(loginRes){
 						uni.getUserInfo({	
 							provider: 'weixin',
 							success:function(res){			
-								//address=getChina.pinyin(res.userInfo.province)+" "+getChina.pinyin(res.userInfo.city);
-								address=res.userInfo.province+" "+res.userInfo.city;
-								res.userInfo.address=address;
 								res.userInfo.phoneNumber="";
 								uni.setStorage({
 									key:"userInfo",
@@ -236,9 +208,6 @@
 									title: '授权成功',
 									icon:"none"
 								});
-								if(res!=null||res!=""){
-									theSelf.login(res.userInfo);						
-								}
 								//绑定手机号
 								uni.getStorage({
 									key:'userInfo',
@@ -256,11 +225,6 @@
 										}
 									}
 								})
-								/* setTimeout(function(){
-									uni.navigateBack({
-										delta: 2
-									})
-								},1000); */	
 							},
 							fail:function(){
 								
@@ -402,6 +366,33 @@
 			        return false;
 			    }
 			},
+			//------------获得7日后的日期-----------
+			getSpecialTime() {
+				var date=new Date();
+				var currentDate=JSON.stringify(date).substring(1,11);
+				var arry  = currentDate.split("-");
+				var year = parseInt(arry[0],10);
+				var month = parseInt(arry[1],10);
+				var day = parseInt(arry[2],10); 
+				//月份的方法：getMonth()从 Date 对象返回月份 (0 ~ 11)。
+				var structDate = new Date(year , month - 1, day);
+				var num  = parseInt(7,10);
+				//setDate增减天数
+				structDate.setDate(structDate.getDate()+num); 
+				 //如果月份长度少于2，则前加 0 补位   
+				 if((structDate.getMonth() + 1).toString().length == 1) {  
+					month = 0 + "" + (structDate.getMonth() + 1).toString();  
+				 } else {    
+					 month = (structDate.getMonth() + 1).toString();  
+				 }   
+				 //如果天数长度少于2，则前加 0 补位   
+				 if (structDate.getDate().toString().length == 1) {   
+					day = 0 + "" + structDate.getDate().toString();   
+				 } else {    
+					 day = structDate.getDate().toString();   
+				 }    
+				 var newDate = structDate.getFullYear() + "-" + month + "-" + day;   
+			}
 		}
 	}
 </script>

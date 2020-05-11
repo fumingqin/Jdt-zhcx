@@ -154,7 +154,8 @@
             "base" : "/h5/"
         },
         "devServer" : {
-            "https" : false
+            "https" : false,
+            "port" : ""
         },
         "sdkConfigs" : {
             "maps" : {

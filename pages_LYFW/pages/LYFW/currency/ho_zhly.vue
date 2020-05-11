@@ -25,8 +25,8 @@
 				</view>
 				<!-- 景区商品 -->
 				<view class="zl_commodity" @click="route4">
-					<image class="zl_coImage" src="../../../static/LYFW/currency/ho_zhly/jinqushangpin.png"></image>
-					<text class="zl_coText">景区商品</text>
+					<image class="zl_coImage" src="../../../static/LYFW/currency/ho_zhly/lvyouchanping.png"></image>
+					<text class="zl_coText">旅游产品</text>
 				</view>
 			</view>
 		</view>
@@ -176,6 +176,15 @@
 			this.routeInit();
 			this.loadData();
 		},
+		
+		onPullDownRefresh: function() {
+			this.routeInit();
+			this.loadData();
+			setTimeout(function() {
+				uni.stopPullDownRefresh(); //停止下拉刷新动画
+			}, 1000);
+		},
+		
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
@@ -228,7 +237,7 @@
 			//资讯详情页
 			informationTo: function(e) {
 				uni.navigateTo({
-					url: 'InformationDetails?id=' + e
+					url:'../../../../pages/Home/InformationDetails?id=' + e
 				})
 			},
 
@@ -257,9 +266,8 @@
 				})
 			},
 			route4: function() {
-				uni.showToast({
-					title: '正在开发中...',
-					icon: 'none'
+				uni.navigateTo({
+					url: '../tourismProducts/tp_ticketsList'
 				})
 			},
 			

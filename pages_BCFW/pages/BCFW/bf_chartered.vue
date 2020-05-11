@@ -495,7 +495,7 @@
 						console.log(res)
 						if (res.confirm) {
 							uni.openSetting(); // 打开地图权限设置
-						} else if (res.confirm) {
+						} else if (res.cancel) {
 							uni.showToast({
 								title: '你拒绝了授权，无法获得周边信息',
 								icon: 'none',
@@ -507,10 +507,6 @@
 			},
 
 			onShow() {
-				// 动态设置标题
-				// uni.setNavigationBarTitle({
-				//     title: this.$t('买金'),
-				// })
 				this.getAuthorizeInfo();
 			}
 		}

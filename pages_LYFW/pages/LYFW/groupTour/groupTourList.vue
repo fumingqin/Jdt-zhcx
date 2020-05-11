@@ -31,7 +31,7 @@
 						padding-bottom: 40upx;
 						padding-top: 20upx;
 						border-bottom: 1px #F5F5F5 dotted;"
-						 v-for="(itemContent,indexContent) in item.content" :key='indexContent' @click="details(item.contentId)">
+						 v-for="(itemContent,indexContent) in item.content" :key='indexContent' @click="details(itemContent.contentId)">
 							<view class="groupContent2">
 								<image class="contentImage2" :src="itemContent.contentImage[0]" mode="aspectFill"></image>
 							</view>
@@ -39,7 +39,7 @@
 								<text class="contentText2">{{itemContent.contentTitle}}</text>
 								<text class="contentLabel2">{{itemContent.contentLabel}}</text>
 								<view class="groupCost2">
-									<view class="cost2">￥<text class="contentCost2">{{itemContent.cost}}</text>元</view>
+									<!-- <view class="cost2">￥<text class="contentCost2">{{itemContent.cost}}</text>元</view> -->
 									<text class="sellComment2">已售{{itemContent.sell}}</text>
 								</view>
 							</view>
@@ -69,7 +69,7 @@
 						<text class="contentText">{{item2.contentTitle}}</text>
 						<text class="contentLabel">{{item2.contentLabel}}</text>
 						<view class="groupCost">
-							<view class="cost">￥<text class="contentCost">{{item2.cost}}</text>元</view>
+							<!-- <view class="cost">￥<text class="contentCost">{{item2.cost}}</text>元</view> -->
 							<text class="sellComment">已售{{item2.sell}}</text>
 						</view>
 					</view>
@@ -91,7 +91,7 @@
 						<text class="contentText">{{item.contentTitle}}</text>
 						<text class="contentLabel">{{item.contentLabel}}</text>
 						<view class="groupCost">
-							<view class="cost">￥<text class="contentCost">{{item.cost}}</text>元</view>
+							<!-- <view class="cost">￥<text class="contentCost">{{item.cost}}</text>元</view> -->
 							<text class="sellComment">已售{{item.sell}}</text>
 						</view>
 					</view>
@@ -191,10 +191,8 @@
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-							},
-							complete:function(){
 								this.routeData();
-							}
+							},
 						}),
 
 						uni.getStorage({

@@ -49,10 +49,10 @@
 				<image class="sv_print" src="../../static/Home/serve/jqgoupiao.png" mode="aspectFit"></image>
 				<text class="sv_text">景区购票</text>
 			</view>
-			<!-- <view class="sv_view3">
-				<image class="sv_print" src="../../static/Home/serve/jqshangpun.png" mode="aspectFit"></image>
-				<text class="sv_text">景区商品</text>
-			</view> -->
+			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
+				<image class="sv_print" src="../../static/Home/lvyouchanping.png" mode="aspectFit"></image>
+				<text class="sv_text">旅游产品</text>
+			</view>
 			</view>
 		</view>
 		<!-- <view class="sv_view2">
