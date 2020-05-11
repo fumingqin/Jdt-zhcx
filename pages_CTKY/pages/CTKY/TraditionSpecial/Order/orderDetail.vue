@@ -15,6 +15,7 @@
 			<view class="headText"> 司机姓名：{{getDetailInfo(orderInfo.driverName)}}</view>
 			<view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view>
 			<view class="headText"> 车牌号：{{getDetailInfo(orderInfo.vehicleNumber)}}</view>
+			<view class="headText"> 检票口：未知</view>
 		</view>
 		<!-- 乘客信息 -->
 		<scroll-view class="scrollBox" scroll-y="true">
@@ -44,7 +45,7 @@
 							<!-- 退改规则 -->
 							<view>{{role}}</view>
 							<!-- 附加保险 -->
-							<view>乘车险</view>
+							<view>{{isInsured(orderInfo.insured)}}</view>
 						</view>
 					</view>
 					<!-- 二维码 -->
@@ -89,6 +90,7 @@
 		},
 		onLoad(res) {
 			var that = this;
+			console.log(res);
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
 			console.log(orderInfo);
@@ -118,6 +120,15 @@
 							// console.log('完成')
 						}
 					})
+				}
+			},
+			//-------------------------------判断是否有保险-------------------------------
+			isInsured:function(param) {
+				console.log(param)
+				if(param == 'False') {
+					return '无保险'
+				}else {
+					return '乘车险'
 				}
 			},
 			//-------------------------------报班信息-------------------------------
