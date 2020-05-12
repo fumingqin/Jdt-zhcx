@@ -36,7 +36,23 @@
 				
 			}
 			// #endif
-			
+			// #ifdef MP-WEIXIN
+			uni.getStorage({
+				key:'userInfo',
+				success(res){
+					if(res.data.openId_xcx==""||res.data.openId_xcx==null){
+						uni.navigateTo({
+							url:'/pages/Home/wxAuthorize'
+						})
+					}
+				},
+				fail(){
+					uni.navigateTo({
+						url:'/pages/Home/wxAuthorize'
+					})
+				}
+			})
+			// #endif
 		},
 		methods: {
 			

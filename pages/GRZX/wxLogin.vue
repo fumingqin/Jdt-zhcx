@@ -151,7 +151,11 @@
 									nickname:userInfo.nickname,
 									address:userInfo.province+userInfo.city,
 									openId_wx:userInfo.openid,
-									//wxOpenid:openid,
+									gender:res1.data.data.gender,
+									openId_qq:res1.data.data.openId_qq,
+									openId_xcx:res1.data.data.openId_xcx,
+									birthday:res1.data.data.birthday,
+									autograph:res1.data.data.autograph,
 								},
 								method:that.$GrzxInter.Interface.changeInfo.method,
 								success(res) {
