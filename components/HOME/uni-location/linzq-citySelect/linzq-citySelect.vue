@@ -249,7 +249,9 @@
 					type:'wgs84',
 					geocode:true,
 					success: function(res) {
-						// console.log(res)
+						console.log(res)
+							that.markersData.latitude = res.latitude;
+							that.markersData.longitude = res.longitude;
 							uni.setStorage({
 								key: 'app_position',
 								data:res.address,
@@ -260,14 +262,16 @@
 			},
 			//把当前位置的经纬度传给高德地图，调用高德API获取当前地理位置
 			    loadCity:function(){
-			      var myAmapFun = new amapFile.AMapWX({ 
+					console.log(this.markersData.key)
+			      var myAmapFun = new amapFile.AMapWX({
 					  key: this.markersData.key,
 					  });
-			      // console.log(myAmapFun);
+			      console.log(myAmapFun);
 			      myAmapFun.getRegeo({
 			        success:(data) =>{
-						// console.log(data)
+						console.log(data)
 			          this.position =data[0].regeocodeData.addressComponent.city
+						console.log(this.position)
 			          uni.setStorage({
 			          	key: 'wx_position',
 			          	data:this.position
