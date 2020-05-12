@@ -9,7 +9,7 @@
 		<view class="ctky_View" :class="{ctky_ViewBorder : index==statusIndex}"  v-for="(item,index) in departureData" :key="index" @click="selection(item,index)" >
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >出发</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >返程</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.setOutDate}}</view>
 				</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
@@ -56,13 +56,11 @@
 				success: (res) => {
 					this.orderNumber = res.data.orderNumber;
 					this.setOutDate = res.data.orderDate;
-					this.startStation = res.data.planStart;
-					this.endStation = res.data.planEnd;
+					this.startStation = res.data.planEnd;
+					this.endStation = res.data.planStart;
 					this.GetSchedule();
 				}
 			})
-			
-			
 		},
 		methods: {
 			selection:function(item,index){
@@ -73,19 +71,21 @@
 			paymentSatas: function(){
 				var that = this;
 					uni.request({
-						url: $lyfw.Interface.lyky_BindGoInfo.value,
-						method: $lyfw.Interface.lyky_BindGoInfo.method,
+						url: $lyfw.Interface.lyky_BindBackInfo.value,
+						method: $lyfw.Interface.lyky_BindBackInfo.method,
 						data:{
 							orderNumber : this.orderNumber,
 							scheduleID : this.departureData[that.statusIndex].scheduleID
 						},
 						success: (res) => {
-							// console.log(res)
+							console.log(res)
 							uni.showToast({
-								title:'选择班次成功'
-							})
-							uni.redirectTo({
-								url:'tp_chooseShuttle2?originIndex=1'
+								title:'选择返程班次成功',
+								success: () => {
+									uni.switchTab({
+										url:'../../../../pages/order/OrderList'
+									})
+								}
 							})
 						},
 						fail: (ee) => {
@@ -95,8 +95,6 @@
 							})
 						}
 					})
-				
-				
 			},
 			
 			//获取班次发车信息
@@ -110,7 +108,7 @@
 							endStation : this.endStation,
 						},
 						success: (res) => {
-							console.log(res)
+							// console.log(res)
 							this.departureData = res.data.data;
 						}
 				})

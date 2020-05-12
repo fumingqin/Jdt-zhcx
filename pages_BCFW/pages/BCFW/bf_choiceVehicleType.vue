@@ -75,7 +75,7 @@
 				<scroll-view class="sr_scroll" scroll-x="true">
 					<view class="sc_choiceCar">
 						<view v-for="(item,index) in vehicleSelection[value].cvt_cost[value2].cvt_vehicle" :key="index" @click="carClick(index)">
-							<view class="cc_button">
+							<view class="cc_button"> 
 								<text class="cc_text" :class="{current3: value3===index}">{{item.cvt_Name}}</text>
 								<image class="cc_image" :src="item.cvt_carImage" />
 							</view>
@@ -85,7 +85,7 @@
 				
 				<!-- 按钮 -->
 				<view class="cvt_button">
-					<button class="bt_button" :class="{submitColor:value3!==''}" @click="subit">确认用车</button>
+					<button class="bt_button" :class="{submitColor:value3!==-1}" @click="sbuit">确认用车</button>
 				</view>
 			</view>
 		</view>
@@ -105,7 +105,7 @@
 				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
 				value: 0, //默认值
 				value2: 0,
-				value3: '',
+				value3: -1,
 				selectedValue: 0, //同意须知的选中值
 				// status: false, //隐藏状态
 				addressContent: {
@@ -213,7 +213,7 @@
 			},
 
 			carClick: function(res) {
-				console.log(res)
+				console.log(typeof res)
 				// var test = res;
 				// this.carIndex = test.vehicle;
 				this.value3 = res;
@@ -236,8 +236,9 @@
 			},
 			
 			//------------------------------提交数据-------------------------------------
-			subit:function(){
-				if(this.value3!==''){
+			sbuit:function(){
+				console.log(value3)
+				if(this.value3!==-1){
 					this.information.cvt_carImage = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carImage;
 					this.information.cvt_Name = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_Name;
 					this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carNumberSeats;

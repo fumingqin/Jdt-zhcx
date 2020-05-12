@@ -157,6 +157,7 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
+        
     ],
 
 	"subPackages": [
@@ -174,6 +175,20 @@
 				}, {
 					"path": "pages/CTKY/SpecialBus/Home/specialReserve",
 					"style": {}
+				},
+				{
+				    "path" : "pages/CTKY/SpecialBus/ScheduleLineList/specialBusLineList",
+				    "style" : {
+						"navigationBarTitleText": "班次列表"
+					}
+				},
+				{
+				    "path" : "pages/CTKY/SpecialBus/ScheduleLineList/specialBusTakeOrder",
+				    "style" : {}
+				},
+				{
+				    "path" : "pages/CTKY/SpecialBus/stationPicker/specialBusStationPicker",
+				    "style" : {}
 				},
 				//----------------------------------传统班车/定制班车-----------------------------------
 				{
@@ -268,7 +283,7 @@
 
 					}
 				}
-			]
+            ]
 		},
 		//---------------------------------------------第二个包：网络约车------------------------------------------
 		{
@@ -675,6 +690,9 @@
 					}
 				},{
 					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle",
+					"style" : {}
+				},{
+					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle2",
 					"style" : {}
 				}
 			]

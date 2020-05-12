@@ -149,7 +149,7 @@
 
 				loadingType: 0, //加载更多状态
 				loadingText: {
-					down: '上拉加载更多',
+					down: ' ',
 					refresh: '正在加载...',
 					nomore: '没有更多了',
 				},

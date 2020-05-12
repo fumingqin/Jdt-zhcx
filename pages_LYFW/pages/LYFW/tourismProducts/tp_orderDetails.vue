@@ -84,7 +84,7 @@
 					<text class="Xx_contentTitle2">凭订单二维码扫码上车</text>
 				</view>
 				
-				<view class="Xx_contentBlock" @click="open2">
+				<view class="Xx_contentBlock" @click="open3">
 					<text class="Xx_contentTitle" >出发班次信息</text>
 					<text class="Xx_contentTitle2" style="color: #007AFF;">点击查看 > </text>
 				</view>
@@ -146,36 +146,77 @@
 		
 		<!-- 嵌套弹框组件popup -->
 		<uni-popup ref="popup2" type="bottom">
-			
+				
 				<view class="box_Vlew2">
-					<scroll-view scroll-y="true">
+					<view :hidden="orderInfo.backsetOutDate !== ''">订单未选择返程班次</view>
+					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == ''">
 					<view class="box_titleView">
 						<text class="box_title">出发班次信息</text> 
 						<text class="box_icon jdticon icon-fork " @click="close2"></text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >出发时间</text>
-						<text class="MP_cost">2020-05-09 09:00</text>
+						<text class="MP_cost">{{orderInfo.backsetOutDate}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >上车点</text>
-						<text class="MP_cost">泉州客运中心站</text>
+						<text class="MP_cost">{{orderInfo.backstartStation}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >下车点</text>
-						<text class="MP_cost">安溪清水岩</text>
+						<text class="MP_cost">{{orderInfo.backendStation}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >驾驶员</text>
-						<text class="MP_cost">王师傅</text>
+						<text class="MP_cost">{{orderInfo.backdriverName}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >车牌号</text>
-						<text class="MP_cost">闽C15245</text>
+						<text class="MP_cost">{{orderInfo.backvehicleNumber}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >联系电话</text>
-						<text class="MP_cost" style="color: #007AFF;" @click="makeCall">13481858714 (点击拨打电话)</text>
+						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.backdriverPhone)">{{orderInfo.backdriverPhone}}(点击拨打电话)</text>
+					</view>
+					</scroll-view>
+				</view>
+			
+		</uni-popup>
+		
+		<!-- 嵌套弹框组件popup -->
+		<uni-popup ref="popup3" type="bottom">
+				
+				
+				<view class="box_Vlew2" >
+					<view :hidden="orderInfo.setOutDate !== ''">订单未选择出发班次</view>
+					<scroll-view scroll-y="true" :hidden="orderInfo.setOutDate == ''">
+					<view class="box_titleView">
+						<text class="box_title">出发班次信息</text> 
+						<text class="box_icon jdticon icon-fork " @click="close3"></text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >出发时间</text>
+						<text class="MP_cost">{{orderInfo.setOutDate}}</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >上车点</text>
+						<text class="MP_cost">{{orderInfo.startStation}}</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >下车点</text>
+						<text class="MP_cost">{{orderInfo.endStation}}</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >驾驶员</text>
+						<text class="MP_cost">{{orderInfo.driverName}}</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >车牌号</text>
+						<text class="MP_cost">{{orderInfo.vehicleNumber}}</text>
+					</view>
+					<view class="MP_selectionDate">
+						<text class="MP_text" >联系电话</text>
+						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.driverPhone)">{{orderInfo.driverPhone}}(点击拨打电话)</text>
 					</view>
 					</scroll-view>
 				</view>
@@ -261,13 +302,22 @@
 				this.$refs.popup.close()
 			},
 			
-			//查看出发班次弹框
+			//查看返程班次弹框
 			open2() {
 				this.$refs.popup2.open()
 			},
-			//关闭出发班次弹框
+			//关闭返程班次弹框
 			close2() {
 				this.$refs.popup2.close()
+			},
+			
+			//查看出发班次弹框
+			open3() {
+				this.$refs.popup3.open()
+			},
+			//关闭出发班次弹框
+			close3() {
+				this.$refs.popup3.close()
 			},
 			
 			//数组提取
@@ -309,7 +359,7 @@
 			// 拨打电话
 			makeCall :function(e){
 				uni.makePhoneCall({
-					phoneNumber:'13481858714'
+					phoneNumber:e
 				})
 			}
 			
@@ -417,8 +467,7 @@
 		}
 		//使用时间/费用详情
 		.MP_selectionDate {
-			margin-top: 24upx;
-			margin-bottom: 24upx;
+			margin: 24upx 0;
 			border-top: 1px #F5F5F5 dashed;
 			.MP_text {
 				color: #888;
@@ -477,7 +526,7 @@
 		.MP_selectionDate {
 			margin-top: 24upx;
 			margin-bottom: 24upx;
-			border-top: 1px #F5F5F5 dashed;
+			// border-top: 1px #F5F5F5 dashed;
 			.MP_text {
 				font-size: 30upx;
 				display: block; // 让字体换行
@@ -523,7 +572,7 @@
 				color: #333;
 			}
 			.Xx_contentBlock{
-				margin-top: 20upx;
+				margin: 24upx 0;
 			}
 		}
 		

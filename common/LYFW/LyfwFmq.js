@@ -252,6 +252,26 @@ const Interface = {
 		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
 	},
 	
+	lyky_GetScheduleByDateStartStationEndStation:{
+		value: Url + '/api/lyky/GetScheduleByDateStartStationEndStation',
+		name:'订单 - 获取班次发车信息',
+		method:'POST',
+		pages:["pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle"]
+	},
+	
+	lyky_BindGoInfo:{
+		value: Url + '/api/lyky/BindGoInfo',
+		name:'订单 - 绑定去程班次信息）',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
+	
+	lyky_BindBackInfo:{
+		value: Url + '/api/lyky/BindBackInfo',
+		name:'订单-绑定回程班次信息',
+		method:'POST',
+		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+	},
 	
 	qg_GetImage:{
 		value: Url + '/api/zhcx/GetImage',
