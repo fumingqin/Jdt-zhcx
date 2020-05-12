@@ -282,8 +282,9 @@
 			<view v-if="current == 4" style="margin-top: 10rpx;">
 				<view class='privatetaxi' v-for="(item,index) in downwindCar" :key="index" @click="downwindCarClick(item)">
 					<text style="font-size: 36rpx;font-weight: bold;">{{item.DepartureTime.replace("T"," ").substr(0,16)}}&nbsp;出发</text>
-					<view style="padding-top: 20rpx;flex-direction: row;">
+					<view style="padding-top: 20rpx;flex-direction: row;justify-content: space-between;">
 						<text style="font-size: 30rpx;">&nbsp;&nbsp;&nbsp;司机：{{item.DriverName.substr(0,1)}}师傅</text>
+						<text style="font-size: 30rpx;">剩余{{item.Seat}}座</text>
 					</view>
 					<view style="justify-content: space-between;padding-top: 10rpx;">
 						<view style="flex-direction: row;justify-content: space-between;">
@@ -1242,19 +1243,23 @@
 						duration: 2000,
 					})
 				} else {
-					uni.setStorage({ //顺风车信息
-						key: "downwindCarstartlocation",
-						data: that.startlocation,
-					})
-					uni.setStorage({ //顺风车信息
-						key: "downwindCarendlocation",
-						data: that.endlocation,
-						success(){
-							uni.navigateTo({
-								url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price,
-							})
-						}
-					})
+					if(value.Seat>0){
+						uni.setStorage({ //顺风车信息
+							key: "downwindCarstartlocation",
+							data: that.startlocation,
+						})
+						uni.setStorage({ //顺风车信息
+							key: "downwindCarendlocation",
+							data: that.endlocation,
+							success(){
+								uni.navigateTo({
+									url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price,
+								})
+							}
+						})
+					}else{
+						that.showToast("该车辆已无多余座位，请选择其他行程！")
+					}
 				}
 			}
 			///////////////////////////顺风车结束/////////////////////////////////////////////////////

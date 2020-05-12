@@ -68,7 +68,7 @@ const Interface={
 	},
 	GetUserInfoByOpenId_wx:{
 		value:Url+'/api/person/GetUserInfoByOpenId_wx',
-		name:'通过微信的openid获取用户信息',
+		name:'通过微信公众号的openid获取用户信息',
 		method:'POST',
 		pages: [],
 	}, 
@@ -77,7 +77,13 @@ const Interface={
 		name:'通过qq的openid获取用户信息',
 		method:'POST',
 		pages: [],
-	}, 
+	},
+	GetUserInfoByOpenId_xcx:{
+	 	value:Url+'/api/person/GetUserInfoByOpenId_xcx',
+	 	name:'通过微信小程序的openid获取用户信息',
+	 	method:'POST',
+	 	pages: [],
+	},
 	SearchVersion:{
 		value:Url+'/api/person/SearchVersion',
 		name:'获取版本号',
