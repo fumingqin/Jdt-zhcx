@@ -20,7 +20,7 @@
 								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">{{orderInfo.vehicleNumber}}</text>
 							</view>
 							<view style="margin-left: 18rpx;">
-								<text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text>
+								<!-- <text style="font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#2C2D2D;">豪华SUV</text> -->
 							</view>
 						</view>
 					</view>
@@ -234,6 +234,7 @@
 					success(res) {
 						if(res.data.status){
 							that.orderInfo = res.data.data
+							console.log(that.orderInfo)
 							console.log(res.data)
 							that.setMarker(1, that.orderInfo.startLon, that.orderInfo.startLat, '../../static/Order/Start.png');
 							that.setMarker(2, that.orderInfo.endLon, that.orderInfo.endLat, '../../static/Order/End.png');

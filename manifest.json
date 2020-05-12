@@ -128,7 +128,7 @@
     "mp-weixin" : {
         "appid" : "wxf64bf945b37a9939",
         "setting" : {
-            "urlCheck" : false,
+            "urlCheck" : true,
             "minified" : true
         },
         "usingComponents" : true,

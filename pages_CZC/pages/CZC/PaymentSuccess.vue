@@ -6,7 +6,7 @@
 
 		<view class="cover-container">
 			<image class="okImage" mode="aspectFill" src='../../static/CZC/Success.png'></image>
-			<text class="title">行程已结束，请线下付款</text>
+			<text class="title">行程已结束 </text>
 			<text class="content">无选择操作，将在10秒后自动返回首页</text>
 			<view class="buttonView">
 				<view class="orderButton" @click="godetail(0)">查看订单</view>

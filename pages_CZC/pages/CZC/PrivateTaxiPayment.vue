@@ -98,16 +98,18 @@
 				countDownInterval: '',
 				SpecialLineName: '',
 				userInfo: '',
-				scenicSpotOpenId:'',//oppenid
+				scenicSpotOpenId: '', //oppenid
+				g_wakelock: null,
 			}
 		},
 		onLoad: function(options) {
 			this.orderNumber = options.orderNumber;
 			this.CheckPayState();
 			this.userInfo = uni.getStorageSync('userInfo') || '';
+			this.wakeLock();
 		},
 		onShow() {
-			this.scenicSpotOpenId=uni.getStorageSync('scenicSpotOpenId')|| '';//获取Oppenid
+			this.scenicSpotOpenId = uni.getStorageSync('scenicSpotOpenId') || ''; //获取Oppenid
 		},
 		methods: {
 			change: function(value) {
@@ -135,6 +137,16 @@
 					}
 				}, 1000);
 			},
+			wakeLock: function() {
+				//Android  
+				console.log(66);
+				var main = plus.android.runtimeMainActivity();
+				var Context = plus.android.importClass("android.content.Context");
+				var PowerManager = plus.android.importClass("android.os.PowerManager");
+				var pm = main.getSystemService(Context.POWER_SERVICE);
+				this.g_wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ANY_NAME");
+				this.g_wakelock.acquire();
+			},
 			getTimeRemain: function(value) { //获取时间
 				var time = new Date(value + "+08:00").getTime();
 				this.countDownDate = (180 - (new Date().getTime() - time) / 1000).toFixed(0);
@@ -155,12 +167,12 @@
 							clearInterval(that.countDownInterval); //清除倒计时
 							setTimeout(function() {
 								uni.switchTab({
-									url: "../../pages/order/OrderList"
+									url:'../../../pages/order/OrderList'
 								})
 							}, 1000)
 						} else {
-							
-							
+
+
 							that.showToast(res.data.msg);
 						}
 					},
@@ -236,7 +248,7 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						openId:that.scenicSpotOpenId,
+						openId: that.scenicSpotOpenId,
 						payType: payPlatform,
 						// price: that.TaxiCost,
 						price: 0.01,
