@@ -57,10 +57,23 @@
 				// console.log(e)
 			},
 			formSubmit: function(e) {
-			    uni.showModal({
-			        content: '提交成功',
-			        showCancel: false
-			    });
+				if(this.remnant==0){
+					uni.showModal({
+						content:'请填写具体内容',
+						showCancel:false
+					})
+				}else{
+					uni.request({
+						url:'https://zntc.145u.net:9099/api/person/addSuggestion',
+						method:'POST',
+					
+					})
+					
+					uni.showModal({
+					    content: '提交成功',
+					    showCancel: false
+					})
+				}			   
 			}
 		}
 	}
@@ -98,7 +111,7 @@
 				font-size: 24upx;
 				color: #AAAAAA;
 				position: absolute;
-				left: 634upx;
+				left: 620upx;
 				top: 346upx;
 			}
 		}

@@ -1958,8 +1958,24 @@
 			//-------------------------跳转到详情页-------------------------
 			keYunDetail: function(res) {
 				console.log(res)
+				var orderInfo = {
+					state: res.state,
+					totalPrice: res.totalPrice,
+					startSiteName: res.startSiteName,
+					endSiteName: res.endSiteName,
+					fullTicket: res.fullTicket,
+					halfTicket: res.halfTicket,
+					carryChild: res.carryChild,
+					setOutTime: res.setOutTime,
+					driverName: res.driverName,
+					driverPhone: res.driverPhone,
+					vehicleNumber: res.vehicleNumber,
+					iDNameType: res.iDNameType,
+					ticketNumber: res.ticketNumber,
+					insured: res.insured,
+				}
 				uni.navigateTo({
-					url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(res)
+					url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(orderInfo)
 				})
 			},
 			// -------------------------客运改签-------------------------
