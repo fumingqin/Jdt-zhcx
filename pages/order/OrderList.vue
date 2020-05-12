@@ -3124,13 +3124,15 @@
 				uni.setStorage({
 					key:'chooseShuttleData',
 					data:e,
-					success: () => {
-						if(e.startStation == null){
+					success: (res) => {
+						console.log(res)
+						console.log(e)
+						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'
 							})
 							uni.hideLoading()
-						}else if(e.backstartStation == null){
+						}else if(e.backstartStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle2?originIndex=1'
 							})
