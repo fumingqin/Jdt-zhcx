@@ -94,7 +94,7 @@ export default{
 									console.log(res,'res')
 									setTimeout(function(){
 										uni.hideLoading();
-									},2000);
+									},1000);
 									if(!res.data.status || res.data.data.phoneNumber=="" || res.data.data.phoneNumber==null){
 										that.bindState=true;
 									}else{
