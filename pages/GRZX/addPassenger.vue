@@ -29,7 +29,7 @@
 			<view class="codeClass">证件</view>
 			<view class="box2">
 				<view class="itemClass">
-					<view class="fontStyle" style="font">身份证</view>
+					<view class="fontStyle" style="font-weight: bold;">身份证</view>
 				</view>
 				<view class="itemClass borderTop">
 					<view class="fontStyle">证件号</view>
@@ -144,7 +144,7 @@
 					{title:'女'}
 				],
 				proveType:['请选择','军人','教师','学生'],
-				selector:'请添加额外凭证',
+				selector:'请添加额外凭证 >',
 				user:{
 					passengerId:'',//乘车人id
 					userName:'',	
@@ -474,7 +474,7 @@
 			//----------添加额外凭证--------
 			proveChange:function(e){
 				if(e.detail.value==0){
-					this.selector="请添加额外凭证";
+					this.selector="请添加额外凭证 >";
 				}else{
 					this.selector=this.proveType[e.detail.value];
 				}
