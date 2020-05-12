@@ -2,7 +2,7 @@
 	<view class="content">
 		<!-- 头部背景图 -->
 		<view>
-			<!-- <image class="banner" src="../../../../static/CTKY/specialBus.png" lazy-load mode="aspectFit"></image> -->
+			<image class="banner" :src="imageUrl" lazy-load mode="aspectFill"></image>
 		</view>
 		<!-- 内容 -->
 		<view class="center">
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+	import $KyInterface from "@/common/Ctky.js"
 	import datePicker from '@/pages_CTKY/components/CTKY/mx-datepicker/ctkyDatePicker.vue'
 	import Popup from '@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue'
 	export default {
@@ -46,8 +47,10 @@
 		data() {
 			return {
 				lineName:'',//线路名称
+				lineID:'',//线路ID
 				date:'选择出发时间',//时间
 				// show:false,
+				imageUrl:'',
 			}
 		},
 		onLoad() {
@@ -55,31 +58,62 @@
 			if(that.lineName == '') {
 				that.lineName = '请选择线路'
 			}
-			//监听事件,监听下个页面返回的值
-			uni.$on('specialLineName', function(data) {
-			    // data即为传过来的值，给上车点赋值
-				that.lineName = data.data;
-			    //清除监听，不清除会消耗资源
-			    uni.$off('specialLineName');
-			});
+			that.getPicture();
+			
 		},
 		methods: {
+			//------------------------------加载图片------------------------------
+			getPicture() {
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_AddPicture.Url,
+					method:$KyInterface.KyInterface.Ky_AddPicture.method,
+					header:$KyInterface.KyInterface.Ky_AddPicture.header,
+					data:{
+						model:8,
+					},
+					success(res) {
+						console.log(res)
+						if(res.data.status == true) {
+							that.imageUrl = res.data.data[0].imageUrl
+							console.log(that.imageUrl)
+						}else {
+							console.log(res.data.status)
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 			//------------------------------线路点击------------------------------
 			lineTap() {
-				console.log('点击了线路');
+				var that = this;
+				//监听事件,监听下个页面返回的值
+				uni.$on('specialLineName', function(data) {
+					console.log(data)
+				    // data即为传过来的值，给上车点赋值
+					that.lineName = data.data;
+					that.lineID = data.lineID;
+					
+				    //清除监听，不清除会消耗资源
+				    uni.$off('specialLineName');
+				});
 				uni.navigateTo({
 					url:'./specialLinePicker'
 				})
 			},
 			//------------------------------时间点击------------------------------
 			timeTap() {
-				console.log('点击了时间');
-				// this.showPop();
 				this.$refs.popup.open()
 			},
 			//------------------------------下一步点击------------------------------
 			nextTap() {
-				console.log('点击了下一步');
+				// console.log(this.lineID,this.date)
+				
+				uni.navigateTo({
+					url:'../ScheduleLineList/specialBusLineList?lineID=' + this.lineID + '&date=' + this.date
+				})
 			},
 			// 取消事件
 			cancel(){
@@ -87,9 +121,11 @@
 			},
 			// 确认事件
 			sure(e){
-			    console.log(e)
+			    // console.log(e)
+				
 			    // 输出 { year: 2020,month: 3,day: 23}
-				this.date = e.month + '月' + e.day + '日' + '  ' + e.hour + ':' + e.minute
+				this.date = e.year + '-' + e.month + '-' + e.day
+				this.$refs.popup.close()
 			},
 			// picker显示
 			showPop(){
