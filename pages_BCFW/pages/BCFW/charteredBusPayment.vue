@@ -40,7 +40,7 @@
 					</view>
 					<view class="MP_cost" v-if="orderInfo.or_class=='包车-专线'">
 						<text>专线费用</text>
-						<text class="MP_userCost">¥{orderInfo.cm_totalCost}}</text>
+						<text class="MP_userCost">¥{{orderInfo.cm_totalCost}}</text>
 					</view>
 
 					<!-- 优惠券 -->
@@ -110,6 +110,8 @@
 					or_number: '',//订单编号
 					or_type: '',//订单状态
 					or_class: '',//包车类型
+					or_date:'',
+					or_time:'',//下单时间
 					billDescript:'',//订单描述
 					
 					cm_totalCost:'',//总计
@@ -146,7 +148,8 @@
 			}
 		},
 		onLoad: function(options) {
-			that.or_number=JSON.parse(options.or_number);
+			this.or_number=JSON.parse(decodeURIComponent(options.or_number));
+			
 			uni.showLoading({
 				title: '拉起订单中...'
 			})
@@ -159,7 +162,7 @@
 				url: $bcfw.Interface.fw_charterDetails.value,
 				method: $bcfw.Interface.fw_charterDetails.method,
 				data:{
-					or_number :options.orderNumber
+					or_number :options.or_number
 				},
 				
 				success: (res) => {
@@ -171,7 +174,7 @@
 						this.orderInfo.billDescript='包车专线费用'
 						}
 					console.log(this.orderInfo.billDescript)
-					// this.getDate();
+					this.getDate();
 					uni.hideLoading()
 				}
 			})
@@ -223,35 +226,37 @@
 
 
 			//获取当前时间并格式化
-			// getDate: function() {
-			// 	//先提取订单下单时间把空格转换成T
-			// 	var a = this.orderInfo.setOrderTime.replace(' ', 'T')
-			// 	//把时间转换成时间戳
-			// 	var b = new Date(a).getTime();
+			getDate: function() {
+				//先提取订单下单时间把空格转换成T
+				var a =(this.orderInfo.or_date + ' '+this.orderInfo.or_time).replace(' ', 'T')
+				console.log(a);
+				//把时间转换成时间戳
+				var b = new Date(a).getTime();
+				console.log(b) 
 
-			// 	//获取当前时间（为什么要先把当前时间戳格式化？）是因为直接获取当前时间戳存在时间误差
-			// 	var date = new Date(),
-			// 		year = date.getFullYear(),
-			// 		month = date.getMonth() + 1,
-			// 		day = date.getDate(),
-			// 		hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-			// 		minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
-			// 		second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-			// 	month >= 1 && month <= 9 ? (month = "0" + month) : "";
-			// 	day >= 0 && day <= 9 ? (day = "0" + day) : "";
-			// 	var timer = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
-			// 	//把转换后的时间，转换成时间戳
-			// 	var c = new Date(timer).getTime();
+				//获取当前时间（为什么要先把当前时间戳格式化？）是因为直接获取当前时间戳存在时间误差
+				var date = new Date(),
+					year = date.getFullYear(),
+					month = date.getMonth() + 1,
+					day = date.getDate(),
+					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+					minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
+					second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+				month >= 1 && month <= 9 ? (month = "0" + month) : "";
+				day >= 0 && day <= 9 ? (day = "0" + day) : "";
+				var timer = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
+				//把转换后的时间，转换成时间戳
+				var c = new Date(timer).getTime();
 
-			// 	//用当前时间-下单时间再除于1000就是秒
-			// 	var d = (c - b) / 1000;
+				//用当前时间-下单时间再除于1000就是秒
+				var d = (c - b) / 1000;
 
-			// 	//这里的300秒就是支付倒计时，门票是5分钟
-			// 	var e = 394 - d;
+				//这里的300秒就是支付倒计时，门票是5分钟
+				var e = 346 - d;
 
-			// 	this.countDownDate = e;
-			// 	this.countDown();
-			// },
+				this.countDownDate = e;
+				this.countDown();
+			},
 
 
 			//支付倒计时
@@ -276,14 +281,20 @@
 			//倒计时结束
 			countDownEnd: function() {
 				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getScenicspotOrderDetail?orderNumber=' + this.orderInfo.or_number,
-					method: 'POST',
+					url: $bcfw.Interface.fw_charterDetails.value,
+					method: $bcfw.Interface.fw_charterDetails.method,
+					data:{
+							or_number :this.orderInfo.or_number
+						},
 					success: (res) => {
 						// console.log(res)
-						if (res.data.data.orderType == '待支付') {
+						if (res.data.data.or_Type == '0') {
 							uni.request({
-								url: 'http://218.67.107.93:9210/api/app/returnOrder?orderNumber=' + res.data.data.or_number,
-								method: 'POST',
+								url: $bcfw.Interface.spt_CancelTickets.value,
+								method: $bcfw.Interface.spt_CancelTickets.method,
+								data:{
+										or_number :this.orderInfo.or_number
+									},
 								success() {
 									// console.log('取消成功')
 									uni.showToast({

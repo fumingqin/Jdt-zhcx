@@ -6,21 +6,21 @@
           <view @click="sure" style="padding-right: 20rpx;" class="sure">确认</view>
         </view>
           <picker-view :indicator-style="indicatorStyle" :value="value" @change="bindChange" style="height:400rpx;">
-              <!-- <picker-view-column >
+              <picker-view-column >
                   <view class="picker item"  v-for="(item,index) in years" :key="index">{{item}}年</view>
-              </picker-view-column> -->
+              </picker-view-column>
               <picker-view-column>
                   <view class="picker item" v-for="(item,index) in months" :key="index">{{item}}月</view>
               </picker-view-column>
               <picker-view-column>
                   <view class="picker item"  v-for="(item,index) in days" :key="index">{{item}}日</view>
               </picker-view-column>
-			  <picker-view-column>
+			  <!-- <picker-view-column>
 			      <view class="picker item" v-for="(item,index) in hours" :key="index">{{item}}点</view>
 			  </picker-view-column>
 			  <picker-view-column>
 			      <view class="picker item"  v-for="(item,index) in minutes" :key="index">{{item}}分</view>
-			  </picker-view-column>
+			  </picker-view-column> -->
           </picker-view>
 
   </view>
@@ -66,11 +66,11 @@ export default {
     bindChange: function (e) {
 	  this.flag = true
       const val = e.detail.value
-      // this.year = this.years[val[0]] 
-      this.month = this.months[val[0]]
-      this.day = this.days[val[1]]
-	  this.hour = this.hours[val[2]]
-	  this.minute = this.minutes[val[3]]
+      this.year = this.years[val[0]] 
+      this.month = this.months[val[1]]
+      this.day = this.days[val[2]]
+	  // this.hour = this.hours[val[2]]
+	  // this.minute = this.minutes[val[3]]
     },
     // 获得年份
     getYears () {
@@ -118,7 +118,7 @@ export default {
     // 确认
     sure () {
 		if(!this.flag){
-			   this.$emit('cancel', false)
+			this.$emit('cancel', false)
 			this.$emit('sure', { year: this.years[0], month: this.months[0], day: this.days[0], hour:this.hours[0], minute:this.minutes[0]})
 			return
 		}
@@ -134,6 +134,8 @@ export default {
     width: 100%;
     height: 100rpx;
     display: flex;
+	background-color: #FFFFFF;
+	border-bottom: 1rpx solid #AAAAAA;
     justify-content: space-between;
     align-items: center;
 	font-size: 30rpx;
@@ -142,6 +144,7 @@ export default {
     }
     }
   .picker{
+	background-color: #FFFFFF;
     text-align: center;
     line-height: 70rpx;
   }

@@ -362,8 +362,9 @@
 
 			// 数量+计价
 			numberChange() {
-				const a = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this
+				const b = (this.admissionTicket.ticketAdultPrice * this.adultIndex) + (this.admissionTicket.ticketChildPrice * this
 					.childrenIndex);
+				const a = b.toFixed(2);
 				if (this.couponColor == '') {
 					this.actualPayment = a;
 				} else if (a >= this.couponCondition) {

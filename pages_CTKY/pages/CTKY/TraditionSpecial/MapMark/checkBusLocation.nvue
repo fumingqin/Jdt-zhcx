@@ -55,9 +55,13 @@
 		},
 		onLoad(item) {
 			var that = this;
-			console.log(item.busInfo)
 			that.busInfo = JSON.parse(item.busInfo);
-			console.log(that.busInfo)
+			if(!that.busInfo.latitude && !that.busInfo.longitude) {
+				uni.showToast({
+					title: '该车未报班，暂无定位信息',
+					icon: 'none'
+				})
+			}
 			//获取系统信息
 			uni.getSystemInfo({
 				success:function(res){
@@ -70,7 +74,7 @@
 			//获取坐标，绘制路线
 			// that.getPoint();
 			//设置班车位置
-			that.getBusLocation(item);
+			that.getBusLocation(that.busInfo);
 		},
 		methods: {
 			//获取坐标，绘制路线
@@ -114,13 +118,14 @@
 				});
 			},
 			//-----------------------------位置班车坐标点-----------------------------
-			getBusLocation:function(){
+			getBusLocation:function(item){
+				var that = this;
 				//创建绘制坐标点的对象marker
 				var marker = new Object();
 				marker = {
 					// id : res.data[i].AID,
-					latitude : res.data[i].Bst_Latitude,
-					longitude : res.data[i].Bst_Longitude,
+					latitude : item.latitude,
+					longitude : item.longitude,
 				    iconPath : '',//标识显示的图片
 					width : that.iconWidth,
 					height : that.iconHeight,

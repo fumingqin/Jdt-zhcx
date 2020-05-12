@@ -39,10 +39,10 @@
 					:timeout="true"
 				></w-picker>
 			</view>
-			<view class="Cr_slk2">
+			<!-- <view class="Cr_slk2">
 				<text class="bz">签&nbsp;名：</text>
 				<input class="slk" name="autograph" placeholder="你想要说的话"  v-model="autograph" />
-			</view>
+			</view> -->
 			<button class="an" type="warn" form-type="submit">保存</button>
 		</form>
 	</view>
@@ -74,10 +74,8 @@
 		},
 		onLoad:function(){
 			this.loadUserInfo();
-			
 		},
 		computed:{
-			
 			startDate() {
 			            return this.getDate('start');
 			        }, 
