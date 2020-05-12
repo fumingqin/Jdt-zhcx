@@ -17,33 +17,33 @@
 		<!-- 联动列表 -->
 		<view class="list_box" v-if="isShowAllList">
 			<!-- 左边的列表 -->
-			<view class="left">
+			<view class="left" v-if="true">
 				<scroll-view scroll-y="true" :style="{ 'height':scrollHeight }">
 					<view class="item" 
-						v-for="(item,index) in stationArray"
+						v-for="(item,index) in mainArray"
 						:key="index" 
 						:class="{ 'active':index==leftIndex }" 
 						:data-index="index"
-						@tap="leftTap"
-					>{{item.cityName}}</view>
+						@tap="detailStationTap(item)"
+					>{{item.lineName}}</view>
 		        </scroll-view>
 			</view>
 			<!-- 右边的列表 -->
-			<view class="main" v-if="isShowAllList">
+			<view class="main" v-if="false">
 				<swiper class="swiper" :style="{ 'height':scrollHeight }" 
 					:current="leftIndex" @change="swiperChange"
 					 vertical="true" duration="300">
-					<swiper-item v-for="(item,index) in stationArray" :key="index">
-						<scroll-view  scroll-y="true" :style="{ 'height':scrollHeight }">
+					<!-- <swiper-item v-for="(item,index) in stationArray" :key="index"> -->
+						<scroll-view  scroll-y="true" :style="{'height':scrollHeight}">
 							<view class="item">
 								<view class="goods" v-for="(item2,index2) in mainArray" :key="index2" @tap="detailStationTap(item2)">
 									<view>
-										<view>{{item2.countys}}</view>
+										<view>{{item2.lineName}}</view>
 									</view>
 								</view>
 							</view>
 						</scroll-view>
-					</swiper-item>
+					<!-- </swiper-item> -->
 				</swiper>
 			</view>
 		</view>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+	import $KyInterface from "@/common/Ctky.js"
 	export default {
 		data() {
 			return {
@@ -66,48 +67,40 @@
 		},
 		onLoad(param){
 			var that = this;
-			//获取站点列表
-			that.getBusStationList();
+			//获取专线
+			that.GetAllLine();
 			/* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
 			uni.getSystemInfo({
 				success:(res)=>{
 					this.scrollHeight=`${res.windowHeight}px`;
 				}
 			});
+			
 		},
 		methods: {
-			//-------------------------获取车站列表数据-------------------------
-			getBusStationList() {
-				uni.showLoading();
+			//-------------------------获取专线列表数据-------------------------
+			GetAllLine(){
+				var that = this;
 				uni.request({
-					url:'http://27.148.155.9:9055/CTKY/getStations',
-					method:'POST',
-					header:{'content-type':'application/x-www-form-urlencoded'},
-					data:{
-						systemName:'泉运公司综合出行'
-					},
-					success: (res) => {
-						console.log(res)
-						uni.hideLoading();
-						let that = this;
-						// console.log(res.data);
-						if (res.data.length != 0) {
-							for (var i = 0; i < res.data.length; i++) {
-								var cityNameArray = {
-									cityName : res.data[i].cityName
-								}
-								this.stationArray.push(cityNameArray);
-								for (var j = 0; j < res.data[i].countys.length;j++) {
-									var countysArray = {
-										countys : res.data[i].countys[j]
+					url:$KyInterface.KyInterface.Cs_GetAllLine.Url,
+					method:$KyInterface.KyInterface.Cs_GetAllLine.method,
+					header:$KyInterface.KyInterface.Cs_GetAllLine.header,
+					success(res) {
+						console.log('定制巴士线路',res)
+						if (res.data) {
+							if(res.data.Successed == true){
+								for (var i = 0; i < res.data.line.length; i++) {
+									var cityNameArray = {
+										lineName : res.data.line[i].LineName,
+										lineID: res.data.line[i].AID,
 									}
-									this.mainArray.push(countysArray);
+									that.mainArray.push(cityNameArray);
 								}
 							}
-						}
+					    }
 					},
 					fail(res) {
-						uni.hideLoading();
+						console.log(res)
 					}
 				})
 			},
@@ -134,7 +127,6 @@
 					},
 					success: (res) => {
 						uni.hideLoading();
-						// console.log(res);
 						this.keywordList = [];
 						this.keywordList = this.drawCorrelativeKeyword(res.data, keyword);
 					},
@@ -173,10 +165,11 @@
 			},
 			//-------------------------点击站点-------------------------
 			detailStationTap(item){
-				// console.log(item.countys);
+				console.log(item)
 				var that = this;
 				uni.$emit('specialLineName', {
-				    data: item.countys
+				    data: item.lineName,
+					lineID: item.lineID,
 				});
 				uni.navigateBack({ });
 			},
@@ -240,7 +233,7 @@
 	font-size: 28rpx;
 	
 	.left{
-		width: 200rpx;
+		width: 100%;
 		background-color: #f6f6f6;
 		line-height: 80rpx;
 		box-sizing: border-box;

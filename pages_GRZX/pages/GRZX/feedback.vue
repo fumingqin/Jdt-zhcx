@@ -3,15 +3,15 @@
 	<form @submit="formSubmit" >
 		<view class="fb_view">
 			<text class="fb_Text">意见反馈</text>
-			<textarea class="fb_Textarea" placeholder-style="#AAAAAA" placeholder="您的宝贵意见将会让我们提供更好的服务质量" maxlength="500" @input="descInput" />
+			<textarea class="fb_Textarea" placeholder-style="#AAAAAA" placeholder="您的宝贵意见将会让我们提供更好的服务质量" maxlength="500" v-model="ideaContent" @input="descInput" />
 			<view class="fb_words">{{remnant}}/500字</view>
 		</view>
-		<view class="fb_view2">
+		<!-- <view class="fb_view2">
 			<text class="fb_Text2">上传图片</text>
 			<view class="scClass">
 				<robby-image-upload v-model="detailInfo.imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
 			</view>
-		</view>
+		</view> -->
 		<view class="fb_view3">
 			<button class="fb_btn" form-type="submit">提交</button>
 		</view>
@@ -28,6 +28,8 @@
 		data() {
 			return {
 			remnant:0,
+			nickid:'',
+			ideaContent:'',
 			enableDel : true,//是否启动del
 			enableAdd : true,//是否启动删除
 			enableDrag : false,//是否启动拖动
@@ -57,10 +59,54 @@
 				// console.log(e)
 			},
 			formSubmit: function(e) {
-			    uni.showModal({
-			        content: '提交成功',
-			        showCancel: false
-			    });
+				uni.showLoading({
+					title:'提交意见反馈中...'
+				})
+				if(this.remnant==0){
+					uni.hideLoading()
+					uni.showModal({
+						content:'请填写具体内容',
+						showCancel:false
+					})
+				}else{
+					var that=this;
+					uni.getStorage({
+						key:'userInfo',
+						success: (res) => {
+							console.log(res)
+							uni.request({
+								url:'https://zntc.145u.net:9099/api/person/addSuggestion',
+								method:'POST',
+								data:{
+									userId:res.data.userId,
+									suggestion:that.ideaContent,
+								},
+								success: (res) => {
+									console.log(res)
+									if(res.data.msg=='建议提交成功'){
+										uni.hideLoading()
+										uni.showToast({
+											title:'反馈成功'
+										})
+										}else{
+											uni.hideLoading()
+											uni.showToast({
+												title:'反馈失败'
+											})
+										}
+								},
+								fail: (res) => {
+									console.log(res)
+									uni.hideLoading()
+									uni.showToast({
+										title:'反馈失败'
+									})
+								}
+							})
+						}
+					})
+					
+				}			   
 			}
 		}
 	}
@@ -98,7 +144,7 @@
 				font-size: 24upx;
 				color: #AAAAAA;
 				position: absolute;
-				left: 634upx;
+				left: 620upx;
 				top: 346upx;
 			}
 		}

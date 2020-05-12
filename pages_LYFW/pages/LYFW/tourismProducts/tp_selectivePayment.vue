@@ -832,7 +832,7 @@
 										// console.log(res)
 										if (res.data.msg == '出票成功') {
 											uni.redirectTo({ 
-												url:'successfulPayment'
+												url:'tp_successfulPayment'
 											})
 										} else if (res.data.msg == '出票失败') {
 											uni.showToast({
@@ -842,7 +842,7 @@
 											})
 										}else if (res.data.msg == '您当前无可出票的订单或该订单已出票') {
 											uni.redirectTo({
-												url: 'successfulPayment'
+												url: 'tp_successfulPayment'
 											})
 										}
 									},

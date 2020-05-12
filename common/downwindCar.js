@@ -21,7 +21,7 @@ const InterfaceAddress = [
 //接口域名
 //接口域名
 
-	const Url = 'http://111.231.109.113:8004'; //https请求
+	const Url = 'https://zntc.145u.net:9099'; //https请求
 
 //接口对象
 const Interface = {

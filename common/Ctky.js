@@ -7,7 +7,7 @@
 
 //接口域名
 // #ifdef H5
-	// const Url = 'http://zntc.145u.net';
+	const Url = 'http://zntc.145u.net';
 // #endif
 // #ifndef H5
 	const Url = 'https://zntc.145u.net:9099'; //https请求
@@ -98,8 +98,32 @@ const KyInterface = {
 		method:'GET',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 		page:["pages/order/OrderList.vue"],
+	},
+	//--------------------------------------定制巴士--------------------------------------
+	Cs_GetAllLine:{
+		Url:Url + '/api/CustomizedBus/GetAllLine',
+		name:'定制巴士-线路查询',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_GetScheduleList:{
+		Url:Url + '/api/CustomizedBus/GetSellableSchedule',
+		name:'定制巴士-查询班次',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_GetPriceByScheduleAID:{
+		Url:Url + '/api/CustomizedBus/GetPriceByScheduleAID',
+		name:'定制巴士-查询班次票价',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_BookingTicket:{
+		Url:Url + '/api/CustomizedBus/BookingTicket',
+		name:'定制巴士-下单',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
 	}
-	
 }
 // 接口声明区
 export default {
