@@ -3020,7 +3020,7 @@
 									}
 									//客运
 									//获取用户信息
-									that.tp_orderListData();
+									that.tp_orderListData(); //获取旅游产品订单
 									that.getUserInfo();
 									
 								} else {
@@ -3029,7 +3029,7 @@
 									that.goingArr = [];
 									that.unfinishArr = [];
 									that.cancelArr = [];
-									that.tp_orderListData();
+									that.tp_orderListData(); //获取旅游产品订单
 									that.getUserInfo();
 									
 								}
