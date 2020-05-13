@@ -248,7 +248,9 @@
 			//获取定位数据
 			Getpostion: function() {
 				setTimeout(() => {
-					// #ifndef APP-PLUS
+					
+					
+					
 					uni.getStorage({
 						key: 'wx_position',
 						success: (res) => {
@@ -263,9 +265,7 @@
 							})
 						},
 					}),
-					// #endif
 					
-					// #ifdef APP-PLUS
 					uni.getStorage({
 						key: 'app_position',
 						success: (res) => {
@@ -282,7 +282,8 @@
 							})
 						},
 					})
-					// #endif
+
+					
 
 				}, 500)
 
