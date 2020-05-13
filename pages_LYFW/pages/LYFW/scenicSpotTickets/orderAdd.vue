@@ -188,7 +188,9 @@
 			this.lyfwData();
 		},
 		onShow() {
+			this.getUserInfo();
 			this.userData();
+			this.getCoupons();
 		},
 		components: {
 			//加载多方弹框组件
@@ -197,6 +199,34 @@
 			uniCalendar,
 		},
 		methods: {
+			//获取用户信息
+			getUserInfo:function(){
+				uni.getStorage({
+					key:'userInfo',
+					success:(res)=>{
+						this.userInfo = res.data;
+					}
+				})
+			},
+			
+			//获取用户优惠券
+			getCoupons:function(){
+				uni.request({
+					url: $lyfw.Interface.spt_GetcouponByuserId.value,
+					method: $lyfw.Interface.spt_GetcouponByuserId.method,
+					data: {
+						userId: this.userInfo.userId
+					},
+					header: {
+						'content-type': 'application/json'
+					},
+					success: (res) => {
+						// console.log(res)
+						this.couponList = res.data.data;
+					}
+				})
+			},
+			
 			//读取静态数据
 			lyfwData(e) {
 				uni.getStorage({
@@ -221,28 +251,7 @@
 						// console.log(res)
 					}
 				})
-				uni.getStorage({
-					key: 'userInfo',
-					success: (res) => {
-						this.userInfo = res.data;
-
-						uni.request({
-							url: $lyfw.Interface.spt_GetcouponByuserId.value,
-							method: $lyfw.Interface.spt_GetcouponByuserId.method,
-							data: {
-								userId: res.data.userId
-							},
-							header: {
-								'content-type': 'application/json'
-							},
-							success: (res) => {
-								console.log(res)
-								this.couponList = res.data.data;
-							}
-						})
-						// console.log(res)
-					}
-				})
+				
 
 
 
