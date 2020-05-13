@@ -168,8 +168,6 @@
 				success: (res) => {
 					console.log(res)
 					this.orderInfo = res.data.data;
-					const b=res.data.data.cm_totalCost;
-					this.orderInfo.cm_totalCost=b.toFixed(2);
 					if(this.orderInfo.or_class=='包车-定制'){
 						this.orderInfo.billDescript='包车定制费用'
 						}else{
