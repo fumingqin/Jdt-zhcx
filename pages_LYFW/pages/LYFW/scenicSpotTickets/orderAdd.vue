@@ -10,7 +10,7 @@
 		<!-- 命名：MP -->
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{admissionTicket.ticketTitle}}</view>
+				<view class="MP_title">{{admissionTicket.admissionTicketName}}</view>
 				<text class="MP_text" @click="open2(1)">预订须知 > </text>
 
 				<!-- 嵌套弹框组件popup -->
@@ -509,6 +509,15 @@
 				// #endif
 
 				// #ifdef APP-PLUS
+				console.log(this.userInfo.userId)
+				console.log(this.admissionTicket.ticketId)
+				console.log(this.userInfo.phoneNumber)
+				console.log(this.admissionTicket.admissionTicketID)
+				console.log(this.couponColor)
+				console.log(this.date)
+				console.log(this.actualPayment)
+				console.log(this.admissionTicket.ticketContain)
+				console.log(this.addressData)
 				uni.request({
 					url: $lyfw.Interface.spt_AddtouristOrder.value,
 					method: $lyfw.Interface.spt_AddtouristOrder.method,

@@ -29,12 +29,12 @@
 					<view class="MP_cost" v-if="adultIndex>=1">
 						<text>成人票</text>
 						<text class="MP_number">×{{adultIndex}}</text>
-						<text class="MP_userCost">¥{{adultTotalPrice}}</text>
+						<text class="MP_userCost">¥{{priceAccuracy(adultTotalPrice)}}</text>
 					</view>
 					<view class="MP_cost" v-if="childrenIndex>=1">
 						<text>儿童票</text>
 						<text class="MP_number">×{{childrenIndex}}</text>
-						<text class="MP_userCost">¥{{childrenTotalPrice}}</text>
+						<text class="MP_userCost">¥{{priceAccuracy(childrenTotalPrice)}}</text>
 					</view>
 				
 					<!-- 保险 -->
@@ -273,6 +273,10 @@
 			
 		},
 		methods: {
+			//0.3价格取2位精度
+			priceAccuracy:function(e){
+				return e.toFixed(2);
+			},
 			//访问接口数据
 			lyfwData(e) {
 				uni.request({
