@@ -3106,8 +3106,12 @@
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
 			open2: function(e, exitindex) {
+				console.log(e)
+				console.log(exitindex)
 				this.ticketOrderNumber = e;
 				this.exitindex = exitindex;
+				console.log(this.ticketOrderNumber)
+				console.log(this.exitindex)
 				this.$refs.popup2.open()
 			},
 			//-------------------------景区门票-关闭退票弹框-------------------------
@@ -3217,11 +3221,12 @@
 				if (this.exitindex == '2') {
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
+					console.log('景区门票')
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
 						data: {
-							orderNumber: this.ticketOrderNumber,
+							orderNumber: that.ticketOrderNumber,
 						},
 						header: {
 							'content-type': 'application/json'
@@ -3245,17 +3250,18 @@
 						}
 					})
 				}else if (this.exitindex == '5'){
+					console.log('旅游产品')
 					uni.request({
 						url: $lyfw.Interface.lyky_BounceTickets.value,
 						method: $lyfw.Interface.lyky_BounceTickets.method,
 						data: {
-							orderNumber: this.ticketOrderNumber,
+							orderNumber: that.ticketOrderNumber,
 						},
 						header: {
 							'content-type': 'application/json'
 						},
 						success: (e) => {
-							// console.log(e)
+							console.log(e)
 							uni.hideLoading()
 							uni.showToast({
 								title: '退票成功',
