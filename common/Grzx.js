@@ -89,6 +89,12 @@ const Interface={
 		name:'获取版本号',
 		method:'POST',
 		pages: [],
+	},
+	AddSuggestion:{
+		value:Url+'/api/person/AddSuggestion',
+		name:'添加意见',
+		method:'POST',
+		pages: [],
 	}, 
 }
 
