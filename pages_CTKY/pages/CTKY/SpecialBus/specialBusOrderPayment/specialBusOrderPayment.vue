@@ -345,13 +345,13 @@
 				// #ifdef MP-ALIPAY
 				payType = 2;
 				// #endif
-				// #ifdef APP-NVUE
-				payType = 3;
-				// #endif
-				// #ifdef MP-WEIXIN
+				// #ifdef APP-PLUS
 				payType = 3;
 				// #endif
 				// #ifdef H5
+				payType = 4;
+				// #endif
+				// #ifdef MP-WEIXIN
 				payType = 5;
 				// #endif
 				var timer = null;
@@ -492,21 +492,33 @@
 				var that = this;
 				var timer = null;
 				that.timer = timer;
+				var payType = '';
+				// #ifdef MP-ALIPAY
+				payType = 2;
+				// #endif
+				// #ifdef APP-PLUS
+				payType = 3;
+				// #endif
+				// #ifdef H5
+				payType = 4;
+				// #endif
+				// #ifdef MP-WEIXIN
+				payType = 5;
+				// #endif
 				uni.showLoading({
-					title: '检索订单是否支付...'
+					title: '正在检索，请稍后...'
 				});
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.commonCheckPayState.Url,
+						method:$KyInterface.KyInterface.commonCheckPayState.method,
 						data: {
 							orderNumber: orderNumber,
+							payType: payType,
 						},
 						success: (res) => {
 							console.log('支付参数返回数据', res);
+							
 							if (res.data.status == true) {
 								uni.hideLoading();
 								clearInterval(timer);
@@ -515,7 +527,7 @@
 									icon: 'none',
 									success(){
 										uni.redirectTo({
-											url: './CTKYPaySuccess'
+											url:'../../TraditionSpecial/PayMent/CTKYPaySuccess'
 										})
 									}
 								})
