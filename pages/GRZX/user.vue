@@ -109,6 +109,7 @@
 				phoneNumber:'',
 				openId_qq:'',
 				openId_wx:'',
+				openId_xcx:'',
 				address:'',
 				birthday:'',
 				gender:'',
@@ -184,6 +185,7 @@
 									that.phoneNumber=res.data.data.phoneNumber;
 									that.openId_qq=res.data.data.openId_qq;
 									that.openId_wx=res.data.data.openId_wx;
+									that.openId_xcx=res.data.data.openId_xcx;
 									that.address=res.data.data.address;
 									that.birthday=res.data.data.birthday;
 									that.gender=res.data.data.gender;
@@ -214,8 +216,9 @@
 				})
 			},
 			orderClick(e){
+				uni.setStorageSync('currentNum',e)
 				uni.switchTab({
-					url:'/pages/order/OrderList?current='+e,
+					url:'/pages/order/OrderList',
 				})
 			},
 			navTo(e){
@@ -285,6 +288,7 @@
 							gender:that.gender,
 							openId_qq:that.openId_qq,
 							openId_wx:that.openId_wx,
+							openId_xcx:that.openId_xcx,
 							address:that.address,
 							nickname:that.nickname,
 							birthday:that.birthday,

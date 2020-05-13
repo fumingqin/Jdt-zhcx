@@ -2,12 +2,7 @@
 	<view>
 		<!-- 搜索栏 -->
 		<view class="searchTopBox">
-			<!-- #ifdef MP -->
 			<text class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
-			<!-- #endif -->
-			<!-- #ifdef APP-PLUS -->
-			<text class="locationTxt" @click="oncity">{{regionApp}}<text class="icon jdticon icon-xia"></text></text>
-			<!-- #endif -->
 			<view class="searchBoxRadius">
 				<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
 				<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
@@ -159,7 +154,6 @@
 				cateValue: '', //分类筛选值
 
 				regionWeixin: '请选择', //微信地区数值
-				regionApp: '请选择', //APP地区数值
 			}
 		},
 
@@ -189,7 +183,7 @@
 		methods: {
 			//请求模拟接口数据
 			lyfwData: function() {
-				// console.log(this.regionWeixin)
+				console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
 					url: $lyfw.Interface.lyky_GetticketSearchByrequestArea_Six.value,
@@ -254,27 +248,41 @@
 			//获取定位数据
 			Getpostion: function() {
 				setTimeout(() => {
-					uni.getStorage({
+						
+						uni.getStorage({
 							key: 'wx_position',
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-							},
-							complete: () => {
 								this.lyfwData(); //请求接口数据
-							}
+							},
+							fail: (res) => {
+								uni.showToast({
+									title:'请选择地区',
+									icon:'none'
+								})
+							},
 						}),
-
+						
+						
 						uni.getStorage({
 							key: 'app_position',
 							success: (res) => {
 								// console.log(res)
 								if (res.data !== undefined) {
-									this.regionApp = res.data.city;
+									this.regionWeixin = res.data.city;
+									this.lyfwData(); //请求接口数据
 								}
-							}
+							},
+							fail: (res) => {
+								uni.showToast({
+									title:'请选择地区',
+									icon:'none'
+								})
+							},
 						})
-
+						
+						
 				}, 500)
 
 			},
@@ -289,29 +297,33 @@
 				if (e !== 'no' && e !== 'yes') {
 					// console.log(e)
 					this.regionWeixin = e.cityName
-					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
 					this.lyfwData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if (e == 'yes') {
+					// #ifndef APP-PLUS
 					uni.getStorage({
-							key: 'wx_position',
-							success: (res) => {
-								// console.log(res)
-								this.regionWeixin = res.data;
+						key: 'wx_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionWeixin = res.data;
+							this.lyfwData(); //请求接口数据
+						}
+					}),
+					// #endif
+					// #ifdef APP-PLUS
+					uni.getStorage({
+						key: 'app_position',
+						success: (res) => {
+							// console.log(res)
+							if (res.data !== undefined) {
+								this.regionWeixin = res.data.city;
 								this.lyfwData(); //请求接口数据
 							}
-						}),
-						uni.getStorage({
-							key: 'app_position',
-							success: (res) => {
-								// console.log(res)
-								if (res.data !== undefined) {
-									this.regionApp = res.data.city;
-								}
-							}
-						})
+						}
+					})
+					// #endif
 					this.$refs.popupRef.close();
 				} else {
 					this.$refs.popupRef.close();
