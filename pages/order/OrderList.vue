@@ -2997,6 +2997,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
+								// console.log(res)
 								uni.stopPullDownRefresh();
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
@@ -3066,7 +3067,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log(res);
+						// console.log(res);
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
 									that.info.push(res.data.data[i]);

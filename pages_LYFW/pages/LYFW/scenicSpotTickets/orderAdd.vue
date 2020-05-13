@@ -431,7 +431,7 @@
 								userId: that.userInfo.userId,
 								ticketId: that.admissionTicket.ticketId,
 								userPhone: that.userInfo.phoneNumber,
-								ticketProductId: that.admissionTicket.ticketProductId,
+								ticketProductId: that.admissionTicket.admissionTicketID,
 								couponID: that.couponColor,
 								orderDate: that.date,
 								orderInsure: '',
@@ -441,6 +441,7 @@
 								sellerCompanyCode: 'H5',
 								tppId: openid.data,
 								addressData: that.addressData,
+								
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
@@ -515,7 +516,7 @@
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
 						userPhone: this.userInfo.phoneNumber,
-						ticketProductId: this.admissionTicket.ticketProductId,
+						ticketProductId: this.admissionTicket.admissionTicketID,
 						couponID: this.couponColor,
 						orderDate: this.date,
 						orderInsure: '',
@@ -597,7 +598,7 @@
 								userId: that.userInfo.userId,
 								ticketId: that.admissionTicket.ticketId,
 								userPhone: that.userInfo.phoneNumber,
-								ticketProductId: that.admissionTicket.ticketProductId,
+								ticketProductId: that.admissionTicket.admissionTicketID,
 								couponID: that.couponColor,
 								orderDate: that.date,
 								orderInsure: '',
