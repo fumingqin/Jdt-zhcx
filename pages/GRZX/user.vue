@@ -216,8 +216,9 @@
 				})
 			},
 			orderClick(e){
+				uni.setStorageSync('currentNum',e)
 				uni.switchTab({
-					url:'/pages/order/OrderList?current='+e,
+					url:'/pages/order/OrderList',
 				})
 			},
 			navTo(e){

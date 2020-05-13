@@ -187,6 +187,12 @@ export default{
 							})
 						}
 					})
+				},
+				fail() {
+					uni.showToast({
+						title:'获取手机号失败！',
+						icon:'none',
+					})
 				}
 			})
 
