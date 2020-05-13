@@ -23,6 +23,12 @@ const KyInterface = {
 		systemNameApp:'泉运公司综合出行APP',
 		systemNameH5:'泉运公司综合出行H5',
 	},
+	commonPayment:{
+		Url:Url + '/api/Pay/getCommonPayparameter',
+		name:'通用支付接口',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 	Ky_AddPicture:{
 		Url: Url + '/api/zhcx/getImage',
 		name:'客运-添加图片',

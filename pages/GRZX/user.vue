@@ -24,17 +24,17 @@
 			</view>
 			
 			<view class="myBox">
-				<view class="collection" @click="collectionClick">
+				<view class="collection" @click="orderClick(0)">
 					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1" mode="aspectFill"></image>
-					<text class="myFont">我的收藏</text>
+					<text class="myFont">待支付</text>
 				</view>
-				<view class="order" @click="orderClick">
+				<view class="order" @click="orderClick(1)">
 					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2" mode="aspectFill"></image>
-					<text class="myFont">我的订单</text>
+					<text class="myFont">进行中</text>
 				</view>
-				<view class="history" @click="historyClick">
+				<view class="history" @click="orderClick(2)">
 					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3" mode="aspectFill"></image>
-					<text class="myFont">我的历史</text>
+					<text class="myFont">已完成</text>
 				</view>
 			</view>
 		</view>
@@ -109,7 +109,6 @@
 				phoneNumber:'',
 				openId_qq:'',
 				openId_wx:'',
-				openId_xcx:'',
 				address:'',
 				birthday:'',
 				gender:'',
@@ -214,10 +213,14 @@
 					}
 				})
 			},
-			orderClick(){
-				uni.switchTab({
-					url:'/pages/order/OrderList'
-				})
+			orderClick(e){
+				// var 
+				if(e==0){
+					uni.switchTab({
+						url:'/pages/order/OrderList'
+					})
+				}
+				
 			},
 			navTo(e){
 				if(e=='set'){
@@ -286,7 +289,6 @@
 							gender:that.gender,
 							openId_qq:that.openId_qq,
 							openId_wx:that.openId_wx,
-							openId_xcx:that.openId_xcx,
 							address:that.address,
 							nickname:that.nickname,
 							birthday:that.birthday,

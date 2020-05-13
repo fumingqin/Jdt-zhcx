@@ -68,7 +68,6 @@
 				userId:'',
 				openId_qq:'',
 				openId_wx:'',
-				openId_xcx:'',
 				phoneNumber:'',
 				port:'',
 			};
@@ -166,9 +165,7 @@
 									theself.openId_qq=res1.data.data.openId_qq;
 									// ------------9.openId_wx-------------
 									theself.openId_wx=res1.data.data.openId_wx;
-									// ------------10.openId_xcx-------------
-									theself.openId_xcx=res1.data.data.openId_xcx;
-									// ------------11.手机号-------------
+									// ------------10.手机号-------------
 									theself.phoneNumber=res1.data.data.phoneNumber;
 									uni.hideLoading();
 								}
@@ -260,7 +257,6 @@
 				// console.log(this.port,"port")
 				console.log(this.openId_qq)
 				console.log(this.openId_wx)
-				console.log(this.openId_xcx)
 				if(this.selector=='男'){
 					this.gender=1;
 				}
@@ -282,7 +278,6 @@
 						gender:that.gender,
 						openId_qq:that.openId_qq,
 						openId_wx:that.openId_wx,
-						openId_xcx:that.openId_xcx,
 						address:that.address,
 						nickname:that.nickname,
 						birthday:that.birthday,
