@@ -117,7 +117,7 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 							</view>
@@ -1732,14 +1732,14 @@
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
-						iconPath: '../../static/CZC/Wechatpay.png',
+						// iconPath: '../../static/CZC/Wechatpay.png',
 						value: 'wxpay',
 						checked: true,
 					},
 					{
 						typeName: '支付宝',
 						typeColor: '#0EBDFF',
-						iconPath: '../../static/CZC/Alipay.png',
+						// iconPath: '../../static/CZC/Alipay.png',
 						value: 'alipay',
 						checked: false
 					}
@@ -1752,7 +1752,7 @@
 				SfcInfo: '',
 			}
 		},
-		onLoad: function() {
+		onLoad: function(options) {
 			var that = this;
 			//获取客运弹框图片
 			that.getPicture();
@@ -1763,6 +1763,8 @@
 					that.userInfo = data.data;
 				}
 			})
+			// that.current=options.current;
+			// console.log(options.current,"current")
 		},
 		onShow: function() {
 			//请求景区门票数据
@@ -2408,7 +2410,7 @@
 				if (param == 0 || param == 1 || param == 2 || param == 3 || param == 4) {
 					return '进行中';
 				} else if (param == 5 || param == 9) {
-					return '待计价';
+					return '未支付';
 				} else if (param == 7 || param == 8) {
 					return '已取消';
 				} else if (param == 6) {
@@ -2997,6 +2999,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
+								// console.log(res)
 								uni.stopPullDownRefresh();
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
@@ -3066,7 +3069,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log(res);
+						// console.log(res);
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
 									that.info.push(res.data.data[i]);
@@ -3103,8 +3106,12 @@
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
 			open2: function(e, exitindex) {
+				console.log(e)
+				console.log(exitindex)
 				this.ticketOrderNumber = e;
 				this.exitindex = exitindex;
+				console.log(this.ticketOrderNumber)
+				console.log(this.exitindex)
 				this.$refs.popup2.open()
 			},
 			//-------------------------景区门票-关闭退票弹框-------------------------
@@ -3214,11 +3221,12 @@
 				if (this.exitindex == '2') {
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
+					console.log('景区门票')
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
 						data: {
-							orderNumber: this.ticketOrderNumber,
+							orderNumber: that.ticketOrderNumber,
 						},
 						header: {
 							'content-type': 'application/json'
@@ -3242,17 +3250,18 @@
 						}
 					})
 				}else if (this.exitindex == '5'){
+					console.log('旅游产品')
 					uni.request({
 						url: $lyfw.Interface.lyky_BounceTickets.value,
 						method: $lyfw.Interface.lyky_BounceTickets.method,
 						data: {
-							orderNumber: this.ticketOrderNumber,
+							orderNumber: that.ticketOrderNumber,
 						},
 						header: {
 							'content-type': 'application/json'
 						},
 						success: (e) => {
-							// console.log(e)
+							console.log(e)
 							uni.hideLoading()
 							uni.showToast({
 								title: '退票成功',

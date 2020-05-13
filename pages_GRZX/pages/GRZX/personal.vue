@@ -68,6 +68,7 @@
 				userId:'',
 				openId_qq:'',
 				openId_wx:'',
+				openId_xcx:'',
 				phoneNumber:'',
 				port:'',
 			};
@@ -165,7 +166,9 @@
 									theself.openId_qq=res1.data.data.openId_qq;
 									// ------------9.openId_wx-------------
 									theself.openId_wx=res1.data.data.openId_wx;
-									// ------------10.手机号-------------
+									// ------------10.openId_wx-------------
+									theself.openId_xcx=res1.data.data.openId_xcx;
+									// ------------11.手机号-------------
 									theself.phoneNumber=res1.data.data.phoneNumber;
 									uni.hideLoading();
 								}
@@ -278,6 +281,7 @@
 						gender:that.gender,
 						openId_qq:that.openId_qq,
 						openId_wx:that.openId_wx,
+						openId_xcx:that.openId_xcx,
 						address:that.address,
 						nickname:that.nickname,
 						birthday:that.birthday,

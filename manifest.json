@@ -129,7 +129,7 @@
         "appid" : "wx8dcbb62a76885221",
         "setting" : {
             "urlCheck" : false,
-            "minified" : false
+            "minified" : true
         },
         "usingComponents" : true,
         "permission" : {

@@ -168,6 +168,9 @@
 			// #ifdef  H5
 			 this.getCode();
 			//#endif
+			// #ifdef MP-WEIXIN
+			this.getLoginState();
+			//#endif
 		},
 		onReady() {
 			var that = this;
@@ -422,7 +425,28 @@
 				    return null  
 				  }  
 			},
-			 //#endif  
+			 //#endif
+			// #ifdef MP-WEIXIN
+			getLoginState(){
+				uni.getStorage({
+					key:'userInfo',
+					success(res){
+						console.log(res,"res")
+						if(res.data.openId_xcx==""||res.data.openId_xcx==null){
+							uni.navigateTo({
+								url:'/pages/Home/wxAuthorize'
+							})
+						}
+					},
+					fail(err){
+						console.log(err,"err")
+						uni.navigateTo({
+							url:'/pages/Home/wxAuthorize'
+						})
+					}
+				})
+			} 
+			//#endif
 		}
 	}
 </script>
