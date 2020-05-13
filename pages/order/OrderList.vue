@@ -117,7 +117,7 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 							</view>
@@ -1752,7 +1752,7 @@
 				SfcInfo: '',
 			}
 		},
-		onLoad: function() {
+		onLoad: function(options) {
 			var that = this;
 			//获取客运弹框图片
 			that.getPicture();
@@ -1763,6 +1763,8 @@
 					that.userInfo = data.data;
 				}
 			})
+			// that.current=options.current;
+			// console.log(options.current,"current")
 		},
 		onShow: function() {
 			//请求景区门票数据
@@ -2408,7 +2410,7 @@
 				if (param == 0 || param == 1 || param == 2 || param == 3 || param == 4) {
 					return '进行中';
 				} else if (param == 5 || param == 9) {
-					return '待计价';
+					return '未支付';
 				} else if (param == 7 || param == 8) {
 					return '已取消';
 				} else if (param == 6) {

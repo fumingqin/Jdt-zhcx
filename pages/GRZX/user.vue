@@ -24,16 +24,16 @@
 			</view>
 			
 			<view class="myBox">
-				<view class="collection" @click="orderClick(0)">
-					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1" mode="aspectFill"></image>
+				<view class="collection" @click="orderClick(3)">
+					<image src="../../static/GRZX/tubiao_pay1.png" class="imgStyle1" mode="aspectFill"></image>
 					<text class="myFont">待支付</text>
 				</view>
-				<view class="order" @click="orderClick(1)">
-					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2" mode="aspectFill"></image>
+				<view class="order" @click="orderClick(2)">
+					<image src="../../static/GRZX/tubiao_pay2.png" class="imgStyle2" mode="aspectFill"></image>
 					<text class="myFont">进行中</text>
 				</view>
-				<view class="history" @click="orderClick(2)">
-					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3" mode="aspectFill"></image>
+				<view class="history" @click="orderClick(1)">
+					<image src="../../static/GRZX/tubiao_pay3.png" class="imgStyle3" mode="aspectFill"></image>
 					<text class="myFont">已完成</text>
 				</view>
 			</view>
@@ -214,13 +214,9 @@
 				})
 			},
 			orderClick(e){
-				// var 
-				if(e==0){
-					uni.switchTab({
-						url:'/pages/order/OrderList'
-					})
-				}
-				
+				uni.switchTab({
+					url:'/pages/order/OrderList?current='+e,
+				})
 			},
 			navTo(e){
 				if(e=='set'){
@@ -595,9 +591,9 @@
 		flex-direction: column;
 	}
 	.imgStyle2{
-		width: 55upx;
-		height: 56upx;
-		margin-top: 32upx;
+		width: 61upx;
+		height: 59upx;
+		margin-top: 31upx;
 		margin-left: 36.68%;
 	}
 	.history{			//我的历史
@@ -607,8 +603,8 @@
 		flex-direction: column;
 	}
 	.imgStyle3{
-		width: 58upx;
-		height: 57upx;
+		width: 61upx;
+		height: 59upx;
 		margin-top: 31upx;
 		margin-left: 36.68%;
 	}
