@@ -393,7 +393,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					url: './tp_ticketsDetails?ticketId=' + JSON.stringify(e)
+					url: './tp_ticketsDetails?ticketId=' +e
 				})
 			},
 

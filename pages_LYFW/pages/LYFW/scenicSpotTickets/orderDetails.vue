@@ -180,7 +180,8 @@
 		methods: {
 			//0.3价格取2位精度
 			priceAccuracy:function(e){
-				return e.toFixed(2);
+				const pri = e.toFixed(2);
+				return pri;
 			},
 			//访问接口数据
 			lyfwData(e) {

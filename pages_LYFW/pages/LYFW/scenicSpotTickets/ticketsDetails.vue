@@ -71,7 +71,7 @@
 			}
 		},
 		onLoad(options) {
-			this.lyfwData(JSON.parse(options.ticketId));
+			this.lyfwData(options.ticketId);
 		},
 		onNavigationBarButtonTap: function() {
 			this.share();
