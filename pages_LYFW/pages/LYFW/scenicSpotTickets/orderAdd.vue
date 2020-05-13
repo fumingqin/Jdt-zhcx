@@ -431,7 +431,7 @@
 								userId: that.userInfo.userId,
 								ticketId: that.admissionTicket.ticketId,
 								userPhone: that.userInfo.phoneNumber,
-								ticketProductId: that.admissionTicket.ticketProductId,
+								ticketProductId: that.admissionTicket.admissionTicketID,
 								couponID: that.couponColor,
 								orderDate: that.date,
 								orderInsure: '',
@@ -441,6 +441,7 @@
 								sellerCompanyCode: 'H5',
 								tppId: openid.data,
 								addressData: that.addressData,
+								
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
@@ -454,6 +455,7 @@
 									that.submissionState = false;
 
 								} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
+									uni.hideLoading()
 									uni.showToast({
 										title: '下单失败,您当前有未支付订单',
 										icon: 'none',
@@ -463,15 +465,15 @@
 												url: '../../../../pages/order/OrderList'
 											})
 											that.submissionState = false;
-											uni.hideLoading()
+									
 										}
 									})
 
 								} else if (res.data.msg == '订单下单成功') {
+									uni.hideLoading()
 									uni.redirectTo({
 										url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
 									})
-									uni.hideLoading()
 								} else if (res.data.msg == '抱歉,订单下单失败') {
 									uni.hideLoading()
 									uni.showToast({
@@ -495,13 +497,15 @@
 					fail: function() {
 						uni.hideLoading()
 						uni.showToast({
-							title: '请授权微信公众号！'
+							title: '请授权微信小程序，即将为您返回主页！'
+						})
+						uni.switchTab({
+							url:'../../../../pages/Home/Index'
 						})
 						that.submissionState = false;
 
 					}
 				})
-
 				// #endif
 
 				// #ifdef APP-PLUS
@@ -512,7 +516,7 @@
 						userId: this.userInfo.userId,
 						ticketId: this.admissionTicket.ticketId,
 						userPhone: this.userInfo.phoneNumber,
-						ticketProductId: this.admissionTicket.ticketProductId,
+						ticketProductId: this.admissionTicket.admissionTicketID,
 						couponID: this.couponColor,
 						orderDate: this.date,
 						orderInsure: '',
@@ -538,17 +542,17 @@
 							that.submissionState = false;
 
 						} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
+							uni.hideLoading()
 							uni.showToast({
 								title: '下单失败,您当前有未支付订单',
 								icon: 'none',
 								duration: 2000,
 								success: function() {
-									uni.hideLoading()
 									uni.switchTab({
 										url: '../../../../pages/order/OrderList'
 									})
 									that.submissionState = false;
-
+							
 								}
 							})
 
@@ -583,75 +587,90 @@
 				// #endif
 
 				// #ifdef MP-WEIXIN
-				console.log()
-				uni.request({
-					url: $lyfw.Interface.spt_AddtouristOrder.value,
-					method: $lyfw.Interface.spt_AddtouristOrder.method,
-					data: {
-						userId: this.userInfo.userId,
-						ticketId: this.admissionTicket.ticketId,
-						userPhone: this.userInfo.phoneNumber,
-						ticketProductId: this.admissionTicket.ticketProductId,
-						couponID: this.couponColor,
-						orderDate: this.date,
-						orderInsure: '',
-						orderInsurePrice: '',
-						orderActualPayment: this.actualPayment,
-						ticketContain: this.admissionTicket.ticketContain,
-						sellerCompanyCode: 'APP',
-						tppId: 0,
-						addressData: this.addressData,
-					},
-					header: {
-						'content-type': 'application/json'
-					},
-					//向服务器发送订单数据，返回订单编号
-					success: (res) => {
-						console.log(res)
-						if (res.data.msg == '无可售门票！') {
-							uni.showToast({
-								title: '该景区无可售门票！',
-								icon: 'none',
-							})
-							that.submissionState = false;
-							uni.hideLoading()
-						} else if (res.data.msg == '下单失败，联系管理员！') {
-							uni.showToast({
-								title: '下单失败，联系管理员！',
-								icon: 'none',
-							})
-							that.submissionState = false;
-							uni.hideLoading()
-						} else if (res.data.msg == "抱歉!下单失败,您当前有未支付完成的订单") {
-							uni.showToast({
-								title: '下单失败,您当前有未支付订单',
-								icon: 'none',
-								duration: 2000,
-								success: function() {
-									uni.switchTab({
-										url: '../../../../pages/order/OrderList'
+				uni.getStorage({
+					key: 'scenicSpotOpenId',
+					success: function(openid) {
+						// console.log(openid)
+						uni.request({
+							url: $lyfw.Interface.spt_AddtouristOrder.value,
+							method: $lyfw.Interface.spt_AddtouristOrder.method,
+							data: {
+								userId: that.userInfo.userId,
+								ticketId: that.admissionTicket.ticketId,
+								userPhone: that.userInfo.phoneNumber,
+								ticketProductId: that.admissionTicket.admissionTicketID,
+								couponID: that.couponColor,
+								orderDate: that.date,
+								orderInsure: '',
+								orderInsurePrice: '',
+								orderActualPayment: that.actualPayment,
+								ticketContain: that.admissionTicket.ticketContain,
+								sellerCompanyCode: '小程序',
+								tppId: openid.data,
+								addressData: that.addressData,
+							},
+							//向服务器发送订单数据，返回订单编号
+							success: (res) => {
+								console.log(res)
+								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
+									uni.hideLoading()
+									uni.showToast({
+										title: '当日已取消订单次数超过限额',
+										icon: 'none',
 									})
 									that.submissionState = false;
+				
+								} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
 									uni.hideLoading()
+									uni.showToast({
+										title: '下单失败,您当前有未支付订单',
+										icon: 'none',
+										duration: 2000,
+										success: function() {
+											uni.switchTab({
+												url: '../../../../pages/order/OrderList'
+											})
+											that.submissionState = false;
+									
+										}
+									})
+				
+								} else if (res.data.msg == '订单下单成功') {
+									uni.hideLoading()
+									uni.redirectTo({
+										url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
+									})
+								} else if (res.data.msg == '抱歉,订单下单失败') {
+									uni.hideLoading()
+									uni.showToast({
+										title: '下单失败，请联系客服',
+										icon: 'none',
+									})
+									that.submissionState = false;
+								} else {
+									uni.hideLoading()
+									uni.showToast({
+										title: '下单失败，请返回并重进页面',
+										icon: 'none',
+									})
+									that.submissionState = false;
+				
 								}
-							})
-
-						} else if (res.data.msg == '订单下单成功') {
-							uni.redirectTo({
-								url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
-							})
-							uni.hideLoading()
-						}
-
+				
+							}
+						})
 					},
-					fail: function(ee) {
-						if (ee.statusCode == 500) {
-							uni.showToast({
-								title: '服务器出现问题，请联系客服'
-							})
-						}
+					fail: function() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请授权微信小程序，即将为您返回主页！'
+						})
+						uni.switchTab({
+							url:'../../../../pages/Home/Index'
+						})
+						that.submissionState = false;
+				
 					}
-
 				})
 				// #endif
 
