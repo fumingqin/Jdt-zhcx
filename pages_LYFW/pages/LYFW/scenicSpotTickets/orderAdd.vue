@@ -10,7 +10,7 @@
 		<!-- 命名：MP -->
 		<view class="cover-container">
 			<view class="MP_information1">
-				<view class="MP_title">{{admissionTicket.ticketTitle}}</view>
+				<view class="MP_title">{{admissionTicket.admissionTicketName}}</view>
 				<text class="MP_text" @click="open2(1)">预订须知 > </text>
 
 				<!-- 嵌套弹框组件popup -->
