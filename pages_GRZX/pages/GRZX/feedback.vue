@@ -75,8 +75,9 @@
 						success: (res) => {
 							console.log(res)
 							uni.request({
-								url:'https://zntc.145u.net:9099/api/person/addSuggestion',
-								method:'POST',
+								// url:'https://zntc.145u.net:9099/api/person/addSuggestion',
+								url:that.$GrzxInter.Interface.AddSuggestion.value,
+								method:that.$GrzxInter.Interface.AddSuggestion.method,
 								data:{
 									userId:res.data.userId,
 									suggestion:that.ideaContent,
@@ -88,12 +89,15 @@
 										uni.showToast({
 											title:'反馈成功'
 										})
-										}else{
-											uni.hideLoading()
-											uni.showToast({
-												title:'反馈失败'
-											})
-										}
+										setTimeout(function(){
+											uni.navigateBack();
+										},500);
+									}else{
+										uni.hideLoading()
+										uni.showToast({
+											title:'反馈失败'
+										})
+									}
 								},
 								fail: (res) => {
 									console.log(res)
@@ -167,9 +171,12 @@
 			}
 		}
 		.fb_view3{
-			width:650upx;
-			margin-top: 30upx;
-			margin-left: 50upx;
+			width:94%;
+			// margin-top: 30upx;
+			// margin-left: 50upx;
+			position: fixed;
+			bottom: 40upx;
+			left: 3%;
 			.fb_btn{
 				border-radius:30px;
 				background: #FC4646;

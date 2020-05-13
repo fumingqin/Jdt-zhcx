@@ -2606,11 +2606,18 @@
 			},
 			CheckPayState: function(orderNumber) { //检测支付状态
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber
 					},
 					success(res) {
@@ -2625,6 +2632,7 @@
 						}
 					},
 					fail() {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2634,19 +2642,28 @@
 			},
 			BouncePay: function(orderNumber) {
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
 						price: 0.01
 					},
 					success(res) {
+						console.log(res);
 						if (res.data.status) {
 							that.CheckPayState(orderNumber)
 						} else {
+							uni.hideLoading()
 							uni.showToast({
 								title: '取消失败',
 								icon: 'none',
@@ -2654,6 +2671,7 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2664,6 +2682,7 @@
 			CancelSpecialLineOrder1: function(orderNumber) {
 				//取消订单
 				let that = this;
+				console.log(that.userInfo.userId);
 				uni.request({
 					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
 					method: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.method,
@@ -2672,6 +2691,7 @@
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
+						uni.hideLoading()
 						let data = res.data.data;
 						if (res.data.status) {
 							uni.showToast({
@@ -2687,6 +2707,7 @@
 						}
 					},
 					fail: function(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none'
@@ -2706,8 +2727,7 @@
 								mask: true,
 							})
 							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
-								that.BouncePay(value.orderNumber);
-								uni.hideLoading()
+								that.BouncePay(value.orderNumber);							
 							} else {
 								that.CancelSpecialLineOrder1(value.orderNumber);
 								uni.hideLoading()
@@ -2862,11 +2882,18 @@
 			},
 			CheckSfcPayState: function(orderNumber) { //检测支付状态
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber
 					},
 					success(res) {
@@ -2874,6 +2901,7 @@
 						if (res.data.status) {
 							that.CancelSfcOrder1(orderNumber);
 						} else {
+							uni.hideLoading();
 							uni.showToast({
 								title: '取消失败',
 								icon: 'none',
@@ -2881,6 +2909,7 @@
 						}
 					},
 					fail() {
+						uni.hideLoading();
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2890,11 +2919,18 @@
 			},
 			SfcBouncePay: function(orderNumber) {
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
 						price: 0.01
@@ -2911,6 +2947,7 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2929,7 +2966,7 @@
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
-						console.log(res)
+							uni.hideLoading();
 						let data = res.data.data;
 						if (res.data.status) {
 							uni.showToast({
@@ -2945,6 +2982,7 @@
 						}
 					},
 					fail: function(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none'
@@ -2965,7 +3003,7 @@
 							})
 							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
 								that.SfcBouncePay(value.orderNumber);
-								uni.hideLoading()
+							
 							} else {
 								that.CancelSfcOrder1(value.orderNumber);
 								uni.hideLoading()

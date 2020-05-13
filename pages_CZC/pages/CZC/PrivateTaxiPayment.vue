@@ -110,7 +110,7 @@
 		},
 		onShow() {
 			this.scenicSpotOpenId = uni.getStorageSync('scenicSpotOpenId') || ''; //获取Oppenid
-			console.log("id"+this.scenicSpotOpenId )
+			console.log(this.scenicSpotOpenId )
 		},
 		methods: {
 			change: function(value) {
@@ -132,8 +132,8 @@
 					if (that.countDownDate > 0) {
 						that.countDownDate--;
 					} else {
-						that.cancelOrder();
 						clearInterval(that.countDownInterval);
+						that.cancelOrder();
 						that.countDownDate = '';
 					}
 				}, 1000);
@@ -240,7 +240,7 @@
 				payPlatform = 4;
 				//  #endif
 				// #ifdef MP-WEIXIN
-				payPlatform = 5;
+				payPlatform = 5; 
 				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.getCommonPayparameter.value,
@@ -258,6 +258,7 @@
 						billDescript: "出租车专车车费",
 					},
 					success(res) {
+						console.log(res)
 						that.payment(res.data.data)
 					}
 				})
@@ -265,14 +266,24 @@
 			payment: function(orderInfo) { //支付
 				let that = this;
 				uni.requestPayment({
-					provider: "wxpay",
+					//#ifdef MP-WEIXIN
+					timeStamp:orderInfo.timeStamp,
+					nonceStr:orderInfo.nonceStr,
+					package:orderInfo.package,
+					signType:orderInfo.signType,
+					paySign:orderInfo.paySign,
+					// #endif
+					// #ifdef APP-VUE
+					provider:"wxpay", 
 					orderInfo: orderInfo,
+					// #endif
 					success(res) {
 						clearInterval(that.countDownInterval); //清除倒计时
 						that.CheckPayState();
 					},
 					fail(res) {
 						that.CheckPayState();
+						console.log(res)
 						if (res.errMsg == "requestPayment:fail canceled") {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")

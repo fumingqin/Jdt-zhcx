@@ -12,7 +12,16 @@
 // #ifndef H5
 	const Url = 'https://zntc.145u.net:9099'; //https请求
 // #endif
+
+// #ifdef H5
 const scheduleUrl = 'http://27.148.155.9:9056';//班次列表
+// #endif
+
+// #ifndef H5
+const scheduleUrl = 'https://zhcx.npzhly.com:9098';//班次列表https请求
+// #endif
+
+
 const systemName = '泉运公司综合出行';
 
 //接口对象
@@ -26,6 +35,18 @@ const KyInterface = {
 	commonPayment:{
 		Url:Url + '/api/Pay/getCommonPayparameter',
 		name:'通用支付接口',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	commonCheckPayState:{
+		Url:Url + '/api/Pay/CheckPayState',
+		name:'通用检测订单支付状态接口',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	commonBouncePay:{
+		Url:Url + '/api/Pay/BouncePay',
+		name:'通用退款接口',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},

@@ -282,8 +282,9 @@
 			<view v-if="current == 4" style="margin-top: 10rpx;">
 				<view class='privatetaxi' v-for="(item,index) in downwindCar" :key="index" @click="downwindCarClick(item)">
 					<text style="font-size: 36rpx;font-weight: bold;">{{item.DepartureTime.replace("T"," ").substr(0,16)}}&nbsp;出发</text>
-					<view style="padding-top: 20rpx;flex-direction: row;">
+					<view style="padding-top: 20rpx;flex-direction: row;justify-content: space-between;">
 						<text style="font-size: 30rpx;">&nbsp;&nbsp;&nbsp;司机：{{item.DriverName.substr(0,1)}}师傅</text>
+						<text style="font-size: 30rpx;">剩余{{item.Seat}}座</text>
 					</view>
 					<view style="justify-content: space-between;padding-top: 10rpx;">
 						<view style="flex-direction: row;justify-content: space-between;">
