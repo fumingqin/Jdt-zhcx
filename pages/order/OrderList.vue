@@ -2505,6 +2505,7 @@
 									startAddress: data.StartAddress,
 									endAddress: data.EndAddress,
 									orderNumber: data.OrderNumber,
+									driverName: data.DriverName,
 									appointment: true,
 								}
 								that.info.push(obj);
@@ -2760,6 +2761,7 @@
 									startAddress: data.StartAddress,
 									endAddress: data.EndAddress,
 									orderNumber: data.OrderNumber,
+									driverName: data.DriverName,
 									appointment: true,
 								}
 								that.info.push(obj);
@@ -3534,22 +3536,19 @@
 				console.log(item)
 				if(item.title=='出租车-专线'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=专线车&tsData=' + item
+						url:'complaint?tsTitle=专线车&tsData=' + item.driverName
 					})
 				}
 				if(item.title=='出租车-顺风车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=顺风车&tsData=' + item
+						url:'complaint?tsTitle=顺风车&tsData=' + item.driverName
 					})
 				}
 				if(item.vehicleType == '出租车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=出租车&tsData=' + item
+						url:'complaint?tsTitle=出租车&tsData=' + item.driverName
 					})
 				}
-				// if (item.vehicleType == '出租车') {
-					
-				// }
 			},
 			//-------------------包车订单添加-------------------------
 			getArrayInfo: function() {
