@@ -427,14 +427,14 @@
 					url: $bcfw.Interface.spt_RequestTicketsList.value,
 					method: $bcfw.Interface.spt_RequestTickets.method,
 					data: {
-						userId: this.userInfo.userId,
+						userId: this.userId,
 					},
 					success: (res) => {
 						console.log(res)
 						var a = '';
-						if (res.data.msg == '获取订单列表成功！') {
+						if (res.data.msg == '订单查询完成') {
 							a = res.data.data.filter(item => {
-								return item.orderType == '待支付';
+								return item.or_Type == 0;
 							})
 						}
 						if (a == '') {
@@ -449,7 +449,7 @@
 								url: $bcfw.Interface.spt_AddtouristOrder.value,
 								method:$bcfw.Interface.spt_AddtouristOrder.method,
 								data: {
-									userId: that.userInfo.userId,
+									userId: that.userId,
 									privateSite:that.privateSite, //专线目的地
 									datestring:that.datestring, //选择时间
 									or_boardingPoint:that.initialPoint,
@@ -494,7 +494,7 @@
 								url: $bcfw.Interface.spt_AddtouristOrder.value,
 								method:$bcfw.Interface.spt_AddtouristOrder.method,
 								data: {
-									userId: that.userInfo.userId,
+									userId: that.userId,
 									privateSite:that.privateSite, //专线目的地
 									datestring:that.datestring, //选择时间
 									or_boardingPoint:that.initialPoint,
@@ -538,7 +538,7 @@
 								url: $bcfw.Interface.spt_AddtouristOrder.value,
 								method:$bcfw.Interface.spt_AddtouristOrder.method,
 								data: {
-									userId: that.userInfo.userId,
+									userId: that.userId,
 									privateSite:that.privateSite, //专线目的地
 									datestring:that.datestring, //选择时间
 									or_boardingPoint:that.initialPoint,
@@ -579,13 +579,13 @@
 
 						} else if (a.length > 0) {
 							uni.hideLoading()
-							uni.showToast({
-								title: '订单中，存在待支付订单，请支付/取消后再下单',
-								icon: 'none',
-								duration: 2000
-							})
 							uni.switchTab({
 								url: '../../../pages/order/OrderList'
+							})
+							uni.showToast({
+								title: '订单中，存在待接单订单，请取消后再下单',
+								icon: 'none',
+								duration: 2000
 							})
 						}
 					},
@@ -619,11 +619,11 @@
 			// 			success: (res) => {
 			// 				console.log(res)
 			// 				var a = '';
-			// 				if (res.data.msg == '获取订单列表成功！') {
-			// 					a = res.data.data.filter(item => {
-			// 						return item.orderType == '待支付';
-			// 					})
-			// 				}
+			// 				if (res.data.msg == '订单查询完成') {
+			// 				a = res.data.data.filter(item => {
+			// 					return item.or_Type == 0;
+			// 				})
+			// 			}
 			// 				if (a == '') {
 			// 					if(that.isNormal===0){
 			// 						that.destination=that.privateSite;
