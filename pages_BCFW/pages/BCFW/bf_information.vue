@@ -30,6 +30,7 @@
 			<!-- 车型信息 -->
 			<view class="ci_carModelView">
 				<view class="cmv_selected">已选车型</view>
+				
 				<image class="cmv_car" :src="car"></image>
 				<view class="cmv_carName">{{carName}}</view>
 				<view style="display: flex;">
@@ -260,8 +261,9 @@
 							success: (res) => {
 								this.car = res.data.cvt_carImage;
 								this.carNumberSeats = res.data.cvt_carNumberSeats;
-								this.carName = res.data.cvt_Name;
-								this.carprice = res.data.cvt_carprice;
+								this.carName = res.data.cvt_Name;	
+								const b = res.data.cvt_carprice;
+								this.carprice = b.toFixed(2);
 								console.log(res.data);
 							}
 						});
@@ -963,16 +965,29 @@
 		margin-top: 20upx;
 		border-radius: 13upx;
 		
-		
-		
-		.cmv_car {
-			width: 345upx;
-			height: 185upx;
+		.cmv_car{
+			height: 226upx;
+			width: 226upx;
 			padding-top: 34upx;
-			padding-left: 178upx;
+			padding-left: 228upx;
 			display: block;
 			text-align: center;
+			
+			.cmv_car2{
+				height: 100%;
+				width: 100%;
+				// margin: auto;
+			}
 		}
+		
+		// .cmv_car {
+		// 	width: 345upx;
+		// 	height: 185upx;
+		// 	padding-top: 34upx;
+		// 	padding-left: 178upx;
+		// 	display: block;
+		// 	text-align: center;
+		// }
 
 		.cmv_carName {
 			font-size: 32upx;
