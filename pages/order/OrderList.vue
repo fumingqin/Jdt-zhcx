@@ -1752,7 +1752,7 @@
 				SfcInfo: '',
 			}
 		},
-		onLoad: function(options) {
+		onLoad: function() {
 			var that = this;
 			//获取客运弹框图片
 			that.getPicture();
@@ -1763,8 +1763,6 @@
 					that.userInfo = data.data;
 				}
 			})
-			// that.current=options.current;
-			// console.log(options.current,"current")
 		},
 		onShow: function() {
 			//请求景区门票数据
@@ -1773,6 +1771,7 @@
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
+			this.getCurrent();
 		},
 		onPullDownRefresh: function() {
 			this.toFinished();
@@ -3657,6 +3656,20 @@
 				} // else if (param == '11') {
 				// 	return '待补款'
 				// }
+			},
+			getCurrent(){
+				var that=this;
+				uni.getStorage({
+					key:'currentNum',
+					success(res){
+						that.current=res.data;
+						console.log(that.current,"that.current")
+						uni.removeStorageSync('currentNum');
+					},
+					fail(){
+						that.current=0;
+					}
+				})
 			}
 		}
 	}
