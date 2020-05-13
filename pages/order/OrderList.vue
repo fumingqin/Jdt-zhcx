@@ -1752,7 +1752,7 @@
 				SfcInfo: '',
 			}
 		},
-		onLoad: function() {
+		onLoad: function(options) {
 			var that = this;
 			//获取客运弹框图片
 			that.getPicture();
@@ -1763,6 +1763,8 @@
 					that.userInfo = data.data;
 				}
 			})
+			// that.current=options.current;
+			// console.log(options.current,"current")
 		},
 		onShow: function() {
 			//请求景区门票数据

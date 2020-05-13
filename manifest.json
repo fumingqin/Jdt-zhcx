@@ -129,7 +129,7 @@
         "appid" : "",
         "setting" : {
             "urlCheck" : false,
-            "minified" : false
+            "minified" : true
         },
         "usingComponents" : true,
         "permission" : {
