@@ -509,6 +509,15 @@
 				// #endif
 
 				// #ifdef APP-PLUS
+				console.log(this.userInfo.userId)
+				console.log(this.admissionTicket.ticketId)
+				console.log(this.userInfo.phoneNumber)
+				console.log(this.admissionTicket.admissionTicketID)
+				console.log(this.couponColor)
+				console.log(this.date)
+				console.log(this.actualPayment)
+				console.log(this.admissionTicket.ticketContain)
+				console.log(this.addressData)
 				uni.request({
 					url: $lyfw.Interface.spt_AddtouristOrder.value,
 					method: $lyfw.Interface.spt_AddtouristOrder.method,
