@@ -26,11 +26,10 @@
 					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
 					<text class="sv_text">包车服务</text>
 				</view>
-<!-- 
-				<view class="sv_view3">
+				<view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
 					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image>
 					<text class="sv_text">定制巴士</text>
-				</view> -->
+				</view>
 				</view>
 		</view>
 
