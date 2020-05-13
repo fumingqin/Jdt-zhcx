@@ -10,7 +10,7 @@
 					<!-- 时间-价格 -->
 					<view class="ticketContent">
 						<view class="textCLass" style="font-size: 28upx;color: #333333;">{{turnDate(ticketDetail.SetoutTime)}}出发</view>
-						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{totalPrice}}</view>
+						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{oneTicketPrice}}</view>
 					</view>
 					<!-- 站点-余票 -->
 					<view class="ticketContent">
@@ -259,6 +259,8 @@
 				ScheduleID: '', //线路ID
 				specialTicketArray:[],
 				startEndStation:'',//上下车点拼接
+				oneTicketPrice:'',//车票单价
+				PriceID:'',//票价ID
 			}
 		},
 
@@ -318,7 +320,6 @@
 					key: 'passengerList',
 					success: (res) => {
 						that.passengerInfo = res.data;
-						//计算价格
 						that.calculateTotalPrice();
 					}
 				});
@@ -339,8 +340,10 @@
 							for(let i = 0; i < that.specialTicketArray.length;i++) {
 								let station = that.specialTicketArray[i].station;
 								if(that.startEndStation == station) {
-									that.totalPrice = that.specialTicketArray[i].FullPrice
-									console.log(that.totalPrice)
+									// that.totalPrice = that.specialTicketArray[i].FullPrice
+									that.oneTicketPrice = that.specialTicketArray[i].FullPrice
+									that.PriceID = that.specialTicketArray[i].PriceID
+									that.calculateTotalPrice();
 								}
 							}
 						}
@@ -375,13 +378,18 @@
 									station:res.data.ScheduleForSell[i].StartSiteName + '-' +res.data.ScheduleForSell[i].EndSiteName,
 									FullPrice:res.data.ScheduleForSell[i].FullPrice,
 									RuleDesc:res.data.ScheduleForSell[i].RuleDesc,
+									PriceID:res.data.ScheduleForSell[i].PriceID,
 								}
 								let station = res.data.ScheduleForSell[i].StartSiteName + '-' +res.data.ScheduleForSell[i].EndSiteName;
 								if(that.startEndStation == station) {
 									that.totalPrice = res.data.ScheduleForSell[i].FullPrice
+									that.oneTicketPrice = res.data.ScheduleForSell[i].FullPrice
+									that.PriceID = res.data.ScheduleForSell[i].PriceID
 								}
 								that.specialTicketArray.push(array)
 							}
+							//计算价格
+							that.calculateTotalPrice();
 						}
 					},
 					fail(res) {
@@ -395,7 +403,6 @@
 					var setTime = date.replace('T', ' ');
 					return setTime;
 				}
-				// return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------点击定制班车上车点-----------------------------
 			startStationTap() {
@@ -561,13 +568,7 @@
 				//成年数组
 				let adultArray = [];
 				//车票单价
-				let price = that.ticketDetail.fare;
-				//半价票单价
-				let halfPrice = that.ticketDetail.halfTicket;
-				let insurePrice = that.ticketDetail.insurePrice;
-				if (that.isInsurance == 0) { //不选择保险
-					insurePrice = 0;
-				}
+				let price = that.oneTicketPrice;
 				//查看乘车人个数
 				if (that.passengerInfo.length > 0) {
 					for (var i = 0; i < that.passengerInfo.length; i++) {
@@ -577,6 +578,7 @@
 							//将儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;
+							
 						} else {
 							//将成人票加入数组
 							adultArray.push(that.passengerInfo[i]);
@@ -584,10 +586,10 @@
 						}
 					}
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(price) * childNum
 				} else {
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(price) * childNum
 				}
 			},
 
@@ -595,39 +597,23 @@
 			reserveTap() {
 				var that = this;
 				//当选中用户须知且选择了上下车点和乘客之后发送请求
-				if (that.ticketDetail.starSiteArr.length > 2 || that.ticketDetail.endSiteArr.length > 2) {
-					if (that.startStation == '请选择上车点' && that.endStation == '请选择下车点') {
-						uni.showModal({
-							title: '友情提示',
-							content: '未选择上下车点，请选择上下车点',
-						})
-					} else if (that.passengerInfo.length == 0) {
-						uni.showToast({
-							title: '请选择乘车人',
-							icon: 'none'
-						})
-					} else if (that.selectedValue == 0) {
-						uni.showToast({
-							title: '请同意购买须知',
-							icon: 'none'
-						})
-					} else {
-						that.jumpTo();
-					}
-				}else {
-					if (that.passengerInfo.length == 0) {
-						uni.showToast({
-							title: '请选择乘车人',
-							icon: 'none'
-						})
-					} else if (that.selectedValue == 0) {
-						uni.showToast({
-							title: '请同意购买须知',
-							icon: 'none'
-						})
-					} else {
-						that.jumpTo();
-					}
+				if (that.startStation == '请选择上车点' && that.endStation == '请选择下车点') {
+					uni.showModal({
+						title: '友情提示',
+						content: '未选择上下车点，请选择上下车点',
+					})
+				} else if (that.passengerInfo.length == 0) {
+					uni.showToast({
+						title: '请选择乘车人',
+						icon: 'none'
+					})
+				} else if (that.selectedValue == 0) {
+					uni.showToast({
+						title: '请同意购买须知',
+						icon: 'none'
+					})
+				} else {
+					that.jumpTo();
 				}
 			},
 			//-----------------------------跳转-----------------------------
@@ -635,17 +621,19 @@
 				var that = this;
 				//计算价格
 				that.calculateTotalPrice();
-				//请求成功之后跳转到支付页面,传是否选择保险1:选择 0:未选择
+				//请求成功之后跳转到支付页面
 				var array = {
-					isInsurance: that.isInsurance,
 					totalPrice: that.totalPrice,
-					shuttleType: that.shuttleType,
-					getOnPoint: that.startStation,
-					getOffPoint: that.endStation
+					priceAID: that.PriceID,
+					startStation: that.ticketDetail.StartSiteName,
+					endStation: that.ticketDetail.EndSiteName,
+					pickerStartStation: that.startStation,
+					pickerEndStation: that.endStation,
+					date: that.ticketDetail.SetoutTime,
+					oneTicketPrice: that.oneTicketPrice
 				}
 				uni.navigateTo({
-					url: '../PayMent/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' +
-						JSON.stringify(array)
+					url:'../specialBusOrderPayment/specialBusOrderPayment?array=' + JSON.stringify(array)
 				})
 			}
 		}
