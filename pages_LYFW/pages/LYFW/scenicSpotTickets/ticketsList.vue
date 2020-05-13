@@ -396,7 +396,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					url: './ticketsDetails?ticketId=' + JSON.stringify(e)
+					url: './ticketsDetails?ticketId=' + e
 				})
 			},
 

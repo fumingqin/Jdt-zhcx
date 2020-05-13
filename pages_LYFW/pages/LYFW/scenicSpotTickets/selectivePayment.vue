@@ -208,7 +208,8 @@
 		methods: {
 			//0.3价格取2位精度
 			priceAccuracy:function(e){
-				return e.toFixed(2);
+				const pri = e.toFixed(2);
+				return pri;
 			},
 			
 			//隐藏操作
@@ -423,11 +424,11 @@
 								console.log(res)
 								uni.requestPayment({
 									provider: 'wxpay',
-									timeStamp: res.data.data.Timestamp,
-									nonceStr: res.data.data.Noncestr,
-									package: res.data.data.Noncestr,
-									signType: 'MD5',
-									paySign: res.data.data.Sign,
+									timeStamp: res.data.data.timeStamp,
+									nonceStr: res.data.data.nonceStr,
+									package: res.data.data.package,
+									signType: res.data.data.signType,
+									paySign: res.data.data.paySign,
 									success: function(res){
 										console.log(res)
 										if(res.errMsg == 'requestPayment:ok'){

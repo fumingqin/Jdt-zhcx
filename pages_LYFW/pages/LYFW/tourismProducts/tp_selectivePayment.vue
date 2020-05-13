@@ -208,7 +208,8 @@
 		methods: {
 			//0.3价格取2位精度
 			priceAccuracy:function(e){
-				return e.toFixed(2);
+				const pri = e.toFixed(2);
+				return pri;
 			},
 			
 			//隐藏操作
@@ -406,13 +407,13 @@
 				if (that.channeIndex == 0) {
 					uni.getStorage({
 						key:'scenicSpotOpenId',
-						success:()=>{
+						success:(openid)=>{
 							uni.request({
 								url:$lyfw.Interface.lyky_getCommonPayparameter.value,
 								method:$lyfw.Interface.lyky_getCommonPayparameter.method,
 								data: {
 									payType: 5,
-									openId : res.data,
+									openId : openid.data,
 									price: that.orderInfo.orderActualPayment,
 									orderNumber: that.orderInfo.orderNumber,
 									goodsName: that.orderInfo.title,
@@ -420,78 +421,79 @@
 								},
 								header: {'content-type': 'application/json'},
 								success: function(res) {
-									console.log(res)
-							// 		uni.requestPayment({
-							// 			provider: 'wxpay',
-							// 			timeStamp: res.data.data.Timestamp,
-							// 			nonceStr: res.data.data.Noncestr,
-							// 			package: res.data.data.Noncestr,
-							// 			signType: 'MD5',
-							// 			paySign: res.data.data.Sign,
-							// 			success: function(res){
-							// 				console.log(res)
-							// 				// if(res.errMsg == 'requestPayment:ok'){
-							// 				// 	uni.request({
-							// 				// 		url:$lyfw.Interface.lyky_RequestTickets.value,
-							// 				// 		method:$lyfw.Interface.lyky_RequestTickets.method,
-							// 				// 		data: {
-							// 				// 			orderNumber: that.orderInfo.orderNumber
-							// 				// 		},
-							// 				// 		header: {'content-type': 'application/json'},
-							// 				// 		success: function(res) {
-							// 				// 			console.log(res)
-							// 				// 			if (res.data.msg == '出票成功') {
-							// 				// 				uni.redirectTo({
-							// 				// 					url: 'successfulPayment'
-							// 				// 				})
-							// 				// 			} else {
-							// 				// 				uni.showToast({
-							// 				// 					title: '出票失败，联系客服出示订单编号',
-							// 				// 					icon: 'none',
-							// 				// 					duration: 3000
-							// 				// 				})
-							// 				// 			}
-							// 				// 		},
-							// 				// 		fail: function() {
-							// 				// 			uni.showToast({
-							// 				// 				title: '出票失败，请联系客服出示订单编号',
-							// 				// 				icon: 'none',
-							// 				// 				duration: 3000
-							// 				// 			})
-							// 				// 		}
-							// 				// 	})
-							// 				// }
-							// 				// } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-							// 				// 	// alert("您取消了支付，请重新支付");
-							// 				// 	uni.showToast({
-							// 				// 		title: '您取消了支付，请重新支付',
-							// 				// 		icon: 'none'
-							// 				// 	})
-							// 				// } else if (res.err_msg == "get_brand_wcpay_request:faile") {
-							// 				// 	// alert("支付失败，请重新支付"); 
-							// 				// 	uni.showToast({
-							// 				// 		title: '支付失败，请重新支付',
-							// 				// 		icon: 'none',
-							// 				// 		success: function() {
-							// 				// 			uni.switchTab({
-							// 				// 				url: '../../../../pages/order/OrderList'
-							// 				// 			})
-							// 				// 		}
-							// 				// 	})
-							
-							// 				// } else {
-							// 				// 	// location.href = "/Coach/GetCoach";
-							// 				// }
-							
-							// 			},
-							// 			fail: function(e) {
-							// 				console.log(e)
-							// 				uni.showToast({
-							// 					title: '拉起支付失败，请查看网络状态'
-							// 				})
-							// 			}
-							
-							// 		})
+								console.log(res)
+								uni.requestPayment({
+									provider: 'wxpay',
+									timeStamp: res.data.data.timeStamp,
+									nonceStr: res.data.data.nonceStr,
+									package: res.data.data.package,
+									signType: res.data.data.signType,
+									paySign: res.data.data.paySign,
+									success: function(res){
+										console.log(res)
+										if(res.errMsg == 'requestPayment:ok'){
+											uni.request({
+												url:$lyfw.Interface.lyky_RequestTickets.value,
+												method:$lyfw.Interface.lyky_RequestTickets.method,
+												data: {
+													orderNumber: that.orderInfo.orderNumber
+												},
+												header: {'content-type': 'application/json'},
+												success: function(res) {
+													console.log(res)
+													if (res.data.msg == '出票成功') {
+														uni.redirectTo({
+															url: 'successfulPayment'
+														})
+													} else {
+														uni.showToast({
+															title: '出票失败，联系客服出示订单编号',
+															icon: 'none',
+															duration: 3000
+														})
+													}
+												},
+												fail: function() {
+													uni.showToast({
+														title: '出票失败，请联系客服出示订单编号',
+														icon: 'none',
+														duration: 3000
+													})
+												}
+											})
+										} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+											// alert("您取消了支付，请重新支付");
+											uni.showToast({
+												title: '您取消了支付，请重新支付',
+												icon: 'none'
+											})
+										} else if (res.err_msg == "get_brand_wcpay_request:faile") {
+											// alert("支付失败，请重新支付"); 
+											uni.showToast({
+												title: '支付失败，请重新支付',
+												icon: 'none',
+												success: function() {
+													uni.switchTab({
+														url: '../../../../pages/order/OrderList'
+													})
+												}
+											})
+															
+										} else {
+											// location.href = "/Coach/GetCoach";
+										}
+															
+									},
+									fail: function(e) {
+										console.log(e)
+										uni.showToast({
+											title: '拉起支付失败，请查看网络状态'
+										})
+									}
+															
+								})
+								
+								
 								},
 								fail: function() {
 									uni.showToast({

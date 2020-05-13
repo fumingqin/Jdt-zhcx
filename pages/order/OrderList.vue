@@ -3203,12 +3203,12 @@
 			repurchase(e,index) {
 				if(index =='3'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' +e
 					})
 					
 				}else if(index =='5'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' + JSON.stringify(e)
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' +e
 					})
 				}
 
@@ -3233,14 +3233,21 @@
 							'content-type': 'application/json'
 						},
 						success: (e) => {
-							// console.log(e)
+							console.log(e)
 							uni.hideLoading()
-							uni.showToast({
-								title: '退票成功',
-								icon: 'success',
-							})
-							this.close2()
-							this.toFinished();
+							if(e.data.msg =='订单异常'){
+								uni.showToast({
+									title: '退票异常，请联系客服',
+									icon: 'success',
+								})
+							}else{
+								uni.showToast({
+									title: '退票成功',
+									icon: 'success',
+								})
+								this.close2()
+								this.toFinished();
+							}
 						},
 						fail: function() {
 							uni.showToast({
@@ -3263,13 +3270,19 @@
 						},
 						success: (e) => {
 							console.log(e)
-							uni.hideLoading()
-							uni.showToast({
-								title: '退票成功',
-								icon: 'success',
-							})
-							this.close2()
-							this.toFinished();
+							if(e.data.msg =='订单异常'){
+								uni.showToast({
+									title: '退票异常，请联系客服',
+									icon: 'success',
+								})
+							}else{
+								uni.showToast({
+									title: '退票成功',
+									icon: 'success',
+								})
+								this.close2()
+								this.toFinished();
+							}
 						},
 						fail: function() {
 							uni.showToast({

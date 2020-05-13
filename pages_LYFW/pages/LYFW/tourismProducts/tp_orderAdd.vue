@@ -596,7 +596,6 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(openid) {
-						// console.log(openid)
 						uni.request({
 							url: $lyfw.Interface.lyky_AddtouristOrder.value,
 							method: $lyfw.Interface.lyky_AddtouristOrder.method,
@@ -625,7 +624,7 @@
 										icon: 'none',
 									})
 									that.submissionState = false;
-
+				
 								} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
 									uni.hideLoading()
 									uni.showToast({
@@ -640,11 +639,12 @@
 									
 										}
 									})
+				
 								} else if (res.data.msg == '订单下单成功') {
-									uni.redirectTo({
-										url: 'tp_selectivePayment?orderNumber=' + res.data.data.orderNumber
-									})
 									uni.hideLoading()
+									uni.redirectTo({
+										url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
+									})
 								} else if (res.data.msg == '抱歉,订单下单失败') {
 									uni.hideLoading()
 									uni.showToast({
@@ -659,9 +659,9 @@
 										icon: 'none',
 									})
 									that.submissionState = false;
-
+				
 								}
-
+				
 							}
 						})
 					},
@@ -674,6 +674,7 @@
 							url:'../../../../pages/Home/Index'
 						})
 						that.submissionState = false;
+				
 					}
 				})
 				// #endif
