@@ -1732,14 +1732,14 @@
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
-						iconPath: '../../static/CZC/Wechatpay.png',
+						// iconPath: '../../static/CZC/Wechatpay.png',
 						value: 'wxpay',
 						checked: true,
 					},
 					{
 						typeName: '支付宝',
 						typeColor: '#0EBDFF',
-						iconPath: '../../static/CZC/Alipay.png',
+						// iconPath: '../../static/CZC/Alipay.png',
 						value: 'alipay',
 						checked: false
 					}
