@@ -110,6 +110,7 @@
 		},
 		onShow() {
 			this.scenicSpotOpenId = uni.getStorageSync('scenicSpotOpenId') || ''; //获取Oppenid
+			console.log("id"+this.scenicSpotOpenId )
 		},
 		methods: {
 			change: function(value) {
