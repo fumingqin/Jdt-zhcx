@@ -423,7 +423,7 @@
 								success: function(res) {
 								console.log(res)
 								uni.requestPayment({
-									provider: 'wxpay',
+									// provider: 'wxpay',
 									timeStamp: res.data.data.timeStamp,
 									nonceStr: res.data.data.nonceStr,
 									package: res.data.data.package,
@@ -443,7 +443,7 @@
 													console.log(res)
 													if (res.data.msg == '出票成功') {
 														uni.redirectTo({
-															url: 'successfulPayment'
+															url: 'tp_successfulPayment'
 														})
 													} else {
 														uni.showToast({

@@ -423,7 +423,7 @@
 								success: function(res) {
 								console.log(res)
 								uni.requestPayment({
-									provider: 'wxpay',
+									// provider: 'wxpay',
 									timeStamp: res.data.data.timeStamp,
 									nonceStr: res.data.data.nonceStr,
 									package: res.data.data.package,
