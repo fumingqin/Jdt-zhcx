@@ -24,17 +24,17 @@
 			</view>
 			
 			<view class="myBox">
-				<view class="collection" @click="collectionClick">
-					<image src="../../static/GRZX/tubiao_shoucan.png" class="imgStyle1" mode="aspectFill"></image>
-					<text class="myFont">我的收藏</text>
+				<view class="collection" @click="orderClick(3)">
+					<image src="../../static/GRZX/tubiao_pay1.png" class="imgStyle1" mode="aspectFill"></image>
+					<text class="myFont">待支付</text>
 				</view>
-				<view class="order" @click="orderClick">
-					<image src="../../static/GRZX/tubiao_dingdan.png" class="imgStyle2" mode="aspectFill"></image>
-					<text class="myFont">我的订单</text>
+				<view class="order" @click="orderClick(2)">
+					<image src="../../static/GRZX/tubiao_pay2.png" class="imgStyle2" mode="aspectFill"></image>
+					<text class="myFont">进行中</text>
 				</view>
-				<view class="history" @click="historyClick">
-					<image src="../../static/GRZX/tubiao_lishi.png" class="imgStyle3" mode="aspectFill"></image>
-					<text class="myFont">我的历史</text>
+				<view class="history" @click="orderClick(1)">
+					<image src="../../static/GRZX/tubiao_pay3.png" class="imgStyle3" mode="aspectFill"></image>
+					<text class="myFont">已完成</text>
 				</view>
 			</view>
 		</view>
@@ -109,6 +109,7 @@
 				phoneNumber:'',
 				openId_qq:'',
 				openId_wx:'',
+				openId_xcx:'',
 				address:'',
 				birthday:'',
 				gender:'',
@@ -184,6 +185,7 @@
 									that.phoneNumber=res.data.data.phoneNumber;
 									that.openId_qq=res.data.data.openId_qq;
 									that.openId_wx=res.data.data.openId_wx;
+									that.openId_xcx=res.data.data.openId_xcx;
 									that.address=res.data.data.address;
 									that.birthday=res.data.data.birthday;
 									that.gender=res.data.data.gender;
@@ -213,9 +215,10 @@
 					}
 				})
 			},
-			orderClick(){
+			orderClick(e){
+				uni.setStorageSync('currentNum',e)
 				uni.switchTab({
-					url:'/pages/order/OrderList'
+					url:'/pages/order/OrderList',
 				})
 			},
 			navTo(e){
@@ -285,6 +288,7 @@
 							gender:that.gender,
 							openId_qq:that.openId_qq,
 							openId_wx:that.openId_wx,
+							openId_xcx:that.openId_xcx,
 							address:that.address,
 							nickname:that.nickname,
 							birthday:that.birthday,
@@ -591,9 +595,9 @@
 		flex-direction: column;
 	}
 	.imgStyle2{
-		width: 55upx;
-		height: 56upx;
-		margin-top: 32upx;
+		width: 61upx;
+		height: 59upx;
+		margin-top: 31upx;
 		margin-left: 36.68%;
 	}
 	.history{			//我的历史
@@ -603,8 +607,8 @@
 		flex-direction: column;
 	}
 	.imgStyle3{
-		width: 58upx;
-		height: 57upx;
+		width: 61upx;
+		height: 59upx;
 		margin-top: 31upx;
 		margin-left: 36.68%;
 	}

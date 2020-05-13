@@ -42,7 +42,7 @@
 								</view>
 								<view style="display: flex;justify-content: flex-end;">
 									<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
-									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn" @click="czcComplaint(item)" v-if="item.orderType=='已完成'">投诉</button>
 									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
 									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
@@ -78,7 +78,7 @@
 								</view>
 								<view style="display: flex;justify-content: flex-end;">
 									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
-									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn" @click="czcComplaint(item)" v-if="item.orderType=='已完成'">投诉</button>
 									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
 									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
@@ -117,7 +117,7 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<button class="allBtn czcpayBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 							</view>
@@ -194,10 +194,10 @@
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'3')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'3')">再次预订</view>
 							</view>
- 
+
 						</view>
 					</view>
-					
+
 					<!-- 旅游产品 -->
 					<!-- 同景区门票 -->
 					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
@@ -214,66 +214,66 @@
 								</view>
 								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 							</view>
-					
+
 							<view class="at_contentView">
 								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 							</view>
-					
+
 							<!-- 已使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='已使用'">
 								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
 							</view>
-					
+
 							<!-- 待使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='待使用'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 							</view>
-							
+
 							<!-- 待选车 -->
 							<view class="at_buttonView" v-if="item.orderType=='待选车'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="chooseShuttle(item)">选班车</view>
 							</view>
-					
+
 							<!-- 待支付 -->
 							<view class="at_buttonView" v-if="item.orderType=='待支付'">
 								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'5')">取消</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btToPay" @click="topay(item.orderNumber,'5')">去支付</view>
 							</view>
-					
+
 							<!-- 已退票 -->
 							<view class="at_buttonView" v-if="item.orderType=='已退票'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 							<!-- 已取消 -->
 							<view class="at_buttonView" v-if="item.orderType=='已取消'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 							<!-- 支付超时 -->
 							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 							<!-- 已失效 -->
 							<view class="at_buttonView" v-if="item.orderType=='已失效'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 						</view>
 					</view>
 
@@ -421,7 +421,7 @@
 								</view>
 								<view style="display: flex;justify-content: flex-end;">
 									<button class="Btn" @click="SpecialLineOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成' ">详情</button>
-									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn" @click="czcComplaint(item)" v-if="item.orderType=='已完成'">投诉</button>
 									<button class="Btn payBtn" @click="GotoPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 									<button class="Btn" @click="DeleteSpecialLineOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
 									<button class="Btn" @click="ConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
@@ -429,7 +429,7 @@
 							</view>
 						</view>
 					</view>
-					
+
 					<!-- 顺风车 -->
 					<view v-if="item.title=='出租车-顺风车'">
 						<view style="margin:30rpx;">
@@ -458,7 +458,7 @@
 								</view>
 								<view style="display: flex;justify-content: flex-end;">
 									<button class="Btn" @click="SfcOrderDetail(item)" v-if="item.orderType=='进行中'|| item.orderType=='已完成'">详情</button>
-									<!-- <button class="Btn" @click="detail(item.titleIndex)" v-if="item.orderType=='已完成'">评价</button> -->
+									<button class="Btn" @click="czcComplaint(item)" v-if="item.orderType=='已完成'">投诉</button>
 									<button class="Btn payBtn" @click="GotoSfcPay(item.orderNumber)" v-if="item.orderType=='未支付'">去支付</button>
 									<button class="Btn" @click="DeleteSfcOrder(item.orderNumber)" v-if="item.orderType=='已取消' || item.orderType=='已完成'">删除</button>
 									<button class="Btn" @click="SfcConfirmCancel(item)" v-if="item.SpecialorderState==0|| item.SpecialorderState==1|| item.SpecialorderState==2||item.orderType=='未支付'">取消</button>
@@ -466,7 +466,7 @@
 							</view>
 						</view>
 					</view>
-					
+
 					<!-- 出租车 -->
 					<view v-if="item.vehicleType=='出租车'">
 						<view v-if="item.orderType=='预约'" style="margin-left: 30rpx;width: 375rpx; height: 62rpx; border-radius: 32rpx;background-color: #06B4FD;display: flex;justify-content: center;align-items: center;">
@@ -535,7 +535,7 @@
 
 						</view>
 					</view>
-					
+
 					<!-- 旅游产品 -->
 					<!-- 同景区门票 -->
 					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
@@ -552,18 +552,18 @@
 								</view>
 								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 							</view>
-					
+
 							<view class="at_contentView">
 								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 							</view>
-					
+
 							<!-- 已使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='已使用'">
 								<view class="at_button at_btDetails" @click="details(item.orderNumber)" style="margin-right: 0upx;">详情</view>
 							</view>
-					
-					
+
+
 						</view>
 					</view>
 
@@ -751,7 +751,7 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-								<button class="allBtn payBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
+								<button class="czcpayBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 							</view>
@@ -792,7 +792,7 @@
 
 						</view>
 					</view>
-					
+
 					<!-- 旅游产品 -->
 					<!-- 同景区门票 -->
 					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
@@ -809,33 +809,33 @@
 								</view>
 								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 							</view>
-					
+
 							<view class="at_contentView">
 								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 							</view>
-					
 
-					
+
+
 							<!-- 待使用 -->
 							<view class="at_buttonView" v-if="item.orderType=='待使用'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="open5(item)">二维码</view>
 							</view>
-							
+
 							<!-- 待选车 -->
 							<view class="at_buttonView" v-if="item.orderType=='待选车'">
 								<view class="at_button at_btDelete" @click="open2(item.orderNumber,'5')">退票</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="chooseShuttle(item)">选班车</view>
 							</view>
-					
 
-					
+
+
 						</view>
 					</view>
-					
+
 					<!-- 包车订单 -->
 					<!-- 标签class命名：;全称：Purchase Date -->
 					<!-- 内容class命名：cm;全称：custom made -->
@@ -1031,7 +1031,7 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
-								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
+								<button class="allBtn czcpayBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
 							</view>
@@ -1072,7 +1072,7 @@
 
 						</view>
 					</view>
-					
+
 					<!-- 旅游产品 -->
 					<!-- 同景区门票 -->
 					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
@@ -1089,23 +1089,23 @@
 								</view>
 								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 							</view>
-					
+
 							<view class="at_contentView">
 								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 							</view>
-					
-					
+
+
 							<!-- 待支付 -->
 							<view class="at_buttonView" v-if="item.orderType=='待支付'">
 								<view class="at_button at_btDelete" @click="open3(item.orderNumber,'5')">取消</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btToPay" @click="topay(item.orderNumber,'5')">去支付</view>
 							</view>
-					
+
 						</view>
 					</view>
-					
+
 
 					<!-- 包车订单 -->
 					<!-- 标签class命名：;全称：Purchase Date -->
@@ -1352,8 +1352,8 @@
 							</view>
 						</view>
 					</view>
-					
-					
+
+
 					<!-- 旅游产品 -->
 					<!-- 同景区门票 -->
 					<view v-if="item.title=='旅游产品' && item.isDel !== '是'">
@@ -1370,40 +1370,40 @@
 								</view>
 								<text class="at_contentPrice">¥{{item.orderActualPayment}}</text>
 							</view>
-					
+
 							<view class="at_contentView">
 								<text class="at_contentText">使用时间：&nbsp;{{item.orderDate}}</text>
 								<text class="at_contentText">预订人数：&nbsp;{{item.orderUserIndex}}人</text>
 							</view>
-					
+
 							<!-- 已退票 -->
 							<view class="at_buttonView" v-if="item.orderType=='已退票'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 							<!-- 已取消 -->
 							<view class="at_buttonView" v-if="item.orderType=='已取消'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 							<!-- 支付超时 -->
 							<view class="at_buttonView" v-if="item.orderType=='支付超时'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 							<!-- 已失效 -->
 							<view class="at_buttonView" v-if="item.orderType=='已失效'">
 								<view class="at_button at_btDelete" @click="open4(item.orderNumber,'5')">删除</view>
 								<view class="at_button at_btDetails" @click="details(item.orderNumber,'5')">详情</view>
 								<view class="at_button at_btQrCode" @click="repurchase(item.ticketId,'5')">再次预订</view>
 							</view>
-					
+
 						</view>
 					</view>
 
@@ -1732,14 +1732,14 @@
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
-						iconPath: '../../static/CZC/Wechatpay.png',
+						// iconPath: '../../static/CZC/Wechatpay.png',
 						value: 'wxpay',
 						checked: true,
 					},
 					{
 						typeName: '支付宝',
 						typeColor: '#0EBDFF',
-						iconPath: '../../static/CZC/Alipay.png',
+						// iconPath: '../../static/CZC/Alipay.png',
 						value: 'alipay',
 						checked: false
 					}
@@ -1771,6 +1771,7 @@
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
+			this.getCurrent();
 		},
 		onPullDownRefresh: function() {
 			this.toFinished();
@@ -2408,7 +2409,7 @@
 				if (param == 0 || param == 1 || param == 2 || param == 3 || param == 4) {
 					return '进行中';
 				} else if (param == 5 || param == 9) {
-					return '待计价';
+					return '未支付';
 				} else if (param == 7 || param == 8) {
 					return '已取消';
 				} else if (param == 6) {
@@ -2504,6 +2505,7 @@
 									startAddress: data.StartAddress,
 									endAddress: data.EndAddress,
 									orderNumber: data.OrderNumber,
+									driverName: data.DriverName,
 									appointment: true,
 								}
 								that.info.push(obj);
@@ -2759,6 +2761,7 @@
 									startAddress: data.StartAddress,
 									endAddress: data.EndAddress,
 									orderNumber: data.OrderNumber,
+									driverName: data.DriverName,
 									appointment: true,
 								}
 								that.info.push(obj);
@@ -2997,6 +3000,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
+								// console.log(res)
 								uni.stopPullDownRefresh();
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
@@ -3066,7 +3070,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log(res);
+						// console.log(res);
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
 									that.info.push(res.data.data[i]);
@@ -3103,8 +3107,12 @@
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
 			open2: function(e, exitindex) {
+				console.log(e)
+				console.log(exitindex)
 				this.ticketOrderNumber = e;
 				this.exitindex = exitindex;
+				console.log(this.ticketOrderNumber)
+				console.log(this.exitindex)
 				this.$refs.popup2.open()
 			},
 			//-------------------------景区门票-关闭退票弹框-------------------------
@@ -3214,11 +3222,12 @@
 				if (this.exitindex == '2') {
 					this.keYunRefundTicket(that.ticketOrderNumber)
 				} else if (this.exitindex == '3') {
+					console.log('景区门票')
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
 						data: {
-							orderNumber: this.ticketOrderNumber,
+							orderNumber: that.ticketOrderNumber,
 						},
 						header: {
 							'content-type': 'application/json'
@@ -3242,17 +3251,18 @@
 						}
 					})
 				}else if (this.exitindex == '5'){
+					console.log('旅游产品')
 					uni.request({
 						url: $lyfw.Interface.lyky_BounceTickets.value,
 						method: $lyfw.Interface.lyky_BounceTickets.method,
 						data: {
-							orderNumber: this.ticketOrderNumber,
+							orderNumber: that.ticketOrderNumber,
 						},
 						header: {
 							'content-type': 'application/json'
 						},
 						success: (e) => {
-							// console.log(e)
+							console.log(e)
 							uni.hideLoading()
 							uni.showToast({
 								title: '退票成功',
@@ -3524,12 +3534,21 @@
 			},
 			czcComplaint: function(item) {
 				console.log(item)
-				uni.navigateTo({
-					url:'complaint?tsTitle=出租车&tsData=' + item
-				})
-				// if (item.vehicleType == '出租车') {
-					
-				// }
+				if(item.title=='出租车-专线'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=专线车&tsData=' + item.driverName
+					})
+				}
+				if(item.title=='出租车-顺风车'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=顺风车&tsData=' + item.driverName
+					})
+				}
+				if(item.vehicleType == '出租车'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=出租车&tsData=' + item.driverName
+					})
+				}
 			},
 			//-------------------包车订单添加-------------------------
 			getArrayInfo: function() {
@@ -3636,6 +3655,20 @@
 				} // else if (param == '11') {
 				// 	return '待补款'
 				// }
+			},
+			getCurrent(){
+				var that=this;
+				uni.getStorage({
+					key:'currentNum',
+					success(res){
+						that.current=res.data;
+						console.log(that.current,"that.current")
+						uni.removeStorageSync('currentNum');
+					},
+					fail(){
+						that.current=0;
+					}
+				})
 			}
 		}
 	}
@@ -3944,6 +3977,12 @@
 		.payBtn {
 			background-color: #FC4646;
 			color: #ffffff;
+		}
+		//支付
+		.czcpayBtn {
+			background-color: #FC4646;
+			color: #ffffff;
+			margin-right: 32rpx;
 		}
 
 		//二维码

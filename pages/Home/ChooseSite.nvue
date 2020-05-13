@@ -544,8 +544,12 @@
 					that.current = e.currentIndex
 				}
 				if (that.current == 1 && this.isPupop) {
-					uni.clearStorage("StartPoint");
-					uni.clearStorage("EndPoint");
+					uni.removeStorage({
+						key: "StartPoint"
+					})
+					uni.removeStorage({
+						key: "EndPoint"
+					})
 					that.startAddress = '';
 					that.endAddress = '';
 					//客运弹框
@@ -565,7 +569,9 @@
 				clearInterval(this.intervalAround);
 			},
 			clearHistpry: function() { //清除历史记录
-				uni.clearStorage("historyAddress");
+				uni.removeStorage({
+					key: "historyAddress"
+				})
 				this.historyAddress = [];
 			},
 			getHistory: function(index) { //获取历史信息
