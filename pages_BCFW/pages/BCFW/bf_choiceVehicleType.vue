@@ -13,7 +13,7 @@
 					<view class="ct_content5" style="padding-bottom: 40upx;">出发时间 &nbsp;<text class="ct_content6">{{addressContent.datestring}}</text></view>
 				</view>
 			</view>
-			
+
 			<view class="cvt_content" :hidden="startingContent==0">
 				<view class="ct_departureContents1">
 					<view class="ct_content1">上车点 &nbsp;<text class="ct_content2">{{addressContent.initialPoint}}</text></view>
@@ -51,7 +51,7 @@
 						</uni-popup>
 					</view>
 				</view>
-			
+
 				<!-- 滑动区域 -->
 				<scroll-view class="sr_scroll" scroll-x="true">
 					<!-- 顶部滑动 -->
@@ -61,7 +61,7 @@
 						</view>
 					</view>
 				</scroll-view>
-				
+
 				<!-- 选择按钮  :hidden="status==false"-隐藏 -->
 				<scroll-view class="sr_scroll" scroll-x="true">
 					<view class="sc_selectButton">
@@ -70,19 +70,39 @@
 						</view>
 					</view>
 				</scroll-view>
-				
+
 				<!-- 选择车 -->
 				<scroll-view class="sr_scroll" scroll-x="true">
 					<view class="sc_choiceCar">
 						<view v-for="(item,index) in vehicleSelection[value].cvt_cost[value2].cvt_vehicle" :key="index" @click="carClick(index)">
-							<view class="cc_button"> 
-								<text class="cc_text" :class="{current3: value3===index}">{{item.cvt_Name}}</text>
-								<image class="cc_image" :src="item.cvt_carImage" />
+							<view class="cc_button">
+								<view class="cc_image2">
+									<image class="cc_image" :src="item.cvt_carImage" mode="aspectFit"></image>
+									<!-- <image class="cc_image" src="../../static/1.jpg" mode="aspectFit"></image> -->
+									<!-- <image class="cc_image" src="../../static/2.jpg" mode="aspectFit"></image> -->
+								</view>
+								<view style="padding-top: 15upx;">
+									<text class="cc_text" :class="{current3: value3===index}">{{item.cvt_Name}}</text>
+								</view>
 							</view>
 						</view>
 					</view>
 				</scroll-view>
-				
+
+				<!-- 选择车 -->
+				<!-- <scroll-view class="sr_scroll" scroll-x="true">
+					<view class="sc_choiceCar">
+						<view v-for="(item,index) in vehicleSelection[value].cvt_cost[value2].cvt_vehicle" :key="index" @click="carClick(index)">
+							<view class="cc_button"> 
+								<view class="cc_image2">
+									<image class="cc_image" :src="item.cvt_carImage" />
+								</view>
+								<text class="cc_text" :class="{current3: value3===index}">{{item.cvt_Name}}</text>
+							</view>
+						</view>
+					</view>
+				</scroll-view> -->
+
 				<!-- 按钮 -->
 				<view class="cvt_button">
 					<button class="bt_button" :class="{submitColor:value3!==-1}" @click="sbuit">确认用车</button>
@@ -101,8 +121,8 @@
 		},
 		data() {
 			return {
-				startingContent:0,//0不显示,1显示
-				isNormal:0,//判断是普通购票还是定制班车:1是普通0是定制
+				startingContent: 0, //0不显示,1显示
+				isNormal: 0, //判断是普通购票还是定制班车:1是普通0是定制
 				value: 0, //默认值
 				value2: 0,
 				value3: -1,
@@ -129,22 +149,22 @@
 						cvt_price: '',
 
 						cvt_vehicle: [{
-							cvt_carImage:'',
+							cvt_carImage: '',
 							cvt_Name: '',
-							cvt_carNumberSeats:'',
-							cvt_carprice:'',
+							cvt_carNumberSeats: '',
+							cvt_carprice: '',
 						}],
 					}],
 				}], //车辆选择
-				
-				information:{
+
+				information: {
 					cvt_Name: '',
-					cvt_carImage:'',
-					cvt_carNumberSeats:'',
-					cvt_carprice:'',
+					cvt_carImage: '',
+					cvt_carNumberSeats: '',
+					cvt_carprice: '',
 				},
-				
-				
+
+
 			}
 		},
 
@@ -153,27 +173,29 @@
 			this.routeInit();
 			this.bcfwData();
 		},
-		
+
 		onShow() {
 			this.readData();
 		},
-		
+
 		methods: {
 			//---------------------------------口数据--------------------------------------
-			bcfwData:function(){
+			bcfwData: function() {
 				uni.request({
-					url:$bcfw.Interface.fw_selectVehicle.value,
-					method:$bcfw.Interface.fw_selectVehicle.method,
-					header: {'content-type': 'application/json'},
-					
+					url: $bcfw.Interface.fw_selectVehicle.value,
+					method: $bcfw.Interface.fw_selectVehicle.method,
+					header: {
+						'content-type': 'application/json'
+					},
+
 					success: (res) => {
 						console.log(res)
-						this.vehicleSelection=res.data.data;
+						this.vehicleSelection = res.data.data;
 						// console.log(this.vehicleSelection)
 					}
 				})
 			},
-			
+
 			//---------------------------------模拟接口数据---------------------------------
 			async routeInit() {
 				let priceExplain = await this.$api.lyfwcwd('priceExplain');
@@ -218,51 +240,52 @@
 				// this.carIndex = test.vehicle;
 				this.value3 = res;
 			},
-			
+
 			//---------------------读取数据-----------------
-			readData:function(){
+			readData: function() {
 				uni.getStorage({
-					key:'homePageInfo',
-					success:(res)=>{
+					key: 'homePageInfo',
+					success: (res) => {
 						this.addressContent = res.data;
 						console.log(res)
-						if(this.isNormal == 0){
+						if (this.isNormal == 0) {
 							this.startingContent = 0;
-						}else{
+						} else {
 							this.startingContent = 1;
 						}
 					}
-				},500)
+				}, 500)
 			},
-			
+
 			//------------------------------提交数据-------------------------------------
-			sbuit:function(){
-				console.log(value3)
-				if(this.value3!==-1){
+			sbuit: function() {
+				// console.log(value3)
+				if (this.value3 !== -1) {
 					this.information.cvt_carImage = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carImage;
 					this.information.cvt_Name = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_Name;
-					this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carNumberSeats;
+					this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3]
+						.cvt_carNumberSeats;
 					this.information.cvt_carprice = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carprice;
-					
+
 					// console.log(this.vehicleSelection[this.value])
 					uni.setStorage({
-						key:'vehicleInformation',	
-						data:this.information,
-						success:()=>{
+						key: 'vehicleInformation',
+						data: this.information,
+						success: () => {
 							uni.navigateTo({
-								url:'./bf_information?isNormal='+this.isNormal
+								url: './bf_information?isNormal=' + this.isNormal
 							})
 						}
 					})
 					console.log(this.information)
-				}else{
+				} else {
 					uni.showToast({
 						title: '请选择包车',
 						icon: 'none'
 					})
 				}
 			}
-			
+
 		}
 	}
 </script>
@@ -285,23 +308,23 @@
 		background: rgba(252, 70, 70, 1);
 		top: 0;
 	}
-	
-	.cvt_setOutContent{
+
+	.cvt_setOutContent {
 		position: relative;
 		margin-left: 26upx;
 		margin-right: 26upx;
 		margin-bottom: 135upx;
 		top: 148upx;
 	}
-	
+
 	/* #ifdef MP-WEIXIN */
 	//整体容器样式 -微信版
 	.cvt_setOutContent {
 		top: 64upx;
 	}
-	
+
 	/* #endif */
-	
+
 	//出发内容
 	.cvt_content {
 		width: 698upx;
@@ -352,7 +375,7 @@
 				}
 			}
 		}
-		
+
 		//内容样式
 		.ct_departureContents2 {
 			display: flex;
@@ -392,6 +415,7 @@
 					font-weight: bold;
 				}
 			}
+
 			.ct_content9 {
 				color: rgba(102, 102, 102, 1);
 				font-size: 30upx;
@@ -399,7 +423,7 @@
 				// text-overflow: ellipsis;
 				// white-space: nowrap;
 				// overflow: hidden;
-			
+
 				.ct_content10 {
 					font-size: 30upx;
 					color: rgba(44, 45, 45, 1);
@@ -517,7 +541,7 @@
 					&.current {
 						z-index: 10;
 						color: #ff0000;
-						
+
 						&:after {
 							content: '';
 							position: absolute;
@@ -561,17 +585,13 @@
 					}
 				}
 			}
-			
-			.sc_choiceCar{
+
+			.sc_choiceCar {
 				display: flex;
-				
-				.cc_button{
+
+				.cc_button {
 					flex: 1;
-					display: flex;
-					// border: 1px solid #888;
-					// border-radius: 12rpx;
-					height: 165upx;
-					width: 226upx;
+					// display: flex;
 					justify-content: center;
 					color: #888;
 					position: relative;
@@ -579,20 +599,28 @@
 					margin-top: 30upx;
 					z-index: 21;
 					
-					.cc_image{
+					.cc_image2{
+						height: 226upx;
 						width: 226upx;
-						height: 103upx;
-						padding-top: 12upx;
-						z-index: 22;
+						
+						.cc_image {
+							height: 100%;
+							width: 100%;
+							// margin: auto;
+						}
 					}
-					
-					.cc_text{
-						position: absolute;
+
+					.cc_text {
+						display: block;
 						bottom: 0;
 						font-size: 28upx;
 						color: #888;
 						z-index: 23;
-						
+						// padding-top: 15upx;
+						width: 130upx;
+						margin:0 auto;
+						text-align: center;
+
 						&.current3 {
 							z-index: 24;
 							color: #ff0000;
@@ -605,24 +633,24 @@
 			}
 		}
 	}
-	
+
 	//按钮
 	.cvt_button {
 		display: flex;
 		padding: 46upx 41upx 60upx 41upx;
-	
+
 		.bt_button {
 			position: relative;
 			width: 640upx;
-			height:94upx;
-			background-color: #aaa; 
+			height: 94upx;
+			background-color: #aaa;
 			z-index: 25;
 			font-size: 36upx;
 			color: #FFFFFF;
-			
+
 			&.submitColor {
 				z-index: 26;
-				background-color:#f95c75;
+				background-color: #f95c75;
 			}
 		}
 	}

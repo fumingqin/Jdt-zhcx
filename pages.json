@@ -190,6 +190,10 @@
 				    "path" : "pages/CTKY/SpecialBus/stationPicker/specialBusStationPicker",
 				    "style" : {}
 				},
+				{
+				    "path" : "pages/CTKY/SpecialBus/specialBusOrderPayment/specialBusOrderPayment",
+				    "style" : {}
+				},
 				//----------------------------------传统班车/定制班车-----------------------------------
 				{
 					"path": "pages/CTKY/TraditionSpecial/Home/ctkyIndex",
