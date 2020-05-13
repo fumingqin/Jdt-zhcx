@@ -586,11 +586,18 @@
 			},
 			CheckPayState: function() { //检测支付状态
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: that.orderNumber
 					},
 					success(res) {
@@ -616,6 +623,13 @@
 			},
 			BouncePay: function() {
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.showModal({
 					title: "取消订单",
 					content: "您是否取消订单",
@@ -628,7 +642,7 @@
 								url: $privateTaxi.Interface.BouncePay.value,
 								method: $privateTaxi.Interface.BouncePay.method,
 								data: {
-									payType: 3,
+									payType: payPlatform,
 									orderNumber: that.orderNumber,
 									// price:that.FactPayPrice
 									price: 0.01
