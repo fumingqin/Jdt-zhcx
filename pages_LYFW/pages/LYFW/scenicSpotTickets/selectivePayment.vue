@@ -247,7 +247,7 @@
 			//数组提取
 			screenUser: function() {
 				let adult = this.orderInfo.addressData.filter(item => {
-					return item.userType == '成人';
+					return item.userType == '成人' || item.userType == '军人' || item.userType == '教师' || item.userType == '学生';
 				})
 				let children = this.orderInfo.addressData.filter(item => {
 					return item.userType == '儿童';

@@ -117,7 +117,7 @@ export default{
 			uni.getUserInfo({
 				provider: 'weixin',
 				success: function(infoRes) {
-					// console.log(infoRes,'49')
+					console.log(infoRes,'49')
 					that.userInfo=infoRes.userInfo;
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
 					setTimeout(function(){
@@ -149,45 +149,55 @@ export default{
 				},
 				method:that.$GrzxInter.Interface.login.method,
 				success(res1){
-					uni.request({
-						url:that.$GrzxInter.Interface.changeInfo.value,
-						data:{
-							userId:res1.data.data.userId,
-							phoneNumber:data.purePhoneNumber,
-							nickname:that.userInfo.nickName,
-							address:that.userInfo.province+that.userInfo.city,
-							openId_wx:res1.data.data.openId_wx,
-							gender:that.userInfo.gender,
-							openId_qq:res1.data.data.openId_qq,
-							openId_xcx:that.openId_xcx,
-							birthday:res1.data.data.birthday,
-							autograph:res1.data.data.autograph,
-						},
-						method:that.$GrzxInter.Interface.changeInfo.method,
-						success(res2){
-							uni.request({
-								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								data:{
-									userId:res2.data.data.userId,
-									portrait:that.userInfo.avatarUrl,
-								},
-								method:that.$GrzxInter.Interface.changeInfoPortrait.method,
-								success(res3) {
-									console.log(res3);
-									uni.showToast({
-										title:'绑定成功！',
-										icon:'success',
-									})
-									uni.setStorageSync('userInfo',res3.data.data)
-									setTimeout(function(){
-										uni.switchTab({
-											url:'/pages/Home/Index',
+					console.log('res1', res1)
+					if(!res1.data.status){
+						uni.showToast({
+							title:'绑定手机号失败，请重试！',
+							icon:'none'
+						})
+					}else{
+						uni.request({
+							url:that.$GrzxInter.Interface.changeInfo.value,
+							data:{
+								userId:res1.data.data.userId,
+								phoneNumber:data.purePhoneNumber,
+								nickname:that.userInfo.nickName,
+								address:that.userInfo.province+that.userInfo.city,
+								openId_wx:res1.data.data.openId_wx,
+								gender:that.userInfo.gender,
+								openId_qq:res1.data.data.openId_qq,
+								openId_xcx:that.openId_xcx,
+								birthday:res1.data.data.birthday,
+								autograph:res1.data.data.autograph,
+							},
+							method:that.$GrzxInter.Interface.changeInfo.method,
+							success(res2){
+								console.log('res2', res2)
+								uni.request({
+									url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+									data:{
+										userId:res2.data.data.userId,
+										portrait:that.userInfo.avatarUrl,
+									},
+									method:that.$GrzxInter.Interface.changeInfoPortrait.method,
+									success(res3) {
+										console.log(res3);
+										uni.showToast({
+											title:'绑定成功！',
+											icon:'success',
 										})
-									},500);
-								}
-							})
-						}
-					})
+										uni.setStorageSync('userInfo',res3.data.data)
+										setTimeout(function(){
+											uni.switchTab({
+												url:'/pages/Home/Index',
+											})
+										},500);
+									}
+								})
+							}
+						})
+					}
+					
 				},
 				fail() {
 					uni.showToast({

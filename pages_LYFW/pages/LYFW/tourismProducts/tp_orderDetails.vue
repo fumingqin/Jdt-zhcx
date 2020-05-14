@@ -113,7 +113,7 @@
 						<text class="Xx_QRcodeContent">{{orderInfo.orderTicketNumber}}</text>
 					</view>
 					<view class="Xx_QRcodeBlock2">
-						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx;"  />
+						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; z-index:0;"  />
 					</view>
 					<view class="Xx_QRcodeBlock2">
 						<text class="Xx_QRcodeTips">出示二维码，检票入园</text>
@@ -330,7 +330,7 @@
 			//数组提取
 			screenUser: function() {
 				let adult = this.orderInfo.addressData.filter(item => {
-					return item.userType == '成人';
+					return item.userType == '成人' || item.userType == '军人' || item.userType == '教师' || item.userType == '学生';
 				})
 				let children = this.orderInfo.addressData.filter(item => {
 					return item.userType == '儿童';
