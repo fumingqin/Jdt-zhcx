@@ -215,11 +215,11 @@
 							// that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						// that.getOpenID();
+						that.getOpenID();
 
 
 						//-------------------------------下单-------------------------------
-						that.getOrder();
+						// that.getOrder();
 					},
 					fail() {
 						uni.showToast({
@@ -365,8 +365,8 @@
 							//订单编号
 							orderNumber: res,
 							payType:4,
-							// openId:that.ctkyOpenID,
-							openId:'oV4q25OV2DJHvgTsfGYh4F9D_2lM',
+							openId:that.ctkyOpenID,
+							// openId:'oV4q25OV2DJHvgTsfGYh4F9D_2lM',
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
 							price:that.ticketInfo.totalPrice,
@@ -483,6 +483,8 @@
 					}
 				})
 				// #endif
+				
+				
 				// #ifdef MP-WEIXIN
 				
 				// #endif

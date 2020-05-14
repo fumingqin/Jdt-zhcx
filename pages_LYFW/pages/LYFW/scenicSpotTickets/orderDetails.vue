@@ -180,7 +180,8 @@
 		methods: {
 			//0.3价格取2位精度
 			priceAccuracy:function(e){
-				return e.toFixed(2);
+				const pri = e.toFixed(2);
+				return pri;
 			},
 			//访问接口数据
 			lyfwData(e) {
@@ -192,7 +193,7 @@
 					},
 					header: {'content-type': 'application/json'},
 					success:(res) => {
-						console.log(res)
+						// console.log(res)
 						this.orderInfo = res.data.data[0];
 						this.screenUser();
 						this.make()

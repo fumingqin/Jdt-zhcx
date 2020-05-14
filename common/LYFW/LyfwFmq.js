@@ -151,49 +151,49 @@ const Interface = {
 		value: Url + '/api/lyky/GetticketSearchByrequestArea_Six',
 		name:'旅游产品-六宫格',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+		pages:["LYFW/tourismProducts/tp_ticketsList.vue"]
 	},
 	
 	lyky_GetticketSearchByrequestArea:{
 		value: Url + '/api/lyky/GetticketSearchByrequestArea',
 		name:'旅游产品-景区列表',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+		pages:["LYFW/tourismProducts/tp_ticketsList.vue"]
 	},
 	
 	lyky_GetticketSearchBysearchValue:{
 		value: Url + '/api/lyky/GetticketSearchBysearchValue',
 		name:'旅游产品-搜索',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/ticketsList.vue"]
+		pages:["LYFW/tourismProducts/tp_ticketsList.vue"]
 	},
 	
 	lyky_GetticketDetailByticketId:{
 		value: Url + '/api/lyky/GetticketDetailByticketId',
 		name:'旅游产品-详情',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/ticketsDetails.vue"]
+		pages:["LYFW/tourismProducts/tp_ticketsDetails.vue"]
 	},
 	
 	lyky_GetticketSecurityByticketIde:{
 		value: Url + '/api/lyky/GetticketSecurityByticketId',
 		name:'旅游产品-门票须知',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+		pages:["LYFW/tourismProducts/tp_orderAdd.vue"]
 	},
 	
 	lyky_GetcouponByuserId:{
 		value: Url + '/api/lyky/GetcouponByuserId',
 		name:'旅游产品-优惠券列表',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+		pages:["LYFW/tourismProducts/tp_orderAdd.vue"]
 	},
 	
 	lyky_AddtouristOrder:{
 		value: Url + '/api/lyky/AddtouristOrder',
 		name:'旅游产品-提交订单',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/orderAdd.vue"]
+		pages:["LYFW/tourismProducts/tp_orderAdd.vue"]
 	},
 	
 	lyky_RequestTicketsList:{
@@ -207,35 +207,35 @@ const Interface = {
 		value: Url + '/api/lyky/RequestTicketsListDetail',
 		name:'订单详情',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/orderDetails.vue","LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+		pages:["LYFW/tourismProducts/tp_orderDetails.vue","LYFW/tourismProducts/tp_selectivePayment.vue","order/OrderList.vue"]
 	},
 	
 	lyky_getIsPaySuccess:{
 		value: Url + '/api/lyky/getIsPaySuccess',
 		name:'订单-去支付-查询是否出票',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+		pages:["LYFW/tourismProducts/tp_selectivePayment.vue"]
 	},
 	
 	lyky_RequestTickets:{
 		value: Url + '/api/lyky/RequestTickets',
 		name:'订单-去支付-出票',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+		pages:["LYFW/tourismProducts/tp_selectivePayment.vue"]
 	},
 	
 	lyky_CancelTickets:{
 		value: Url + '/api/lyky/CancelTickets',
 		name:'订单-取消',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+		pages:["LYFW/tourismProducts/tp_selectivePayment.vue","order/OrderList.vue"]
 	},
 	
 	lyky_BounceTickets:{
 		value: Url + '/api/lyky/BounceTickets',
 		name:'订单-退票',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/selectivePayment.vue","order/OrderList.vue"]
+		pages:["LYFW/tourismProducts/tp_selectivePayment.vue","order/OrderList.vue"]
 	},
 	
 	lyky_DeleteTickets:{
@@ -249,7 +249,7 @@ const Interface = {
 		value: Url + '/api/lyky/Pay',
 		name:'订单-请求支付参数（景区门票专用）',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+		pages:["LYFW/tourismProducts/tp_selectivePayment.vue"]
 	},
 	
 	lyky_GetScheduleByDateStartStationEndStation:{
@@ -263,14 +263,14 @@ const Interface = {
 		value: Url + '/api/lyky/BindGoInfo',
 		name:'订单 - 绑定去程班次信息）',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+		pages:["LYFW/tourismProducts/tp_selectivePayment.vue"]
 	},
 	
 	lyky_BindBackInfo:{
 		value: Url + '/api/lyky/BindBackInfo',
 		name:'订单-绑定回程班次信息',
 		method:'POST',
-		pages:["LYFW/scenicSpotTickets/selectivePayment.vue"]
+		pages:["LYFW/tourismProducts/tp_selectivePayment.vue"]
 	},
 	
 	qg_GetImage:{

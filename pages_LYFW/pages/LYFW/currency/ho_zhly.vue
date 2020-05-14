@@ -222,13 +222,13 @@
 					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data: {
 						// requestArea : this.regionWeixin,
-						requestArea: '南平市'
+						requestArea: '泉州市'
 					},
 					header: {
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
