@@ -10,7 +10,7 @@
 	const Url = 'https://zntc.145u.net:9099'; //https请求
 // #endif
 
-const Url1='http://111.231.109.113:8002';
+// const Url1='http://111.231.109.113:8002';
 const Interface={
 	login:{
 		value:Url+'/api/person/login',
@@ -89,7 +89,19 @@ const Interface={
 		name:'获取版本号',
 		method:'POST',
 		pages: [],
+	},
+	AddSuggestion:{
+		value:Url+'/api/person/AddSuggestion',
+		name:'添加意见',
+		method:'POST',
+		pages: [],
 	}, 
+	GetOpenId_xcx:{
+		value:Url+'/api/person/GetOpenId_xcx',
+		name:'获取微信小程序的openid',
+		method:'POST',
+		pages: [],
+	},
 }
 
 const MainPackage='/pages/GRZX';   //主包

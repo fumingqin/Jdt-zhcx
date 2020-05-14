@@ -243,7 +243,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								this.notice = res.data.data[0];
 							}
 						})
@@ -283,6 +283,7 @@
 								icon: 'none',
 								title: '未登录无法添加乘车人,请先登录'
 							})
+							//#ifdef APP-PLUS
 							setTimeout(function() {
 								uni.navigateTo({
 									//loginType=1,泉运登录界面
@@ -291,6 +292,12 @@
 									url: '../../../../pages/GRZX/userLogin?loginType=1'
 								})
 							}, 500);
+							//#endif
+							//#ifdef MP-WEIXIN
+							uni.navigateTo({
+								url:'/pages/Home/wxAuthorize',
+							})
+							// #endif
 						},
 						success() {
 							uni.navigateTo({
@@ -454,7 +461,7 @@
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.hideLoading()
 									uni.showToast({
@@ -518,39 +525,30 @@
 				// #endif
 
 				// #ifdef APP-PLUS
-				console.log(this.userInfo.userId)
-				console.log(this.admissionTicket.ticketId)
-				console.log(this.userInfo.phoneNumber)
-				console.log(this.admissionTicket.admissionTicketID)
-				console.log(this.couponColor)
-				console.log(this.date)
-				console.log(this.actualPayment)
-				console.log(this.admissionTicket.ticketContain)
-				console.log(this.addressData)
 				uni.request({
 					url: $lyfw.Interface.spt_AddtouristOrder.value,
 					method: $lyfw.Interface.spt_AddtouristOrder.method,
 					data: {
-						userId: this.userInfo.userId,
-						ticketId: this.admissionTicket.ticketId,
-						userPhone: this.userInfo.phoneNumber,
-						ticketProductId: this.admissionTicket.admissionTicketID,
-						couponID: this.couponColor,
-						orderDate: this.date,
+						userId: that.userInfo.userId,
+						ticketId: that.admissionTicket.ticketId,
+						userPhone: that.userInfo.phoneNumber,
+						ticketProductId: that.admissionTicket.admissionTicketID,
+						couponID: that.couponColor,
+						orderDate: that.date,
 						orderInsure: '',
 						orderInsurePrice: '',
-						orderActualPayment: this.actualPayment,
-						ticketContain: this.admissionTicket.ticketContain,
+						orderActualPayment: that.actualPayment,
+						ticketContain: that.admissionTicket.ticketContain,
 						sellerCompanyCode: 'APP',
 						tppId: 0,
-						addressData: this.addressData,
+						addressData: that.addressData,
 					},
 					header: {
 						'content-type': 'application/json'
 					},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 							uni.hideLoading()
 							uni.showToast({
@@ -608,7 +606,6 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(openid) {
-						// console.log(openid)
 						uni.request({
 							url: $lyfw.Interface.spt_AddtouristOrder.value,
 							method: $lyfw.Interface.spt_AddtouristOrder.method,
@@ -629,7 +626,7 @@
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.hideLoading()
 									uni.showToast({

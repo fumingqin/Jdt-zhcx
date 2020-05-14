@@ -199,7 +199,7 @@
 					},
 					// header: {'content-type': 'application/x-www-form-urlencoded'},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.sixPalaceList = res.data.data;
 						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
@@ -211,7 +211,7 @@
 
 					},
 					fail: function(ee) {
-						console.log(ee)
+						// console.log(ee)
 					}
 				})
 
@@ -372,7 +372,7 @@
 					},
 
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.searchData = res.data.data;
 							this.searchValue = ''
@@ -396,7 +396,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					url: './ticketsDetails?ticketId=' + JSON.stringify(e)
+					url: './ticketsDetails?ticketId=' + e
 				})
 			},
 

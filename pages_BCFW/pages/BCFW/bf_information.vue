@@ -226,6 +226,7 @@
 							icon: 'none',
 							title: '未登录无法添加乘车人,请先登录'
 						})
+						//#ifdef APP-PLUS
 						setTimeout(function() {
 							uni.navigateTo({
 								//loginType=1,泉运登录界面
@@ -234,6 +235,12 @@
 								url: '../../../pages/GRZX/userLogin?loginType=1'
 							})
 						}, 500);
+						// #endif
+						//#ifdef MP-WEIXIN
+						uni.navigateTo({
+							url:'/pages/Home/wxAuthorize',
+						})
+						// #endif
 					},
 					success: () => {
 						var a='';
@@ -291,6 +298,7 @@
 								icon: 'none',
 								title: '未登录无法添加乘车人,请先登录'
 							})
+							//#ifdef APP-PLUS
 							setTimeout(function() {
 								uni.navigateTo({
 									//loginType=1,泉运登录界面
@@ -299,6 +307,12 @@
 									url: '../../../pages/GRZX/userLogin?loginType=1'
 								})
 							}, 500);
+							// #endif
+							//#ifdef MP-WEIXIN
+							uni.navigateTo({
+								url:'/pages/Home/wxAuthorize',
+							})
+							// #endif
 						},
 						success() {
 							uni.navigateTo({
