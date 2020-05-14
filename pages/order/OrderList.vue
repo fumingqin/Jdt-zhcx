@@ -1763,6 +1763,10 @@
 					that.userInfo = data.data;
 				}
 			})
+			
+			
+			//定制巴士订单测试
+			that.GetBookLogInfoByUserId();
 		},
 		onShow: function() {
 			//请求景区门票数据
@@ -1939,6 +1943,30 @@
 						// console.log('错误', res);
 					}
 				})
+			},
+			//-------------------------请求定制巴士订单数据-------------------------
+			GetBookLogInfoByUserId(){
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.Url,
+					method:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.method,
+					header:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.header,
+					data:{
+						UserAID: that.userInfo.userId
+					},
+					success(res) {
+						console.log(res)
+						if (res.data.Successed == true) {
+							
+						}else if(res.data.Successed == false) {
+							
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+				
 			},
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {

@@ -158,6 +158,12 @@ const KyInterface = {
 		name:'定制巴士-模糊查询',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_GetBookLogInfoByUserId:{
+		Url:Url + '/api/CustomizedBus/GetBookLogInfoByUserId',
+		name:'定制巴士-订单列表',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
 	}
 }
 // 接口声明区

@@ -130,7 +130,8 @@
         "setting" : {
             "es6" : false,
             "postcss" : false,
-            "minified" : true
+            "minified" : false,
+            "urlCheck" : false
         },
         "usingComponents" : true,
         "permission" : {
