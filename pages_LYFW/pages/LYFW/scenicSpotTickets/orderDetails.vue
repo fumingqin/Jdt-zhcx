@@ -193,7 +193,7 @@
 					},
 					header: {'content-type': 'application/json'},
 					success:(res) => {
-						console.log(res)
+						// console.log(res)
 						this.orderInfo = res.data.data[0];
 						this.screenUser();
 						this.make()

@@ -183,7 +183,7 @@
 		methods: {
 			//请求模拟接口数据
 			lyfwData: function() {
-				console.log(this.regionWeixin)
+				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
 					url: $lyfw.Interface.lyky_GetticketSearchByrequestArea_Six.value,
@@ -198,7 +198,7 @@
 					},
 					// header: {'content-type': 'application/x-www-form-urlencoded'},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.sixPalaceList = res.data.data;
@@ -211,7 +211,7 @@
 
 					},
 					fail: function(ee) {
-						console.log(ee)
+						// console.log(ee)
 					}
 				})
 
@@ -369,7 +369,7 @@
 					},
 
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.searchData = res.data.data;
 							this.searchValue = ''

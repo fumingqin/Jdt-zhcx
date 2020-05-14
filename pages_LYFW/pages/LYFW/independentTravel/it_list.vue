@@ -456,7 +456,7 @@
 						title : this.searchValue
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.data) {
 							this.searchData = res.data.data;
 							this.searchValue = ''
@@ -482,7 +482,7 @@
 			
 			//跳转
 			natTo:function(e){
-				console.log(e)
+				// console.log(e)
 				uni.navigateTo({
 					url:'../currency/travelDetails?contentId=' +e
 				})
@@ -490,7 +490,6 @@
 			
 			/* 左侧导航点击 */
 			leftTap:function(item,index){
-				console.log(item)
 				this.leftIndex=index;
 				this.classifyList(item);
 				uni.showLoading({

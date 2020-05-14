@@ -243,7 +243,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								this.notice = res.data.data[0];
 							}
 						})
@@ -454,7 +454,7 @@
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.hideLoading()
 									uni.showToast({
@@ -541,7 +541,7 @@
 					},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 							uni.hideLoading()
 							uni.showToast({
@@ -619,7 +619,7 @@
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.hideLoading()
 									uni.showToast({
