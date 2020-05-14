@@ -102,6 +102,12 @@ const Interface={
 		method:'POST',
 		pages: [],
 	},
+	SearchCustomerService:{
+		value:Url+'/api/person/SearchCustomerService',
+		name:'获取QQ客服和电话客服',
+		method:'POST',
+		pages: [],
+	},
 }
 
 const MainPackage='/pages/GRZX';   //主包
