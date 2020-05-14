@@ -3194,6 +3194,7 @@
 
 			//-------------------------旅游产品-选车班车-------------------------
 			chooseShuttle:function(e){
+				// console.log(e)
 				uni.showLoading({
 					title:'正在加载班次...'
 				})
@@ -3201,8 +3202,8 @@
 					key:'chooseShuttleData',
 					data:e,
 					success: (res) => {
-						console.log(res)
-						console.log(e)
+						// console.log(res)
+						
 						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'
@@ -3210,7 +3211,7 @@
 							uni.hideLoading()
 						}else if(e.backstartStation == ''){
 							uni.navigateTo({
-								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle2?originIndex=1'
+								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle2?originIndex=1&setOutDate='+e.setOutDate
 							})
 							uni.hideLoading()
 						}

@@ -70,6 +70,11 @@
 			//提交绑定班次
 			paymentSatas: function(){
 				var that = this;
+					
+				
+				
+				
+				
 					uni.request({
 						url: $lyfw.Interface.lyky_BindBackInfo.value,
 						method: $lyfw.Interface.lyky_BindBackInfo.method,
@@ -108,7 +113,10 @@
 							endStation : this.endStation,
 						},
 						success: (res) => {
-							// console.log(res)
+							console.log(res)
+							// let a = res.data.filter(item => {
+							// 	return item.userType > '成人';
+							// })
 							this.departureData = res.data.data;
 						}
 				})
