@@ -109,8 +109,9 @@
 			this.wakeLock();
 		},
 		onShow() {
-			this.scenicSpotOpenId = uni.getStorageSync('scenicSpotOpenId') || ''; //获取Oppenid
-			console.log(this.scenicSpotOpenId )
+			// #ifdef MP-WEIXIN
+			this.scenicSpotOpenId = this.userInfo.openId_xcx || ''; //获取Oppenid
+			// #endif
 		},
 		methods: {
 			change: function(value) {

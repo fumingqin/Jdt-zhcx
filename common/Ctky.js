@@ -27,6 +27,7 @@ const systemName = '泉运公司综合出行';
 //接口对象
 const KyInterface = {
 	//GET-POST
+	//--------------------------------------通用接口--------------------------------------
 	systemName:{
 		systemName:'泉运公司综合出行',
 		systemNameApp:'泉运公司综合出行APP',
@@ -50,6 +51,7 @@ const KyInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	//--------------------------------------传统/定制客运--------------------------------------
 	Ky_AddPicture:{
 		Url: Url + '/api/zhcx/getImage',
 		name:'客运-添加图片',
@@ -148,6 +150,18 @@ const KyInterface = {
 	Cs_BookingTicket:{
 		Url:Url + '/api/CustomizedBus/BookingTicket',
 		name:'定制巴士-下单',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_GetLineByLineName:{
+		Url:Url + '/api/CustomizedBus/GetLineByLineName',
+		name:'定制巴士-模糊查询',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_GetBookLogInfoByUserId:{
+		Url:Url + '/api/CustomizedBus/GetBookLogInfoByUserId',
+		name:'定制巴士-订单列表',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	}

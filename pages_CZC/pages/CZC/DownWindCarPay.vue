@@ -107,7 +107,9 @@
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		onShow() {
-			this.scenicSpotOpenId=uni.getStorageSync('scenicSpotOpenId')|| '';//获取Oppenid
+			// #ifdef MP-WEIXIN
+			this.scenicSpotOpenId = this.userInfo.openId_xcx || ''; //获取Oppenid
+			// #endif
 		},
 		methods: {
 			change: function(value) {
