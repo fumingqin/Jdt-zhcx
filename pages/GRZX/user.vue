@@ -48,7 +48,12 @@
 				<text class="fontStyle">电子发票</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view> -->
-			<view class="boxClass" @click="QQClick">
+			<view class="boxClass" @click="phoneClick">
+				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
+				<text class="fontStyle">电话客服</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="QQClick">
 				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
 				<text class="fontStyle">QQ客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
@@ -406,13 +411,18 @@
 					icon : 'none',
 				})
 			},
+			phoneClick(){
+				uni.makePhoneCall({
+				    phoneNumber: '114' //仅为示例
+				});
+			},
 			QQClick(){
 				// #ifdef APP-PLUS
 				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
 				//#endif
 				// #ifdef MP-WEIXIN
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'QQ客服仅在APP内能正常使用',
 					icon : 'none',
 				})
 				//#endif
@@ -638,6 +648,7 @@
 		margin-left: 4.27%;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 30upx;
 	}
 	.moreClass{		
 		font-size:32upx ;
