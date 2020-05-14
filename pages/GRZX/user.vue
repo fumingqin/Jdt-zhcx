@@ -348,6 +348,7 @@
 						title : '请先登录',
 						icon : 'none',
 					})
+					// #ifdef APP-PLUS
 					setTimeout(function(){
 						uni.navigateTo({	
 							//loginType=1,泉运登录界面
@@ -356,6 +357,12 @@
 							url:that.$GrzxInter.Route.userLogin.url +'?loginType=1&&urlData=1'
 						}) 
 					},500);
+					// #endif
+					//#ifdef MP-WEIXIN
+					uni.navigateTo({
+						url:'/pages/Home/wxAuthorize',
+					})
+					// #endif
 				}else{
 					// console.log(that.$GrzxInter.Route.personal.url,"8888")
 					uni.navigateTo({

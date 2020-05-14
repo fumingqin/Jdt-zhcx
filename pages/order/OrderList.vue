@@ -2397,9 +2397,16 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
+								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
+								// #endif
+								//#ifdef MP-WEIXIN
+								uni.navigateTo({
+									url:'/pages/Home/wxAuthorize',
+								})
+								// #endif
 							}
 						})
 					}
@@ -3085,9 +3092,16 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
+								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
+								// #endif
+								//#ifdef MP-WEIXIN
+								uni.navigateTo({
+									url:'/pages/Home/wxAuthorize',
+								})
+								// #endif
 							}
 						})
 					}
@@ -3656,9 +3670,16 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
+								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
+								// #endif
+								//#ifdef MP-WEIXIN
+								uni.navigateTo({
+									url:'/pages/Home/wxAuthorize',
+								})
+								// #endif
 							}
 						})
 						that.getSfcOrderList();
