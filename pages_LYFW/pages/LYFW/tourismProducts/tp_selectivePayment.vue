@@ -172,7 +172,10 @@
 			uni.showLoading({
 				title: '拉起订单中...'
 			})
-
+			
+			//获取用户信息
+			this.getUserInfo();
+			
 			uni.request({
 				url:$lyfw.Interface.lyky_RequestTicketsListDetail.value,
 				method:$lyfw.Interface.lyky_RequestTicketsListDetail.method,
@@ -210,6 +213,16 @@
 			priceAccuracy:function(e){
 				const pri = e.toFixed(2);
 				return pri;
+			},
+			
+			//获取用户信息
+			getUserInfo:function(){
+				uni.getStorage({
+					key:'userInfo',
+					success:(res)=>{
+						this.userInfo = res.data;
+					}
+				})
 			},
 			
 			//隐藏操作

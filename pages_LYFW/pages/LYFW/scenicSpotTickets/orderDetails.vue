@@ -227,7 +227,7 @@
 			//跳转至景区详情
 			route(){
 				uni.navigateTo({
-					url: 'ticketsDetails?ticketId=' + JSON.stringify(this.orderInfo.ticketId)
+					url: 'ticketsDetails?ticketId=' +this.orderInfo.ticketId
 				})
 			},
 			
