@@ -3117,7 +3117,7 @@
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].orderType == '已使用') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderType == '待使用') {
+								} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待选车') {
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].orderType == '待支付') {
 									that.unfinishArr.push(res.data.data[i]);

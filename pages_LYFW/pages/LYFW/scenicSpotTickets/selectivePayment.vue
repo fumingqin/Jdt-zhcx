@@ -409,8 +409,8 @@
 						key:'scenicSpotOpenId',
 						success:(openid)=>{
 							uni.request({
-								url:$lyfw.Interface.spt_getCommonPayparameter.value,
-								method:$lyfw.Interface.spt_getCommonPayparameter.method,
+								url:$lyfw.Interface.spt_Pay.value,
+								method:$lyfw.Interface.spt_Pay.method,
 								data: {
 									payType: 5,
 									openId : openid.data,
