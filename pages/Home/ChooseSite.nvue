@@ -1258,7 +1258,7 @@
 						data: that.endlocation,
 						success(){
 							uni.navigateTo({
-								url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price,
+								url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price+"&vehicleNumber="+value.VehicleNumber,
 							})
 						}
 					})

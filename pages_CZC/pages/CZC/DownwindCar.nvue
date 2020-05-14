@@ -175,6 +175,7 @@
 				lineID:'',
 				departureTime:'',
 				Price:'',
+				vehicleNumber:'',
 			}
 		},
 		onUnload() {
@@ -191,6 +192,7 @@
 			that.departureTime = option.departureTime;
 			that.Price = option.Price;
 			that.TaxiCost=option.Price;
+			that.vehicleNumber=option.vehicleNumber;
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
@@ -273,6 +275,7 @@
 							PassengersPhone: that.userInfo.phoneNumber,
 							userType: 0,
 							DriverId:that.driverID,
+							VehicleNumber:that.vehicleNumber,
 							// EstimateDistance: that.SpecialLineInf.Distance, //预计里程
 							// EstimateTime: that.SpecialLineInf.EstimatedTime, //预计时间分钟
 						},
