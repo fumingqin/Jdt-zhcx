@@ -69,21 +69,20 @@ export default{
 			let that = this;
 			uni.login({
 				success(res){
-					console.log(res,'res')
-					var appid='wx8dcbb62a76885221';
-					var secret='11d8e65170b67f58cccd655051ca8303';
-					var logUrl='https://api.weixin.qq.com/sns/jscode2session?appid='+appid
-					+'&secret='+secret+'&js_code='+res.code+'&grant_type=authorization_code';
+					var logUrl=that.$GrzxInter.Interface.GetOpenId_xcx.value;
 					console.log(logUrl,'logUrl')
 					uni.request({
 						url:logUrl,
-						method: 'GET',
+						data:{
+							code:res.code,
+						},
+						method: that.$GrzxInter.Interface.GetOpenId_xcx.method,
 						success(logRes){
-							console.log(logRes,'logRes')
-							uni.setStorageSync('scenicSpotOpenId',logRes.data.openid)
-							var openid=logRes.data.openid;
-							that.sessionKey=logRes.data.session_key;
-							that.openId_xcx=logRes.data.openid;
+							// console.log(logRes,'logRes')
+							uni.setStorageSync('scenicSpotOpenId',logRes.data.data.openid)
+							var openid=logRes.data.data.openid;
+							that.sessionKey=logRes.data.data.session_key;
+							that.openId_xcx=logRes.data.data.openid;
 							uni.request({
 								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.value,
 								data:{
@@ -91,7 +90,7 @@ export default{
 								},
 								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.method,
 								success(res){
-									console.log(res,'res')
+									// console.log(res,'res')
 									setTimeout(function(){
 										uni.hideLoading();
 									},1000);
@@ -118,10 +117,12 @@ export default{
 			uni.getUserInfo({
 				provider: 'weixin',
 				success: function(infoRes) {
-					console.log(infoRes,'49')
+					// console.log(infoRes,'49')
 					that.userInfo=infoRes.userInfo;
-					// uni.setStorageSync('wxUserInfo',infoRes.userInfo)
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
+					setTimeout(function(){
+						uni.hideLoading();
+					},1000);
 				},
 				fail(res) {
 					uni.showToast({
@@ -138,9 +139,9 @@ export default{
 			var iv = e.detail.iv;
 			var pc = new WXBizDataCrypt(appId, this.sessionKey)
 			var data = pc.decryptData(encryptedData , iv)
-			console.log('解密后 data: ', data)
+			// console.log('解密后 data: ', data)
 			var that=this;
-			console.log('that.userInfo: ', that.userInfo)
+			// console.log('that.userInfo: ', that.userInfo)
 			uni.request({
 				url:that.$GrzxInter.Interface.login.value,
 				data:{

@@ -330,7 +330,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.data[0].orderType == '待支付') {
 							uni.request({
 								url:$lyfw.Interface.spt_CancelTickets.value,
@@ -342,7 +342,7 @@
 									'content-type': 'application/json'
 								},
 								success(res) {
-									console.log(res)
+									// console.log(res)
 									uni.showToast({
 										title: '支付超时，已自动取消订单,请刷新订单',
 										icon: 'none',
@@ -409,8 +409,8 @@
 						key:'scenicSpotOpenId',
 						success:(openid)=>{
 							uni.request({
-								url:$lyfw.Interface.spt_getCommonPayparameter.value,
-								method:$lyfw.Interface.spt_getCommonPayparameter.method,
+								url:$lyfw.Interface.spt_Pay.value,
+								method:$lyfw.Interface.spt_Pay.method,
 								data: {
 									payType: 5,
 									openId : openid.data,
@@ -421,7 +421,7 @@
 								},
 								header: {'content-type': 'application/json'},
 								success: function(res) {
-								console.log(res)
+								// console.log(res)
 								uni.requestPayment({
 									// provider: 'wxpay',
 									timeStamp: res.data.data.timeStamp,
@@ -430,7 +430,7 @@
 									signType: res.data.data.signType,
 									paySign: res.data.data.paySign,
 									success: function(res){
-										console.log(res)
+										// console.log(res)
 										if(res.errMsg == 'requestPayment:ok'){
 											uni.request({
 												url:$lyfw.Interface.spt_RequestTickets.value,
@@ -440,7 +440,7 @@
 												},
 												header: {'content-type': 'application/json'},
 												success: function(res) {
-													console.log(res)
+													// console.log(res)
 													if (res.data.msg == '出票成功') {
 														uni.redirectTo({
 															url: 'successfulPayment'
@@ -539,7 +539,7 @@
 									openId : res.data
 								},
 								success: function(res) {
-									console.log(res)
+									// console.log(res)
 									WeixinJSBridge.invoke('getBrandWCPayRequest', {
 										"appId": res.data.data.appId, //公众号名称，由商户传入
 										"timeStamp": res.data.data.timeStamp, //时间戳
@@ -557,7 +557,7 @@
 												},
 												header: {'content-type': 'application/json'},
 												success: function(res) {
-													console.log(res)
+													// console.log(res)
 													if (res.data.msg == '出票成功') {
 														uni.redirectTo({
 															url: 'successfulPayment'
@@ -642,7 +642,7 @@
 						},
 						header: {'content-type': 'application/json'},
 						success: function(e) {
-							console.log(e.data.data)
+							// console.log(e.data.data)
 							uni.hideLoading()
 							uni.requestPayment({
 								provider: 'wxpay',
@@ -657,7 +657,7 @@
 											},
 											header: {'content-type': 'application/json'},
 											success: function(res) {
-												console.log(res)
+												// console.log(res)
 												if (res.data.msg == '出票成功') {
 													uni.redirectTo({
 														url: 'successfulPayment'
@@ -682,7 +682,7 @@
 								},
 					
 								fail: function(e) {
-									console.log(e)
+									// console.log(e)
 									if (e.errMsg == 'requestPayment:fail canceled') {
 										uni.showToast({
 											title: '您放弃了支付',
@@ -708,7 +708,7 @@
 					
 						},
 						fail: (e) => {
-							console.log(e)
+							// console.log(e)
 							uni.hideLoading()
 							uni.showToast({
 								// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
@@ -721,7 +721,7 @@
 					
 					
 				} else if (this.channeIndex == 1) { 
-					console.log(that.orderInfo.orderNumber)
+					// console.log(that.orderInfo.orderNumber)
 					//--------------------------------------支付宝APP支付-------------------------------------
 					uni.request({
 						url:$lyfw.Interface.spt_Pay.value,
@@ -741,7 +741,7 @@
 								provider: 'alipay',
 								orderInfo: e.data.data,
 								success: function(res) {
-									console.log(res)
+									// console.log(res)
 									uni.request({
 										url:$lyfw.Interface.spt_RequestTickets.value,
 										method:$lyfw.Interface.spt_RequestTickets.method,
@@ -750,7 +750,7 @@
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
-											console.log(res)
+											// console.log(res)
 											if (res.data.msg == '出票成功') {
 												uni.redirectTo({
 													url: 'successfulPayment'
@@ -774,7 +774,7 @@
 								},
 							
 								fail: function(e) {
-									console.log(e)
+									// console.log(e)
 									if (e.errMsg == 'requestPayment:fail canceled') {
 										uni.showToast({
 											title: '您放弃了支付',
@@ -813,7 +813,8 @@
 
 
 			},
-
+			
+			//检查是否已支付
 			retrievePayment:function(){
 				var that = this;
 				uni.request({
@@ -824,7 +825,7 @@
 					},
 					header: {'content-type': 'application/json'},
 					success:function(res){
-						console.log(res)
+						// console.log(res)
 							if(res.data.msg =='当前订单已支付成功,请勿重复支付'){
 								uni.request({
 									url:$lyfw.Interface.spt_RequestTickets.value,

@@ -110,7 +110,7 @@
 							endStation : this.endStation,
 						},
 						success: (res) => {
-							console.log(res)
+							// console.log(res)
 							this.departureData = res.data.data;
 						}
 				})

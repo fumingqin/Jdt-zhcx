@@ -78,7 +78,7 @@
 							scheduleID : this.departureData[that.statusIndex].scheduleID
 						},
 						success: (res) => {
-							console.log(res)
+							// console.log(res)
 							uni.showToast({
 								title:'选择返程班次成功',
 								success: () => {

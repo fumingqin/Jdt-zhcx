@@ -244,7 +244,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								this.notice = res.data.data[0];
 							}
 						})
@@ -280,6 +280,7 @@
 								icon: 'none',
 								title: '未登录无法添加乘车人,请先登录'
 							})
+							//#ifdef APP-PLUS
 							setTimeout(function() {
 								uni.navigateTo({
 									//loginType=1,泉运登录界面
@@ -288,6 +289,12 @@
 									url: '../../../../pages/GRZX/userLogin?loginType=1'
 								})
 							}, 500);
+							//#endif
+							//#ifdef MP-WEIXIN
+							uni.navigateTo({
+								url:'/pages/Home/wxAuthorize',
+							})
+							// #endif
 						},
 						success() {
 							uni.navigateTo({
@@ -450,7 +457,7 @@
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.hideLoading()
 									uni.showToast({
@@ -537,7 +544,7 @@
 					},
 					//向服务器发送订单数据，返回订单编号
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 							uni.hideLoading()
 							uni.showToast({
@@ -561,7 +568,7 @@
 							})
 
 						} else if (res.data.msg == '订单下单成功') {
-							console.log(res.data.data.orderNumber)
+							// console.log(res.data.data.orderNumber)
 							uni.hideLoading()
 							uni.redirectTo({
 								url: 'tp_selectivePayment?orderNumber=' + res.data.data.orderNumber
@@ -586,7 +593,7 @@
 
 					},
 					fail: function(ee) {
-						console.log(ee)
+						// console.log(ee)
 					}
 				})
 				// #endif
@@ -616,7 +623,7 @@
 							},
 							//向服务器发送订单数据，返回订单编号
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
 									uni.hideLoading()
 									uni.showToast({

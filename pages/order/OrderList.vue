@@ -2397,9 +2397,16 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
+								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
+								// #endif
+								//#ifdef MP-WEIXIN
+								uni.navigateTo({
+									url:'/pages/Home/wxAuthorize',
+								})
+								// #endif
 							}
 						})
 					}
@@ -3085,9 +3092,16 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
+								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
+								// #endif
+								//#ifdef MP-WEIXIN
+								uni.navigateTo({
+									url:'/pages/Home/wxAuthorize',
+								})
+								// #endif
 							}
 						})
 					}
@@ -3117,7 +3131,7 @@
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].orderType == '已使用') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderType == '待使用') {
+								} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待选车') {
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].orderType == '待支付') {
 									that.unfinishArr.push(res.data.data[i]);
@@ -3656,9 +3670,16 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
+								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
+								// #endif
+								//#ifdef MP-WEIXIN
+								uni.navigateTo({
+									url:'/pages/Home/wxAuthorize',
+								})
+								// #endif
 							}
 						})
 						that.getSfcOrderList();

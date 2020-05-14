@@ -149,7 +149,8 @@
 				
 				<view class="box_Vlew2">
 					<view :hidden="orderInfo.backsetOutDate !== ''">订单未选择返程班次</view>
-					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == ''">
+					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
+					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
 						<text class="box_title">出发班次信息</text> 
 						<text class="box_icon jdticon icon-fork " @click="close2"></text>
@@ -189,7 +190,8 @@
 				
 				<view class="box_Vlew2" >
 					<view :hidden="orderInfo.setOutDate !== ''">订单未选择出发班次</view>
-					<scroll-view scroll-y="true" :hidden="orderInfo.setOutDate == ''">
+					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
+					<scroll-view scroll-y="true" :hidden="orderInfo.setOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
 						<text class="box_title">出发班次信息</text> 
 						<text class="box_icon jdticon icon-fork " @click="close3"></text>
@@ -288,7 +290,7 @@
 					},
 					header: {'content-type': 'application/json'},
 					success:(res) => {
-						console.log(res)
+						// console.log(res)
 						this.orderInfo = res.data.data[0];
 						this.screenUser();
 						this.make()

@@ -109,12 +109,19 @@
 							title : '请先登录',
 							icon : 'none',
 						})
+						//#ifdef APP-PLUS
 						setTimeout(function(){
 							uni.navigateTo({
 								// url  : '/pages/GRZX/userLogin',
 								url:that.$GrzxInter.Route.userLogin.url +'?loginType=1&&urlData=1'
 							}) 
 						},1000);
+						// #endif
+						//#ifdef MP-WEIXIN
+						uni.navigateTo({
+							url:'/pages/Home/wxAuthorize',
+						})
+						// #endif
 					}
 				})
 			},
