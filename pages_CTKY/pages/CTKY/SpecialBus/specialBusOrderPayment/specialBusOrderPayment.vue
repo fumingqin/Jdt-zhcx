@@ -473,7 +473,6 @@
 							})
 						}
 					},
-
 					fail: function(ee) {
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
@@ -481,12 +480,40 @@
 							duration: 3000
 						})
 					}
-				})
+				});
 				// #endif
 				
-				
 				// #ifdef MP-WEIXIN
-				
+				uni.hideLoading()
+				uni.requestPayment({
+					provider: 'wxpay',
+					timeStamp:that.paymentData.timeStamp,
+					nonceStr:that.paymentData.nonceStr,
+					package:that.paymentData.package,
+					signType:that.paymentData.signType,
+					paySign:that.paymentData.paySign,
+					success(res) {
+						console.log(res)
+						uni.showToast({
+							title: '支付成功',
+							icon: 'none'
+						})
+						uni.showLoading({
+						    title: '加载中...'
+						});
+						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+					},
+					fail(res) {
+						console.log(res)
+						if (res.errMsg == "requestPayment:fail canceled") {
+							setTimeout(function() {
+								that.showToast("支付失败，请重新支付")
+							}, 1000)
+						} else {
+							that.showToast("网络连接失败")
+						}
+					}
+				});
 				// #endif
 			},
 			//--------------------------成功之后重新获取车票支付参数--------------------------
