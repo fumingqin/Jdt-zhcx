@@ -204,6 +204,7 @@
 				uni.getStorage({
 					key:'userInfo',
 					success:(res)=>{
+						console.log(res)
 						this.userInfo = res.data;
 					}
 				})
@@ -598,7 +599,7 @@
 				// #endif
 
 				// #ifdef MP-WEIXIN
-				if(that.userInfo.openId_wx){
+				if(that.userInfo.openId_xcx){
 					uni.request({
 						url: $lyfw.Interface.spt_AddtouristOrder.value,
 						method: $lyfw.Interface.spt_AddtouristOrder.method,
