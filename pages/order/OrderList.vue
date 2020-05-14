@@ -29,10 +29,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -65,10 +69,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -408,10 +416,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -445,10 +457,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -661,10 +677,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -698,10 +718,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -941,10 +965,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -978,10 +1006,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -1202,10 +1234,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -1239,10 +1275,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -1763,6 +1803,10 @@
 					that.userInfo = data.data;
 				}
 			})
+			
+			
+			//定制巴士订单测试
+			that.GetBookLogInfoByUserId();
 		},
 		onShow: function() {
 			//请求景区门票数据
@@ -1939,6 +1983,30 @@
 						// console.log('错误', res);
 					}
 				})
+			},
+			//-------------------------请求定制巴士订单数据-------------------------
+			GetBookLogInfoByUserId(){
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.Url,
+					method:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.method,
+					header:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.header,
+					data:{
+						UserAID: that.userInfo.userId
+					},
+					success(res) {
+						console.log(res)
+						if (res.data.Successed == true) {
+							
+						}else if(res.data.Successed == false) {
+							
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+				
 			},
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {
@@ -2397,16 +2465,9 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
-								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
-								// #endif
-								//#ifdef MP-WEIXIN
-								uni.navigateTo({
-									url:'/pages/Home/wxAuthorize',
-								})
-								// #endif
 							}
 						})
 					}
@@ -3092,16 +3153,9 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
-								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
-								// #endif
-								//#ifdef MP-WEIXIN
-								uni.navigateTo({
-									url:'/pages/Home/wxAuthorize',
-								})
-								// #endif
 							}
 						})
 					}
@@ -3131,7 +3185,7 @@
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].orderType == '已使用') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待选车') {
+								} else if (res.data.data[i].orderType == '待使用') {
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].orderType == '待支付') {
 									that.unfinishArr.push(res.data.data[i]);
@@ -3256,12 +3310,12 @@
 			repurchase(e,index) {
 				if(index =='3'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' +e
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
 					})
 					
 				}else if(index =='5'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' +e
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' + JSON.stringify(e)
 					})
 				}
 
@@ -3286,21 +3340,14 @@
 							'content-type': 'application/json'
 						},
 						success: (e) => {
-							console.log(e)
+							// console.log(e)
 							uni.hideLoading()
-							if(e.data.msg =='订单异常'){
-								uni.showToast({
-									title: '退票异常，请联系客服',
-									icon: 'success',
-								})
-							}else{
-								uni.showToast({
-									title: '退票成功',
-									icon: 'success',
-								})
-								this.close2()
-								this.toFinished();
-							}
+							uni.showToast({
+								title: '退票成功',
+								icon: 'success',
+							})
+							this.close2()
+							this.toFinished();
 						},
 						fail: function() {
 							uni.showToast({
@@ -3323,19 +3370,13 @@
 						},
 						success: (e) => {
 							console.log(e)
-							if(e.data.msg =='订单异常'){
-								uni.showToast({
-									title: '退票异常，请联系客服',
-									icon: 'success',
-								})
-							}else{
-								uni.showToast({
-									title: '退票成功',
-									icon: 'success',
-								})
-								this.close2()
-								this.toFinished();
-							}
+							uni.hideLoading()
+							uni.showToast({
+								title: '退票成功',
+								icon: 'success',
+							})
+							this.close2()
+							this.toFinished();
 						},
 						fail: function() {
 							uni.showToast({
@@ -3671,16 +3712,9 @@
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
 							success: function() {
-								//#ifdef APP-PLUS
 								uni.redirectTo({
 									url: '../GRZX/userLogin?loginType=1&&urlData=2'
 								})
-								// #endif
-								//#ifdef MP-WEIXIN
-								uni.navigateTo({
-									url:'/pages/Home/wxAuthorize',
-								})
-								// #endif
 							}
 						})
 						that.getSfcOrderList();
