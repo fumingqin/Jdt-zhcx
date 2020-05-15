@@ -92,6 +92,8 @@
 					tsTitle : '',
 					tsDate: '',
 					nickname : '',//用户姓名
+					userId:'',
+					orderNumber:'',//订单编号
 					// mobile : '',//用户电话
 					// txt: '请选择',//事件选择
 					// complaintObject : '',//投诉
@@ -116,6 +118,7 @@
 		onLoad:function(options) {
 			this.detailInfo.tsTitle = options.tsTitle;
 			this.detailInfo.tsDate = options.tsData;
+			this.detailInfo.orderNumber = options.orderNumber;
 			// this.routeInit();
 			this.loadUserInfo();
 			
@@ -129,6 +132,7 @@
 					key: 'userInfo',			
 					success: function (res) {
 						theself.detailInfo.nickname = res.data.nickname; 
+						theself.detailInfo.userId = res.data.userId;
 						theself.detailInfo.mobile = res.data.mobile;
 						// console.log(res)
 					}
@@ -179,8 +183,9 @@
 			    	method:$lyfw.Interface.person_addComplaint.method,
 					data:{
 						complaintContent : this.detailInfo.a,
-						complainant : this.detailInfo.nickname,
+						complainant : this.detailInfo.userId,
 						beComplainant : this.detailInfo.tsDate,
+						orderNumber: this.detailInfo.orderNumber,
 						model : this.detailInfo.tsTitle,
 					},
 					success: (res) => {
