@@ -149,12 +149,7 @@
 						ticketId: '',
 						ticketTitle: '',
 						ticketImage: '',
-					}
-				],
-
-
-
-				goodsList: [],
+					}]
 			}
 		},
 		onLoad() {
