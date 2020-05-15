@@ -203,8 +203,11 @@
 			if (that.destination == '') {
 				that.destination = '请选择目的点'
 			}
+			if (that.datestring == '') {
+				that.datestring = '请选择时间'
+			}
 			that.routeInit();
-			that.getTodayDate();
+			// that.getTodayDate();
 		},
 
 		methods: {
@@ -304,18 +307,18 @@
 			},
 
 			//---------------------------------获取当前日期---------------------------------
-			getTodayDate() {
-				var date = new Date(),
-					year = date.getFullYear(),
-					month = date.getMonth() + 1,
-					day = date.getDate(),
-					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-					minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-				month >= 1 && month <= 9 ? (month = "0" + month) : "";
-				day >= 0 && day <= 9 ? (day = "0" + day) : "";
-				var timer = year + '年' + month + '月' + day + '日' + ' ' + hour + ':' + minutes;
-				this.datestring = timer;
-			},
+			// getTodayDate() {
+			// 	var date = new Date(),
+			// 		year = date.getFullYear(),
+			// 		month = date.getMonth() + 1,
+			// 		day = date.getDate(),
+			// 		hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+			// 		minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+			// 	month >= 1 && month <= 9 ? (month = "0" + month) : "";
+			// 	day >= 0 && day <= 9 ? (day = "0" + day) : "";
+			// 	var timer = year + '年' + month + '月' + day + '日' + ' ' + hour + ':' + minutes;
+			// 	this.datestring = timer;
+			// },
 
 			//---------------------------------时间日期---------------------------------
 			onShowDatePicker(type) { //显示

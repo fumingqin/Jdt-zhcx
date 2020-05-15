@@ -336,6 +336,25 @@ const Interface = {
 		name:'订单 - 投诉',
 		method:'POST',
 		pages:["pages/order/complaint"]
+	},
+	//--------------------------------旅游服务首页-咨询-------------------------------
+	currency_zhly:{
+		value: Url + '/api/person/getNews',
+		name:'旅游服务首页 - 咨询',
+		method:'POST',
+		pages:["pages/LYFW/currency/ho_zhly"]
+	},
+	home_InformationDetails:{
+		value: Url + '/api/person/AddNewsCount',
+		name:'旅游服务首页 - 咨询详情提高浏览',
+		method:'POST',
+		pages:["pages/Home/InformationDetails"]
+	},
+	home_InformationDetails2:{
+		value: Url + '/api/person/getNewsByAid',
+		name:'旅游服务首页 - 咨询详情',
+		method:'POST',
+		pages:["pages/Home/InformationDetails"]
 	}
 }
 
