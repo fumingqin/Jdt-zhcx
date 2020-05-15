@@ -180,13 +180,12 @@
 							that.showToast("超时未支付，订单自动取消");
 							clearInterval(that.countDownInterval); //清除倒计时
 							setTimeout(function() {
+								uni.hideLoading();
 								uni.switchTab({
 									url: '../../../pages/order/OrderList'
 								})
 							}, 1000)
 						} else {
-
-
 							that.showToast(res.data.msg);
 						}
 					},
@@ -298,8 +297,11 @@
 					},
 					fail(res) {
 						that.CheckPayState();
-						console.log(res)
-						if (res.errMsg == "requestPayment:fail canceled") {
+						var msg="requestPayment:fail canceled";
+						// #ifdef MP-WEIXIN
+						msg="requestPayment:fail cancel";
+						// #endif
+						if (res.errMsg == msg) {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")
 							}, 1000)

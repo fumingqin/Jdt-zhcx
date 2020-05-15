@@ -9,7 +9,7 @@
 			<view class="SearchBar" elevation='5px' style="">
 				<image class="topContent-image" src="../../static/Home/Search.png"></image>
 				<text @click="chooseSite" style="width: 500rpx;line-height: 45rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:400; color:rgba(153,153,153,1);">{{Address}}</text>
-				<image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image>
+				<!-- <image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image> -->
 			</view>
 		</view>
 		<!-- #endif -->
