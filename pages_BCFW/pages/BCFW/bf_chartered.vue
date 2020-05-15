@@ -394,7 +394,12 @@
 							title: '请选择上车点',
 							icon: 'none'
 						})
-					} else {
+					} else if (this.datestring = '请选择时间') {
+						uni.showToast({
+							title: '请选择上车时间',
+							icon: 'none'
+						})
+					}else {
 						this.homePageInfo.isNormal = this.isNormal;
 						this.homePageInfo.privateSite = this.privateSite;
 						this.homePageInfo.initialPoint = this.initialPoint;
@@ -430,7 +435,12 @@
 							title: '请选择目的点',
 							icon: 'none'
 						})
-					} else if (this.dayContent[this.index] == '请选择') {
+					} else if (this.datestring = '请选择时间') {
+						uni.showToast({
+							title: '请选择上车时间',
+							icon: 'none'
+						})
+					}else if (this.dayContent[this.index] == '请选择') {
 						uni.showToast({
 							title: '请选择包车天数',
 							icon: 'none'

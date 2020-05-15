@@ -11,7 +11,7 @@
 			<image :src="information.src" mode="widthFix"></image>
 		</view> -->
 		<view class="content">
-			<rich-text :nodes="imageText"></rich-text>
+			<rich-text :nodes="imageText" style="width: 100%;"></rich-text>
 		</view>
 		<view class="count">
 		   <text>游览量：{{information.count}}</text>
@@ -67,15 +67,32 @@
 								that.information.author=detailTweet[0].author;
 								that.information.createdTime = detailTweet[0].reportTime;
 								that.information.count = detailTweet[0].viewsCount;
-								that.imageText=detailTweet[0].newsContent.slice(2);
+								// that.imageText=detailTweet[0].newsContent;
+								that.imageText = detailTweet[0].newsContent.replace(/\<img/g, '<img style="max-width:1%;height:auto;margin: 10px 0px;" ');
+								uni.getStorage({
+									key:'userInfo',
+									success:(res) =>{
+										uni.request({
+											url:that.$GrzxInter.Interface.AddNewsCount.value,
+											data:{
+												aid:that.aid,
+												userId:res.data.userId,
+											},
+											method:that.$GrzxInter.Interface.AddNewsCount.method,
+											success(r) {
+												
+											},
+											fail() {
+												uni.showToast({
+													title:'您暂未登录，请登录！',
+													icon:'none',
+												})
+											}
+										})
+									}
+								})
 							}
 						})
-						// this.information.title = e.data.title;
-						// this.information.createdTime = e.data.reportTime;
-						// this.information.src = e.data.src;
-						// this.imageText = e.data.text;
-						// this.count=e.data.viewsCount;
-						console.log(e)
 					},
 					fail() {
 						uni.showToast({
@@ -84,18 +101,7 @@
 						})
 					}
 				})
-				uni.getStorage({
-					key:'userInfo',
-					success:(res) =>{
-						//tianjiayoulangliang
-					},
-					fail() {
-						uni.showToast({
-							title:'您暂未登录，请登录！',
-							icon:'none',
-						})
-					}
-				})
+				
 			},
 		}
 	}

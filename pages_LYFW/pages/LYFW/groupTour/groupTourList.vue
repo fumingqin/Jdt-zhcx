@@ -3,12 +3,7 @@
 		<view class="topSearch">
 			<!-- 搜索栏 -->
 			<view class="searchTopBox">
-				<!-- #ifdef MP -->
-				<text class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
-				<!-- #endif -->
-				<!-- #ifdef APP-PLUS -->
-				<text class="locationTxt" @click="oncity">{{regionApp.city}}<text class="icon jdticon icon-xia"></text></text>
-				<!-- #endif -->
+				<text  class="locationTxt" @click="oncity">{{regionWeixin}}<text class="icon jdticon icon-xia"></text></text>
 				<view class="searchBoxRadius">
 					<input class="inputIocale" type="search" v-model="searchValue" @confirm="searchNow" placeholder="搜索景区名称" />
 					<image class="searchImage" src="../../../static/LYFW/currency/search.png" />
@@ -148,6 +143,17 @@
 		},
 
 		onLoad() {
+			// #ifdef H5
+			uni.showToast({
+				title:'公众号当前定位无法启用，已默认定位泉州市',
+				icon:'none'
+			})
+			this.regionWeixin = '泉州市'; //h5无法自动定位，采用手动赋值
+			// #endif
+			uni.showLoading({
+				title:'加载中...',
+				icon:'loading'
+			})
 			// this.routeInit();
 			this.Getpostion();
 			// #ifdef H5
@@ -157,9 +163,9 @@
 
 		onPullDownRefresh: function() {
 			this.routeData(); //请求接口数据
-			setTimeout(function() {
-				uni.stopPullDownRefresh(); //停止下拉刷新动画
-			}, 1000);
+			// setTimeout(function() {
+			// 	uni.stopPullDownRefresh(); //停止下拉刷新动画
+			// }, 1000);
 		},
 
 		methods: {
@@ -168,17 +174,31 @@
 					url: $lyfw.Interface.gt_groupTourList.value,
 					method: $lyfw.Interface.gt_groupTourList.method,
 					data: {
-						// #ifdef H5
-						regionWeixin: '泉州市',
-						// #endif
-						// #ifndef H5
 						regionWeixin: this.regionWeixin,
-						// #endif
 					},
 					success: (e) => {
-						// console.log(e)
-						this.groupTitle = e.data.data;
-					}
+						console.log(e)
+						if(e.data.status == true){
+							this.groupTitle = e.data.data;
+							uni.hideLoading()
+						}else{
+							uni.hideLoading()
+							this.groupTitle = '';
+							uni.showToast({
+								title:'该地区暂无自由行数据',
+								icon:'none'
+							})
+							
+						}
+					},
+					fail:function(){
+						uni.hideLoading()
+						uni.showToast({
+							title:'网络异常，请检查网络后尝试',
+							icon:'none'
+						})
+						
+					} 
 				})
 			},
 
@@ -186,21 +206,35 @@
 			//获取定位数据
 			Getpostion: function() {
 				setTimeout(() => {
-					uni.getStorage({
+						uni.getStorage({
 							key: 'wx_position',
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-								this.routeData();
+								this.routeData(); //请求接口数据
+							},
+							fail: (res) => {
+								uni.showToast({
+									title:'请选择地区',
+									icon:'none'
+								})
 							},
 						}),
-
 						uni.getStorage({
 							key: 'app_position',
 							success: (res) => {
-								// console.log(res)
-								this.regionApp = res.data;
-							}
+								console.log(res)
+								if (res.data !== undefined) {
+									this.regionWeixin = res.data.city;
+									this.routeData(); //请求接口数据
+								}
+							},
+							fail: (res) => {
+								uni.showToast({
+									title:'请选择地区',
+									icon:'none'
+								})
+							},
 						})
 				}, 500)
 
@@ -383,12 +417,7 @@
 			}
 
 			.searchBoxRadius {
-				/* #ifdef H5 */
-				width: 100%;
-				/* #endif */
-				/* #ifndef H5 */
 				width: 76%;
-				/* #endif */
 				height: 78upx;
 				background-color: #fff;
 				border-radius: 46upx;
