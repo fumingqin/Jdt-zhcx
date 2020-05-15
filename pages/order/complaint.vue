@@ -92,6 +92,7 @@
 					tsTitle : '',
 					tsDate: '',
 					nickname : '',//用户姓名
+					userId:'',
 					// mobile : '',//用户电话
 					// txt: '请选择',//事件选择
 					// complaintObject : '',//投诉
@@ -129,6 +130,7 @@
 					key: 'userInfo',			
 					success: function (res) {
 						theself.detailInfo.nickname = res.data.nickname; 
+						theself.detailInfo.userId = res.data.userId;
 						theself.detailInfo.mobile = res.data.mobile;
 						console.log(res)
 					}
@@ -193,7 +195,7 @@
 			    	method:$lyfw.Interface.person_addComplaint.method,
 					data:{
 						complaintContent : this.detailInfo.a,
-						complainant : this.detailInfo.nickname,
+						complainant : this.detailInfo.userId,
 						beComplainant : this.detailInfo.tsDate,
 						model : this.detailInfo.tsTitle,
 					},
