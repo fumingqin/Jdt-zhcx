@@ -296,6 +296,7 @@
 						that.getOrder();
 					},
 					fail: function(fail) {
+						that.getOrder();
 						uni.hideLoading();
 						uni.showModal({
 							content: '用户未授权',

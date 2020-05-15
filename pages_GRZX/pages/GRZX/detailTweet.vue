@@ -7,9 +7,9 @@
 			<text>{{information.createdTime}}</text>
 			<text style="margin-left:24upx;" :v-if="information.author !==''">{{information.author}}</text>
 		</view>
-		<view class="imageView">
+		<!-- <view class="imageView">
 			<image :src="information.src" mode="widthFix"></image>
-		</view>
+		</view> -->
 		<view class="content">
 			<rich-text :nodes="imageText"></rich-text>
 		</view>
@@ -28,15 +28,14 @@
 					createdTime: '', //时间
 					author: '', //作者
 					src : '', //图片路径
-					count: '182', //游览量
+					count: '', //游览量
 				},
-				id : '',
+				aid : '',
 				imageText : '', //图文
 			}
 		},
-		onLoad(options) {
-			// this.id = options.id 
-			this.getArticleInfo() 
+		onLoad() {
+			this.getArticleInfo(); 
 		},
 		methods: {
 			getArticleInfo :function(){
@@ -50,14 +49,51 @@
 				// 		// console.log(res)
 				// 		}
 				// })
+				var that=this;
 				uni.getStorage({
 					key:'detailTweet',
 					success:(e) =>{
-						this.information.title = e.data.title;
-						this.information.createdTime = e.data.time;
-						this.information.src = e.data.src;
-						this.imageText = e.data.text;
-						// console.log(e)
+						that.aid=e.data.aid;
+						uni.request({
+							url:that.$GrzxInter.Interface.getNews.value,
+							method:that.$GrzxInter.Interface.getNews.method,
+							success(logRes) {
+								console.log(logRes,'logRes')
+								var detailTweet=logRes.data.data.filter(item => {
+									return item.aid == that.aid;
+								})
+								console.log(detailTweet)
+								that.information.title = detailTweet[0].title;
+								that.information.author=detailTweet[0].author;
+								that.information.createdTime = detailTweet[0].reportTime;
+								that.information.count = detailTweet[0].viewsCount;
+								that.imageText=detailTweet[0].newsContent.slice(2);
+							}
+						})
+						// this.information.title = e.data.title;
+						// this.information.createdTime = e.data.reportTime;
+						// this.information.src = e.data.src;
+						// this.imageText = e.data.text;
+						// this.count=e.data.viewsCount;
+						console.log(e)
+					},
+					fail() {
+						uni.showToast({
+							title:'获取资讯详情失败',
+							icon:'none',
+						})
+					}
+				})
+				uni.getStorage({
+					key:'userInfo',
+					success:(res) =>{
+						//tianjiayoulangliang
+					},
+					fail() {
+						uni.showToast({
+							title:'您暂未登录，请登录！',
+							icon:'none',
+						})
 					}
 				})
 			},

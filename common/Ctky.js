@@ -28,6 +28,20 @@ const systemName = '泉运公司综合出行';
 const KyInterface = {
 	//GET-POST
 	//--------------------------------------通用接口--------------------------------------
+	payType:{
+		// #ifdef MP-ALIPAY
+		payType : 2
+		// #endif
+		// #ifdef APP-PLUS
+		payType : 3
+		// #endif
+		// #ifdef H5
+		payType : 4
+		// #endif
+		// #ifdef MP-WEIXIN
+		payType : 5
+		// #endif
+	},
 	systemName:{
 		systemName:'泉运公司综合出行',
 		systemNameApp:'泉运公司综合出行APP',
@@ -162,6 +176,18 @@ const KyInterface = {
 	Cs_GetBookLogInfoByUserId:{
 		Url:Url + '/api/CustomizedBus/GetBookLogInfoByUserId',
 		name:'定制巴士-订单列表',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_Refund:{
+		Url:Url + '/api/CustomizedBus/Refund',
+		name:'定制巴士-退款',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_CheckPayState:{
+		Url:Url + '/api/Pay/CheckPayState',
+		name:'定制巴士-检测订单支付状态',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	}

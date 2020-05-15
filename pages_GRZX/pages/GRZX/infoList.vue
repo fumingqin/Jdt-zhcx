@@ -225,7 +225,10 @@
 						})
 					},
 					fail() {
-						
+						uni.showToast({
+							icon:'none',
+							title:'暂未登录,请先登录'
+						})
 					}
 				})
 				// var address=[];
@@ -247,7 +250,18 @@
 				// 	}
 				// }
 		
-				this.passengerList=array;
+				this.passengerList=array.sort((a,b)=>a.userDefault?-1:1);
+				// {
+				// 	console.log(x.userDefault)
+				// 	if(x.userDefault){
+				// 		console.log(x.userDefault)
+				// 		return -1;
+				// 	}else{
+				// 		console.log(x.userDefault)
+				// 		return 1;
+				// 	}
+				// }
+				
 				// this.addressList=address;
 			},
 			//---------乘车人管理---------
@@ -485,6 +499,7 @@
 		/* #ifdef H5 */
 		margin-top: 115upx;
 		margin-bottom: 30upx;
+		padding-bottom: 160upx;
 		/* #endif */
 	}
 	.boxClass{

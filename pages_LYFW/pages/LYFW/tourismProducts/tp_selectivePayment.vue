@@ -665,7 +665,7 @@
 												// console.log(res)
 												if (res.data.msg == '出票成功') {
 													uni.redirectTo({
-														url: 'successfulPayment'
+														url: 'tp_successfulPayment'
 													})
 												} else {
 													uni.showToast({
@@ -758,7 +758,7 @@
 											// console.log(res)
 											if (res.data.msg == '出票成功') {
 												uni.redirectTo({
-													url: 'successfulPayment'
+													url: 'tp_successfulPayment'
 												})
 											} else {
 												uni.showToast({
