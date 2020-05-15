@@ -413,7 +413,7 @@
 					uni.getStorage({
 						key: 'app_position',
 						success: (res) => {
-							// console.log(res)
+							console.log(res)
 							if (res.data !== undefined) {
 								this.regionWeixin = res.data.city;
 								this.textData(); //请求接口数据
@@ -446,8 +446,16 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.method,
 					data:{
-						regionWeixin :  this.regionWeixin,
+						// #ifdef H5
+						regionWeixin: '泉州市',
+						// #endif
+						// #ifndef H5
+						regionWeixin: this.regionWeixin,
+						// #endif
 						title : this.searchValue
+					},
+					header: {
+						'content-type': 'application/json'
 					},
 					success: (res) => {
 						// console.log(res)
