@@ -260,10 +260,12 @@
 							},
 							fail: (res) => {
 								// #ifndef H5
+								// #ifndef MP-WEIXIN
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 								// #endif
 							},
 							complete: () => {
@@ -280,17 +282,19 @@
 							},
 							fail: (res) => {
 								// #ifndef H5
+								// #ifndef MP-WEIXIN
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 								// #endif
 							},
 							complete: () => {
 								this.lyfwData(); //请求接口数据
 							}
 						})
-				}, 500)
+				}, 1000)
 			},
 
 			//打开地区选择器
@@ -374,7 +378,7 @@
 					header: {
 						'content-type': 'application/json'
 					},
-
+					
 					success: (res) => {
 						console.log(res)
 						if (res.data.msg == '搜索景区信息成功！') {

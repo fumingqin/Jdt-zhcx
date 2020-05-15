@@ -114,6 +114,12 @@ const Interface={
 		method:'POST',
 		pages: [],
 	},
+	AddNewsCount:{
+		value:Url+'/api/person/AddNewsCount',
+		name:'添加游览量',
+		method:'POST',
+		pages: [],
+	},
 }
 
 const MainPackage='/pages/GRZX';   //主包
