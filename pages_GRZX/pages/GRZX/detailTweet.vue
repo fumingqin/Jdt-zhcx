@@ -80,7 +80,7 @@
 											},
 											method:that.$GrzxInter.Interface.AddNewsCount.method,
 											success(r) {
-												console.log(r,"rrrrrrrrrr")
+												
 											},
 											fail() {
 												uni.showToast({
