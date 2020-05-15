@@ -2426,8 +2426,8 @@
 							openId:that.ctkyOpenID,
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
-							price:totalPrice,
-							// price:0.1,
+							// price:totalPrice,
+							price:0.1,
 						},
 						success: (res) => {
 							console.log(res.data);

@@ -164,13 +164,7 @@
 					//that.controls[3].position.left = 640 * res.windowWidth / 750;//5.5注释
 					// that.controls[3].position.top = 835 * res.windowWidth / 750;
 				}
-			})
-			// #ifdef  H5
-			 this.getCode();
-			//#endif
-			// #ifdef MP-WEIXIN
-			this.getLoginState();
-			//#endif
+			})	
 		},
 		onReady() {
 			var that = this;
@@ -183,6 +177,14 @@
 					that.mapHeight = (res.windowHeight - 50) + 'px';
 				}
 			});
+		},
+		onShow(){
+			// #ifdef MP-WEIXIN
+			this.getLoginState();
+			//#endif
+			// #ifdef  H5
+			 this.getCode();
+			//#endif
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -433,15 +435,36 @@
 					success(res){
 						console.log(res,"res")
 						if(res.data.openId_xcx==""||res.data.openId_xcx==null){
-							uni.navigateTo({
-								url:'/pages/Home/wxAuthorize'
+							uni.showModal({
+								content:'您暂未登录，是否登录',
+								confirmText:'去登录',
+								cancelText:'暂不登录',
+								success(res1) {
+									if (res1.confirm) {
+										uni.navigateTo({
+											url:'/pages/Home/wxAuthorize'
+										})
+									} else if (res1.cancel) {
+										// console.log('用户点击取消');
+									}
+								}
 							})
 						}
 					},
 					fail(err){
-						console.log(err,"err")
-						uni.navigateTo({
-							url:'/pages/Home/wxAuthorize'
+						uni.showModal({
+							content:'您暂未登录，是否登录',
+							confirmText:'去登录',
+							cancelText:'暂不登录',
+							success(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url:'/pages/Home/wxAuthorize'
+									})
+								} else if (res.cancel) {
+									// console.log('用户点击取消');
+								}
+							}
 						})
 					}
 				})
