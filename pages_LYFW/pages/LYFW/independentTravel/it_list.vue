@@ -163,12 +163,7 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 					data:{
-						// #ifdef H5
-						regionWeixin : '泉州市',
-						// #endif
-						// #ifndef H5
 						regionWeixin : this.regionWeixin,
-						// #endif
 					},
 					success: (res) => {
 						// console.log(res)
@@ -201,12 +196,7 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 					data:{
-						// #ifdef H5
-						regionWeixin : '泉州市',
-						// #endif
-						// #ifndef H5
 						regionWeixin : this.regionWeixin,
-						// #endif
 					},
 					success: (res) => {
 						if(res.data.status == true){
@@ -271,12 +261,7 @@
 						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 						data:{
-							// #ifdef H5
-							regionWeixin : '泉州市',
-							// #endif
-							// #ifndef H5
 							regionWeixin : e,
-							// #endif
 						},
 						success: (res) => {
 							// console.log(res)
@@ -310,13 +295,7 @@
 						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 						data:{
-							// #ifdef H5
-							regionWeixin : '泉州市',
-							// #endif
-							// #ifndef H5
 							regionWeixin : this.stationArray[this.leftIndex]
-							// #endif
-							
 						},
 						success: (res) => {
 							if(res.data.data){
@@ -359,7 +338,7 @@
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-								this.lyfwData(); //请求接口数据
+								this.textData(); //请求接口数据
 							},
 							fail: (res) => {
 								uni.showToast({
@@ -374,7 +353,7 @@
 								// console.log(res)
 								if (res.data !== undefined) {
 									this.regionWeixin = res.data.city;
-									this.lyfwData(); //请求接口数据
+									this.textData(); //请求接口数据
 								}
 							},
 							fail: (res) => {
@@ -399,7 +378,7 @@
 					// console.log(e)
 					this.regionWeixin = e.cityName
 					this.$refs.popupRef.close();
-					this.lyfwData();
+					this.textData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if (e == 'yes') {
@@ -409,7 +388,7 @@
 						success: (res) => {
 							// console.log(res)
 							this.regionWeixin = res.data;
-							this.lyfwData(); //请求接口数据
+							this.textData(); //请求接口数据
 						}
 					}),
 					// #endif
@@ -420,7 +399,7 @@
 							// console.log(res)
 							if (res.data !== undefined) {
 								this.regionWeixin = res.data.city;
-								this.lyfwData(); //请求接口数据
+								this.textData(); //请求接口数据
 							}
 						}
 					})
@@ -450,12 +429,7 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.method,
 					data:{
-						// #ifdef H5
-						regionWeixin : '泉州市',
-						// #endif
-						// #ifndef H5
 						regionWeixin :  this.regionWeixin,
-						// #endif
 						title : this.searchValue
 					},
 					success: (res) => {

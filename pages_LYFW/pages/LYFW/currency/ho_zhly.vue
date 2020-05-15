@@ -281,7 +281,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					url: '../scenicSpotTickets/ticketsDetails?ticketId='+JSON.stringify(e)
+					url: '../scenicSpotTickets/ticketsDetails?ticketId='+e
 				})
 			},
 		}
