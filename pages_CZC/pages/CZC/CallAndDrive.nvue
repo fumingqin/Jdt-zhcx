@@ -229,6 +229,7 @@
 				StartAddress: '', //出发地点
 				UrgentPhone: "110", //紧急联系人电话
 				paystate: "",
+				detialAddress:"",
 			}
 		},
 		onLoad(option) {
@@ -415,7 +416,6 @@
 							OrderNumber: that.orderNumber
 						},
 						success: function(res) {
-							console.log(res)
 							let data = res.data.data;
 							if (res.data.status) {
 								that.thisDriverLon = data.thisDriverLon;
@@ -548,7 +548,6 @@
 			callPolice: function() {
 				//一键报警
 				let that = this;
-				console.log(that.userInfo.autograph)
 				if (that.userInfo.autograph != "") {
 					that.UrgentPhone = that.userInfo.autograph
 				}
@@ -563,8 +562,11 @@
 								type: 'gcj02',
 								geocode: true,
 								success: function(res) {
-									console.log(res)
-									uni.request({
+									//#ifdef MP-WEIXIN
+									that.getAddressByLocation(res)
+									// #endif
+									// #ifdef APP-PLUS
+								 	uni.request({
 										url: $taxi.Interface.addPassengerOneTouchAlarm.value,
 										method: $taxi.Interface.addPassengerOneTouchAlarm.method,
 										data: {
@@ -575,10 +577,10 @@
 											Address: that.packAddress(res.address),
 										},
 										success(res) {
+											console.log(res)
 											uni.makePhoneCall({ //拨打紧急联系人电话
 												phoneNumber: that.UrgentPhone
 											});
-											console.log(res);
 											if (res.data.status) {
 												uni.showToast({
 													title: res.data.msg,
@@ -601,12 +603,63 @@
 											})
 										}
 									})
-
+									// #endif
 								}
 							});
 						}
 					}
 				})
+			},
+			getAddressByLocation: function(value) {//地址逆解析
+				let that=this;
+					uni.request({
+						url: $taxi.Interface.getAddressByLocation.value,
+						method: $taxi.Interface.getAddressByLocation.method,
+						data:{
+							key:$taxi.Interface.getAddressByLocation.key,
+							location:value.longitude+','+value.latitude
+						},
+						success(res) {
+							uni.request({
+								url: $taxi.Interface.addPassengerOneTouchAlarm.value,
+								method: $taxi.Interface.addPassengerOneTouchAlarm.method,
+								data: {
+									orderNumber: that.orderNumber,
+									passengerNumber: that.userInfo.userId,
+									Lon: value.longitude,
+									Lat: value.latitude,
+									Address:res.data.regeocode.formatted_address,
+								},
+								success(res) {
+									console.log(res)
+									uni.makePhoneCall({ //拨打紧急联系人电话
+										phoneNumber: that.UrgentPhone
+									});
+									if (res.data.status) {
+										uni.showToast({
+											title: res.data.msg,
+											icon: "none"
+										})
+									} else {
+										uni.showToast({
+											title: res.data.msg,
+											icon: "none"
+										})
+									}
+								},
+								fail() {
+									uni.makePhoneCall({ //拨打紧急联系人电话
+										phoneNumber: that.UrgentPhone
+									});
+									uni.showToast({
+										title: "网络连接失败",
+										icon: "none"
+									})
+								}
+							})
+						},
+					})
+				
 			},
 			packAddress: function(value) { //组装地址
 				var country = '';
