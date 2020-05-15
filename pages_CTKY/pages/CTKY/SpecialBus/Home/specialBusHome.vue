@@ -15,7 +15,10 @@
 			<!-- 标题 -->
 			<view class="title">时间</view>
 			<!-- 时间 -->
-			<view class="textContent" @tap="timeTap">{{date}}</view>
+			<!-- <view class="textContent" @tap="timeTap">{{date}}</view> -->
+			<picker mode="date" :value="pickerDate" :start="startDate" :end="endDate" @change="bindDateChange">
+				<view class="textContent">{{pickerDate}}</view>
+			</picker>
 			
 			<!-- 下一步按钮 -->
 			<view class="nextView">
@@ -36,6 +39,23 @@
 </template>
 
 <script>
+	function getDate(type) {
+		const date = new Date();
+	
+		let year = date.getFullYear();
+		let month = date.getMonth() + 1;
+		let day = date.getDate();
+	
+		if (type === 'start') {
+			year = year - 60;
+		} else if (type === 'end') {
+			year = year + 2;
+		}
+		month = month > 9 ? month : '0' + month;;
+		day = day > 9 ? day : '0' + day;
+	
+		return `${year}-${month}-${day}`;
+	}
 	import $KyInterface from "@/common/Ctky.js"
 	import datePicker from '@/pages_CTKY/components/CTKY/mx-datepicker/ctkyDatePicker.vue'
 	import Popup from '@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue'
@@ -51,6 +71,11 @@
 				date:'选择出发时间',//时间
 				// show:false,
 				imageUrl:'',
+				pickerDate: getDate({
+					format: true
+				}),
+				startDate:getDate('start'),
+				endDate:getDate('end'),
 			}
 		},
 		onLoad() {
@@ -107,12 +132,15 @@
 			timeTap() {
 				this.$refs.popup.open()
 			},
+			bindDateChange: function(e) {
+				this.pickerDate = e.detail.value
+			},
 			//------------------------------下一步点击------------------------------
 			nextTap() {
 				// console.log(this.lineID,this.date)
 				
 				uni.navigateTo({
-					url:'../ScheduleLineList/specialBusLineList?lineID=' + this.lineID + '&date=' + this.date
+					url:'../ScheduleLineList/specialBusLineList?lineID=' + this.lineID + '&date=' + this.pickerDate
 				})
 			},
 			// 取消事件
