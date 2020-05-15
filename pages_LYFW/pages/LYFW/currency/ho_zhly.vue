@@ -91,15 +91,15 @@
 		<!-- 新闻资讯 -->
 		<view class="titNp">新闻资讯</view>
 		<view class="guess-section">
-			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="informationTo(item.id)">
+			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="informationTo(item.aid)">
 				<view class="image-wrapper">
-					<image :src="item.imgUrl" mode="aspectFill"></image>
+					<image :src="item.imageUrl" mode="aspectFill"></image>
 				</view>
 				<view class="title clamp">{{item.title}}</view>
 				<view>
 					<image class="Portrait" src="../../../../static/GRZX/missing-face.png" mode="aspectFill"></image>
-					<text class="price">{{item.createdTime}}</text>
-					<text class="price-zan">阅读{{item.count+1080}}</text>
+					<text class="price">{{item.reportTime}}</text>
+					<text class="price-zan">阅读{{item.viewsCount+1080}}</text>
 				</view>
 			</view>
 		</view>
@@ -113,18 +113,16 @@
 			return {
 				imageIndex : '', //banner图片
 				Announcement: '', //通知内容
-				recommendedContent: [{
-					rc_image: ''
-				}, {
-					rc_image: ''
-				}, {
-					rc_image: ''
-				}, {
-					rc_image: ''
-				}, {
-					rc_image: ''
-				}], //推荐内容
-
+				
+				goodsList:{
+					reportTime:'',
+					title:'',
+					imageUrl:'',
+					aid:'',
+					newsContent:'',
+					viewsCount:'',
+				},
+				
 				sixPalaceList: [{
 						ticketEnglishName: '',
 						ticketId: '',
@@ -180,9 +178,6 @@
 		onPullDownRefresh: function() {
 			this.routeInit();
 			this.loadData();
-			setTimeout(function() {
-				uni.stopPullDownRefresh(); //停止下拉刷新动画
-			}, 1000);
 		},
 		
 		methods: {
@@ -190,33 +185,30 @@
 			async routeInit() {
 				let Announcement = await this.$api.lyfwcwd('Announcement');
 				this.Announcement = Announcement.data;
-				let recommendedContent = await this.$api.lyfwcwd('recommendedContent');
-				this.recommendedContent = recommendedContent.data;
 			},
 
-			routeData: function() {
-				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getPackageTourList',
-					method: 'POST',
-					success: (e) => {
-						console.log(e)
-					}
-				})
-			},
+			// routeData: function() {
+			// 	uni.request({
+			// 		url: 'http://218.67.107.93:9210/api/app/getPackageTourList',
+			// 		method: 'POST',
+			// 		success: (e) => {
+			// 			console.log(e)
+			// 		}
+			// 	})
+			// },
 
 			loadData: function() {
+				//请求新闻资讯
 				uni.request({
-					url: 'http://218.67.107.93:9210/api/app/getInformationList',
-					method: 'POST',
+					url:$lyfw.Interface.currency_zhly.value,
+					method:$lyfw.Interface.currency_zhly.method,
 					success: (e) => {
-						this.goodsList = e.data.data;
 						// console.log(e)
+						this.goodsList = e.data.data;
+						
 					}
 				})
-				setTimeout(() => {
-					uni.stopPullDownRefresh();
-				}, 1000)
-
+				//请求六宫格数据
 				uni.request({
 					url:$lyfw.Interface.spt_GetticketSearchByrequestArea.value,
 					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
@@ -232,15 +224,30 @@
 						this.sixPalaceList = res.data.data;
 					}
 				})
+				
+				uni.stopPullDownRefresh();
 			},
 
 			//资讯详情页
 			informationTo: function(e) {
 				uni.navigateTo({
-					url:'../../../../pages/Home/InformationDetails?id=' + e
+					url:'../../../../pages/Home/InformationDetails?aid=' + e
 				})
 			},
-
+			
+			// subit:function(item){
+			// 	console.log(item)
+			// 	uni.setStorage({
+			// 		key: 'ho_ZhlyInforData',
+			// 		data: item,
+			// 		success: () => {
+			// 			uni.navigateTo({
+			// 				url: '../../../../pages/Home/InformationDetails'
+			// 			})
+			// 		}
+			// 	})
+			// },
+			
 			//金刚区各模块入口
 			route1: function() {
 				// uni.showToast({

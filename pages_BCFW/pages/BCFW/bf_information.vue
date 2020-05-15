@@ -52,7 +52,7 @@
 				</view>
 				<view style="display: flex;">
 					<view class="cbv_idCord">身份证</view>
-					<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" maxlength="18" v-model="nickId" />
+					<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" type="idcard" maxlength="18" v-model="nickId" />
 				</view>
 				<view style="display: flex;">
 					<view class="cbv_mobile">联系电话</view>
@@ -1007,7 +1007,7 @@
 			font-size: 32upx;
 			color: #333333;
 			font-weight: 400;
-			padding-left: 315upx;
+			padding-left: 300upx;
 			display: block;
 		}
 
