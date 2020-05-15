@@ -267,7 +267,7 @@
 			      myAmapFun.getRegeo({
 			        success:(data) =>{
 						// console.log(data)
-			          this.position =data[0].regeocodeData.addressComponent.city
+						this.position =data[0].regeocodeData.addressComponent.city
 			          uni.setStorage({
 			          	key: 'wx_position',
 			          	data:this.position

@@ -152,9 +152,8 @@
 				cateId: 0, //已选三级分类id
 				cateList: [], //分类数组
 				cateValue: '', //分类筛选值
-
+				
 				regionWeixin: '请选择', //微信地区数值
-				regionApp: '请选择', //APP地区数值
 			}
 		},
 
@@ -168,6 +167,13 @@
 		},
 
 		onLoad: function(options) {
+			// #ifdef H5
+			uni.showToast({
+				title:'公众号当前定位无法启用，已默认定位泉州市',
+				icon:'none'
+			})
+			this.regionWeixin = '泉州市'; //h5无法自动定位，采用手动赋值
+			// #endif
 			this.cateId = options.tid;
 			this.loadCateList(options.fid, options.sid);
 			this.Getpostion();
@@ -184,7 +190,7 @@
 		methods: {
 			//请求模拟接口数据
 			lyfwData: function() {
-				console.log(this.regionWeixin)
+				// console.log(this.regionWeixin)
 				// 六宫格
 				uni.request({
 					url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
@@ -203,6 +209,7 @@
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.sixPalaceList = res.data.data;
 						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
+							this.sixPalaceList = '';
 							uni.showToast({
 								title: '该地区暂无景点信息',
 								icon: 'none'
@@ -233,6 +240,7 @@
 						if (res.data.msg == '搜索景区信息成功') {
 							this.scenicList = res.data.data;
 						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
+							this.scenicList = '';
 							uni.showToast({
 								title: '该地区暂无景点信息',
 								icon: 'none'
@@ -248,9 +256,6 @@
 			//获取定位数据
 			Getpostion: function() {
 				setTimeout(() => {
-					
-					
-					
 					uni.getStorage({
 						key: 'wx_position',
 						success: (res) => {
@@ -265,7 +270,6 @@
 							})
 						},
 					}),
-					
 					uni.getStorage({
 						key: 'app_position',
 						success: (res) => {
@@ -282,9 +286,6 @@
 							})
 						},
 					})
-
-					
-
 				}, 500)
 
 			},
@@ -299,34 +300,33 @@
 				if (e !== 'no' && e !== 'yes') {
 					// console.log(e)
 					this.regionWeixin = e.cityName
-					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
 					this.lyfwData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if (e == 'yes') {
-						// #ifndef APP-PLUS
-						uni.getStorage({
-							key: 'wx_position',
-							success: (res) => {
-								// console.log(res)
-								this.regionWeixin = res.data;
+					// #ifndef APP-PLUS
+					uni.getStorage({
+						key: 'wx_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionWeixin = res.data;
+							this.lyfwData(); //请求接口数据
+						}
+					}),
+					// #endif
+					// #ifdef APP-PLUS
+					uni.getStorage({
+						key: 'app_position',
+						success: (res) => {
+							// console.log(res)
+							if (res.data !== undefined) {
+								this.regionWeixin = res.data.city;
 								this.lyfwData(); //请求接口数据
 							}
-						}),
-						// #endif
-						// #ifdef APP-PLUS
-						uni.getStorage({
-							key: 'app_position',
-							success: (res) => {
-								// console.log(res)
-								if (res.data !== undefined) {
-									this.regionApp = res.data.city;
-									this.lyfwData(); //请求接口数据
-								}
-							}
-						})
-						// #endif
+						}
+					})
+					// #endif
 					this.$refs.popupRef.close();
 				} else {
 					this.$refs.popupRef.close();
@@ -536,7 +536,7 @@
 
 		.searchBoxRadius {
 			/* #ifdef H5 */
-			width: 100%;
+			width: 80%;
 			/* #endif */
 			/* #ifndef H5 */
 			width: 76%;

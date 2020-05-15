@@ -6,25 +6,27 @@
 		</view>
 		
 		<!-- 班车信息 -->
-		<view class="ctky_View" :class="{ctky_ViewBorder : index==statusIndex}"  v-for="(item,index) in departureData" :key="index" @click="selection(item,index)" >
-			<view class="ctky_View_Left">
-				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >出发</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.setOutDate}}</view>
+		<view style="padding-bottom: 160upx;">
+			<view class="ctky_View" :class="{ctky_ViewBorder : index==statusIndex}"  v-for="(item,index) in departureData" :key="index" @click="selection(item,index)" >
+				<view class="ctky_View_Left">
+					<view style="display: flex;align-items: center;margin:20upx 25upx;">
+						<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >出发</view>
+						<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.setOutDate}}</view>
+					</view>
+					<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
+						<image src="../../../static/LYFW/tourismProducts/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.startStation}}</view>
+					</view>
+					<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
+						<image src="../../../static/LYFW/tourismProducts/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.endStation}}</view>
+					</view>
+					<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;font-size: 28upx;color: #666666;">{{item.lineContent}}</view>
 				</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../../static/LYFW/tourismProducts/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.startStation}}</view>
-				</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../../static/LYFW/tourismProducts/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.endStation}}</view>
-				</view>
-				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;font-size: 28upx;color: #666666;">{{item.lineContent}}</view>
-			</view>
-			<view class="ctky_View_Right">
-				<view>
-					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:SourceHanSansSC-Light; color: #FF6600;">余{{item.count}}座</view>
+				<view class="ctky_View_Right">
+					<view>
+						<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:SourceHanSansSC-Light; color: #FF6600;">余{{item.count}}座</view>
+					</view>
 				</view>
 			</view>
 		</view>

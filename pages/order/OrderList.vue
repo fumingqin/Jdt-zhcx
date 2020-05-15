@@ -3310,15 +3310,14 @@
 			repurchase(e,index) {
 				if(index =='3'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' +e
 					})
 					
 				}else if(index =='5'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' + JSON.stringify(e)
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' +e
 					})
 				}
-
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
