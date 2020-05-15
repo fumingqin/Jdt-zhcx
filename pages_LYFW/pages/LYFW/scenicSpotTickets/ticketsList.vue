@@ -196,12 +196,7 @@
 					url: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.value,
 					method: $lyfw.Interface.spt_GetticketSearchByrequestArea_Six.method,
 					data: {
-						// #ifdef H5
-						requestArea: '泉州市',
-						// #endif
-						// #ifndef H5
 						requestArea: this.regionWeixin,
-						// #endif
 					},
 					// header: {'content-type': 'application/x-www-form-urlencoded'},
 					success: (res) => {
@@ -227,12 +222,7 @@
 					url: $lyfw.Interface.spt_GetticketSearchByrequestArea.value,
 					method: $lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data: {
-						// #ifdef H5
-						requestArea: '泉州市',
-						// #endif
-						// #ifndef H5
 						requestArea: this.regionWeixin,
-						// #endif
 					},
 					// header: {'content-type': 'application/x-www-form-urlencoded'},
 					success: (res) => {
@@ -365,6 +355,7 @@
 					url: $lyfw.Interface.spt_GetticketSearchBysearchValue.value,
 					method: $lyfw.Interface.spt_GetticketSearchBysearchValue.method,
 					data: {
+						// regionWeixin :  this.regionWeixin,
 						searchValue: this.searchValue,
 					},
 					header: {
@@ -372,7 +363,7 @@
 					},
 
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.searchData = res.data.data;
 							this.searchValue = ''
@@ -386,7 +377,14 @@
 								duration: 2000
 							});
 							this.searchValue = ''
-
+						}else if(res.data.msg == '获取数据异常'){
+							uni.hideLoading()
+							uni.showToast({
+								title: '数据异常，请联系客服',
+								icon: 'none',
+								duration: 2000
+							});
+							this.searchValue = ''
 						}
 					}
 				})
