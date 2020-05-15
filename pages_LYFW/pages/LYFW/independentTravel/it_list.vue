@@ -503,7 +503,7 @@
 
 		.searchBoxRadius {
 			/* #ifdef H5 */
-			width: 100%;
+			width: 80%;
 			/* #endif */
 			/* #ifndef H5 */
 			width: 76%;

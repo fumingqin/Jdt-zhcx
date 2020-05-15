@@ -377,6 +377,14 @@
 							});
 							this.searchValue = ''
 
+						}else if(res.data.msg == '获取数据异常'){
+							uni.hideLoading()
+							uni.showToast({
+								title: '数据异常，请联系客服',
+								icon: 'none',
+								duration: 2000
+							});
+							this.searchValue = ''
 						}
 					}
 				})
