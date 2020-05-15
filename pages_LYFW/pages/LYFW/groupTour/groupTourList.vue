@@ -176,7 +176,7 @@
 						// #endif
 					},
 					success: (e) => {
-						console.log(e)
+						// console.log(e)
 						this.groupTitle = e.data.data;
 					}
 				})
@@ -282,13 +282,13 @@
 					},
 
 					success: function(res) {
-						console.log(res)
+						// console.log(res)
 						if (res.data.data) {
 							that.searchData = res.data.data;
-							console.log(268, that.searchData)
+							// console.log(268, that.searchData)
 							that.searchValue = ''
 							that.searchIndex = 1;
-							console.log(that.searchData)
+							// console.log(that.searchData)
 							uni.hideLoading()
 						} else if (res.data.status == false) {
 							uni.hideLoading()
@@ -306,7 +306,7 @@
 
 
 			details: function(e) {
-				console.log(e)
+				// console.log(e)
 				uni.navigateTo({
 					url: '../currency/travelDetails?contentId=' + e
 				})
@@ -315,7 +315,7 @@
 
 			//tabbar筛选点击
 			change(e) {
-				console.log(e)
+				// console.log(e)
 				if (e == 0) {
 					this.current = e;
 					this.currentIndex = 0;
