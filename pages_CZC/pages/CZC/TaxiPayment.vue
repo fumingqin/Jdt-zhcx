@@ -189,8 +189,7 @@
 					data: {
 						openId: that.scenicSpotOpenId,
 						payType: payPlatform,
-						// price: that.TaxiCost,
-						price: 0.01,
+						price: that.TaxiCost,
 						orderNumber: that.orderNumber,
 						goodsName: that.driverName,
 						billDescript: "出租车车费",
@@ -220,8 +219,11 @@
 						that.CheckPayState();
 					},
 					fail(res) {
-						console.log(res)
-						if (res.errMsg == "requestPayment:fail canceled") {
+						var msg="requestPayment:fail canceled";
+						// #ifdef MP-WEIXIN
+						msg="requestPayment:fail cancel";
+						// #endif
+						if (res.errMsg == msg) {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")
 							}, 1000)

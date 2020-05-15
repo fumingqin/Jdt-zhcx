@@ -386,15 +386,14 @@
 				if(user1==""||user1==null){
 					console.log(user1,"2222")
 					uni.showToast({
-						title:"登录失败，请重新进入公众号",
+						title:"请允许公众号授权登录，即将为你跳转至首页",
 						icon:'none'
 					})
-					// setTimeout(function(){
-					// 	uni.navigateTo({
-					// 		// url:'/pages/GRZX/wxLogin',
-					// 		url:that.$GrzxInter.Route.wxLogin.url,
-					// 	})
-					// },1000);
+					setTimeout(function(){
+						uni.switchTab({
+							url:'/pages/Home/Index',
+						})
+					},500);
 				}else{
 					console.log(user1,"3333")
 					uni.navigateTo({

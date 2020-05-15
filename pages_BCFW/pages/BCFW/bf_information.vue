@@ -172,15 +172,18 @@
 				de_Latitude: '', //目的地纬度
 				dl_Longitude: '', //专线经度
 				dl_Latitude: '', //专线纬度
-				couponList: []
+				couponList: [],
+				index:0,
 			}
 		},
 		onLoad() {
 			this.getcharteredBus();
+			this.getuser();
 		},
 		onShow() {
 			this.readData();
 			this.getSt();
+			this.getuser();
 		},
 
 		methods: {
@@ -189,6 +192,30 @@
 				let charteredBus = await this.$api.bcfwzyx('charteredBus');
 				this.charteredBus = charteredBus.data;
 				// console.log(charteredBus)
+			},
+			getuser:function(){
+				var that=this;				
+				if(that.index == 0){
+					uni.getStorage({
+						key:"charteredBusInfo",
+						success:(res)=>{
+							that.nickName = res.data.nickName;
+							that.nickId = res.data.nickId;
+							that.nickPhone = res.data.nickPhone;
+						}
+					})
+					
+				}else{
+					uni.getStorage({
+						key: 'passengerList',
+						success: (res) => {
+							that.nickName = res.data[0].userName;
+							that.nickId = res.data[0].userCodeNum;
+							that.nickPhone = res.data[0].userPhoneNum;
+							that.userId=res.data[0].userId;
+						}
+					})
+				}			
 			},
 			// getcharteredBus(){
 			// 	uni.request({
@@ -304,7 +331,7 @@
 									//loginType=1,泉运登录界面
 									//loginType=2,今点通登录界面
 									//loginType=3,武夷股份登录界面
-									url: '../../../pages/GRZX/userLogin?loginType=1'
+									url: '../../../pages/GRZX/userLogin?loginType=2'
 								})
 							}, 500);
 							// #endif
@@ -321,8 +348,9 @@
 						}
 					})
 				} else if (e == 1) {
+					this.index = 1;
 					uni.navigateTo({
-						url: '../../../pages/GRZX/passengerInfo?submitType=1',
+						url: '../../../pages/GRZX/passengerInfo?submitType=2&&limitNum=1',
 					});
 				}
 			},
@@ -398,6 +426,8 @@
 			},
 			//提交按钮状态赋值
 			submitState: function() {
+				var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+				var that=this;
 				//这边还得加上是否选择人数和勾选同意的判断
 				if (this.selectedValue == 1 && this.nickName !== '') {
 
@@ -417,17 +447,43 @@
 						title: '请添加包车人信息',
 						icon: 'none'
 					})
-				} else {
+				}else if(!regIdNo.test(that.nickId)){
+					uni.showToast({
+						icon:'none',
+						title:'输入的身份证有误，请检查'
+					})
+				}else if(that.nickPhone.length!=11){
+					uni.showToast({
+						icon:'none',
+						title:'输入的手机号有误，请检查'
+					})
+				}else {
 					uni.showToast({
 						title: '请同意包车须知',
 						icon: 'none'
 					})
 				}
 			},
+			descInput:function(e){
+				this.nickId=e.detail.value;
+			},
 
 			//提交表单
 			submit: function() {
 				var that=this;
+				that.index =0;
+				uni.setStorage({
+					key: 'charteredBusInfo',
+					data:{nickName:that.nickName,
+					      nickId:that.nickId,
+					      nickPhone:that.nickPhone,
+					},
+					success: () => {
+						uni.navigateTo({
+							url: './bf_information?isNormal=' + this.isNormal
+						})
+					}
+				})
 				uni.showLoading({
 					title: '提交订单中...'
 				})
