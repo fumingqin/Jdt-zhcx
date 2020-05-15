@@ -167,6 +167,13 @@
 		},
 
 		onLoad: function(options) {
+			// #ifdef H5
+			uni.showToast({
+				title:'公众号当前定位无法启用，已默认定位泉州市',
+				icon:'none'
+			})
+			this.regionWeixin = '泉州市'; //h5无法自动定位，采用手动赋值
+			// #endif
 			this.cateId = options.tid;
 			this.loadCateList(options.fid, options.sid);
 			this.Getpostion();
@@ -199,10 +206,10 @@
 					// header: {'content-type': 'application/x-www-form-urlencoded'},
 					success: (res) => {
 						// console.log(res)
-
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.sixPalaceList = res.data.data;
 						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
+							this.sixPalaceList = '';
 							uni.showToast({
 								title: '该地区暂无景点信息',
 								icon: 'none'
@@ -233,6 +240,7 @@
 						if (res.data.msg == '搜索景区信息成功') {
 							this.scenicList = res.data.data;
 						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
+							this.scenicList = '';
 							uni.showToast({
 								title: '该地区暂无景点信息',
 								icon: 'none'

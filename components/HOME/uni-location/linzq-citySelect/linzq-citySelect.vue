@@ -267,16 +267,7 @@
 			      myAmapFun.getRegeo({
 			        success:(data) =>{
 						// console.log(data)
-						// #ifdef H5
-						uni.showToast({
-							title:'公众号当前定位无法启用，已默认定位泉州市',
-							icon:'none'
-						})
-						this.position = '泉州市'; //h5无法自动定位，采用手动赋值
-						// #endif
-						// #ifndef H5
 						this.position =data[0].regeocodeData.addressComponent.city
-						// #endif
 			          uni.setStorage({
 			          	key: 'wx_position',
 			          	data:this.position

@@ -139,6 +139,13 @@
 			QSTabs
 		},
 		onLoad:function() {
+			// #ifdef H5
+			uni.showToast({
+				title:'公众号当前定位无法启用，已默认定位泉州市',
+				icon:'none'
+			})
+			this.regionWeixin = '泉州市'; //h5无法自动定位，采用手动赋值
+			// #endif
 			uni.showLoading({
 				title:'加载中...',
 				icon:'loading'
