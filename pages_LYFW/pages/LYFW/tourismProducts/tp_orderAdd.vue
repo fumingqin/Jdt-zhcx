@@ -506,7 +506,8 @@
 				}else{
 					uni.hideLoading()
 					uni.showToast({
-						title: '请允许授权给公众号，即将为您返回主页！'
+						title: '请允许授权给公众号，即将为您返回主页！',
+						icon:'none'
 					})
 					uni.switchTab({
 						url:'../../../../pages/Home/Index'
@@ -516,81 +517,94 @@
 				// #endif
 
 				// #ifdef APP-PLUS
-				uni.request({
-					url: $lyfw.Interface.lyky_AddtouristOrder.value,
-					method: $lyfw.Interface.lyky_AddtouristOrder.method,
-					data: {
-						userId: this.userInfo.userId,
-						ticketId: this.admissionTicket.ticketId,
-						userPhone: this.userInfo.phoneNumber,
-						ticketProductId: this.admissionTicket.admissionTicketID,
-						couponID: this.couponColor,
-						orderDate: this.date,
-						orderInsure: '',
-						orderInsurePrice: '',
-						orderActualPayment: this.actualPayment,
-						ticketContain: this.admissionTicket.ticketContain,
-						sellerCompanyCode: 'APP',
-						tppId: 0,
-						addressData: this.addressData,
-					},
-					header: {
-						'content-type': 'application/json'
-					},
-					//向服务器发送订单数据，返回订单编号
-					success: (res) => {
-						// console.log(res)
-						if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
+				if(that.userInfo.userId !== ''){
+					uni.request({
+						url: $lyfw.Interface.lyky_AddtouristOrder.value,
+						method: $lyfw.Interface.lyky_AddtouristOrder.method,
+						data: {
+							userId: that.userInfo.userId,
+							ticketId: that.admissionTicket.ticketId,
+							userPhone: that.userInfo.phoneNumber,
+							ticketProductId: that.admissionTicket.admissionTicketID,
+							couponID: that.couponColor,
+							orderDate: that.date,
+							orderInsure: '',
+							orderInsurePrice: '',
+							orderActualPayment: that.actualPayment,
+							ticketContain: that.admissionTicket.ticketContain,
+							sellerCompanyCode: 'APP',
+							tppId: 0,
+							addressData: that.addressData,
+						},
+						header: {
+							'content-type': 'application/json'
+						},
+						//向服务器发送订单数据，返回订单编号
+						success: (res) => {
+							// console.log(res)
+							if (res.data.msg == '抱歉!下单失败,当日已取消订单次数超过限额,已被限制下单操作') {
+								uni.hideLoading()
+								uni.showToast({
+									title: '当日已取消订单次数超过限额',
+									icon: 'none',
+								})
+								that.submissionState = false;
+					
+							} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
+								uni.hideLoading()
+								uni.showToast({
+									title: '下单失败,您当前有未支付订单',
+									icon: 'none',
+									duration: 2000,
+									success: function() {
+										uni.switchTab({
+											url: '../../../../pages/order/OrderList'
+										})
+										that.submissionState = false;
+									}
+								})
+					
+							} else if (res.data.msg == '订单下单成功') {
+								// console.log(res.data.data.orderNumber)
+								uni.hideLoading()
+								uni.redirectTo({
+									url: 'tp_selectivePayment?orderNumber=' + res.data.data.orderNumber
+								})
+					
+							} else if (res.data.msg == '抱歉,订单下单失败') {
+								uni.hideLoading()
+								uni.showToast({ 
+									title: '下单失败，请联系客服',
+									icon: 'none',
+								})
+								that.submissionState = false;
+							} else {
+								uni.hideLoading()
+								uni.showToast({
+									title: '下单失败，请返回并重进页面',
+									icon: 'none',
+								})
+								that.submissionState = false;
+					
+							}
+					
+						},
+						fail: function(ee) {
 							uni.hideLoading()
-							uni.showToast({
-								title: '当日已取消订单次数超过限额',
-								icon: 'none',
-							})
-							that.submissionState = false;
-
-						} else if (res.data.msg == '抱歉!下单失败,您当前有未支付完成的订单') {
-							uni.hideLoading()
-							uni.showToast({
-								title: '下单失败,您当前有未支付订单',
-								icon: 'none',
-								duration: 2000,
-								success: function() {
-									uni.switchTab({
-										url: '../../../../pages/order/OrderList'
-									})
-									that.submissionState = false;
-								}
-							})
-
-						} else if (res.data.msg == '订单下单成功') {
-							// console.log(res.data.data.orderNumber)
-							uni.hideLoading()
-							uni.redirectTo({
-								url: 'tp_selectivePayment?orderNumber=' + res.data.data.orderNumber
-							})
-
-						} else if (res.data.msg == '抱歉,订单下单失败') {
-							uni.hideLoading()
-							uni.showToast({ 
-								title: '下单失败，请联系客服',
-								icon: 'none',
-							})
-							that.submissionState = false;
-						} else {
-							uni.hideLoading()
-							uni.showToast({
-								title: '下单失败，请返回并重进页面',
-								icon: 'none',
-							})
-							that.submissionState = false;
-
+							// console.log(ee)
 						}
-
-					},
-					fail: function(ee) {
-						// console.log(ee)
-					}
-				})
+					})
+				}else{
+					uni.hideLoading()
+					uni.showToast({
+						title: '未登录账号，即将跳转登录！'
+					})
+					uni.navigateTo({
+						url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
+					})
+					that.submissionState = false;
+				}
+				
 				// #endif
 
 
@@ -667,10 +681,10 @@
 				}else{
 					uni.hideLoading()
 					uni.showToast({
-						title: '请允许授权给小程序，即将为您返回主页！'
+						title: '请允许授权给小程序，即将跳转登录！'
 					})
-					uni.switchTab({
-						url:'../../../../pages/Home/Index'
+					uni.navigateTo({
+						url:'../../../../pages/Home/wxAuthorize'
 					})
 					that.submissionState = false;
 				}
