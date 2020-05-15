@@ -170,9 +170,11 @@
 						if(res.data.status == true){
 							this.itText = res.data.data;
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 						}else{
 							uni.hideLoading()
 							this.itText = '';
+							uni.stopPullDownRefresh();
 							uni.showToast({
 								title:'该地区暂无自由行数据',
 								icon:'none'
@@ -183,6 +185,7 @@
 					},
 					fail:function(){
 						uni.hideLoading()
+						uni.stopPullDownRefresh();
 						uni.showToast({
 							title:'网络异常，请检查网络后尝试',
 							icon:'none'
@@ -204,8 +207,10 @@
 							sc.sort((a, b) => a.id - b.id)
 							this.newDiscovery = sc;
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 						}else{
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 							this.newDiscovery = '';
 							uni.showToast({
 								title:'该地区暂无自由行数据',
@@ -216,6 +221,7 @@
 					},
 					fail:function(){
 						uni.hideLoading()
+						uni.stopPullDownRefresh();
 						uni.showToast({
 							title:'网络异常，请检查网络后尝试',
 							icon:'none'
@@ -232,8 +238,10 @@
 						if(res.data.status == true){
 							this.stationArray = res.data.data
 							this.classifyList()
+							uni.stopPullDownRefresh();
 						}else(
 						uni.hideLoading(),
+						uni.stopPullDownRefresh(),
 						uni.showToast({
 							title:'暂无相关地区数据',
 							icon:'none'
@@ -243,6 +251,7 @@
 					},
 					fail:function(){
 						uni.hideLoading()
+						uni.stopPullDownRefresh();
 						uni.showToast({
 							title:'网络异常，请检查网络后尝试',
 							icon:'none'
