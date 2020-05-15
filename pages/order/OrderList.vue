@@ -29,10 +29,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -65,10 +69,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -408,10 +416,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -445,10 +457,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -661,10 +677,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -698,10 +718,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -941,10 +965,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -978,10 +1006,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -1202,10 +1234,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -1239,10 +1275,14 @@
 									<view style="color: #666666; font-size: 28rpx;">{{item.orderType}}</view>
 								</view>
 								<view style="display: flex;align-items: center;padding: 20rpx 0 15rpx 0rpx ;">
+									<image style="width: 22rpx; height: 22rpx;margin-left: 60rpx;" src="../../static/Order/time.png"></image>
+									<view style=" color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{changeTime(item.time)}}</view>
+								</view>
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #06B4FD;background: #06B4FD;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style=" color: #AAAAAA; font-size: 28rpx; padding-left: 20rpx;">{{item.startAddress}}</view>
 								</view>
-								<view style="display: flex;align-items: center;padding: 15rpx 0 20rpx 0rpx ;">
+								<view style="display: flex;align-items: center;padding: 15rpx 0 15rpx 0rpx ;">
 									<view style="width: 8rpx;height: 8rpx;border: 4rpx solid #FC4646;background: #FC4646;border-radius: 100%;margin-left: 60rpx;"></view>
 									<view style="color: #AAAAAA; font-size: 28rpx;padding-left: 20rpx;">{{item.endAddress}}</view>
 								</view>
@@ -1763,6 +1803,10 @@
 					that.userInfo = data.data;
 				}
 			})
+			
+			
+			//定制巴士订单测试
+			that.GetBookLogInfoByUserId();
 		},
 		onShow: function() {
 			//请求景区门票数据
@@ -1939,6 +1983,30 @@
 						// console.log('错误', res);
 					}
 				})
+			},
+			//-------------------------请求定制巴士订单数据-------------------------
+			GetBookLogInfoByUserId(){
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.Url,
+					method:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.method,
+					header:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.header,
+					data:{
+						UserAID: that.userInfo.userId
+					},
+					success(res) {
+						console.log(res)
+						if (res.data.Successed == true) {
+							
+						}else if(res.data.Successed == false) {
+							
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+				
 			},
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {
@@ -2606,11 +2674,18 @@
 			},
 			CheckPayState: function(orderNumber) { //检测支付状态
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber
 					},
 					success(res) {
@@ -2625,6 +2700,7 @@
 						}
 					},
 					fail() {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2634,19 +2710,28 @@
 			},
 			BouncePay: function(orderNumber) {
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
 						price: 0.01
 					},
 					success(res) {
+						console.log(res);
 						if (res.data.status) {
 							that.CheckPayState(orderNumber)
 						} else {
+							uni.hideLoading()
 							uni.showToast({
 								title: '取消失败',
 								icon: 'none',
@@ -2654,6 +2739,7 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2664,6 +2750,7 @@
 			CancelSpecialLineOrder1: function(orderNumber) {
 				//取消订单
 				let that = this;
+				console.log(that.userInfo.userId);
 				uni.request({
 					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
 					method: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.method,
@@ -2672,6 +2759,7 @@
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
+						uni.hideLoading()
 						let data = res.data.data;
 						if (res.data.status) {
 							uni.showToast({
@@ -2687,6 +2775,7 @@
 						}
 					},
 					fail: function(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none'
@@ -2706,8 +2795,7 @@
 								mask: true,
 							})
 							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
-								that.BouncePay(value.orderNumber);
-								uni.hideLoading()
+								that.BouncePay(value.orderNumber);							
 							} else {
 								that.CancelSpecialLineOrder1(value.orderNumber);
 								uni.hideLoading()
@@ -2862,11 +2950,18 @@
 			},
 			CheckSfcPayState: function(orderNumber) { //检测支付状态
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber
 					},
 					success(res) {
@@ -2874,6 +2969,7 @@
 						if (res.data.status) {
 							that.CancelSfcOrder1(orderNumber);
 						} else {
+							uni.hideLoading();
 							uni.showToast({
 								title: '取消失败',
 								icon: 'none',
@@ -2881,6 +2977,7 @@
 						}
 					},
 					fail() {
+						uni.hideLoading();
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2890,11 +2987,18 @@
 			},
 			SfcBouncePay: function(orderNumber) {
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.BouncePay.value,
 					method: $privateTaxi.Interface.BouncePay.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
 						price: 0.01
@@ -2911,6 +3015,7 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none',
@@ -2929,7 +3034,7 @@
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
-						console.log(res)
+							uni.hideLoading();
 						let data = res.data.data;
 						if (res.data.status) {
 							uni.showToast({
@@ -2945,6 +3050,7 @@
 						}
 					},
 					fail: function(res) {
+						uni.hideLoading()
 						uni.showToast({
 							title: '网络连接失败',
 							icon: 'none'
@@ -2965,7 +3071,7 @@
 							})
 							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
 								that.SfcBouncePay(value.orderNumber);
-								uni.hideLoading()
+							
 							} else {
 								that.CancelSfcOrder1(value.orderNumber);
 								uni.hideLoading()
@@ -3079,7 +3185,7 @@
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].orderType == '已使用') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderType == '待使用') {
+								} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待选车') {
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].orderType == '待支付') {
 									that.unfinishArr.push(res.data.data[i]);
@@ -3142,6 +3248,7 @@
 
 			//-------------------------旅游产品-选车班车-------------------------
 			chooseShuttle:function(e){
+				// console.log(e)
 				uni.showLoading({
 					title:'正在加载班次...'
 				})
@@ -3149,8 +3256,8 @@
 					key:'chooseShuttleData',
 					data:e,
 					success: (res) => {
-						console.log(res)
-						console.log(e)
+						// console.log(res)
+						
 						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'

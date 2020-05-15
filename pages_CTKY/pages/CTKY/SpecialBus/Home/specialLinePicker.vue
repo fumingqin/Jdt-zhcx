@@ -86,7 +86,7 @@
 					method:$KyInterface.KyInterface.Cs_GetAllLine.method,
 					header:$KyInterface.KyInterface.Cs_GetAllLine.header,
 					success(res) {
-						console.log('定制巴士线路',res)
+						// console.log('定制巴士线路',res)
 						if (res.data) {
 							if(res.data.Successed == true){
 								for (var i = 0; i < res.data.line.length; i++) {
@@ -115,33 +115,15 @@
 				}
 				this.isShowList = true;
 				this.isShowAllList = false;
-				//以下示例截取淘宝的关键字，请替换成你的接口
-				uni.showLoading();
-				uni.request({
-					url: 'http://27.148.155.9:9055/CTKY/getSatartSite',
-					method:'POST',
-					header:{'content-type':'application/x-www-form-urlencoded'},
-					data:{
-						systemName:'泉运公司综合出行',
-						keyword:keyword
-					},
-					success: (res) => {
-						uni.hideLoading();
-						this.keywordList = [];
-						this.keywordList = this.drawCorrelativeKeyword(res.data, keyword);
-					},
-					fail(res) {
-						uni.hideLoading();
-					}
-				});
+				this.keywordList = [];
+				this.keywordList = this.drawCorrelativeKeyword(this.mainArray, keyword);
 			},
 			//-------------------------高亮关键字-------------------------
 			drawCorrelativeKeyword(keywords, keyword) {
-				// console.log(keywords);
 				var len = keywords.length,
 					keywordArr = [];
 				for (var i = 0; i < len; i++) {
-					var row = keywords[i].siteName;
+					var row = keywords[i].lineName;
 					//定义高亮#9f9f9f
 					var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
 					html = '<div>' + html + '</div>';

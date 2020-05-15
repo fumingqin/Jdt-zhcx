@@ -175,9 +175,9 @@
 					},
 				],
 				FactPayPrice: '', //订单价格
-				AppointmentTime:'',//预约时间
-				StartAddress:'',//上车点
-				UrgentPhone:"110",//紧急联系人电话
+				AppointmentTime: '', //预约时间
+				StartAddress: '', //上车点
+				UrgentPhone: "110", //紧急联系人电话
 			}
 		},
 		onLoad(option) {
@@ -254,8 +254,8 @@
 							that.vehicleNumber = data.VehicleNumber; //车牌号
 							that.state = data.State; //订单状态
 							that.FactPayPrice = data.FactPayPrice;
-							that.StartAddress = data.StartAddress; 
-							that.AppointmentTime = data.AppointmentTime.replace("T"," "); 
+							that.StartAddress = data.StartAddress;
+							that.AppointmentTime = data.AppointmentTime.replace("T", " ");
 							//绘制起终点标记
 							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
 							that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
@@ -497,8 +497,8 @@
 			callPolice: function() {
 				//一键报警
 				let that = this;
-				if(that.userInfo.autograph!=""){
-					that.UrgentPhone=that.userInfo.autograph
+				if (that.userInfo.autograph != "") {
+					that.UrgentPhone = that.userInfo.autograph
 				}
 				uni.showModal({
 					title: "一键报警",
@@ -522,7 +522,7 @@
 											Address: that.packAddress(res.address),
 										},
 										success(res) {
-											uni.makePhoneCall({//拨打紧急联系人电话
+											uni.makePhoneCall({ //拨打紧急联系人电话
 												phoneNumber: that.UrgentPhone
 											});
 											if (res.data.status) {
@@ -538,7 +538,7 @@
 											}
 										},
 										fail() {
-											uni.makePhoneCall({//拨打紧急联系人电话
+											uni.makePhoneCall({ //拨打紧急联系人电话
 												phoneNumber: that.UrgentPhone
 											});
 											uni.showToast({
@@ -587,11 +587,18 @@
 			},
 			CheckPayState: function() { //检测支付状态
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.CheckPayState.value,
 					method: $privateTaxi.Interface.CheckPayState.method,
 					data: {
-						payType: 3,
+						payType: payPlatform,
 						orderNumber: that.orderNumber
 					},
 					success(res) {
@@ -617,6 +624,13 @@
 			},
 			BouncePay: function() {
 				let that = this;
+				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
+				// #ifdef H5
+				payPlatform = 4;
+				//  #endif
+				// #ifdef MP-WEIXIN
+				payPlatform = 5;
+				//  #endif
 				uni.showModal({
 					title: "取消订单",
 					content: "您是否取消订单",
@@ -629,7 +643,7 @@
 								url: $privateTaxi.Interface.BouncePay.value,
 								method: $privateTaxi.Interface.BouncePay.method,
 								data: {
-									payType: 3,
+									payType: payPlatform,
 									orderNumber: that.orderNumber,
 									// price:that.FactPayPrice
 									price: 0.01
@@ -663,8 +677,8 @@
 				//取消订单
 				let that = this;
 				//关闭所有的定时器	
-							console.log(that.orderNumber)
-							console.log(that.userInfo.userId)
+				console.log(that.orderNumber)
+				console.log(that.userInfo.userId)
 				uni.request({
 					url: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.value,
 					method: $downwindCar.Interface.CancelHitchhikerOrder_Passenger.method,
@@ -673,7 +687,7 @@
 						UserId: that.userInfo.userId,
 					},
 					success: function(res) {
-						
+
 						let data = res.data.data;
 						console.log(res)
 						if (res.data.status) {

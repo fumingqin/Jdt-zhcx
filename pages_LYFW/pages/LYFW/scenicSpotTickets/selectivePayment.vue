@@ -165,6 +165,7 @@
 				childrenTotalPrice: '', //儿童总价
 
 				submitH5Data: '', //公众号H5支付参数
+				userInfo : '',//用户信息
 
 			}
 		},
@@ -172,7 +173,10 @@
 			uni.showLoading({
 				title: '拉起订单中...'
 			})
-
+			
+			//获取用户信息
+			this.getUserInfo();
+			
 			uni.request({
 				url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
 				method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
@@ -208,7 +212,18 @@
 		methods: {
 			//0.3价格取2位精度
 			priceAccuracy:function(e){
-				return e.toFixed(2);
+				const pri = e.toFixed(2);
+				return pri;
+			},
+			
+			//获取用户信息
+			getUserInfo:function(){
+				uni.getStorage({
+					key:'userInfo',
+					success:(res)=>{
+						this.userInfo = res.data;
+					}
+				})
 			},
 			
 			//隐藏操作
@@ -232,7 +247,7 @@
 			//数组提取
 			screenUser: function() {
 				let adult = this.orderInfo.addressData.filter(item => {
-					return item.userType == '成人';
+					return item.userType == '成人' || item.userType == '军人' || item.userType == '教师' || item.userType == '学生';
 				})
 				let children = this.orderInfo.addressData.filter(item => {
 					return item.userType == '儿童';
@@ -329,7 +344,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.data.data[0].orderType == '待支付') {
 							uni.request({
 								url:$lyfw.Interface.spt_CancelTickets.value,
@@ -341,7 +356,7 @@
 									'content-type': 'application/json'
 								},
 								success(res) {
-									console.log(res)
+									// console.log(res)
 									uni.showToast({
 										title: '支付超时，已自动取消订单,请刷新订单',
 										icon: 'none',
@@ -400,117 +415,113 @@
 				// 		console.log(res)
 				// 	}
 				// })
+				
 
 				// #ifdef MP-WEIXIN
 				//--------------------------------------微信小程序支付-------------------------------------
 				if (that.channeIndex == 0) {
-					uni.getStorage({
-						key:'scenicSpotOpenId',
-						success:(openid)=>{
-							uni.request({
-								url:$lyfw.Interface.spt_getCommonPayparameter.value,
-								method:$lyfw.Interface.spt_getCommonPayparameter.method,
-								data: {
-									payType: 5,
-									openId : openid.data,
-									price: that.orderInfo.orderActualPayment,
-									orderNumber: that.orderInfo.orderNumber,
-									goodsName: that.orderInfo.title,
-									billDescript: that.orderInfo.ticketTitle
-								},
-								header: {'content-type': 'application/json'},
-								success: function(res) {
-								console.log(res)
-								uni.requestPayment({
-									provider: 'wxpay',
-									timeStamp: res.data.data.Timestamp,
-									nonceStr: res.data.data.Noncestr,
-									package: res.data.data.Noncestr,
-									signType: 'MD5',
-									paySign: res.data.data.Sign,
-									success: function(res){
-										console.log(res)
-										if(res.errMsg == 'requestPayment:ok'){
-											uni.request({
-												url:$lyfw.Interface.spt_RequestTickets.value,
-												method:$lyfw.Interface.spt_RequestTickets.method,
-												data: {
-													orderNumber: that.orderInfo.orderNumber
-												},
-												header: {'content-type': 'application/json'},
-												success: function(res) {
-													console.log(res)
-													if (res.data.msg == '出票成功') {
-														uni.redirectTo({
-															url: 'successfulPayment'
-														})
-													} else {
-														uni.showToast({
-															title: '出票失败，联系客服出示订单编号',
-															icon: 'none',
-															duration: 3000
-														})
-													}
-												},
-												fail: function() {
+					if(that.userInfo.openId_xcx){
+						uni.request({
+							url:$lyfw.Interface.spt_Pay.value,
+							method:$lyfw.Interface.spt_Pay.method,
+							data: {
+								payType: 5,
+								openId : that.userInfo.openId_xcx,
+								price: that.orderInfo.orderActualPayment,
+								orderNumber: that.orderInfo.orderNumber,
+								goodsName: that.orderInfo.title,
+								billDescript: that.orderInfo.ticketTitle
+							},
+							header: {'content-type': 'application/json'},
+							success: function(res) {
+							// console.log(res)
+							uni.requestPayment({
+								// provider: 'wxpay',
+								timeStamp: res.data.data.timeStamp,
+								nonceStr: res.data.data.nonceStr,
+								package: res.data.data.package,
+								signType: res.data.data.signType,
+								paySign: res.data.data.paySign,
+								success: function(res){
+									// console.log(res)
+									if(res.errMsg == 'requestPayment:ok'){
+										uni.request({
+											url:$lyfw.Interface.spt_RequestTickets.value,
+											method:$lyfw.Interface.spt_RequestTickets.method,
+											data: {
+												orderNumber: that.orderInfo.orderNumber
+											},
+											header: {'content-type': 'application/json'},
+											success: function(res) {
+												// console.log(res)
+												if (res.data.msg == '出票成功') {
+													uni.redirectTo({
+														url: 'successfulPayment'
+													})
+												} else {
 													uni.showToast({
-														title: '出票失败，请联系客服出示订单编号',
+														title: '出票失败，联系客服出示订单编号',
 														icon: 'none',
 														duration: 3000
 													})
 												}
-											})
-										} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-											// alert("您取消了支付，请重新支付");
-											uni.showToast({
-												title: '您取消了支付，请重新支付',
-												icon: 'none'
-											})
-										} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-											// alert("支付失败，请重新支付"); 
-											uni.showToast({
-												title: '支付失败，请重新支付',
-												icon: 'none',
-												success: function() {
-													uni.switchTab({
-														url: '../../../../pages/order/OrderList'
-													})
-												}
-											})
-															
-										} else {
-											// location.href = "/Coach/GetCoach";
-										}
-															
-									},
-									fail: function(e) {
-										console.log(e)
-										uni.showToast({
-											title: '拉起支付失败，请查看网络状态'
+											},
+											fail: function() {
+												uni.showToast({
+													title: '出票失败，请联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
+												})
+											}
 										})
+									} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+										// alert("您取消了支付，请重新支付");
+										uni.showToast({
+											title: '您取消了支付，请重新支付',
+											icon: 'none'
+										})
+									} else if (res.err_msg == "get_brand_wcpay_request:faile") {
+										// alert("支付失败，请重新支付"); 
+										uni.showToast({
+											title: '支付失败，请重新支付',
+											icon: 'none',
+											success: function() {
+												uni.switchTab({
+													url: '../../../../pages/order/OrderList'
+												})
+											}
+										})
+														
+									} else {
+										// location.href = "/Coach/GetCoach";
 									}
-															
-								})
-								
-								
+														
 								},
-								fail: function() {
+								fail: function(e) {
+									console.log(e)
 									uni.showToast({
-										title: '请求支付参数失败，请查看网络状态'
+										title: '拉起支付失败，请查看网络状态'
 									})
 								}
+														
 							})
-						},
-						fail:function(){
-							uni.showToast({
-								title:'账户未授权',
-								icon:'none'
-							})
-							uni.switchTab({
-								url:'../../pages/Home/Index'
-							})
-						}
-					})
+							},
+							fail: function() {
+								uni.showToast({
+									title: '请求支付参数失败，请查看网络状态'
+								})
+							}
+						})
+					}else{
+						uni.hideLoading()
+						uni.showToast({
+							title: '请允许授权给公众号，即将为您返回主页！',
+							icon:'none'
+						})
+						uni.switchTab({
+							url:'../../../../pages/Home/Index'
+						})
+					}
 					
 				} else {
 					uni.showToast({
@@ -523,99 +534,96 @@
 				// #ifdef H5
 				//--------------------------------------微信H5公众号支付-------------------------------------
 				if (that.channeIndex == 0) {
-					uni.getStorage({
-						key:'scenicSpotOpenId',
-						success:(res)=>{
-							uni.request({
-								url:$lyfw.Interface.spt_Pay.value,
-								method:$lyfw.Interface.spt_Pay.method,
-								data: {
-									payType: 4,
-									price: that.orderInfo.orderActualPayment,
-									orderNumber: that.orderInfo.orderNumber,
-									goodsName: that.orderInfo.title,
-									billDescript: that.orderInfo.ticketTitle,
-									openId : res.data
-								},
-								success: function(res) {
-									console.log(res)
-									WeixinJSBridge.invoke('getBrandWCPayRequest', {
-										"appId": res.data.data.appId, //公众号名称，由商户传入
-										"timeStamp": res.data.data.timeStamp, //时间戳
-										"nonceStr": res.data.data.nonceStr, //随机串
-										"package": res.data.data.package, //扩展包
-										"signType": 'MD5', //微信签名方式:MD5
-										"paySign": res.data.data.paySign, //微信签名
-									}, function(res) {
-										if (res.err_msg == "get_brand_wcpay_request:ok") {
-											uni.request({
-												url:$lyfw.Interface.spt_RequestTickets.value,
-												method:$lyfw.Interface.spt_RequestTickets.method,
-												data: {
-													orderNumber: that.orderInfo.orderNumber
-												},
-												header: {'content-type': 'application/json'},
-												success: function(res) {
-													console.log(res)
-													if (res.data.msg == '出票成功') {
-														uni.redirectTo({
-															url: 'successfulPayment'
-														})
-													} else {
-														uni.showToast({
-															title: '出票失败，联系客服出示订单编号',
-															icon: 'none',
-															duration: 3000
-														})
-													}
-												},
-												fail: function() {
+					if(that.userInfo.openId_wx){
+						uni.request({
+							url:$lyfw.Interface.spt_Pay.value,
+							method:$lyfw.Interface.spt_Pay.method,
+							data: {
+								payType: 4,
+								price: that.orderInfo.orderActualPayment,
+								orderNumber: that.orderInfo.orderNumber,
+								goodsName: that.orderInfo.title,
+								billDescript: that.orderInfo.ticketTitle,
+								openId : that.userInfo.openId_wx,
+							},
+							success: function(res) {
+								// console.log(res)
+								WeixinJSBridge.invoke('getBrandWCPayRequest', {
+									"appId": res.data.data.appId, //公众号名称，由商户传入
+									"timeStamp": res.data.data.timeStamp, //时间戳
+									"nonceStr": res.data.data.nonceStr, //随机串
+									"package": res.data.data.package, //扩展包
+									"signType": 'MD5', //微信签名方式:MD5
+									"paySign": res.data.data.paySign, //微信签名
+								}, function(res) {
+									if (res.err_msg == "get_brand_wcpay_request:ok") {
+										uni.request({
+											url:$lyfw.Interface.spt_RequestTickets.value,
+											method:$lyfw.Interface.spt_RequestTickets.method,
+											data: {
+												orderNumber: that.orderInfo.orderNumber
+											},
+											header: {'content-type': 'application/json'},
+											success: function(res) {
+												// console.log(res)
+												if (res.data.msg == '出票成功') {
+													uni.redirectTo({
+														url: 'successfulPayment'
+													})
+												} else {
 													uni.showToast({
-														title: '出票失败，请联系客服出示订单编号',
+														title: '出票失败，联系客服出示订单编号',
 														icon: 'none',
 														duration: 3000
 													})
 												}
-											})
-										} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-											uni.showToast({
-												title: '您放弃了支付',
-												icon: 'none',
-												duration: 3000
-											})
-										} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-											uni.showToast({
-												title: '支付失败，请重试',
-												icon: 'none',
-												duration: 3000
-											})
-							
-										} else {
-											uni.showToast({
-												title: '网络异常，请检查网络后重试',
-												icon: 'none',
-												duration: 3000
-											})
-										}
-									});
-								},
-								fail: function() {
-									uni.showToast({
-										title: '请求支付参数失败，请查看网络状态'
-									})
-								}
-							})
-						},
-						fail:function(){
-							uni.showToast({
-								title:'账户未授权',
-								icon:'none'
-							})
-							uni.switchTab({
-								url:'@/pages/Home/Index'
-							})
-						}
-					})
+											},
+											fail: function() {
+												uni.showToast({
+													title: '出票失败，请联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
+												})
+											}
+										})
+									} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+										uni.showToast({
+											title: '您放弃了支付',
+											icon: 'none',
+											duration: 3000
+										})
+									} else if (res.err_msg == "get_brand_wcpay_request:faile") {
+										uni.showToast({
+											title: '支付失败，请重试',
+											icon: 'none',
+											duration: 3000
+										})
+						
+									} else {
+										uni.showToast({
+											title: '网络异常，请检查网络后重试',
+											icon: 'none',
+											duration: 3000
+										})
+									}
+								});
+							},
+							fail: function() {
+								uni.showToast({
+									title: '请求支付参数失败，请查看网络状态'
+								})
+							}
+						})
+					}else{
+						uni.hideLoading()
+						uni.showToast({
+							title: '请允许授权给公众号，即将为您返回主页！',
+							icon:'none'
+						})
+						uni.switchTab({
+							url:'../../../../pages/Home/Index'
+						})
+					}
 					
 				} else {
 					uni.showToast({
@@ -641,7 +649,7 @@
 						},
 						header: {'content-type': 'application/json'},
 						success: function(e) {
-							console.log(e.data.data)
+							// console.log(e.data.data)
 							uni.hideLoading()
 							uni.requestPayment({
 								provider: 'wxpay',
@@ -656,7 +664,7 @@
 											},
 											header: {'content-type': 'application/json'},
 											success: function(res) {
-												console.log(res)
+												// console.log(res)
 												if (res.data.msg == '出票成功') {
 													uni.redirectTo({
 														url: 'successfulPayment'
@@ -681,7 +689,7 @@
 								},
 					
 								fail: function(e) {
-									console.log(e)
+									// console.log(e)
 									if (e.errMsg == 'requestPayment:fail canceled') {
 										uni.showToast({
 											title: '您放弃了支付',
@@ -707,7 +715,7 @@
 					
 						},
 						fail: (e) => {
-							console.log(e)
+							// console.log(e)
 							uni.hideLoading()
 							uni.showToast({
 								// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
@@ -720,7 +728,7 @@
 					
 					
 				} else if (this.channeIndex == 1) { 
-					console.log(that.orderInfo.orderNumber)
+					// console.log(that.orderInfo.orderNumber)
 					//--------------------------------------支付宝APP支付-------------------------------------
 					uni.request({
 						url:$lyfw.Interface.spt_Pay.value,
@@ -740,7 +748,7 @@
 								provider: 'alipay',
 								orderInfo: e.data.data,
 								success: function(res) {
-									console.log(res)
+									// console.log(res)
 									uni.request({
 										url:$lyfw.Interface.spt_RequestTickets.value,
 										method:$lyfw.Interface.spt_RequestTickets.method,
@@ -749,7 +757,7 @@
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
-											console.log(res)
+											// console.log(res)
 											if (res.data.msg == '出票成功') {
 												uni.redirectTo({
 													url: 'successfulPayment'
@@ -773,7 +781,7 @@
 								},
 							
 								fail: function(e) {
-									console.log(e)
+									// console.log(e)
 									if (e.errMsg == 'requestPayment:fail canceled') {
 										uni.showToast({
 											title: '您放弃了支付',
@@ -812,7 +820,8 @@
 
 
 			},
-
+			
+			//检查是否已支付
 			retrievePayment:function(){
 				var that = this;
 				uni.request({
@@ -823,7 +832,7 @@
 					},
 					header: {'content-type': 'application/json'},
 					success:function(res){
-						console.log(res)
+						// console.log(res)
 							if(res.data.msg =='当前订单已支付成功,请勿重复支付'){
 								uni.request({
 									url:$lyfw.Interface.spt_RequestTickets.value,

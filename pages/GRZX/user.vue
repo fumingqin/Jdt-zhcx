@@ -48,11 +48,26 @@
 				<text class="fontStyle">电子发票</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view> -->
-			<view class="boxClass" @click="QQClick">
+			<view class="boxClass" @click="phoneClick">
+				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
+				<text class="fontStyle">电话客服</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<!-- #ifdef APP-PLUS -->
+			<view class="boxClass borderTop" @click="QQClick">
 				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
 				<text class="fontStyle">QQ客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="boxClass borderTop">
+				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
+				<button open-type="contact" class="contactClass">在线客服</button>
+				<!-- <text class="fontStyle">在线客服</text> -->
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<!-- #endif -->
 			<view class="boxClass borderTop" @click="infoClick">
 				<image src="../../static/GRZX/tubiao_zhengzhao.png" class="iconClass3"></image>
 				<text class="fontStyle">信息管理</text>
@@ -343,6 +358,7 @@
 						title : '请先登录',
 						icon : 'none',
 					})
+					// #ifdef APP-PLUS
 					setTimeout(function(){
 						uni.navigateTo({	
 							//loginType=1,泉运登录界面
@@ -351,6 +367,12 @@
 							url:that.$GrzxInter.Route.userLogin.url +'?loginType=1&&urlData=1'
 						}) 
 					},500);
+					// #endif
+					//#ifdef MP-WEIXIN
+					uni.navigateTo({
+						url:'/pages/Home/wxAuthorize',
+					})
+					// #endif
 				}else{
 					// console.log(that.$GrzxInter.Route.personal.url,"8888")
 					uni.navigateTo({
@@ -406,14 +428,34 @@
 					icon : 'none',
 				})
 			},
+			phoneClick(){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.SearchCustomerService.value,
+					data:{
+						region:'泉州',
+					},
+					method:that.$GrzxInter.Interface.SearchCustomerService.method,
+					success(res){
+						console.log(res)
+						uni.makePhoneCall({
+						    phoneNumber: res.data.data.phone, //仅为示例
+						});
+					}
+				})
+			},
 			QQClick(){
 				// #ifdef APP-PLUS
-				plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + this.QQ + '&version=1&src_type=web ');
-				//#endif
-				// #ifdef MP-WEIXIN
-				uni.showToast({
-					title:'正在测试中，敬请期待...',
-					icon : 'none',
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.SearchCustomerService.value,
+					data:{
+						region:'泉州',
+					},
+					method:that.$GrzxInter.Interface.SearchCustomerService.method,
+					success(res){
+						plus.runtime.openURL('mqq://im/chat?chat_type=wpa&uin=' + res.data.data.qq + '&version=1&src_type=web ');
+					}
 				})
 				//#endif
 			},
@@ -638,6 +680,7 @@
 		margin-left: 4.27%;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 30upx;
 	}
 	.moreClass{		
 		font-size:32upx ;
@@ -770,5 +813,22 @@
 		font-size: 32upx;
 		margin-top: 50upx;
 		margin-left: 8%;
+	}
+	.contactClass{
+		width: 91%;
+		height: 100upx;
+		line-height: 100upx;
+		// border: 1upx solid red;
+		position: absolute;
+		left: 8%;
+		top:0upx;
+		background-color: #FFFFFF;
+		border: 1upx solid #FFFFFF;
+		font-size: 28upx;
+		color: #2C2D2D;
+		text-align: left;
+	}
+	.contactClass::after{
+		border: none; 
 	}
 </style>

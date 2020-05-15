@@ -112,7 +112,9 @@
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 		},
 		onShow() {
-			this.scenicSpotOpenId = uni.getStorageSync('scenicSpotOpenId') || ''; //获取Oppenid
+			// #ifdef MP-WEIXIN
+			this.scenicSpotOpenId = this.userInfo.openId_xcx || ''; //获取Oppenid
+			// #endif
 		},
 		methods: {
 			change: function(value) {
@@ -168,6 +170,9 @@
 			// ------------------------------------支付开始------------------------------------------
 			getPaymentInformation: function() { //获取支付信息
 				let that = this;
+				uni.showLoading({
+					mask:true
+				})
 				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
 				// #ifdef H5
 				payPlatform = 4;
@@ -199,8 +204,17 @@
 			payment: function(orderInfo) { //支付
 				let that = this;
 				uni.requestPayment({
-					provider: "wxpay",
+					//#ifdef MP-WEIXIN
+					timeStamp:orderInfo.timeStamp,
+					nonceStr:orderInfo.nonceStr,
+					package:orderInfo.package,
+					signType:orderInfo.signType,
+					paySign:orderInfo.paySign,
+					// #endif
+					// #ifdef APP-VUE
+					provider:"wxpay", 
 					orderInfo: orderInfo,
+					// #endif
 					success(res) {
 						console.log(res)
 						that.CheckPayState();

@@ -69,21 +69,20 @@ export default{
 			let that = this;
 			uni.login({
 				success(res){
-					console.log(res,'res')
-					var appid='wx8dcbb62a76885221';
-					var secret='11d8e65170b67f58cccd655051ca8303';
-					var logUrl='https://api.weixin.qq.com/sns/jscode2session?appid='+appid
-					+'&secret='+secret+'&js_code='+res.code+'&grant_type=authorization_code';
+					var logUrl=that.$GrzxInter.Interface.GetOpenId_xcx.value;
 					console.log(logUrl,'logUrl')
 					uni.request({
 						url:logUrl,
-						method: 'GET',
+						data:{
+							code:res.code,
+						},
+						method: that.$GrzxInter.Interface.GetOpenId_xcx.method,
 						success(logRes){
-							console.log(logRes,'logRes')
-							uni.setStorageSync('scenicSpotOpenId',logRes.data.openid)
-							var openid=logRes.data.openid;
-							that.sessionKey=logRes.data.session_key;
-							that.openId_xcx=logRes.data.openid;
+							// console.log(logRes,'logRes')
+							uni.setStorageSync('scenicSpotOpenId',logRes.data.data.openid)
+							var openid=logRes.data.data.openid;
+							that.sessionKey=logRes.data.data.session_key;
+							that.openId_xcx=logRes.data.data.openid;
 							uni.request({
 								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.value,
 								data:{
@@ -91,7 +90,7 @@ export default{
 								},
 								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.method,
 								success(res){
-									console.log(res,'res')
+									// console.log(res,'res')
 									setTimeout(function(){
 										uni.hideLoading();
 									},1000);
@@ -120,8 +119,10 @@ export default{
 				success: function(infoRes) {
 					console.log(infoRes,'49')
 					that.userInfo=infoRes.userInfo;
-					// uni.setStorageSync('wxUserInfo',infoRes.userInfo)
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
+					setTimeout(function(){
+						uni.hideLoading();
+					},1000);
 				},
 				fail(res) {
 					uni.showToast({
@@ -138,9 +139,9 @@ export default{
 			var iv = e.detail.iv;
 			var pc = new WXBizDataCrypt(appId, this.sessionKey)
 			var data = pc.decryptData(encryptedData , iv)
-			console.log('解密后 data: ', data)
+			// console.log('解密后 data: ', data)
 			var that=this;
-			console.log('that.userInfo: ', that.userInfo)
+			// console.log('that.userInfo: ', that.userInfo)
 			uni.request({
 				url:that.$GrzxInter.Interface.login.value,
 				data:{
@@ -148,45 +149,55 @@ export default{
 				},
 				method:that.$GrzxInter.Interface.login.method,
 				success(res1){
-					uni.request({
-						url:that.$GrzxInter.Interface.changeInfo.value,
-						data:{
-							userId:res1.data.data.userId,
-							phoneNumber:data.purePhoneNumber,
-							nickname:that.userInfo.nickName,
-							address:that.userInfo.province+that.userInfo.city,
-							openId_wx:res1.data.data.openId_wx,
-							gender:that.userInfo.gender,
-							openId_qq:res1.data.data.openId_qq,
-							openId_xcx:that.openId_xcx,
-							birthday:res1.data.data.birthday,
-							autograph:res1.data.data.autograph,
-						},
-						method:that.$GrzxInter.Interface.changeInfo.method,
-						success(res2){
-							uni.request({
-								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								data:{
-									userId:res2.data.data.userId,
-									portrait:that.userInfo.avatarUrl,
-								},
-								method:that.$GrzxInter.Interface.changeInfoPortrait.method,
-								success(res3) {
-									console.log(res3);
-									uni.showToast({
-										title:'绑定成功！',
-										icon:'success',
-									})
-									uni.setStorageSync('userInfo',res3.data.data)
-									setTimeout(function(){
-										uni.switchTab({
-											url:'/pages/Home/Index',
+					console.log('res1', res1)
+					if(!res1.data.status){
+						uni.showToast({
+							title:'绑定手机号失败，请重试！',
+							icon:'none'
+						})
+					}else{
+						uni.request({
+							url:that.$GrzxInter.Interface.changeInfo.value,
+							data:{
+								userId:res1.data.data.userId,
+								phoneNumber:data.purePhoneNumber,
+								nickname:that.userInfo.nickName,
+								address:that.userInfo.province+that.userInfo.city,
+								openId_wx:res1.data.data.openId_wx,
+								gender:that.userInfo.gender,
+								openId_qq:res1.data.data.openId_qq,
+								openId_xcx:that.openId_xcx,
+								birthday:res1.data.data.birthday,
+								autograph:res1.data.data.autograph,
+							},
+							method:that.$GrzxInter.Interface.changeInfo.method,
+							success(res2){
+								console.log('res2', res2)
+								uni.request({
+									url:that.$GrzxInter.Interface.changeInfoPortrait.value,
+									data:{
+										userId:res2.data.data.userId,
+										portrait:that.userInfo.avatarUrl,
+									},
+									method:that.$GrzxInter.Interface.changeInfoPortrait.method,
+									success(res3) {
+										console.log(res3);
+										uni.showToast({
+											title:'绑定成功！',
+											icon:'success',
 										})
-									},500);
-								}
-							})
-						}
-					})
+										uni.setStorageSync('userInfo',res3.data.data)
+										setTimeout(function(){
+											uni.switchTab({
+												url:'/pages/Home/Index',
+											})
+										},500);
+									}
+								})
+							}
+						})
+					}
+					
 				},
 				fail() {
 					uni.showToast({

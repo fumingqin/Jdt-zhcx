@@ -113,7 +113,7 @@
 						<text class="Xx_QRcodeContent">{{orderInfo.orderTicketNumber}}</text>
 					</view>
 					<view class="Xx_QRcodeBlock2">
-						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx;"  />
+						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; z-index:0;"  />
 					</view>
 					<view class="Xx_QRcodeBlock2">
 						<text class="Xx_QRcodeTips">出示二维码，检票入园</text>
@@ -149,13 +149,14 @@
 				
 				<view class="box_Vlew2">
 					<view :hidden="orderInfo.backsetOutDate !== ''">订单未选择返程班次</view>
-					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == ''">
+					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
+					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
-						<text class="box_title">出发班次信息</text> 
+						<text class="box_title">返程班次信息</text> 
 						<text class="box_icon jdticon icon-fork " @click="close2"></text>
 					</view>
 					<view class="MP_selectionDate">
-						<text class="MP_text" >出发时间</text>
+						<text class="MP_text" >返程时间</text>
 						<text class="MP_cost">{{orderInfo.backsetOutDate}}</text>
 					</view>
 					<view class="MP_selectionDate">
@@ -189,7 +190,8 @@
 				
 				<view class="box_Vlew2" >
 					<view :hidden="orderInfo.setOutDate !== ''">订单未选择出发班次</view>
-					<scroll-view scroll-y="true" :hidden="orderInfo.setOutDate == ''">
+					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
+					<scroll-view scroll-y="true" :hidden="orderInfo.setOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
 						<text class="box_title">出发班次信息</text> 
 						<text class="box_icon jdticon icon-fork " @click="close3"></text>
@@ -275,7 +277,8 @@
 		methods: {
 			//0.3价格取2位精度
 			priceAccuracy:function(e){
-				return e.toFixed(2);
+				const pri = e.toFixed(2);
+				return pri;
 			},
 			//访问接口数据
 			lyfwData(e) {
@@ -287,7 +290,7 @@
 					},
 					header: {'content-type': 'application/json'},
 					success:(res) => {
-						console.log(res)
+						// console.log(res)
 						this.orderInfo = res.data.data[0];
 						this.screenUser();
 						this.make()
@@ -327,7 +330,7 @@
 			//数组提取
 			screenUser: function() {
 				let adult = this.orderInfo.addressData.filter(item => {
-					return item.userType == '成人';
+					return item.userType == '成人' || item.userType == '军人' || item.userType == '教师' || item.userType == '学生';
 				})
 				let children = this.orderInfo.addressData.filter(item => {
 					return item.userType == '儿童';
@@ -340,7 +343,7 @@
 			//跳转至景区详情
 			route(){
 				uni.navigateTo({
-					url: 'tp_ticketsDetails?ticketId=' + JSON.stringify(this.orderInfo.ticketId)
+					url: 'tp_ticketsDetails?ticketId=' +this.orderInfo.ticketId
 				})
 			},
 			

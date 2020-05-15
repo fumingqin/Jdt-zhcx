@@ -214,7 +214,7 @@
 					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data: {
 						// requestArea : this.regionWeixin,
-						requestArea: '南平市'
+						requestArea: '泉州市'
 					},
 					header: {
 						'content-type': 'application/json'

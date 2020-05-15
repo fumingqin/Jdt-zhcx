@@ -282,8 +282,9 @@
 			<view v-if="current == 4" style="margin-top: 10rpx;">
 				<view class='privatetaxi' v-for="(item,index) in downwindCar" :key="index" @click="downwindCarClick(item)">
 					<text style="font-size: 36rpx;font-weight: bold;">{{item.DepartureTime.replace("T"," ").substr(0,16)}}&nbsp;出发</text>
-					<view style="padding-top: 20rpx;flex-direction: row;">
+					<view style="padding-top: 20rpx;flex-direction: row;justify-content: space-between;">
 						<text style="font-size: 30rpx;">&nbsp;&nbsp;&nbsp;司机：{{item.DriverName.substr(0,1)}}师傅</text>
+						<text style="font-size: 30rpx;">剩余{{item.Seat}}座</text>
 					</view>
 					<view style="justify-content: space-between;padding-top: 10rpx;">
 						<view style="flex-direction: row;justify-content: space-between;">
@@ -1257,7 +1258,7 @@
 						data: that.endlocation,
 						success(){
 							uni.navigateTo({
-								url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price,
+								url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price+"&vehicleNumber="+value.VehicleNumber,
 							})
 						}
 					})
@@ -1360,7 +1361,7 @@
 		margin: 15rpx;
 		margin-left: 30rpx;
 		margin-right: 30rpx;
-		padding: 20rpx;
+		padding: 20rpx 40rpx;
 		background-color: #FFFFFF;
 		border-radius: 20rpx;
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);

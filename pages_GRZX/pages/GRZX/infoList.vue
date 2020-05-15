@@ -141,6 +141,7 @@
 						icon:'none',
 						title:'暂未登录,请登录后查看'
 					})
+					//#ifdef APP-PLUS
 					setTimeout(function(){
 						uni.navigateTo({	
 							//loginType=1,泉运登录界面
@@ -149,6 +150,12 @@
 							url  : '/pages/GRZX/userLogin?loginType=1'
 						}) 
 					},500);
+					// #endif
+					//#ifdef MP-WEIXIN
+					uni.navigateTo({
+						url:'/pages/Home/wxAuthorize',
+					})
+					// #endif
 				}
 			})
 		},

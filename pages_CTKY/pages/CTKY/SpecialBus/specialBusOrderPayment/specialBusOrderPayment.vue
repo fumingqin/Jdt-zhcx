@@ -215,11 +215,11 @@
 							// that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						// that.getOpenID();
+						that.getOpenID();
 
 
 						//-------------------------------下单-------------------------------
-						that.getOrder();
+						// that.getOrder();
 					},
 					fail() {
 						uni.showToast({
@@ -345,13 +345,13 @@
 				// #ifdef MP-ALIPAY
 				payType = 2;
 				// #endif
-				// #ifdef APP-NVUE
-				payType = 3;
-				// #endif
-				// #ifdef MP-WEIXIN
+				// #ifdef APP-PLUS
 				payType = 3;
 				// #endif
 				// #ifdef H5
+				payType = 4;
+				// #endif
+				// #ifdef MP-WEIXIN
 				payType = 5;
 				// #endif
 				var timer = null;
@@ -364,12 +364,13 @@
 						data: {
 							//订单编号
 							orderNumber: res,
-							payType:4,
-							// openId:that.ctkyOpenID,
-							openId:'oV4q25OV2DJHvgTsfGYh4F9D_2lM',
+							payType:payType,
+							openId:that.ctkyOpenID,
+							// openId:'oV4q25OV2DJHvgTsfGYh4F9D_2lM',
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
-							price:that.ticketInfo.totalPrice,
+							// price:that.ticketInfo.totalPrice,
+							price:0.1,
 						},
 						success: (res) => {
 							console.log(res.data);
@@ -473,7 +474,6 @@
 							})
 						}
 					},
-
 					fail: function(ee) {
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
@@ -481,10 +481,40 @@
 							duration: 3000
 						})
 					}
-				})
+				});
 				// #endif
-				// #ifdef MP-WEIXIN
 				
+				// #ifdef MP-WEIXIN
+				uni.hideLoading()
+				uni.requestPayment({
+					// provider: 'wxpay',
+					timeStamp:that.paymentData.timeStamp,
+					nonceStr:that.paymentData.nonceStr,
+					package:that.paymentData.package,
+					signType:that.paymentData.signType,
+					paySign:that.paymentData.paySign,
+					success(res) {
+						console.log(res)
+						uni.showToast({
+							title: '支付成功',
+							icon: 'none'
+						})
+						uni.showLoading({
+						    title: '加载中...'
+						});
+						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+					},
+					fail(res) {
+						console.log(res)
+						if (res.errMsg == "requestPayment:fail canceled") {
+							setTimeout(function() {
+								that.showToast("支付失败，请重新支付")
+							}, 1000)
+						} else {
+							that.showToast("网络连接失败")
+						}
+					}
+				});
 				// #endif
 			},
 			//--------------------------成功之后重新获取车票支付参数--------------------------
@@ -492,21 +522,33 @@
 				var that = this;
 				var timer = null;
 				that.timer = timer;
+				var payType = '';
+				// #ifdef MP-ALIPAY
+				payType = 2;
+				// #endif
+				// #ifdef APP-PLUS
+				payType = 3;
+				// #endif
+				// #ifdef H5
+				payType = 4;
+				// #endif
+				// #ifdef MP-WEIXIN
+				payType = 5;
+				// #endif
 				uni.showLoading({
-					title: '检索订单是否支付...'
+					title: '正在检索，请稍后...'
 				});
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.commonCheckPayState.Url,
+						method:$KyInterface.KyInterface.commonCheckPayState.method,
 						data: {
 							orderNumber: orderNumber,
+							payType: payType,
 						},
 						success: (res) => {
 							console.log('支付参数返回数据', res);
+							
 							if (res.data.status == true) {
 								uni.hideLoading();
 								clearInterval(timer);
@@ -515,7 +557,7 @@
 									icon: 'none',
 									success(){
 										uni.redirectTo({
-											url: './CTKYPaySuccess'
+											url:'../../TraditionSpecial/PayMent/CTKYPaySuccess'
 										})
 									}
 								})

@@ -71,7 +71,7 @@
 			}
 		},
 		onLoad(options) {
-			this.lyfwData(JSON.parse(options.ticketId));
+			this.lyfwData(options.ticketId);
 		},
 		onNavigationBarButtonTap: function() {
 			this.share();
@@ -108,7 +108,7 @@
 					},
 					header: {'content-type': 'application/json'},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						this.piclist = res.data.data;
 						this.scSpotContent = res.data.data;
 						this.admissionTicket = res.data.data;
