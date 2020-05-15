@@ -69,7 +69,7 @@
 					success(res) {
 						console.log(res)
 						for(var i=0;i<res.data.data.length;i++){
-							res.data.data[i].newsContent=res.data.data[i].newsContent.slice(6);
+							res.data.data[i].newsContent=res.data.data[i].newsContent.slice(6,30);
 							that.tweetArticle.push(res.data.data[i]);
 						}
 					}

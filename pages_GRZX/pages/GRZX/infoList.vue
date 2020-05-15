@@ -114,7 +114,12 @@
 			</view>
 		</view>
 		<view class="topClass">
+			<!-- #ifndef MP-WEIXIN -->
 			<text class="titleClass">常用信息设置</text>
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<text class="titleClass" @click="returnClick">常用信息设置</text>
+			<!-- #endif -->
 			<image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image>
 			<view v-if="state==1" class="dfClass" @click="deleteClick">管理</view>
 			<view v-if="state==2" class="dfClass" @click="finishClick">完成</view>
@@ -701,11 +706,19 @@
 		/* #ifdef H5 */
 		top: 20upx;
 		/* #endif */
+		
 		/* #ifndef H5 */
 		top: 90upx;
 		/* #endif */
+		
+		/* #ifndef MP-WEIXIN */
 		width: 100%;
 		text-align: center;
+		/* #endif */
+		
+		/* #ifdef MP-WEIXIN */
+		left: 10%;
+		/* #endif */
 		color: #232323;
 		font-size: 38upx;
 	}
@@ -717,7 +730,12 @@
 		/* #ifndef H5 */
 		top: 90upx;
 		/* #endif */
+		/* #ifdef MP-WEIXIN */
+		left: 60%;
+		/* #endif */
+		/* #ifndef MP-WEIXIN */
 		left: 85%;
+		/* #endif */
 		color: #232323;
 		font-size: 38upx;
 	} 
