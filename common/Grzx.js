@@ -108,6 +108,12 @@ const Interface={
 		method:'POST',
 		pages: [],
 	},
+	getNews:{
+		value:Url+'/api/person/getNews',
+		name:'获取新闻资讯列表',
+		method:'POST',
+		pages: [],
+	},
 }
 
 const MainPackage='/pages/GRZX';   //主包
