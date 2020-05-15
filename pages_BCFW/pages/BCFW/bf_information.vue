@@ -52,7 +52,7 @@
 				</view>
 				<view style="display: flex;">
 					<view class="cbv_idCord">身份证</view>
-					<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" maxlength="18" v-model="nickId" />
+					<input placeholder="请输入身份证件号" class="cbv_id" name="nickeId" type="idcard" maxlength="18" v-model="nickId" />
 				</view>
 				<view style="display: flex;">
 					<view class="cbv_mobile">联系电话</view>
@@ -212,7 +212,7 @@
 					key: 'homePageInfo',
 					success: (res) => {
 						this.addressContent = res.data;
-						console.log(res)
+						// console.log(res)
 
 					}
 				}, 500)
@@ -260,8 +260,8 @@
 								that.dl_Longitude=res.data.dl_Longitude;
 								that.dl_Latitude=res.data.dl_Latitude;
 								that.isNormal=res.data.isNormal;
-								console.log(res.data);
-								console.log(that.de_Longitude);
+								// console.log(res.data);
+								// console.log(that.de_Longitude);
 							}
 						});
 						uni.getStorage({
@@ -271,7 +271,7 @@
 								this.carNumberSeats = res.data.cvt_carNumberSeats;
 								this.carName = res.data.cvt_Name;	
 								this.carprice = res.data.cvt_carprice;
-								console.log(res.data);
+								// console.log(res.data);
 							}
 						});
 						uni.getStorage({
@@ -281,7 +281,7 @@
 								this.nickId = res.data[0].userCodeNum;
 								this.nickPhone = res.data[0].userPhoneNum;
 								this.userId=res.data[0].userId;
-								console.log(res.data[0]);
+								// console.log(res.data[0]);
 							}
 						})
 					}
@@ -444,7 +444,7 @@
 						userId: this.userId,
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						var a = '';
 						if (res.data.msg == '订单查询完成') {
 							a = res.data.data.filter(item => {
@@ -488,7 +488,7 @@
 
 								//向服务器发送订单数据，返回订单编号
 								success: (res) => {
-									console.log(res)
+									// console.log(res)
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
@@ -497,7 +497,7 @@
 									}
 								},
 								fail:(res)=>{
-									console.log('shibai')
+									// console.log('shibai')
 								}
 							})
 							// #endif
@@ -532,7 +532,7 @@
 								},
 								header: {'content-type': 'application/json'},
 								success:(res)=>{
-									console.log(res)
+									// console.log(res)
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
@@ -541,7 +541,7 @@
 									}
 								},
 								fail:(res)=>{
-									console.log('shibai')
+									// console.log('shibai')
 								}
 							})
 							// #endif
@@ -576,7 +576,7 @@
 								},
 								header: {'content-type': 'application/json'},
 								success:(res)=>{
-									console.log(res)
+									// console.log(res)
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
@@ -585,7 +585,7 @@
 									}
 								},
 								fail:(res)=>{
-									console.log('shibai')
+									// console.log('shibai')
 								}
 							})
 							// #endif
@@ -604,7 +604,7 @@
 						}
 					},
 					fail: function(ee) {
-						console.log(ee)
+						// console.log(ee)
 					}
 				})
 
@@ -1007,7 +1007,7 @@
 			font-size: 32upx;
 			color: #333333;
 			font-weight: 400;
-			padding-left: 315upx;
+			padding-left: 300upx;
 			display: block;
 		}
 

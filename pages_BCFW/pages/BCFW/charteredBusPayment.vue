@@ -166,14 +166,14 @@
 				},
 				
 				success: (res) => {
-					console.log(res)
+					// console.log(res)
 					this.orderInfo = res.data.data;
 					if(this.orderInfo.or_class=='包车-定制'){
 						this.orderInfo.billDescript='包车定制费用'
 						}else{
 						this.orderInfo.billDescript='包车专线费用'
 						}
-					console.log(this.orderInfo.billDescript)
+					// console.log(this.orderInfo.billDescript)
 					this.getDate();
 					uni.hideLoading()
 				}
@@ -229,10 +229,10 @@
 			getDate: function() {
 				//先提取订单下单时间把空格转换成T
 				var a =(this.orderInfo.or_date + ' '+this.orderInfo.or_time).replace(' ', 'T')
-				console.log(a);
+				// console.log(a);
 				//把时间转换成时间戳
 				var b = new Date(a).getTime();
-				console.log(b) 
+				// console.log(b) 
 
 				//获取当前时间（为什么要先把当前时间戳格式化？）是因为直接获取当前时间戳存在时间误差
 				var date = new Date(),
@@ -374,7 +374,7 @@
 							billDescript: that.orderInfo.billDescript
 						},
 						success:function(e){
-							console.log(e)
+							// console.log(e)
 							uni.hideLoading()
 							uni.requestPayment({
 								provider: 'wxpay',
@@ -390,7 +390,7 @@
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
-											console.log(res)
+											// console.log(res)
 											if (res.data.status ==true) {
 												uni.redirectTo({
 													url: 'BCsuccessfulPayment'
@@ -414,7 +414,7 @@
 								},
 					
 								fail: function(e) {
-									console.log(e)
+									// console.log(e)
 									if (e.errMsg == 'requestPayment:fail canceled') {
 										uni.showToast({
 											title: '您放弃了支付',
@@ -469,13 +469,13 @@
 							billDescript: that.orderInfo.billDescript
 						},
 						success:function(e){
-							console.log(e)
+							// console.log(e)
 							uni.hideLoading()
 							uni.requestPayment({
 								provider: 'wxpay',
 								orderInfo: e.data.data,
 								success: function(res) {
-									console.log(res)
+									// console.log(res)
 									uni.request({
 										url:$bcfw.Interface.spt_CheckPayState.value,
 										method:$bcfw.Interface.spt_CheckPayState.method,
@@ -485,7 +485,7 @@
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
-											console.log(res)
+											// console.log(res)
 											if (res.data.status ==true) {
 												uni.redirectTo({
 													url: 'BCsuccessfulPayment'
@@ -509,7 +509,7 @@
 								},
 					
 								fail: function(e) {
-									console.log(e)
+									// console.log(e)
 									if (e.errMsg == 'requestPayment:fail canceled') {
 										uni.showToast({
 											title: '您放弃了支付',
@@ -554,13 +554,13 @@
 						},
 						method: 'POST',
 						success:function(e){
-							console.log(e)
+							// console.log(e)
 							uni.hideLoading()
 							uni.requestPayment({
 								provider: 'alipay',
 								orderInfo: e.data.data.appUrl,
 								success:function(res){
-									console.log(res)
+									// console.log(res)
 									uni.request({
 										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber='+that.orderInfo.or_number,
 										method:'POST',
@@ -588,7 +588,7 @@
 								},
 						
 								fail: function(ee) {
-									console.log(ee)
+									// console.log(ee)
 									uni.showToast({
 										title: '取消支付',
 										icon: 'none',

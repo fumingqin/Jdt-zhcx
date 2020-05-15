@@ -482,7 +482,7 @@
 							} else if (res.data.msg == '订单下单成功') {
 								uni.hideLoading()
 								uni.redirectTo({
-									url: 'selectivePayment?orderNumber=' + res.data.data.orderNumber
+									url: 'tp_selectivePayment?orderNumber=' + res.data.data.orderNumber
 								})
 							} else if (res.data.msg == '抱歉,订单下单失败') {
 								uni.hideLoading()

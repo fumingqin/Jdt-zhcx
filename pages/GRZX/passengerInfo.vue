@@ -291,6 +291,7 @@
 		/* #ifdef H5 */
 		margin-top: 110upx;
 		margin-bottom: 30upx;
+		padding-bottom: 160upx;
 		/* #endif */
 		/* #ifndef H5 */
 		margin-top: 180upx;

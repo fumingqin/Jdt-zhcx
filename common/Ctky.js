@@ -28,6 +28,20 @@ const systemName = '泉运公司综合出行';
 const KyInterface = {
 	//GET-POST
 	//--------------------------------------通用接口--------------------------------------
+	payType:{
+		// #ifdef MP-ALIPAY
+		payType : 2
+		// #endif
+		// #ifdef APP-PLUS
+		payType : 3
+		// #endif
+		// #ifdef H5
+		payType : 4
+		// #endif
+		// #ifdef MP-WEIXIN
+		payType : 5
+		// #endif
+	},
 	systemName:{
 		systemName:'泉运公司综合出行',
 		systemNameApp:'泉运公司综合出行APP',
@@ -164,7 +178,32 @@ const KyInterface = {
 		name:'定制巴士-订单列表',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
-	}
+	},
+	Cs_Refund:{
+		Url:Url + '/api/CustomizedBus/Refund',
+		name:'定制巴士-退款',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_CheckPayState:{
+		Url:Url + '/api/Pay/CheckPayState',
+		name:'定制巴士-检测订单支付状态',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_Cancel:{
+		Url:Url + '/api/CustomizedBus/Cancel',
+		name:'定制巴士-取消',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_Confirm:{
+		Url:Url + '/api/CustomizedBus/Confirm',
+		name:'定制巴士-付款成功确认订单',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	
 }
 // 接口声明区
 export default {
