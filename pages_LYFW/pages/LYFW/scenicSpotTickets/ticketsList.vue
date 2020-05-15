@@ -152,9 +152,8 @@
 				cateId: 0, //已选三级分类id
 				cateList: [], //分类数组
 				cateValue: '', //分类筛选值
-
+				
 				regionWeixin: '请选择', //微信地区数值
-				regionApp: '请选择', //APP地区数值
 			}
 		},
 
@@ -248,9 +247,6 @@
 			//获取定位数据
 			Getpostion: function() {
 				setTimeout(() => {
-					
-					
-					
 					uni.getStorage({
 						key: 'wx_position',
 						success: (res) => {
@@ -265,7 +261,6 @@
 							})
 						},
 					}),
-					
 					uni.getStorage({
 						key: 'app_position',
 						success: (res) => {
@@ -282,9 +277,6 @@
 							})
 						},
 					})
-
-					
-
 				}, 500)
 
 			},
@@ -299,34 +291,33 @@
 				if (e !== 'no' && e !== 'yes') {
 					// console.log(e)
 					this.regionWeixin = e.cityName
-					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
 					this.lyfwData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if (e == 'yes') {
-						// #ifndef APP-PLUS
-						uni.getStorage({
-							key: 'wx_position',
-							success: (res) => {
-								// console.log(res)
-								this.regionWeixin = res.data;
+					// #ifndef APP-PLUS
+					uni.getStorage({
+						key: 'wx_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionWeixin = res.data;
+							this.lyfwData(); //请求接口数据
+						}
+					}),
+					// #endif
+					// #ifdef APP-PLUS
+					uni.getStorage({
+						key: 'app_position',
+						success: (res) => {
+							// console.log(res)
+							if (res.data !== undefined) {
+								this.regionWeixin = res.data.city;
 								this.lyfwData(); //请求接口数据
 							}
-						}),
-						// #endif
-						// #ifdef APP-PLUS
-						uni.getStorage({
-							key: 'app_position',
-							success: (res) => {
-								// console.log(res)
-								if (res.data !== undefined) {
-									this.regionApp = res.data.city;
-									this.lyfwData(); //请求接口数据
-								}
-							}
-						})
-						// #endif
+						}
+					})
+					// #endif
 					this.$refs.popupRef.close();
 				} else {
 					this.$refs.popupRef.close();
@@ -536,7 +527,7 @@
 
 		.searchBoxRadius {
 			/* #ifdef H5 */
-			width: 100%;
+			width: 80%;
 			/* #endif */
 			/* #ifndef H5 */
 			width: 76%;

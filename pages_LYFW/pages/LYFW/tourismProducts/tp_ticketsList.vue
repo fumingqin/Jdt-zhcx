@@ -248,7 +248,6 @@
 			//获取定位数据
 			Getpostion: function() {
 				setTimeout(() => {
-						
 						uni.getStorage({
 							key: 'wx_position',
 							success: (res) => {
@@ -263,8 +262,6 @@
 								})
 							},
 						}),
-						
-						
 						uni.getStorage({
 							key: 'app_position',
 							success: (res) => {
@@ -281,10 +278,7 @@
 								})
 							},
 						})
-						
-						
 				}, 500)
-
 			},
 
 			//打开地区选择器
@@ -533,7 +527,7 @@
 
 		.searchBoxRadius {
 			/* #ifdef H5 */
-			width: 100%;
+			width: 80%;
 			/* #endif */
 			/* #ifndef H5 */
 			width: 76%;
