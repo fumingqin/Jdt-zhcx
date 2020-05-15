@@ -203,6 +203,7 @@
 							uni.showToast({
 								title:'投诉成功'
 							})
+							uni.navigateBack()
 					},
 					fail:function(){
 						uni.hideLoading()
