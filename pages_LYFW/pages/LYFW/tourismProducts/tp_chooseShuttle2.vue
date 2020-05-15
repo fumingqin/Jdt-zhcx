@@ -45,22 +45,38 @@
 				orderNumber : '',//订单编号
 				departureData :'', //循环班次列表
 				setOutDate : '',//时间
+				comSetOutDate : '',//对比的时间，出发时间，用于对比返程时间
 				startStation : '',//起始站
 				endStation : '',//终点站
 			}
 		},
 		onLoad:function(options){
 			this.originIndex = options.originIndex;
-			uni.getStorage({
-				key:'chooseShuttleData',
-				success: (res) => {
-					this.orderNumber = res.data.orderNumber;
-					this.setOutDate = res.data.orderDate;
-					this.startStation = res.data.planEnd;
-					this.endStation = res.data.planStart;
-					this.GetSchedule();
-				}
-			})
+			if(!options.setOutDate){
+				uni.getStorage({
+					key:'chooseShuttleData',
+					success: (res) => {
+						this.orderNumber = res.data.orderNumber;
+						this.setOutDate = res.data.orderDate;
+						this.comSetOutDate = res.data.setOutDate;
+						this.startStation = res.data.planEnd;
+						this.endStation = res.data.planStart;
+						this.GetSchedule();
+					}
+				})
+			}else{
+				this.comSetOutDate = options.setOutDate;
+				uni.getStorage({
+					key:'chooseShuttleData',
+					success: (res) => {
+						this.orderNumber = res.data.orderNumber;
+						this.setOutDate = res.data.orderDate;
+						this.startStation = res.data.planEnd;
+						this.endStation = res.data.planStart;
+						this.GetSchedule();
+					}
+				})
+			}
 		},
 		methods: {
 			selection:function(item,index){
@@ -108,8 +124,10 @@
 							endStation : this.endStation,
 						},
 						success: (res) => {
-							// console.log(res)
-							this.departureData = res.data.data;
+							let a = res.data.data.filter(item => {
+								return item.setOutDate > this.comSetOutDate;
+							})
+							this.departureData = a;
 						}
 				})
 			}

@@ -287,7 +287,7 @@
 				var codeNum=data1.userCodeNum;
 				if(data1.userName!=null&&data1.userName!=""&&data1.userPhoneNum!=null&&data1.userPhoneNum!=""&&data1.userCodeNum!=null&&data1.userCodeNum!=""){
 					//--------额外凭证--------
-					if((that.selector!="请添加额外凭证"&&that.fImg!=""&&that.fImg!=null&&that.bImg!=""&&that.bImg!=null)||(that.selector=="请添加额外凭证")){
+					if((that.selector!="请添加额外凭证 >"&&that.fImg!=""&&that.fImg!=null&&that.bImg!=""&&that.bImg!=null)||(that.selector=="请添加额外凭证 >")){
 						var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 						if(data1.userPhoneNum.length!=11){
 							uni.showToast({
@@ -310,7 +310,7 @@
 									age=Y-r[1];
 									console.log(age,"age")
 								}
-								if(that.selector!="请添加额外凭证"){
+								if(that.selector!="请添加额外凭证 >"){
 									data1.userType=that.selector;	
 								}else if(age<0){
 									uni.showToast({
@@ -475,6 +475,8 @@
 			proveChange:function(e){
 				if(e.detail.value==0){
 					this.selector="请添加额外凭证 >";
+					this.auditState1="";
+					this.auditState2="";
 				}else{
 					this.selector=this.proveType[e.detail.value];
 				}

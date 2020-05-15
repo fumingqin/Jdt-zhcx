@@ -66,6 +66,7 @@
 		},
 		methods: {
 			selection:function(item,index){
+				console.log(item)
 				this.statusIndex = index;
 				this.selectionData = item;
 			},
@@ -85,7 +86,7 @@
 								title:'选择班次成功'
 							})
 							uni.redirectTo({
-								url:'tp_chooseShuttle2?originIndex=1'
+								url:'tp_chooseShuttle2?originIndex=1&setOutDate=' + that.selectionData.setOutDate
 							})
 						},
 						fail: (ee) => {

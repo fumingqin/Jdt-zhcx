@@ -364,12 +364,13 @@
 						data: {
 							//订单编号
 							orderNumber: res,
-							payType:4,
+							payType:payType,
 							openId:that.ctkyOpenID,
 							// openId:'oV4q25OV2DJHvgTsfGYh4F9D_2lM',
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
-							price:that.ticketInfo.totalPrice,
+							// price:that.ticketInfo.totalPrice,
+							price:0.1,
 						},
 						success: (res) => {
 							console.log(res.data);
@@ -486,7 +487,7 @@
 				// #ifdef MP-WEIXIN
 				uni.hideLoading()
 				uni.requestPayment({
-					provider: 'wxpay',
+					// provider: 'wxpay',
 					timeStamp:that.paymentData.timeStamp,
 					nonceStr:that.paymentData.nonceStr,
 					package:that.paymentData.package,

@@ -1803,6 +1803,10 @@
 					that.userInfo = data.data;
 				}
 			})
+			
+			
+			//定制巴士订单测试
+			that.GetBookLogInfoByUserId();
 		},
 		onShow: function() {
 			//请求景区门票数据
@@ -1979,6 +1983,30 @@
 						// console.log('错误', res);
 					}
 				})
+			},
+			//-------------------------请求定制巴士订单数据-------------------------
+			GetBookLogInfoByUserId(){
+				var that = this;
+				uni.request({
+					url:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.Url,
+					method:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.method,
+					header:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.header,
+					data:{
+						UserAID: that.userInfo.userId
+					},
+					success(res) {
+						console.log(res)
+						if (res.data.Successed == true) {
+							
+						}else if(res.data.Successed == false) {
+							
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+				
 			},
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {
@@ -3157,7 +3185,7 @@
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].orderType == '已使用') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderType == '待使用') {
+								} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待选车') {
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].orderType == '待支付') {
 									that.unfinishArr.push(res.data.data[i]);
@@ -3220,6 +3248,7 @@
 
 			//-------------------------旅游产品-选车班车-------------------------
 			chooseShuttle:function(e){
+				// console.log(e)
 				uni.showLoading({
 					title:'正在加载班次...'
 				})
@@ -3227,8 +3256,8 @@
 					key:'chooseShuttleData',
 					data:e,
 					success: (res) => {
-						console.log(res)
-						console.log(e)
+						// console.log(res)
+						
 						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'
