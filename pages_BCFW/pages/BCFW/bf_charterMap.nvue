@@ -243,7 +243,7 @@
 						or_number:this.or_number,
 					},
 					success:(res)=>{
-						console.log(res)
+						// console.log(res)
 						this.driverInformation = res.data.data;
 					}
 				})
@@ -286,7 +286,7 @@
 			},
 			pickerChange: function(e) {
 				let that = this;
-				console.log(e);
+				// console.log(e);
 				that.pickerValue = e.detail.value;
 				that.reason = that.callPoliceArr[e.detail.value];
 			},
@@ -300,8 +300,8 @@
 					return;
 				}
 				//发送
-				console.log(that.reason);
-				console.log(that.remark);
+				// console.log(that.reason);
+				// console.log(that.remark);
 				uni.showToast({
 					title: '发送成功',
 					icon: 'none',
@@ -393,7 +393,7 @@
 						that.polyline.push(obj);
 					},
 					fail: function(res) {
-						console.log(res);
+						// console.log(res);
 					}
 				});
 			},

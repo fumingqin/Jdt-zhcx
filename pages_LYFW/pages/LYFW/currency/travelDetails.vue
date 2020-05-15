@@ -174,12 +174,6 @@
 		methods: {
 			//读取静态数据json.js
 			async routeInit() {
-				// let routeComment2 = await this.$api.lyfwcwd('routeComment2');
-				// this.picList = routeComment2.data.image;
-				// let travel = await this.$api.lyfwcwd('travel');
-				// this.titleClick = travel.data;
-				// let arrange = await this.$api.lyfwcwd('arrange');
-				// this.arrangeText = arrange.data;
 				let description = await this.$api.lyfwcwd('description');
 				this.costDescription = description.data;
 				let reserve = await this.$api.lyfwcwd('reserve');
@@ -228,7 +222,7 @@
 						contentId: e,
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						that.titleClick = res.data.data;
 						// that.costDescription = res.data.data;
 						that.picList = res.data.data.ticketImage;
@@ -242,7 +236,7 @@
 						contentId: e,
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						that.information = res.data.data;
 						// for (var i = 0; i < res.data.data.length; i++) {
 						// 	that.information[i].schedulingContent.contentText = res.data.data[i].schedulingContent.contentText.replace(

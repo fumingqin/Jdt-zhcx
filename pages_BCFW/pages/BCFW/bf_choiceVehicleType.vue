@@ -189,9 +189,8 @@
 					},
 
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						this.vehicleSelection = res.data.data;
-						// console.log(this.vehicleSelection)
 					}
 				})
 			},
@@ -277,7 +276,6 @@
 							})
 						}
 					})
-					console.log(this.information)
 				} else {
 					uni.showToast({
 						title: '请选择包车',

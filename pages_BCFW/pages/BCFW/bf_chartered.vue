@@ -220,7 +220,7 @@
 
 			//---------------------------------选择天数---------------------------------
 			godetail: function(e) {
-				console.log(e)
+				// console.log(e)
 				this.index = e.target.value;
 				this.homePageInfo.dayContentObject = this.dayContent[e.target.value];
 			},
@@ -235,7 +235,7 @@
 					that.privateSite = data.data.ct_dedicatedLine;
 					that.dl_Latitude = data.data.ct_latitude;
 					that.dl_Longitude = data.data.ct_longitude;
-					console.log(that.dl_Longitude)
+					// console.log(that.dl_Longitude)
 					//清除监听，不清除会消耗资源
 					uni.$off('startstaionChange');
 				});
@@ -259,7 +259,7 @@
 								that.st_Longitude = res.longitude;
 								that.st_Latitude = res.latitude;
 								that.startlocation = res;
-								console.log(that.st_Longitude + "," + that.st_Latitude)
+								// console.log(that.st_Longitude + "," + that.st_Latitude)
 							}
 						});
 						// uni.getLocation({
@@ -333,15 +333,15 @@
 					this.datestring = this[this.type];
 					this.queryWeek(e.date.toString().substring(0, 3));
 					//选择的值
-					console.log('value => ' + e.value);
+					// console.log('value => ' + e.value);
 					//原始的Date对象
-					console.log('date => ' + e.date);
+					// console.log('date => ' + e.date);
 					this.date = e.value;
 				}
 			},
 			//周期
 			queryWeek(e) {
-				console.log(e);
+				// console.log(e);
 				switch (e) {
 					case "Mon":
 						this.Week = '周一';
@@ -407,7 +407,7 @@
 						this.homePageInfo.dl_Longitude = this.dl_Longitude;
 						this.homePageInfo.dl_Latitude = this.dl_Latitude;
 						this.homePageInfo.dayContentObject = this.dayContent[this.index];
-						console.log(this.homePageInfo.dl_Longitude + " " + this.homePageInfo.dl_Latitude)
+						// console.log(this.homePageInfo.dl_Longitude + " " + this.homePageInfo.dl_Latitude)
 						// console.log(this.vehicleSelection[this.value])
 						uni.setStorage({
 							key: 'homePageInfo',
@@ -470,7 +470,7 @@
 					scope: 'scope.userLocation',
 					success() { // 允许授权
 						that.getLocationInfo();
-						console.log("你允许授权")
+						// console.log("你允许授权")
 					},
 					fail() { // 拒绝授权
 						that.openConfirm();
@@ -483,7 +483,7 @@
 				uni.getLocation({
 					type: 'wgs84',
 					success(res) {
-						console.log(res);
+						// console.log(res);
 					}
 				});
 			},
@@ -495,7 +495,7 @@
 					title: '请求授权当前位置',
 					content: '需要获取您的地理位置，请确认授权',
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						if (res.confirm) {
 							uni.openSetting(); // 打开地图权限设置
 						} else if (res.cancel) {
