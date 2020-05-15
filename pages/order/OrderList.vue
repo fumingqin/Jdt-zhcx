@@ -1806,6 +1806,33 @@
 				key: 'userInfo',
 				success: function(data) {
 					that.userInfo = data.data;
+				},
+				fail:function(){
+					// #ifdef H5
+					uni.showToast({
+						title: '请允许授权给公众号，即将为您返回主页！',
+						icon:'none'
+					})
+					uni.switchTab({
+						url:'../../../../pages/Home/Index'
+					})
+					// #endif
+					// #ifdef MP-WEIXIN
+					uni.showToast({
+						title: '请允许授权给小程序，即将跳转登录！'
+					})
+					uni.navigateTo({
+						url:'../../../../pages/Home/wxAuthorize'
+					})
+					// #endif
+					// #ifdef APP-NVUE
+					uni.showToast({
+						title: '未登录账号，即将跳转登录！'
+					})
+					uni.navigateTo({
+						url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
+					})
+					// #endif
 				}
 			})
 			
@@ -1860,9 +1887,12 @@
 					},
 					fail: function(fail) {
 						uni.hideLoading();
-						uni.showModal({
-							content: '用户未授权',
-						})
+						// #ifndef APP-NVUE
+						// uni.showModal({
+						// 	content: '用户未授权',
+						// })
+						// #endif
+						
 					}
 				})
 			},
@@ -3578,15 +3608,31 @@
 					fail() {
 						//请求数据失败，停止刷新
 						uni.stopPullDownRefresh();
+						// #ifdef H5
 						uni.showToast({
-							title: '暂无订单数据，请先登录后查看订单',
-							icon: 'none',
-							success: function() {
-								uni.redirectTo({
-									url: '../GRZX/userLogin?loginType=1&&urlData=2'
-								})
-							}
+							title: '请允许授权给公众号，即将为您返回主页！',
+							icon:'none'
 						})
+						uni.switchTab({
+							url:'../../../../pages/Home/Index'
+						})
+						// #endif
+						// #ifdef MP-WEIXIN
+						uni.showToast({
+							title: '请允许授权给小程序，即将跳转登录！'
+						})
+						uni.navigateTo({
+							url:'../../../../pages/Home/wxAuthorize'
+						})
+						// #endif
+						// #ifdef APP-NVUE
+						uni.showToast({
+							title: '未登录账号，即将跳转登录！'
+						})
+						uni.navigateTo({
+							url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
+						})
+						// #endif
 					}
 				})
 			},
