@@ -341,19 +341,7 @@
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(res) {
 				var that = this;
-				var payType = '';
-				// #ifdef MP-ALIPAY
-				payType = 2;
-				// #endif
-				// #ifdef APP-PLUS
-				payType = 3;
-				// #endif
-				// #ifdef H5
-				payType = 4;
-				// #endif
-				// #ifdef MP-WEIXIN
-				payType = 5;
-				// #endif
+				var payType = $KyInterface.KyInterface.payType.payType;
 				var timer = null;
 				that.timer = timer;
 				console.log(res)
@@ -366,7 +354,6 @@
 							orderNumber: res,
 							payType:payType,
 							openId:that.ctkyOpenID,
-							// openId:'oV4q25OV2DJHvgTsfGYh4F9D_2lM',
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
 							// price:that.ticketInfo.totalPrice,

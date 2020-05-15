@@ -130,21 +130,13 @@
 					success: function (res) {
 						theself.detailInfo.nickname = res.data.nickname; 
 						theself.detailInfo.mobile = res.data.mobile;
-						console.log(res)
+						// console.log(res)
 					}
 				});	
 			},
-			
-			//读取静态数据json.js
-			// async routeInit() {
-			// 	let complaint = await this.$api.lyfwcwd('complaint');
-			// 	this.complaint = complaint.data;
-			// 	// console.log(this.complaint)
-			// },
 
 			//投诉对象内容点击.
 			godetail:function(e){
-				console.log(e)
 				this.index = e.target.value;
 				this.detailInfo.complaintObject = this.complaint[e.target.value];
 			},
@@ -157,23 +149,21 @@
 				var c = data.data[2];
 				var d = `${a} ${b} ${c}`;
 				this.detailInfo.txt = d;
-				console.log(d)
-				// console.log(data)
+				// console.log(d)
 			},
 
 			//字数
 			descInput: function(e) {
-				// console.log(e)
-				this.remnant = e.detail.cursor;	
+				this.remnant = e.detail.value.length;
 			},
 
 			//复制
 			paste:function(){
 				this.detailInfo.a=this.b;
+				this.remnant=this.b.length;
 			},
 			
 			deleteImage: function(e){
-				// console.log(e)
 			},
 			addImage: function(e){
 				// console.log(e)
@@ -183,10 +173,6 @@
 				uni.showLoading({
 					title:'提交投诉中...'
 				})
-				console.log(this.detailInfo.a)
-				console.log(this.detailInfo.nickname)
-				console.log(this.detailInfo.tsDate)
-				console.log(this.detailInfo.tsTitle)
 				
 			    uni.request({
 			    	url:$lyfw.Interface.person_addComplaint.value,
@@ -198,11 +184,12 @@
 						model : this.detailInfo.tsTitle,
 					},
 					success: (res) => {
-							console.log(res)
+							// console.log(res)
 							uni.hideLoading()
 							uni.showToast({
 								title:'投诉成功'
 							})
+							uni.navigateBack()
 					},
 					fail:function(){
 						uni.hideLoading()
