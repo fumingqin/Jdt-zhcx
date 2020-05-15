@@ -424,6 +424,11 @@
 																	for(var i=0;i<list.data.length;i++){
 																		passList.push(list.data[i]);
 																	}
+																	if(res.data.data.userSex==0){
+																		res.data.data.userSex="男";
+																	}else{
+																		res.data.data.userSex="女";
+																	}
 																	var list1={
 																		passengerId:res.data.data.passengerId, //乘车人id
 																		userType:res.data.data.userType,   //用户类别 成人/儿童 

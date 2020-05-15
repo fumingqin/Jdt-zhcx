@@ -203,8 +203,10 @@
 						// console.log(res)
 						if (res.data.msg == '搜索景区信息成功！') {
 							this.sixPalaceList = res.data.data;
+							uni.stopPullDownRefresh();
 						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
 							this.sixPalaceList = '';
+							uni.stopPullDownRefresh();
 							uni.showToast({
 								title: '该地区暂无景点信息',
 								icon: 'none'
@@ -214,6 +216,7 @@
 					},
 					fail: function(ee) {
 						// console.log(ee)
+						uni.stopPullDownRefresh();
 					}
 				})
 
@@ -229,18 +232,20 @@
 						// console.log(res)
 						if (res.data.msg == '搜索景区信息成功') {
 							this.scenicList = res.data.data;
+							uni.stopPullDownRefresh();
 						} else if (res.data.msg == '查不到相关景区，请确认景区名！') {
 							this.scenicList = '';
+							uni.stopPullDownRefresh();
 							uni.showToast({
 								title: '该地区暂无景点信息',
 								icon: 'none'
 							})
 						}
+					},
+					fail:function(){
+						uni.stopPullDownRefresh();
 					}
 				})
-				setTimeout(() => {
-					uni.stopPullDownRefresh();
-				}, 1000)
 			},
 
 			//获取定位数据
@@ -251,14 +256,18 @@
 						success: (res) => {
 							// console.log(res)
 							this.regionWeixin = res.data;
-							this.lyfwData(); //请求接口数据
 						},
 						fail: (res) => {
+							// #ifndef H5
 							uni.showToast({
 								title:'请选择地区',
 								icon:'none'
 							})
+							// #endif
 						},
+						complete: () => {
+							this.lyfwData(); //请求接口数据
+						}
 					}),
 					uni.getStorage({
 						key: 'app_position',
@@ -266,15 +275,19 @@
 							// console.log(res)
 							if (res.data !== undefined) {
 								this.regionWeixin = res.data.city;
-								this.lyfwData(); //请求接口数据
 							}
 						},
 						fail: (res) => {
+							// #ifndef H5
 							uni.showToast({
 								title:'请选择地区',
 								icon:'none'
 							})
+							// #endif
 						},
+						complete: () => {
+							this.lyfwData(); //请求接口数据
+						}
 					})
 				}, 500)
 

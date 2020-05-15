@@ -25,15 +25,24 @@
 							<view style="padding-right: 20rpx;">{{item.userName}}</view>
 							<view>男</view>
 						</view>
-						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">身份证：{{item.userCodeNum}}</view>
-						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">手机号：{{item.userPhoneNum}}</view>
+						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">身份证：{{(item.userCodeNum.substr(0,6))+'******'+(item.userCodeNum.substr(14,18))}}</view>
+						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">手机号：{{(item.userPhoneNum.substr(0,3))+'****'+(item.userPhoneNum.substr(7,11))}}</view>
 					</view>
 				</view>
 				<view style="padding: 30rpx 0;">
 					<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">费用详情</view>
 					<view style="color: #2C2D2D;font-size: 32rpx;line-height: 60rpx;display: flex;justify-content: space-between;">
 						<view style="padding-right: 20rpx;">车费</view>
-						<view>￥{{TaxiCost}}</view>
+						<view>
+							<view style="display: flex;margin-right: 10rpx;align-items: center;">
+								<text>￥{{Price}}</text>
+								<text>&nbsp;X&nbsp;{{personArr.length}}人</text>
+							</view>
+							<view style="display: flex;margin-right: 10rpx;align-items: center;">
+								<text style="font-weight: bold;">总计：</text>
+								<text style="color: #ff0000;">￥{{TaxiCost}}</text>
+							</view>
+						</view>
 					</view>
 				</view>
 				<view class="jdticon icon-xia" style="padding: 24rpx 0upx; text-align: center; margin-top: 10rpx;" v-if="!isHidden"
@@ -100,13 +109,16 @@
 				userInfo: '',
 				scenicSpotOpenId: '', //oppenid
 				g_wakelock: null,
+				Price: 0, //单价
 			}
 		},
 		onLoad: function(options) {
 			this.orderNumber = options.orderNumber;
 			this.CheckPayState();
 			this.userInfo = uni.getStorageSync('userInfo') || '';
+			//#ifdef APP-PLUS
 			this.wakeLock();
+			// #endif
 		},
 		onShow() {
 			// #ifdef MP-WEIXIN
@@ -169,7 +181,7 @@
 							clearInterval(that.countDownInterval); //清除倒计时
 							setTimeout(function() {
 								uni.switchTab({
-									url:'../../../pages/order/OrderList'
+									url: '../../../pages/order/OrderList'
 								})
 							}, 1000)
 						} else {
@@ -192,8 +204,10 @@
 						SpecialLineID: value,
 					},
 					success(res) {
+						console.log(res);
 						if (res.data.status) {
 							that.SpecialLineName = res.data.data[0].SpecialLineName;
+							that.Price= res.data.data[0].EstimatePrice; 
 						}
 					}
 				})
@@ -213,7 +227,7 @@
 							that.EndAddress = res.data.data.EndAddress;
 							that.AppointmentTime = res.data.data.AppointmentTime.replace("T", " ");
 							that.orderTime = res.data.data.OrderTime;
-							that.TaxiCost = res.data.data.EstimatePrice; //价格
+							that.TaxiCost = res.data.data.EstimatePrice; 
 							that.GetSpecialLineByLineID(res.data.data.SpecialLineID);
 							that.getTimeRemain(res.data.data.OrderTime);
 						} else {
@@ -241,7 +255,7 @@
 				payPlatform = 4;
 				//  #endif
 				// #ifdef MP-WEIXIN
-				payPlatform = 5; 
+				payPlatform = 5;
 				//  #endif
 				uni.request({
 					url: $privateTaxi.Interface.getCommonPayparameter.value,
@@ -252,8 +266,8 @@
 					data: {
 						openId: that.scenicSpotOpenId,
 						payType: payPlatform,
-						// price: that.TaxiCost,
-						price: 0.01,
+						price: that.TaxiCost,
+						// price: 0.01,
 						orderNumber: that.orderNumber,
 						goodsName: that.SpecialLineName,
 						billDescript: "出租车专车车费",
@@ -268,14 +282,14 @@
 				let that = this;
 				uni.requestPayment({
 					//#ifdef MP-WEIXIN
-					timeStamp:orderInfo.timeStamp,
-					nonceStr:orderInfo.nonceStr,
-					package:orderInfo.package,
-					signType:orderInfo.signType,
-					paySign:orderInfo.paySign,
+					timeStamp: orderInfo.timeStamp,
+					nonceStr: orderInfo.nonceStr,
+					package: orderInfo.package,
+					signType: orderInfo.signType,
+					paySign: orderInfo.paySign,
 					// #endif
 					// #ifdef APP-VUE
-					provider:"wxpay", 
+					provider: "wxpay",
 					orderInfo: orderInfo,
 					// #endif
 					success(res) {

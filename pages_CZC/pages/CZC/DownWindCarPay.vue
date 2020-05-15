@@ -24,8 +24,8 @@
 							<view style="padding-right: 20rpx;">{{item.userName}}</view>
 							<view>男</view>
 						</view>
-						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">身份证：{{item.userCodeNum}}</view>
-						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">手机号：{{item.userPhoneNum}}</view>
+						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">身份证：{{(item.userCodeNum.substr(0,6))+'******'+(item.userCodeNum.substr(14,18))}}</view>
+						<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">手机号：{{(item.userPhoneNum.substr(0,3))+'****'+(item.userPhoneNum.substr(7,11))}}</view>
 					</view>
 				</view>
 				<view style="padding: 30rpx 0;">

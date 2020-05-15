@@ -62,10 +62,17 @@ const Interface = {
 	},
 	InputAmountExpressOrder_Driver: {
 		value: Url + '/api/taxi/InputAmountExpressOrder_Driver',
-		name: '司机端-出租车-订单支付',
+		name: '旅客端-出租车-订单支付',
 		method: 'POST', //GET-POST
 		pages: []
 	},
+	getAddressByLocation:{
+		value:'https://restapi.amap.com/v3/geocode/regeo',
+		name: '旅客端-地址逆解析、高德Api',
+		method: 'Get', //GET-POST
+		key: '59d14ab081f6bd5d41c1254a75a6ccf0', //高德key
+		pages: []
+	}
 }
 
 const dateFormat = {
