@@ -521,7 +521,7 @@
 				// #endif
 
 				// #ifdef APP-PLUS
-				if(that.userInfo){
+				if(that.userInfo.userId !==''){
 					uni.request({
 						url: $lyfw.Interface.spt_AddtouristOrder.value,
 						method: $lyfw.Interface.spt_AddtouristOrder.method,
@@ -603,7 +603,7 @@
 						title: '未登录账号，即将跳转登录！'
 					})
 					uni.navigateTo({
-						url:'../../../../pages/GRZX/userLogin?loginType=1'
+						url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
 					})
 					that.submissionState = false;
 				}

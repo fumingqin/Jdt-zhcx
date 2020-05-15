@@ -5,7 +5,7 @@
 			<!-- <view class='header'>
 				<image src='../../static/GRZX/1.png'></image>
 			</view> -->
-		<!-- 	<view class='content'>
+			<!-- <view class='content'>
 				<view>申请获取以下权限</view>
 				<text>获得你的公开信息(昵称，头像、地区等)</text>
 			</view> -->
@@ -26,12 +26,15 @@
 				</view>
 			</view>
 			<view v-if="!bindState">
-				<button class='bottom' type='warn' open-type="getUserInfo" withCredentials="true" lang="zh_CN" @getuserinfo="wxGetUserInfo">
+				<button class='bottom' type='primary' open-type="getUserInfo" withCredentials="true" lang="zh_CN" @getuserinfo="wxGetUserInfo">
 					授权微信
 				</button>
 			</view>	
 			<view v-if="bindState">
-				<button open-type="getPhoneNumber" type='warn' class='bottom' @getphonenumber="getPhoneNumber">绑定手机号</button> 
+				<button open-type="getPhoneNumber" type='primary' class='bottom' @getphonenumber="getPhoneNumber">绑定手机号</button> 
+			</view>
+			<view>
+				<button type='warn' class='returnClass' @click="returnClick">返回首页</button> 
 			</view>
 			<!-- <button @click="btn">
 				还原
@@ -67,62 +70,59 @@ export default{
 				title:'登录中...'
 			})
 			let that = this;
-			uni.login({
-				success(res){
-					var logUrl=that.$GrzxInter.Interface.GetOpenId_xcx.value;
-					console.log(logUrl,'logUrl')
-					uni.request({
-						url:logUrl,
-						data:{
-							code:res.code,
-						},
-						method: that.$GrzxInter.Interface.GetOpenId_xcx.method,
-						success(logRes){
-							// console.log(logRes,'logRes')
-							uni.setStorageSync('scenicSpotOpenId',logRes.data.data.openid)
-							var openid=logRes.data.data.openid;
-							that.sessionKey=logRes.data.data.session_key;
-							that.openId_xcx=logRes.data.data.openid;
-							uni.request({
-								url:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.value,
-								data:{
-									openId_xcx:openid,
-								},
-								method:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.method,
-								success(res){
-									// console.log(res,'res')
-									setTimeout(function(){
-										uni.hideLoading();
-									},1000);
-									if(!res.data.status || res.data.data.phoneNumber=="" || res.data.data.phoneNumber==null){
-										that.bindState=true;
-									}else{
-										uni.showToast({
-											title:'登录成功！',
-											icon:'success',
-										})
-										uni.setStorageSync('userInfo',res.data.data)
-										setTimeout(function(){
-											uni.switchTab({
-												url:'/pages/Home/Index',
-											})
-										},500);
-									}	
-								}
-							})
-						}
-					})
-				}
-			})
 			uni.getUserInfo({
 				provider: 'weixin',
 				success: function(infoRes) {
 					console.log(infoRes,'49')
 					that.userInfo=infoRes.userInfo;
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
-					setTimeout(function(){
-						uni.hideLoading();
-					},1000);
+					uni.login({
+						success(res){
+							var logUrl=that.$GrzxInter.Interface.GetOpenId_xcx.value;
+							console.log(logUrl,'logUrl')
+							uni.request({
+								url:logUrl,
+								data:{
+									code:res.code,
+								},
+								method: that.$GrzxInter.Interface.GetOpenId_xcx.method,
+								success(logRes){
+									// console.log(logRes,'logRes')
+									uni.setStorageSync('scenicSpotOpenId',logRes.data.data.openid)
+									var openid=logRes.data.data.openid;
+									that.sessionKey=logRes.data.data.session_key;
+									that.openId_xcx=logRes.data.data.openid;
+									uni.request({
+										url:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.value,
+										data:{
+											openId_xcx:openid,
+										},
+										method:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.method,
+										success(res){
+											// console.log(res,'res')
+											setTimeout(function(){
+												uni.hideLoading();
+											},1000);
+											if(!res.data.status || res.data.data.phoneNumber=="" || res.data.data.phoneNumber==null){
+												that.bindState=true;
+											}else{
+												uni.showToast({
+													title:'登录成功！',
+													icon:'success',
+												})
+												uni.setStorageSync('userInfo',res.data.data)
+												setTimeout(function(){
+													uni.switchTab({
+														url:'/pages/Home/Index',
+													})
+												},500);
+											}	
+										}
+									})
+								}
+							})
+						}
+					})
 				},
 				fail(res) {
 					uni.showToast({
@@ -139,9 +139,7 @@ export default{
 			var iv = e.detail.iv;
 			var pc = new WXBizDataCrypt(appId, this.sessionKey)
 			var data = pc.decryptData(encryptedData , iv)
-			// console.log('解密后 data: ', data)
 			var that=this;
-			// console.log('that.userInfo: ', that.userInfo)
 			uni.request({
 				url:that.$GrzxInter.Interface.login.value,
 				data:{
@@ -206,8 +204,12 @@ export default{
 					})
 				}
 			})
-
-		} 
+		},
+		returnClick(){
+			uni.switchTab({
+				url:'/pages/Home/Index'
+			})
+		}
 	}	
 }
 </script>
@@ -243,7 +245,12 @@ export default{
 
 	.bottom {
 		border-radius: 80rpx;
-		margin: 230rpx 50rpx;
+		margin: 150rpx 50rpx 0rpx 50rpx;
+		font-size: 35rpx;
+	}
+	.returnClass{
+		border-radius: 80rpx;
+		margin: 100rpx 50rpx 0rpx 50rpx;
 		font-size: 35rpx;
 	}
 	.box{

@@ -181,9 +181,11 @@
 						if(e.data.status == true){
 							this.groupTitle = e.data.data;
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 						}else{
 							uni.hideLoading()
 							this.groupTitle = '';
+							uni.stopPullDownRefresh();
 							uni.showToast({
 								title:'该地区暂无自由行数据',
 								icon:'none'
@@ -193,6 +195,7 @@
 					},
 					fail:function(){
 						uni.hideLoading()
+						uni.stopPullDownRefresh();
 						uni.showToast({
 							title:'网络异常，请检查网络后尝试',
 							icon:'none'
@@ -230,11 +233,16 @@
 								}
 							},
 							fail: (res) => {
+								// #ifndef H5
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 							},
+							complete: () => {
+								this.routeData(); //请求接口数据
+							}
 						})
 				}, 500)
 
@@ -324,8 +332,10 @@
 							that.searchIndex = 1;
 							// console.log(that.searchData)
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 						} else if (res.data.status == false) {
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 							uni.showToast({
 								title: '查不到相关景区！如:北京/天津',
 								icon: 'none',
