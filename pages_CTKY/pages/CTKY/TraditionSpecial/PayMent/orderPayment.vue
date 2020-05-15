@@ -596,6 +596,12 @@
 				});
 				// #endif
 			},
+			showToast: function(msg, icon = 'none') {
+				uni.showToast({
+					title: msg,
+					icon: icon
+				})
+			},
 			//--------------------------成功之后重新获取车票支付参数--------------------------
 			getTicketPaymentInfo_ticketIssue: function(orderNumber) {
 				var that = this;

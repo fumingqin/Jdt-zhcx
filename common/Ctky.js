@@ -190,7 +190,20 @@ const KyInterface = {
 		name:'定制巴士-检测订单支付状态',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
-	}
+	},
+	Cs_Cancel:{
+		Url:Url + '/api/CustomizedBus/Cancel',
+		name:'定制巴士-取消',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_Confirm:{
+		Url:Url + '/api/CustomizedBus/Confirm',
+		name:'定制巴士-付款成功确认订单',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	
 }
 // 接口声明区
 export default {
