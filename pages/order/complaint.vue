@@ -93,6 +93,7 @@
 					tsDate: '',
 					nickname : '',//用户姓名
 					userId:'',
+					orderNumber:'',//订单编号
 					// mobile : '',//用户电话
 					// txt: '请选择',//事件选择
 					// complaintObject : '',//投诉
@@ -117,6 +118,7 @@
 		onLoad:function(options) {
 			this.detailInfo.tsTitle = options.tsTitle;
 			this.detailInfo.tsDate = options.tsData;
+			this.detailInfo.orderNumber = options.orderNumber;
 			// this.routeInit();
 			this.loadUserInfo();
 			
@@ -183,6 +185,7 @@
 						complaintContent : this.detailInfo.a,
 						complainant : this.detailInfo.userId,
 						beComplainant : this.detailInfo.tsDate,
+						orderNumber: this.detailInfo.orderNumber,
 						model : this.detailInfo.tsTitle,
 					},
 					success: (res) => {
