@@ -184,7 +184,9 @@
 			},
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {
-				if (param == 4) {
+				if (!(/(^[1-9]\d*$)/.test(param))){//如果不是数字
+					return param
+				}else if (param == 4) {
 					return '进行中'
 				} else if (param == 5) {
 					return '已完成'
