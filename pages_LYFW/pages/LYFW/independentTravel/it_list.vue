@@ -338,14 +338,18 @@
 							success: (res) => {
 								// console.log(res)
 								this.regionWeixin = res.data;
-								this.textData(); //请求接口数据
 							},
 							fail: (res) => {
+								// #ifndef H5
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 							},
+							complete: () => {
+								this.textData(); //请求接口数据
+							}
 						}),
 						uni.getStorage({
 							key: 'app_position',
@@ -353,15 +357,19 @@
 								// console.log(res)
 								if (res.data !== undefined) {
 									this.regionWeixin = res.data.city;
-									this.textData(); //请求接口数据
 								}
 							},
 							fail: (res) => {
+								// #ifndef H5
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 							},
+							complete: () => {
+								this.textData(); //请求接口数据
+							}
 						})
 				}, 500)
 			},
