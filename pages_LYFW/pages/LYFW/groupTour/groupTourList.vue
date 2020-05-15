@@ -176,7 +176,7 @@
 						// #endif
 					},
 					success: (e) => {
-						console.log(e)
+						// console.log(e)
 						this.groupTitle = e.data.data;
 					}
 				})
@@ -216,27 +216,33 @@
 				if (e !== 'no' && e !== 'yes') {
 					// console.log(e)
 					this.regionWeixin = e.cityName
-					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
 					this.routeData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if (e == 'yes') {
+					// #ifndef APP-PLUS
 					uni.getStorage({
-							key: 'wx_position',
-							success: (res) => {
-								// console.log(res)
-								this.regionWeixin = res.data;
-								this.routeData()
+						key: 'wx_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionWeixin = res.data;
+							this.routeData(); //请求接口数据
+						}
+					}),
+					// #endif
+					// #ifdef APP-PLUS
+					uni.getStorage({
+						key: 'app_position',
+						success: (res) => {
+							// console.log(res)
+							if (res.data !== undefined) {
+								this.regionWeixin = res.data.city;
+								this.routeData(); //请求接口数据
 							}
-						}),
-						uni.getStorage({
-							key: 'app_position',
-							success: (res) => {
-								// console.log(res)
-								this.regionApp = res.data;
-							}
-						})
+						}
+					})
+					// #endif
 					this.$refs.popupRef.close();
 				} else {
 					this.$refs.popupRef.close();
@@ -276,13 +282,13 @@
 					},
 
 					success: function(res) {
-						console.log(res)
+						// console.log(res)
 						if (res.data.data) {
 							that.searchData = res.data.data;
-							console.log(268, that.searchData)
+							// console.log(268, that.searchData)
 							that.searchValue = ''
 							that.searchIndex = 1;
-							console.log(that.searchData)
+							// console.log(that.searchData)
 							uni.hideLoading()
 						} else if (res.data.status == false) {
 							uni.hideLoading()
@@ -300,7 +306,7 @@
 
 
 			details: function(e) {
-				console.log(e)
+				// console.log(e)
 				uni.navigateTo({
 					url: '../currency/travelDetails?contentId=' + e
 				})
@@ -309,7 +315,7 @@
 
 			//tabbar筛选点击
 			change(e) {
-				console.log(e)
+				// console.log(e)
 				if (e == 0) {
 					this.current = e;
 					this.currentIndex = 0;

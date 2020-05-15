@@ -89,7 +89,7 @@
 					method:$bcfw.Interface.fw_selectSpecialLine.method,
 					header:{'content-type': 'application/json'},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						uni.hideLoading();
 						let that = this;
 						// console.log(res.data);
@@ -140,7 +140,7 @@
 						uni.hideLoading();
 						// console.log(res);
 						this.keywordList = [];
-						console.log(res.data.data)
+						// console.log(res.data.data)
 						this.keywordList = this.drawCorrelativeKeyword(res.data.data, keyword);
 						
 					},
@@ -173,7 +173,7 @@
 							htmlStr: html
 						};
 						keywordArr.push(tmpObj)
-						console.log(keywordArr)
+						// console.log(keywordArr)
 					}
 				}
 				return keywordArr;

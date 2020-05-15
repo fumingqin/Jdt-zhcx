@@ -6,29 +6,30 @@
 		</view>
 		
 		<!-- 班车信息 -->
-		<view class="ctky_View" :class="{ctky_ViewBorder : index==statusIndex}"  v-for="(item,index) in departureData" :key="index" @click="selection(item,index)" >
-			<view class="ctky_View_Left">
-				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >返程</view>
-					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.setOutDate}}</view>
+		<view style="padding-bottom: 160upx;">
+			<view class="ctky_View" :class="{ctky_ViewBorder : index==statusIndex}"  v-for="(item,index) in departureData" :key="index" @click="selection(item,index)" >
+				<view class="ctky_View_Left">
+					<view style="display: flex;align-items: center;margin:20upx 25upx;">
+						<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" >返程</view>
+						<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{item.setOutDate}}</view>
+					</view>
+					<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
+						<image src="../../../static/LYFW/tourismProducts/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.startStation}}</view>
+					</view>
+					<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
+						<image src="../../../static/LYFW/tourismProducts/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.endStation}}</view>
+					</view>
+					<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;font-size: 28upx;color: #666666;">{{item.lineContent}}</view>
 				</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../../static/LYFW/tourismProducts/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.startStation}}</view>
-				</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../../static/LYFW/tourismProducts/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;color: #333333;">{{item.endStation}}</view>
-				</view>
-				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;font-size: 28upx;color: #666666;">{{item.lineContent}}</view>
-			</view>
-			<view class="ctky_View_Right">
-				<view>
-					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:SourceHanSansSC-Light; color: #FF6600;">余{{item.count}}座</view>
+				<view class="ctky_View_Right">
+					<view>
+						<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:SourceHanSansSC-Light; color: #FF6600;">余{{item.count}}座</view>
+					</view>
 				</view>
 			</view>
 		</view>
-		
 		<view class="MP_information3" @click="paymentSatas">选中此班次</view>
 		
 	</view>
@@ -45,22 +46,42 @@
 				orderNumber : '',//订单编号
 				departureData :'', //循环班次列表
 				setOutDate : '',//时间
+				comSetOutDate : '',//对比的时间，出发时间，用于对比返程时间
 				startStation : '',//起始站
 				endStation : '',//终点站
 			}
 		},
 		onLoad:function(options){
 			this.originIndex = options.originIndex;
-			uni.getStorage({
-				key:'chooseShuttleData',
-				success: (res) => {
-					this.orderNumber = res.data.orderNumber;
-					this.setOutDate = res.data.orderDate;
-					this.startStation = res.data.planEnd;
-					this.endStation = res.data.planStart;
-					this.GetSchedule();
-				}
-			})
+			if(!options.setOutDate){
+				uni.getStorage({
+					key:'chooseShuttleData',
+					success: (res) => {
+						console.log(res,'订单进来')
+						this.orderNumber = res.data.orderNumber;
+						this.setOutDate = res.data.orderDate;
+						this.comSetOutDate = res.data.setOutDate;
+						this.startStation = res.data.planEnd;
+						this.endStation = res.data.planStart;
+						console.log(this.comSetOutDate,'出发时间')
+						this.GetSchedule();
+					}
+				})
+			}else{
+				this.comSetOutDate = options.setOutDate;
+				console.log(this.comSetOutDate,'出发时间')
+				uni.getStorage({
+					key:'chooseShuttleData',
+					success: (res) => {
+						console.log(res,'出发班次进来')
+						this.orderNumber = res.data.orderNumber;
+						this.setOutDate = res.data.orderDate;
+						this.startStation = res.data.planEnd;
+						this.endStation = res.data.planStart;
+						this.GetSchedule();
+					}
+				})
+			}
 		},
 		methods: {
 			selection:function(item,index){
@@ -70,11 +91,6 @@
 			//提交绑定班次
 			paymentSatas: function(){
 				var that = this;
-					
-				
-				
-				
-				
 					uni.request({
 						url: $lyfw.Interface.lyky_BindBackInfo.value,
 						method: $lyfw.Interface.lyky_BindBackInfo.method,
@@ -113,11 +129,10 @@
 							endStation : this.endStation,
 						},
 						success: (res) => {
-							console.log(res)
-							// let a = res.data.filter(item => {
-							// 	return item.userType > '成人';
-							// })
-							this.departureData = res.data.data;
+							let a = res.data.data.filter(item => {
+								return item.setOutDate > this.comSetOutDate;
+							})
+							this.departureData = a;
 						}
 				})
 			}
@@ -150,6 +165,7 @@
 		border-radius: 20upx;
 		display: flex;
 		justify-content: space-between;
+		
 		&.ctky_ViewBorder{
 			border: 4upx solid #06B4FD;
 		}

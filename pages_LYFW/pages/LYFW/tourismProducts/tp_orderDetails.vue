@@ -152,11 +152,11 @@
 					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
 					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
-						<text class="box_title">出发班次信息</text> 
+						<text class="box_title">返程班次信息</text> 
 						<text class="box_icon jdticon icon-fork " @click="close2"></text>
 					</view>
 					<view class="MP_selectionDate">
-						<text class="MP_text" >出发时间</text>
+						<text class="MP_text" >返程时间</text>
 						<text class="MP_cost">{{orderInfo.backsetOutDate}}</text>
 					</view>
 					<view class="MP_selectionDate">

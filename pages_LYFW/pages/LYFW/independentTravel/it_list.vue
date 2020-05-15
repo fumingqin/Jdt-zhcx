@@ -117,7 +117,6 @@
 				searchValue: '', //搜索框值
 				searchData: '', //搜索后的值
 				regionWeixin: '请选择', //微信地区数值
-				regionApp : '请选择',//APP地区数值
 				
 				current: 0, //标题下标
 				tabs: ['推荐', '全部'], //选项标题
@@ -140,6 +139,13 @@
 			QSTabs
 		},
 		onLoad:function() {
+			// #ifdef H5
+			uni.showToast({
+				title:'公众号当前定位无法启用，已默认定位泉州市',
+				icon:'none'
+			})
+			this.regionWeixin = '泉州市'; //h5无法自动定位，采用手动赋值
+			// #endif
 			uni.showLoading({
 				title:'加载中...',
 				icon:'loading'
@@ -157,12 +163,7 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 					data:{
-						// #ifdef H5
-						regionWeixin : '泉州市',
-						// #endif
-						// #ifndef H5
 						regionWeixin : this.regionWeixin,
-						// #endif
 					},
 					success: (res) => {
 						// console.log(res)
@@ -195,12 +196,7 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 					data:{
-						// #ifdef H5
-						regionWeixin : '泉州市',
-						// #endif
-						// #ifndef H5
 						regionWeixin : this.regionWeixin,
-						// #endif
 					},
 					success: (res) => {
 						if(res.data.status == true){
@@ -265,12 +261,7 @@
 						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 						data:{
-							// #ifdef H5
-							regionWeixin : '泉州市',
-							// #endif
-							// #ifndef H5
 							regionWeixin : e,
-							// #endif
 						},
 						success: (res) => {
 							// console.log(res)
@@ -304,13 +295,7 @@
 						url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.value,
 						method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixin.method,
 						data:{
-							// #ifdef H5
-							regionWeixin : '泉州市',
-							// #endif
-							// #ifndef H5
 							regionWeixin : this.stationArray[this.leftIndex]
-							// #endif
-							
 						},
 						success: (res) => {
 							if(res.data.data){
@@ -347,42 +332,48 @@
 
 			//获取定位数据
 			Getpostion: function() {
-				setTimeout(()=>{
-					uni.getStorage({
-						key: 'wx_position',
-						success: (res) => {
-							// console.log(res)
-							this.regionWeixin = res.data;
-							this.textData(); //请求接口数据
-						},
-						fail: (res) => {
-							uni.showToast({
-								title:'请选择地区',
-								icon:'none'
-							})
-						},
-					}),
-					
-					uni.getStorage({
-						key: 'app_position',
-						success: (res) => {
-							// console.log(res)
-							if (res.data !== undefined) {
-								this.regionWeixin = res.data.city;
+				setTimeout(() => {
+						uni.getStorage({
+							key: 'wx_position',
+							success: (res) => {
+								// console.log(res)
+								this.regionWeixin = res.data;
+							},
+							fail: (res) => {
+								// #ifndef H5
+								uni.showToast({
+									title:'请选择地区',
+									icon:'none'
+								})
+								// #endif
+							},
+							complete: () => {
 								this.textData(); //请求接口数据
 							}
-						},
-						fail: (res) => {
-							uni.showToast({
-								title:'请选择地区',
-								icon:'none'
-							})
-						},
-					})
-					
-				},500)
-				
+						}),
+						uni.getStorage({
+							key: 'app_position',
+							success: (res) => {
+								// console.log(res)
+								if (res.data !== undefined) {
+									this.regionWeixin = res.data.city;
+								}
+							},
+							fail: (res) => {
+								// #ifndef H5
+								uni.showToast({
+									title:'请选择地区',
+									icon:'none'
+								})
+								// #endif
+							},
+							complete: () => {
+								this.textData(); //请求接口数据
+							}
+						})
+				}, 500)
 			},
+			
 
 			//打开地区选择器
 			oncity() {
@@ -394,34 +385,33 @@
 				if (e !== 'no' && e !== 'yes') {
 					// console.log(e)
 					this.regionWeixin = e.cityName
-					this.regionApp = e.cityName
 					this.$refs.popupRef.close();
 					this.textData();
 					this.screenIndex = 0;
 					this.searchIndex = 0;
 				} else if (e == 'yes') {
-						// #ifndef APP-PLUS
-						uni.getStorage({
-							key: 'wx_position',
-							success: (res) => {
-								// console.log(res)
-								this.regionWeixin = res.data;
+					// #ifndef APP-PLUS
+					uni.getStorage({
+						key: 'wx_position',
+						success: (res) => {
+							// console.log(res)
+							this.regionWeixin = res.data;
+							this.textData(); //请求接口数据
+						}
+					}),
+					// #endif
+					// #ifdef APP-PLUS
+					uni.getStorage({
+						key: 'app_position',
+						success: (res) => {
+							// console.log(res)
+							if (res.data !== undefined) {
+								this.regionWeixin = res.data.city;
 								this.textData(); //请求接口数据
 							}
-						}),
-						// #endif
-						// #ifdef APP-PLUS
-						uni.getStorage({
-							key: 'app_position',
-							success: (res) => {
-								// console.log(res)
-								if (res.data !== undefined) {
-									this.regionApp = res.data.city;
-									this.textData(); //请求接口数据
-								}
-							}
-						})
-						// #endif
+						}
+					})
+					// #endif
 					this.$refs.popupRef.close();
 				} else {
 					this.$refs.popupRef.close();
@@ -447,12 +437,7 @@
 					url:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.value,
 					method:$lyfw.Interface.zyx_GetFreeTourByRegionWeixinTitle.method,
 					data:{
-						// #ifdef H5
-						regionWeixin : '泉州市',
-						// #endif
-						// #ifndef H5
 						regionWeixin :  this.regionWeixin,
-						// #endif
 						title : this.searchValue
 					},
 					success: (res) => {
@@ -526,7 +511,7 @@
 
 		.searchBoxRadius {
 			/* #ifdef H5 */
-			width: 100%;
+			width: 80%;
 			/* #endif */
 			/* #ifndef H5 */
 			width: 76%;

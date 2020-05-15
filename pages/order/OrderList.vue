@@ -512,7 +512,7 @@
 
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
-								<button class="allBtn" @click="czcComplaint(item.driverName)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
+								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
 								<!-- <button class="allBtn" @tap="del(index)" v-if="taxiOrderState(item.state)=='已取消' || taxiOrderState(item.state)=='已完成'">删除</button> -->
 								<button class="allBtn" @click="cancleOrder(item)" v-if="taxiOrderState(item.state)=='进行中'">取消</button>
@@ -3529,7 +3529,7 @@
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].orderType == '已使用') {
 									that.finishArr.push(res.data.data[i]);
-								} else if (res.data.data[i].orderType == '待使用') {
+								} else if (res.data.data[i].orderType == '待使用' || res.data.data[i].orderType == '待选车') {
 									that.goingArr.push(res.data.data[i]);
 								} else if (res.data.data[i].orderType == '待支付') {
 									that.unfinishArr.push(res.data.data[i]);
@@ -3609,7 +3609,7 @@
 							uni.hideLoading()
 						}else if(e.backstartStation == ''){
 							uni.navigateTo({
-								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle2?originIndex=1&setOutDate='+e.setOutDate
+								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle2?originIndex=1'
 							})
 							uni.hideLoading()
 						}
@@ -3654,15 +3654,14 @@
 			repurchase(e,index) {
 				if(index =='3'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' + JSON.stringify(e)
+						url: '../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId=' +e
 					})
 					
 				}else if(index =='5'){
 					uni.navigateTo({
-						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' + JSON.stringify(e)
+						url: '../../pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsDetails?ticketId=' +e
 					})
 				}
-
 			},
 			//-------------------------景区门票-退票-------------------------
 			refund: function() {
