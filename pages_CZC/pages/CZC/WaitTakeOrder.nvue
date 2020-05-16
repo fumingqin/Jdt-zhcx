@@ -322,6 +322,14 @@
 							} else if (that.state == 8) {
 								//关闭旅客上传定位
 								getApp().globalData.closeUpload();
+								uni.showToast({
+									title: '订单已取消',
+									icon: 'none',
+								});
+								setTimeout(function() {
+									uni.hideLoading();
+									uni.navigateBack({});
+								}, 1500)
 								//旅客取消订单
 							} else if (that.state == 9) {
 								//支付失败
@@ -462,6 +470,14 @@
 									//旅客取消订单
 									//关闭旅客上传定位
 									getApp().globalData.closeUpload();
+									uni.showToast({
+										title: '订单已取消',
+										icon: 'none',
+									});
+									setTimeout(function() {
+										uni.hideLoading();
+										uni.navigateBack({});
+									}, 1500)
 								} else if (that.state == 9) {
 									//支付失败
 									//关闭旅客上传定位
