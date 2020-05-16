@@ -181,9 +181,11 @@
 						if(e.data.status == true){
 							this.groupTitle = e.data.data;
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 						}else{
 							uni.hideLoading()
 							this.groupTitle = '';
+							uni.stopPullDownRefresh();
 							uni.showToast({
 								title:'该地区暂无自由行数据',
 								icon:'none'
@@ -193,6 +195,7 @@
 					},
 					fail:function(){
 						uni.hideLoading()
+						uni.stopPullDownRefresh();
 						uni.showToast({
 							title:'网络异常，请检查网络后尝试',
 							icon:'none'
@@ -214,10 +217,12 @@
 								this.routeData(); //请求接口数据
 							},
 							fail: (res) => {
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 							},
 						}),
 						uni.getStorage({
@@ -230,11 +235,16 @@
 								}
 							},
 							fail: (res) => {
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 							},
+							complete: () => {
+								this.routeData(); //请求接口数据
+							}
 						})
 				}, 500)
 
@@ -303,12 +313,9 @@
 					url: $lyfw.Interface.gt_groupTourList2.value,
 					method: $lyfw.Interface.gt_groupTourList2.method,
 					data: {
-						// #ifdef H5
-						regionWeixin: '泉州市',
-						// #endif
-						// #ifndef H5
-						regionWeixin: this.regionWeixin,
-						// #endif
+						// // #ifndef H5
+						// regionWeixin: this.regionWeixin,
+						// // #endif
 						GroupTitle: this.searchValue,
 					},
 					header: {
@@ -324,8 +331,10 @@
 							that.searchIndex = 1;
 							// console.log(that.searchData)
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 						} else if (res.data.status == false) {
 							uni.hideLoading()
+							uni.stopPullDownRefresh();
 							uni.showToast({
 								title: '查不到相关景区！如:北京/天津',
 								icon: 'none',

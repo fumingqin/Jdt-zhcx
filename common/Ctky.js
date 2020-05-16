@@ -74,6 +74,18 @@ const KyInterface = {
 		header:{'content-type': 'application/json'},
 		systemName:systemName,
 	},
+	Ky_GetStations:{
+		Url: scheduleUrl + '/CTKY/getStations',
+		name:'客运-获取车站列表数据',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_GetSatartSite:{
+		Url: scheduleUrl + '/CTKY/getSatartSite',
+		name:'客运-模糊查询',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 	Ky_ScheduleUrl:{
 		Url: scheduleUrl + '/CTKY/getListSchedulesInfo',
 		name:'客运-班次列表',
@@ -181,6 +193,12 @@ const KyInterface = {
 	},
 	Cs_Refund:{
 		Url:Url + '/api/CustomizedBus/Refund',
+		name:'定制巴士-退票',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_BouncePay:{
+		Url:Url + '/api/Pay/BouncePay',
 		name:'定制巴士-退款',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},

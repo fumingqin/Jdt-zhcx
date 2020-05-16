@@ -285,7 +285,7 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.ticketInfo.date.replace('T', ' ');
-				var companyCode = '';
+				var companyCode = '泉运公司综合出行';
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
@@ -296,7 +296,7 @@
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_BookingTicket.Url,
 					method:$KyInterface.KyInterface.Cs_BookingTicket.method,
-					header:$KyInterface.KyInterface.Cs_BookingTicket.header,
+					// header:$KyInterface.KyInterface.Cs_BookingTicket.header,
 					data: {
 						sellerCompanyCode: companyCode,//公司代码
 						priceAID:that.ticketInfo.priceAID,//价格id
@@ -345,6 +345,9 @@
 				var timer = null;
 				that.timer = timer;
 				console.log(res)
+				uni.showLoading({
+					title:'正在获取支付...'
+				})
 				timer = setInterval(function() {
 					uni.request({
 						url:$KyInterface.KyInterface.commonPayment.Url,
@@ -356,11 +359,12 @@
 							openId:that.ctkyOpenID,
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
-							// price:that.ticketInfo.totalPrice,
-							price:0.1,
+							price:that.ticketInfo.totalPrice,
+							// price:0.01,
 						},
 						success: (res) => {
 							console.log(res.data);
+							uni.hideLoading();
 							if(res.data.status == true) {
 								that.paymentData = res.data.data;
 								clearInterval(timer);
@@ -403,7 +407,7 @@
 						uni.showLoading({
 						    title: '加载中...'
 						});
-						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+						that.Cs_paySuccess(that.orderNum);
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						// alert("您取消了支付，请重新支付");
 						uni.showToast({
@@ -448,7 +452,7 @@
 							uni.showLoading({
 							    title: '加载中...'
 							});
-							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+							that.Cs_paySuccess(that.orderNum);
 						} else if (res.errCode == -1) { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
@@ -489,7 +493,7 @@
 						uni.showLoading({
 						    title: '加载中...'
 						});
-						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+						that.Cs_paySuccess(that.orderNum);
 					},
 					fail(res) {
 						console.log(res)
@@ -515,22 +519,8 @@
 				var that = this;
 				var timer = null;
 				that.timer = timer;
-				var payType = '';
-				// #ifdef MP-ALIPAY
-				payType = 2;
-				// #endif
-				// #ifdef APP-PLUS
-				payType = 3;
-				// #endif
-				// #ifdef H5
-				payType = 4;
-				// #endif
-				// #ifdef MP-WEIXIN
-				payType = 5;
-				// #endif
-				uni.showLoading({
-					title: '正在检索，请稍后...'
-				});
+				var payType = $KyInterface.KyInterface.payType.payType;
+				
 				timer = setInterval(function() {
 					uni.request({
 						url:$KyInterface.KyInterface.commonCheckPayState.Url,
@@ -549,9 +539,7 @@
 									title: '出票成功',
 									icon: 'none',
 									success(){
-										uni.redirectTo({
-											url:'../../TraditionSpecial/PayMent/CTKYPaySuccess'
-										})
+										
 									}
 								})
 								
@@ -570,6 +558,34 @@
 						}
 					})
 				}, 3000)
+			},
+			//--------------------------定制巴士支付成功后请求--------------------------
+			Cs_paySuccess:function(bookID){
+				var that = this;
+				uni.showLoading({
+					title: '正在检索，请稍后...'
+				});
+				uni.request({
+					url:$KyInterface.KyInterface.Cs_Confirm.Url,
+					method:$KyInterface.KyInterface.Cs_Confirm.method,
+					header:$KyInterface.KyInterface.Cs_Confirm.header,
+					data:{
+						bookID:bookID
+					},
+					success(res) {
+						console.log('支付成功后调接口',res)
+						uni.hideLoading()
+						if(res.data.BookResult.Successed == true){
+							uni.redirectTo({
+								url:'../../TraditionSpecial/PayMent/CTKYPaySuccess'
+							})
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log('支付失败后调接口',res)
+					}
+				})
 			},
 		}
 	}
