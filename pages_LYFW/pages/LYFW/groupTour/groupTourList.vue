@@ -313,12 +313,9 @@
 					url: $lyfw.Interface.gt_groupTourList2.value,
 					method: $lyfw.Interface.gt_groupTourList2.method,
 					data: {
-						// #ifdef H5
-						regionWeixin: '泉州市',
-						// #endif
-						// #ifndef H5
-						regionWeixin: this.regionWeixin,
-						// #endif
+						// // #ifndef H5
+						// regionWeixin: this.regionWeixin,
+						// // #endif
 						GroupTitle: this.searchValue,
 					},
 					header: {
