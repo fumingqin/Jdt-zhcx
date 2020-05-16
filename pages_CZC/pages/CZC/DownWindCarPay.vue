@@ -145,8 +145,8 @@
 			cancelOrder: function() { //取消订单
 				let that = this;
 				uni.request({
-					url: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.value,
-					method: $privateTaxi.Interface.CancelSpecialLineOrder_Passenger.method,
+					url: $privateTaxi.Interface.CancelHitchhikerOrder_Passenger.value,
+					method: $privateTaxi.Interface.CancelHitchhikerOrder_Passenger.method,
 					data: {
 						OrderNumber: that.orderNumber,
 						UserId: that.userInfo.userId,
@@ -156,13 +156,12 @@
 							that.showToast("超时未支付，订单自动取消");
 							clearInterval(that.countDownInterval); //清除倒计时
 							setTimeout(function() {
+								uni.hideLoading();
 								uni.switchTab({
 									url: "../../pages/order/OrderList"
 								})
 							}, 1000)
 						} else {
-							
-							
 							that.showToast(res.data.msg);
 						}
 					},
@@ -227,8 +226,8 @@
 					data: {
 						openId:that.scenicSpotOpenId,
 						payType: payPlatform,
-						// price: that.TaxiCost,
-						price: 0.01,
+						price: that.TaxiCost,
+						// price: 0.01,
 						orderNumber: that.orderNumber,
 						goodsName: "顺风车车费",
 						billDescript: "顺风车车费",
@@ -262,7 +261,11 @@
 					fail(res) {
 						uni.hideLoading();
 						that.CheckPayState();
-						if (res.errMsg == "requestPayment:fail canceled") {
+						var msg="requestPayment:fail canceled";
+						// #ifdef MP-WEIXIN
+						msg="requestPayment:fail cancel";
+						// #endif
+						if (res.errMsg == msg) {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")
 							}, 1000)

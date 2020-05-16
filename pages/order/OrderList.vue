@@ -388,7 +388,7 @@
 								<button class="allBtn" v-if="item.state=='5'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
 								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
-								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item.orderNumber,'cs2')">退票</button>
+								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.state=='尚未支付'" @tap="open3(item.orderNumber,'cs2')">取消</button>
 								<button class="allBtn payBtn" v-if="item.state=='尚未支付'" @tap="keYunPay(item,item.carType)">去支付</button>
 							</view>
@@ -938,8 +938,8 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
-								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open2(item.orderNumber,'cs2')">退票</button>
-								<button class="allBtn" @tap="endorse(item)">改签</button>
+								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open2(item,'cs2tui')">退票</button>
+								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="endorse(item)">改签</button>
 							</view>
 						</view>
 					</view>
@@ -1210,8 +1210,8 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open3(item.orderNumber,'cs2')">取消</button>
+								<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>   
 							</view>
 						</view>
 					</view>
@@ -1774,6 +1774,7 @@
 				ctkyOrderNum: '', //传统客运订单号（退票需要）
 				ky_currentType:'',
 				ctkyOpenID:'',
+				csRefundInfo:[],//定制巴士退票
 				payType: [{
 						typeName: '微信',
 						typeColor: '#00C805',
@@ -2048,7 +2049,7 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
-						// console.log('定制巴士订单数据',res)
+						console.log('定制巴士订单数据',res)
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -2069,14 +2070,14 @@
 								};
 								orderArray.push(array);
 								that.info.push(array);
-								
-								if (res.data.bookLogs[i].MyState == '7') {
+								var state = res.data.bookLogs[i].Rep_BookLogState;
+								if (state == '已完成') {
 									that.finishArr.push(orderArray[i]);
-								} else if (res.data.bookLogs[i].MyState == '3' || res.data.bookLogs[i].MyState == '9') {
+								} else if (state == '支付正常' || state == '改签') {
 									that.goingArr.push(orderArray[i]);
-								} else if (res.data.bookLogs[i].MyState == '1') {
+								} else if (state == '尚未支付') {
 									that.unfinishArr.push(orderArray[i]);
-								} else if (res.data.bookLogs[i].MyState == '9') {
+								} else if (state == '作废' || state == '已退票') {
 									that.cancelArr.push(orderArray[i]);
 								}
 							}
@@ -2195,11 +2196,51 @@
 					}
 				})
 			},
-			// -------------------------定制巴士退票-------------------------
-			cs_refundStateCheck:function(orderNumber){
+			// -------------------------定制巴士退款/退票 先退款再退票-------------------------
+			cs_refundStateCheck:function(item){
 				var that = this;
 				that.ky_currentType = '定制巴士退票';
-				that.Cs_CheckPayState(orderNumber);
+				that.Cs_BouncePay(item);
+			},
+			Cs_BouncePay:function(item){
+				var that = this;
+				var payType = $KyInterface.KyInterface.payType.payType;
+				uni.request({
+					url: $KyInterface.KyInterface.Cs_BouncePay.Url,
+					method: $KyInterface.KyInterface.Cs_BouncePay.method,
+					// header: $KyInterface.KyInterface.Cs_BouncePay.header,
+					data: {
+						orderNumber: item.orderNumber,
+						payType: payType,
+						price: item.totalPrice
+						// price: '0.01'
+					},
+					success: (respones) => {
+						if (respones.data.Successed == true) {
+							uni.showToast({
+								title: respones.data.msg
+							})
+							// this.$refs.popup2.close()
+							that.csRefundTicket(item.orderNumber);
+						} else {
+							uni.hideLoading()
+							uni.showToast({
+								title: respones.data.msg,
+								icon: 'none'
+							})
+							this.$refs.popup2.close()
+							that.csRefundTicket(item.orderNumber);
+							uni.startPullDownRefresh();
+						}
+					},
+					fail: (respones) => {
+						uni.hideLoading()
+						console.log(respones)
+						uni.showToast({
+							title: '服务器异常，请联系客服'
+						})
+					}
+				})
 			},
 			csRefundTicket:function(bookID){
 				var that = this;
@@ -2211,10 +2252,11 @@
 						bookID: bookID,
 					},
 					success: (respones) => {
+						// console.log(respones)
 						if (respones.data.Successed == true) {
 							uni.hideLoading()
 							uni.showToast({
-								title: respones.BookResult.Message
+								title: respones.data.BookResult.Message
 							})
 							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
@@ -2414,7 +2456,6 @@
 				var payType = $KyInterface.KyInterface.payType.payType;
 				var timer = null;
 				that.timer = timer;
-				console.log(orderNumber)
 				timer = setInterval(function() {
 					uni.request({
 						url:$KyInterface.KyInterface.commonPayment.Url,
@@ -2426,11 +2467,10 @@
 							openId:that.ctkyOpenID,
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
-							// price:totalPrice,
-							price:0.1,
+							price:totalPrice,
+							// price:0.1,
 						},
 						success: (res) => {
-							console.log(res.data);
 							uni.hideLoading();
 							if(res.data.status == true) {
 								that.paymentData = res.data.data;
@@ -2444,7 +2484,12 @@
 									}
 								})
 							}else if(res.data.status == false) {
+								uni.hideLoading();
 								clearInterval(timer);
+								uni.showToast({
+									title: res.data.msg,
+									icon:'none'
+								})
 							}
 						},
 						fail(res) {
@@ -3688,13 +3733,23 @@
 			},
 			//-------------------------景区门票-打开退票弹框-------------------------
 			open2: function(e, exitindex) {
-				console.log(e)
-				console.log(exitindex)
-				this.ticketOrderNumber = e;
-				this.exitindex = exitindex;
-				console.log(this.ticketOrderNumber)
-				console.log(this.exitindex)
-				this.$refs.popup2.open()
+				// console.log(e)
+				// console.log(exitindex)
+				var that = this;
+				if(exitindex == 'cs2tui') {
+					// console.log(e)
+					that.csRefundInfo = e;
+					that.exitindex = exitindex;
+					that.$refs.popup2.open()
+				}else {
+					that.ticketOrderNumber = e;
+					that.exitindex = exitindex;
+					that.$refs.popup2.open()
+				}
+				
+				// console.log(this.ticketOrderNumber)
+				// console.log(this.exitindex)
+				
 			},
 			//-------------------------景区门票-关闭退票弹框-------------------------
 			close2() {
@@ -3802,10 +3857,10 @@
 				var that = this
 				if (this.exitindex == '2') {
 					this.keYunRefundTicket(that.ticketOrderNumber)
-				} else if(this.exitindex == 'cs2'){
+				} else if(this.exitindex == 'cs2tui'){
 					// this.csRefundTicket(that.ticketOrderNumber)
 					//先检测订单支付状态再执行退票操作
-					this.cs_refundStateCheck(that.ticketOrderNumber)
+					this.cs_refundStateCheck(that.csRefundInfo)
 				}else if (this.exitindex == '3') {
 					console.log('景区门票')
 					uni.request({
@@ -4631,7 +4686,7 @@
 		color: #2C2D2D;
 		font-size: 34rpx;
 		font-weight: bold;
-		width: 80%;
+		width: 70%;
 	}
 
 	//预定日期---LJH

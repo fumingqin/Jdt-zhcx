@@ -13,8 +13,9 @@
                   <view class="picker item" v-for="(item,index) in months" :key="index">{{item}}月</view>
               </picker-view-column>
               <picker-view-column>
-                  <view class="picker item"  v-for="(item,index) in days" :key="index">{{item}}日</view>
+                  <view class="picker item"  v-for="(item,index) in days"  :key="index">{{item[getToday(index)]}}日</view>
               </picker-view-column>
+			  
 			  <!-- <picker-view-column>
 			      <view class="picker item" v-for="(item,index) in hours" :key="index">{{item}}点</view>
 			  </picker-view-column>
@@ -45,6 +46,7 @@ export default {
       value: [0, 0, 0],
       visible: false,
 	  flag:false,
+	  dayIndex:'',
       indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth / (750 / 100))}rpx;`
     }
   },
@@ -89,7 +91,8 @@ export default {
     getDays () {
       //  this.dayLength
       const time = new Date()
-      for (let i = time.getDate(); i <= this.dayLength; i++) {
+	  // let i = time.getDate()
+      for (let i = 1; i <= this.dayLength; i++) {
         this.days.push(i)
       }
     },
@@ -103,6 +106,20 @@ export default {
 		const time = new Date()
 		for(let i = time.getMinutes(); i <= this.minuteLength; i++) {
 			this.minutes.push(i);
+		}
+	},
+	//判断当前日期
+	getToday(item){
+		var that = this;
+		const time = new Date()
+		let date = time.getDate()
+		for(let i = 0;i < that.days;i++){
+			if(item == date) {
+				that.dayIndex = i;
+				return that.dayIndex;
+			}else {
+				return i
+			}
 		}
 	},
     // 获取某年某月多少天

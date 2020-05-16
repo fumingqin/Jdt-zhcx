@@ -149,6 +149,7 @@
 				index: 0, //指数
 				noticeContent: '', //须知内容
 				datestring: '', //当前日期和时间字符串
+				datestring2:'',
 				privateSite: '', //专线
 				initialPoint: '', //起始点
 				destination: '', //目的地
@@ -203,11 +204,11 @@
 			if (that.destination == '') {
 				that.destination = '请选择目的点'
 			}
-			if (that.datestring == '') {
-				that.datestring = '请选择时间'
-			}
+			// if (that.datestring == '') {
+			// 	that.datestring = '请选择时间'
+			// }
 			that.routeInit();
-			// that.getTodayDate();
+			that.getTodayDate();
 		},
 
 		methods: {
@@ -305,20 +306,21 @@
 					this.$refs.popup.close()
 				}
 			},
-
+			
 			//---------------------------------获取当前日期---------------------------------
-			// getTodayDate() {
-			// 	var date = new Date(),
-			// 		year = date.getFullYear(),
-			// 		month = date.getMonth() + 1,
-			// 		day = date.getDate(),
-			// 		hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-			// 		minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-			// 	month >= 1 && month <= 9 ? (month = "0" + month) : "";
-			// 	day >= 0 && day <= 9 ? (day = "0" + day) : "";
-			// 	var timer = year + '年' + month + '月' + day + '日' + ' ' + hour + ':' + minutes;
-			// 	this.datestring = timer;
-			// },
+			getTodayDate() {
+				var date = new Date(),
+					year = date.getFullYear(),
+					month = date.getMonth() + 1,
+					day = date.getDate(),
+					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+					minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+				month >= 1 && month <= 9 ? (month = "0" + month) : "";
+				day >= 0 && day <= 9 ? (day = "0" + day) : "";
+				var timer = year + '/' + month + '/' + day + ' ' + hour + ':' + minutes;
+				this.datestring = timer;
+				this.datestring2 = timer;
+			},
 
 			//---------------------------------时间日期---------------------------------
 			onShowDatePicker(type) { //显示
@@ -383,94 +385,97 @@
 
 			//------------------------------提交数据-------------------------------------
 			subit: function() {
-				if (this.isNormal == 0) {
-					if (this.privateSite == '请选择专线') {
-						uni.showToast({
-							title: '请选择专线',
-							icon: 'none'
-						})
-					} else if (this.initialPoint == '请选择上车点') {
-						uni.showToast({
-							title: '请选择上车点',
-							icon: 'none'
-						})
-					} else if (this.datestring = '请选择时间') {
-						uni.showToast({
-							title: '请选择上车时间',
-							icon: 'none'
-						})
-					}else {
-						this.homePageInfo.isNormal = this.isNormal;
-						this.homePageInfo.privateSite = this.privateSite;
-						this.homePageInfo.initialPoint = this.initialPoint;
-						this.homePageInfo.destination = this.destination;
-						this.homePageInfo.datestring = this.datestring;
-						this.homePageInfo.st_Longitude = this.st_Longitude;
-						this.homePageInfo.st_Latitude = this.st_Latitude;
-						this.homePageInfo.de_Longitude = this.de_Longitude;
-						this.homePageInfo.de_Latitude = this.de_Latitude;
-						this.homePageInfo.dl_Longitude = this.dl_Longitude;
-						this.homePageInfo.dl_Latitude = this.dl_Latitude;
-						this.homePageInfo.dayContentObject = this.dayContent[this.index];
-						// console.log(this.homePageInfo.dl_Longitude + " " + this.homePageInfo.dl_Latitude)
-						// console.log(this.vehicleSelection[this.value])
-						uni.setStorage({
-							key: 'homePageInfo',
-							data: this.homePageInfo,
-							success: () => {
-								uni.navigateTo({
-									url: './bf_choiceVehicleType?isNormal=' + this.isNormal
-								})
-							}
-						})
+				console.log(this.datestring)
+				console.log(this.datestring2)
+				if(this.datestring >= this.datestring2){
+					if (this.isNormal == 0) {
+						if (this.privateSite == '请选择专线') {
+							uni.showToast({
+								title: '请选择专线',
+								icon: 'none'
+							})
+						} else if (this.initialPoint == '请选择上车点') {
+							uni.showToast({
+								title: '请选择上车点',
+								icon: 'none'
+							})
+						}else {
+							this.homePageInfo.isNormal = this.isNormal;
+							this.homePageInfo.privateSite = this.privateSite;
+							this.homePageInfo.initialPoint = this.initialPoint;
+							this.homePageInfo.destination = this.destination;
+							this.homePageInfo.datestring = this.datestring;
+							this.homePageInfo.st_Longitude = this.st_Longitude;
+							this.homePageInfo.st_Latitude = this.st_Latitude;
+							this.homePageInfo.de_Longitude = this.de_Longitude;
+							this.homePageInfo.de_Latitude = this.de_Latitude;
+							this.homePageInfo.dl_Longitude = this.dl_Longitude;
+							this.homePageInfo.dl_Latitude = this.dl_Latitude;
+							this.homePageInfo.dayContentObject = this.dayContent[this.index];
+							// console.log(this.homePageInfo.dl_Longitude + " " + this.homePageInfo.dl_Latitude)
+							// console.log(this.vehicleSelection[this.value])
+							uni.setStorage({
+								key: 'homePageInfo',
+								data: this.homePageInfo,
+								success: () => {
+									uni.navigateTo({
+										url: './bf_choiceVehicleType?isNormal=' + this.isNormal
+									})
+								}
+							})
+						}
+					} else if (this.isNormal == 1) {
+						if (this.initialPoint == '请选择上车点') {
+							uni.showToast({
+								title: '请选择上车点',
+								icon: 'none'
+							})
+						} else if (this.destination == '请选择目的点') {
+							uni.showToast({
+								title: '请选择目的点',
+								icon: 'none'
+							})
+						}else if (this.dayContent[this.index] == '请选择') {
+							uni.showToast({
+								title: '请选择包车天数',
+								icon: 'none'
+							})
+						} else {
+							this.homePageInfo.isNormal = this.isNormal;
+							this.homePageInfo.privateSite = this.privateSite;
+							this.homePageInfo.initialPoint = this.initialPoint;
+							this.homePageInfo.destination = this.destination;
+							this.homePageInfo.datestring = this.datestring;
+							this.homePageInfo.st_Longitude = this.st_Longitude;
+							this.homePageInfo.st_Latitude = this.st_Latitude;
+							this.homePageInfo.de_Longitude = this.de_Longitude;
+							this.homePageInfo.de_Latitude = this.de_Latitude;
+							this.homePageInfo.dl_Longitude = this.dl_Longitude;
+							this.homePageInfo.dl_Latitude = this.dl_Latitude;
+							this.homePageInfo.dayContentObject = this.dayContent[this.index];
+							// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
+							// console.log(this.vehicleSelection[this.value])
+							uni.setStorage({
+								key: 'homePageInfo',
+								data: this.homePageInfo,
+								success: () => {
+									uni.navigateTo({
+										url: './bf_choiceVehicleType?isNormal=' + this.isNormal
+									})
+								}
+							})
+						}
 					}
-				} else if (this.isNormal == 1) {
-					if (this.initialPoint == '请选择上车点') {
-						uni.showToast({
-							title: '请选择上车点',
-							icon: 'none'
-						})
-					} else if (this.destination == '请选择目的点') {
-						uni.showToast({
-							title: '请选择目的点',
-							icon: 'none'
-						})
-					} else if (this.datestring = '请选择时间') {
-						uni.showToast({
-							title: '请选择上车时间',
-							icon: 'none'
-						})
-					}else if (this.dayContent[this.index] == '请选择') {
-						uni.showToast({
-							title: '请选择包车天数',
-							icon: 'none'
-						})
-					} else {
-						this.homePageInfo.isNormal = this.isNormal;
-						this.homePageInfo.privateSite = this.privateSite;
-						this.homePageInfo.initialPoint = this.initialPoint;
-						this.homePageInfo.destination = this.destination;
-						this.homePageInfo.datestring = this.datestring;
-						this.homePageInfo.st_Longitude = this.st_Longitude;
-						this.homePageInfo.st_Latitude = this.st_Latitude;
-						this.homePageInfo.de_Longitude = this.de_Longitude;
-						this.homePageInfo.de_Latitude = this.de_Latitude;
-						this.homePageInfo.dl_Longitude = this.dl_Longitude;
-						this.homePageInfo.dl_Latitude = this.dl_Latitude;
-						this.homePageInfo.dayContentObject = this.dayContent[this.index];
-						// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
-						// console.log(this.vehicleSelection[this.value])
-						uni.setStorage({
-							key: 'homePageInfo',
-							data: this.homePageInfo,
-							success: () => {
-								uni.navigateTo({
-									url: './bf_choiceVehicleType?isNormal=' + this.isNormal
-								})
-							}
-						})
-					}
+				}else{
+					uni.showToast({
+						title:'选择时间比当前时间早，请重新选择！',
+						icon:'none'
+					})
 				}
+				
+				
+				
+				
 			},
 
 			//------------------------------开启定位功能----------------------------------
