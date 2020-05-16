@@ -45,6 +45,7 @@
 </template>
 
 <script>
+	import $GrzxInter from '@/common/Grzx.js'
 export default{
 	data(){
 		return{
@@ -74,53 +75,13 @@ export default{
 				provider: 'weixin',
 				success: function(infoRes) {
 					console.log(infoRes,'49')
+					
 					that.userInfo=infoRes.userInfo;
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
 					uni.login({
-						success(res){
-							var logUrl=that.$GrzxInter.Interface.GetOpenId_xcx.value;
-							console.log(logUrl,'logUrl')
-							uni.request({
-								url:logUrl,
-								data:{
-									code:res.code,
-								},
-								method: that.$GrzxInter.Interface.GetOpenId_xcx.method,
-								success(logRes){
-									// console.log(logRes,'logRes')
-									uni.setStorageSync('scenicSpotOpenId',logRes.data.data.openid)
-									var openid=logRes.data.data.openid;
-									that.sessionKey=logRes.data.data.session_key;
-									that.openId_xcx=logRes.data.data.openid;
-									uni.request({
-										url:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.value,
-										data:{
-											openId_xcx:openid,
-										},
-										method:that.$GrzxInter.Interface.GetUserInfoByOpenId_xcx.method,
-										success(res){
-											// console.log(res,'res')
-											setTimeout(function(){
-												uni.hideLoading();
-											},1000);
-											if(!res.data.status || res.data.data.phoneNumber=="" || res.data.data.phoneNumber==null){
-												that.bindState=true;
-											}else{
-												uni.showToast({
-													title:'登录成功！',
-													icon:'success',
-												})
-												uni.setStorageSync('userInfo',res.data.data)
-												setTimeout(function(){
-													uni.switchTab({
-														url:'/pages/Home/Index',
-													})
-												},500);
-											}	
-										}
-									})
-								}
-							})
+						success(res2){
+							console.log(res2,'res2')
+							that.getOpenID(res2.code)
 						}
 					})
 				},
@@ -131,6 +92,53 @@ export default{
 					})
 				}
 			});
+		},
+		getOpenID:function(code){
+			var that = this;
+			uni.request({
+				url:$GrzxInter.Interface.GetOpenId_xcx.value,
+				method: $GrzxInter.Interface.GetOpenId_xcx.method,
+				data:{
+					code:code,
+				},
+				success(logRes){
+					console.log(logRes,'logRes')
+					uni.setStorageSync('scenicSpotOpenId',logRes.data.data.openid)
+					var openid=logRes.data.data.openid;
+					that.sessionKey=logRes.data.data.session_key;
+					that.openId_xcx=logRes.data.data.openid;
+					uni.request({
+						url: $GrzxInter.Interface.GetUserInfoByOpenId_xcx.value,
+						data:{
+							openId_xcx:openid,
+						},
+						method:$GrzxInter.Interface.GetUserInfoByOpenId_xcx.method,
+						success(res){
+							// console.log(res,'res')
+							setTimeout(function(){
+								uni.hideLoading();
+							},1000);
+							if(!res.data.status || res.data.data.phoneNumber=="" || res.data.data.phoneNumber==null){
+								that.bindState=true;
+							}else{
+								uni.showToast({
+									title:'登录成功！',
+									icon:'success',
+								})
+								uni.setStorageSync('userInfo',res.data.data)
+								setTimeout(function(){
+									uni.switchTab({
+										url:'/pages/Home/Index',
+									})
+								},500);
+							}	
+						}
+					})
+				},
+				fail(res) {
+					console.log('请求错误',res)
+				}
+			})
 		},
 		getPhoneNumber(e) {  
 			var WXBizDataCrypt = require('@/common/WXBizDataCrypt')

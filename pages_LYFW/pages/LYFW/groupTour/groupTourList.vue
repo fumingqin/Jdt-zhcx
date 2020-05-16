@@ -217,10 +217,12 @@
 								this.routeData(); //请求接口数据
 							},
 							fail: (res) => {
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 							},
 						}),
 						uni.getStorage({
@@ -233,7 +235,7 @@
 								}
 							},
 							fail: (res) => {
-								// #ifndef H5
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
@@ -311,12 +313,9 @@
 					url: $lyfw.Interface.gt_groupTourList2.value,
 					method: $lyfw.Interface.gt_groupTourList2.method,
 					data: {
-						// #ifdef H5
-						regionWeixin: '泉州市',
-						// #endif
-						// #ifndef H5
-						regionWeixin: this.regionWeixin,
-						// #endif
+						// // #ifndef H5
+						// regionWeixin: this.regionWeixin,
+						// // #endif
 						GroupTitle: this.searchValue,
 					},
 					header: {

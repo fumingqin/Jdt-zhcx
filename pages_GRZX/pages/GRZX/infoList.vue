@@ -254,19 +254,18 @@
 				// 		list1.push(array[i]);
 				// 	}
 				// }
-		
-				this.passengerList=array.sort((a,b)=>a.userDefault?-1:1);
-				// {
-				// 	console.log(x.userDefault)
-				// 	if(x.userDefault){
-				// 		console.log(x.userDefault)
-				// 		return -1;
-				// 	}else{
-				// 		console.log(x.userDefault)
-				// 		return 1;
+				// this.passengerList=array.sort((a,b)=>a.userDefault?-1:1);
+				this.passengerList=array;
+				// var defaultList=[];
+				// for(var n=0;n<array.length;i++){
+				// 	if(array[n].userDefault==true){
+				// 		array.splice(n, 1);
+				// 		// array.unshift(array[n]);
+				// 		break;
 				// 	}
 				// }
-				
+				// array.unshift(defaultList[0]);
+				// console.log(this.passengerList,"268")
 				// this.addressList=address;
 			},
 			//---------乘车人管理---------

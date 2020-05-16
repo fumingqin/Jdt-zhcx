@@ -269,14 +269,14 @@
 								this.regionWeixin = res.data;
 							},
 							fail: (res) => {
-								// #ifndef H5
-								// #ifndef MP-WEIXIN
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
 								// #endif
-								// #endif
+								
+
 							},
 							complete: () => {
 								this.lyfwData(); //请求接口数据
@@ -291,13 +291,11 @@
 								}
 							},
 							fail: (res) => {
-								// #ifndef H5
-								// #ifndef MP-WEIXIN
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
-								// #endif
 								// #endif
 							},
 							complete: () => {
