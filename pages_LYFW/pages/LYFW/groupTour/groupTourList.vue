@@ -217,10 +217,12 @@
 								this.routeData(); //请求接口数据
 							},
 							fail: (res) => {
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
 								})
+								// #endif
 							},
 						}),
 						uni.getStorage({
@@ -233,7 +235,7 @@
 								}
 							},
 							fail: (res) => {
-								// #ifndef H5
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
