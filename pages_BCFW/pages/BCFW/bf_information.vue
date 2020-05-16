@@ -452,7 +452,7 @@
 
 				} else if (this.nickName == '') {
 					uni.showToast({
-						title: '请添加包车人信息',
+						title: '请添加包车人信息', 
 						icon: 'none'
 					})
 				}else if(!regIdNo.test(that.nickId)){
