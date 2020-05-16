@@ -77,9 +77,10 @@ export default{
 					that.userInfo=infoRes.userInfo;
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
 					uni.login({
-						success(res){
+						success(res2){
 							var logUrl=that.$GrzxInter.Interface.GetOpenId_xcx.value;
-							console.log(logUrl,'logUrl')
+							// console.log(logUrl,'logUrl')
+							console.log(res2,'res2')
 							uni.request({
 								url:logUrl,
 								data:{
@@ -87,7 +88,7 @@ export default{
 								},
 								method: that.$GrzxInter.Interface.GetOpenId_xcx.method,
 								success(logRes){
-									// console.log(logRes,'logRes')
+									console.log(logRes,'logRes')
 									uni.setStorageSync('scenicSpotOpenId',logRes.data.data.openid)
 									var openid=logRes.data.data.openid;
 									that.sessionKey=logRes.data.data.session_key;
