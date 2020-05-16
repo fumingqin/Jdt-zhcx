@@ -181,6 +181,12 @@ const KyInterface = {
 	},
 	Cs_Refund:{
 		Url:Url + '/api/CustomizedBus/Refund',
+		name:'定制巴士-退票',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_BouncePay:{
+		Url:Url + '/api/Pay/BouncePay',
 		name:'定制巴士-退款',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
