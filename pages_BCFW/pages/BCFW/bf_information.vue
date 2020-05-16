@@ -310,13 +310,10 @@
 							}
 						});
 						uni.getStorage({
-							key: 'passengerList',
+							key: 'userInfo',
 							success: (res) => {
-								this.nickName = res.data[0].userName;
-								this.nickId = res.data[0].userCodeNum;
-								this.nickPhone = res.data[0].userPhoneNum;
-								this.userId=res.data[0].userId;
-								// console.log(res.data[0]);
+								this.userId=res.data.userId;
+								console.log(res.data);
 							}
 						})
 					}
@@ -486,11 +483,6 @@
 					      nickId:that.nickId,
 					      nickPhone:that.nickPhone,
 					},
-					success: () => {
-						uni.navigateTo({
-							url: './bf_information?isNormal=' + this.isNormal
-						})
-					}
 				})
 				uni.showLoading({
 					title: '提交订单中...'
@@ -508,7 +500,7 @@
 						userId: this.userId,
 					},
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						var a = '';
 						if (res.data.msg == '订单查询完成') {
 							a = res.data.data.filter(item => {
@@ -552,7 +544,7 @@
 
 								//向服务器发送订单数据，返回订单编号
 								success: (res) => {
-									// console.log(res)
+									console.log(res)
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
@@ -561,7 +553,7 @@
 									}
 								},
 								fail:(res)=>{
-									// console.log('shibai')
+									console.log('shibai')
 								}
 							})
 							// #endif
@@ -596,7 +588,7 @@
 								},
 								header: {'content-type': 'application/json'},
 								success:(res)=>{
-									// console.log(res)
+									console.log(res)
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
@@ -605,13 +597,13 @@
 									}
 								},
 								fail:(res)=>{
-									// console.log('shibai')
+									console.log('shibai')
 								}
 							})
 							// #endif
 							
 							// #ifdef MP-WEIXIN
-							
+							console.log(that.userId);
 							uni.request({
 								url: $bcfw.Interface.spt_AddtouristOrder.value,
 								method:$bcfw.Interface.spt_AddtouristOrder.method,
@@ -640,7 +632,7 @@
 								},
 								header: {'content-type': 'application/json'},
 								success:(res)=>{
-									// console.log(res)
+									console.log(res)
 									uni.hideLoading()
 									if (res.data.status) {
 										uni.redirectTo({
@@ -649,7 +641,7 @@
 									}
 								},
 								fail:(res)=>{
-									// console.log('shibai')
+									console.log('shibai')
 								}
 							})
 							// #endif
@@ -668,7 +660,7 @@
 						}
 					},
 					fail: function(ee) {
-						// console.log(ee)
+						console.log(ee)
 					}
 				})
 
