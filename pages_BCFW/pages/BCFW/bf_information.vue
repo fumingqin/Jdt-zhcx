@@ -179,6 +179,7 @@
 		onLoad() {
 			this.getcharteredBus();
 			this.getuser();
+			this.remove();
 		},
 		onShow() {
 			this.readData();
@@ -194,7 +195,7 @@
 				// console.log(charteredBus)
 			},
 			getuser:function(){
-				var that=this;				
+				var that=this;
 				if(that.index == 0){
 					uni.getStorage({
 						key:"charteredBusInfo",
@@ -216,6 +217,13 @@
 						}
 					})
 				}			
+			},
+			remove:function(){
+				uni.removeStorage({
+				    key: 'passengerList',
+				    success: function (res) {
+				    }
+				});
 			},
 			// getcharteredBus(){
 			// 	uni.request({
