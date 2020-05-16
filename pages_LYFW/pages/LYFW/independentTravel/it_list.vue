@@ -349,7 +349,7 @@
 								this.regionWeixin = res.data;
 							},
 							fail: (res) => {
-								// #ifndef H5
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
@@ -369,7 +369,7 @@
 								}
 							},
 							fail: (res) => {
-								// #ifndef H5
+								// #ifdef APP-NVUE
 								uni.showToast({
 									title:'请选择地区',
 									icon:'none'
