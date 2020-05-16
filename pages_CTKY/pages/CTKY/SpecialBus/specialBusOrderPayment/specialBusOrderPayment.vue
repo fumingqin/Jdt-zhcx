@@ -285,18 +285,31 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.ticketInfo.date.replace('T', ' ');
-				var companyCode = '';
+				var companyCode = '泉运公司综合出行';
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
 				// #ifdef APP-PLUS
 				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
 				// #endif
+				
+			    var data = {
+					sellerCompanyCode: companyCode,//公司代码
+					priceAID:that.ticketInfo.priceAID,//价格id
+					phoneNumber:that.userInfo.phoneNumber,//手机号码
+					fullTicket:that.adultNum, //全票人数
+					children:that.childrenNum, //携童人数
+					passengerIDs:that.passengerIDs,
+					passengerNames:that.passengerNames,
+					TPPID:'',//传空
+					UserAID:that.userInfo.userId,//用户ID
+				};
+				console.log(data);
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_BookingTicket.Url,
 					method:$KyInterface.KyInterface.Cs_BookingTicket.method,
-					header:$KyInterface.KyInterface.Cs_BookingTicket.header,
+					// header:$KyInterface.KyInterface.Cs_BookingTicket.header,
 					data: {
 						sellerCompanyCode: companyCode,//公司代码
 						priceAID:that.ticketInfo.priceAID,//价格id
