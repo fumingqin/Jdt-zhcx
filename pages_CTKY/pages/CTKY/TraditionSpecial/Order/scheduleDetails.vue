@@ -30,7 +30,7 @@
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">地图标点</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<view @tap="checkLocation" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">查看班次信息</view>
-					<image src="/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+					<image src="/pages_CTKY/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 				</view>
 			</view>
 
@@ -41,14 +41,14 @@
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">上车点</view>
 					<view style="display: flex;align-items: center;">
 						<view @tap="startStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{startStation}}</view>
-						<image src="/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+						<image src="/pages_CTKY/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 					</view>
 				</view>
 				<view class="boarding" @tap="endStationTap">
 					<view style="margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">下车点</view>
 					<view style="display: flex;align-items: center;">
 						<view @tap="endStationTap" style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;text-align: right;">{{endStation}}</view>
-						<image src="/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+						<image src="/pages_CTKY/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 					</view>
 				</view>
 			</view>
@@ -65,7 +65,7 @@
 					<view class="passengerInfoDetail">
 						<view style="display: flex;text-align: center;align-items: center;">
 							<view style="width: 73upx;">
-								<image src="/static/CTKY/delete.png" style="width: 34upx;height: 34upx;" @click="deleteInfo(index)"></image>
+								<image src="/pages_CTKY/static/CTKY/delete.png" style="width: 34upx;height: 34upx;" @click="deleteInfo(index)"></image>
 							</view>
 							<view style="height: 100%;">
 								<view style="display: flex;margin-top: 18upx;margin-bottom: 18upx;">
@@ -78,7 +78,7 @@
 							</view>
 						</view>
 						<view>
-							<image src="/static/CTKY/right.png" style="width:12upx ;height: 21upx;"></image>
+							<image src="/pages_CTKY/static/CTKY/right.png" style="width:12upx ;height: 21upx;"></image>
 						</view>
 					</view>
 				</view>
@@ -89,7 +89,7 @@
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">优惠券</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<view style="font-size: 28upx;font-family: SourceHanSansSC-Light;color: #999999;">{{couponIndex}}</view>
-					<image src="../../../../static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
+					<image src="/pages_CTKY/static/CTKY/right.png" style="width: 11upx;height: 21upx;margin-left: 10upx;"></image>
 				</view>
 			</view>
 
@@ -274,13 +274,15 @@
 					that.ticketDetail = data.data; //车票数组
 					that.totalPrice = data.data.fare; //价格
 					that.shuttleType = data.data.shuttleType; //班车类型
-
+					console.log(data)
+					
 					//定制班车起点数组
 					that.sepecialStartArray = data.data.starSiteArr;
 					//定制班车终点数组
 					that.specialEndArray = data.data.endSiteArr
 
 					console.log('车票数据', that.ticketDetail)
+					
 					if (data.data.insurePrice == 0) {
 						that.isInsurance = 0;
 					} else {
@@ -567,6 +569,11 @@
 			//-------------------------------点击订单预定-----------------------------
 			reserveTap() {
 				var that = this;
+				console.log(that.startStation,that.endStation)
+				if(that.shuttleType == '普通班车') {
+					that.startStation = " "
+					that.endStation = " "
+				}
 				//当选中用户须知且选择了上下车点和乘客之后发送请求
 				if (that.ticketDetail.starSiteArr.length > 2 || that.ticketDetail.endSiteArr.length > 2) {
 					if (that.startStation == '请选择上车点' && that.endStation == '请选择下车点') {
