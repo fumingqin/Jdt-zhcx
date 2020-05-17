@@ -309,7 +309,7 @@
 						UserAID:that.userInfo.userId,//用户ID
 					},
 					success: (res) => {
-						// console.log('下单返回数据',res);
+						console.log('下单返回数据',res);
 						if (res.data) {
 							if (res.data.Successed == true) {
 								uni.showToast({
