@@ -52,6 +52,10 @@
 			}
 		},
 		onLoad:function(options){
+			uni.showLoading({
+				title:'加载班次中...',
+				icon:'loading'
+			})
 			this.originIndex = options.originIndex;
 			if(!options.setOutDate){
 				uni.getStorage({
@@ -133,6 +137,9 @@
 								return item.setOutDate > this.comSetOutDate;
 							})
 							this.departureData = a;
+						},
+						complete:function(){
+							uni.hideLoading()
 						}
 				})
 			}
