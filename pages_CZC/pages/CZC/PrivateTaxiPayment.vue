@@ -177,7 +177,7 @@
 					},
 					success: function(res) {
 						if (res.data.status) {
-							that.showToast("超时未支付，订单自动取消");
+							// that.showToast("超时未支付，订单自动取消");
 							clearInterval(that.countDownInterval2); //清除倒计时
 							setTimeout(function() {
 								uni.hideLoading();
