@@ -301,19 +301,19 @@
 					key: 'scenicSpotOpenId',
 					success: function(response) {
 						console.log(response)
-						uni.showToast({
-							title:response.data,
-							icon:'none'
-						})
+						// uni.showToast({
+						// 	title:response.data,
+						// 	icon:'none'
+						// })
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail: function(response) {
-						uni.showToast({
-							title:response.data,
-							icon:'none'
-						})
+						// uni.showToast({
+						// 	title:response.data,
+						// 	icon:'none'
+						// })
 						that.ctkyOpenID = response.data
 						that.getOrder();
 					}
