@@ -408,6 +408,12 @@
 										} 
 									}
 								})
+							}else {
+								uni.hideLoading();
+								uni.showToast({
+									title: '网络错误',
+									icon: 'none'
+								})
 							}
 						}
 					},
@@ -431,8 +437,9 @@
 							//订单编号
 							orderNumber: res
 						},
+						
 						success: (res) => {
-							// console.log(res);
+							console.log(res);
 							if (res.data) {
 								if (res.data.status == true) {
 									var msgArray = JSON.parse(res.data.msg);
@@ -496,9 +503,6 @@
 						uni.showToast({
 							title: '支付成功',
 						})
-						uni.showLoading({
-						    title: '加载中...'
-						});
 						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						uni.showToast({
@@ -541,9 +545,6 @@
 							uni.showToast({
 								title: '支付成功',
 							})
-							uni.showLoading({
-							    title: '加载中...'
-							});
 							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 						} else if (res.errCode == -1) { //错误
 							uni.showToast({
@@ -581,9 +582,6 @@
 						uni.showToast({
 							title: '支付成功',
 						})
-						uni.showLoading({
-						    title: '加载中...'
-						});
 						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 					},
 					fail(res) {
@@ -615,11 +613,9 @@
 				});
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
@@ -637,7 +633,6 @@
 										})
 									}
 								})
-								
 							} else if (res.data.status == false) {
 								clearInterval(timer);
 								uni.showToast({

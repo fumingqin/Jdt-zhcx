@@ -229,7 +229,7 @@
 			},
 			
 			//读取静态数据
-			lyfwData(e) {
+			lyfwData:function(e) {
 				uni.getStorage({
 					key: 'ticketInformation',
 					success: (res) => {
@@ -471,9 +471,11 @@
 									icon: 'none',
 									duration: 2000,
 									success: function() {
-										uni.switchTab({
-											url: '../../../../pages/order/OrderList'
-										})
+										setTimeout(function(){
+											uni.switchTab({
+												url: '../../../../pages/order/OrderList'
+											})
+										},2000)
 										that.submissionState = false;
 								
 									}
@@ -557,9 +559,11 @@
 									icon: 'none',
 									duration: 2000,
 									success: function() {
-										uni.switchTab({
-											url: '../../../../pages/order/OrderList'
-										})
+										setTimeout(function(){
+											uni.switchTab({
+												url: '../../../../pages/order/OrderList'
+											})
+										},2000)
 										that.submissionState = false;
 									}
 								})
@@ -646,9 +650,11 @@
 									icon: 'none',
 									duration: 2000,
 									success: function() {
-										uni.switchTab({
-											url: '../../../../pages/order/OrderList'
-										})
+										setTimeout(function(){
+											uni.switchTab({
+												url: '../../../../pages/order/OrderList'
+											})
+										},2000)
 										that.submissionState = false;
 								
 									}
