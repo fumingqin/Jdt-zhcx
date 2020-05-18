@@ -153,7 +153,7 @@
 					},
 					success: function(res) {
 						if (res.data.status) {
-							that.showToast("超时未支付，订单自动取消");
+							// that.showToast("超时未支付，订单自动取消");
 							clearInterval(that.countDownInterval1); //清除倒计时
 							that.countDownDate = '';
 							setTimeout(function() {
