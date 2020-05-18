@@ -13,7 +13,7 @@
 					</view>
 					<view style="margin-left: 10rpx;">
 						<view>
-							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{orderInfo.driverName}}</text>
+							<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">{{formatDriverName(driverName)}}</text>
 						</view>
 						<view style="flex-direction: row;margin-top: 10rpx;">
 							<view>
@@ -202,6 +202,7 @@
 				userInfo:'',
 				num:'5',
 				orderNumber:'',
+				driverName:'',
 			}
 		},
 		onLoad(option) {
@@ -235,10 +236,11 @@
 						if(res.data.status){
 							that.orderInfo = res.data.data
 							console.log(res.data)
+							that.driverName = res.data.data.driverName;
 							that.setMarker(1, that.orderInfo.startLon, that.orderInfo.startLat, '../../static/Order/Start.png');
 							that.setMarker(2, that.orderInfo.endLon, that.orderInfo.endLat, '../../static/Order/End.png');
 							// that.getDirectionDriving(that.orderInfo.startLon + ',' + that.orderInfo.startLat, that.orderInfo.endtLon + ',' + that.orderInfo.endLat);
-							if(that.orderInfo.satisfied!="null"){
+							if(that.orderInfo.satisfied!=null){
 									var arr=[]
 									var str=that.orderInfo.selectionTags;
 									if(str.length>0){
@@ -391,6 +393,9 @@
 				arr.push(marker);
 				that.markers = arr;
 			},
+			formatDriverName:function(name){
+				return name.substring(0,1) + '师傅';
+			}
 			// getDirectionDriving: function(startLonLat, endLonLat) {
 			// 	//调用高德api取得路径规划并绘制线路 
 			// 	var that = this;
