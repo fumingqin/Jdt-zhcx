@@ -91,8 +91,7 @@
 				</uni-popup> -->
 				<!-- 司机信息 -->
 				<view class="ct_information" v-if="driverInformation.or_Type == 1 || driverInformation.or_Type == 2
-				 || driverInformation.or_Type == 3 || driverInformation.or_Type == 4 || driverInformation.or_Type == 7
-				  || driverInformation.or_Type == 8 || driverInformation.or_Type == 9 || driverInformation.or_Type == 10
+				 || driverInformation.or_Type == 3 || driverInformation.or_Type == 4 || driverInformation.or_Type == 9 || driverInformation.or_Type == 10
 				   || driverInformation.or_Type == 11 || driverInformation.or_Type == 12 || driverInformation.or_Type == 13">
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
@@ -107,14 +106,14 @@
 						<text class="te_text">电话:{{(driverInformation.or_driverTelephone.substr(0,3))+'****'+(driverInformation.or_driverTelephone.substr(7,11))}}</text>
 					</view>
 					<view class="if_button" v-if="driverInformation.or_Type == 1 || driverInformation.or_Type == 2 || driverInformation.or_Type == 3 
-					 || driverInformation.or_Type == 4 || driverInformation.or_Type == 7 || driverInformation.or_Type == 8">
+					 || driverInformation.or_Type == 4">
 						<button class="bt_remind3" type="warn">联系司机</button>
 					</view>
 				</view>
 
 
 				<!-- 费用详情 -->
-				<view class="ct_feeDetails">
+				<view class="ct_feeDetails" v-if="driverInformation.or_class == '包车-定制'">
 					<text class="if_topTitle2">费用详情</text>
 					<view class="if_text">
 						<text class="te_text">包车天数:{{driverInformation.cm_day}}天</text>
@@ -133,6 +132,8 @@
 					<text class="if_topTitle3">路线信息</text>
 					<view class="if_text">
 						<text class="te_text2">上车点:{{driverInformation.or_boardingPoint}}</text>
+					</view>
+					<view class="if_text">
 						<text class="te_text3">目的地:{{driverInformation.or_destination}}</text>
 					</view>
 					<view class="if_text">
@@ -248,7 +249,7 @@
 						or_number: this.or_number,
 					},
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						this.driverInformation = res.data.data;
 					}
 				})
@@ -562,7 +563,7 @@
 		padding-left: 31upx;
 		font-size: 36upx;
 		font-weight: bold;
-		padding-bottom: 20upx;
+		// padding-bottom: 20upx;
 	}
 
 	//内容公共样式
@@ -580,23 +581,45 @@
 		font-size: 30upx;
 		width: 320upx;
 	}
+
 	.te_text2 {
+		// overflow: hidden;
+		// lines: 1;
+		// text-overflow: ellipsis;
+		// /* #ifdef MP-WEIXIN*/
+		// white-space: nowrap;
+		// /*#endif*/
 		flex-direction: row;
 		justify-content: space-between;
+<<<<<<< HEAD
+=======
 		text-overflow: ellipsis;
 		// white-space: nowrap;
 		overflow: hidden;
+>>>>>>> 81859b28de4704dd6e4370012822bd922ccdde04
 		font-size: 30upx;
-		width: 320upx;
+		// width: 300upx;
+		height: 40upx;
 	}
+
 	.te_text3 {
+		// overflow: hidden;
+		// lines: 1;
+		// text-overflow: ellipsis;
+		// /* #ifdef MP-WEIXIN*/
+		// white-space: nowrap;
+		// /*#endif*/
 		flex-direction: row;
 		justify-content: space-between;
+<<<<<<< HEAD
+=======
 		text-overflow: ellipsis;
 		// white-space: nowrap;
 		overflow: hidden;
+>>>>>>> 81859b28de4704dd6e4370012822bd922ccdde04
 		font-size: 30upx;
-		width: 320upx;
+		// width: 320upx;
+		height: 40upx;
 	}
 
 	//---支付弹框样式-----

@@ -6,7 +6,7 @@
 		<view class="cvt_setOutContent">
 			<view class="cvt_content" :hidden="startingContent==1">
 				<view class="ct_departureContents1">
-					<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{addressContent.privateSite}}</text></view>
+					<view class="ct_content1">目的地 &nbsp;<text class="ct_content2">{{addressContent.ct_EndAddress}}</text></view>
 					<view class="ct_content3">上车点 &nbsp;<text class="ct_content4">{{addressContent.initialPoint}}</text></view>
 				</view>
 				<view class="ct_departureContents2">
@@ -134,6 +134,8 @@
 					datestring: '', //出发时间
 					dayContentObject: '', //选择天数
 					privateSite: '', //专线
+					ct_EndAddress:'',
+					
 				}, //地址内容
 				priceExplain: [], //价格须知
 				siteWidth: '',

@@ -180,6 +180,7 @@
 					de_Latitude: '', //目的地纬度
 					dl_Longitude: '', //专线经度
 					dl_Latitude: '', //专线经度
+					ct_EndAddress:'',//专线终点
 					isNormal: '',
 
 				},
@@ -234,9 +235,10 @@
 					// data即为传过来的值，给上车点赋值
 					that.privateSite = '';
 					that.privateSite = data.data.ct_dedicatedLine;
+					that.ct_EndAddress=data.data.ct_EndAddress;
 					that.dl_Latitude = data.data.ct_latitude;
 					that.dl_Longitude = data.data.ct_longitude;
-					// console.log(that.dl_Longitude)
+					console.log(that.ct_EndAddress)
 					//清除监听，不清除会消耗资源
 					uni.$off('startstaionChange');
 				});
@@ -385,8 +387,8 @@
 
 			//------------------------------提交数据-------------------------------------
 			subit: function() {
-				console.log(this.datestring)
-				console.log(this.datestring2)
+				// console.log(this.datestring)
+				// console.log(this.datestring2)
 				if(this.datestring >= this.datestring2){
 					if (this.isNormal == 0) {
 						if (this.privateSite == '请选择专线') {
@@ -411,6 +413,7 @@
 							this.homePageInfo.de_Latitude = this.de_Latitude;
 							this.homePageInfo.dl_Longitude = this.dl_Longitude;
 							this.homePageInfo.dl_Latitude = this.dl_Latitude;
+							this.homePageInfo.ct_EndAddress = this.ct_EndAddress;
 							this.homePageInfo.dayContentObject = this.dayContent[this.index];
 							// console.log(this.homePageInfo.dl_Longitude + " " + this.homePageInfo.dl_Latitude)
 							// console.log(this.vehicleSelection[this.value])
@@ -452,6 +455,7 @@
 							this.homePageInfo.de_Latitude = this.de_Latitude;
 							this.homePageInfo.dl_Longitude = this.dl_Longitude;
 							this.homePageInfo.dl_Latitude = this.dl_Latitude;
+							this.homePageInfo.ct_EndAddress = this.ct_EndAddress;
 							this.homePageInfo.dayContentObject = this.dayContent[this.index];
 							// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
 							// console.log(this.vehicleSelection[this.value])
