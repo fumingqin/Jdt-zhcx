@@ -23,7 +23,7 @@
 					<image class="Tk_image" :src="item.imageUrl[0]" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.title}}</text>
-						<view style="display: flex; margin-top: 8upx;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 216upx;">
+						<view style="display: flex; margin-top: 8upx;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 480upx;">
 							<text class="Tk_text2" v-for="(item2,index2) in item.label" :key="index2">{{item2}}&nbsp;|&nbsp;</text>
 						</view>
 						<text class="Tk_text3">{{item.synopsis}}</text>
@@ -321,7 +321,6 @@
 									title:'查不到该地区相关信息！',
 									icon:'none'
 								})
-								
 							}
 						},
 						fail:function(){
@@ -472,6 +471,14 @@
 							});
 							this.searchValue = ''
 
+						}else {
+							uni.hideLoading()
+							uni.showToast({
+								title: '数据异常，请联系客服',
+								icon: 'none',
+								duration: 2000
+							});
+							this.searchValue = ''
 						}
 					}
 				})
@@ -566,7 +573,7 @@
 			display: flex;
 
 			.Tk_image {
-				width: 182upx;
+				// width: 182upx;
 				height: 152upx;
 				border-radius: 12upx;
 				margin: 24rpx 0rpx;
@@ -595,9 +602,12 @@
 			.Tk_text3 {
 				font-size: 24upx;
 				margin-top: 24upx;
-				// text-align: left;	
 				color: #AAAAAA;
 				display: block; // 让字体换行
+				overflow: hidden;
+				text-overflow: ellipsis; 
+				white-space: nowrap; 
+				width: 480upx;
 			}
 		}
 	}

@@ -90,18 +90,18 @@
 					</view>
 				</uni-popup> -->
 				<!-- 司机信息 -->
-				<view class="ct_information" v-if="driverInformation.or_Type !== 5">
+				<view class="ct_information" v-if="driverInformation.or_Type !== '0' || driverInformation.or_Type !== '5' || driverInformation.or_Type !== '6'">
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
 						<text class="te_text">车牌号:{{driverInformation.cm_licensePlate}}</text>
 						<text class="te_text">车型:{{driverInformation.cm_vehicleType}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">姓名:{{driverInformation.cm_driverName}}</text>
+						<text class="te_text">姓名:{{(driverInformation.cm_driverName.substr(0,1))+'师傅'}}</text>
 						<text class="te_text">驾龄:{{driverInformation.cm_vehicleAge}}年</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">电话:{{driverInformation.or_driverTelephone}}</text>
+						<text class="te_text">电话:{{(driverInformation.or_driverTelephone.substr(0,3))+'****'+(driverInformation.or_driverTelephone.substr(7,11))}}</text>
 					</view>
 					<view class="if_button" v-if="driverInformation.or_Type == 1 || driverInformation.or_Type == 2 || driverInformation.or_Type == 3 
 					 || driverInformation.or_Type == 4 || driverInformation.or_Type == 7 || driverInformation.or_Type == 8">
