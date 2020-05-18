@@ -275,11 +275,15 @@
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
+						// #ifdef H5 || MP-WEIXIN
 						that.getOpenID();
-
-
+						// #endif
+						
 						//-------------------------------下单-------------------------------
-						// that.getOrder();
+						// #ifdef APP-PLUS
+						that.getOrder();
+						// #endif
+						
 					},
 					fail() {
 						uni.showToast({
@@ -296,12 +300,16 @@
 					key: 'scenicSpotOpenId',
 					success: function(response) {
 						console.log(response)
+						uni.showToast({
+							title:response.data,
+							icon:'none'
+						})
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail: function(fail) {
-						that.getOrder();
+						// that.getOrder();
 						//uni.hideLoading();
 					}
 				})
@@ -390,10 +398,7 @@
 
 					success: (res) => {
 						console.log(res)
-						uni.showToast({
-							title:res.data.msg,
-							icon:'none'
-						})
+						
 						if (res.data) {
 							if (res.data.status == true) {
 								that.orderNum = res.data.data;
@@ -441,10 +446,7 @@
 						
 						success: (res) => {
 							console.log(res);
-							uni.showToast({
-								title:res.data.msg,
-								icon:'none'
-							})
+							
 							if (res.data) {
 								if (res.data.status == true) {
 									var msgArray = JSON.parse(res.data.msg);
