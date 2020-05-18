@@ -169,7 +169,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >驾驶员</text>
-						<text class="MP_cost">{{(orderInfo.backdriverName.substr(0,1))+'师傅'}}</text>
+						<text class="MP_cost">{{orderInfo.backdriverName}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >车牌号</text>
@@ -177,7 +177,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >联系电话</text>
-						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.backdriverPhone)">{{(orderInfo.backdriverPhone.substr(0,3))+'****'+(orderInfo.backdriverPhone.substr(7,11))}}(点击拨打电话)</text>
+						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.backdriverPhone)">{{orderInfo.backdriverPhone}}(点击拨打电话)</text>
 					</view>
 					</scroll-view>
 				</view>
@@ -210,7 +210,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >驾驶员</text>
-						<text class="MP_cost">{{(orderInfo.driverName.substr(0,1))+'师傅'}}</text>
+						<text class="MP_cost">{{orderInfo.driverName}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >车牌号</text>
@@ -218,7 +218,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >联系电话</text>
-						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.driverPhone)">{{(orderInfo.driverPhone.substr(0,3))+'****'+(orderInfo.driverPhone.substr(7,11))}}(点击拨打电话)</text>
+						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.driverPhone)">{{orderInfo.driverPhone}}(点击拨打电话)</text>
 					</view>
 					</scroll-view>
 				</view>
@@ -259,6 +259,7 @@
 						couponCondition: '',
 						
 						addressData : '',//用户列表
+						backdriverName : '',//司机姓名
 					},
 				childrenIndex : '', //儿童数量
 				adultIndex : '', //成人数量
@@ -281,7 +282,7 @@
 				return pri;
 			},
 			//访问接口数据
-			lyfwData(e) {
+			lyfwData:function(e) {
 				uni.request({
 					url:$lyfw.Interface.lyky_RequestTicketsListDetail.value,
 					method:$lyfw.Interface.lyky_RequestTicketsListDetail.method,
@@ -301,29 +302,29 @@
 				// console.log(this.orderInfo[0])
 			},
 			//打开弹框
-			open() {
+			open:function() {
 				this.$refs.popup.open()
 			},
 			//关闭弹框
-			close() {
+			close:function() {
 				this.$refs.popup.close()
 			},
 			
 			//查看返程班次弹框
-			open2() {
+			open2:function() {
 				this.$refs.popup2.open()
 			},
 			//关闭返程班次弹框
-			close2() {
+			close2:function() {
 				this.$refs.popup2.close()
 			},
 			
 			//查看出发班次弹框
-			open3() {
+			open3:function() {
 				this.$refs.popup3.open()
 			},
 			//关闭出发班次弹框
-			close3() {
+			close3:function() {
 				this.$refs.popup3.close()
 			},
 			
@@ -341,7 +342,7 @@
 				this.childrenTotalPrice = children.length * this.orderInfo.ticketChildPrice;
 			},
 			//跳转至景区详情
-			route(){
+			route:function(){
 				uni.navigateTo({
 					url: 'tp_ticketsDetails?ticketId=' +this.orderInfo.ticketId
 				})
