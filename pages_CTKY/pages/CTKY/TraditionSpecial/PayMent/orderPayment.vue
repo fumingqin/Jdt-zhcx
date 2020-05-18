@@ -390,6 +390,10 @@
 
 					success: (res) => {
 						console.log(res)
+						uni.showToast({
+							title:res.data.msg,
+							icon:'none'
+						})
 						if (res.data) {
 							if (res.data.status == true) {
 								that.orderNum = res.data.data;
@@ -437,6 +441,10 @@
 						
 						success: (res) => {
 							console.log(res);
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
 							if (res.data) {
 								if (res.data.status == true) {
 									var msgArray = JSON.parse(res.data.msg);
