@@ -277,6 +277,7 @@
 					data: {
 						OrderNumber: that.orderNumber,
 						FactPayPrice: that.TaxiCost,
+						payType:"线上支付",
 					},
 					success(res) {
 						if (res.data.status) {

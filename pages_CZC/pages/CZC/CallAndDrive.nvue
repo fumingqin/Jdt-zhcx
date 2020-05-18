@@ -49,7 +49,7 @@
 				</view>
 			</view>
 		</view>
-		<view v-if='state == 2' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+		<view v-if='state == 2' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
 			<view elevation='5px' class="comeBottomContent">
 				<view @click="callPolice" style="width: 300rpx;align-items: center;border-right:1px solid #2C2D2D;">
@@ -60,7 +60,7 @@
 				</view>
 			</view>
 		</view>
-		<view v-if='state == 1' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
+		<view v-if='state == 1' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
 			<view elevation='5px' style="width: 300rpx;padding-top: 30rpx;padding-bottom: 30rpx;background-color: #FFFFFF;border-radius: 9px;flex-direction: row;box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);">
 				<view @click="cancleOrder" style="width: 300rpx;align-items: center;">

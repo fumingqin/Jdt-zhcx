@@ -1797,7 +1797,7 @@
 
 				noDataImage:'',//客运弹框背景图
 				textareaValue:"",
-
+				
 				SfcInfo: '',
 			}
 		},
@@ -3229,7 +3229,7 @@
 					}
 				})
 			},
-			BouncePay: function(orderNumber) {
+			BouncePay: function(orderNumber,money) {
 				let that = this;
 				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
 				// #ifdef H5
@@ -3245,7 +3245,7 @@
 						payType: payPlatform,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
-						price: 0.01
+						price: money
 					},
 					success(res) {
 						console.log(res);
@@ -3316,7 +3316,7 @@
 								mask: true,
 							})
 							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
-								that.BouncePay(value.orderNumber);							
+								that.BouncePay(value.orderNumber,value.money);							
 							} else {
 								that.CancelSpecialLineOrder1(value.orderNumber);
 								uni.hideLoading()
@@ -3506,7 +3506,7 @@
 					}
 				})
 			},
-			SfcBouncePay: function(orderNumber) {
+			SfcBouncePay: function(orderNumber,money) {
 				let that = this;
 				var payPlatform = 3; //支付类型如：支付宝=2,App=3,公众号=4,小程序=5等
 				// #ifdef H5
@@ -3522,7 +3522,7 @@
 						payType: payPlatform,
 						orderNumber: orderNumber,
 						// price:that.FactPayPrice
-						price: 0.01
+						price: money
 					},
 					success(res) {
 						console.log(res)
@@ -3591,7 +3591,7 @@
 								mask: true,
 							})
 							if (value.SpecialorderState == 0 || value.SpecialorderState == 1 || value.SpecialorderState == 2) {
-								that.SfcBouncePay(value.orderNumber);
+								that.SfcBouncePay(value.orderNumber,value.money);
 							
 							} else {
 								that.CancelSfcOrder1(value.orderNumber);

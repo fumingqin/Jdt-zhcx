@@ -169,11 +169,11 @@
 										method:that.$GrzxInter.Interface.changeInfoPortrait.method,
 										success(res3) {
 											console.log(res3);
+											uni.setStorageSync('userInfo',res3.data.data)
 											uni.showToast({
 												title:'绑定成功！',
 												icon:'success',
 											})
-											uni.setStorageSync('userInfo',res3.data.data)
 											setTimeout(function(){
 												uni.navigateBack();
 											},500);
