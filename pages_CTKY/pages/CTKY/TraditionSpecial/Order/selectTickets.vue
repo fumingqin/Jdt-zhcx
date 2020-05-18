@@ -132,7 +132,12 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(response) {
-						console.log('当前有openid');
+						
+						if(response.data) {
+							console.log('当前没有有openid',response);
+						}else {
+							that.getCode();
+						}
 					},
 					fail: function(fail) {
 						//无openid，请求openid
