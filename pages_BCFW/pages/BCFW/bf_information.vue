@@ -283,7 +283,7 @@
 							
 							key: 'homePageInfo',
 							success: (res) => {
-								that.privateSite = res.data.privateSite;
+								that.privateSite = res.data.ct_EndAddress;
 								that.initialPoint = res.data.initialPoint;
 								that.destination = res.data.destination;
 								that.datestring = res.data.datestring;
