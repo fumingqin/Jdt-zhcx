@@ -222,9 +222,9 @@
 			that.or_number=JSON.parse(options.or_number);
 			that.bcfwData();
 			// that.routeInit();
-			that.setMarker(1, 118.600608, 24.889217, '../../static/CTKY/start.png');
-			that.setMarker(2, 118.613688, 24.912702, '../../static/CZC/End.png');
-			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
+			// that.setMarker(1, 118.600608, 24.889217, '../../static/BCFW/choice/charterMap/Start.png');
+			// that.setMarker(2, 118.613688, 24.912702, '../../static/BCFW/choice/charterMap/End.png');
+			// that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
