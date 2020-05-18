@@ -238,7 +238,7 @@
 					that.ct_EndAddress=data.data.ct_EndAddress;
 					that.dl_Latitude = data.data.ct_latitude;
 					that.dl_Longitude = data.data.ct_longitude;
-					console.log(that.ct_EndAddress)
+					// console.log(that.ct_EndAddress)
 					//清除监听，不清除会消耗资源
 					uni.$off('startstaionChange');
 				});
