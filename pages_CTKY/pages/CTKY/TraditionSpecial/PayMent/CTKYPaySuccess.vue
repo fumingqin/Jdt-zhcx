@@ -30,7 +30,7 @@
 			// this.getTicketPaymentInfo(res.orderNum);
 		},
 		onReady() {
-			this.backHome();
+			// this.backHome();
 		},
 		methods: {
 			//--------------------------获取车票支付参数--------------------------

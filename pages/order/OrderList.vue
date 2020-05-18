@@ -2005,7 +2005,7 @@
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
-						// console.log('11111', res.data);
+						console.log('客运订单数据', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
@@ -2051,7 +2051,7 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
-						console.log('定制巴士订单数据',res)
+						// console.log('定制巴士订单数据',res)
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -2162,7 +2162,7 @@
 			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				// console.log(orderNumber)
+				console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -2199,6 +2199,7 @@
 									icon: 'none'
 								})
 							}
+							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
 						}
 					},
@@ -2390,9 +2391,11 @@
 					that.ky_currentType = '定制巴士支付';
 					this.Cs_CheckPayState(item.orderNumber,item.totalPrice)
 				}else {
+					this.ky_orderStatus = '客运支付订单检索'
 					this.getTicketPaymentInfo(item.orderNumber);
 				}
 			},
+			
 			//--------------------------检测订单支付状态--------------------------
 			Cs_CheckPayState:function(orderNumber,totalPrice){
 				var that = this;
@@ -2407,7 +2410,6 @@
 						payType:payType
 					},
 					success(res) {
-						console.log('我要崩溃了',res)
 						if(res.data.msg == '不存在该订单，请输入正确订单号'){
 							if(that.ky_currentType == '定制巴士取消') {
 								that.Cs_cancelTicket(orderNumber)

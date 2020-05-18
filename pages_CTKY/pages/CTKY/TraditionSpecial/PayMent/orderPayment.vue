@@ -168,7 +168,7 @@
 			// console.log('from:' + options.from);
 			clearInterval(that.timer);
 			if (options.from == 'backbutton') {
-				console.log('that.timer', that.timer);
+				// console.log('that.timer', that.timer);
 				if (that.timer) {
 					clearInterval(that.timer);
 				}
@@ -391,10 +391,6 @@
 						console.log(res)
 						if (res.data) {
 							if (res.data.status == true) {
-								uni.showToast({
-									title: res.data.status,
-									icon: 'none'
-								})
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							} else if (res.data.status == false) {
