@@ -391,7 +391,10 @@
 						console.log(res)
 						if (res.data) {
 							if (res.data.status == true) {
-								
+								uni.showToast({
+									title: res.data.status,
+									icon: 'none'
+								})
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							} else if (res.data.status == false) {
@@ -440,14 +443,12 @@
 							if (res.data) {
 								if (res.data.status == true) {
 									var msgArray = JSON.parse(res.data.msg);
-									console.log(typeof msgArray.message)
 									if (msgArray.oldState == '结束') {
 										uni.hideLoading();
-										
-										// uni.showToast({
-										// 	title: msgArray.message,
-										// 	icon: 'none'
-										// })
+										uni.showToast({
+											title: msgArray.message,
+											icon: 'none'
+										})
 										clearInterval(timer);
 									} else if (msgArray.oldState == '支付系统申请支付订单') {
 										that.paymentData = msgArray;
