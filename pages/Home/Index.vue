@@ -511,10 +511,7 @@
 										})
 									} else if (res1.cancel) {
 										// console.log('用户点击取消');
-										uni.showToast({
-											title:'未绑定手机号，将会影响部分功能的正常运行',
-											icon:'none'
-										})
+										
 									}
 								}
 							})
@@ -532,10 +529,7 @@
 									})
 								} else if (res.cancel) {
 									// console.log('用户点击取消');
-									uni.showToast({
-										title:'未绑定手机号，将会影响部分功能的正常运行',
-										icon:'none'
-									})
+									
 								}
 							}
 						})
