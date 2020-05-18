@@ -43,12 +43,12 @@
 	
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
-			<!-- <view class="boxClass marginTop" @click="navTo('电子发票')">
+			<!-- <view class="boxClass marginTop" @click="QQLogin">
 				<image src="../../static/GRZX/tubiao_fapiao.png" class="iconClass1"></image>
-				<text class="fontStyle">电子发票</text>
+				<text class="fontStyle">测试QQ登录</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view> -->
-			<view class="boxClass" @click="phoneClick">
+			<view class="boxClass marginTop" @click="phoneClick">
 				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
 				<text class="fontStyle">电话客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
@@ -476,6 +476,26 @@
 				        return false;
 				    }
 			},
+			// QQLogin(){
+			// 	uni.getProvider({
+			// 	    service: 'oauth',
+			// 	    success: function (res) {
+			// 	        if (~res.provider.indexOf('qq')) {
+			// 	            uni.login({
+			// 	                provider: 'qq',
+			// 	                success: function (loginRes) {
+			// 	                    uni.getUserInfo({
+			// 	                    	provider: 'qq',
+			// 							success(logRes) {
+			// 								console.log(logRes,"logRes")
+			// 							}
+			// 	                    })
+			// 	                }
+			// 	            });
+			// 	        }
+			// 	    }
+			// 	})
+			// },
 		}
 		
 	}

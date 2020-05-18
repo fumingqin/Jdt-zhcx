@@ -9,7 +9,7 @@
 		</view>
 		<view class="inputItem Captcha">
 			<image src="../../static/GRZX/yanzhengma.png" class="iconClass2"></image>
-			<input type="number" placeholder="输入验证码" maxlength="6" class="inputClass" data-key="captchaCode" @input="inputChange2" />
+			<input type="number" placeholder="输入验证码" maxlength="4" class="inputClass" data-key="captchaCode" @input="inputChange2" />
 			<view class="getCode style" @click="getCodeClick" id="Code">{{textCode}}</view>
 		</view>
 		<button type="warn" @click="bindPhone" class="btnClass">确定</button>
@@ -151,7 +151,11 @@
 									nickname:userInfo.nickname,
 									address:userInfo.province+userInfo.city,
 									openId_wx:userInfo.openid,
-									//wxOpenid:openid,
+									gender:res1.data.data.gender,
+									openId_qq:res1.data.data.openId_qq,
+									openId_xcx:res1.data.data.openId_xcx,
+									birthday:res1.data.data.birthday,
+									autograph:res1.data.data.autograph,
 								},
 								method:that.$GrzxInter.Interface.changeInfo.method,
 								success(res) {
