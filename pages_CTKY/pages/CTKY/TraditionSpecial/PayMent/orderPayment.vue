@@ -439,6 +439,7 @@
 							if (res.data) {
 								if (res.data.status == true) {
 									var msgArray = JSON.parse(res.data.msg);
+									console.log(msgArray)
 									if (msgArray.oldState == '结束') {
 										uni.hideLoading();
 										uni.showToast({
@@ -532,22 +533,24 @@
 						prepayid: that.paymentData.jsapi.PrepayId,
 					},
 					success: function(res) {
-						uni.showModal({
-							title: '提示',
-							content: res,
-							showCancel: false
-						})
-						if (res.errCode == 0) { //成功
+						// uni.showModal({
+						// 	title: '提示',
+						// 	content: res,
+						// 	showCancel: false
+						// })
+						console.log(res)
+						
+						if (res.errMsg == 'requestPayment:ok') { //成功
 							uni.showToast({
 								title: '支付成功',
 							})
 							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
-						} else if (res.errCode == -1) { //错误
+						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
-						} else if (res.errCode == -2) { //用户取消
+						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
