@@ -584,7 +584,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		text-overflow: ellipsis;
-		white-space: nowrap;
+		// white-space: nowrap;
 		overflow: hidden;
 		font-size: 30upx;
 		width: 320upx;
@@ -593,7 +593,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		text-overflow: ellipsis;
-		white-space: nowrap;
+		// white-space: nowrap;
 		overflow: hidden;
 		font-size: 30upx;
 		width: 320upx;
