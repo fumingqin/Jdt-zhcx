@@ -348,9 +348,9 @@
 									//判断是否有绑定手机号
 									if(res1.data.msg=="不存在该用户"){
 										console.log('res4')
-										uni.navigateTo({
-											url:'/pages/GRZX/wxLogin'
-										})
+										// uni.navigateTo({
+										// 	url:'/pages/GRZX/wxLogin'
+										// })
 									}else{
 										console.log('res5')
 										uni.setStorageSync('userInfo',res1.data.data)
@@ -401,6 +401,10 @@
 										})
 									} else if (res1.cancel) {
 										// console.log('用户点击取消');
+										uni.showToast({
+											title:'未绑定手机号，将会影响部分功能的正常运行',
+											icon:'none'
+										})
 									}
 								}
 							})
@@ -418,6 +422,10 @@
 									})
 								} else if (res.cancel) {
 									// console.log('用户点击取消');
+									uni.showToast({
+										title:'未绑定手机号，将会影响部分功能的正常运行',
+										icon:'none'
+									})
 								}
 							}
 						})

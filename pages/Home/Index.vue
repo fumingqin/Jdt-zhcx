@@ -401,17 +401,17 @@
 									success(res1) {
 										console.log(res1,'res1')
 										//判断是否有绑定手机号
-										if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
-											uni.showToast({
-												title:'您未绑定手机号，请绑定手机号！',
-												icon:'none',
-											})
-											setTimeout(function(){
-												uni.navigateTo({
-													url:'/pages/GRZX/wxLogin'
-												})
-											},1000);
-										}
+										// if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+										// 	uni.showToast({
+										// 		title:'您未绑定手机号，请绑定手机号！',
+										// 		icon:'none',
+										// 	})
+										// 	setTimeout(function(){
+										// 		uni.navigateTo({
+										// 			url:'/pages/GRZX/wxLogin'
+										// 		})
+										// 	},1000);
+										// }
 										console.log(openid,'openid1')
 										if(openid==res1.data.data.openId_wx&&openid!=""){
 											uni.setStorageSync('userInfo',res1.data.data)
@@ -503,6 +503,10 @@
 										})
 									} else if (res1.cancel) {
 										// console.log('用户点击取消');
+										uni.showToast({
+											title:'未绑定手机号，将会影响部分功能的正常运行',
+											icon:'none'
+										})
 									}
 								}
 							})
@@ -520,6 +524,10 @@
 									})
 								} else if (res.cancel) {
 									// console.log('用户点击取消');
+									uni.showToast({
+										title:'未绑定手机号，将会影响部分功能的正常运行',
+										icon:'none'
+									})
 								}
 							}
 						})
