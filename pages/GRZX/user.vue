@@ -383,7 +383,7 @@
 				//#ifdef H5
 				var user1=uni.getStorageSync('userInfo');
 				console.log(user1,"1111")
-				if(user1==""||user1==null){
+				if(user1==""||user1==null ||user1.openId_wx==null||user1.openId_wx==""){
 					console.log(user1,"2222")
 					uni.showToast({
 						title:"请允许公众号授权登录，即将为你跳转至首页",

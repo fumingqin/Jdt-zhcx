@@ -184,6 +184,7 @@
 			//#endif
 			// #ifdef  H5
 			 this.getCode();
+			 this.bindPhone();
 			//#endif
 		},
 		methods: {
@@ -441,6 +442,47 @@
 				  } else {  
 				    return null  
 				  }  
+			},
+			//检查是否绑定手机号
+			bindPhone(){
+				uni.getStorage({
+					key:'userInfo',
+					success(res){
+						console.log(res,"res")
+						if(res.data.openId_wx==""||res.data.openId_wx==null||res.data.phoneNumber==""||res.data.phoneNumber==null){
+							uni.showModal({
+								content:'您暂未绑定手机号，是否绑定',
+								confirmText:'去绑定',
+								cancelText:'暂不绑定',
+								success(res1) {
+									if (res1.confirm) {
+										uni.navigateTo({
+											url:'/pages/GRZX/wxLogin'
+										})
+									} else if (res1.cancel) {
+										// console.log('用户点击取消');
+									}
+								}
+							})
+						}
+					},
+					fail(err){
+						uni.showModal({
+							content:'您暂未绑定手机号，是否绑定',
+							confirmText:'去绑定',
+							cancelText:'暂不绑定',
+							success(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url:'/pages/GRZX/wxLogin'
+									})
+								} else if (res.cancel) {
+									// console.log('用户点击取消');
+								}
+							}
+						})
+					}
+				})
 			},
 			 //#endif
 			// #ifdef MP-WEIXIN
