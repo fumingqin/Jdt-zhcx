@@ -591,17 +591,11 @@
 		// /*#endif*/
 		flex-direction: row;
 		justify-content: space-between;
-<<<<<<< HEAD
-=======
-		text-overflow: ellipsis;
-		// white-space: nowrap;
-		overflow: hidden;
->>>>>>> 81859b28de4704dd6e4370012822bd922ccdde04
 		font-size: 30upx;
 		// width: 300upx;
 		height: 40upx;
 	}
-
+	
 	.te_text3 {
 		// overflow: hidden;
 		// lines: 1;
@@ -611,12 +605,6 @@
 		// /*#endif*/
 		flex-direction: row;
 		justify-content: space-between;
-<<<<<<< HEAD
-=======
-		text-overflow: ellipsis;
-		// white-space: nowrap;
-		overflow: hidden;
->>>>>>> 81859b28de4704dd6e4370012822bd922ccdde04
 		font-size: 30upx;
 		// width: 320upx;
 		height: 40upx;

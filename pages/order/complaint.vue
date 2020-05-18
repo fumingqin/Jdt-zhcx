@@ -189,7 +189,7 @@
 						model : this.detailInfo.tsTitle,
 					},
 					success: (res) => {
-							console.log(res)
+							// console.log(res)
 							uni.hideLoading()
 							if(res.data.msg=="投诉提交成功"){
 								uni.showToast({
