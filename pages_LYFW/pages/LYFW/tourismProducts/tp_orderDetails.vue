@@ -112,7 +112,7 @@
 					<view class="Xx_QRcodeBlock2"> 
 						<text class="Xx_QRcodeContent">{{orderInfo.orderTicketNumber}}</text>
 					</view>
-					<view class="Xx_QRcodeBlock2">
+					<view class="Xx_QRcodeBlock2" style="z-index:0;">
 						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; z-index:0;"  />
 					</view>
 					<view class="Xx_QRcodeBlock2">
@@ -129,11 +129,11 @@
 					<view></view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >身份证</text>
-						<text class="Xx_contentTitle2">{{item.userCodeNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userCodeNum.substr(0,6))+'******'+(item.userCodeNum.substr(14,18))}}</text>
 					</view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >手机号</text>
-						<text class="Xx_contentTitle2">{{item.userPhoneNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userPhoneNum.substr(0,3))+'****'+(item.userPhoneNum.substr(7,11))}}</text>
 					</view>
 				</view>
 				
@@ -148,7 +148,7 @@
 		<uni-popup ref="popup2" type="bottom">
 				
 				<view class="box_Vlew2">
-					<view :hidden="orderInfo.backsetOutDate !== ''">订单未选择返程班次</view>
+					<view :hidden="orderInfo.backsetOutDate !== '' || orderInfo.orderType == '已退票' ">订单未选择返程班次</view>
 					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
 					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
@@ -169,7 +169,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >驾驶员</text>
-						<text class="MP_cost">{{orderInfo.backdriverName}}</text>
+						<text class="MP_cost">{{(orderInfo.backdriverName.substr(0,1))+'师傅'}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >车牌号</text>
@@ -177,7 +177,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >联系电话</text>
-						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.backdriverPhone)">{{orderInfo.backdriverPhone}}(点击拨打电话)</text>
+						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.backdriverPhone)">{{(orderInfo.backdriverPhone.substr(0,3))+'****'+(orderInfo.backdriverPhone.substr(7,11))}}(点击拨打电话)</text>
 					</view>
 					</scroll-view>
 				</view>
@@ -189,7 +189,7 @@
 				
 				
 				<view class="box_Vlew2" >
-					<view :hidden="orderInfo.setOutDate !== ''">订单未选择出发班次</view>
+					<view :hidden="orderInfo.setOutDate !== '' || orderInfo.orderType == '已退票'">订单未选择出发班次</view>
 					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
 					<scroll-view scroll-y="true" :hidden="orderInfo.setOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
@@ -210,7 +210,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >驾驶员</text>
-						<text class="MP_cost">{{orderInfo.driverName}}</text>
+						<text class="MP_cost">{{(orderInfo.driverName.substr(0,1))+'师傅'}}</text>
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >车牌号</text>
@@ -218,7 +218,7 @@
 					</view>
 					<view class="MP_selectionDate">
 						<text class="MP_text" >联系电话</text>
-						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.driverPhone)">{{orderInfo.driverPhone}}(点击拨打电话)</text>
+						<text class="MP_cost" style="color: #007AFF;" @click="makeCall(orderInfo.driverPhone)">{{(orderInfo.driverPhone.substr(0,3))+'****'+(orderInfo.driverPhone.substr(7,11))}}(点击拨打电话)</text>
 					</view>
 					</scroll-view>
 				</view>

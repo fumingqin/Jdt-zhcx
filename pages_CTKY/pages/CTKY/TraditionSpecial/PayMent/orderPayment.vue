@@ -338,11 +338,10 @@
 			},
 			//--------------------------计时器--------------------------
 			getOrder: function() {
-				console.log('11111212314432');
 				var that = this;
 				var timer = null;
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
-				var companyCode = '';
+				var companyCode = '泉运公司综合出行';
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
@@ -385,7 +384,7 @@
 					},
 
 					success: (res) => {
-						// alert(res);
+						console.log(res)
 						if (res.data) {
 							if (res.data.status == true) {
 								uni.showToast({
@@ -429,7 +428,7 @@
 							orderNumber: res
 						},
 						success: (res) => {
-							// console.log(res.data);
+							console.log(res);
 							if (res.data) {
 								if (res.data.status == true) {
 									// alert('获取支付参数状态成功',res.data.status)

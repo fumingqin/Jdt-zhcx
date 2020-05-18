@@ -30,8 +30,8 @@
 						<text class="Mp_square">{{item.userType}}</text>
 						<text class="Mp_square" v-if="item.userDefault == 'true'">本人</text>
 						<text class="Mp_square" v-if="item.userEmergencyContact == 'true'">紧急联系人</text>
-						<text class="Mp_text">身份证：{{item.userCodeNum}}</text>
-						<text class="Mp_text">手机号：{{item.userPhoneNum}}</text>
+						<text class="Mp_text">身份证：{{(item.userCodeNum.substr(0,6))+'******'+(item.userCodeNum.substr(14,18))}}</text>
+						<text class="Mp_text">手机号：{{(item.userPhoneNum.substr(0,3))+'****'+(item.userPhoneNum.substr(7,11))}}</text>
 					</view>
 				</view>
 

@@ -113,11 +113,11 @@
 					<view></view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >身份证</text>
-						<text class="Xx_contentTitle2">{{item.userCodeNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userCodeNum.substr(0,6))+'******'+(item.userCodeNum.substr(14,18))}}</text>
 					</view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >手机号</text>
-						<text class="Xx_contentTitle2">{{item.userPhoneNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userPhoneNum.substr(0,3))+'****'+(item.userPhoneNum.substr(7,11))}}</text>
 					</view>
 				</view>
 				<view class="Xx_contentBlock" v-if="orderInfo.orderInsure == true">
