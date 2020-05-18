@@ -141,6 +141,7 @@
 			uni.showLoading({
 			    title: '加载中...'
 			});
+			
 			that.totalPrice = param.totalPrice;
 			if (param.isInsurance == 1) {
 				that.insurance = '保险';
@@ -301,7 +302,7 @@
 					},
 					fail: function(fail) {
 						that.getOrder();
-						uni.hideLoading();
+						//uni.hideLoading();
 					}
 				})
 			},

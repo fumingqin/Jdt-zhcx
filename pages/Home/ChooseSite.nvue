@@ -710,7 +710,7 @@
 						uni.$off('startstaionChange');
 					});
 					uni.navigateTo({
-						url: '../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian'
+						url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian',
 					})
 				} else {
 					uni.navigateTo({
@@ -749,7 +749,7 @@
 						uni.$off('endStaionChange');
 					});
 					uni.navigateTo({
-						url: '../CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'zhongdian'
+						url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'zhongdian'
 					})
 				} else {
 					uni.navigateTo({
@@ -856,18 +856,18 @@
 							var date = that.getTime();
 							uni.showLoading();
 							uni.request({
-								url: 'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
+								url: $KyInterface.KyInterface.Ky_getHomeSchedulesInfo.Url,
+								method: $KyInterface.KyInterface.Ky_getHomeSchedulesInfo.method,
+								header: $KyInterface.KyInterface.Ky_getHomeSchedulesInfo.header,
+								// url: 'http://27.148.155.9:9055/CTKY/getHomeSchedulesInfo',
 								data: {
 									systemName: '泉运公司综合出行',
 									startPosition: this.startAddress,
 									endPosition: this.endAddress,
 									date: date,
 								},
-								method: 'POST',
-								header: {
-									'content-type': 'application/json'
-								},
 								success: (res) => {
+									console.log(res)
 									uni.hideLoading();
 									//非空判断
 									if (res.data.data.length != 0) {

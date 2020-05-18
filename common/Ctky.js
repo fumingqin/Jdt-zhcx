@@ -67,6 +67,12 @@ const KyInterface = {
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
 	//--------------------------------------传统/定制客运--------------------------------------
+	Ky_getHomeSchedulesInfo:{
+		Url: scheduleUrl + '/CTKY/getHomeSchedulesInfo',
+		name:'客运-首页',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
 	Ky_AddPicture:{
 		Url: Url + '/api/zhcx/getImage',
 		name:'客运-添加图片',
