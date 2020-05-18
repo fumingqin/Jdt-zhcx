@@ -90,7 +90,10 @@
 					</view>
 				</uni-popup> -->
 				<!-- 司机信息 -->
-				<view class="ct_information" v-if="driverInformation.or_Type !== '0' || driverInformation.or_Type !== '5' || driverInformation.or_Type !== '6'">
+				<view class="ct_information" v-if="driverInformation.or_Type == 1 || driverInformation.or_Type == 2
+				 || driverInformation.or_Type == 3 || driverInformation.or_Type == 4 || driverInformation.or_Type == 7
+				  || driverInformation.or_Type == 8 || driverInformation.or_Type == 9 || driverInformation.or_Type == 10
+				   || driverInformation.or_Type == 11 || driverInformation.or_Type == 12 || driverInformation.or_Type == 13">
 					<text class="if_topTitle">司机信息</text>
 					<view class="if_text">
 						<text class="te_text">车牌号:{{driverInformation.cm_licensePlate}}</text>
@@ -129,8 +132,8 @@
 				<view class="ct_routeInformation">
 					<text class="if_topTitle3">路线信息</text>
 					<view class="if_text">
-						<text class="te_text">上车点:{{driverInformation.or_boardingPoint}}</text>
-						<text class="te_text">目的地:{{driverInformation.or_destination}}</text>
+						<text class="te_text2">上车点:{{driverInformation.or_boardingPoint}}</text>
+						<text class="te_text3">目的地:{{driverInformation.or_destination}}</text>
 					</view>
 					<view class="if_text">
 						<text class="te_text">总里程:{{driverInformation.cm_totalLi}}</text>
@@ -192,7 +195,7 @@
 				reason: '请选择报警原因',
 				pickerValue: -1,
 				remark: '',
-				or_number:'',
+				or_number: '',
 				driverInformation: {
 					or_Type: '',
 					cm_licensePlate: '',
@@ -219,12 +222,12 @@
 		},
 		onLoad(options) {
 			var that = this;
-			that.or_number=JSON.parse(options.or_number);
+			that.or_number = JSON.parse(options.or_number);
 			that.bcfwData();
 			// that.routeInit();
-			that.setMarker(1, 118.600608, 24.889217, '../../static/CTKY/start.png');
-			that.setMarker(2, 118.613688, 24.912702, '../../static/CZC/End.png');
-			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
+			// that.setMarker(1, 118.600608, 24.889217, '../../static/BCFW/choice/charterMap/Start.png');
+			// that.setMarker(2, 118.613688, 24.912702, '../../static/BCFW/choice/charterMap/End.png');
+			// that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
@@ -234,32 +237,34 @@
 			});
 		},
 		methods: {
-			bcfwData:function(){
+			bcfwData: function() {
 				uni.request({
-					url:$bcfw.Interface.fw_charterDetails.value,
-					method:$bcfw.Interface.fw_charterDetails.method,
-					header: {'content-type': 'application/json'},
-					data:{
-						or_number:this.or_number,
+					url: $bcfw.Interface.fw_charterDetails.value,
+					method: $bcfw.Interface.fw_charterDetails.method,
+					header: {
+						'content-type': 'application/json'
 					},
-					success:(res)=>{
+					data: {
+						or_number: this.or_number,
+					},
+					success: (res) => {
 						// console.log(res)
 						this.driverInformation = res.data.data;
 					}
 				})
 			},
-			
+
 			//---------------------------------模拟接口数据---------------------------------
 			// async routeInit() {
 			// 	let driverInformation = await this.$api.lyfwcwd('driverInformation');
 			// 	this.driverInformation = driverInformation.data;
-				
-				// if(this.driverInformation.overtimeCharge>0){
-				// 	this.$refs.popup.open();
-				// }else{
-					
-				// }
-				// console.log(driverInformation.data)
+
+			// if(this.driverInformation.overtimeCharge>0){
+			// 	this.$refs.popup.open();
+			// }else{
+
+			// }
+			// console.log(driverInformation.data)
 			// },
 
 			//------------------------------弹框事件-----------------------------------------
@@ -323,7 +328,7 @@
 					this.choiceIndex = 0;
 				}
 			},
-			
+
 			Selection2: function() {
 				if (this.choiceIndex2 == 0) {
 					this.choiceIndex2 = 1;
@@ -419,14 +424,14 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	
+
 	.popupTitleFont {
 		font-size: 38rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 400;
 		color: #333333;
 	}
-	
+
 	.popupButtonChoose {
 		flex-direction: row;
 		align-items: center;
@@ -473,6 +478,7 @@
 		border-radius: 10px;
 		padding: 30upx;
 		background-color: #fff;
+		margin-bottom: 20upx;
 	}
 
 	.sa_text {
@@ -490,7 +496,7 @@
 		border-radius: 10px;
 		background-color: #fff;
 		padding: 30upx 0;
-		margin: 20upx 0;
+		margin-bottom: 20upx;
 	}
 
 	.if_topTitle {
@@ -571,6 +577,24 @@
 	.te_text {
 		flex-direction: row;
 		justify-content: space-between;
+		font-size: 30upx;
+		width: 320upx;
+	}
+	.te_text2 {
+		flex-direction: row;
+		justify-content: space-between;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		font-size: 30upx;
+		width: 320upx;
+	}
+	.te_text3 {
+		flex-direction: row;
+		justify-content: space-between;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 		font-size: 30upx;
 		width: 320upx;
 	}
@@ -659,8 +683,8 @@
 		flex-direction: row;
 		justify-content: space-between;
 	}
-	
-	.pm_choice2{
+
+	.pm_choice2 {
 		flex-direction: row;
 		justify-content: space-between;
 		padding-top: 63upx;
@@ -670,11 +694,13 @@
 		width: 42upx;
 		height: 42upx;
 	}
-	.pm_text{
+
+	.pm_text {
 		font-size: 32upx;
 		padding-left: 20upx;
 	}
-	.bt_remind4{
+
+	.bt_remind4 {
 		flex-direction: row;
 		justify-content: center;
 		margin-top: 90upx;

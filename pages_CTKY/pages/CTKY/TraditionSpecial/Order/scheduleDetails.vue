@@ -83,7 +83,6 @@
 					</view>
 				</view>
 			</view>
-
 			<!-- 优惠券 -->
 			<view class="orderCommonClass" @click="toggleMask" v-if="false">
 				<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">优惠券</view>

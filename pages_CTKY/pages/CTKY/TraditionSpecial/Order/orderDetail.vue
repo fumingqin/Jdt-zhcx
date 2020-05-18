@@ -39,7 +39,7 @@
 							<!-- 出行人 -->
 							<view>{{item.userName}}</view>
 							<!-- 身份证 -->
-							<view>{{item.userCodeNum}}</view>
+							<view>{{userCodeNumChange(item.userCodeNum)}}</view>
 							<!-- 联系电话 -->
 							<!-- <view>{{orderInfo.phoneNumber}}</view> -->
 							<!-- 退改规则 -->
@@ -121,6 +121,10 @@
 						}
 					})
 				}
+			},
+			//-------------------------------身份证-------------------------------
+			userCodeNumChange:function(userCodeNum){
+				return (userCodeNum.substr(0,6))+'******'+(userCodeNum.substr(16,18))
 			},
 			//-------------------------------判断是否有保险-------------------------------
 			isInsured:function(param) {
