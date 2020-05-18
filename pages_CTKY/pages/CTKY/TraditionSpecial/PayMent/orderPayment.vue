@@ -276,14 +276,14 @@
 						}
 						//-------------------------------读取用户openID-------------------------------
 						// #ifdef H5 || MP-WEIXIN
-						// that.getOpenID();
+						that.getOpenID();
 						// #endif
 						
 						//-------------------------------下单-------------------------------
 						// #ifdef APP-PLUS
-						
-						// #endif
 						that.getOrder();
+						// #endif
+						
 					},
 					fail() {
 						uni.showToast({
@@ -308,12 +308,13 @@
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
-					fail: function(fail) {
-						// that.getOrder();
+					fail: function(response) {
 						uni.showToast({
-							title:'未获取到openid',
+							title:response.data,
 							icon:'none'
 						})
+						that.ctkyOpenID = response.data
+						that.getOrder();
 					}
 				})
 			},
@@ -391,7 +392,7 @@
 						carryChild: that.childrenNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
-						openId: 'oI1cA0k7cBdeZ_jA0fd_OdEO6kls',
+						openId: '',//oI1cA0k7cBdeZ_jA0fd_OdEO6kls
 						totalPrice: that.totalPrice, //总价格
 						payParameter: '', //不需要的参数，传空
 
