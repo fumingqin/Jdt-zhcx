@@ -99,6 +99,7 @@
 		created() {
 			this.valueSync = Number(this.value);
 		},
+		watch: { value(newValue,oldValue) { this.valueSync = newValue; } },
 		methods: {
 			_onClick(index) {
 				if (this.disabled) {

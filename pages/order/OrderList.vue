@@ -1773,6 +1773,8 @@
 				orderType1: '',
 				ctkyOrderNum: '', //传统客运订单号（退票需要）
 				ky_currentType:'',
+				ky_orderStatus:'',//判断是否需要检测当前订单状态
+				
 				ctkyOpenID:'',
 				csRefundInfo:[],//定制巴士退票
 				payType: [{
@@ -2160,7 +2162,7 @@
 			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				// console.log(orderNumber)
+				console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -2173,17 +2175,30 @@
 						console.log('删除结果', respones)
 						if (respones.data.status == true) {
 							uni.hideLoading()
-							uni.showToast({
-								title: respones.data.msg
-							})
+							if(respones.data.msg){
+								uni.showToast({
+									title: respones.data.msg
+								})
+							}else {
+								uni.showToast({
+									title: '退票成功'
+								})
+							}
 							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
 						} else {
 							uni.hideLoading()
-							uni.showToast({
-								title: respones.data.msg,
-								icon: 'none'
-							})
+							if(respones.data.msg) {
+								uni.showToast({
+									title: respones.data.msg,
+									icon: 'none'
+								})
+							}else {
+								uni.showToast({
+									title: '退票失败',
+									icon: 'none'
+								})
+							}
 							uni.startPullDownRefresh();
 						}
 					},
@@ -2535,13 +2550,14 @@
 								}
 							} else if (res.data.status == false) {
 								uni.hideLoading();
+								clearInterval(timer);
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									uni.showToast({
 										title: '订单已超时',
 										icon: 'none'
 									})
-									clearInterval(timer);
+									
 								} else {
 									uni.showModal({
 										content: info.oldState,
@@ -2816,11 +2832,9 @@
 				});
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},

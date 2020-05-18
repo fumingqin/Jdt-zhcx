@@ -112,8 +112,8 @@
 					<view class="Xx_QRcodeBlock2"> 
 						<text class="Xx_QRcodeContent">{{orderInfo.orderTicketNumber}}</text>
 					</view>
-					<view class="Xx_QRcodeBlock2">
-						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; z-index:0;"  />
+					<view class="Xx_QRcodeBlock2" style="position: relative; z-index: -9999;">
+						<canvas canvas-id="qrcode" style="width: 160px; height: 160px; left: 152upx; "  />
 					</view>
 					<view class="Xx_QRcodeBlock2">
 						<text class="Xx_QRcodeTips">出示二维码，检票入园</text>
@@ -129,11 +129,11 @@
 					<view></view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >身份证</text>
-						<text class="Xx_contentTitle2">{{item.userCodeNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userCodeNum.substr(0,6))+'******'+(item.userCodeNum.substr(14,18))}}</text>
 					</view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >手机号</text>
-						<text class="Xx_contentTitle2">{{item.userPhoneNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userPhoneNum.substr(0,3))+'****'+(item.userPhoneNum.substr(7,11))}}</text>
 					</view>
 				</view>
 				
@@ -148,7 +148,7 @@
 		<uni-popup ref="popup2" type="bottom">
 				
 				<view class="box_Vlew2">
-					<view :hidden="orderInfo.backsetOutDate !== ''">订单未选择返程班次</view>
+					<view :hidden="orderInfo.backsetOutDate !== '' || orderInfo.orderType == '已退票' ">订单未选择返程班次</view>
 					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
 					<scroll-view scroll-y="true"  :hidden="orderInfo.backsetOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
@@ -189,7 +189,7 @@
 				
 				
 				<view class="box_Vlew2" >
-					<view :hidden="orderInfo.setOutDate !== ''">订单未选择出发班次</view>
+					<view :hidden="orderInfo.setOutDate !== '' || orderInfo.orderType == '已退票'">订单未选择出发班次</view>
 					<view :hidden="orderInfo.orderType !== '已退票'">订单已退票</view>
 					<scroll-view scroll-y="true" :hidden="orderInfo.setOutDate == '' || orderInfo.orderType == '已退票'">
 					<view class="box_titleView">
@@ -259,6 +259,7 @@
 						couponCondition: '',
 						
 						addressData : '',//用户列表
+						backdriverName : '',//司机姓名
 					},
 				childrenIndex : '', //儿童数量
 				adultIndex : '', //成人数量
@@ -281,7 +282,7 @@
 				return pri;
 			},
 			//访问接口数据
-			lyfwData(e) {
+			lyfwData:function(e) {
 				uni.request({
 					url:$lyfw.Interface.lyky_RequestTicketsListDetail.value,
 					method:$lyfw.Interface.lyky_RequestTicketsListDetail.method,
@@ -301,29 +302,29 @@
 				// console.log(this.orderInfo[0])
 			},
 			//打开弹框
-			open() {
+			open:function() {
 				this.$refs.popup.open()
 			},
 			//关闭弹框
-			close() {
+			close:function() {
 				this.$refs.popup.close()
 			},
 			
 			//查看返程班次弹框
-			open2() {
+			open2:function() {
 				this.$refs.popup2.open()
 			},
 			//关闭返程班次弹框
-			close2() {
+			close2:function() {
 				this.$refs.popup2.close()
 			},
 			
 			//查看出发班次弹框
-			open3() {
+			open3:function() {
 				this.$refs.popup3.open()
 			},
 			//关闭出发班次弹框
-			close3() {
+			close3:function() {
 				this.$refs.popup3.close()
 			},
 			
@@ -341,7 +342,7 @@
 				this.childrenTotalPrice = children.length * this.orderInfo.ticketChildPrice;
 			},
 			//跳转至景区详情
-			route(){
+			route:function(){
 				uni.navigateTo({
 					url: 'tp_ticketsDetails?ticketId=' +this.orderInfo.ticketId
 				})

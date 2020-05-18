@@ -113,11 +113,11 @@
 					<view></view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >身份证</text>
-						<text class="Xx_contentTitle2">{{item.userCodeNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userCodeNum.substr(0,6))+'******'+(item.userCodeNum.substr(14,18))}}</text>
 					</view>
 					<view class="Xx_contentBlock">
 						<text class="Xx_contentTitle" >手机号</text>
-						<text class="Xx_contentTitle2">{{item.userPhoneNum}}</text>
+						<text class="Xx_contentTitle2">{{(item.userPhoneNum.substr(0,3))+'****'+(item.userPhoneNum.substr(7,11))}}</text>
 					</view>
 				</view>
 				<view class="Xx_contentBlock" v-if="orderInfo.orderInsure == true">
@@ -184,7 +184,7 @@
 				return pri;
 			},
 			//访问接口数据
-			lyfwData(e) {
+			lyfwData:function(e) {
 				uni.request({
 					url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
 					method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
@@ -204,11 +204,11 @@
 				// console.log(this.orderInfo[0])
 			},
 			//打开弹框
-			open() {
+			open:function() {
 				this.$refs.popup.open()
 			},
 			//关闭弹框
-			close() {
+			close:function() {
 				this.$refs.popup.close()
 			},
 			//数组提取
@@ -225,7 +225,7 @@
 				this.childrenTotalPrice = children.length * this.orderInfo.ticketChildPrice;
 			},
 			//跳转至景区详情
-			route(){
+			route:function(){
 				uni.navigateTo({
 					url: 'ticketsDetails?ticketId=' +this.orderInfo.ticketId
 				})

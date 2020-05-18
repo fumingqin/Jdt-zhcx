@@ -285,12 +285,15 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.ticketInfo.date.replace('T', ' ');
-				var companyCode = '泉运公司综合出行';
+				var companyCode = '';
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
 				// #ifdef APP-PLUS
 				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
+				// #endif
+				// #ifdef MP-WEIXIN
+				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
 				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({
@@ -309,7 +312,7 @@
 						UserAID:that.userInfo.userId,//用户ID
 					},
 					success: (res) => {
-						// console.log('下单返回数据',res);
+						console.log('下单返回数据',res);
 						if (res.data) {
 							if (res.data.Successed == true) {
 								uni.showToast({
@@ -438,8 +441,8 @@
 						noncestr: that.paymentData.nonceStr,
 						package: 'Sign=WXPay',
 						sign: that.paymentData.signType,
-						partnerid: that.paymentData.PartnerId,
-						prepayid: that.paymentData.PrepayId,
+						partnerid: that.paymentData.partnerId,
+						prepayid: that.paymentData.prepayId,
 					},
 					success: function(res) {
 						uni.showModal({
