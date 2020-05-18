@@ -190,19 +190,26 @@
 					},
 					success: (res) => {
 							// console.log(res)
-							uni.hideLoading()
-							if(res.data.msg=="投诉提交成功"){
+							if(this.remnant==0){
 								uni.showToast({
-									title:'投诉成功',
+									title:'请输入投诉内容',
 									icon: 'none',
 								})
-								uni.navigateBack()
-							}else if(res.data.msg=="投诉提交失败,请输入用户ID和投诉内容和投诉模块"){
-								uni.showToast({
-									title:'投诉失败',
-									icon: 'none',
-								})
-								uni.navigateBack()
+							}else if(this.remnant!==0){
+								if(res.data.status== true){
+									uni.hideLoading()
+									uni.showToast({
+										title:'投诉成功',
+										icon: 'none',
+									})
+									uni.navigateBack()
+								}else if(res.data.status== false ){
+									uni.hideLoading()
+									uni.showToast({
+										title:'投诉失败',
+										icon: 'none',
+									})
+								}
 							}
 					},
 					fail:function(){

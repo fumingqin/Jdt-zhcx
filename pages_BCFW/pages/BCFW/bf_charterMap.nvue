@@ -107,7 +107,7 @@
 					</view>
 					<view class="if_button" v-if="driverInformation.or_Type == 1 || driverInformation.or_Type == 2 || driverInformation.or_Type == 3 
 					 || driverInformation.or_Type == 4">
-						<button class="bt_remind3" type="warn">联系司机</button>
+						<button class="bt_remind3" type="warn" @click="tel(driverInformation.or_driverTelephone)">联系司机</button>
 					</view>
 				</view>
 
@@ -137,8 +137,8 @@
 						<text class="te_text3">目的地:{{driverInformation.or_destination}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">总里程:{{driverInformation.cm_totalLi}}</text>
-						<text class="te_text">总时长:{{driverInformation.cm_totalDuration}}</text>
+						<!-- <text class="te_text">总里程:{{Math.round(driverInformation.cm_totalLi)}}</text> -->
+						<text class="te_text">总时长:{{Math.round(driverInformation.cm_totalDuration)}}分</text>
 					</view>
 				</view>
 			</scroll-view>
@@ -215,6 +215,7 @@
 					cm_totalDuration: '',
 				},
 
+
 				weixinId: 1,
 				zhifubaoId: 2,
 				choiceIndex: 0,
@@ -249,8 +250,10 @@
 						or_number: this.or_number,
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						this.driverInformation = res.data.data;
+						// this.driverInformation.cm_totalLi = res.data.data.cm_totalLi.toFixed(0);
+						// this.driverInformation.cm_totalDuration = Math.round(res.data.data.cm_totalDuration);
 					}
 				})
 			},
@@ -402,6 +405,13 @@
 						// console.log(res);
 					}
 				});
+			},
+			
+			//-------------------------拨打电话-------------------------
+			tel: function(e) {
+				uni.makePhoneCall({
+					phoneNumber: e
+				})
 			},
 		}
 	}
@@ -595,7 +605,7 @@
 		// width: 300upx;
 		height: 40upx;
 	}
-	
+
 	.te_text3 {
 		// overflow: hidden;
 		// lines: 1;
