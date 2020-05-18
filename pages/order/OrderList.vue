@@ -3065,7 +3065,6 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
-						 console.log(res)
 						uni.stopPullDownRefresh();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
