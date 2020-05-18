@@ -306,9 +306,24 @@
 
 			//路由统一事件
 			godetail: function(url) {
-				uni.navigateTo({
-					url: url
-				});
+				if(url == '/pages_GJCX/pages/GJCX/busH5'){
+					// #ifdef MP-WEIXIN
+					uni.showToast({
+						title:'公交查询仅支持公众号和APP',
+						icon:'none'
+					})
+					// #endif
+					// #ifndef MP-WEIXIN
+					uni.navigateTo({
+						url: url
+					});
+					// #endif
+				}else{
+					uni.navigateTo({
+						url: url
+					});
+				}
+				
 			},
 			
 			//路由统一事件
