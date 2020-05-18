@@ -202,7 +202,9 @@
 										title:'投诉成功',
 										icon: 'none',
 									})
-									uni.navigateBack()
+									setTimeout(function(){
+										uni.navigateBack();
+									},2000);
 								}else if(res.data.status== false ){
 									uni.hideLoading()
 									uni.showToast({
