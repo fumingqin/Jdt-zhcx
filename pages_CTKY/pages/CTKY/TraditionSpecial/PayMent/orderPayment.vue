@@ -229,6 +229,10 @@
 					key: 'userInfo',
 					success: function(data) {
 						that.userInfo = data.data;
+						// #ifdef MP-WEIXIN
+						that.ctkyOpenID = data.data.openId_xcx;
+						// #endif
+						
 					}
 				})
 			},
@@ -290,7 +294,7 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(response) {
-						// alert('获取id成功');
+						console.log(response)
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
@@ -298,9 +302,6 @@
 					fail: function(fail) {
 						that.getOrder();
 						uni.hideLoading();
-						uni.showModal({
-							content: '用户未授权',
-						})
 					}
 				})
 			},
@@ -338,7 +339,6 @@
 			},
 			//--------------------------计时器--------------------------
 			getOrder: function() {
-				console.log('11111212314432');
 				var that = this;
 				var timer = null;
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
@@ -348,6 +348,9 @@
 				// #endif
 				// #ifdef APP-PLUS
 				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
+				// #endif
+				// #ifdef MP-WEIXIN
+				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
 				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({
@@ -385,7 +388,7 @@
 					},
 
 					success: (res) => {
-						// alert(res);
+						console.log(res)
 						if (res.data) {
 							if (res.data.status == true) {
 								uni.showToast({
@@ -429,10 +432,9 @@
 							orderNumber: res
 						},
 						success: (res) => {
-							// console.log(res.data);
+							// console.log(res);
 							if (res.data) {
 								if (res.data.status == true) {
-									// alert('获取支付参数状态成功',res.data.status)
 									var msgArray = JSON.parse(res.data.msg);
 									if (msgArray.oldState == '结束') {
 										uni.hideLoading();
@@ -491,19 +493,19 @@
 					"paySign": that.paymentData.jsapi.PaySign //微信签名
 				}, function(res) {
 					if (res.err_msg == "get_brand_wcpay_request:ok") {
-						alert("支付成功");
+						uni.showToast({
+							title: '支付成功',
+						})
 						uni.showLoading({
 						    title: '加载中...'
 						});
 						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-						// alert("您取消了支付，请重新支付");
 						uni.showToast({
 							title: '您取消了支付，请重新支付',
 							icon: 'none'
 						})
 					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-						// alert("支付失败，请重新支付");
 						uni.showToast({
 							title: '支付失败，请重新支付',
 							icon: 'none'
@@ -536,7 +538,9 @@
 							showCancel: false
 						})
 						if (res.errCode == 0) { //成功
-							alert("支付成功");
+							uni.showToast({
+								title: '支付成功',
+							})
 							uni.showLoading({
 							    title: '加载中...'
 							});
@@ -576,7 +580,6 @@
 						console.log(res)
 						uni.showToast({
 							title: '支付成功',
-							icon: 'none'
 						})
 						uni.showLoading({
 						    title: '加载中...'

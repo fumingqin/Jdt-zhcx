@@ -52,6 +52,10 @@
 			}
 		},
 		onLoad:function(options){
+			uni.showLoading({
+				title:'加载班次中...',
+				icon:'loading'
+			})
 			this.originIndex = options.originIndex;
 			uni.getStorage({
 				key:'chooseShuttleData',
@@ -87,9 +91,16 @@
 							uni.showToast({
 								title:'选择班次成功'
 							})
-							uni.redirectTo({
-								url:'tp_chooseShuttle2?originIndex=1&setOutDate=' + that.selectionData.setOutDate
-							})
+							if(that.selectionData == ''){
+								uni.redirectTo({
+									url:'tp_chooseShuttle2?originIndex=1&setOutDate=' + that.departureData[0].setOutDate
+								})
+							}else{
+								uni.redirectTo({
+									url:'tp_chooseShuttle2?originIndex=1&setOutDate=' + that.selectionData.setOutDate
+								})
+							}
+							
 						},
 						fail: (ee) => {
 							uni.showToast({
@@ -115,6 +126,10 @@
 						success: (res) => {
 							// console.log(res)
 							this.departureData = res.data.data;
+							
+						},
+						complete:function(){
+							uni.hideLoading()
 						}
 				})
 			}

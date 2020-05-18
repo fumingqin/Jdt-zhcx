@@ -309,7 +309,7 @@
 						UserAID:that.userInfo.userId,//用户ID
 					},
 					success: (res) => {
-						// console.log('下单返回数据',res);
+						console.log('下单返回数据',res);
 						if (res.data) {
 							if (res.data.Successed == true) {
 								uni.showToast({
@@ -438,8 +438,8 @@
 						noncestr: that.paymentData.nonceStr,
 						package: 'Sign=WXPay',
 						sign: that.paymentData.signType,
-						partnerid: that.paymentData.PartnerId,
-						prepayid: that.paymentData.PrepayId,
+						partnerid: that.paymentData.partnerId,
+						prepayid: that.paymentData.prepayId,
 					},
 					success: function(res) {
 						uni.showModal({
