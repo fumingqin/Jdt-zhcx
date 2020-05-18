@@ -1773,7 +1773,7 @@
 				orderType1: '',
 				ctkyOrderNum: '', //传统客运订单号（退票需要）
 				ky_currentType:'',
-				ky_orderStatus'',//判断是否需要检测当前订单状态
+				ky_orderStatus:'',//判断是否需要检测当前订单状态
 				ctkyOpenID:'',
 				csRefundInfo:[],//定制巴士退票
 				payType: [{

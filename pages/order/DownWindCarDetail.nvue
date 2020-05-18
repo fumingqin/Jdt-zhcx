@@ -312,7 +312,6 @@
 						evaluateContent:that.textareaValue
 					},
 					success(res) {
-						console.log(res);
 						uni.showToast({
 							title:res.data.msg,
 							icon:"none"
@@ -373,6 +372,7 @@
 				});
 			},
 			openPopup: function(value) {//开启弹窗
+			console.log(this.starNum);
 				this.$nextTick(function() {
 					this.$refs[value].open();
 				});

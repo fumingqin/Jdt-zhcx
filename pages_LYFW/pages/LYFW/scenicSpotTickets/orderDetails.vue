@@ -184,7 +184,7 @@
 				return pri;
 			},
 			//访问接口数据
-			lyfwData(e) {
+			lyfwData:function(e) {
 				uni.request({
 					url:$lyfw.Interface.spt_RequestTicketsListDetail.value,
 					method:$lyfw.Interface.spt_RequestTicketsListDetail.method,
@@ -204,11 +204,11 @@
 				// console.log(this.orderInfo[0])
 			},
 			//打开弹框
-			open() {
+			open:function() {
 				this.$refs.popup.open()
 			},
 			//关闭弹框
-			close() {
+			close:function() {
 				this.$refs.popup.close()
 			},
 			//数组提取
@@ -225,7 +225,7 @@
 				this.childrenTotalPrice = children.length * this.orderInfo.ticketChildPrice;
 			},
 			//跳转至景区详情
-			route(){
+			route:function(){
 				uni.navigateTo({
 					url: 'ticketsDetails?ticketId=' +this.orderInfo.ticketId
 				})
