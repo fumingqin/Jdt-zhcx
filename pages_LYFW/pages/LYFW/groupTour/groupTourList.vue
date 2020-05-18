@@ -160,6 +160,10 @@
 			this.routeData();
 			// #endif
 		},
+		
+		onShow:function(){
+			this.getAuthorizeInfo();//检查是否开启定位
+		},
 
 		onPullDownRefresh: function() {
 			this.routeData(); //请求接口数据
@@ -167,6 +171,7 @@
 			// 	uni.stopPullDownRefresh(); //停止下拉刷新动画
 			// }, 1000);
 		},
+		
 
 		methods: {
 			routeData: function() {
@@ -386,6 +391,22 @@
 			changeCate: function(e) {
 				this.currentIndex = 1;
 				this.screenContent = e;
+			},
+			
+			//------------------------------开启定位功能----------------------------------
+			getAuthorizeInfo() {
+				const that = this;
+				uni.authorize({
+					scope: 'scope.userLocation',
+					success() { // 允许授权
+						that.getLocationInfo();
+						// console.log("你允许授权")
+					},
+					fail() { // 拒绝授权
+						that.openConfirm();
+						// console.log("你拒绝了授权，无法获得周边信息")
+					}
+				})
 			}
 
 		}
