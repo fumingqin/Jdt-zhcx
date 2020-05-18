@@ -189,12 +189,21 @@
 						model : this.detailInfo.tsTitle,
 					},
 					success: (res) => {
-							// console.log(res)
+							console.log(res)
 							uni.hideLoading()
-							uni.showToast({
-								title:'投诉成功'
-							})
-							uni.navigateBack()
+							if(res.data.msg=="投诉提交成功"){
+								uni.showToast({
+									title:'投诉成功',
+									icon: 'none',
+								})
+								uni.navigateBack()
+							}else if(res.data.msg=="投诉提交失败,请输入用户ID和投诉内容和投诉模块"){
+								uni.showToast({
+									title:'投诉失败',
+									icon: 'none',
+								})
+								uni.navigateBack()
+							}
 					},
 					fail:function(){
 						uni.hideLoading()

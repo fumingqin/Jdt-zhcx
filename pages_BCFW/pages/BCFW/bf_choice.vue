@@ -89,7 +89,7 @@
 					method:$bcfw.Interface.fw_selectSpecialLine.method,
 					header:{'content-type': 'application/json'},
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						uni.hideLoading();
 						let that = this;
 						// console.log(res.data);
@@ -104,6 +104,7 @@
 										ct_dedicatedLine : res.data.data[i].Countys[j].ct_dedicatedLine,
 										ct_latitude : res.data.data[i].Countys[j].ct_latitude,
 										ct_longitude : res.data.data[i].Countys[j].ct_longitude,
+										ct_EndAddress : res.data.data[i].Countys[j].ct_EndAddress,
 									}
 									this.mainArray.push(countysArray);
 								}
@@ -163,6 +164,7 @@
 							ct_dedicatedLine :keywords[i].Countys[j].ct_dedicatedLine,
 							ct_latitude :keywords[i].Countys[j].ct_latitude,
 							ct_longitude :keywords[i].Countys[j].ct_longitude,
+							ct_EndAddress : keywords[i].Countys[j].ct_EndAddress,
 						}
 						//定义高亮#9f9f9f
 						// console.log(row);
