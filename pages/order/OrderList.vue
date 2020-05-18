@@ -2162,7 +2162,7 @@
 			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				// console.log(orderNumber)
+				console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -2550,13 +2550,14 @@
 								}
 							} else if (res.data.status == false) {
 								uni.hideLoading();
+								clearInterval(timer);
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									uni.showToast({
 										title: '订单已超时',
 										icon: 'none'
 									})
-									clearInterval(timer);
+									
 								} else {
 									uni.showModal({
 										content: info.oldState,
