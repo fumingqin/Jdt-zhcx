@@ -234,7 +234,7 @@
 						that.weixinOpenId = data.data.openId_xcx;
 						// #endif
 						//读取乘车人信息
-						this.getPassengerInfo();
+						that.getPassengerInfo();
 					}
 				})
 			},
