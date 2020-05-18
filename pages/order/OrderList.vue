@@ -2552,13 +2552,14 @@
 								}
 							} else if (res.data.status == false) {
 								uni.hideLoading();
+								clearInterval(timer);
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									uni.showToast({
 										title: '订单已超时',
 										icon: 'none'
 									})
-									clearInterval(timer);
+									
 								} else {
 									uni.showModal({
 										content: info.oldState,
@@ -3067,7 +3068,6 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
-						 console.log(res)
 						uni.stopPullDownRefresh();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {

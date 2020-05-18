@@ -95,7 +95,7 @@
 					// 	checked: false 
 					// }
 				],
-				countDownInterval: '',
+				countDownInterval1: '',
 				SpecialLineName: '',
 				userInfo: '',
 				scenicSpotOpenId:'',//oppenid
@@ -127,12 +127,12 @@
 			},
 			countDown: function() { //支付倒计时
 				let that = this;
-				that.countDownInterval = setInterval(function() {
+				that.countDownInterval1 = setInterval(function() {
 					if (that.countDownDate > 0) {
 						that.countDownDate--;
 					} else {
 						that.cancelOrder();
-						clearInterval(that.countDownInterval);
+						clearInterval(that.countDownInterval1);
 						that.countDownDate = '';
 					}
 				}, 1000);
@@ -154,7 +154,8 @@
 					success: function(res) {
 						if (res.data.status) {
 							that.showToast("超时未支付，订单自动取消");
-							clearInterval(that.countDownInterval); //清除倒计时
+							clearInterval(that.countDownInterval1); //清除倒计时
+							that.countDownDate = '';
 							setTimeout(function() {
 								uni.hideLoading();
 								uni.switchTab({
@@ -255,7 +256,7 @@
 					orderInfo: orderInfo,
 					// #endif
 					success(res) {
-						clearInterval(that.countDownInterval); //清除倒计时
+						clearInterval(that.countDownInterval1); //清除倒计时
 						that.CheckPayState();
 					},
 					fail(res) {
