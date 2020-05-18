@@ -212,7 +212,7 @@
 							//未绑定手机号
 							//#ifdef H5
 							uni.showToast({
-								title:"请绑定手机号",
+								title:"请绑定手机号，请返回至首页",
 								icon:'none'
 							})
 							// setTimeout(function(){
