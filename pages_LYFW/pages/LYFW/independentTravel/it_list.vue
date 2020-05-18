@@ -152,6 +152,11 @@
 			})
 			this.Getpostion();
 		},
+		
+		onShow:function(){
+			this.getAuthorizeInfo();//检查是否开启定位
+		},
+		
 		onPullDownRefresh:function(){
 			this.textData();
 		},
@@ -505,6 +510,23 @@
 					title:'正在搜索'+item
 				});
 			},
+			
+			//------------------------------开启定位功能----------------------------------
+			getAuthorizeInfo() {
+				const that = this;
+				uni.authorize({
+					scope: 'scope.userLocation',
+					success() { // 允许授权
+						that.getLocationInfo();
+						// console.log("你允许授权")
+					},
+					fail() { // 拒绝授权
+						that.openConfirm();
+						// console.log("你拒绝了授权，无法获得周边信息")
+					}
+				})
+			}
+			
 		}
 	}
 </script>

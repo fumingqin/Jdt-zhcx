@@ -182,6 +182,10 @@
 			this.loadCateList(options.fid, options.sid);
 			this.Getpostion();
 		},
+		
+		onShow:function(){
+			this.getAuthorizeInfo();//检查是否开启定位
+		},
 
 		onPullDownRefresh: function() {
 			this.lyfwData(); //请求接口数据
@@ -514,7 +518,7 @@
 
 
 			//加载信息
-			getMore() {
+			getMore(){
 				this.loadingType = 1;
 
 				if (this.scenicListIndex < this.scenicList.length) {
@@ -525,7 +529,27 @@
 				if (this.scenicListIndex >= this.scenicList.length) {
 					this.loadingType = 2;
 				}
-			}
+			},
+			
+			//------------------------------开启定位功能----------------------------------
+			getAuthorizeInfo() {
+				const that = this;
+				uni.authorize({
+					scope: 'scope.userLocation',
+					success() { // 允许授权
+						that.getLocationInfo();
+						// console.log("你允许授权")
+					},
+					fail() { // 拒绝授权
+						that.openConfirm();
+						// console.log("你拒绝了授权，无法获得周边信息")
+					}
+				})
+			},
+			
+			
+			
+			
 
 		}
 	}
