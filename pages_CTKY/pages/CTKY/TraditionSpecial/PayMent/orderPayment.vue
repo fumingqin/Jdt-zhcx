@@ -275,11 +275,15 @@
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						that.getOpenID();
-
-
+						// #ifdef H5 || MP-WEIXIN
+						// that.getOpenID();
+						// #endif
+						
 						//-------------------------------下单-------------------------------
-						// that.getOrder();
+						// #ifdef APP-PLUS
+						
+						// #endif
+						that.getOrder();
 					},
 					fail() {
 						uni.showToast({
@@ -296,13 +300,20 @@
 					key: 'scenicSpotOpenId',
 					success: function(response) {
 						console.log(response)
+						uni.showToast({
+							title:response.data,
+							icon:'none'
+						})
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail: function(fail) {
-						that.getOrder();
-						//uni.hideLoading();
+						// that.getOrder();
+						uni.showToast({
+							title:'未获取到openid',
+							icon:'none'
+						})
 					}
 				})
 			},
@@ -380,7 +391,7 @@
 						carryChild: that.childrenNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
-						openId: that.ctkyOpenID,
+						openId: 'oI1cA0k7cBdeZ_jA0fd_OdEO6kls',
 						totalPrice: that.totalPrice, //总价格
 						payParameter: '', //不需要的参数，传空
 
@@ -390,10 +401,7 @@
 
 					success: (res) => {
 						console.log(res)
-						uni.showToast({
-							title:res.data.msg,
-							icon:'none'
-						})
+						
 						if (res.data) {
 							if (res.data.status == true) {
 								that.orderNum = res.data.data;
@@ -441,10 +449,7 @@
 						
 						success: (res) => {
 							console.log(res);
-							uni.showToast({
-								title:res.data.msg,
-								icon:'none'
-							})
+							
 							if (res.data) {
 								if (res.data.status == true) {
 									var msgArray = JSON.parse(res.data.msg);
