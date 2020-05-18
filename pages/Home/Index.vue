@@ -184,6 +184,7 @@
 			//#endif
 			// #ifdef  H5
 			 this.getCode();
+			 this.bindPhone();
 			//#endif
 		},
 		methods: {
@@ -400,17 +401,17 @@
 									success(res1) {
 										console.log(res1,'res1')
 										//判断是否有绑定手机号
-										if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
-											uni.showToast({
-												title:'您未绑定手机号，请绑定手机号！',
-												icon:'none',
-											})
-											setTimeout(function(){
-												uni.navigateTo({
-													url:'/pages/GRZX/wxLogin'
-												})
-											},1000);
-										}
+										// if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+										// 	uni.showToast({
+										// 		title:'您未绑定手机号，请绑定手机号！',
+										// 		icon:'none',
+										// 	})
+										// 	setTimeout(function(){
+										// 		uni.navigateTo({
+										// 			url:'/pages/GRZX/wxLogin'
+										// 		})
+										// 	},1000);
+										// }
 										console.log(openid,'openid1')
 										if(openid==res1.data.data.openId_wx&&openid!=""){
 											uni.setStorageSync('userInfo',res1.data.data)
@@ -442,6 +443,47 @@
 				    return null  
 				  }  
 			},
+			//检查是否绑定手机号
+			bindPhone(){
+				uni.getStorage({
+					key:'userInfo',
+					success(res){
+						console.log(res,"res")
+						if(res.data.openId_wx==""||res.data.openId_wx==null||res.data.phoneNumber==""||res.data.phoneNumber==null){
+							uni.showModal({
+								content:'您暂未绑定手机号，是否绑定',
+								confirmText:'去绑定',
+								cancelText:'暂不绑定',
+								success(res1) {
+									if (res1.confirm) {
+										uni.navigateTo({
+											url:'/pages/GRZX/wxLogin'
+										})
+									} else if (res1.cancel) {
+										// console.log('用户点击取消');
+									}
+								}
+							})
+						}
+					},
+					fail(err){
+						uni.showModal({
+							content:'您暂未绑定手机号，是否绑定',
+							confirmText:'去绑定',
+							cancelText:'暂不绑定',
+							success(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url:'/pages/GRZX/wxLogin'
+									})
+								} else if (res.cancel) {
+									// console.log('用户点击取消');
+								}
+							}
+						})
+					}
+				})
+			},
 			 //#endif
 			// #ifdef MP-WEIXIN
 			getLoginState(){
@@ -461,6 +503,10 @@
 										})
 									} else if (res1.cancel) {
 										// console.log('用户点击取消');
+										uni.showToast({
+											title:'未绑定手机号，将会影响部分功能的正常运行',
+											icon:'none'
+										})
 									}
 								}
 							})
@@ -478,6 +524,10 @@
 									})
 								} else if (res.cancel) {
 									// console.log('用户点击取消');
+									uni.showToast({
+										title:'未绑定手机号，将会影响部分功能的正常运行',
+										icon:'none'
+									})
 								}
 							}
 						})

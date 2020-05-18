@@ -43,12 +43,12 @@
 	
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
-			<!-- <view class="boxClass marginTop" @click="navTo('电子发票')">
+			<!-- <view class="boxClass marginTop" @click="QQLogin">
 				<image src="../../static/GRZX/tubiao_fapiao.png" class="iconClass1"></image>
-				<text class="fontStyle">电子发票</text>
+				<text class="fontStyle">测试QQ登录</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view> -->
-			<view class="boxClass" @click="phoneClick">
+			<view class="boxClass marginTop" @click="phoneClick">
 				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
 				<text class="fontStyle">电话客服</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
@@ -212,15 +212,15 @@
 							//未绑定手机号
 							//#ifdef H5
 							uni.showToast({
-								title:"请绑定手机号",
+								title:"请绑定手机号，请返回至首页",
 								icon:'none'
 							})
-							setTimeout(function(){
-								uni.navigateTo({
-									// url:'/pages/GRZX/wxLogin',
-									url:that.$GrzxInter.Route.wxLogin.url,
-								})
-							},1000);
+							// setTimeout(function(){
+							// 	uni.navigateTo({
+							// 		// url:'/pages/GRZX/wxLogin',
+							// 		url:that.$GrzxInter.Route.wxLogin.url,
+							// 	})
+							// },1000);
 							//#endif
 						}
 					},
@@ -383,7 +383,7 @@
 				//#ifdef H5
 				var user1=uni.getStorageSync('userInfo');
 				console.log(user1,"1111")
-				if(user1==""||user1==null){
+				if(user1==""||user1==null ||user1.openId_wx==null||user1.openId_wx==""){
 					console.log(user1,"2222")
 					uni.showToast({
 						title:"请允许公众号授权登录，即将为你跳转至首页",
@@ -476,6 +476,26 @@
 				        return false;
 				    }
 			},
+			// QQLogin(){
+			// 	uni.getProvider({
+			// 	    service: 'oauth',
+			// 	    success: function (res) {
+			// 	        if (~res.provider.indexOf('qq')) {
+			// 	            uni.login({
+			// 	                provider: 'qq',
+			// 	                success: function (loginRes) {
+			// 	                    uni.getUserInfo({
+			// 	                    	provider: 'qq',
+			// 							success(logRes) {
+			// 								console.log(logRes,"logRes")
+			// 							}
+			// 	                    })
+			// 	                }
+			// 	            });
+			// 	        }
+			// 	    }
+			// 	})
+			// },
 		}
 		
 	}

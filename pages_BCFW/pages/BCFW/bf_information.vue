@@ -649,14 +649,18 @@
 
 						} else if (a.length > 0) {
 							uni.hideLoading()
-							uni.switchTab({
-								url: '../../../pages/order/OrderList'
-							})
 							uni.showToast({
 								title: '订单中，存在待接单订单，请取消后再下单',
 								icon: 'none',
-								duration: 2000
+								success() {
+									setTimeout(function(){
+									uni.switchTab({
+										url: '../../../pages/order/OrderList'
+									})		
+									},2000)						
+								}
 							})
+							
 						}
 					},
 					fail: function(ee) {
@@ -839,16 +843,20 @@
 				
 				
 			// 				} else if (a.length > 0) {
-			// 					uni.hideLoading()
-			// 					uni.showToast({
-			// 						title: '订单中，存在待支付订单，请支付/取消后再下单',
-			// 						icon: 'none',
-			// 						duration: 2000
-			// 					})
-			// 					uni.switchTab({
-			// 						url: '../../../pages/order/OrderList'
-			// 					})
-			// 				}
+						// 	uni.hideLoading()
+						// 	uni.showToast({
+						// 		title: '订单中，存在待接单订单，请取消后再下单',
+						// 		icon: 'none',
+						// 		success() {
+						// 			setTimeout(function(){
+						// 			uni.switchTab({
+						// 				url: '../../../pages/order/OrderList'
+						// 			})		
+						// 			},2000)						
+						// 		}
+						// 	})
+							
+						// }
 			// 			},
 			// 			fail: function(ee) {
 			// 				console.log(ee)

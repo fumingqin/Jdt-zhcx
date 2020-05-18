@@ -7,7 +7,7 @@
 		<view class="cover-container">
 			<image class="okImage" mode="aspectFill" src='../../../../static/CTKY/Success.png'></image>
 			<text class="title">支付成功</text>
-			<text class="content">无选择操作，将在10秒后自动返回首页</text>
+			<!-- <text class="content">请选择</text> -->
 			<view class="buttonView">
 				<view class="orderButton" @click="godetail(0)">查看订单</view>
 				<view class="homeButton" @click="godetail(1)">返回首页</view>
@@ -30,7 +30,7 @@
 			// this.getTicketPaymentInfo(res.orderNum);
 		},
 		onReady() {
-			this.backHome();
+			// this.backHome();
 		},
 		methods: {
 			//--------------------------获取车票支付参数--------------------------
@@ -85,11 +85,9 @@
 				}
 			},
 			backHome : function() {
-				setTimeout(() => { 
-					uni.switchTab({
-						url:'../../../../../pages/Home/Index',
-					});
-				}, 10000)
+				uni.switchTab({
+					url:'../../../../../pages/Home/Index',
+				});
 			}
 
 		}

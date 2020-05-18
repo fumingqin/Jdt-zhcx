@@ -1773,6 +1773,8 @@
 				orderType1: '',
 				ctkyOrderNum: '', //传统客运订单号（退票需要）
 				ky_currentType:'',
+				ky_orderStatus:'',//判断是否需要检测当前订单状态
+				
 				ctkyOpenID:'',
 				csRefundInfo:[],//定制巴士退票
 				payType: [{
@@ -2003,7 +2005,7 @@
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
-						// console.log('11111', res.data);
+						console.log('客运订单数据', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
@@ -2049,7 +2051,7 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
-						console.log('定制巴士订单数据',res)
+						// console.log('定制巴士订单数据',res)
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -2160,7 +2162,7 @@
 			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				// console.log(orderNumber)
+				console.log(orderNumber)
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -2173,17 +2175,31 @@
 						console.log('删除结果', respones)
 						if (respones.data.status == true) {
 							uni.hideLoading()
-							uni.showToast({
-								title: respones.data.msg
-							})
+							if(respones.data.msg){
+								uni.showToast({
+									title: respones.data.msg
+								})
+							}else {
+								uni.showToast({
+									title: '退票成功'
+								})
+							}
 							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
 						} else {
 							uni.hideLoading()
-							uni.showToast({
-								title: respones.data.msg,
-								icon: 'none'
-							})
+							if(respones.data.msg) {
+								uni.showToast({
+									title: respones.data.msg,
+									icon: 'none'
+								})
+							}else {
+								uni.showToast({
+									title: '退票失败',
+									icon: 'none'
+								})
+							}
+							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
 						}
 					},
@@ -2375,9 +2391,11 @@
 					that.ky_currentType = '定制巴士支付';
 					this.Cs_CheckPayState(item.orderNumber,item.totalPrice)
 				}else {
+					this.ky_orderStatus = '客运支付订单检索'
 					this.getTicketPaymentInfo(item.orderNumber);
 				}
 			},
+			
 			//--------------------------检测订单支付状态--------------------------
 			Cs_CheckPayState:function(orderNumber,totalPrice){
 				var that = this;
@@ -2392,7 +2410,6 @@
 						payType:payType
 					},
 					success(res) {
-						console.log('我要崩溃了',res)
 						if(res.data.msg == '不存在该订单，请输入正确订单号'){
 							if(that.ky_currentType == '定制巴士取消') {
 								that.Cs_cancelTicket(orderNumber)
@@ -2535,13 +2552,14 @@
 								}
 							} else if (res.data.status == false) {
 								uni.hideLoading();
+								clearInterval(timer);
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									uni.showToast({
 										title: '订单已超时',
 										icon: 'none'
 									})
-									clearInterval(timer);
+									
 								} else {
 									uni.showModal({
 										content: info.oldState,
@@ -2816,11 +2834,9 @@
 				});
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
@@ -3052,7 +3068,6 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
-						 console.log(res)
 						uni.stopPullDownRefresh();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {

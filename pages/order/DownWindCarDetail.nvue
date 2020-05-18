@@ -49,7 +49,7 @@
 					<view style="align-items: center;">
 						<text style="font-size:36rpx;font-family:Source Han Sans SC;font-weight:bold;color:#2C2D2D;">感谢您的评价！</text>
 					</view>
-					<view style="margin-top:20rpx;align-items: center;margin-right: 20px;">
+					<view style="margin-top:20rpx;align-items: center;margin-right: 20px;padding-top: 20rpx;">
 						<uni-rate size="30" margin="20" :value="starNum" disabled="true" />
 						<view style="margin-top: 40rpx;">
 							<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;" @click="openPopup('evaluatePopup')">评价详情</text>
@@ -312,7 +312,6 @@
 						evaluateContent:that.textareaValue
 					},
 					success(res) {
-						console.log(res);
 						uni.showToast({
 							title:res.data.msg,
 							icon:"none"
@@ -373,6 +372,7 @@
 				});
 			},
 			openPopup: function(value) {//开启弹窗
+			console.log(this.starNum);
 				this.$nextTick(function() {
 					this.$refs[value].open();
 				});

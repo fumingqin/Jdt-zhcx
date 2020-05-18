@@ -285,12 +285,15 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.ticketInfo.date.replace('T', ' ');
-				var companyCode = '泉运公司综合出行';
+				var companyCode = '';
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
 				// #ifdef APP-PLUS
 				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
+				// #endif
+				// #ifdef MP-WEIXIN
+				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
 				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({

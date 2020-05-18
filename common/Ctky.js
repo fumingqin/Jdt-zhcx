@@ -46,6 +46,7 @@ const KyInterface = {
 		systemName:'泉运公司综合出行',
 		systemNameApp:'泉运公司综合出行APP',
 		systemNameH5:'泉运公司综合出行H5',
+		systemNameWeiXin:'泉运公司综合出行小程序',
 	},
 	commonPayment:{
 		Url:Url + '/api/Pay/getCommonPayparameter',

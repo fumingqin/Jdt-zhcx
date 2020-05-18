@@ -168,7 +168,7 @@
 			// console.log('from:' + options.from);
 			clearInterval(that.timer);
 			if (options.from == 'backbutton') {
-				console.log('that.timer', that.timer);
+				// console.log('that.timer', that.timer);
 				if (that.timer) {
 					clearInterval(that.timer);
 				}
@@ -229,6 +229,10 @@
 					key: 'userInfo',
 					success: function(data) {
 						that.userInfo = data.data;
+						// #ifdef MP-WEIXIN
+						that.ctkyOpenID = data.data.openId_xcx;
+						// #endif
+						
 					}
 				})
 			},
@@ -290,7 +294,7 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(response) {
-						// alert('获取id成功');
+						console.log(response)
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
@@ -298,9 +302,6 @@
 					fail: function(fail) {
 						that.getOrder();
 						uni.hideLoading();
-						uni.showModal({
-							content: '用户未授权',
-						})
 					}
 				})
 			},
@@ -341,12 +342,15 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
-				var companyCode = '泉运公司综合出行';
+				var companyCode = '';
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
 				// #ifdef APP-PLUS
 				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
+				// #endif
+				// #ifdef MP-WEIXIN
+				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
 				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({
@@ -387,10 +391,6 @@
 						console.log(res)
 						if (res.data) {
 							if (res.data.status == true) {
-								uni.showToast({
-									title: res.data.status,
-									icon: 'none'
-								})
 								that.orderNum = res.data.data;
 								that.getTicketPaymentInfo(res.data.data);
 							} else if (res.data.status == false) {
@@ -403,6 +403,12 @@
 											uni.navigateBack()
 										} 
 									}
+								})
+							}else {
+								uni.hideLoading();
+								uni.showToast({
+									title: '网络错误',
+									icon: 'none'
 								})
 							}
 						}
@@ -427,12 +433,13 @@
 							//订单编号
 							orderNumber: res
 						},
+						
 						success: (res) => {
 							console.log(res);
 							if (res.data) {
 								if (res.data.status == true) {
-									// alert('获取支付参数状态成功',res.data.status)
 									var msgArray = JSON.parse(res.data.msg);
+									console.log(msgArray)
 									if (msgArray.oldState == '结束') {
 										uni.hideLoading();
 										uni.showToast({
@@ -490,19 +497,16 @@
 					"paySign": that.paymentData.jsapi.PaySign //微信签名
 				}, function(res) {
 					if (res.err_msg == "get_brand_wcpay_request:ok") {
-						alert("支付成功");
-						uni.showLoading({
-						    title: '加载中...'
-						});
+						uni.showToast({
+							title: '支付成功',
+						})
 						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-						// alert("您取消了支付，请重新支付");
 						uni.showToast({
 							title: '您取消了支付，请重新支付',
 							icon: 'none'
 						})
 					} else if (res.err_msg == "get_brand_wcpay_request:faile") {
-						// alert("支付失败，请重新支付");
 						uni.showToast({
 							title: '支付失败，请重新支付',
 							icon: 'none'
@@ -529,23 +533,24 @@
 						prepayid: that.paymentData.jsapi.PrepayId,
 					},
 					success: function(res) {
-						uni.showModal({
-							title: '提示',
-							content: res,
-							showCancel: false
-						})
-						if (res.errCode == 0) { //成功
-							alert("支付成功");
-							uni.showLoading({
-							    title: '加载中...'
-							});
+						// uni.showModal({
+						// 	title: '提示',
+						// 	content: res,
+						// 	showCancel: false
+						// })
+						console.log(res)
+						
+						if (res.errMsg == 'requestPayment:ok') { //成功
+							uni.showToast({
+								title: '支付成功',
+							})
 							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
-						} else if (res.errCode == -1) { //错误
+						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
-						} else if (res.errCode == -2) { //用户取消
+						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
@@ -575,11 +580,7 @@
 						console.log(res)
 						uni.showToast({
 							title: '支付成功',
-							icon: 'none'
 						})
-						uni.showLoading({
-						    title: '加载中...'
-						});
 						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
 					},
 					fail(res) {
@@ -611,11 +612,9 @@
 				});
 				timer = setInterval(function() {
 					uni.request({
-						url: 'http://zntc.145u.net/api/ky/SellTicket_Flow',
-						method: 'GET',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded'
-						},
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
@@ -633,7 +632,6 @@
 										})
 									}
 								})
-								
 							} else if (res.data.status == false) {
 								clearInterval(timer);
 								uni.showToast({
