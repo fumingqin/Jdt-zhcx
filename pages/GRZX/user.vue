@@ -215,12 +215,12 @@
 								title:"请绑定手机号",
 								icon:'none'
 							})
-							setTimeout(function(){
-								uni.navigateTo({
-									// url:'/pages/GRZX/wxLogin',
-									url:that.$GrzxInter.Route.wxLogin.url,
-								})
-							},1000);
+							// setTimeout(function(){
+							// 	uni.navigateTo({
+							// 		// url:'/pages/GRZX/wxLogin',
+							// 		url:that.$GrzxInter.Route.wxLogin.url,
+							// 	})
+							// },1000);
 							//#endif
 						}
 					},
