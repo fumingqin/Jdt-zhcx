@@ -613,7 +613,7 @@
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
 						} else {
-							that.showToast("网络连接失败")
+							that.showToast("支付失败")
 						}
 					}
 				});
