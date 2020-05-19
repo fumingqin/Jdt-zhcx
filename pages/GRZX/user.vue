@@ -271,8 +271,9 @@
 				var that=this;
 				uni.getStorage({
 					key:'userInfo',
-					success(){
+					success(res){
 						that.userFeedbackHidden=false;
+						that.contantPhone=res.data.autograph;
 					},
 					fail() {
 						uni.showToast({
@@ -296,6 +297,9 @@
 						title:'请输入正确的手机号码',
 						icon:'none',
 					})
+					// #ifdef H5
+					that.userFeedbackHidden=true;
+					// #endif
 				}else{
 					uni.request({
 						url:that.$GrzxInter.Interface.changeInfo.value,
