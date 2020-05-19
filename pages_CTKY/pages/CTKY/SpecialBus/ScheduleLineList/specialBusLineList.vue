@@ -41,8 +41,8 @@
 			</view>
 			<view class="ctky_View_Right">
 				<view>
-					<view style="margin-right: 28upx;font-size: 36upx;font-style:
-		           SourceHanSansSC-Regular; color: #FC4646;">￥{{item.FullPrice}}</view>
+					<!-- <view style="margin-right: 28upx;font-size: 36upx;font-style:
+		           SourceHanSansSC-Regular; color: #FC4646;">￥{{item.FullPrice}}</view> -->
 					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
 		           SourceHanSansSC-Light; color: #666666;">余{{item.MaxTicket}}张</view>
 				</view>
