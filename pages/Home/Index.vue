@@ -384,7 +384,7 @@
 								uni.setStorageSync('scenicSpotOpenId',res.data.openid)
 							}
 							uni.setStorageSync('wxuserInfo',res.data)
-							let openid=res.data.openid;
+							let openid=uni.getStorageSync('scenicSpotOpenId')||'';
 							console.log(openid,"openid")
 							if(openid!=""&&openid!=null&&openid!=undefined){
 								uni.request({
