@@ -300,20 +300,11 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(response) {
-						console.log(response)
-						// uni.showToast({
-						// 	title:response.data,
-						// 	icon:'none'
-						// })
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
 					fail: function(response) {
-						// uni.showToast({
-						// 	title:response.data,
-						// 	icon:'none'
-						// })
 						that.ctkyOpenID = response.data
 						that.getOrder();
 					}
@@ -613,7 +604,7 @@
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
 						} else {
-							that.showToast("网络连接失败")
+							that.showToast("支付失败")
 						}
 					}
 				});
