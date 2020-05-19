@@ -937,7 +937,7 @@
 							</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
+								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item.orderNumber,'2')">退票</button>
 								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="endorse(item)">改签</button>
@@ -1212,7 +1212,7 @@
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open3(item.orderNumber,'cs2')">取消</button>
-								<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>   
+								<button class="allBtn payBtn" @tap="keYunPay(item,item.carType)">去支付</button>   
 							</view>
 						</view>
 					</view>
@@ -2028,7 +2028,8 @@
 							//出租车请求数据
 							that.loadczcData();
 						} else if (res.data.status == false) {
-							// console.log('无客运车票数据');
+							//定制巴士订单测试
+							that.GetBookLogInfoByUserId();
 							//出租车请求数据
 							that.loadczcData();
 						}

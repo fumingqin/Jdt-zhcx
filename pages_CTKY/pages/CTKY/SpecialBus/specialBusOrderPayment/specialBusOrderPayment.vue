@@ -128,6 +128,7 @@
 				ctkyOpenID: '',
 				passengerNames:[],//乘客姓名数组
 				passengerIDs:[],//乘客身份证数组
+				weixinOpenId:'',
 			}
 		},
 		onLoad: function(param) {
@@ -173,6 +174,9 @@
 					key: 'userInfo',
 					success: function(data) {
 						that.userInfo = data.data;
+						// #ifdef MP-WEIXIN
+						that.weixinOpenId = data.data.openId_xcx;
+						// #endif
 					}
 				})
 			},
@@ -215,11 +219,16 @@
 							// that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
+						
+						// #ifdef H5
 						that.getOpenID();
-
+						// #endif
 
 						//-------------------------------下单-------------------------------
-						// that.getOrder();
+						
+						// #ifdef APP-PLUS || MP-WEIXIN
+						that.getOrder();
+						// #endif
 					},
 					fail() {
 						uni.showToast({
@@ -241,10 +250,8 @@
 						that.getOrder();
 					},
 					fail: function(fail) {
-						uni.hideLoading();
-						uni.showModal({
-							content: '用户未授权',
-						})
+						that.ctkyOpenID = response.data
+						that.getOrder();
 					}
 				})
 			},
@@ -286,6 +293,7 @@
 				var timer = null;
 				var setTime = that.ticketInfo.date.replace('T', ' ');
 				var companyCode = '';
+				
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
@@ -348,6 +356,15 @@
 				var timer = null;
 				that.timer = timer;
 				console.log(res)
+				
+				var openId = '';
+				// #ifdef MP-WEIXIN
+				openId = that.weixinOpenId;
+				// #endif
+				// #ifdef H5
+				openId = that.ctkyOpenID;
+				// #endif
+				
 				uni.showLoading({
 					title:'正在获取支付...'
 				})
@@ -359,7 +376,7 @@
 							//订单编号
 							orderNumber: res,
 							payType:payType,
-							openId:that.ctkyOpenID,
+							openId:openId,
 							billDescript:'定制巴士订单服务费',
 							goodsName:'定制巴士服务',
 							price:that.ticketInfo.totalPrice,
