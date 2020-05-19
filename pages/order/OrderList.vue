@@ -310,6 +310,7 @@
 							<!-- 已完成 -->
 							<view class="cm_buttonView" v-if="item.or_Type=='13'">
 								<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
+								<view class="cm_button cm_btDetails" @click="czcComplaint2(item)" style="margin-right: 0upx;margin-left: 20upx;">投诉</view>
 							</view>
 
 							<!-- 待补款 -->
@@ -607,6 +608,7 @@
 							<!-- 已完成 -->
 							<view class="cm_buttonView" v-if="item.or_Type=='13'">
 								<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
+								<view class="cm_button cm_btDetails" @click="czcComplaint2(item)" style="margin-right: 0upx;margin-left: 20upx;">投诉</view>
 							</view>
 						</view>
 					</view>
@@ -4207,6 +4209,21 @@
 				if(item.vehicleType == '出租车'){
 					uni.navigateTo({
 						url:'complaint?tsTitle=出租车&tsData=' + item.driverName +'&orderNumber='+ item.orderNumber
+					})
+				}
+			},
+			
+			//------------------------------------------------跳转投诉--------------------------------------------
+			czcComplaint2: function(item) {
+				console.log(item)
+				if(item.or_class=='包车-定制'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=定制&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+					})
+				}
+				if(item.or_class=='包车-专线'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=专线&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
 					})
 				}
 			},
