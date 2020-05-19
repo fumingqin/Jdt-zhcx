@@ -23,6 +23,7 @@
 						class="inputClass"
 						:value="user.userPhoneNum"
 						name="userPhoneNum"
+						@blur="checkPhone"
 					/>				
 				</view>
 			</view>
@@ -40,6 +41,7 @@
 						name="userCodeNum"
 						type="idcard"
 						maxlength="18"
+						@blur="checkCodeNum"
 					/>	
 				</view>
 				
@@ -260,9 +262,6 @@
 			},
 			//----------上传乘车人信息--------
 			formSubmit(e){
-				uni.showLoading({
-					title:'保存中...'
-				})
 				var data1=e.target.value;
 				var that=this;
 				data1.userId=that.userId;
@@ -288,13 +287,13 @@
 				if(data1.userName!=null&&data1.userName!=""&&data1.userPhoneNum!=null&&data1.userPhoneNum!=""&&data1.userCodeNum!=null&&data1.userCodeNum!=""){
 					//--------额外凭证--------
 					if((that.selector!="请添加额外凭证 >"&&that.fImg!=""&&that.fImg!=null&&that.bImg!=""&&that.bImg!=null)||(that.selector=="请添加额外凭证 >")){
-						var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-						if(data1.userPhoneNum.length!=11){
+						var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
+						if(data1.userPhoneNum.length!=11||!reg.test(data1.userPhoneNum)){
 							uni.showToast({
 								icon:'none',
 								title:'输入的手机号有误，请检查'
 							})
-						}else if(!regIdNo.test(codeNum)){ 
+						}else if(!that.checkIDCard(codeNum)){
 								uni.showToast({
 									icon:'none',
 									title:'输入的身份证有误，请检查'
@@ -323,6 +322,9 @@
 									data1.userType="成人";
 								}
 								if(age>0){
+									uni.showLoading({
+										title:'保存中...'
+									})
 									uni.request({
 										// url:'http://111.231.109.113:8002/api/person/userInfoList',
 										url:that.$GrzxInter.Interface.userInfoList.value,
@@ -561,6 +563,56 @@
 					}
 				})
 			},
+			checkPhone:function(e){
+				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
+				if(e.detail.value==""){
+					console.log("空的")
+				}else if(reg.test(e.detail.value)){
+					console.log("正确")
+				}else{
+					uni.showToast({
+						title:'输入的手机号有误，请检查',
+						icon:'none'
+					})
+				}
+			},
+			checkCodeNum:function(e){
+				console.log(e)
+				if(e.detail.value==""){
+					console.log("空的")
+				}else if(this.checkIDCard(e.detail.value)){
+					console.log("正确")
+				}else{
+					uni.showToast({
+						title:'输入的身份证有误，请检查',
+						icon:'none'
+					})
+				}
+			},
+			checkIDCard:function(idcode){
+			    // 加权因子
+			    var weight_factor = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
+			    // 校验码
+			    var check_code = ['1', '0', 'X' , '9', '8', '7', '6', '5', '4', '3', '2'];
+			    var code = idcode + "";
+			    var last = idcode[17];//最后一位
+			    var seventeen = code.substring(0,17);
+			    // 判断最后一位校验码是否正确
+			    var arr = seventeen.split("");
+			    var len = arr.length;
+			    var num = 0;
+			    for(var i = 0; i < len; i++){
+			        num = num + arr[i] * weight_factor[i];
+			    }
+			    // 获取余数
+			    var resisue = num%11;
+			    var last_no = check_code[resisue];
+				var idcard_patter = /^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/;
+				// 判断格式是否正确
+				var format = idcard_patter.test(idcode);
+				// 返回验证结果，校验码和格式同时正确才算是合法的身份证号码
+				return last === last_no && format ? true : false;
+			}
 		}
 	}
 </script>

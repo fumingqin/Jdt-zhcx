@@ -285,12 +285,13 @@
 			submit(){
 				var that=this;
 				console.log(that.phoneNumber)
+				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
 				if(that.contantPhone==""){
 					uni.showToast({
 						title:'请输入手机号码',
 						icon:'none',
 					})
-				}else if(!that.judgeNum(that.contantPhone)||that.contantPhone.length!=11){
+				}else if(!that.judgeNum(that.contantPhone)||that.contantPhone.length!=11||!reg.test(that.contantPhone)){
 					uni.showToast({
 						title:'请输入正确的手机号码',
 						icon:'none',
