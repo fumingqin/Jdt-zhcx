@@ -387,7 +387,9 @@
 								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
 								<button class="allBtn" v-if="item.state=='5'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
+								<!-- #ifndef MP-WEIXIN -->
 								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- #endif -->
 								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.state=='尚未支付'" @tap="open3(item.orderNumber,'cs2')">取消</button>
 								<button class="allBtn payBtn" v-if="item.state=='尚未支付'" @tap="keYunPay(item,item.carType)">去支付</button>
@@ -646,12 +648,8 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 							<view class="CTKYBtnView">
-								<button class="allBtn" @click="busLocation(item)">车辆位置</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
-								<!-- <button class="allBtn QRCode">二维码</button>
-								<button class="allBtn">选座</button>
-								<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
 							</view>
 						</view>
 					</view>
@@ -938,7 +936,9 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item.orderNumber,'2')">退票</button>
-								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- #ifndef MP-WEIXIN -->
+								<button class="allBtn" v-if="item.state=='4'&&item.carType=='定制巴士'" @click="busLocation(item)">车辆位置</button>
+								<!-- #endif -->
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="endorse(item)">改签</button>
 							</view>
@@ -1518,7 +1518,6 @@
 
 							<view class="CTKYBtnView">
 								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
-								<!-- <button class="allBtn" @tap="del(index)">删除</button> -->
 							</view>
 						</view>
 					</view>
@@ -2148,9 +2147,12 @@
 			// -------------------------客运改签-------------------------
 			endorse:function(item) {
 				// console.log(item)
-				uni.navigateTo({
-					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				uni.showToast({
+					title:'待开放...'
 				})
+				// uni.navigateTo({
+				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				// })
 			},
 			// -------------------------客运查看车辆位置-------------------------
 			busLocation:function(item) {

@@ -73,6 +73,12 @@ const KyInterface = {
 		method:'POST',
 		header:{'content-type': 'application/json'},
 	},
+	Ky_getExecuteScheduleInfoForSellByID:{
+		Url: scheduleUrl + '/CTKY/getExecuteScheduleInfoForSellByID',
+		name:'客运-请求保险信息',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
 	Ky_AddPicture:{
 		Url: Url + '/api/zhcx/getImage',
 		name:'客运-添加图片',

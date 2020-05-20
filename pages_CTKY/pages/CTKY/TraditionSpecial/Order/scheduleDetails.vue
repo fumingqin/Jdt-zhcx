@@ -218,6 +218,7 @@
 </template>
 
 <script>
+	import $KyInterface from "@/common/Ctky.js"
 	import popup from "@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue";
 	import utils from "@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
@@ -279,7 +280,8 @@
 					that.sepecialStartArray = data.data.starSiteArr;
 					//定制班车终点数组
 					that.specialEndArray = data.data.endSiteArr
-
+					//读取保险信息
+					that.getExecuteScheduleInfoForSellByID(that.ticketDetail);
 					console.log('车票数据', that.ticketDetail)
 					
 					if (data.data.insurePrice == 0) {
@@ -346,6 +348,32 @@
 					fail: () => {
 						that.startStation = "请选择上车点"
 						that.endStation = "请选择下车点"
+					}
+				})
+			},
+			//--------------------------获取保险信息--------------------------
+			getExecuteScheduleInfoForSellByID:function(orderInfo){
+				uni.showLoading({
+					title:'加载中...'
+				})
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.Url,
+					method:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.method,
+					header:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.header,
+					data:{
+						systemName:$KyInterface.KyInterface.systemName.systemName,
+						scheduleCompanyCode:orderInfo.scheduleCompanyCode,
+						ExecuteScheduleID:orderInfo.executeScheduleID,
+						StartSiteID:orderInfo.startSiteID,
+						EndSiteID:orderInfo.endSiteID,
+					},
+					success(res) {
+						uni.hideLoading();
+						console.log('保险数据',res);
+					},
+					fail(res) {
+						uni.hideLoading();
+						console.log(res);
 					}
 				})
 			},
@@ -442,6 +470,13 @@
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
 				var that = this;
+				// #ifdef MP-WEIXIN
+				uni.showModal({
+					content:'小程序暂不支持地图显示',
+					showCancel:false,
+				})
+				// #endif
+				// #ifndef MP-WEIXIN
 				if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
 					if (this.ticketDetail.starSiteArr.length <= 2 && this.ticketDetail.endSiteArr.length <= 2) { //普通班车
 						uni.navigateTo({
@@ -453,6 +488,7 @@
 						})
 					}
 				}
+				// #endif
 			},
 			//-------------------------------选择乘客-----------------------------
 			pickPassenger() {

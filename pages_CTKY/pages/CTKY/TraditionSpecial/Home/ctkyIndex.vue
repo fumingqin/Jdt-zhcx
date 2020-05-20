@@ -83,11 +83,9 @@
 		},
 		onLoad() {
 			var that = this;
-			if(that.departure == '') {
-				that.departure = '选择上车点'
-			}
-			if (that.destination == '') {
-				that.destination = '选择下车点'
+			if(that.departure == '' || that.destination == '') {
+				that.departure = '选择上车点';
+				that.destination = '选择下车点';
 			}
 			that.getPicture();
 			//读取历史记录
@@ -95,6 +93,11 @@
 				key:'historyLines',
 				success:function(data){
 					that.historyLines = data.data;
+					if(data.data){
+						var station = data.data[0].split('-');
+						that.departure = station[0];
+						that.destination = station[1];
+					}
 				}
 			})
 			//获取当前日期
