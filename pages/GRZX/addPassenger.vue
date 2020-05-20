@@ -45,14 +45,19 @@
 					/>	
 				</view>
 				
-				<!-- <view class="itemClass borderTop">
-					<view class="fontStyle">有效期至</view>
+				<view class="itemClass borderTop">
+					<view class="fontStyle">类型</view>
 					<view class="inputClass">
+						<picker name="type"  mode="selector" @change="typeChange" :range="selectType" :value="user.type">
+							{{ticketType}}
+						</picker>	
+					</view>
+					<!-- <view class="inputClass">
 						<picker mode="date" :value="user.date" @change="bindDateChange" name="date">
 							<view>{{user.date}}</view>
 						</picker>
-					</view>
-				</view> -->
+					</view> -->
+				</view>
 				
 				<view class="itemClass borderTop">
 					<picker class="proveClass" name="prove"  mode="selector" @change="proveChange" :range="proveType" :value="user.prove">
@@ -112,7 +117,7 @@
 				</view>
 			</view>
 			<view v-if="!user.show" style="margin-bottom: 150upx;"></view>
-			<view v-if="user.show" class="emergencyClass">
+			<view v-if="false" class="emergencyClass">
 				<view class="fontStyle">紧急联系人</view>
 				<view class="checkBox">
 					<checkbox-group name="userEmergencyContact">
@@ -146,6 +151,8 @@
 					{title:'女'}
 				],
 				proveType:['请选择','军人','教师','学生'],
+				selectType:['请选择','成人','半票儿童','全票儿童'],
+				ticketType:'请选择购票类型 >',
 				selector:'请添加额外凭证 >',
 				user:{
 					passengerId:'',//乘车人id
@@ -159,6 +166,7 @@
 					userEmergencyContact:false,
 					date:'请选择',
 					prove:0,
+					type:0,
 					userfrontImg:'',
 					userbackImg:'',
 					fImg:'',
@@ -181,7 +189,7 @@
 		     wPicker
 		},
 		methods:{
-			//----------加载账号id--------
+			//------------------加载账号id----------------
 			loadUnid(){
 				var the=this;
 				uni.getStorage({
@@ -191,7 +199,7 @@
 					}
 				})
 			},
-			//----------加载乘车人信息--------
+			//------------------加载乘车人信息----------------
 			loadData(type){
 				uni.showLoading({
 					title:'加载中...'
@@ -256,11 +264,11 @@
 					}
 				})
 			}, 
-			//----------选择性别--------
+			//------------------选择性别----------------
 			radioClick:function(e){
 				this.user.userSex = e;
 			},
-			//----------上传乘车人信息--------
+			//------------------上传乘车人信息----------------
 			formSubmit(e){
 				var data1=e.target.value;
 				var that=this;
@@ -283,6 +291,8 @@
 				data1.fImg=this.fImg;
 				data1.bImg=this.bImg;
 				data1.userauditState=that.auditState2;
+				console.log(that.ticketType,"that.ticketType")
+				data1.userType=that.ticketType;
 				var codeNum=data1.userCodeNum;
 				if(data1.userName!=null&&data1.userName!=""&&data1.userPhoneNum!=null&&data1.userPhoneNum!=""&&data1.userCodeNum!=null&&data1.userCodeNum!=""){
 					//--------额外凭证--------
@@ -299,29 +309,12 @@
 									title:'输入的身份证有误，请检查'
 								})
 							}else{
-								var birth=codeNum.substring(6, 10) + "-" + codeNum.substring(10, 12) + "-" + codeNum.substring(12, 14);
-								var  r=birth.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
-								var  d=new Date(r[1],r[3]-1,r[4]); 
-								var age=0;
-								if(d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])   
-								{   
-									var Y=new  Date().getFullYear();   
-									age=Y-r[1];
-									console.log(age,"age")
-								}
-								if(that.selector!="请添加额外凭证 >"){
-									data1.userType=that.selector;	
-								}else if(age<0){
+								if(data1.userType=="请选择购票类型 >"){
 									uni.showToast({
-										icon:'none',
-										title:'输入的身份证有误，请检查'
+										title:'请选择购票类型',
+										icon:'none'
 									})
-								}else if(age<18){
-									data1.userType="儿童";
-								}else{
-									data1.userType="成人";
-								}
-								if(age>0){
+								}else {
 									uni.showLoading({
 										title:'保存中...'
 									})
@@ -474,11 +467,11 @@
 				}
 				
 			},
-			//----------绑定日期--------
+			//------------------绑定日期----------------
 			bindDateChange:function(e){
 				this.user.date = e.target.value;
 			},
-			//----------添加额外凭证--------
+			//------------------添加额外凭证----------------
 			proveChange:function(e){
 				if(e.detail.value==0){
 					this.selector="请添加额外凭证 >";
@@ -494,7 +487,12 @@
 					this.user.userbackImg="";
 				}
 			},
-			//----------重置信息--------
+			//------------------选择购票类型----------------
+			typeChange:function(e){
+				console.log(e)
+				this.ticketType=this.selectType[e.detail.value];
+			},
+			//------------------重置信息----------------
 			resetClick:function(e){
 				this.user.date="请选择";
 				this.user.userSex=0;
@@ -505,7 +503,7 @@
 				this.user.userDefault=false;
 				this.user.userEmergencyContact=false;
 			},
-			//----------是否选中本人--------
+			//------------------是否选中本人----------------
 			checkChange:function(e){
 				//console.log(e.detail.value,"xuanzhong");
 				if(e.detail.value=="false"||e.detail.value=="true"){ //选中
@@ -515,11 +513,11 @@
 					this.user.userEmergencyContact=false;
 				}
 			},
-			//----------返回按钮--------
+			//------------------返回按钮----------------
 			returnClick(){
 				uni.navigateBack();
 			},
-			//----------证件正面--------
+			//------------------证件正面----------------
 			getPhoto1(){  
 				var that=this;
 				uni.chooseImage({
@@ -540,7 +538,7 @@
 					}
 				})
 			},
-			//----------证件主页--------
+			//------------------证件主页----------------
 			getPhoto2(){
 				var that=this;
 				uni.chooseImage({
@@ -563,6 +561,7 @@
 					}
 				})
 			},
+			//------------------校验手机号----------------
 			checkPhone:function(e){
 				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
 				if(e.detail.value==""){
@@ -576,6 +575,7 @@
 					})
 				}
 			},
+			//------------------校验身份证号----------------
 			checkCodeNum:function(e){
 				console.log(e)
 				if(e.detail.value==""){

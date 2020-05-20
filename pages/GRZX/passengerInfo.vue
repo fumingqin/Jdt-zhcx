@@ -175,7 +175,7 @@
 					success() {
 						uni.navigateTo({
 							//url:'/pages/GRZX/addPassenger?type=ad'
-							url:that.$GrzxInter.Route.addPassenger.url+'?type=ad'
+							url:that.$GrzxInter.Route.addPassenger.url+'?type=add'
 						})
 					},
 					fail() {
