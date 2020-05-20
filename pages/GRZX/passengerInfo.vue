@@ -150,14 +150,23 @@
 										array.push(data1);
 										uni.stopPullDownRefresh();
 									}
+									var defaultList=[];
+									for(var n=0;n<array.length;n++){
+										if(array[n].userDefault==true){
+											defaultList.unshift(array[n]);
+										}else{
+											defaultList.push(array[n]);
+										}
+									}
+									that.passengerList=defaultList;
 								}
 							})
 						}
 						
 					}
 				})
-				this.passengerList=array;
-				console.log(array)
+				// this.passengerList=array;
+				// console.log(array)
 			},
 			addPassenger(){
 				var that=this;
@@ -166,7 +175,7 @@
 					success() {
 						uni.navigateTo({
 							//url:'/pages/GRZX/addPassenger?type=ad'
-							url:that.$GrzxInter.Route.addPassenger.url+'?type=ad'
+							url:that.$GrzxInter.Route.addPassenger.url+'?type=add'
 						})
 					},
 					fail() {
