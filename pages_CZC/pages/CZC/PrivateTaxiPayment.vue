@@ -53,7 +53,7 @@
 		</view>
 		<!-- 付款方式 -->
 		<view style="margin:20rpx 30rpx;">
-			<view style="padding:20px;background-color: #FFF;border-radius: 20rpx;">
+			<!-- <view style="padding:20px;background-color: #FFF;border-radius: 20rpx;">
 				<radio-group name='chooseType'>
 					<view v-for='item in payType' :key='item.typeName' style="display: flex;justify-content: space-between;align-items: center;">
 						<view style="display: flex;justify-content: center;align-items: center;">
@@ -65,7 +65,7 @@
 						</view>
 					</view>
 				</radio-group>
-			</view>
+			</view> -->
 			<view style="margin-top: 20rpx;">
 				<button style="width: 100%;height: 100rpx;background-color: #FE4644;color: #FFFFFF;" @click="getPaymentInformation">
 					<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">立即支付</text>
@@ -141,6 +141,7 @@
 			},
 			countDown: function() { //支付倒计时
 				let that = this;
+				clearInterval(that.countDownInterval2);
 				that.countDownInterval2 = setInterval(function() {
 					if (that.countDownDate > 0) {
 						that.countDownDate--;
@@ -177,7 +178,8 @@
 					},
 					success: function(res) {
 						if (res.data.status) {
-							// that.showToast("超时未支付，订单自动取消");
+							that.showToast("超时未支付，订单自动取消");
+							console.log(that.countDownInterval2);
 							clearInterval(that.countDownInterval2); //清除倒计时
 							setTimeout(function() {
 								uni.hideLoading();
