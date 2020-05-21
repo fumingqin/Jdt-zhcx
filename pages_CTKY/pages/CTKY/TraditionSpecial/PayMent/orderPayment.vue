@@ -126,6 +126,7 @@
 				specialEndStation: '', //定制班车下车点
 				tickettype: '', //班车类型
 				ctkyOpenID: '',
+				weixinOpenId:'',
 			}
 		},
 		onLoad: function(param) {
@@ -154,8 +155,7 @@
 			this.getTickerInfo();
 			//读取用户信息
 			this.getUserInfo();
-			//读取乘车人信息
-			this.getPassengerInfo();
+			
 		},
 		onShow() {
 			
@@ -213,6 +213,7 @@
 					success: function(data) {
 						that.orderInfo = data.data;
 						// console.log('订单数据', that.orderInfo)
+						
 					},
 					fail() {
 						uni.showToast({
@@ -231,12 +232,14 @@
 					success: function(data) {
 						that.userInfo = data.data;
 						// #ifdef MP-WEIXIN
-						that.ctkyOpenID = data.data.openId_xcx;
+						that.weixinOpenId = data.data.openId_xcx;
 						// #endif
-						
+						//读取乘车人信息
+						that.getPassengerInfo();
 					}
 				})
 			},
+			
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
 				if (date) {
@@ -275,15 +278,15 @@
 							that.idNameTypeStr = that.idNameTypeStr.substring(0, that.idNameTypeStr.length - 1);
 						}
 						//-------------------------------读取用户openID-------------------------------
-						// #ifdef H5 || MP-WEIXIN
-						// that.getOpenID();
+						// #ifdef H5
+						that.getOpenID();
 						// #endif
 						
 						//-------------------------------下单-------------------------------
-						// #ifdef APP-PLUS
-						
-						// #endif
+						// #ifdef APP-PLUS || MP-WEIXIN
 						that.getOrder();
+						// #endif
+						
 					},
 					fail() {
 						uni.showToast({
@@ -299,21 +302,13 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(response) {
-						console.log(response)
-						uni.showToast({
-							title:response.data,
-							icon:'none'
-						})
 						that.ctkyOpenID = response.data
 						//等待读取用户缓存成功之后再请求接口数据
 						that.getOrder();
 					},
-					fail: function(fail) {
-						// that.getOrder();
-						uni.showToast({
-							title:'未获取到openid',
-							icon:'none'
-						})
+					fail: function(response) {
+						that.ctkyOpenID = response.data
+						that.getOrder();
 					}
 				})
 			},
@@ -354,6 +349,13 @@
 				var that = this;
 				var timer = null;
 				var setTime = that.orderInfo.setTime.replace('T', ' ');
+				var openId = '';
+				// #ifdef MP-WEIXIN
+				openId = that.weixinOpenId;
+				// #endif
+				// #ifdef H5
+				openId = that.ctkyOpenID;
+				// #endif
 				var companyCode = '';
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
@@ -391,7 +393,7 @@
 						carryChild: that.childrenNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
-						openId: 'oI1cA0k7cBdeZ_jA0fd_OdEO6kls',
+						openId: openId,//oI1cA0k7cBdeZ_jA0fd_OdEO6kls
 						totalPrice: that.totalPrice, //总价格
 						payParameter: '', //不需要的参数，传空
 
@@ -604,7 +606,7 @@
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
 						} else {
-							that.showToast("网络连接失败")
+							that.showToast("支付失败")
 						}
 					}
 				});

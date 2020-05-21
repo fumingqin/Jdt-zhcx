@@ -107,7 +107,7 @@
 					</view>
 					<view class="if_button" v-if="driverInformation.or_Type == 1 || driverInformation.or_Type == 2 || driverInformation.or_Type == 3 
 					 || driverInformation.or_Type == 4">
-						<button class="bt_remind3" type="warn">联系司机</button>
+						<button class="bt_remind3" type="warn" @click="tel(driverInformation.or_driverTelephone)">联系司机</button>
 					</view>
 				</view>
 
@@ -137,15 +137,15 @@
 						<text class="te_text3">目的地:{{driverInformation.or_destination}}</text>
 					</view>
 					<view class="if_text">
-						<text class="te_text">总里程:{{driverInformation.cm_totalLi}}</text>
-						<text class="te_text">总时长:{{driverInformation.cm_totalDuration}}</text>
+						<!-- <text class="te_text">总里程:{{Math.round(driverInformation.cm_totalLi)}}</text> -->
+						<text class="te_text">总时长:{{Math.round(driverInformation.cm_totalDuration)}}分</text>
 					</view>
 				</view>
 			</scroll-view>
 		</view>
-		<uni-popup ref='callPolice' :animation='true' type='center' :maskClick='false'>
+		<!-- <uni-popup ref='callPolice' :animation='true' type='center' :maskClick='false'> -->
 			<!--一键报警-->
-			<view class="popupBlock" style="margin: 0 auto;">
+			<!-- <view class="popupBlock" style="margin: 0 auto;">
 				<view class="popupTitle">
 					<view style="width: 72rpx;"></view>
 					<text class="popupTitleFont">一键报警</text>
@@ -160,12 +160,13 @@
 						<text class="popupButtonOkFont">确定</text>
 					</button>
 				</view>
-			</view>
-		</uni-popup>
+			</view> -->
+		<!-- </uni-popup> -->
 	</view>
 </template>
 
 <script>
+	import $taxi from '@/common/Czc.js';
 	import $bcfw from '@/common/BCFW/bcfw.js'
 	import uniIcons from '@/pages_BCFW/components/BCFW/uni-icons/uni-icons.vue';
 	import Map from '@/pages_BCFW/components/BCFW/my-openMap/openMap.js';
@@ -215,6 +216,7 @@
 					cm_totalDuration: '',
 				},
 
+				UrgentPhone: "110", //紧急联系人电话
 				weixinId: 1,
 				zhifubaoId: 2,
 				choiceIndex: 0,
@@ -224,6 +226,7 @@
 		onLoad(options) {
 			var that = this;
 			that.or_number = JSON.parse(options.or_number);
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 			that.bcfwData();
 			// that.routeInit();
 			// that.setMarker(1, 118.600608, 24.889217, '../../static/BCFW/choice/charterMap/Start.png');
@@ -249,8 +252,10 @@
 						or_number: this.or_number,
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						this.driverInformation = res.data.data;
+						// this.driverInformation.cm_totalLi = res.data.data.cm_totalLi.toFixed(0);
+						// this.driverInformation.cm_totalDuration = Math.round(res.data.data.cm_totalDuration);
 					}
 				})
 			},
@@ -281,41 +286,41 @@
 			// 	}
 			// },
 
-			//picker相关
-			callPolice: function() {
-				let that = this;
-				that.$refs.callPolice.open();
-			},
-			cancle: function() {
-				let that = this;
-				that.$refs.callPolice.close();
-			},
-			pickerChange: function(e) {
-				let that = this;
-				// console.log(e);
-				that.pickerValue = e.detail.value;
-				that.reason = that.callPoliceArr[e.detail.value];
-			},
-			sendCall: function() {
-				let that = this;
-				if (that.pickerValue < 0) {
-					uni.showToast({
-						title: '请选择一个原因',
-						icon: 'none'
-					});
-					return;
-				}
-				//发送
-				// console.log(that.reason);
-				// console.log(that.remark);
-				uni.showToast({
-					title: '发送成功',
-					icon: 'none',
-					success: function() {
-						that.cancle();
-					}
-				})
-			},
+			// //picker相关
+			// callPolice: function() {
+			// 	let that = this;
+			// 	that.$refs.callPolice.open();
+			// },
+			// cancle: function() {
+			// 	let that = this;
+			// 	that.$refs.callPolice.close();
+			// },
+			// pickerChange: function(e) {
+			// 	let that = this;
+			// 	// console.log(e);
+			// 	that.pickerValue = e.detail.value;
+			// 	that.reason = that.callPoliceArr[e.detail.value];
+			// },
+			// sendCall: function() {
+			// 	let that = this;
+			// 	if (that.pickerValue < 0) {
+			// 		uni.showToast({
+			// 			title: '请选择一个原因',
+			// 			icon: 'none'
+			// 		});
+			// 		return;
+			// 	}
+			// 	//发送
+			// 	// console.log(that.reason);
+			// 	// console.log(that.remark);
+			// 	uni.showToast({
+			// 		title: '发送成功',
+			// 		icon: 'none',
+			// 		success: function() {
+			// 			that.cancle();
+			// 		}
+			// 	})
+			// },
 
 			back: function() {
 				var that = this;
@@ -402,6 +407,79 @@
 						// console.log(res);
 					}
 				});
+			},
+			
+			//-------------------------拨打电话-------------------------
+			tel: function(e) {
+				uni.makePhoneCall({
+					phoneNumber: e
+				})
+			},
+			//-------------------------一键报警-------------------------
+			callPolice: function() {
+				//一键报警
+				let that = this;
+				if (that.userInfo.autograph != "") {
+					that.UrgentPhone = that.userInfo.autograph
+				}
+				uni.showModal({
+					title: "一键报警",
+					content: "注意：恶意报警将承担相关法律责任",
+					confirmText: "报警",
+					confirmColor: "#E74246",
+					success(res) {
+						if (res.confirm) {
+							uni.getLocation({
+								type: 'gcj02',
+								geocode: true,
+								success: function(res) {
+									//#ifdef MP-WEIXIN
+									that.getAddressByLocation(res)
+									// #endif
+									// #ifdef APP-PLUS
+								 	uni.request({
+										url: $taxi.Interface.addPassengerOneTouchAlarm.value,
+										method: $taxi.Interface.addPassengerOneTouchAlarm.method,
+										data: {
+											orderNumber: that.orderNumber,
+											passengerNumber: that.userInfo.userId,
+											Lon: res.longitude,
+											Lat: res.latitude,
+											Address: that.packAddress(res.address),
+										},
+										success(res) {
+											console.log(res)
+											uni.makePhoneCall({ //拨打紧急联系人电话
+												phoneNumber: that.UrgentPhone
+											});
+											if (res.data.status) {
+												uni.showToast({
+													title: res.data.msg,
+													icon: "none"
+												})
+											} else {
+												uni.showToast({
+													title: res.data.msg,
+													icon: "none"
+												})
+											}
+										},
+										fail() {
+											uni.makePhoneCall({ //拨打紧急联系人电话
+												phoneNumber: that.UrgentPhone
+											});
+											uni.showToast({
+												title: "网络连接失败",
+												icon: "none"
+											})
+										}
+									})
+									// #endif
+								}
+							});
+						}
+					}
+				})
 			},
 		}
 	}
@@ -595,7 +673,7 @@
 		// width: 300upx;
 		height: 40upx;
 	}
-	
+
 	.te_text3 {
 		// overflow: hidden;
 		// lines: 1;

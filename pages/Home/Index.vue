@@ -380,9 +380,11 @@
 						method:'POST',
 						success(res) {
 							console.log(res,"res")
-							uni.setStorageSync('scenicSpotOpenId',res.data.openid)
+							if(res.data.openid!=""&&res.data.openid!=null){
+								uni.setStorageSync('scenicSpotOpenId',res.data.openid)
+							}
 							uni.setStorageSync('wxuserInfo',res.data)
-							let openid=res.data.openid;
+							let openid=uni.getStorageSync('scenicSpotOpenId')||'';
 							console.log(openid,"openid")
 							if(openid!=""&&openid!=null&&openid!=undefined){
 								uni.request({

@@ -28,6 +28,8 @@
 					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType == '普通班车' && isFlowTickets(item.priceID) == '流水'">流水</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{turnDate(item.setTime)}}</view>
 				</view>
+				<view style="margin-left: 25upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+					color: #333333;margin-bottom: 16upx;">班次：{{getScheduleNum(item.executeScheduleID)}}</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
@@ -82,6 +84,7 @@
 				endoresDate:'',//改签日期
 				endoresOrderNum:'',//改签的订单编号
 				endorescompanyCode:'',
+				scheduleDetailNum:'',//班次
 			}
 		},
 		onLoad(param) {
@@ -103,14 +106,15 @@
 				that.getTicketInfo(dateArray[0]);
 				
 			}else {
-				// #ifdef H5
-				//获取openid
-				this.getOpenID();
-				// #endif
+				
 				that.startStation = param.startStation;
 				that.endStation = param.endStation;
 				//如果传过来的参数没有时间就获取当前时间
 				if (param.date == 'date') {//二维码扫码进来
+				// #ifdef H5
+				//获取openid
+				this.getOpenID();
+				// #endif
 					//初始化时间轴
 					that.loadDate(param.date);
 					that.getTicketInfo(param.date);
@@ -132,7 +136,12 @@
 				uni.getStorage({
 					key: 'scenicSpotOpenId',
 					success: function(response) {
-						console.log('当前有openid');
+						
+						if(response.data) {
+							console.log('当前没有有openid',response);
+						}else {
+							that.getCode();
+						}
 					},
 					fail: function(fail) {
 						//无openid，请求openid
@@ -163,6 +172,12 @@
 						//非空判断
 						if (res.data.status == true) {
 							that.departureData = res.data.data;
+							if(res.data.data.length == 0) {
+								uni.showToast({
+									title: '暂无班次信息',
+									icon: 'none'
+								})
+							}
 						} else if (res.data.status == false){
 							that.departureData = res.data.data;
 							uni.showToast({
@@ -181,6 +196,11 @@
 				this.selectIndex = e;
 				this.date = item.longDate;
 				this.getDeparture();
+			},
+			//-------------------------------获取班次-------------------------------
+			getScheduleNum:function(scheduleNum){
+				var schedule = scheduleNum.split('|');
+				return schedule[1];
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
@@ -460,6 +480,9 @@
 						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
 				} else {
 					// 存在则通过code传向后台调用接口返回微信的个人信息
+					// #ifdef H5
+					
+					// #endif
 					uni.request({
 						url: 'https://27.148.155.9:9056/CTKY/getWxUserinfo?code=' + code + '&Appid=' + Appid +
 							'&Appsecret=9cda28b050341aca1f674d2043b01358',

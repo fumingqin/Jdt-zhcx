@@ -310,6 +310,7 @@
 							<!-- 已完成 -->
 							<view class="cm_buttonView" v-if="item.or_Type=='13'">
 								<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
+								<view class="cm_button cm_btDetails" @click="czcComplaint2(item)" style="margin-right: 0upx;margin-left: 20upx;">投诉</view>
 							</view>
 
 							<!-- 待补款 -->
@@ -387,7 +388,9 @@
 								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
 								<button class="allBtn" v-if="item.state=='5'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
+								<!-- #ifndef MP-WEIXIN -->
 								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- #endif -->
 								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.state=='尚未支付'" @tap="open3(item.orderNumber,'cs2')">取消</button>
 								<button class="allBtn payBtn" v-if="item.state=='尚未支付'" @tap="keYunPay(item,item.carType)">去支付</button>
@@ -607,6 +610,7 @@
 							<!-- 已完成 -->
 							<view class="cm_buttonView" v-if="item.or_Type=='13'">
 								<view class="cm_button cm_btDetails" @click="details2(item.or_number)" style="margin-right: 0upx;">详情</view>
+								<view class="cm_button cm_btDetails" @click="czcComplaint2(item)" style="margin-right: 0upx;margin-left: 20upx;">投诉</view>
 							</view>
 						</view>
 					</view>
@@ -646,12 +650,8 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 							<view class="CTKYBtnView">
-								<button class="allBtn" @click="busLocation(item)">车辆位置</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
-								<!-- <button class="allBtn QRCode">二维码</button>
-								<button class="allBtn">选座</button>
-								<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
 							</view>
 						</view>
 					</view>
@@ -937,9 +937,11 @@
 							</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn" @tap="open2(item.orderNumber,'2')">退票</button>
-								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
-								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item,'cs2tui')">退票</button>
+								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item.orderNumber,'2')">退票</button>
+								<!-- #ifndef MP-WEIXIN -->
+								<button class="allBtn" v-if="item.state=='4'&&item.carType=='定制巴士'" @click="busLocation(item)">车辆位置</button>
+								<!-- #endif -->
+								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="endorse(item)">改签</button>
 							</view>
 						</view>
@@ -1212,7 +1214,7 @@
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open3(item.orderNumber,'cs2')">取消</button>
-								<button class="allBtn payBtn" @tap="keYunPay(item.orderNumber)">去支付</button>   
+								<button class="allBtn payBtn" @tap="keYunPay(item,item.carType)">去支付</button>   
 							</view>
 						</view>
 					</view>
@@ -1518,7 +1520,6 @@
 
 							<view class="CTKYBtnView">
 								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
-								<!-- <button class="allBtn" @tap="del(index)">删除</button> -->
 							</view>
 						</view>
 					</view>
@@ -2028,7 +2029,8 @@
 							//出租车请求数据
 							that.loadczcData();
 						} else if (res.data.status == false) {
-							// console.log('无客运车票数据');
+							//定制巴士订单测试
+							that.GetBookLogInfoByUserId();
 							//出租车请求数据
 							that.loadczcData();
 						}
@@ -2147,9 +2149,12 @@
 			// -------------------------客运改签-------------------------
 			endorse:function(item) {
 				// console.log(item)
-				uni.navigateTo({
-					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				uni.showToast({
+					title:'待开放...'
 				})
+				// uni.navigateTo({
+				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				// })
 			},
 			// -------------------------客运查看车辆位置-------------------------
 			busLocation:function(item) {
@@ -3346,6 +3351,7 @@
 					},
 					success: function(res) {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3388,6 +3394,7 @@
 					},
 					fail() {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 					}
 				})
 			},
@@ -3616,6 +3623,10 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
+						uni.showLoading(
+						{
+							title:'订单加载中...'
+						});
 						this.userInfo = res.data;
 						uni.request({
 							url: $lyfw.Interface.spt_RequestTicketsList.value,
@@ -4206,6 +4217,21 @@
 				if(item.vehicleType == '出租车'){
 					uni.navigateTo({
 						url:'complaint?tsTitle=出租车&tsData=' + item.driverName +'&orderNumber='+ item.orderNumber
+					})
+				}
+			},
+			
+			//------------------------------------------------跳转投诉--------------------------------------------
+			czcComplaint2: function(item) {
+				console.log(item)
+				if(item.or_class=='包车-定制'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=定制&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+					})
+				}
+				if(item.or_class=='包车-专线'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=专线&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
 					})
 				}
 			},

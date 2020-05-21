@@ -174,7 +174,7 @@
 		},
 	    methods: {	
 			// ---------加载数据---------
-			async loadData(){
+			loadData(){
 				var array=[];
 				var list=[];
 				var that=this;
@@ -216,11 +216,18 @@
 									array.push(data1);
 								}
 								var list1=[];
+								var defaultList=[];
 								for(var i=0;i<array.length;i++){
 									if(array[i].hiddenIndex==1){
 										list1.push(array[i]);
 									}
+									if(array[i].userDefault==true){
+										defaultList.unshift(array[i]);
+									}else{
+										defaultList.push(array[i]);
+									}
 								}
+								that.passengerList=defaultList;
 								uni.stopPullDownRefresh();
 								uni.setStorage({
 									key:'passengerList',
@@ -246,26 +253,6 @@
 				// 		}
 				// 	}
 				// })
-				// console.log(array.length,"array193")
-				// console.log(array,"array")
-				// var list1=[];
-				// for(var i=0;i<array.length;i++){
-				// 	if(array[i].hiddenIndex==1){
-				// 		list1.push(array[i]);
-				// 	}
-				// }
-				// this.passengerList=array.sort((a,b)=>a.userDefault?-1:1);
-				this.passengerList=array;
-				// var defaultList=[];
-				// for(var n=0;n<array.length;i++){
-				// 	if(array[n].userDefault==true){
-				// 		array.splice(n, 1);
-				// 		// array.unshift(array[n]);
-				// 		break;
-				// 	}
-				// }
-				// array.unshift(defaultList[0]);
-				// console.log(this.passengerList,"268")
 				// this.addressList=address;
 			},
 			//---------乘车人管理---------
