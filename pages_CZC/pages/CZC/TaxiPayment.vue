@@ -46,7 +46,7 @@
 		</view>
 		<!-- 付款方式 -->
 		<view style="margin:20rpx 30rpx;">
-			<view style="padding:20px;background-color: #FFF;border-radius: 20rpx;">
+			<!-- <view style="padding:20px;background-color: #FFF;border-radius: 20rpx;">
 				<radio-group name='chooseType'>
 					<view v-for='item in payType' :key='item.typeName' style="display: flex;justify-content: space-between;align-items: center;">
 						<view style="display: flex;justify-content: center;align-items: center;">
@@ -58,7 +58,7 @@
 						</view>
 					</view>
 				</radio-group>
-			</view>
+			</view> -->
 			<view style="margin-top: 20rpx;">
 				<button style="width: 100%;height: 100rpx;background-color: #FE4644;color: #FFFFFF;" @click="getPaymentInformation">
 					<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">立即支付</text>

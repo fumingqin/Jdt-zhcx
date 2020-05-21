@@ -454,7 +454,7 @@
 												// console.log(res)
 												if (res.data.msg == '出票成功') {
 													uni.redirectTo({
-														url: 'tp_successfulPayment'
+														url: 'tp_successfulPayment?orderNumber=' +that.orderInfo.orderNumber
 													})
 												} else {
 													uni.showToast({
@@ -566,7 +566,7 @@
 												// console.log(res)
 												if (res.data.msg == '出票成功') {
 													uni.redirectTo({
-														url: 'tp_successfulPayment'
+														url: 'tp_successfulPayment?orderNumber=' +that.orderInfo.orderNumber
 													})
 												} else {
 													uni.showToast({
@@ -665,7 +665,7 @@
 												// console.log(res)
 												if (res.data.msg == '出票成功') {
 													uni.redirectTo({
-														url: 'tp_successfulPayment'
+														url: 'tp_successfulPayment?orderNumber=' +that.orderInfo.orderNumber
 													})
 												} else {
 													uni.showToast({

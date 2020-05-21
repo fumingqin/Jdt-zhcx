@@ -2045,7 +2045,7 @@
 			//-------------------------请求定制巴士订单数据-------------------------
 			GetBookLogInfoByUserId(){
 				var that = this;
-				
+				console.log(that.userInfo.userId)
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.Url,
 					method:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.method,
@@ -2054,7 +2054,7 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
-						// console.log('定制巴士订单数据',res)
+						console.log('定制巴士订单数据',res)
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -3369,6 +3369,7 @@
 					},
 					success: function(res) {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3411,6 +3412,7 @@
 					},
 					fail() {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 					}
 				})
 			},
@@ -3639,6 +3641,10 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
+						uni.showLoading(
+						{
+							title:'订单加载中...'
+						});
 						this.userInfo = res.data;
 						uni.request({
 							url: $lyfw.Interface.spt_RequestTicketsList.value,
@@ -3827,7 +3833,6 @@
 					data:e,
 					success: (res) => {
 						// console.log(res)
-						
 						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'
