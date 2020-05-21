@@ -286,17 +286,17 @@
 					this.$refs['bottomPopup'].open();
 				});
 			},
+			closeBottomPopup: function() {
+				this.$nextTick(function() {
+					this.$refs['bottomPopup'].close();
+				});
+			},
 			//添加紧急联系人弹框
 			openContactPopup: function() {
 				this.$nextTick(function() {
 					this.$refs['contactPopup'].open();
 				});
 				this.inputFocus = true;
-			},
-			closeBottomPopup: function() {
-				this.$nextTick(function() {
-					this.$refs['bottomPopup'].close();
-				});
 			},
 			//关闭紧急联系人弹框
 			closeContactPopup: function() {
@@ -921,6 +921,7 @@
 						uni.hideLoading();
 						if(res.data.status){
 							uni.setStorageSync('userInfo',res.data.data);
+							that.userInfo = res.data.data;
 							uni.showToast({
 								title:'保存成功',
 								icon:'none'
