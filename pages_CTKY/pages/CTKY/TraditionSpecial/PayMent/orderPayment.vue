@@ -213,6 +213,7 @@
 					success: function(data) {
 						that.orderInfo = data.data;
 						// console.log('订单数据', that.orderInfo)
+						
 					},
 					fail() {
 						uni.showToast({
@@ -238,6 +239,7 @@
 					}
 				})
 			},
+			
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
 				if (date) {

@@ -12,6 +12,12 @@ const Interface = {
 		method:'GET',//GET-POST
 		pages:["Jdt-zhcx/App.vue"]
 	},
+	AddEmergencyContact:{
+		value: Url + '/api/person/AddEmergencyContact',
+		name:'旅客端定时实时上报位置',
+		method:'POST',//GET-POST
+		pages:[]
+	}
 }
 
 const dateFormat = {

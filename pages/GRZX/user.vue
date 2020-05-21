@@ -45,7 +45,7 @@
 			<text class="moreClass">更多服务</text>
 			<!-- <view class="boxClass marginTop" @click="QQLogin">
 				<image src="../../static/GRZX/tubiao_fapiao.png" class="iconClass1"></image>
-				<text class="fontStyle">测试QQ登录</text>
+				<text class="fontStyle">电子发票</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view> -->
 			<view class="boxClass marginTop" @click="phoneClick">
@@ -89,8 +89,7 @@
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 		</view>
-		
-		
+		<!-- 添加紧急联系人弹窗 -->
 		<view :hidden="userFeedbackHidden" class="popup_content">
 			<view class="popup_title">添加</view>
 			<view class="popup_textarea_item">
@@ -143,7 +142,6 @@
 			// ---------------------------加载图片----------------------------
 			loadImg(){
 				var that=this;
-				// console.log(that.$GrzxInter.GetImage.url,"144")
 				uni.request({
 					url:that.$GrzxInter.GetImage.url,
 					data:{
@@ -151,12 +149,10 @@
 					},
 					method:'POST',
 					success(res) {
-						// console.log(res,"153")
 						var image=res.data.data.filter(item => {
 							return item.type=='广告';
 						})
 						that.advert=image[0].imageUrl;
-						// console.log(that.advert,'that.advert')
 					}
 				})
 			},
@@ -230,12 +226,14 @@
 					}
 				})
 			},
+			// ---------------------------跳转订单的点击-----------------------
 			orderClick(e){
 				uni.setStorageSync('currentNum',e)
 				uni.switchTab({
 					url:'/pages/order/OrderList',
 				})
 			},
+			// --------------------------设置，通知，扫一扫--------------------
 			navTo(e){
 				if(e=='set'){
 					uni.navigateTo({
@@ -347,15 +345,17 @@
 					url:this.$GrzxInter.Route.complaint.url,
 				})  
 			},
+			//------------------------------意见反馈-----------------------
 			feedbackClick(){
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
 					url:this.$GrzxInter.Route.feedback.url,
 				})  				
 			},
-			// ---------------------------是否登录----------------------------
+			// ---------------------------是否登录--------------------------
 			checkLogin(){
 				var that=this;
+				// ---------------APP,WX--------------
 				//#ifndef H5
 				var user=uni.getStorageSync('userInfo');
 				if(user.userId==""||user.userId==null){
@@ -385,6 +385,7 @@
 					})  
 				}
 				//#endif
+				// ---------------H5--------------
 				//#ifdef H5
 				var user1=uni.getStorageSync('userInfo');
 				console.log(user1,"1111")
@@ -408,6 +409,7 @@
 				}
 				//#endif
 			},
+			// ---------------------------收藏--------------------------
 			collectionClick(){
 				// uni.navigateTo({
 				// 	url:'/pages/GRZX/collection'
@@ -417,6 +419,7 @@
 					icon:'none'
 				})
 			},
+			// ---------------------------历史--------------------------
 			historyClick(){
 				// uni.navigateTo({
 				// 	url:'/pages/GRZX/history'
@@ -426,12 +429,7 @@
 					icon:'none'
 				})
 			},
-			scanClick(){
-				uni.showToast({
-					title : '扫一扫',
-					icon : 'none',
-				})
-			},
+			// ---------------------------电话客服--------------------------
 			phoneClick(){
 				var that=this;
 				uni.request({
@@ -448,6 +446,7 @@
 					}
 				})
 			},
+			// ---------------------------QQ客服--------------------------
 			QQClick(){
 				// #ifdef APP-PLUS
 				var that=this;
@@ -463,7 +462,7 @@
 				})
 				//#endif
 			},
-			//------------判断是否为base64格式-----------
+			//----------------------判断是否为base64格式-------------------
 			isBase64:function(str) {
 			    if (str ==='' || str.trim() ===''){ return false; }
 			    try {
@@ -472,7 +471,8 @@
 			        return false;
 			    }
 			},
-			judgeNum(val){  //只能输入数字
+			//----------------------判断是否为数字-----------------------
+			judgeNum(val){
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
 				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
 				    if(regPos.test(val) || regNeg.test(val)) {
@@ -505,7 +505,7 @@
 		
 	}
 </script>
-
+ 
 <style lang="scss">
 	page{
 		background-color: #F5F9FA;
