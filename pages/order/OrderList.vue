@@ -2166,6 +2166,24 @@
 					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation?busInfo=' + JSON.stringify(loaction)
 				})
 			},
+			// -------------------------客运退票--查询费率-------------------------
+			GetBounceChargeByOrderNumber:function(orderNumber){
+				var that = this;
+				uni.request({
+					url: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.Url,
+					method: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.method,
+					header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
+					data: {
+						orderNumber: orderNumber,
+					},
+					success(respones) {
+						console.log('费率', respones)
+					},
+					fail(respones) {
+						console.log('费率', respones)
+					}
+				})
+			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
 				console.log(orderNumber)
@@ -3878,7 +3896,9 @@
 				})
 				var that = this
 				if (this.exitindex == '2') {
-					this.keYunRefundTicket(that.ticketOrderNumber)
+					// this.keYunRefundTicket(that.ticketOrderNumber)
+					//请求费率
+					this.GetBounceChargeByOrderNumber(that.ticketOrderNumber)
 				} else if(this.exitindex == 'cs2tui'){
 					// this.csRefundTicket(that.ticketOrderNumber)
 					//先检测订单支付状态再执行退票操作
