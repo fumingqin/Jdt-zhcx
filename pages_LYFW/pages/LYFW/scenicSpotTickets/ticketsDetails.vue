@@ -3,7 +3,7 @@
 		<!-- 顶部轮播图（可点击进入相册并放大） -->
 		<swiper class="swi" circular autoplay>
 			<swiper-item class="swi-item" v-for="(item,index) in piclist" :key="index">
-				<image :src="item.ticketImage" mode="aspectFill" @click="goImgList" />
+				<image :src="item" mode="aspectFill" @click="goImgList" />
 				<view class="view">1张图片</view>
 			</swiper-item>
 		</swiper>
@@ -45,9 +45,7 @@
 	export default {
 		data() {
 			return {
-				piclist: [{
-					ticketImage: '',
-				}], //图片内容
+				piclist: '', //图片内容
 				scSpotContent: [{
 					ticketId: '',
 					ticketTitle: '',
@@ -108,8 +106,8 @@
 					},
 					header: {'content-type': 'application/json'},
 					success: (res) => {
-						// console.log(res)
-						this.piclist = res.data.data;
+						console.log(res)
+						this.piclist = res.data.data[0].ticketImage;
 						this.scSpotContent = res.data.data;
 						this.admissionTicket = res.data.data;
 						this.admissionTicketStatus = res.data.msg;
@@ -123,7 +121,7 @@
 			goImgList() {
 				uni.setStorageSync('imagePiclist', this.piclist);
 				uni.navigateTo({
-					url: '../currency/imgPreview',
+					url: '../currency/imglist2',
 					
 				})
 			},

@@ -19,7 +19,7 @@
 		<view :hidden="searchIndex==0" v-for="(item,index) in searchData" :key="index">
 			<view class="Tk_scrollview" @click="godetail(item.ticketId)">
 				<view class="Tk_item">
-					<image class="Tk_image" :src="item.ticketImage" />
+					<image class="Tk_image" :src="item.ticketImage[0]" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<view style="display: flex;">
@@ -39,7 +39,7 @@
 		<view class="sixBackground">
 			<view v-for="(item,index) in sixPalaceList" v-if="index < 6" :key="index" @click="godetail(item.ticketId)">
 				<view class="darkCurtain"></view>
-				<image :src="item.ticketImage"></image>
+				<image :src="item.ticketImage[0]"></image>
 				<view class="sixView">
 					<text class="sixText1">{{item.ticketName}}</text>
 					<text class="sixText2" :hidden="item.ticketEnglishName==''">{{item.ticketEnglishName}}</text>
@@ -70,7 +70,7 @@
 		<view :hidden="screenIndex == 3">
 			<view class="Tk_scrollview" v-for="(item,index) in scenicList" :key="index" v-if="index < scenicListIndex " @click="godetail(item.ticketId)">
 				<view class="Tk_item">
-					<image class="Tk_image" :src="item.ticketImage" />
+					<image class="Tk_image" :src="item.ticketImage[0]" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<view style="display: flex;">
@@ -89,7 +89,7 @@
 		<view :hidden="screenIndex !== 3 ">
 			<view class="Tk_scrollview" v-for="(item,index) in scenicListCate" :key="index" @click="godetail(item.ticketId)">
 				<view class="Tk_item">
-					<image class="Tk_image" :src="item.ticketImage" />
+					<image class="Tk_image" :src="item.ticketImage[0]" />
 					<view class="Tk_bacg">
 						<text class="Tk_text1">{{item.ticketTitle}}</text>
 						<view style="display: flex;">
@@ -546,7 +546,38 @@
 						// console.log("你拒绝了授权，无法获得周边信息")
 					}
 				})
-			}
+			},
+			
+			// 获取地理位置
+			getLocationInfo() {
+				uni.getLocation({
+					type: 'wgs84',
+					success(res) {
+						// console.log(res);
+					}
+				});
+			},
+			
+			// 再次获取授权
+			// 当用户第一次拒绝后再次请求授权
+			openConfirm() {
+				uni.showModal({
+					title: '请求授权当前位置',
+					content: '需要获取您的地理位置，请确认授权',
+					success: (res) => {
+						// console.log(res)
+						if (res.confirm) {
+							uni.openSetting(); // 打开地图权限设置
+						} else if (res.cancel) {
+							uni.showToast({
+								title: '你拒绝了授权，无法获得周边信息',
+								icon: 'none',
+								duration: 1000
+							})
+						}
+					}
+				});
+			},
 
 		}
 	}

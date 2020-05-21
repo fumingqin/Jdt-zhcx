@@ -51,7 +51,10 @@
 		</view>
 		<view v-if='state == 2' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
-			<view elevation='5px' class="comeBottomContent">
+			<view elevation='0px' style="flex-direction: row;align-items: flex-start;justify-content: flex-start;width: 600rpx;margin-bottom: 30rpx;" >
+				<image @click="openContactPopup" src="../../../static/Home/contact.png" style="width: 120rpx;height: 120rpx;"></image>
+			</view>
+			<view class="comeBottomContent">
 				<view @click="callPolice" style="width: 300rpx;align-items: center;border-right:1px solid #2C2D2D;">
 					<text class="callPolice" style="">一键报警</text>
 				</view>
@@ -62,15 +65,16 @@
 		</view>
 		<view v-if='state == 1' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
-			<view elevation='5px' style="width: 300rpx;padding-top: 30rpx;padding-bottom: 30rpx;background-color: #FFFFFF;border-radius: 9px;flex-direction: row;box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);">
+			<view elevation='5px' style="width: 300rpx;padding-top: 30rpx;padding-bottom: 30rpx;background-color: #FFFFFF;border-radius: 9px;flex-direction: row;">
 				<view @click="cancleOrder" style="width: 300rpx;align-items: center;">
 					<text class="cancle">取消订单</text>
 				</view>
 			</view>
 		</view>
 		<view v-if='state == 4' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;">
-			<view style="padding-left: 10rpx;" elevation='0px'>
+			<view style="padding-left: 10rpx;flex-direction: row;" elevation='0px'>
 				<image @click="callPolice" src="../../../static/Home/CallPollice.png" style="width: 120rpx;height: 120rpx;"></image>
+				<image @click="openContactPopup" src="../../../static/Home/contact.png" style="width: 120rpx;height: 120rpx;"></image>
 			</view>
 			<view style="align-items: center;height: 300rpx;">
 				<!-- <view elevation='5px' class="orderBottomContent">
@@ -95,7 +99,7 @@
 		</view>
 		<uni-popup ref="bottomPopup" :maskClick='false' type="bottom">
 			<form @submit="payment">
-				<view style="background-color: #FFFFFF;padding: 20px;box-shadow:0px 6px 20px 0px rgba(231,231,231,0.53);border-top-left-radius: 9px;border-top-right-radius: 9px;">
+				<view style="background-color: #FFFFFF;padding: 20px;border-top-left-radius: 9px;border-top-right-radius: 9px;">
 					<!--<view style="flex-direction: row;justify-content: flex-end;	">
 						</view> -->
 					<view style="flex-direction: row;justify-content: space-between;">
@@ -147,6 +151,19 @@
 				</view>
 			</form>
 		</uni-popup>
+	
+		<!-- 添加紧急联系人弹窗 -->
+		<uni-popup ref="contactPopup" :maskClick='true' type="center">
+			<view style="background-color: #FFFFFF;width: 500rpx;padding: 40rpx;border-radius: 20rpx;justify-content: center;">
+				<view style="text-align: center;align-items: center;margin-bottom: 40rpx;">
+					<text style="font-size: 32rpx;;">添加</text>
+				</view>
+				<input v-model="autograph" placeholder='请输入联系人电话号码' maxlength=11 :focus='inputFocus'/>
+				<button @click="saveContact" style="background-color: #FC4646;margin-top: 40rpx;padding-top: 20rpx;padding-bottom: 20rpx;">
+					<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">确定</text>
+				</button>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -154,7 +171,7 @@
 	import $taxi from '@/common/Czc.js';
 	import uniPopup from "@/pages_CZC/components/CZC/uni-popup/uni-popup.vue";
 	import uniIcons from "@/pages_CZC/components/CZC/uni-icons/uni-icons.vue";
-
+	import $home from '@/common/Home.js'
 
 	export default {
 		components: {
@@ -230,11 +247,15 @@
 				UrgentPhone: "110", //紧急联系人电话
 				paystate: "",
 				detialAddress:"",
+				
+				inputFocus:true,
+				autograph:'',
 			}
 		},
 		onLoad(option) {
 			let that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
+			that.autograph = that.userInfo.autograph;
 			that.orderNumber = option.orderNumber;
 			getApp().globalData.orderNumber = that.orderNumber; //更改当前订单号 
 			uni.getSystemInfo({
@@ -268,6 +289,19 @@
 			closeBottomPopup: function() {
 				this.$nextTick(function() {
 					this.$refs['bottomPopup'].close();
+				});
+			},
+			//添加紧急联系人弹框
+			openContactPopup: function() {
+				this.$nextTick(function() {
+					this.$refs['contactPopup'].open();
+				});
+				this.inputFocus = true;
+			},
+			//关闭紧急联系人弹框
+			closeContactPopup: function() {
+				this.$nextTick(function() {
+					this.$refs['contactPopup'].close();
 				});
 			},
 			back: function() {
@@ -862,8 +896,49 @@
 					that.getDirectionDriving(that.thisDriverLon + ',' + that.thisDriverLat, that.startLon + ',' + that.startLat);
 				}, 10000);
 			},
-
-
+			saveContact:function(){
+				//保存紧急联系人
+				let that = this;
+				if(!that.verification(that.autograph)){
+					uni.showToast({
+						title:'手机号输入有误',
+						icon:'none'
+					});
+					return;
+				}
+				that.closeContactPopup();
+				uni.showLoading({
+					mask:true
+				});
+				uni.request({
+					url:$home.Interface.AddEmergencyContact.value,
+					method:$home.Interface.AddEmergencyContact.method,
+					data:{
+						UserId:that.userInfo.userId,
+						Autograph:that.autograph
+					},
+					success:function(res){
+						uni.hideLoading();
+						if(res.data.status){
+							uni.setStorageSync('userInfo',res.data.data);
+							that.userInfo = res.data.data;
+							uni.showToast({
+								title:'保存成功',
+								icon:'none'
+							});
+						}
+					},
+					fail:function(res){
+						console.log(res);
+						uni.hideLoading();
+					}
+				})
+			},
+			verification:function(phone){
+				let that = this;
+				let phoneCodeVerification = /^[1][3,4,5,7,8][0-9]{9}$/;
+				return phoneCodeVerification.test(phone);
+			},
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
 				let that = this;
@@ -943,6 +1018,7 @@
 				arr.push(marker);
 				that.markers = arr;
 			},
+			
 		}
 	}
 </script>
@@ -968,7 +1044,6 @@
 		background-color: #FFFFFF;
 		padding: 30rpx;
 		border-radius: 9px;
-		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 	}
 
 	.comeBottomContent {
@@ -978,7 +1053,6 @@
 		background-color: #FFFFFF;
 		border-radius: 9px;
 		flex-direction: row;
-		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 	}
 
 	.orderBottomContent {
