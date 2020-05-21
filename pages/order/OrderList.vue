@@ -3807,7 +3807,6 @@
 					data:e,
 					success: (res) => {
 						// console.log(res)
-						
 						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'

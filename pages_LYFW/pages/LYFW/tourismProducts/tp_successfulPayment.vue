@@ -7,51 +7,96 @@
 
 		<view class="cover-container">
 			<image class="okImage" mode="aspectFill" src="../../../static/LYFW/scenicSpotTickets/successfulPayment/ok.png"></image>
-			<text class="title">购票成功</text>
-			<text class="content">无选择操作，将在10秒后自动返回首页</text>
+			<text class="title">支付成功，请选择往返班次</text>
+			<text class="content">无选择操作，将在10秒后自动返回订单列表</text>
 			<view class="buttonView">
-				<view class="orderButton" @click="godetail(0)">查看订单</view>
-				<view class="homeButton" @click="godetail(1)">返回首页</view>
+				<view class="orderButton" @click="godetail(0)">选择班次</view>
+				<view class="homeButton" @click="godetail(1)">返回订单</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	export default {
 		data() {
 			return {
-				godetailIndex:'',//跳转参数
+				orderNumber : '',//订单编号
 			}
+		},
+		onLoad:function(options){
+			this.orderNumber = options.orderNumber;
+			this.orderDetails();
 		},
 		onReady() {
 			this.backHome();
 		},
 		methods: {
+			//请求订单详情
+			orderDetails:function(){
+				uni.request({
+					url:$lyfw.Interface.lyky_RequestTicketsListDetail.value,
+					method:$lyfw.Interface.lyky_RequestTicketsListDetail.method,
+					data:{
+						orderNumber : this.orderNumber
+					},
+					success:(res) => {
+						console.log(res)
+						uni.setStorage({
+							key:'chooseShuttleData',
+							data : res.data.data[0]
+						})
+					}
+				})
+			},
+			//页面跳转定时器
+			backHome(){
+				setTimeout(() => {
+					uni.getStorage({
+						key:'godetailIndex',
+						success:function(){
+							uni.removeStorage({
+								key:'godetailIndex'
+							})
+						},
+						fail:function(){
+							uni.switchTab({
+								url: '../../../../pages/order/OrderList'
+							});
+						}
+					})
+				}, 10000)
+				
+			},
+			
 			//路由统一事件
 			godetail: function(e) {
 				if(e==0){ 
-					this.godetailIndex=1;
-					uni.switchTab({
-						url: '../../../../pages/order/OrderList'	
-					});
+					uni.setStorage({
+						key:'godetailIndex',
+						data:0,
+						success:function(){
+							uni.redirectTo({
+								url:'tp_chooseShuttle?originIndex=0'
+							})
+						}
+					})
+					
 				}else if(e==1){
-					this.godetailIndex=2;
-					uni.switchTab({
-						url: '../../../../pages/Home/Index'
-					});
+					uni.setStorage({
+						key:'godetailIndex',
+						data:1,
+						success:function(){
+							uni.switchTab({
+								url: '../../../../pages/order/OrderList'	
+							})
+						}
+					})
+					
 				}
-			},
-			backHome(){
-				setTimeout(() => {
-					if(this.godetailIndex == ''){
-						uni.switchTab({
-							url: '../../../../pages/Home/Index'
-						});
-					}
-				}, 10000)
-				
 			}
+			
 
 		}
 	}
