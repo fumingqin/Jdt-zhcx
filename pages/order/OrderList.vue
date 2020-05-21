@@ -2045,7 +2045,7 @@
 			//-------------------------请求定制巴士订单数据-------------------------
 			GetBookLogInfoByUserId(){
 				var that = this;
-				
+				console.log(that.userInfo.userId)
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.Url,
 					method:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.method,
@@ -2054,7 +2054,7 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
-						// console.log('定制巴士订单数据',res)
+						console.log('定制巴士订单数据',res)
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
