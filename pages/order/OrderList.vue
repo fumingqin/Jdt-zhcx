@@ -3351,6 +3351,7 @@
 					},
 					success: function(res) {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3393,6 +3394,7 @@
 					},
 					fail() {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 					}
 				})
 			},
@@ -3621,6 +3623,10 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
+						uni.showLoading(
+						{
+							title:'订单加载中...'
+						});
 						this.userInfo = res.data;
 						uni.request({
 							url: $lyfw.Interface.spt_RequestTicketsList.value,
