@@ -7,7 +7,7 @@
 		</view>
 		<!-- 车票查询 -->
 		<view class="queryTickets">
-			<view class="typePickerView">
+			<view class="typePickerView" v-if="false">
 				<view class="typePicker" :class="{'typePickerClick':normalPickerNum == 1}"
 				 style="border-top-right-radius: 0;" @tap="typeSelect('normal')">普通购票</view>
 				<view class="typePicker" :class="{'typePickerClick':specialPickerNum == 1}" 

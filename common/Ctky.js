@@ -170,7 +170,8 @@ const KyInterface = {
 	Ky_GetBounceChargeByOrderNumber:{
 		Url:Url + '/api/ky/GetBounceChargeByOrderNumber',
 		name:'客运-请求退票费率',
-		method:'POST',
+		method:'GET',
+		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
 	//--------------------------------------定制巴士--------------------------------------
 	Cs_GetAllLine:{

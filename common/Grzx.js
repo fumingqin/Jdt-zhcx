@@ -120,6 +120,12 @@ const Interface={
 		method:'POST',
 		pages: [],
 	},
+	AddEmergencyContact:{
+		value: Url + '/api/person/AddEmergencyContact',
+		name:'添加紧急联系人',
+		method:'POST',//GET-POST
+		pages:[]
+	}
 }
 
 const MainPackage='/pages/GRZX';   //主包

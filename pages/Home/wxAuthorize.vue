@@ -79,20 +79,12 @@ export default{
 					console.log(infoRes,'49')
 					that.userInfo=infoRes.userInfo;
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
-					if(that.type=="index"){
-						uni.showToast({
-							title:'授权成功！',
-							icon:'success',
-						})
-						uni.navigateBack();
-					}else{
-						uni.login({
-							success(res2){
-								console.log(res2,'res2')
-								that.getOpenID(res2.code)
-							}
-						})	
-					}
+					uni.login({
+						success(res2){
+							console.log(res2,'res2')
+							that.getOpenID(res2.code)
+						}
+					})			
 				},
 				fail(res) {
 					uni.showToast({
@@ -128,7 +120,15 @@ export default{
 								uni.hideLoading();
 							},1000);
 							if(!res.data.status || res.data.data.phoneNumber=="" || res.data.data.phoneNumber==null){
-								that.bindState=true;
+								if(that.type=="index"){
+									uni.showToast({
+										title:'授权成功！',
+										icon:'success',
+									})
+									uni.navigateBack();
+								}else{
+									that.bindState=true;
+								}
 							}else{
 								uni.setStorageSync('userInfo',res.data.data)
 								uni.showToast({
