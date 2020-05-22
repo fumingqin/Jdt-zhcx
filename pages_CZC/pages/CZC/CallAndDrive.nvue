@@ -1102,7 +1102,7 @@
 	}
 
 	.fontClass-28 {
-		font-size: 28rpx;
+		font-size: 32rpx;
 		line-height: 50rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 300;
