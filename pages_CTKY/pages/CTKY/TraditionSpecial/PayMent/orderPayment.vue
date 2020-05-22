@@ -107,6 +107,7 @@
 				}],
 				insurance: '', //保险
 				isInsurance: '', //是否有保险
+				insuredPrice: '',//保险价格
 				channeIndex: 0, //选择支付方式
 				orderInfo: [], //订单数据
 				passengerInfo: [], //乘车人信息
@@ -143,7 +144,8 @@
 			    title: '加载中...'
 			});
 			
-			that.totalPrice = param.totalPrice;
+			that.totalPrice = param.totalPrice;//总价格
+			that.insuredPrice = param.insuredPrice;//保险价格
 			if (param.isInsurance == 1) {
 				that.insurance = '保险';
 				that.isInsurance = true;
@@ -213,7 +215,6 @@
 					success: function(data) {
 						that.orderInfo = data.data;
 						// console.log('订单数据', that.orderInfo)
-						
 					},
 					fail() {
 						uni.showToast({
@@ -385,7 +386,7 @@
 						endSiteName: that.orderInfo.endStation, //终点站
 						priceID: that.orderInfo.priceID, //价格ID
 						setOutTime: setTime, //发车时间
-						insuredPrice: that.orderInfo.insurePrice, //保险价格
+						insuredPrice: that.insuredPrice, //保险价格
 						carType: that.orderInfo.shuttleType, //班车类型
 
 						fullTicket: that.adultNum, //全票人数
