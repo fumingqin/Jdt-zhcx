@@ -21,7 +21,6 @@
 	export default {
 		data() {
 			return {
-				godetailIndex:'',//跳转参数
 			}
 		},
 		onReady() {
@@ -29,28 +28,51 @@
 		},
 		methods: {
 			//路由统一事件
-			godetail: function(e) {
-				if(e==0){ 
-					this.godetailIndex=1;
-					uni.switchTab({
-						url: '../../../../pages/order/OrderList'	
-					});
-				}else if(e==1){
-					this.godetailIndex=2;
-					uni.switchTab({
-						url: '../../../../pages/Home/Index'
-					});
-				}
-			},
+			//页面跳转定时器
 			backHome(){
 				setTimeout(() => {
-					if(this.godetailIndex == ''){
-						uni.switchTab({
-							url: '../../../../pages/Home/Index'
-						});
-					}
+					uni.getStorage({
+						key:'ticketsGodetailIndex',
+						success:function(){
+							uni.removeStorage({
+								key:'ticketsGodetailIndex'
+							})
+						},
+						fail:function(){
+							uni.switchTab({
+								url: '../../../../pages/Home/Index'
+							});
+						}
+					})
 				}, 10000)
 				
+			},
+			
+			//路由统一事件
+			godetail: function(e) {
+				if(e==0){ 
+					uni.setStorage({
+						key:'ticketsGodetailIndex',
+						data:0,
+						success:function(){
+							uni.switchTab({
+								url: '../../../../pages/order/OrderList'	
+							});
+						}
+					})
+					
+				}else if(e==1){
+					uni.setStorage({
+						key:'ticketsGodetailIndex',
+						data:1,
+						success:function(){
+							uni.switchTab({
+								url: '../../../../pages/Home/Index'
+							});
+						}
+					})
+					
+				}
 			}
 
 		}

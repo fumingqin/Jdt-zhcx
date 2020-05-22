@@ -10,17 +10,19 @@
 					<!-- 时间-价格 -->
 					<view class="ticketContent">
 						<view class="textCLass" style="font-size: 28upx;color: #333333;">{{turnDate(ticketDetail.setTime)}}出发</view>
-						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketDetail.fare}}</view>
+						<view class="textCLass" style="font-size: 28upx;color: #FC4646;">成人票￥{{ticketDetail.fare}}</view>
 					</view>
 					<!-- 站点-余票 -->
 					<view class="ticketContent">
 						<view class="textCLass" style="font-size: 32upx;color: #333333;">{{ticketDetail.startStaion}}→
 							{{ticketDetail.endStation}}</view>
-						<view class="textCLass" style="font-size: 24upx;font-style: SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.remainingVotes}}张</view>
+						<view class="textCLass" style="font-size: 28upx;color: #FC4646;">半价票￥{{ticketDetail.halfTicket}}</view>
+						
 					</view>
 					<!-- 车型-儿童半价 -->
 					<view class="ticketContent">
 						<view class="textCLass" style="font-size: 24upx;color: #999999;">{{ticketDetail.carType}} 儿童半票</view>
+						<view class="textCLass" style="font-size: 24upx;font-style: SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.remainingVotes}}张</view>
 					</view>
 				</view>
 			</view>
@@ -56,9 +58,10 @@
 			<!-- 乘车人信息 -->
 			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
-				<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
-					<button @tap="addPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
-					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+				<view style="display: flex;margin-bottom: 35upx;">
+					<button @tap="addPassenger('成人')" style="padding: 0 40rpx; height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加成人/儿童</button>
+					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+					<button @tap="addPassenger('免童')" style="height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">携带免童</button>
 				</view>
 				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in passengerInfo" :key=index
 				 v-model="passengerInfo">
@@ -128,10 +131,10 @@
 			</popup>
 
 			<!-- 乘车险 -->
-			<view class="orderCommonClass" v-if="ticketDetail.insurePrice != 0">
+			<view class="orderCommonClass">
 				<view style="display: flex; align-items: center;">
 					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">购买乘车险</view>
-					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">{{ticketDetail.insurePrice}}元</view>
+					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">{{InsurePrice}}元</view>
 				</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="isInsurance===1 ? true : false" @click="insuranceTap"></radio>
@@ -218,15 +221,14 @@
 </template>
 
 <script>
+	import $KyInterface from "@/common/Ctky.js"
 	import popup from "@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue";
-	import utils from "@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components: {
 			popup
 		},
 		data() {
 			return {
-				utils: utils,
 				title: '',
 				isNormal: 0, //判断是普通购票还是定制班车:1是普通0是定制
 				count: 1,
@@ -254,6 +256,7 @@
 				shuttleType: '', //班车类型'定制班车''普通班车'
 				sepecialStartArray: [], //定制班车起点数组
 				specialEndArray: [], //定制班车终点数组
+				InsurePrice:'',//保险价格
 			}
 		},
 
@@ -273,20 +276,15 @@
 					that.ticketDetail = data.data; //车票数组
 					that.totalPrice = data.data.fare; //价格
 					that.shuttleType = data.data.shuttleType; //班车类型
-					console.log(data)
 					
 					//定制班车起点数组
 					that.sepecialStartArray = data.data.starSiteArr;
 					//定制班车终点数组
 					that.specialEndArray = data.data.endSiteArr
-
+					//读取保险信息
+					that.getExecuteScheduleInfoForSellByID(that.ticketDetail);
 					console.log('车票数据', that.ticketDetail)
 					
-					if (data.data.insurePrice == 0) {
-						that.isInsurance = 0;
-					} else {
-						that.isInsurance = 1;
-					}
 				}
 			})
 		},
@@ -349,13 +347,49 @@
 					}
 				})
 			},
+			//--------------------------获取保险信息--------------------------
+			getExecuteScheduleInfoForSellByID:function(orderInfo){
+				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.Url,
+					method:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.method,
+					header:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.header,
+					data:{
+						systemName:$KyInterface.KyInterface.systemName.systemName,
+						scheduleCompanyCode:orderInfo.scheduleCompanyCode,
+						ExecuteScheduleID:orderInfo.executeScheduleID,
+						StartSiteID:orderInfo.startSiteID,
+						EndSiteID:orderInfo.endSiteID,
+					},
+					success(res) {
+						uni.hideLoading();
+						console.log('保险数据',res);
+						var respones = res.data;
+						if(respones.Successed == true){
+							that.InsurePrice = respones.ScheduleInfos[0].InsurePrice;
+							//计算价格
+							that.calculateTotalPrice();
+						}else {
+							that.InsurePrice = 0;
+							//计算价格
+							that.calculateTotalPrice();
+						}
+					},
+					fail(res) {
+						uni.hideLoading();
+						console.log(res);
+					}
+				})
+			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
 				if (date) {
 					var setTime = date.replace('T', ' ');
 					return setTime;
 				}
-				// return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------点击定制班车上车点-----------------------------
 			startStationTap() {
@@ -442,6 +476,13 @@
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
 				var that = this;
+				// #ifdef MP-WEIXIN
+				uni.showModal({
+					content:'小程序暂不支持地图显示',
+					showCancel:false,
+				})
+				// #endif
+				// #ifndef MP-WEIXIN
 				if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
 					if (this.ticketDetail.starSiteArr.length <= 2 && this.ticketDetail.endSiteArr.length <= 2) { //普通班车
 						uni.navigateTo({
@@ -453,6 +494,7 @@
 						})
 					}
 				}
+				// #endif
 			},
 			//-------------------------------选择乘客-----------------------------
 			pickPassenger() {
@@ -488,7 +530,7 @@
 				})
 			},
 			//点击添加乘客
-			addPassenger() {
+			addPassenger(param) {
 				uni.getStorage({
 					key: 'userInfo',
 					fail() {
@@ -514,9 +556,16 @@
 					},
 					success() {
 						//跳转到添加乘客页面
-						uni.navigateTo({
-							url: '../../../../../pages/GRZX/addPassenger?type=add',
-						})
+						if(param == '成人'){
+							uni.navigateTo({
+								url: '../../../../../pages/GRZX/addPassenger?type=add',
+							})
+						}else if(param == '儿童'){
+							uni.navigateTo({
+								url: '../../../../../pages/GRZX/addPassenger?type=add',
+							})
+						}
+						
 					}
 				})
 
@@ -538,7 +587,7 @@
 				let price = that.ticketDetail.fare;
 				//半价票单价
 				let halfPrice = that.ticketDetail.halfTicket;
-				let insurePrice = that.ticketDetail.insurePrice;
+				let insurePrice = that.InsurePrice;
 				if (that.isInsurance == 0) { //不选择保险
 					insurePrice = 0;
 				}
@@ -616,11 +665,12 @@
 				that.calculateTotalPrice();
 				//请求成功之后跳转到支付页面,传是否选择保险1:选择 0:未选择
 				var array = {
-					isInsurance: that.isInsurance,
-					totalPrice: that.totalPrice,
-					shuttleType: that.shuttleType,
-					getOnPoint: that.startStation,
-					getOffPoint: that.endStation
+					isInsurance: that.isInsurance,//是否选择了保险
+					totalPrice: that.totalPrice,//总价格
+					shuttleType: that.shuttleType,//班车类型
+					getOnPoint: that.startStation,//起点
+					getOffPoint: that.endStation,//终点
+					insuredPrice: that.InsurePrice,//保险价格
 				}
 				uni.navigateTo({
 					url: '../PayMent/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' +

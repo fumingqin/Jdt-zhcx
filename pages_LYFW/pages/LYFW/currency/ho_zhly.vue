@@ -58,12 +58,12 @@
 				<view class="zl_contentImage1">
 					<!-- 泉州小西埕 -->
 					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
-						<image class="ct_image1" :src="sixPalaceList[0].ticketImage" mode="aspectFill"></image>
+						<image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text>
 					</view>
 					<!-- 稻田摸鱼 -->
 					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
-						<image class="ct_image2" :src="sixPalaceList[1].ticketImage" mode="aspectFill"></image>
+						<image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text>
 					</view>
 				</view>
@@ -71,17 +71,17 @@
 				<view class="zl_contentImage2">
 					<!-- 泉州钟楼 -->
 					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
-						<image class="ct_image3" :src="sixPalaceList[2].ticketImage" mode="aspectFill"></image>
+						<image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
 					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
-						<image class="ct_image4" :src="sixPalaceList[3].ticketImage" mode="aspectFill"></image>
+						<image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text>
 					</view>
 					<!-- 七彩官畲 -->
 					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
-						<image class="ct_image5" :src="sixPalaceList[4].ticketImage" mode="aspectFill"></image>
+						<image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text>
 					</view>
 				</view>

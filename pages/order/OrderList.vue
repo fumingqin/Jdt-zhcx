@@ -388,7 +388,9 @@
 								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
 								<button class="allBtn" v-if="item.state=='5'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
+								<!-- #ifndef MP-WEIXIN -->
 								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- #endif -->
 								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.state=='尚未支付'" @tap="open3(item.orderNumber,'cs2')">取消</button>
 								<button class="allBtn payBtn" v-if="item.state=='尚未支付'" @tap="keYunPay(item,item.carType)">去支付</button>
@@ -648,12 +650,8 @@
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
 							<view class="CTKYBtnView">
-								<button class="allBtn" @click="busLocation(item)">车辆位置</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
-								<!-- <button class="allBtn QRCode">二维码</button>
-								<button class="allBtn">选座</button>
-								<button class="allBtn" @tap="keYunRefundTicket()">退票</button> -->
 							</view>
 						</view>
 					</view>
@@ -940,7 +938,9 @@
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item.orderNumber,'2')">退票</button>
-								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- #ifndef MP-WEIXIN -->
+								<button class="allBtn" v-if="item.state=='4'&&item.carType=='定制巴士'" @click="busLocation(item)">车辆位置</button>
+								<!-- #endif -->
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="endorse(item)">改签</button>
 							</view>
@@ -1520,7 +1520,6 @@
 
 							<view class="CTKYBtnView">
 								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
-								<!-- <button class="allBtn" @tap="del(index)">删除</button> -->
 							</view>
 						</view>
 					</view>
@@ -2046,7 +2045,7 @@
 			//-------------------------请求定制巴士订单数据-------------------------
 			GetBookLogInfoByUserId(){
 				var that = this;
-				
+				console.log(that.userInfo.userId)
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.Url,
 					method:$KyInterface.KyInterface.Cs_GetBookLogInfoByUserId.method,
@@ -2055,7 +2054,7 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
-						// console.log('定制巴士订单数据',res)
+						console.log('定制巴士订单数据',res)
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -2150,9 +2149,12 @@
 			// -------------------------客运改签-------------------------
 			endorse:function(item) {
 				// console.log(item)
-				uni.navigateTo({
-					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				uni.showToast({
+					title:'待开放...'
 				})
+				// uni.navigateTo({
+				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
+				// })
 			},
 			// -------------------------客运查看车辆位置-------------------------
 			busLocation:function(item) {
@@ -2162,6 +2164,24 @@
 				}
 				uni.navigateTo({
 					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation?busInfo=' + JSON.stringify(loaction)
+				})
+			},
+			// -------------------------客运退票--查询费率-------------------------
+			GetBounceChargeByOrderNumber:function(orderNumber){
+				var that = this;
+				uni.request({
+					url: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.Url,
+					method: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.method,
+					header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
+					data: {
+						orderNumber: orderNumber,
+					},
+					success(respones) {
+						console.log('费率', respones)
+					},
+					fail(respones) {
+						console.log('费率', respones)
+					}
 				})
 			},
 			// -------------------------客运退票-------------------------
@@ -3349,6 +3369,7 @@
 					},
 					success: function(res) {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3391,6 +3412,7 @@
 					},
 					fail() {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 					}
 				})
 			},
@@ -3619,6 +3641,10 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
+						uni.showLoading(
+						{
+							title:'订单加载中...'
+						});
 						this.userInfo = res.data;
 						uni.request({
 							url: $lyfw.Interface.spt_RequestTicketsList.value,
@@ -3807,7 +3833,6 @@
 					data:e,
 					success: (res) => {
 						// console.log(res)
-						
 						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'
@@ -3876,7 +3901,9 @@
 				})
 				var that = this
 				if (this.exitindex == '2') {
-					this.keYunRefundTicket(that.ticketOrderNumber)
+					// this.keYunRefundTicket(that.ticketOrderNumber)
+					//请求费率
+					this.GetBounceChargeByOrderNumber(that.ticketOrderNumber)
 				} else if(this.exitindex == 'cs2tui'){
 					// this.csRefundTicket(that.ticketOrderNumber)
 					//先检测订单支付状态再执行退票操作
