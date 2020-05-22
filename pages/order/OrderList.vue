@@ -381,6 +381,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
@@ -649,6 +651,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
@@ -935,6 +939,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item.orderNumber,'2')">退票</button>
@@ -1210,6 +1216,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
@@ -1517,7 +1525,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
 							</view>
@@ -2103,6 +2112,13 @@
 					return setTime;
 				}
 			},
+			//-------------------------------获取班次信息-------------------------------
+			getScheduleNum:function(param){
+				if(param.carType != '定制巴士'){
+					var schedule = param.executeScheduleID.split('|');
+					return schedule[1];
+				}
+			},
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {
 				if (!(/(^[1-9]\d*$)/.test(param))){//如果不是数字
@@ -2177,16 +2193,37 @@
 						orderNumber: orderNumber,
 					},
 					success(respones) {
-						console.log('费率', respones)
+						if(respones.data.status == true){
+							uni.hideLoading();
+							let BounceMoney = respones.data.data.BounceMoney;
+							uni.showModal({
+								title:'温馨提示',
+								content:'退票将收取手续费，退款金额为' + BounceMoney + '元',
+								success(res) {
+									if(res.confirm) {
+										that.keYunRefundTicket(orderNumber)
+									}
+								}
+							})
+						}else if(respones.data.status == false){
+							uni.hideLoading();
+							uni.showToast({
+								title:respones.data.msg,
+								icon:'none'
+							})
+						}
 					},
 					fail(respones) {
+						uni.hideLoading();
 						console.log('费率', respones)
 					}
 				})
 			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				console.log(orderNumber)
+				uni.showLoading({
+					title: '正在退票中...'
+				})
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -2196,7 +2233,7 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						console.log('删除结果', respones)
+						console.log('退票结果', respones)
 						if (respones.data.status == true) {
 							uni.hideLoading()
 							if(respones.data.msg){
