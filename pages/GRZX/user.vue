@@ -93,7 +93,7 @@
 		<view :hidden="userFeedbackHidden" class="popup_content">
 			<view class="popup_title">添加</view>
 			<view class="popup_textarea_item">
-				<input class="inputClass" v-model="contantPhone" placeholder="输入紧急联系人的手机号码" type="number" maxlength="11"/>
+				<input class="inputClass" v-model="contantPhone" placeholder="输入紧急联系人的手机号码" type="number" maxlength="11" :focus='focusType'/>
 				<view>
 					<button class="popup_button" @click="submit">确定</button>
 				</view>
@@ -128,6 +128,7 @@
 				birthday:'',
 				gender:'',
 				port:'',
+				focusType:false,
 			}
 		},
 		computed: {
@@ -265,7 +266,10 @@
 				})
 			},
 			//--------------------添加紧急联系人的电话号码--------------------
-			addContact(){				
+			addContact(){
+				// setTimeout(function(){
+					this.focusType=true;
+				// },5000);
 				var that=this;
 				uni.getStorage({
 					key:'userInfo',
@@ -300,42 +304,29 @@
 					// #endif
 				}else{
 					uni.request({
-						url:that.$GrzxInter.Interface.changeInfo.value,
+						url:that.$GrzxInter.Interface.AddEmergencyContact.value,
 						data:{
-							userId:that.userId,
-							gender:that.gender,
-							openId_qq:that.openId_qq,
-							openId_wx:that.openId_wx,
-							openId_xcx:that.openId_xcx,
-							address:that.address,
-							nickname:that.nickname,
-							birthday:that.birthday,
-							autograph:that.contantPhone,
-							phoneNumber:that.phoneNumber,
+							UserId:that.userId,
+							Autograph:that.contantPhone,
 						},
-						method:that.$GrzxInter.Interface.changeInfo.method,
+						method:that.$GrzxInter.Interface.AddEmergencyContact.method,
 						success(res) {
-							console.log(res,'271')
-							uni.request({
-								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								data:{
-									portrait:that.port,
-									userId:that.userId,
-								},
-								method:that.$GrzxInter.Interface.changeInfoPortrait.method,
-								success(res1) {
-									if(res.data.data!=""){
-										console.log(res.data.data,'296')
-										uni.setStorageSync('userInfo',res1.data.data)
-									}
-									that.userFeedbackHidden=true;
-								}
+							if(res.data.data!=""){
+								console.log(res.data.data,'296')
+								uni.setStorageSync('userInfo',res.data.data)
+							}
+							uni.showToast({
+								title:'保存成功',
+								icon:'success'
 							})
+							that.focusType=false;
+							that.userFeedbackHidden=true;
 						}
 					})
 				}
 			},
 			hideDiv(){
+				this.focusType=false;
 				this.userFeedbackHidden=true;
 			},
 			//------------------------------投诉---------------------------

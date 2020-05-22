@@ -167,6 +167,12 @@ const KyInterface = {
 		header:{'content-type':'application/x-www-form-urlencoded'},
 		page:["pages/order/OrderList.vue"],
 	},
+	Ky_GetBounceChargeByOrderNumber:{
+		Url:Url + '/api/ky/GetBounceChargeByOrderNumber',
+		name:'客运-请求退票费率',
+		method:'GET',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 	//--------------------------------------定制巴士--------------------------------------
 	Cs_GetAllLine:{
 		Url:Url + '/api/CustomizedBus/GetAllLine',
@@ -176,7 +182,13 @@ const KyInterface = {
 	},
 	Cs_GetScheduleList:{
 		Url:Url + '/api/CustomizedBus/GetSellableSchedule',
-		name:'定制巴士-查询班次',
+		name:'定制巴士-查询班次-班线id',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Cs_GetSellableScheduleByLineName:{
+		Url:Url + '/api/CustomizedBus/GetSellableScheduleByLineName',
+		name:'定制巴士-查询班次-班线名称',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
