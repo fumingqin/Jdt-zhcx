@@ -1131,7 +1131,6 @@
 		font-weight: 300;
 		color: #2C2D2D;
 	}
-s
 	.callPolice {
 		font-size: 32rpx;
 		font-family: Source Han Sans SC;
