@@ -57,9 +57,11 @@ export default{
 			sessionKey:'',
 			openId_xcx:'',
 			userInfo:[],
+			type:'',
 		}
 	},
-	onLoad(){
+	onLoad(options){
+		this.type=options.type;
 		var isCanUse=uni.getStorageSync('isCanUse');
 		if(isCanUse){
 			this.wxGetUserInfo();
@@ -75,15 +77,22 @@ export default{
 				provider: 'weixin',
 				success: function(infoRes) {
 					console.log(infoRes,'49')
-					
 					that.userInfo=infoRes.userInfo;
 					uni.setStorageSync('isCanUse', true);//记录是否第一次授权  false:表示不是第一次授权
-					uni.login({
-						success(res2){
-							console.log(res2,'res2')
-							that.getOpenID(res2.code)
-						}
-					})
+					if(that.type=="index"){
+						uni.showToast({
+							title:'授权成功！',
+							icon:'success',
+						})
+						uni.navigateBack();
+					}else{
+						uni.login({
+							success(res2){
+								console.log(res2,'res2')
+								that.getOpenID(res2.code)
+							}
+						})	
+					}
 				},
 				fail(res) {
 					uni.showToast({
@@ -121,15 +130,16 @@ export default{
 							if(!res.data.status || res.data.data.phoneNumber=="" || res.data.data.phoneNumber==null){
 								that.bindState=true;
 							}else{
+								uni.setStorageSync('userInfo',res.data.data)
 								uni.showToast({
 									title:'登录成功！',
 									icon:'success',
 								})
-								uni.setStorageSync('userInfo',res.data.data)
 								setTimeout(function(){
-									uni.switchTab({
-										url:'/pages/Home/Index',
-									})
+									// uni.switchTab({
+									// 	url:'/pages/Home/Index',
+									// })
+									uni.navigateBack();
 								},500);
 							}	
 						}
@@ -194,9 +204,10 @@ export default{
 										})
 										uni.setStorageSync('userInfo',res3.data.data)
 										setTimeout(function(){
-											uni.switchTab({
-												url:'/pages/Home/Index',
-											})
+											// uni.switchTab({
+											// 	url:'/pages/Home/Index',
+											// })
+											uni.navigateBack();
 										},500);
 									}
 								})

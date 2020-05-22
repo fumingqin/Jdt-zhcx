@@ -5,17 +5,15 @@
 			<view class="boxClass" v-for="(item, index) in passengerList" :key="index" @click="editPassenger(item)">  <!--个人中心页面进入 -->
 				<view class="nameClass">{{item.userName}}</view>
 				<view class="sexClass">{{item.userSex}}</view>
-				<view class="typeClass">{{item.userType}}</view>
-				<view class="codeClass fontStyle">身份证</view>
+				<view class="codeClass fontStyle">证件号</view>
 				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
+					<view class="typeClass">{{item.userType}}</view>
+					<text style="font-size: 24upx;color: #2C2D2D;line-height: 57upx;margin-left: 20upx;">{{item.userauditState}}</text>
 					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
-					<text v-if="item.userauditState=='待审核'" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.userauditState=='审核通过'" class="fontClass" style="width: 110upx;">审核通过</text>
-					<text v-if="item.userauditState=='审核未通过'" class="fontClass" style="width: 140upx;">审核未通过</text>	
+					<!-- <text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text> -->
 				</view>
 				<view class="btnRight">
 					<image src="../../static/GRZX/btnRight.png" style="width: 100%;height: 100%;"></image>
@@ -30,17 +28,16 @@
 			<view class="boxClass" v-for="(item, index) in passengerList" :key="index" @click="selete(item)">  <!--个人中心页面进入 -->
 				<view class="nameClass">{{item.userName}}</view>
 				<view class="sexClass">{{item.userSex}}</view>
-				<view class="typeClass">{{item.userType}}</view>
+				<!-- <view class="typeClass">{{item.userType}}</view> -->
 				<view class="codeClass fontStyle">身份证</view>
 				<view class="codeNumClass fontStyle">{{item.userCodeNum}}</view>
 				<view class="phoneClass fontStyle">联系电话</view>
 				<view class="phoneNumClass fontStyle">{{item.userPhoneNum}}</view>
 				<view class="redBox">
+					<view class="typeClass">{{item.userType}}</view>
+					<text style="font-size: 24upx;color: #2C2D2D;line-height: 57upx;margin-left: 20upx;">{{item.userauditState}}</text>
 					<text v-if="item.userDefault==true" class="fontClass" style="width: 80upx;">本人</text>
-					<text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text>
-					<text v-if="item.userauditState=='待审核'" class="fontClass" style="width: 80upx;">待审核</text>
-					<text v-if="item.userauditState=='审核通过'" class="fontClass" style="width: 110upx;">审核通过</text>
-					<text v-if="item.userauditState=='审核未通过'" class="fontClass" style="width: 140upx;">审核未通过</text>	
+					<!-- <text v-if="item.userEmergencyContact==true" class="fontClass" style="width: 80upx;">联系人</text> -->
 				</view>
 				<view v-if="item.deleteIndex==0" class="btnCheck"> 
 					<image src="../../static/GRZX/btnUncheck.png" style="width: 100%;height: 100%;"></image>
@@ -157,9 +154,11 @@
 					},500);
 					// #endif
 					//#ifdef MP-WEIXIN
-					uni.navigateTo({
-						url:'/pages/Home/wxAuthorize',
-					})
+					setTimeout(function(){
+						uni.navigateTo({
+							url:'/pages/Home/wxAuthorize',
+						})
+					},500);
 					// #endif
 				}
 			})
@@ -527,9 +526,10 @@
 	.typeClass{
 		font-size: 24upx;
 		color: #2C2D2D;
-		position: absolute;
-		left: 33%;
-		top:47upx;
+		line-height: 57upx;
+		// position: absolute;
+		// left: 33%;
+		// top:47upx;
 	}
 	.codeClass{
 		position: absolute;
@@ -553,7 +553,7 @@
 	}
 	.redBox{
 		position: absolute;
-		left:40%;
+		left:32%;
 		top: 34upx;
 		display: flex;
 	}
