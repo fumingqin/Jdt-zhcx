@@ -94,7 +94,7 @@
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
 			console.log(orderInfo);
-			
+			//检票号---生成二维码
 			this.ticketNumber = orderInfo.ticketNumber;
 			that.stringTurnArray(orderInfo.iDNameType);
 			that.getTicketNum(orderInfo);

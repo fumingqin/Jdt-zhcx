@@ -176,7 +176,7 @@
 					},
 					success: (res) => {
 						// uni.hideLoading();
-						console.log(res.data);
+						// console.log(res.data);
 						//非空判断
 						if (res.data.status == true) {
 							if(res.data.data){
@@ -185,7 +185,7 @@
 								for(i; i < res.data.data.length;i++){
 									that.allTicketsList.push(res.data.data[i])
 								}
-								console.log(that.allTicketsList)
+								// console.log(that.allTicketsList)
 								//加载定制巴士班次列表数据
 								that.getSpecialBusTicketInfo(date);
 							}else if(res.data.data.length == 0) {
@@ -207,14 +207,14 @@
 			getSpecialBusTicketInfo: function(date) {
 				var that = this;
 				uni.showLoading();
-				var LineID = that.startStation + '-' + that.endStation;
+				var LineName = that.startStation + '-' + that.endStation;
 				uni.request({
 					url: $KyInterface.KyInterface.Cs_GetSellableScheduleByLineName.Url,
 					method: $KyInterface.KyInterface.Cs_GetSellableScheduleByLineName.method,
 					header: $KyInterface.KyInterface.Cs_GetSellableScheduleByLineName.header,
 					data: {
 						executeDate: date,
-						LineID: LineID,
+						LineName: LineName,
 					},
 					success: (res) => {
 						console.log(res)
@@ -239,17 +239,21 @@
 								}
 								that.allTicketsList = that.ForwardRankingDate(that.allTicketsList);
 							}else if(res.data.ScheduleForSell.length == 0) {
+								if(that.departureData.length == 0){
+									uni.showToast({
+										title: '暂无班次信息',
+										icon: 'none'
+									})
+								}
+							}
+						} else if (res.data.Successed == false){
+							// that.departureData = res.data.ScheduleForSell;
+							if(that.departureData.length == 0){
 								uni.showToast({
 									title: '暂无班次信息',
 									icon: 'none'
 								})
 							}
-						} else if (res.data.Successed == false){
-							// that.departureData = res.data.ScheduleForSell;
-							uni.showToast({
-								title: '查无班次',
-								icon: 'none'
-							})
 						}
 					},
 					fail(res) {
@@ -409,6 +413,7 @@
 						}
 					})
 				}else {
+					//如果选择的是传统客运/定制班车就进下面的方法
 					if(item.shuttleType != '定制巴士'){
 						//如果当前选的是流水班次就弹框提示
 						if(item.priceID.lastIndexOf('前') != -1) {
@@ -450,6 +455,7 @@
 				}
 			},
 			goNext:function(item){
+				
 				uni.setStorage({
 					key: 'ticketDate',
 					data: item,
