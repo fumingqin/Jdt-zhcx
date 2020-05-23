@@ -1873,29 +1873,31 @@
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
-			uni.startPullDownRefresh();
+			
 			this.getCurrent();
 			this.getOpenID();
+			uni.startPullDownRefresh();
 		},
 		onPullDownRefresh: function() {
 			// this.toFinished();
-			this.getUserInfo();//加载传统客运订单方法
+			//加载传统客运订单方法
+			// this.getUserInfo();
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
 			if(this.currentModel==0){
-				that.getUserInfo();//加载传统客运订单方法
+				this.getUserInfo();//加载传统客运订单方法
 			}else if(this.currentModel==1){
-				that.GetBookLogInfoByUserId();//加载定制巴士订单方法
+				this.GetBookLogInfoByUserId();//加载定制巴士订单方法
 			}else if(this.currentModel==2){
-				that.loadczcData();//加载出租车订单方法
+				this.loadczcData();//加载出租车订单方法
 			}else if(this.currentModel==3){
-				that.getOrderList();//加载出租车-专线车订单方法
+				this.getOrderList();//加载出租车-专线车订单方法
 			}else if(this.currentModel==4){
-				that.getSfcOrderList();//加载出租车-顺风车订单方法
+				this.getSfcOrderList();//加载出租车-顺风车订单方法
 			}else if(this.currentModel==5){
-				that.toFinished();//加载景区订单方法
+				this.toFinished();//加载景区订单方法
 			}
 		},
 		methods: {
