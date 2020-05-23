@@ -73,6 +73,16 @@
 			}
 		},
 		{
+			"path": "pages/GRZX/addFreeChildren", //添加免票儿童
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					//app页面不显示滚动条
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
 			"path": "pages/GRZX/notice", //推文通知
 			"style": {
 				// #ifdef H5
@@ -368,6 +378,10 @@
                     "style" : {
 						"navigationStyle": "custom"
 					}
+                }
+                ,{
+                    "path" : "pages/CZC/TripShare",
+                    "style" : {"navigationStyle": "custom"}
                 }
             ]
 		},

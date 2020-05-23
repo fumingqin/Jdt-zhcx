@@ -396,6 +396,7 @@
 					imageUrl: ''
 				}], //banner图片
 				TopHeight: 0, //小程序距离顶部的距离
+				IsCallAgain:false,
 			}
 		},
 
@@ -438,7 +439,10 @@
 			if (options.current) {
 				that.current = parseInt(options.current);
 			}
-			that.intervalGet();
+			if(options.callagain==1){
+				that.IsCallAgain=true;
+			}
+			// that.intervalGet();
 		},
 		onUnload() {
 			uni.removeStorage({
@@ -462,7 +466,7 @@
 					that.startLon = res.data.lng;
 					that.startLat = res.data.lat;
 					that.startlocation = res.data;
-					// console.log(that.startLonLat);
+					console.log(res.data);
 				}
 			});
 			uni.getStorage({ //获取终点
@@ -474,6 +478,9 @@
 					that.endLat = res.data.lat;
 					that.endlocation = res.data;
 					that.destinationArea = res.data.district; //目标区域
+					if(that.IsCallAgain){
+						that.search();
+					}
 				}
 			});
 			uni.getStorage({ //获取乘车人

@@ -4,10 +4,17 @@
 			<image @click="back" src="../../static/Order/fanhui.png" style="width: 18rpx; height: 34rpx; margin:103rpx 26rpx; color: #2C2D2D;"></image>
 			<view style="width: 152rpx; height: 48rpx; margin: 92rpx 232rpx;color: #333333; font-size: 38rpx;font-weight:bold;">我的订单</view>
 		</view> -->
-
+        
 		<view class="tab">
+			<view style="display: flex; margin-left: 40rpx; margin-bottom: 20rpx; font-size: 34rpx;">
+				<text>订单类型：</text>
+				<picker @change="selectorChange" mode = "selector" :range="carSelect" name="carSelect">
+				      <view>{{selector}} ></view>
+				</picker>
+			</view>
 			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#3DABFC"></uni-segmented-control>
 		</view>
+		
 		<!-- 最外层view，用于底部拉大 -->
 		<view class="pageView">
 
@@ -123,6 +130,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<button class="allBtn czcpayBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
@@ -518,6 +526,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
@@ -778,6 +787,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<button class="czcpayBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
@@ -1222,7 +1232,7 @@
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open3(item.orderNumber,'cs2')">取消</button>
-								<button class="allBtn payBtn" @tap="keYunPay(item,item.carType)">去支付</button>   
+								<button class="allBtn payBtn" @tap="keYunPay(item,item.carType)">去支付</button>
 							</view>
 						</view>
 					</view>
@@ -1344,6 +1354,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
@@ -1755,6 +1766,8 @@
 				TaxiCost: 0, //价格
 				countdown: 0,
 				items: ['全部', '已完成', '进行中', '未支付', '已取消'],
+				carSelect : ['传统客运','定制巴士','出租车','出租车-专线车','出租车-顺风车','旅游服务'],
+				selector : '传统客运',
 				current: 0,
 				index: 1,
 				exitindex: 0, //订单判断值
@@ -1809,12 +1822,14 @@
 				textareaValue:"",
 				
 				SfcInfo: '',
+				currentModel:'',
 			}
 		},
 		onLoad: function() {
 			var that = this;
 			//获取客运弹框图片
 			that.getPicture();
+			that.getUserInfo();//加载传统客运订单方法
 			//读取用户ID
 			uni.getStorage({
 				key: 'userInfo',
@@ -1852,24 +1867,88 @@
 			
 		},
 		onShow: function() {
-			//请求景区门票数据
-			this.toFinished();
+			// //请求景区门票数据
+			// this.toFinished();
+			//客运刷新状态----获取支付参数
+			if (this.ctkyOrderNum) {
+				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
+			}
+			
+			this.getCurrent();
+			this.getOpenID();
+			uni.startPullDownRefresh();
+		},
+		onPullDownRefresh: function() {
+			// this.toFinished();
+			//加载传统客运订单方法
+			// this.getUserInfo();
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
-			this.getCurrent();
-			this.getOpenID();
-		},
-		onPullDownRefresh: function() {
-			this.toFinished();
-			//客运刷新状态
-			if (this.ctkyOrderNum) {
-				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
+			if(this.currentModel==0){
+				this.getUserInfo();//加载传统客运订单方法
+			}else if(this.currentModel==1){
+				this.GetBookLogInfoByUserId();//加载定制巴士订单方法
+			}else if(this.currentModel==2){
+				this.loadczcData();//加载出租车订单方法
+			}else if(this.currentModel==3){
+				this.getOrderList();//加载出租车-专线车订单方法
+			}else if(this.currentModel==4){
+				this.getSfcOrderList();//加载出租车-顺风车订单方法
+			}else if(this.currentModel==5){
+				this.toFinished();//加载景区订单方法
 			}
 		},
 		methods: {
-			changeTime: function(value) { //时间格式转换
+			//--------------------------订单模块筛选--------------------------
+			selectorChange : function(e){
+				uni.showLoading({
+					title:'加载中...'
+				})
+				this.selector = this.carSelect[e.target.value];//赋值
+				var that=this;
+				this.currentModel=e.target.value;
+				console.log(e.target);
+				console.log(e);
+				if(e.target.value==0){
+					that.getUserInfo();//加载传统客运订单方法
+				}else if(e.target.value==1){
+					that.GetBookLogInfoByUserId();//加载定制巴士订单方法
+				}else if(e.target.value==2){
+					that.loadczcData();//加载出租车订单方法
+				}else if(e.target.value==3){
+					that.getOrderList();//加载出租车-专线车订单方法
+				}else if(e.target.value==4){
+					that.getSfcOrderList();//加载出租车-顺风车订单方法
+				}else if(e.target.value==5){
+					that.toFinished();//加载景区订单方法
+				}
+			},
+CallAgain:function(value){//出租车再次呼叫
+				var endObj={
+					addressName:  value.endAddress,
+					district:  value.destinationArea,
+					lat: value.endLat,
+					lng:  value.endLon,
+				}
+				var startObj={
+					addressName:  value.startAddress,
+					lat: value.startLat,
+					lng:  value.startLon,
+				}
+				uni.setStorage({
+					key: "StartPoint",
+					data: startObj,
+				})
+				uni.setStorage({
+					key: "EndPoint",
+					data: endObj,
+				})
+				uni.navigateTo({
+					url:"/pages/Home/ChooseSite?current=2&callagain=1"
+				})
+			},			changeTime: function(value) { //时间格式转换
 				var date = new Date(value + "+08:00");
 				var year = date.getFullYear();
 				var mounth = date.getMonth() + 1;
@@ -2007,6 +2086,11 @@
 			//-------------------------请求客运订单数据-------------------------
 			getKeYunOrderInfo: function() {
 				var that = this;
+				that.info = [];
+				that.finishArr = [];
+				that.goingArr = [];
+				that.unfinishArr = [];
+				that.cancelArr = [];
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.Url,
 					method: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.method,
@@ -2016,6 +2100,7 @@
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 						console.log('客运订单数据', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
 						if (res.data.status == true) {
@@ -2034,17 +2119,20 @@
 								}
 							}
 							//定制巴士订单测试
-							that.GetBookLogInfoByUserId();
+							// that.GetBookLogInfoByUserId();
 							//出租车请求数据
-							that.loadczcData();
+							// that.loadczcData();
 						} else if (res.data.status == false) {
+							uni.hideLoading();
+							uni.stopPullDownRefresh();
 							//定制巴士订单测试
-							that.GetBookLogInfoByUserId();
+							// that.GetBookLogInfoByUserId();
 							//出租车请求数据
-							that.loadczcData();
+							// that.loadczcData();
 						}
 					},
 					fail(res) {
+						uni.hideLoading();
 						//请求数据失败，停止刷新
 						uni.stopPullDownRefresh();
 						// console.log('错误', res);
@@ -2063,7 +2151,14 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						console.log('定制巴士订单数据',res)
+						that.info = [];
+						that.finishArr = [];
+						that.goingArr = [];
+						that.unfinishArr = [];
+						that.cancelArr = [];
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -2100,6 +2195,8 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						console.log(res)
 					}
 				})
@@ -2114,9 +2211,12 @@
 			},
 			//-------------------------------获取班次信息-------------------------------
 			getScheduleNum:function(param){
+				console.log(param);
 				if(param.carType != '定制巴士'){
-					var schedule = param.executeScheduleID.split('|');
-					return schedule[1];
+					if(param.executeScheduleID){
+						var schedule = param.executeScheduleID.split('|');
+						return schedule[1];
+					}
 				}
 			},
 			//-------------------------判断订单状态-------------------------
@@ -3015,7 +3115,13 @@
 							},
 							method: 'POST',
 							success: (res) => {
+								uni.hideLoading();
 								uni.stopPullDownRefresh();
+								that.info = [];
+								that.finishArr = [];
+								that.goingArr = [];
+								that.unfinishArr = [];
+								that.cancelArr = [];
 								if (res.data.status) {
 									for (var i = 0; i < res.data.data.length; i++) {
 										that.info.push(res.data.data[i]);
@@ -3031,15 +3137,16 @@
 										}
 									}
 									//包车请求数据
-									this.getOrderList();
+									// this.getOrderList();
 								} else {
 									//包车请求数据
-									this.getOrderList();
+									// this.getOrderList();
 								}
 							}
 						})
 					},
 					fail() {
+						uni.hideLoading();
 						//请求数据失败，停止刷新
 						uni.stopPullDownRefresh();
 						uni.showToast({
@@ -3129,7 +3236,13 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
+						uni.hideLoading();
 						uni.stopPullDownRefresh();
+						that.info = [];
+						that.finishArr = [];
+						that.goingArr = [];
+						that.unfinishArr = [];
+						that.cancelArr = [];
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3172,6 +3285,7 @@
 					},
 					fail() {
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 					}
 				})
 			},
@@ -3405,8 +3519,13 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
-						uni.stopPullDownRefresh();
 						uni.hideLoading();
+						uni.stopPullDownRefresh();
+						that.info = [];
+						that.finishArr = [];
+						that.goingArr = [];
+						that.unfinishArr = [];
+						that.cancelArr = [];
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3694,7 +3813,13 @@
 							},
 							success: (res) => {
 								// console.log(res)
+								uni.hideLoading();
 								uni.stopPullDownRefresh();
+								that.info = [];
+								that.finishArr = [];
+								that.goingArr = [];
+								that.unfinishArr = [];
+								that.cancelArr = [];
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
 									that.finishArr = [];
@@ -3736,6 +3861,7 @@
 					fail() {
 						//请求数据失败，停止刷新
 						uni.stopPullDownRefresh();
+						uni.hideLoading();
 						// #ifdef H5
 						uni.showToast({
 							title: '请允许授权给公众号，即将为您返回主页！',
@@ -4520,7 +4646,7 @@
 		position: sticky;
 		top: 0upx;
 		background: #f5f5f5;
-		height: 90upx;
+		height: 140upx;
 		z-index: 99999;
 
 	}
