@@ -99,9 +99,8 @@
 		},
 		onLoad(option) {
 			let that = this;
-			that.orderNumber = "2020052214355302056150";
-			//that.Type = option.type;
-			console.log(option);
+			that.orderNumber = option.orderNumber;
+			that.Type = option.type;
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
 				success: function(res) {
