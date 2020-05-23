@@ -2161,9 +2161,12 @@
 			},
 			//-------------------------------获取班次信息-------------------------------
 			getScheduleNum:function(param){
+				console.log(param);
 				if(param.carType != '定制巴士'){
-					var schedule = param.executeScheduleID.split('|');
-					return schedule[1];
+					if(param.executeScheduleID){
+						var schedule = param.executeScheduleID.split('|');
+						return schedule[1];
+					}
 				}
 			},
 			//-------------------------判断订单状态-------------------------
