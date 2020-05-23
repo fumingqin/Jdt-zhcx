@@ -4,10 +4,17 @@
 			<image @click="back" src="../../static/Order/fanhui.png" style="width: 18rpx; height: 34rpx; margin:103rpx 26rpx; color: #2C2D2D;"></image>
 			<view style="width: 152rpx; height: 48rpx; margin: 92rpx 232rpx;color: #333333; font-size: 38rpx;font-weight:bold;">我的订单</view>
 		</view> -->
-
+        
 		<view class="tab">
+			<view style="display: flex; margin-left: 40rpx; margin-bottom: 20rpx; font-size: 34rpx;">
+				<text>订单类型：</text>
+				<picker @change="selectorChange" mode = "selector" :range="carSelect" name="carSelect">
+				      <view>{{selector}} ></view>
+				</picker>
+			</view>
 			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#3DABFC"></uni-segmented-control>
 		</view>
+		
 		<!-- 最外层view，用于底部拉大 -->
 		<view class="pageView">
 
@@ -382,6 +389,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" v-if="item.state=='7'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
@@ -651,6 +660,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
@@ -938,6 +949,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item.orderNumber,'2')">退票</button>
@@ -1213,6 +1226,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
@@ -1521,7 +1536,8 @@
 								<view class="redring"></view>
 								<view style="color: #AAAAAA; font-size: 28rpx;margin-left: 20rpx;">{{item.endSiteName}}</view>
 							</view>
-
+							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
+								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
 							</view>
@@ -1750,6 +1766,8 @@
 				TaxiCost: 0, //价格
 				countdown: 0,
 				items: ['全部', '已完成', '进行中', '未支付', '已取消'],
+				carSelect : ['传统客运','定制巴士','出租车','专线车','顺风车','旅游服务'],
+				selector : '传统客运',
 				current: 0,
 				index: 1,
 				exitindex: 0, //订单判断值
@@ -1847,8 +1865,8 @@
 			
 		},
 		onShow: function() {
-			//请求景区门票数据
-			this.toFinished();
+			// //请求景区门票数据
+			// this.toFinished();
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
@@ -1857,14 +1875,37 @@
 			this.getOpenID();
 		},
 		onPullDownRefresh: function() {
-			this.toFinished();
+			// this.toFinished();
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
 		},
 		methods: {
-			CallAgain:function(value){//出租车再次呼叫
+			//--------------------------订单模块筛选--------------------------
+			selectorChange : function(e){
+				uni.showLoading({
+					title:'加载中...'
+				})
+				this.selector = this.carSelect[e.target.value];//赋值
+				var that=this;
+				console.log(e.target);
+				console.log(e);
+				if(e.target.value==0){
+					that.getUserInfo();//加载传统客运订单方法
+				}else if(e.target.value==1){
+					that.GetBookLogInfoByUserId();//加载定制巴士订单方法
+				}else if(e.target.value==2){
+					that.loadczcData();//加载出租车订单方法
+				}else if(e.target.value==3){
+					that.getOrderList();//加载出租车-专线车订单方法
+				}else if(e.target.value==4){
+					that.getSfcOrderList();//加载出租车-顺风车订单方法
+				}else if(e.target.value==5){
+					that.toFinished();//加载景区订单方法
+				}
+			},
+CallAgain:function(value){//出租车再次呼叫
 				var endObj={
 					addressName:  value.endAddress,
 					district:  value.destinationArea,
@@ -1887,8 +1928,7 @@
 				uni.navigateTo({
 					url:"/pages/Home/ChooseSite?current=2&callagain=1"
 				})
-			},
-			changeTime: function(value) { //时间格式转换
+			},			changeTime: function(value) { //时间格式转换
 				var date = new Date(value + "+08:00");
 				var year = date.getFullYear();
 				var mounth = date.getMonth() + 1;
@@ -2026,6 +2066,11 @@
 			//-------------------------请求客运订单数据-------------------------
 			getKeYunOrderInfo: function() {
 				var that = this;
+				that.info = [];
+				that.finishArr = [];
+				that.goingArr = [];
+				that.unfinishArr = [];
+				that.cancelArr = [];
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.Url,
 					method: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.method,
@@ -2034,7 +2079,8 @@
 						clientID: that.userInfo.userId,
 					},
 					success: (res) => {
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
+						uni.hideLoading();
 						console.log('客运订单数据', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
 						if (res.data.status == true) {
@@ -2053,19 +2099,21 @@
 								}
 							}
 							//定制巴士订单测试
-							that.GetBookLogInfoByUserId();
+							// that.GetBookLogInfoByUserId();
 							//出租车请求数据
-							that.loadczcData();
+							// that.loadczcData();
 						} else if (res.data.status == false) {
+							uni.hideLoading();
 							//定制巴士订单测试
-							that.GetBookLogInfoByUserId();
+							// that.GetBookLogInfoByUserId();
 							//出租车请求数据
-							that.loadczcData();
+							// that.loadczcData();
 						}
 					},
 					fail(res) {
+						uni.hideLoading();
 						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						// console.log('错误', res);
 					}
 				})
@@ -2082,7 +2130,13 @@
 						UserAID: that.userInfo.userId
 					},
 					success(res) {
+						uni.hideLoading();
 						console.log('定制巴士订单数据',res)
+						that.info = [];
+						that.finishArr = [];
+						that.goingArr = [];
+						that.unfinishArr = [];
+						that.cancelArr = [];
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -2119,6 +2173,7 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading();
 						console.log(res)
 					}
 				})
@@ -2129,6 +2184,16 @@
 				if (date) {
 					var setTime = date.replace('T', ' ');
 					return setTime;
+				}
+			},
+			//-------------------------------获取班次信息-------------------------------
+			getScheduleNum:function(param){
+				console.log(param);
+				if(param.carType != '定制巴士'){
+					if(param.executeScheduleID){
+						var schedule = param.executeScheduleID.split('|');
+						return schedule[1];
+					}
 				}
 			},
 			//-------------------------判断订单状态-------------------------
@@ -2194,9 +2259,48 @@
 					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation?busInfo=' + JSON.stringify(loaction)
 				})
 			},
+			// -------------------------客运退票--查询费率-------------------------
+			GetBounceChargeByOrderNumber:function(orderNumber){
+				var that = this;
+				uni.request({
+					url: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.Url,
+					method: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.method,
+					header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
+					data: {
+						orderNumber: orderNumber,
+					},
+					success(respones) {
+						if(respones.data.status == true){
+							uni.hideLoading();
+							let BounceMoney = respones.data.data.BounceMoney;
+							uni.showModal({
+								title:'温馨提示',
+								content:'退票将收取手续费，退款金额为' + BounceMoney + '元',
+								success(res) {
+									if(res.confirm) {
+										that.keYunRefundTicket(orderNumber)
+									}
+								}
+							})
+						}else if(respones.data.status == false){
+							uni.hideLoading();
+							uni.showToast({
+								title:respones.data.msg,
+								icon:'none'
+							})
+						}
+					},
+					fail(respones) {
+						uni.hideLoading();
+						console.log('费率', respones)
+					}
+				})
+			},
 			// -------------------------客运退票-------------------------
 			keYunRefundTicket: function(orderNumber) {
-				console.log(orderNumber)
+				uni.showLoading({
+					title: '正在退票中...'
+				})
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
@@ -2206,7 +2310,7 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						console.log('删除结果', respones)
+						console.log('退票结果', respones)
 						if (respones.data.status == true) {
 							uni.hideLoading()
 							if(respones.data.msg){
@@ -2988,7 +3092,13 @@
 							},
 							method: 'POST',
 							success: (res) => {
-								uni.stopPullDownRefresh();
+								uni.hideLoading();
+								// uni.stopPullDownRefresh();
+								that.info = [];
+								that.finishArr = [];
+								that.goingArr = [];
+								that.unfinishArr = [];
+								that.cancelArr = [];
 								if (res.data.status) {
 									for (var i = 0; i < res.data.data.length; i++) {
 										that.info.push(res.data.data[i]);
@@ -3004,17 +3114,18 @@
 										}
 									}
 									//包车请求数据
-									this.getOrderList();
+									// this.getOrderList();
 								} else {
 									//包车请求数据
-									this.getOrderList();
+									// this.getOrderList();
 								}
 							}
 						})
 					},
 					fail() {
+						uni.hideLoading();
 						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						uni.showToast({
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
@@ -3102,7 +3213,13 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
-						uni.stopPullDownRefresh();
+						uni.hideLoading();
+						// uni.stopPullDownRefresh();
+						that.info = [];
+						that.finishArr = [];
+						that.goingArr = [];
+						that.unfinishArr = [];
+						that.cancelArr = [];
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3144,7 +3261,8 @@
 						}
 					},
 					fail() {
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
+						uni.hideLoading();
 					}
 				})
 			},
@@ -3378,8 +3496,13 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
-						uni.stopPullDownRefresh();
 						uni.hideLoading();
+						// uni.stopPullDownRefresh();
+						that.info = [];
+						that.finishArr = [];
+						that.goingArr = [];
+						that.unfinishArr = [];
+						that.cancelArr = [];
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3421,7 +3544,7 @@
 						}
 					},
 					fail() {
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						uni.hideLoading();
 					}
 				})
@@ -3667,7 +3790,13 @@
 							},
 							success: (res) => {
 								// console.log(res)
-								uni.stopPullDownRefresh();
+								uni.hideLoading();
+								// uni.stopPullDownRefresh();
+								that.info = [];
+								that.finishArr = [];
+								that.goingArr = [];
+								that.unfinishArr = [];
+								that.cancelArr = [];
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
 									that.finishArr = [];
@@ -3708,7 +3837,8 @@
 					},
 					fail() {
 						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
+						uni.hideLoading();
 						// #ifdef H5
 						uni.showToast({
 							title: '请允许授权给公众号，即将为您返回主页！',
@@ -3843,7 +3973,6 @@
 					data:e,
 					success: (res) => {
 						// console.log(res)
-						
 						if(e.startStation == ''){
 							uni.navigateTo({
 								url:'../../pages_LYFW/pages/LYFW/tourismProducts/tp_chooseShuttle?originIndex=0'
@@ -3912,7 +4041,9 @@
 				})
 				var that = this
 				if (this.exitindex == '2') {
-					this.keYunRefundTicket(that.ticketOrderNumber)
+					// this.keYunRefundTicket(that.ticketOrderNumber)
+					//请求费率
+					this.GetBounceChargeByOrderNumber(that.ticketOrderNumber)
 				} else if(this.exitindex == 'cs2tui'){
 					// this.csRefundTicket(that.ticketOrderNumber)
 					//先检测订单支付状态再执行退票操作
@@ -4492,7 +4623,7 @@
 		position: sticky;
 		top: 0upx;
 		background: #f5f5f5;
-		height: 90upx;
+		height: 140upx;
 		z-index: 99999;
 
 	}

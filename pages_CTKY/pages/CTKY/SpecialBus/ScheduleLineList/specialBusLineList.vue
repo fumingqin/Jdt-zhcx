@@ -89,7 +89,7 @@
 			getTicketInfo: function(date) {
 				var that = this;
 				uni.showLoading();
-				
+				console.log(that.lineID)
 				uni.request({
 					url: $KyInterface.KyInterface.Cs_GetScheduleList.Url,
 					method: $KyInterface.KyInterface.Cs_GetScheduleList.method,
@@ -101,6 +101,7 @@
 					success: (res) => {
 						console.log(res);
 						uni.hideLoading();
+						
 						//非空判断
 						if (res.data.Successed == true) {
 							that.departureData = res.data.ScheduleForSell;
@@ -187,6 +188,7 @@
 			},
 			//-------------------------------点击班次进行缓存，并打开页面  开始-------------------------------
 			ticketDetail(item) {
+				console.log(item)
 				var that = this;
 				uni.setStorage({
 					key: 'specialTicketDate',

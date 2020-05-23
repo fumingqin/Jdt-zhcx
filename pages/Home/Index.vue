@@ -461,26 +461,25 @@
 			// #ifdef MP-WEIXIN
 			getLoginState(){
 				uni.getStorage({
-					key:'userInfo',
+					key:'isCanUse',
 					success(res){
-						console.log(res,"res")
-						if(res.data.openId_xcx==""||res.data.openId_xcx==null){
-							uni.showModal({
-								content:'您暂未登录，是否登录',
-								confirmText:'去登录',
-								cancelText:'暂不登录',
-								success(res1) {
-									if (res1.confirm) {
-										uni.navigateTo({
-											url:'/pages/Home/wxAuthorize'
-										})
-									} else if (res1.cancel) {
-										// console.log('用户点击取消');
-										
-									}
-								}
-							})
-						}
+						// console.log(res,"res")
+						// if(res.data.openId_xcx==""||res.data.openId_xcx==null){
+						// 	uni.showModal({
+						// 		content:'您暂未登录，是否登录',
+						// 		confirmText:'去登录',
+						// 		cancelText:'暂不登录',
+						// 		success(res1) {
+						// 			if (res1.confirm) {
+						// 				uni.navigateTo({
+						// 					url:'/pages/Home/wxAuthorize?type=index'
+						// 				})
+						// 			} else if (res1.cancel) {
+						// 				// console.log('用户点击取消');
+						// 			}
+						// 		}
+						// 	})
+						// }
 					},
 					fail(err){
 						uni.showModal({
@@ -490,11 +489,10 @@
 							success(res) {
 								if (res.confirm) {
 									uni.navigateTo({
-										url:'/pages/Home/wxAuthorize'
+										url:'/pages/Home/wxAuthorize?type=index'
 									})
 								} else if (res.cancel) {
 									// console.log('用户点击取消');
-									
 								}
 							}
 						})

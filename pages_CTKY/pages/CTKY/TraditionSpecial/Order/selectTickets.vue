@@ -20,16 +20,17 @@
 		</view>
 
 		<!-- 车票内容部分 -->
-		<view class="ctky_View" v-for="(item,index) in departureData" :key="index" @click="ticketDetail(departureData[index])">
+		<view class="ctky_View" v-for="(item,index) in allTicketsList" :key="index" @click="ticketDetail(allTicketsList[index])">
 			<view class="ctky_View_Left">
 				<view style="display: flex;align-items: center;margin:20upx 25upx;">
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType == '普通班车' && isFlowTickets(item.priceID) == '普通'">传统</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType == '普通班车' && isFlowTickets(item) == '普通'">传统</view>
 					<view class="markType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.shuttleType == '定制班车'">定制</view>
-					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType == '普通班车' && isFlowTickets(item.priceID) == '流水'">流水</view>
+					<view class="busMarkType" style="border:#FF5A00 solid 1px;color:#FF5A00;" v-if="item.shuttleType == '定制巴士'">定制巴士</view>
+					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType == '普通班车' && isFlowTickets(item) == '流水'">流水</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{turnDate(item.setTime)}}</view>
 				</view>
-				<view style="margin-left: 25upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;margin-bottom: 16upx;">班次：{{getScheduleNum(item.executeScheduleID)}}</view>
+				<view v-if="item.shuttleType != '定制巴士'" style="margin-left: 25upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+					color: #333333;margin-bottom: 16upx;">班次：{{getScheduleNum(item)}}</view>
 				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
 					<image src="../../../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
 					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
@@ -46,11 +47,16 @@
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
 				font-size: 28upx;color: #666666;"
 				 v-if="item.shuttleType == '定制班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票/站外上车</view>
+				 <view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
+				 font-size: 28upx;color: #666666;"
+				  v-if="item.shuttleType == '定制巴士'">{{item.SetoutTimeDesc}}</view>
 			</view>
 			<view class="ctky_View_Right">
 				<view>
-					<view style="margin-right: 28upx;font-size: 36upx;font-style:
-		           SourceHanSansSC-Regular; color: #FC4646;">￥{{item.fare}}</view>
+					<view v-if="item.shuttleType != '定制巴士'" style="margin-right: 28upx;font-size: 30upx;font-style:
+		           SourceHanSansSC-Regular; color: #FC4646;">成人票￥{{item.fare}}</view>
+				   <view v-if="item.shuttleType != '定制巴士'" style="margin-right: 28upx;font-size: 30upx;font-style:
+				   SourceHanSansSC-Regular; color: #FC4646;">儿童票￥{{item.halfTicket}}</view>
 					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
 		           SourceHanSansSC-Light; color: #666666;">余{{item.remainingVotes}}张</view>
 				</view>
@@ -85,6 +91,7 @@
 				endoresOrderNum:'',//改签的订单编号
 				endorescompanyCode:'',
 				scheduleDetailNum:'',//班次
+				allTicketsList:[],//所有的班次信息（客运+定制巴士）
 			}
 		},
 		onLoad(param) {
@@ -149,13 +156,14 @@
 					}
 				})
 			},
-			//-------------------------------加载班次列表数据-------------------------------
+			//-------------------------------加载客运班次列表数据-------------------------------
 			getTicketInfo: function(date) {
 				var that = this;
 				uni.showLoading();
 				if (date == 'date') {
 					date = new Date();
 				}
+				that.allTicketsList = [];
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_ScheduleUrl.Url,
 					method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
@@ -167,40 +175,116 @@
 						date: date,
 					},
 					success: (res) => {
-						uni.hideLoading();
-						console.log(res.data);
+						// uni.hideLoading();
+						// console.log(res.data);
 						//非空判断
 						if (res.data.status == true) {
-							that.departureData = res.data.data;
-							if(res.data.data.length == 0) {
+							if(res.data.data){
+								that.departureData = res.data.data;
+								let i = 0;
+								for(i; i < res.data.data.length;i++){
+									that.allTicketsList.push(res.data.data[i])
+								}
+								// console.log(that.allTicketsList)
+								//加载定制巴士班次列表数据
+								that.getSpecialBusTicketInfo(date);
+							}else if(res.data.data.length == 0) {
+								//加载定制巴士班次列表数据
+								that.getSpecialBusTicketInfo(date);
+							}
+						} else if (res.data.status == false){
+							//加载定制巴士班次列表数据
+							that.getSpecialBusTicketInfo(date);
+						}
+					},
+					fail(res) {
+						console.log(res);
+						uni.hideLoading();
+					}
+				});
+			},
+			//-------------------------------加载定制巴士班次列表数据-------------------------------
+			getSpecialBusTicketInfo: function(date) {
+				var that = this;
+				uni.showLoading();
+				var LineName = that.startStation + '-' + that.endStation;
+				uni.request({
+					url: $KyInterface.KyInterface.Cs_GetSellableScheduleByLineName.Url,
+					method: $KyInterface.KyInterface.Cs_GetSellableScheduleByLineName.method,
+					header: $KyInterface.KyInterface.Cs_GetSellableScheduleByLineName.header,
+					data: {
+						executeDate: date,
+						LineName: LineName,
+					},
+					success: (res) => {
+						console.log(res)
+						uni.hideLoading();
+						//非空判断
+						if (res.data.Successed == true) {
+							if(res.data.ScheduleForSell){
+								let i = 0;
+								for(i; i < res.data.ScheduleForSell.length;i++){
+									var array = {
+										shuttleType:'定制巴士',
+										setTime:res.data.ScheduleForSell[i].SetoutTime,
+										startStaion:res.data.ScheduleForSell[i].StartSiteName,
+										endStation:res.data.ScheduleForSell[i].EndSiteName,
+										SetoutTimeDesc:res.data.ScheduleForSell[i].SetoutTimeDesc,
+										remainingVotes:res.data.ScheduleForSell[i].MaxTicket,
+										LineViaSiteName:res.data.ScheduleForSell[i].LineViaSiteName,
+										ScheduleID:res.data.ScheduleForSell[i].ScheduleID,
+										ScheduleCompanyCode:res.data.ScheduleForSell[i].ScheduleCompanyCode,
+									};
+									that.allTicketsList.push(array);
+								}
+								that.allTicketsList = that.ForwardRankingDate(that.allTicketsList);
+							}else if(res.data.ScheduleForSell.length == 0) {
+								if(that.departureData.length == 0){
+									uni.showToast({
+										title: '暂无班次信息',
+										icon: 'none'
+									})
+								}
+							}
+						} else if (res.data.Successed == false){
+							// that.departureData = res.data.ScheduleForSell;
+							if(that.departureData.length == 0){
 								uni.showToast({
 									title: '暂无班次信息',
 									icon: 'none'
 								})
 							}
-						} else if (res.data.status == false){
-							that.departureData = res.data.data;
-							uni.showToast({
-								title: '暂无班次信息',
-								icon: 'none'
-							})
 						}
 					},
 					fail(res) {
-						console.log(res);
-						// uni.hideLoading();
+						uni.hideLoading();
 					}
 				});
+			},
+			//-------------------------------班次排序--升序-------------------------------
+			ForwardRankingDate:function(param){
+				for (let i = 0; i < param.length - 1; i++){
+					for (let j = 0; j < param.length - 1 - i; j++) {
+						if (Date.parse(this.turnDate(param[j].setTime)) > Date.parse(this.turnDate(param[j+1].setTime))) {
+							var temp = param[j];
+							param[j] = param[j + 1];
+							param[j + 1] = temp;
+						}
+					}
+				}
+				return param;
 			},
 			viewClick: function(e, item) {
 				this.selectIndex = e;
 				this.date = item.longDate;
 				this.getDeparture();
 			},
-			//-------------------------------获取班次-------------------------------
-			getScheduleNum:function(scheduleNum){
-				var schedule = scheduleNum.split('|');
-				return schedule[1];
+			//-------------------------------获取班次信息-------------------------------
+			getScheduleNum:function(param){
+				if(param.shuttleType != '定制巴士'){
+					var schedule = param.executeScheduleID.split('|');
+					return schedule[1];
+				}
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
@@ -211,12 +295,13 @@
 			isFlowTickets:function(param){
 				//传入班次ID，检测是否包含字段‘前’，有字段‘前’即为流水班次
 				//判断返回值为-1表示没有字段‘前’
-				if(param.lastIndexOf('前') != -1) {
-					return '流水'
-				}else {
-					return '普通'
+				if(param.shuttleType != '定制巴士'){
+					if(param.priceID.lastIndexOf('前') != -1) {
+						return '流水'
+					}else {
+						return '普通'
+					}
 				}
-				
 			},
 			//-------------------------------显示日期-------------------------------
 			onShowDatePicker(type) { //显示
@@ -316,6 +401,7 @@
 			//-------------------------------点击班次进行缓存，并打开页面  开始-------------------------------
 			ticketDetail(item) {
 				var that = this;
+				//改签入口
 				if(that.isEndores == 'true') {
 					let content = that.startStation + '-' + that.endStation + '-' + that.endoresDate
 					uni.showModal({
@@ -327,24 +413,49 @@
 						}
 					})
 				}else {
-					//如果当前选的是流水班次就弹框提示
-					if(item.priceID.lastIndexOf('前') != -1) {
-						uni.showModal({
-							title:'温馨提示',
-							content:'流水班车发车时间间隔短、班次多，旅客购买后可乘坐当天任意流水班车出行。',
-							success(res) {
-								if(res.confirm) {
-									that.goNext(item);
+					//如果选择的是传统客运/定制班车就进下面的方法
+					if(item.shuttleType != '定制巴士'){
+						//如果当前选的是流水班次就弹框提示
+						if(item.priceID.lastIndexOf('前') != -1) {
+							uni.showModal({
+								title:'温馨提示',
+								content:'流水班车发车时间间隔短、班次多，旅客购买后可乘坐当天任意流水班车出行。',
+								success(res) {
+									if(res.confirm) {
+										that.goNext(item);
+									}
 								}
+							})
+						}else {
+							//如果选的不是流水班次就直接跳转到下一个页面
+							that.goNext(item);
+						}
+					}else{
+						var array = {
+							SetoutTime:item.setTime,
+							StartSiteName:item.startStaion,
+							EndSiteName:item.endStation,
+							remainingVotes:item.remainingVotes,
+							LineViaSiteName:item.LineViaSiteName,
+							ScheduleID:item.ScheduleID,
+						}
+						uni.setStorage({
+							key: 'specialTicketDate',
+							data: array,
+							success() {
+								uni.navigateTo({
+									url: '../../SpecialBus/ScheduleLineList/specialBusTakeOrder'
+								})
+							},
+							fail() {
+								console.log('123');
 							}
-						})
-					}else {
-						//如果选的不是流水班次就直接跳转到下一个页面
-						that.goNext(item);
+						});
 					}
 				}
 			},
 			goNext:function(item){
+				
 				uni.setStorage({
 					key: 'ticketDate',
 					data: item,
@@ -596,7 +707,17 @@
 		font-size: 24upx;
 		font-family: SourceHanSansSC-Light;
 	}
-
+	.busMarkType {
+		// width: 65upx;
+		padding: 0 10rpx;
+		height: 37upx;
+		line-height: 37rpx;
+		border-radius: 14upx;
+		text-align: center;
+		align-items: center;
+		font-size: 24upx;
+		font-family: SourceHanSansSC-Light;
+	}
 	.textCLass {
 		margin: 9upx 17upx;
 	}
