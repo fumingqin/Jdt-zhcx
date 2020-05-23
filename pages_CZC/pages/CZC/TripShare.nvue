@@ -91,10 +91,10 @@
 				markers: [],
 				Type: "出租车",
 				textvalue: "",
-				state:0,
-				thisDriverLon:'',//司机
-				thisDriverLat:'',
-				ShowTime:'',
+				state: 0,
+				thisDriverLon: '', //司机
+				thisDriverLat: '',
+				ShowTime: '',
 			}
 		},
 		onLoad(option) {
@@ -166,7 +166,7 @@
 								that.endLat = data.endLat;
 								that.thisDriverLon = data.thisDriverLon; //司机
 								that.thisDriverLat = data.thisDriverLat;
-								that.driverName = data.driverName.substring(0,1)+"师傅";
+								that.driverName = data.driverName.substring(0, 1) + "师傅";
 								that.vehicleNumber = data.vehicleNumber; //车牌号
 								that.state = data.state; //订单状态
 								that.StartAddress = data.startAddress;
@@ -174,19 +174,19 @@
 								that.AppointmentTime = data.appointmentTime.replace("T", " ");
 								that.longitude = data.startLon;
 								that.latitude = data.startLat;
-								that.number=JSON.parse(data.passengers).length
+								that.number = JSON.parse(data.passengers).length
 								//绘制起终点标记
-								that.markers=[];
+								that.markers = [];
 								that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
 								that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
 								that.getDirectionDriving(that.startLon + ',' + that.startLat, that.endLon + ',' + that.endLat);
 								if (that.state == 3 || that.state == 4) {
 									that.setMarker('taxi', that.thisDriverLon, that.thisDriverLat, '../../static/CZC/Car.png');
-									that.ShowTime=data.runTime.substring(11,16);
+									that.ShowTime = data.runTime.substring(11, 16);
 								}
 								if (that.state == 6) {
 									that.markers = that.markers.filter(res => res.id == 'start' || res.id == 'end');
-									that.ShowTime=data.finishTime.substring(11,16);
+									that.ShowTime = data.finishTime.substring(11, 16);
 								}
 							} else {
 								that.IsShow = false;
@@ -236,7 +236,7 @@
 								that.endLat = data.EndLat;
 								that.thisDriverLon = data.DriverLon; //司机
 								that.thisDriverLat = data.DriverLat;
-								that.driverName = data.DriverName.substring(0,1)+"师傅";
+								that.driverName = data.DriverName.substring(0, 1) + "师傅";
 								that.vehicleNumber = data.VehicleNumber; //车牌号
 								that.state = data.State; //订单状态
 								that.StartAddress = data.StartAddress;
@@ -244,19 +244,19 @@
 								that.AppointmentTime = data.AppointmentTime.replace("T", " ");
 								that.longitude = data.StartLon;
 								that.latitude = data.StartLat;
-								that.number=JSON.parse(data.Passengers).length
+								that.number = JSON.parse(data.Passengers).length
 								//绘制起终点标记
-								that.markers=[];
+								that.markers = [];
 								that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
 								that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
 								that.getDirectionDriving(that.startLon + ',' + that.startLat, that.endLon + ',' + that.endLat);
 								if (that.state == 3 || that.state == 4) {
 									that.setMarker('taxi', that.thisDriverLon, that.thisDriverLat, '../../static/CZC/Car.png');
-									that.ShowTime=data.RunTime.substring(11,16);
+									that.ShowTime = data.RunTime.substring(11, 16);
 								}
 								if (that.state == 6) {
 									that.markers = that.markers.filter(res => res.id == 'start' || res.id == 'end');
-									that.ShowTime=data.FinishTime.substring(11,16);
+									that.ShowTime = data.FinishTime.substring(11, 16);
 								}
 							} else {
 								that.IsShow = false;
@@ -297,34 +297,41 @@
 						console.log(res)
 						if (res.data.status) {
 							//赋值结束点经纬度
-							that.IsShow = true;
-							that.startLon = data.StartLon; //起点
-							that.startLat = data.StartLat;
-							that.endLon = data.EndLon; //终点
-							that.endLat = data.EndLat;
-							that.thisDriverLon = data.DriverLon; //司机
-							that.thisDriverLat = data.DriverLat;
-							that.driverName = data.DriverName.substring(0,1)+"师傅";
-							that.vehicleNumber = data.VehicleNumber; //车牌号
-							that.state = data.State; //订单状态
-							that.StartAddress = data.StartAddress;
-							that.EndAddress = data.EndAddress;
-							that.AppointmentTime = data.AppointmentTime.replace("T", " ");
-							that.longitude = data.StartLon;
-							that.latitude = data.StartLat;
-							that.number=JSON.parse(data.Passengers).length 
-							//绘制起终点标记
-							that.markers=[];
-							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
-							that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
-							that.getDirectionDriving(that.startLon + ',' + that.startLat, that.endLon + ',' + that.endLat);
-							if (that.state == 3 || that.state == 4) {
-								that.setMarker('taxi', that.thisDriverLon, that.thisDriverLat, '../../static/CZC/Car.png');
-								that.ShowTime=data.RunTime.substring(11,16);
-							}
-							if (that.state == 6) {
-								that.markers = that.markers.filter(res => res.id == 'start' || res.id == 'end');
-								that.ShowTime=data.FinishTime.substring(11,16);
+
+							if (that.CheckTime(data.OrderTime)) {
+								that.IsShow = true;
+								that.IsShow = true;
+								that.startLon = data.StartLon; //起点
+								that.startLat = data.StartLat;
+								that.endLon = data.EndLon; //终点
+								that.endLat = data.EndLat;
+								that.thisDriverLon = data.DriverLon; //司机
+								that.thisDriverLat = data.DriverLat;
+								that.driverName = data.DriverName.substring(0, 1) + "师傅";
+								that.vehicleNumber = data.VehicleNumber; //车牌号
+								that.state = data.State; //订单状态
+								that.StartAddress = data.StartAddress;
+								that.EndAddress = data.EndAddress;
+								that.AppointmentTime = data.AppointmentTime.replace("T", " ");
+								that.longitude = data.StartLon;
+								that.latitude = data.StartLat;
+								that.number = JSON.parse(data.Passengers).length
+								//绘制起终点标记
+								that.markers = [];
+								that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
+								that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
+								that.getDirectionDriving(that.startLon + ',' + that.startLat, that.endLon + ',' + that.endLat);
+								if (that.state == 3 || that.state == 4) {
+									that.setMarker('taxi', that.thisDriverLon, that.thisDriverLat, '../../static/CZC/Car.png');
+									that.ShowTime = data.RunTime.substring(11, 16);
+								}
+								if (that.state == 6) {
+									that.markers = that.markers.filter(res => res.id == 'start' || res.id == 'end');
+									that.ShowTime = data.FinishTime.substring(11, 16);
+								}
+							} else {
+								that.IsShow = false;
+								that.textvalue = "订单已超过24小时，行程分享已结束";
 							}
 						} else {
 							uni.showToast({
@@ -354,7 +361,7 @@
 					width = 40;
 					height = 40;
 					that.markers = that.markers.filter(res => res.id == 'start' || res.id == 'end');
-				} 
+				}
 				//描绘点的方法
 				var marker = new Object();
 				marker = {
