@@ -20,7 +20,8 @@
             "Maps" : {},
             "Push" : {},
             "OAuth" : {},
-            "Payment" : {}
+            "Payment" : {},
+            "Share" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -71,12 +72,16 @@
                         "UniversalLinks" : ""
                     }
                 },
-                "push" : {
-                    "unipush" : {}
-                },
+                "push" : {},
                 "oauth" : {
                     "qq" : {
                         "appid" : "1110314303"
+                    }
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx4394e02214803063",
+                        "UniversalLinks" : ""
                     }
                 }
             },

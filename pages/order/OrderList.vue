@@ -123,6 +123,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<button class="allBtn czcpayBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
@@ -516,6 +517,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
@@ -774,6 +776,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<button class="czcpayBtn" @click="czcGotoPay(item.orderNumber)" v-if="taxiOrderState(item.state)=='未支付'">去支付</button>
@@ -1214,7 +1217,7 @@
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open3(item.orderNumber,'cs2')">取消</button>
-								<button class="allBtn payBtn" @tap="keYunPay(item,item.carType)">去支付</button>   
+								<button class="allBtn payBtn" @tap="keYunPay(item,item.carType)">去支付</button>
 							</view>
 						</view>
 					</view>
@@ -1336,6 +1339,7 @@
 							</view>
 
 							<view class="CTKYBtnView">
+								<button class="allBtn" @click="CallAgain(item)" v-if="taxiOrderState(item.state)=='已完成'|| taxiOrderState(item.state)=='已取消'">再次呼叫</button>
 								<button class="allBtn" @click="going(item)" v-if="taxiOrderState(item.state)=='进行中'|| taxiOrderState(item.state)=='已完成' || taxiOrderState(item.state)=='待计价'">详情</button>
 								<button class="allBtn" @click="czcComplaint(item)" v-if="taxiOrderState(item.state)=='已完成'">投诉</button>
 								<!-- <button class="allBtn payBtn" @click="openBottomPopup" v-if="taxiOrderState(item.state)=='未支付'">去支付</button> -->
@@ -1860,6 +1864,30 @@
 			}
 		},
 		methods: {
+			CallAgain:function(value){//出租车再次呼叫
+				var endObj={
+					addressName:  value.endAddress,
+					district:  value.destinationArea,
+					lat: value.endLat,
+					lng:  value.endLon,
+				}
+				var startObj={
+					addressName:  value.startAddress,
+					lat: value.startLat,
+					lng:  value.startLon,
+				}
+				uni.setStorage({
+					key: "StartPoint",
+					data: startObj,
+				})
+				uni.setStorage({
+					key: "EndPoint",
+					data: endObj,
+				})
+				uni.navigateTo({
+					url:"/pages/Home/ChooseSite?current=2&callagain=1"
+				})
+			},
 			changeTime: function(value) { //时间格式转换
 				var date = new Date(value + "+08:00");
 				var year = date.getFullYear();

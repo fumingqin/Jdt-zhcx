@@ -369,6 +369,10 @@
 						"navigationStyle": "custom"
 					}
                 }
+                ,{
+                    "path" : "pages/CZC/TripShare",
+                    "style" : {"navigationStyle": "custom"}
+                }
             ]
 		},
 		//---------------------------------------------第三个包：公交查询------------------------------------------
