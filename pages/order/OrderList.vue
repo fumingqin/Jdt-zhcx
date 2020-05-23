@@ -3789,14 +3789,7 @@ CallAgain:function(value){//出租车再次呼叫
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								// console.log(res)
 								uni.hideLoading();
-								// uni.stopPullDownRefresh();
-								that.info = [];
-								that.finishArr = [];
-								that.goingArr = [];
-								that.unfinishArr = [];
-								that.cancelArr = [];
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
 									that.finishArr = [];
@@ -3820,8 +3813,6 @@ CallAgain:function(value){//出租车再次呼叫
 									//客运
 									//获取用户信息
 									that.tp_orderListData();
-									that.getUserInfo();
-									
 								} else {
 									that.info = [];
 									that.finishArr = [];
@@ -3829,8 +3820,6 @@ CallAgain:function(value){//出租车再次呼叫
 									that.unfinishArr = [];
 									that.cancelArr = [];
 									that.tp_orderListData();
-									that.getUserInfo();
-									
 								}
 							}
 						})
@@ -4413,6 +4402,11 @@ CallAgain:function(value){//出租车再次呼叫
 							},
 							success: (res) => {
 								console.log(res);
+								that.info = [];
+								that.finishArr = [];
+								that.goingArr = [];
+								that.unfinishArr = [];
+								that.cancelArr = [];
 								if (res.data.msg == '订单查询完成') {
 									for (var i = 0; i < res.data.data.length; i++) {
 										if (res.data.data[i].or_Type == '6' || res.data.data[i].or_Type == '9' || res.data.data[i].or_Type ==
