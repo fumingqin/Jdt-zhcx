@@ -602,10 +602,10 @@
 						}
 					}
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + Number(insurePrice) * that.passengerNum
 				} else {
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + Number(insurePrice) * that.passengerNum
 				}
 			},
 
