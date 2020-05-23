@@ -1729,7 +1729,7 @@
 				TaxiCost: 0, //价格
 				countdown: 0,
 				items: ['全部', '已完成', '进行中', '未支付', '已取消'],
-				carSelect : ['传统客运','定制巴士','出租车','出租车-专线车','出租车-顺风车','旅游服务'],
+				carSelect : ['传统客运','定制巴士','出租车','专线车','顺风车','旅游服务'],
 				selector : '传统客运',
 				current: 0,
 				index: 1,
@@ -1785,14 +1785,12 @@
 				textareaValue:"",
 				
 				SfcInfo: '',
-				currentModel:'',
 			}
 		},
 		onLoad: function() {
 			var that = this;
 			//获取客运弹框图片
 			that.getPicture();
-			that.getUserInfo();//加载传统客运订单方法
 			//读取用户ID
 			uni.getStorage({
 				key: 'userInfo',
@@ -1832,35 +1830,18 @@
 		onShow: function() {
 			// //请求景区门票数据
 			// this.toFinished();
-			//客运刷新状态----获取支付参数
-			if (this.ctkyOrderNum) {
-				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
-			}
-			
-			this.getCurrent();
-			this.getOpenID();
-			uni.startPullDownRefresh();
-		},
-		onPullDownRefresh: function() {
-			// this.toFinished();
-			//加载传统客运订单方法
-			// this.getUserInfo();
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
-			if(this.currentModel==0){
-				this.getUserInfo();//加载传统客运订单方法
-			}else if(this.currentModel==1){
-				this.GetBookLogInfoByUserId();//加载定制巴士订单方法
-			}else if(this.currentModel==2){
-				this.loadczcData();//加载出租车订单方法
-			}else if(this.currentModel==3){
-				this.getOrderList();//加载出租车-专线车订单方法
-			}else if(this.currentModel==4){
-				this.getSfcOrderList();//加载出租车-顺风车订单方法
-			}else if(this.currentModel==5){
-				this.toFinished();//加载景区订单方法
+			this.getCurrent();
+			this.getOpenID();
+		},
+		onPullDownRefresh: function() {
+			// this.toFinished();
+			//客运刷新状态
+			if (this.ctkyOrderNum) {
+				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
 		},
 		methods: {
@@ -1871,7 +1852,6 @@
 				})
 				this.selector = this.carSelect[e.target.value];//赋值
 				var that=this;
-				this.currentModel=e.target.value;
 				console.log(e.target);
 				console.log(e);
 				if(e.target.value==0){
@@ -2062,7 +2042,7 @@ CallAgain:function(value){//出租车再次呼叫
 						clientID: that.userInfo.userId,
 					},
 					success: (res) => {
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						uni.hideLoading();
 						console.log('客运订单数据', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
@@ -2087,7 +2067,6 @@ CallAgain:function(value){//出租车再次呼叫
 							// that.loadczcData();
 						} else if (res.data.status == false) {
 							uni.hideLoading();
-							uni.stopPullDownRefresh();
 							//定制巴士订单测试
 							// that.GetBookLogInfoByUserId();
 							//出租车请求数据
@@ -2097,7 +2076,7 @@ CallAgain:function(value){//出租车再次呼叫
 					fail(res) {
 						uni.hideLoading();
 						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						// console.log('错误', res);
 					}
 				})
@@ -2115,7 +2094,6 @@ CallAgain:function(value){//出租车再次呼叫
 					},
 					success(res) {
 						uni.hideLoading();
-						uni.stopPullDownRefresh();
 						console.log('定制巴士订单数据',res)
 						that.info = [];
 						that.finishArr = [];
@@ -2160,7 +2138,6 @@ CallAgain:function(value){//出租车再次呼叫
 					},
 					fail(res) {
 						uni.hideLoading();
-						uni.stopPullDownRefresh();
 						console.log(res)
 					}
 				})
@@ -3037,7 +3014,7 @@ CallAgain:function(value){//出租车再次呼叫
 							method: 'POST',
 							success: (res) => {
 								uni.hideLoading();
-								uni.stopPullDownRefresh();
+								// uni.stopPullDownRefresh();
 								that.info = [];
 								that.finishArr = [];
 								that.goingArr = [];
@@ -3069,7 +3046,7 @@ CallAgain:function(value){//出租车再次呼叫
 					fail() {
 						uni.hideLoading();
 						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						uni.showToast({
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
@@ -3158,7 +3135,7 @@ CallAgain:function(value){//出租车再次呼叫
 					},
 					success: function(res) {
 						uni.hideLoading();
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						that.info = [];
 						that.finishArr = [];
 						that.goingArr = [];
@@ -3205,7 +3182,7 @@ CallAgain:function(value){//出租车再次呼叫
 						}
 					},
 					fail() {
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						uni.hideLoading();
 					}
 				})
@@ -3441,7 +3418,7 @@ CallAgain:function(value){//出租车再次呼叫
 					},
 					success: function(res) {
 						uni.hideLoading();
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						that.info = [];
 						that.finishArr = [];
 						that.goingArr = [];
@@ -3488,7 +3465,7 @@ CallAgain:function(value){//出租车再次呼叫
 						}
 					},
 					fail() {
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						uni.hideLoading();
 					}
 				})
@@ -3733,14 +3710,7 @@ CallAgain:function(value){//出租车再次呼叫
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								// console.log(res)
 								uni.hideLoading();
-								uni.stopPullDownRefresh();
-								that.info = [];
-								that.finishArr = [];
-								that.goingArr = [];
-								that.unfinishArr = [];
-								that.cancelArr = [];
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
 									that.finishArr = [];
@@ -3764,8 +3734,6 @@ CallAgain:function(value){//出租车再次呼叫
 									//客运
 									//获取用户信息
 									that.tp_orderListData();
-									that.getUserInfo();
-									
 								} else {
 									that.info = [];
 									that.finishArr = [];
@@ -3773,15 +3741,13 @@ CallAgain:function(value){//出租车再次呼叫
 									that.unfinishArr = [];
 									that.cancelArr = [];
 									that.tp_orderListData();
-									that.getUserInfo();
-									
 								}
 							}
 						})
 					},
 					fail() {
 						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
+						// uni.stopPullDownRefresh();
 						uni.hideLoading();
 						// #ifdef H5
 						uni.showToast({
@@ -4357,6 +4323,11 @@ CallAgain:function(value){//出租车再次呼叫
 							},
 							success: (res) => {
 								console.log(res);
+								that.info = [];
+								that.finishArr = [];
+								that.goingArr = [];
+								that.unfinishArr = [];
+								that.cancelArr = [];
 								if (res.data.msg == '订单查询完成') {
 									for (var i = 0; i < res.data.data.length; i++) {
 										if (res.data.data[i].or_Type == '6' || res.data.data[i].or_Type == '9' || res.data.data[i].or_Type ==
