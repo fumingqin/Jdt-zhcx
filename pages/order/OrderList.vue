@@ -1818,12 +1818,14 @@
 				textareaValue:"",
 				
 				SfcInfo: '',
+				currentModel:'',
 			}
 		},
 		onLoad: function() {
 			var that = this;
 			//获取客运弹框图片
 			that.getPicture();
+			that.getUserInfo();//加载传统客运订单方法
 			//读取用户ID
 			uni.getStorage({
 				key: 'userInfo',
@@ -1863,18 +1865,33 @@
 		onShow: function() {
 			// //请求景区门票数据
 			// this.toFinished();
-			//客运刷新状态
+			//客运刷新状态----获取支付参数
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
+			uni.startPullDownRefresh();
 			this.getCurrent();
 			this.getOpenID();
 		},
 		onPullDownRefresh: function() {
 			// this.toFinished();
+			this.getUserInfo();//加载传统客运订单方法
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
+			}
+			if(this.currentModel==0){
+				that.getUserInfo();//加载传统客运订单方法
+			}else if(this.currentModel==1){
+				that.GetBookLogInfoByUserId();//加载定制巴士订单方法
+			}else if(this.currentModel==2){
+				that.loadczcData();//加载出租车订单方法
+			}else if(this.currentModel==3){
+				that.getOrderList();//加载出租车-专线车订单方法
+			}else if(this.currentModel==4){
+				that.getSfcOrderList();//加载出租车-顺风车订单方法
+			}else if(this.currentModel==5){
+				that.toFinished();//加载景区订单方法
 			}
 		},
 		methods: {
@@ -1885,6 +1902,7 @@
 				})
 				this.selector = this.carSelect[e.target.value];//赋值
 				var that=this;
+				this.currentModel=e.target.value;
 				console.log(e.target);
 				console.log(e);
 				if(e.target.value==0){
@@ -2052,7 +2070,7 @@
 						clientID: that.userInfo.userId,
 					},
 					success: (res) => {
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 						console.log('客运订单数据', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
@@ -2077,6 +2095,7 @@
 							// that.loadczcData();
 						} else if (res.data.status == false) {
 							uni.hideLoading();
+							uni.stopPullDownRefresh();
 							//定制巴士订单测试
 							// that.GetBookLogInfoByUserId();
 							//出租车请求数据
@@ -2086,7 +2105,7 @@
 					fail(res) {
 						uni.hideLoading();
 						//请求数据失败，停止刷新
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						// console.log('错误', res);
 					}
 				})
@@ -2104,6 +2123,7 @@
 					},
 					success(res) {
 						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						console.log('定制巴士订单数据',res)
 						that.info = [];
 						that.finishArr = [];
@@ -2147,6 +2167,7 @@
 					},
 					fail(res) {
 						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						console.log(res)
 					}
 				})
@@ -3066,7 +3087,7 @@
 							method: 'POST',
 							success: (res) => {
 								uni.hideLoading();
-								// uni.stopPullDownRefresh();
+								uni.stopPullDownRefresh();
 								that.info = [];
 								that.finishArr = [];
 								that.goingArr = [];
@@ -3098,7 +3119,7 @@
 					fail() {
 						uni.hideLoading();
 						//请求数据失败，停止刷新
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.showToast({
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
@@ -3187,7 +3208,7 @@
 					},
 					success: function(res) {
 						uni.hideLoading();
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						that.info = [];
 						that.finishArr = [];
 						that.goingArr = [];
@@ -3234,7 +3255,7 @@
 						}
 					},
 					fail() {
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 					}
 				})
@@ -3470,7 +3491,7 @@
 					},
 					success: function(res) {
 						uni.hideLoading();
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						that.info = [];
 						that.finishArr = [];
 						that.goingArr = [];
@@ -3517,7 +3538,7 @@
 						}
 					},
 					fail() {
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 					}
 				})
@@ -3764,7 +3785,7 @@
 							success: (res) => {
 								// console.log(res)
 								uni.hideLoading();
-								// uni.stopPullDownRefresh();
+								uni.stopPullDownRefresh();
 								that.info = [];
 								that.finishArr = [];
 								that.goingArr = [];
@@ -3810,7 +3831,7 @@
 					},
 					fail() {
 						//请求数据失败，停止刷新
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 						// #ifdef H5
 						uni.showToast({
