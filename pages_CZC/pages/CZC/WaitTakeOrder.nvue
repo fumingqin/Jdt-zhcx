@@ -48,12 +48,19 @@
 					<text class="fontClass-28" style="color: #ff0000;">距离目的地大约{{distance}}公里，预计{{duration}}分钟到达目的地。</text>
 				</view>
 			</view>
+			<!-- #ifdef MP-WEIXIN -->
+			<view style="width: 720rpx;margin-top: 20rpx;align-items: flex-end;margin-right: 30rpx;">
+				<button open-type="share" style="background-color: #FFFFFF;width: 200rpx;margin-right: 0;"><text>分享行程</text></button>
+			</view>
+			<!-- #endif -->
+			<!-- #ifdef APP-PLUS -->
+			<view style="width: 720rpx;margin-top: 20rpx;align-items: flex-end;margin-right: 30rpx;">
+				<button  style="background-color: #FFFFFF;width: 200rpx;margin-right: 0;" @click="ShareTrip"><text style="font-size: 32rpx;margin: 20rpx;">分享行程</text></button>
+			</view>
+			<!-- #endif -->
 		</view>
 		<view v-if='state == 2' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
-			<view elevation='0px' style="flex-direction: row;align-items: flex-start;justify-content: flex-start;width: 600rpx;margin-bottom: 30rpx;" >
-				<image @click="openContactPopup" src="../../../static/Home/contact.png" style="width: 120rpx;height: 120rpx;"></image>
-			</view>
 			<view elevation='5px' class="comeBottomContent">
 				<view @click="callPolice" style="width: 300rpx;align-items: center;border-right:1px solid #2C2D2D;">
 					<text class="callPolice" style="">一键报警</text>
@@ -65,16 +72,15 @@
 		</view>
 		<view v-if='state == 1' style="width: 100%;position: fixed;bottom: 40px;left: 0px;right: 0px;align-items: center;">
 			<!-- 司机前往乘客地 -->
-			<view elevation='5px' style="width: 750rpx;padding-top: 30rpx;padding-bottom: 30rpx;background-color: #FFFFFF;border-radius: 9px;flex-direction: row;box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);">
+			<view elevation='5px' style="width: 300rpx;padding-top: 30rpx;padding-bottom: 30rpx;background-color: #FFFFFF;border-radius: 9px;flex-direction: row;box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);">
 				<view @click="BouncePay" style="width: 300rpx;align-items: center;">
 					<text class="cancle">取消订单</text>
 				</view>
 			</view>
 		</view>
 		<view v-if='state == 4' style="width: 750rpx;position: fixed;bottom: 40px;left: 0px;right: 0px;">
-			<view style="padding-left: 10rpx;flex-direction: row;" elevation='0px'>
+			<view style="padding-left: 10rpx;" elevation='0px'>
 				<image @click="callPolice" src="../../../static/Home/CallPollice.png" style="width: 120rpx;height: 120rpx;"></image>
-				<image @click="openContactPopup" src="../../../static/Home/contact.png" style="width: 120rpx;height: 120rpx;"></image>
 			</view>
 			<view style="align-items: center;height: 300rpx;">
 				<!-- <view elevation='5px' class="orderBottomContent">
@@ -97,19 +103,6 @@
 				</view> -->
 			</view>
 		</view>
-		
-		<!-- 添加紧急联系人弹窗 -->
-		<uni-popup ref="contactPopup" :maskClick='true' type="center">
-			<view style="background-color: #FFFFFF;width: 500rpx;padding: 40rpx;border-radius: 20rpx;justify-content: center;">
-				<view style="text-align: center;align-items: center;margin-bottom: 40rpx;">
-					<text style="font-size: 32rpx;;">添加</text>
-				</view>
-				<input v-model="autograph" placeholder='请输入联系人电话号码' maxlength=11 :focus='inputFocus'/>
-				<button @click="saveContact" style="background-color: #FC4646;margin-top: 40rpx;padding-top: 20rpx;padding-bottom: 20rpx;line-height: 34rpx;">
-					<text style="font-size:34rpx;font-family:Source Han Sans SC;font-weight:400;color:#FFFFFF;">确定</text>
-				</button>
-			</view>
-		</uni-popup>
 	</view>
 </template>
 
@@ -118,7 +111,7 @@
 	import $taxi from '@/common/Czc.js';
 	import uniPopup from "@/pages_CZC/components/CZC/uni-popup/uni-popup.vue";
 	import uniIcons from "@/pages_CZC/components/CZC/uni-icons/uni-icons.vue";
-	import $home from '@/common/Home.js'
+
 
 	export default {
 		components: {
@@ -191,12 +184,9 @@
 					},
 				],
 				FactPayPrice: '', //订单价格
-				AppointmentTime:'',//预约时间
-				StartAddress:'',//上车点
-				UrgentPhone:"110",//紧急联系人电话
-				
-				inputFocus:true,
-				autograph:'',
+				AppointmentTime: '', //预约时间
+				StartAddress: '', //上车点
+				UrgentPhone: "110", //紧急联系人电话
 			}
 		},
 		onLoad(option) {
@@ -225,7 +215,41 @@
 			clearInterval(that.directionInterval);
 			clearInterval(that.comingInterval);
 		},
+		onShareAppMessage(res) {
+			var that=this;
+			if (res.from === 'button') { // 来自页面内分享按钮
+				return {
+					title: '你的好友分享给你一个行程',
+					path: "/pages_CZC/pages/CZC/TripShare?type=出租车_专线&orderNumber="+that.orderNumber
+				}
+			}
+		},
 		methods: {
+			ShareTrip:function(){
+				var that=this;
+				// uni.share({//分享小程序卡片
+				//     provider: "weixin",
+				//     scene: "WXSceneSession",
+				//     type: 5,
+				//        imageUrl: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/app/share-logo@3.png',
+				//        title: '你的好友给你分享了一个行程',
+				//        miniProgram: {
+				//            id: 'wx8dcbb62a76885221',
+				//            path: "/pages_CZC/pages/CZC/TripShare?type=出租车_专线&orderNumber="+that.orderNumber,
+				//            type: 2 ,
+				//            webUrl: 'http://uniapp.dcloud.io'
+				//        },
+				// });
+				uni.share({//图文分享
+				    provider: "weixin",
+				    scene: "WXSceneSession",
+				    type: 0,
+				    href: "http://uniapp.dcloud.io/",
+				    title: "行程分享",
+				    summary: "你的好友给你分享了一个行程,赶紧查看！",
+				    imageUrl: "https://zntc.145u.net:9099/UpLoadImages/Image/QuanYunLogo.png",
+				});
+			},
 			openBottomPopup: function() {
 				this.$nextTick(function() {
 					this.$refs['bottomPopup'].open();
@@ -234,19 +258,6 @@
 			closeBottomPopup: function() {
 				this.$nextTick(function() {
 					this.$refs['bottomPopup'].close();
-				});
-			},
-			//添加紧急联系人弹框
-			openContactPopup: function() {
-				this.$nextTick(function() {
-					this.$refs['contactPopup'].open();
-				});
-				this.inputFocus = true;
-			},
-			//关闭紧急联系人弹框
-			closeContactPopup: function() {
-				this.$nextTick(function() {
-					this.$refs['contactPopup'].close();
 				});
 			},
 			back: function() {
@@ -285,8 +296,8 @@
 							that.vehicleNumber = data.VehicleNumber; //车牌号
 							that.state = data.State; //订单状态
 							that.FactPayPrice = data.FactPayPrice;
-							that.StartAddress = data.StartAddress; 
-							that.AppointmentTime = data.AppointmentTime.replace("T"," "); 
+							that.StartAddress = data.StartAddress;
+							that.AppointmentTime = data.AppointmentTime.replace("T", " ");
 							//绘制起终点标记
 							that.setMarker('start', that.startLon, that.startLat, '../../static/CZC/Start.png');
 							that.setMarker('end', that.endLon, that.endLat, '../../static/CZC/End.png');
@@ -545,8 +556,8 @@
 			callPolice: function() {
 				//一键报警
 				let that = this;
-				if(that.userInfo.autograph!=""){
-					that.UrgentPhone=that.userInfo.autograph
+				if (that.userInfo.autograph != "") {
+					that.UrgentPhone = that.userInfo.autograph
 				}
 				uni.showModal({
 					title: "一键报警",
@@ -574,7 +585,7 @@
 											Address: that.packAddress(res.address),
 										},
 										success(res) {
-											uni.makePhoneCall({//拨打紧急联系人电话
+											uni.makePhoneCall({ //拨打紧急联系人电话
 												phoneNumber: that.UrgentPhone
 											});
 											if (res.data.status) {
@@ -590,7 +601,7 @@
 											}
 										},
 										fail() {
-											uni.makePhoneCall({//拨打紧急联系人电话
+											uni.makePhoneCall({ //拨打紧急联系人电话
 												phoneNumber: that.UrgentPhone
 											});
 											uni.showToast({
@@ -599,63 +610,63 @@
 											})
 										}
 									})
-								// #endif
+									// #endif
 								}
 							});
 						}
 					}
 				})
 			},
-			getAddressByLocation: function(value) {//地址逆解析
-				let that=this;
-					uni.request({
-						url: $taxi.Interface.getAddressByLocation.value,
-						method: $taxi.Interface.getAddressByLocation.method,
-						data:{
-							key:$taxi.Interface.getAddressByLocation.key,
-							location:value.longitude+','+value.latitude
-						},
-						success(res) {
-							uni.request({
-								url: $taxi.Interface.addPassengerOneTouchAlarm.value,
-								method: $taxi.Interface.addPassengerOneTouchAlarm.method,
-								data: {
-									orderNumber: that.orderNumber,
-									passengerNumber: that.userInfo.userId,
-									Lon: value.longitude,
-									Lat: value.latitude,
-									Address:res.data.regeocode.formatted_address,
-								},
-								success(res) {
-									console.log(res)
-									uni.makePhoneCall({ //拨打紧急联系人电话
-										phoneNumber: that.UrgentPhone
-									});
-									if (res.data.status) {
-										uni.showToast({
-											title: res.data.msg,
-											icon: "none"
-										})
-									} else {
-										uni.showToast({
-											title: res.data.msg,
-											icon: "none"
-										})
-									}
-								},
-								fail() {
-									uni.makePhoneCall({ //拨打紧急联系人电话
-										phoneNumber: that.UrgentPhone
-									});
+			getAddressByLocation: function(value) { //地址逆解析
+				let that = this;
+				uni.request({
+					url: $taxi.Interface.getAddressByLocation.value,
+					method: $taxi.Interface.getAddressByLocation.method,
+					data: {
+						key: $taxi.Interface.getAddressByLocation.key,
+						location: value.longitude + ',' + value.latitude
+					},
+					success(res) {
+						uni.request({
+							url: $taxi.Interface.addPassengerOneTouchAlarm.value,
+							method: $taxi.Interface.addPassengerOneTouchAlarm.method,
+							data: {
+								orderNumber: that.orderNumber,
+								passengerNumber: that.userInfo.userId,
+								Lon: value.longitude,
+								Lat: value.latitude,
+								Address: res.data.regeocode.formatted_address,
+							},
+							success(res) {
+								console.log(res)
+								uni.makePhoneCall({ //拨打紧急联系人电话
+									phoneNumber: that.UrgentPhone
+								});
+								if (res.data.status) {
 									uni.showToast({
-										title: "网络连接失败",
+										title: res.data.msg,
+										icon: "none"
+									})
+								} else {
+									uni.showToast({
+										title: res.data.msg,
 										icon: "none"
 									})
 								}
-							})
-						},
-					})
-				
+							},
+							fail() {
+								uni.makePhoneCall({ //拨打紧急联系人电话
+									phoneNumber: that.UrgentPhone
+								});
+								uni.showToast({
+									title: "网络连接失败",
+									icon: "none"
+								})
+							}
+						})
+					},
+				})
+
 			},
 			packAddress: function(value) { //组装地址
 				var country = '';
@@ -748,7 +759,7 @@
 								data: {
 									payType: payPlatform,
 									orderNumber: that.orderNumber,
-									price:that.FactPayPrice
+									price: that.FactPayPrice
 									// price: 0.01
 								},
 								success(res) {
@@ -917,49 +928,7 @@
 					that.getDirectionDriving(that.thisDriverLon + ',' + that.thisDriverLat, that.startLon + ',' + that.startLat);
 				}, 10000);
 			},
-			saveContact:function(){
-				//保存紧急联系人
-				let that = this;
-				if(!that.verification(that.autograph)){
-					uni.showToast({
-						title:'手机号输入有误',
-						icon:'none'
-					});
-					return;
-				}
-				that.closeContactPopup();
-				uni.showLoading({
-					mask:true
-				});
-				uni.request({
-					url:$home.Interface.AddEmergencyContact.value,
-					method:$home.Interface.AddEmergencyContact.method,
-					data:{
-						UserId:that.userInfo.userId,
-						Autograph:that.autograph
-					},
-					success:function(res){
-						uni.hideLoading();
-						if(res.data.status){
-							uni.setStorageSync('userInfo',res.data.data);
-							that.userInfo = res.data.data;
-							uni.showToast({
-								title:'保存成功',
-								icon:'none'
-							});
-						}
-					},
-					fail:function(res){
-						console.log(res);
-						uni.hideLoading();
-					}
-				})
-			},
-			verification:function(phone){
-				let that = this;
-				let phoneCodeVerification = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
-				return phoneCodeVerification.test(phone);
-			},
+
 
 			getDirectionDriving: function(startLonLat, endLonLat) {
 				//调用高德api取得路径规划并绘制线路
@@ -1125,12 +1094,13 @@
 	}
 
 	.fontClass-28 {
-		font-size: 32rpx;
+		font-size: 28rpx;
 		line-height: 50rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 300;
 		color: #2C2D2D;
 	}
+
 	.callPolice {
 		font-size: 32rpx;
 		font-family: Source Han Sans SC;
