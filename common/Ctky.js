@@ -173,6 +173,13 @@ const KyInterface = {
 		method:'GET',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	Ky_getLineRouteStationImage:{
+		Url:Url + '/api/ky/getLineRouteStationImage',
+		name:'客运-获取线路站点和图片',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	
 	//--------------------------------------定制巴士--------------------------------------
 	Cs_GetAllLine:{
 		Url:Url + '/api/CustomizedBus/GetAllLine',

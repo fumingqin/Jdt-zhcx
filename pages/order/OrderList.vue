@@ -396,7 +396,7 @@
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
 								<button class="allBtn payBtn" v-if="item.state=='7'" @tap="keYunPay(item,item.carType)">去支付</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="open2(item.orderNumber,'2')">退票</button>
-								<button class="allBtn" v-if="item.state=='5'" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+								<button class="allBtn" @click="KyComplain(item)">投诉</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
 								<!-- #ifndef MP-WEIXIN -->
 								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
@@ -664,7 +664,7 @@
 								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
-								<button class="allBtn" @click="openPopup(item.orderNumber,'judgeBottomPopup')">评价</button>
+								<button class="allBtn" @click="KyComplain(item)">投诉</button>
 							</view>
 						</view>
 					</view>
@@ -953,6 +953,7 @@
 								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn" @click="KyComplain(item)">投诉</button>
 								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open2(item.orderNumber,'2')">退票</button>
 								<!-- #ifndef MP-WEIXIN -->
 								<button class="allBtn" v-if="item.state=='4'&&item.carType=='定制巴士'" @click="busLocation(item)">车辆位置</button>
@@ -1229,8 +1230,9 @@
 							<view v-if="item.carType != '定制巴士'" style="margin-left: 96upx;font-size: 28upx;margin-top: 20rpx;
 								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
-								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" @click="keYunDetail(item)">详情</button>
+								<button class="allBtn" @click="KyComplain(item)">投诉</button>
+								<button class="allBtn" v-if="item.carType=='普通班车' || item.carType=='定制班车'" @tap="open3(item.orderNumber,'2')">取消</button>
 								<button class="allBtn" v-if="item.carType=='定制巴士'" @tap="open3(item.orderNumber,'cs2')">取消</button>
 								<button class="allBtn payBtn" @tap="keYunPay(item,item.carType)">去支付</button>
 							</view>
@@ -1540,6 +1542,7 @@
 								color: #AAAAAA;;">班次：{{getScheduleNum(item)}}</view>
 							<view class="CTKYBtnView">
 								<button class="allBtn" @tap="keYunDetail(item)">详情</button>
+								<button class="allBtn" @click="KyComplain(item)">投诉</button>
 							</view>
 						</view>
 					</view>
@@ -1588,46 +1591,6 @@
 					</view>
 				</swiper-item>
 			</swiper>
-		</uni-popup2>
-		<!-- 满意弹出框 -->
-		<uni-popup2 ref="judgeBottomPopup" type="bottom">
-			<form @submit="submit">
-				<view style="height: 780rpx; background-color: #FFFFFF; border-top-left-radius: 20rpx; border-top-right-radius: 20rpx;">
-					<view style="display: flex; flex-direction: row;justify-content: space-between; margin-top: 20rpx;">
-						<view>
-							<!-- 请勿删除 -->
-						</view>
-						<view>
-							<text style="font-size:38rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">评价</text>
-						</view>
-						<view style="right: 30rpx;">
-							<uni-icons @click="closePopup('judgeBottomPopup')" type="closeempty" size="30"></uni-icons>
-						</view>
-					</view>
-					<!-- 五角星 -->
-					<view style="margin-top: 60rpx; margin-left: 92rpx;">
-						<uni-rate size="28" margin="20" :value="num" @change="onchange" />
-					</view>
-					<!-- 评价框 -->
-					<view style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
-						<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate"
-						 :key="index">
-							<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
-						</view>
-					</view>
-					<!-- 文本框 -->
-					<view>
-						<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;height:164rpx;border-width: 1px;border-color: #AAAAAA;border-radius:6rpx;margin-top: 30rpx; margin-left: 40rpx;font-size:28rpx;font-family:Source Han Sans SC;font-weight:300;color:#999999; padding: 10rpx;"
-						 name="textareaValue" />
-						</view>
-				<!-- 提交按钮 -->
-				<view>
-					<button form-type="submit" style="width:648rpx;height:84rpx; border-radius:12rpx; background-color: #FC4646;border-color: #AAAAAA; margin-top: 30rpx; margin-left: 40rpx;">
-						<text style="color: #FFFFFF;align-items: center;line-height: 84rpx; font-size: 34rpx; font-weight:400; font-family:Source Han Sans SC;">提交</text>
-					</button>
-				</view>
-			</view>
-			</form>
 		</uni-popup2>
 		<!-- 退票弹框 -->
 		<uni-popup2 ref="popup2" type="bottom">
@@ -2176,6 +2139,7 @@ CallAgain:function(value){//出租车再次呼叫
 									fullTicket:res.data.bookLogs[i].Person,
 									halfTicket:0,
 									orderNumber:res.data.bookLogs[i].AID,
+									CheckInfoList:res.data.bookLogs[i].CheckInfoList,
 								};
 								orderArray.push(array);
 								that.info.push(array);
@@ -2211,7 +2175,6 @@ CallAgain:function(value){//出租车再次呼叫
 			},
 			//-------------------------------获取班次信息-------------------------------
 			getScheduleNum:function(param){
-				console.log(param);
 				if(param.carType != '定制巴士'){
 					if(param.executeScheduleID){
 						var schedule = param.executeScheduleID.split('|');
@@ -2241,8 +2204,9 @@ CallAgain:function(value){//出租车再次呼叫
 			},
 			//-------------------------跳转到详情页-------------------------
 			keYunDetail: function(res) {
-				// console.log(res)
+				console.log(res)
 				var orderInfo = {
+					carType:res.carType,
 					state: res.state,
 					totalPrice: res.totalPrice,
 					startSiteName: res.startSiteName,
@@ -2257,6 +2221,7 @@ CallAgain:function(value){//出租车再次呼叫
 					iDNameType: res.iDNameType,
 					ticketNumber: res.ticketNumber,
 					insured: res.insured,
+					CheckInfoList:res.CheckInfoList,
 				}
 				uni.navigateTo({
 					url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/orderDetail?orderInfo=' + JSON.stringify(orderInfo)
@@ -2856,7 +2821,7 @@ CallAgain:function(value){//出租车再次呼叫
 									that.showToast("支付失败，请重新支付")
 								}, 1000)
 							} else {
-								that.showToast("网络连接失败")
+								that.showToast("支付失败")
 							}
 						}
 					});
@@ -3022,18 +2987,22 @@ CallAgain:function(value){//出租车再次呼叫
 			QRCodeTap: function() {
 				this.$refs.popup.open()
 			},
-			//-------------------------客运开启评价弹窗-------------------------
-			openPopup: function(orderNumber,value) {
-				this.$nextTick(function() {
-					this.$refs[value].open();
-				});
-				this.ctkyOrderNum = orderNumber;
-			},
-			//-------------------------关闭评价弹窗-------------------------
-			closePopup: function(value) {
-				this.$nextTick(function() {
-					this.$refs[value].close();
-				});
+			//-------------------------客运投诉-------------------------
+			KyComplain:function(item){
+				console.log(item)
+				if(item.carType=='普通班车'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=普通班车&tsData=' + '普通班车' +'&orderNumber='+ item.orderNumber
+					})
+				}else if(item.carType=='定制班车'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=定制班车&tsData=' + '定制班车' +'&orderNumber='+ item.orderNumber
+					})
+				}else if(item.carType=='定制巴士'){
+					uni.navigateTo({
+						url:'complaint?tsTitle=定制巴士&tsData=' + '定制巴士' +'&orderNumber='+ item.orderNumber
+					})
+				}
 			},
 			onchange(e){
 				this.num = e.value;
@@ -3044,54 +3013,6 @@ CallAgain:function(value){//出租车再次呼叫
 				} else {
 				    this.rSelect.splice(this.rSelect.indexOf(e), 1); //取消
 				}
-			},
-			/**
-			 * @name 满意评价提交
-			 */
-			submit(e){
-				var that = this;
-				this.textareaValue = e.detail.value.textareaValue;
-				that.closePopup("judgeBottomPopup");
-				that.getOrderValuate(that.ctkyOrderNum,'是');
-			},
-			//-------------------------------客运订单评价-------------------------------
-			getOrderValuate:function(param,manyi){
-				var that = this;
-				var str = '';
-				if(manyi=="是"){
-					for(let item of that.rSelect){
-						str += item + ',';
-					}
-				}else{
-					for(let item of that.rSelect1){
-						str += item + ',';
-					}
-				}
-				uni.request({
-					url: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.Url,
-					method: $KyInterface.KyInterface.Ky_addPassengerEvaluate_Passenger.method,
-					data: {
-						orderNumber:param,
-						userId: that.userInfo.userId,
-						satisfied :manyi,
-						starClass:that.num,
-					    selectionTags:str,
-						evaluateContent:that.textareaValue
-					},
-					success(res) {
-						uni.showToast({
-							title:res.data.msg,
-							icon:"none"
-						})
-						// that.getOrderDetailInfo();
-					},
-					fail(res) {
-						uni.showToast({
-							title:"网络连接失败",
-							icon:"none"
-						})
-					}
-				})
 			},
 			//------------------------------------------------客运结束------------------------------------------------
 			onClickItem(e) { //tab点击事件
