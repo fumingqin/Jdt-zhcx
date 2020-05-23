@@ -240,7 +240,7 @@
 			if (res.from === 'button') { // 来自页面内分享按钮
 				return {
 					title: '你的好友分享给你一个行程',
-					path: "/pages_CZC/pages/CZC/TripShare?type=出租车_专线&orderNumber="+that.orderNumber
+					path: "/pages_CZC/pages/CZC/TripShare?type=出租车_顺风车&orderNumber="+that.orderNumber
 				}
 			}
 		},
@@ -255,7 +255,7 @@
 				//        title: '你的好友给你分享了一个行程',
 				//        miniProgram: {
 				//            id: 'wx8dcbb62a76885221',
-				//            path: "/pages_CZC/pages/CZC/TripShare?type=出租车_专线&orderNumber="+that.orderNumber,
+				//            path: "/pages_CZC/pages/CZC/TripShare?type=出租车_顺风车&orderNumber="+that.orderNumber,
 				//            type: 2 ,
 				//            webUrl: 'http://uniapp.dcloud.io'
 				//        },
