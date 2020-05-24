@@ -8,7 +8,7 @@
 		<view class="head">
 			<!-- 起始站/价格 -->
 			<view class="u-f-jsb">
-				<view>{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
+				<view>{{orderInfo.carType}}:{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
 			</view>
 			<!-- 发车时间 -->
 			<view class="headText"> 发车时间：{{orderInfo.setOutTime}}</view>
@@ -61,9 +61,9 @@
 					<view v-if="orderInfo.carType != '定制巴士'" style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
 						  取票号 {{getOneTicketNum(orderInfo.ticketNumber,index)}}
 					</view>
-					<view v-if="orderInfo.carType == '定制巴士'" style="width: 100%;text-overflow: ellipsis;white-space: nowrap;overflow: hidden; color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
+					<!-- <view v-if="orderInfo.carType == '定制巴士'" style="width: 100%;text-overflow: ellipsis;white-space: nowrap;overflow: hidden; color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
 						  取票号 {{getSpecialOneTicketNum(specialCodeArray,index)}}
-					</view>
+					</view> -->
 					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
 						出示二维码，检票上车
 					</view>

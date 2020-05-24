@@ -1868,7 +1868,7 @@
 					that.toFinished();//加载景区订单方法
 				}
 			},
-CallAgain:function(value){//出租车再次呼叫
+			CallAgain:function(value){//出租车再次呼叫
 				var endObj={
 					addressName:  value.endAddress,
 					district:  value.destinationArea,
@@ -2341,14 +2341,13 @@ CallAgain:function(value){//出租车再次呼叫
 							})
 							// this.$refs.popup2.close()
 							that.csRefundTicket(item.orderNumber);
-						} else {
+						} else if (respones.data.Successed == false){
 							uni.hideLoading()
 							uni.showToast({
 								title: respones.data.msg,
 								icon: 'none'
 							})
 							this.$refs.popup2.close()
-							that.csRefundTicket(item.orderNumber);
 							uni.startPullDownRefresh();
 						}
 					},
