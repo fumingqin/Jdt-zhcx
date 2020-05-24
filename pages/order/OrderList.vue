@@ -2341,14 +2341,13 @@ CallAgain:function(value){//出租车再次呼叫
 							})
 							// this.$refs.popup2.close()
 							that.csRefundTicket(item.orderNumber);
-						} else {
+						} else if (respones.data.Successed == false){
 							uni.hideLoading()
 							uni.showToast({
 								title: respones.data.msg,
 								icon: 'none'
 							})
 							this.$refs.popup2.close()
-							that.csRefundTicket(item.orderNumber);
 							uni.startPullDownRefresh();
 						}
 					},
