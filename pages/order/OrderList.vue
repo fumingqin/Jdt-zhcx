@@ -1729,8 +1729,9 @@
 				TaxiCost: 0, //价格
 				countdown: 0,
 				items: ['全部', '已完成', '进行中', '未支付', '已取消'],
-				carSelect : ['传统客运','定制巴士','出租车','专线车','顺风车','旅游服务'],
-				selector : '传统客运',
+				carSelect : ['全部','传统客运','定制巴士','出租车','专线车','顺风车','包车服务','旅游服务'],
+				selector : '全部',
+				selectorIndex : 0,//模块筛选值
 				current: 0,
 				index: 1,
 				exitindex: 0, //订单判断值
@@ -1828,43 +1829,60 @@
 			
 		},
 		onShow: function() {
-			// //请求景区门票数据
-			// this.toFinished();
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
 			this.getCurrent();
 			this.getOpenID();
+			this.selectorChange();
 		},
 		onPullDownRefresh: function() {
-			// this.toFinished();
 			//客运刷新状态
 			if (this.ctkyOrderNum) {
 				this.getTicketPaymentInfo_ticketIssue(this.ctkyOrderNum);
 			}
+			this.selectorChange();
 		},
 		methods: {
 			//--------------------------订单模块筛选--------------------------
 			selectorChange : function(e){
+				var that=this;
+				// console.log(e,'订单执行')
 				uni.showLoading({
 					title:'加载中...'
 				})
-				this.selector = this.carSelect[e.target.value];//赋值
-				var that=this;
-				console.log(e.target);
-				console.log(e);
-				if(e.target.value==0){
+				if(e !== undefined){
+					this.selector = this.carSelect[e.target.value];//赋值
+					this.selectorIndex = e.target.value;
+				}
+				//进行订单数组初始化
+				that.info = [];
+				that.finishArr = [];
+				that.goingArr = [];
+				that.unfinishArr = [];
+				that.cancelArr = [];
+				if(that.selectorIndex==0){
 					that.getUserInfo();//加载传统客运订单方法
-				}else if(e.target.value==1){
 					that.GetBookLogInfoByUserId();//加载定制巴士订单方法
-				}else if(e.target.value==2){
 					that.loadczcData();//加载出租车订单方法
-				}else if(e.target.value==3){
 					that.getOrderList();//加载出租车-专线车订单方法
-				}else if(e.target.value==4){
 					that.getSfcOrderList();//加载出租车-顺风车订单方法
-				}else if(e.target.value==5){
+					that.getArrayInfo();//加载包车服务方法
+					that.toFinished();//加载景区订单方法
+				}else if(that.selectorIndex==1){
+					that.getUserInfo();//加载传统客运订单方法
+				}else if(that.selectorIndex==2){
+					that.GetBookLogInfoByUserId();//加载定制巴士订单方法
+				}else if(that.selectorIndex==3){
+					that.loadczcData();//加载出租车订单方法
+				}else if(that.selectorIndex==4){
+					that.getOrderList();//加载出租车-专线车订单方法
+				}else if(that.selectorIndex==5){
+					that.getSfcOrderList();//加载出租车-顺风车订单方法
+				}else if(that.selectorIndex==6){
+					that.getArrayInfo();//加载包车服务方法
+				}else if(that.selectorIndex==7){
 					that.toFinished();//加载景区订单方法
 				}
 			},
@@ -2017,8 +2035,6 @@
 						that.userInfo = data.data;
 						console.log('用户信息', that.userInfo);
 						that.getKeYunOrderInfo();
-						that.getArrayInfo();
-						
 					},
 					fail(res) {
 						// console.log('错误', res);
@@ -2029,11 +2045,6 @@
 			//-------------------------请求客运订单数据-------------------------
 			getKeYunOrderInfo: function() {
 				var that = this;
-				that.info = [];
-				that.finishArr = [];
-				that.goingArr = [];
-				that.unfinishArr = [];
-				that.cancelArr = [];
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.Url,
 					method: $KyInterface.KyInterface.Ky_getKeYunOrderInfo.method,
@@ -2061,16 +2072,10 @@
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
-							//定制巴士订单测试
-							// that.GetBookLogInfoByUserId();
-							//出租车请求数据
-							// that.loadczcData();
+
 						} else if (res.data.status == false) {
 							uni.hideLoading();
-							//定制巴士订单测试
-							// that.GetBookLogInfoByUserId();
-							//出租车请求数据
-							// that.loadczcData();
+
 						}
 					},
 					fail(res) {
@@ -2095,11 +2100,6 @@
 					success(res) {
 						uni.hideLoading();
 						console.log('定制巴士订单数据',res)
-						that.info = [];
-						that.finishArr = [];
-						that.goingArr = [];
-						that.unfinishArr = [];
-						that.cancelArr = [];
 						if (res.data.Successed == true) {
 							var orderArray = [];
 							for(let i=0;i<res.data.bookLogs.length;i++) {
@@ -3001,7 +3001,6 @@
 
 			//-------------------------出租车开始-------------------------
 			loadczcData: function() {
-
 				var that = this;
 				uni.getStorage({
 					key: 'userInfo',
@@ -3016,11 +3015,6 @@
 							success: (res) => {
 								uni.hideLoading();
 								// uni.stopPullDownRefresh();
-								that.info = [];
-								that.finishArr = [];
-								that.goingArr = [];
-								that.unfinishArr = [];
-								that.cancelArr = [];
 								if (res.data.status) {
 									for (var i = 0; i < res.data.data.length; i++) {
 										that.info.push(res.data.data[i]);
@@ -3035,11 +3029,7 @@
 											that.finishArr.push(res.data.data[i]);
 										}
 									}
-									//包车请求数据
-									// this.getOrderList();
 								} else {
-									//包车请求数据
-									// this.getOrderList();
 								}
 							}
 						})
@@ -3137,11 +3127,6 @@
 					success: function(res) {
 						uni.hideLoading();
 						// uni.stopPullDownRefresh();
-						that.info = [];
-						that.finishArr = [];
-						that.goingArr = [];
-						that.unfinishArr = [];
-						that.cancelArr = [];
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3420,11 +3405,6 @@
 					success: function(res) {
 						uni.hideLoading();
 						// uni.stopPullDownRefresh();
-						that.info = [];
-						that.finishArr = [];
-						that.goingArr = [];
-						that.unfinishArr = [];
-						that.cancelArr = [];
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -4323,12 +4303,7 @@
 								'content-type': 'application/json'
 							},
 							success: (res) => {
-								console.log(res);
-								that.info = [];
-								that.finishArr = [];
-								that.goingArr = [];
-								that.unfinishArr = [];
-								that.cancelArr = [];
+								// console.log(res);
 								if (res.data.msg == '订单查询完成') {
 									for (var i = 0; i < res.data.data.length; i++) {
 										if (res.data.data[i].or_Type == '6' || res.data.data[i].or_Type == '9' || res.data.data[i].or_Type ==
@@ -4354,7 +4329,6 @@
 										}
 									}
 								}
-								that.getSfcOrderList();
 							}
 						})
 					},
@@ -4370,7 +4344,6 @@
 								})
 							}
 						})
-						that.getSfcOrderList();
 					}
 				})
 			},
@@ -4430,6 +4403,7 @@
 					}
 				})
 			}
+			
 		}
 	}
 </script>
