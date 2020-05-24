@@ -2945,6 +2945,7 @@ CallAgain:function(value){//出租车再次呼叫
 						},
 						success: (res) => {
 							console.log('支付参数返回数据', res);
+							uni.stopPullDownRefresh();
 							if (res.data.status == true) {
 								uni.hideLoading();
 								clearInterval(timer);
@@ -2953,6 +2954,7 @@ CallAgain:function(value){//出租车再次呼叫
 							}
 						},
 						fail(res) {
+							uni.stopPullDownRefresh();
 							uni.hideLoading();
 							//回调失败，取消定时器
 							clearInterval(timer);

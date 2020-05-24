@@ -51,7 +51,7 @@
 					<!-- 二维码 -->
 					<view style="justify-content: center; align-items: center;display: flex;">
 						<view class="QRImage">
-							<canvas v-if="isShowQrcode == true" canvas-id="ctkyQrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+							<canvas v-if="isShowQrcode == true" :canvas-id="'ctkyQrcode' + index" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
 							<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
 							<!-- 如果没有取票号就显示相应的状态 -->
 							<view v-if="isShowQrcode == false" style="font-weight: 300;color: #2C2D2D;font-size: 32rpx;justify-content: center; align-items: center;">{{getQRCodeStatus(orderInfo.state)}}</view>
@@ -103,13 +103,14 @@
 			// console.log(orderInfo.CheckInfoList);
 			//检票号---生成二维码
 			if(orderInfo.carType != '定制巴士'){
-				this.ticketNumber = orderInfo.ticketNumber;
-				that.make(this.orderInfo.ticketNumber);
+				for(let i = 0;i < orderInfo.passageInfo.length;i++){
+					this.ticketNumber = orderInfo.ticketNumber;
+					that.make(this.orderInfo.ticketNumber,i);
+				}
 			}else {
 				for(let i = 0;i < orderInfo.CheckInfoList.length;i++){
-					
 					this.ticketNumber = orderInfo.CheckInfoList[i].CheckCode;
-					that.make(this.ticketNumber);
+					that.make(this.ticketNumber,i);
 				}
 			}
 			that.stringTurnArray(orderInfo.iDNameType);
@@ -119,15 +120,16 @@
 		},
 		methods: {
 			//-------------------------------生成二维码-------------------------------
-			make(param) {
+			make(param,index) {
 				if(param) {
 					// console.log(param);
 					uQRCode.make({
-						canvasId: 'ctkyQrcode',
+						canvasId: 'ctkyQrcode' + index,
 						text: param,
 						size: this.qrcodeSize,
 						margin: 20,
 						success: res => {
+							console.log(res);
 							// console.log('完成')
 							this.qrcodeSrc = res
 						},
