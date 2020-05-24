@@ -8,7 +8,7 @@
 		<view class="head">
 			<!-- 起始站/价格 -->
 			<view class="u-f-jsb">
-				<view>{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
+				<view>{{orderInfo.carType}}:{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
 			</view>
 			<!-- 发车时间 -->
 			<view class="headText"> 发车时间：{{orderInfo.setOutTime}}</view>
