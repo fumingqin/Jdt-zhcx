@@ -2315,59 +2315,21 @@
 					}
 				})
 			},
-			// -------------------------定制巴士退款/退票 先退款再退票-------------------------
+			// -------------------------定制巴士退票/退款 先退票再退款-------------------------
 			cs_refundStateCheck:function(item){
 				var that = this;
 				that.ky_currentType = '定制巴士退票';
-				that.Cs_BouncePay(item);
+				that.csRefundTicket(item);
 			},
-			Cs_BouncePay:function(item){
-				var that = this;
-				var payType = $KyInterface.KyInterface.payType.payType;
-				uni.request({
-					url: $KyInterface.KyInterface.Cs_BouncePay.Url,
-					method: $KyInterface.KyInterface.Cs_BouncePay.method,
-					// header: $KyInterface.KyInterface.Cs_BouncePay.header,
-					data: {
-						orderNumber: item.orderNumber,
-						payType: payType,
-						price: item.totalPrice
-						// price: '0.01'
-					},
-					success: (respones) => {
-						if (respones.data.Successed == true) {
-							uni.showToast({
-								title: respones.data.msg
-							})
-							// this.$refs.popup2.close()
-							that.csRefundTicket(item.orderNumber);
-						} else if (respones.data.Successed == false){
-							uni.hideLoading()
-							uni.showToast({
-								title: respones.data.msg,
-								icon: 'none'
-							})
-							this.$refs.popup2.close()
-							uni.startPullDownRefresh();
-						}
-					},
-					fail: (respones) => {
-						uni.hideLoading()
-						console.log(respones)
-						uni.showToast({
-							title: '服务器异常，请联系客服'
-						})
-					}
-				})
-			},
-			csRefundTicket:function(bookID){
+			//退票
+			csRefundTicket:function(item){
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Cs_Refund.Url,
 					method: $KyInterface.KyInterface.Cs_Refund.method,
 					header: $KyInterface.KyInterface.Cs_Refund.header,
 					data: {
-						bookID: bookID,
+						bookID: item.orderNumber,
 					},
 					success: (respones) => {
 						// console.log(respones)
@@ -2376,8 +2338,8 @@
 							uni.showToast({
 								title: respones.data.BookResult.Message
 							})
-							this.$refs.popup2.close()
-							uni.startPullDownRefresh();
+							that.$refs.popup2.close()
+							that.Cs_BouncePay(item);
 						} else {
 							uni.hideLoading()
 							uni.showToast({
@@ -2385,6 +2347,40 @@
 								icon: 'none'
 							})
 							this.$refs.popup2.close()
+						}
+					},
+					fail: (respones) => {
+						uni.hideLoading()
+						uni.showToast({
+							title: '服务器异常，请联系客服'
+						})
+					}
+				})
+			},
+			//退款
+			Cs_BouncePay:function(item){
+				var that = this;
+				var payType = $KyInterface.KyInterface.payType.payType;
+				uni.request({
+					url: $KyInterface.KyInterface.Cs_BouncePay.Url,
+					method: $KyInterface.KyInterface.Cs_BouncePay.method,
+					data: {
+						orderNumber: item.orderNumber,
+						payType: payType,
+						price: item.totalPrice
+					},
+					success: (respones) => {
+						if (respones.data.Successed == true) {
+							uni.showToast({
+								title: respones.data.msg
+							})
+							uni.startPullDownRefresh();
+						} else if (respones.data.Successed == false){
+							uni.hideLoading()
+							uni.showToast({
+								title: respones.data.msg,
+								icon: 'none'
+							})
 							uni.startPullDownRefresh();
 						}
 					},
