@@ -2644,9 +2644,13 @@
 									clearInterval(timer);
 								} else {
 									clearInterval(timer);
-									that.keYunPaymentData = JSON.parse(res.data.msg);
-									// console.log('支付参数返回数据', that.keYunPaymentData);
-									that.keYunPayment();
+									if(that.ky_currentType == '客运退票'){
+										that.GetBounceChargeByOrderNumber(orderNumber);
+									}else {
+										//客运支付
+										that.keYunPaymentData = JSON.parse(res.data.msg);
+										that.keYunPayment();
+									}
 								}
 							} else if (res.data.status == false) {
 								uni.hideLoading();
@@ -2657,7 +2661,6 @@
 										title: '订单已超时',
 										icon: 'none'
 									})
-									
 								} else {
 									uni.showModal({
 										content: info.oldState,
@@ -3948,11 +3951,12 @@
 				})
 				var that = this
 				if (this.exitindex == '2') {
-					// this.keYunRefundTicket(that.ticketOrderNumber)
 					//请求费率
-					this.GetBounceChargeByOrderNumber(that.ticketOrderNumber)
+					// this.GetBounceChargeByOrderNumber(that.ticketOrderNumber)
+					that.ky_currentType = '客运退票';
+					//先查询订单状态-->执行费率查询-->执行退票
+					that.getTicketPaymentInfo(that.ticketOrderNumber)
 				} else if(this.exitindex == 'cs2tui'){
-					// this.csRefundTicket(that.ticketOrderNumber)
 					//先检测订单支付状态再执行退票操作
 					this.cs_refundStateCheck(that.csRefundInfo)
 				}else if (this.exitindex == '3') {
