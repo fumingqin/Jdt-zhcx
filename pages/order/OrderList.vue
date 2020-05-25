@@ -3013,7 +3013,7 @@
 							method: 'POST',
 							success: (res) => {
 								uni.hideLoading();
-								// uni.stopPullDownRefresh();
+								uni.stopPullDownRefresh();
 								if (res.data.status) {
 									for (var i = 0; i < res.data.data.length; i++) {
 										that.info.push(res.data.data[i]);
@@ -3036,7 +3036,7 @@
 					fail() {
 						uni.hideLoading();
 						//请求数据失败，停止刷新
-						// uni.stopPullDownRefresh();
+					    uni.stopPullDownRefresh();
 						uni.showToast({
 							title: '暂无订单数据，请先登录后查看订单',
 							icon: 'none',
@@ -3125,7 +3125,7 @@
 					},
 					success: function(res) {
 						uni.hideLoading();
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3167,7 +3167,7 @@
 						}
 					},
 					fail() {
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 					}
 				})
@@ -3403,7 +3403,7 @@
 					},
 					success: function(res) {
 						uni.hideLoading();
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						if (res.data.status) {
 							for (var i = 0; i < res.data.data.length; i++) {
 								var data = res.data.data[i];
@@ -3445,7 +3445,7 @@
 						}
 					},
 					fail() {
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 					}
 				})
