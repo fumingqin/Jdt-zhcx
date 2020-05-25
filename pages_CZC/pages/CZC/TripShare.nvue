@@ -43,8 +43,8 @@
 					</view>
 				</view>
 			</view>
-			<view style="position: fixed;bottom: 0rpx;" @click="Execute">
-				<button style="background-color: #FC4646;width: 750rpx;">
+			<view style="position: fixed;bottom: 40rpx;left: 30rpx;right: 30rpx;" @click="Execute">
+				<button style="background-color: #FC4646;width: 690rpx;">
 					<text style="color: #FFFFFF;">刷新</text>
 				</button>
 			</view>
@@ -72,7 +72,7 @@
 			var that = this;
 			return {
 				scale: 15,
-				IsShow: false,
+				IsShow: true,
 				longitude: "", //地图中心点经度
 				latitude: "", //地图中心点纬度
 				points: [],
@@ -297,9 +297,7 @@
 						console.log(res)
 						if (res.data.status) {
 							//赋值结束点经纬度
-
 							if (that.CheckTime(data.OrderTime)) {
-								that.IsShow = true;
 								that.IsShow = true;
 								that.startLon = data.StartLon; //起点
 								that.startLat = data.StartLat;
