@@ -2224,7 +2224,8 @@
 			endorse:function(item) {
 				// console.log(item)
 				uni.showToast({
-					title:'待开放...'
+					title:'待开放...',
+					icon:'none'
 				})
 				// uni.navigateTo({
 				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
@@ -2256,7 +2257,8 @@
 							let BounceMoney = respones.data.data.BounceMoney;
 							uni.showModal({
 								title:'温馨提示',
-								content:'退票将收取手续费，退款金额为' + BounceMoney + '元',
+								// content:'退票将收取手续费，退款金额为' + BounceMoney + '元',
+								content:'退票将收取手续费，是否继续退票',
 								success(res) {
 									if(res.confirm) {
 										that.keYunRefundTicket(orderNumber)
@@ -2291,7 +2293,7 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						console.log('退票结果', respones)
+						// console.log('退票结果', respones)
 						if (respones.data.status == true) {
 							uni.hideLoading()
 							if(respones.data.msg){
@@ -2300,7 +2302,8 @@
 								})
 							}else {
 								uni.showToast({
-									title: '退票成功'
+									title: '退票成功',
+									duration: 3000,
 								})
 							}
 							this.$refs.popup2.close()
@@ -2335,7 +2338,24 @@
 			cs_refundStateCheck:function(item){
 				var that = this;
 				that.ky_currentType = '定制巴士退票';
+				//退票
 				that.csRefundTicket(item);
+				// that.Cs_GetInsuranceCheckState(item);
+			},
+			//-------------------------定制巴士退票获取业务参数接口-------------------------
+			Cs_GetInsuranceCheckState:function(item){
+				uni.request({
+					url: $KyInterface.KyInterface.Cs_GetInsuranceCheckState.Url,
+					method: $KyInterface.KyInterface.Cs_GetInsuranceCheckState.method,
+					success(res) {
+						console.log('定制巴士退票参数',res)
+						//退票
+						// that.csRefundTicket(item);
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
 			},
 			//退票
 			csRefundTicket:function(item){
@@ -2638,7 +2658,9 @@
 				var that = this;
 				var timer = null;
 				that.timer = timer;
-				uni.showLoading();
+				uni.showLoading({
+					title:'正在检测订单...'
+				})
 				timer = setInterval(function() {
 					uni.request({
 						url: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
@@ -2648,20 +2670,21 @@
 							orderNumber: orderNumber,
 						},
 						success: (res) => {
-							console.log('支付参数返回数据', res);
+							// console.log('支付参数返回数据', res);
 							if (res.data.status == true) {
 								uni.hideLoading();
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
-									uni.showToast({
-										title: '订单已支付',
-										icon: 'none'
-									})
+									clearInterval(timer);
 									//订单已经支付可以退票
 									if(that.ky_currentType == '客运退票'){
 										that.GetBounceChargeByOrderNumber(orderNumber);
+									}else {
+										uni.showToast({
+											title: '订单已支付',
+											icon: 'none'
+										})
 									}
-									clearInterval(timer);
 								} else {
 									clearInterval(timer);
 									//客运支付

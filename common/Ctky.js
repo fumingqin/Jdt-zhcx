@@ -253,7 +253,11 @@ const KyInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
-	
+	Cs_GetInsuranceCheckState:{
+		Url:Url + 'Business/GetInsuranceCheckState',
+		name:'定制巴士-获取业务参数接口--退票参数',
+		method:'POST',
+	},
 }
 // 接口声明区
 export default {

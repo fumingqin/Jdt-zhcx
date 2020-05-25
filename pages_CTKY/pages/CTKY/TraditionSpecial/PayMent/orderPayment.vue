@@ -433,7 +433,7 @@
 
 						fullTicket: that.adultNum, //全票人数
 						halfTicket: that.childrenNum, //半票人数
-						carryChild: that.childrenNum, //携童人数
+						carryChild: that.freeTicketNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
 						openId: openId,//oI1cA0k7cBdeZ_jA0fd_OdEO6kls
@@ -497,6 +497,8 @@
 							
 							if (res.data) {
 								if (res.data.status == true) {
+									clearInterval(timer);
+									
 									var msgArray = JSON.parse(res.data.msg);
 									console.log(msgArray)
 									if (msgArray.oldState == '结束') {
@@ -505,7 +507,6 @@
 											title: msgArray.message,
 											icon: 'none'
 										})
-										clearInterval(timer);
 									} else if (msgArray.oldState == '支付系统申请支付订单') {
 										that.paymentData = msgArray;
 										uni.hideLoading();
@@ -517,10 +518,11 @@
 												}
 											}
 										})
-										//回调失败，取消定时器
-										clearInterval(timer);
 									}
 								} else if (res.data.status == false) {
+									//回调失败，取消定时器
+									clearInterval(timer);
+									
 									// alert('获取支付参数状态失败',res.data.status)
 									var msgArray = JSON.parse(res.data.msg);
 									uni.hideLoading();
@@ -528,16 +530,15 @@
 										title: msgArray.message,
 										icon: 'none'
 									})
-									//回调失败，取消定时器
-									clearInterval(timer);
+									
 								}
 							}
 						},
 						fail(res) {
+							clearInterval(timer);
 							uni.hideLoading();
 							console.log('失败');
 							//回调失败，取消定时器
-							clearInterval(timer);
 						}
 					})
 				}, 3000)
