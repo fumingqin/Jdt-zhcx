@@ -355,7 +355,26 @@ const Interface = {
 		name:'旅游服务首页 - 咨询详情',
 		method:'POST',
 		pages:["pages/Home/InformationDetails"]
-	}
+	},
+	//--------------------------------------投诉------------------------------------
+	GRZX_complaint:{
+		value: Url + '/api/person/InsertComplaint',
+		name:'个人中心 - 投诉页面',
+		method:'POST',
+		pages:["pages/GRZX/gz_complaintsPage"]
+	},
+	GRZX_complaintList:{
+		value: Url + '/api/person/getComplaintByuserId',
+		name:'个人中心 - 投诉列表页',
+		method:'POST',
+		pages:["pages/GRZX/gz_complaintList"]
+	},
+	GRZX_complaintContent:{
+		value: Url + '/api/person/getComplaintDetailBynumber',
+		name:'个人中心 - 投诉详情页',
+		method:'POST',
+		pages:["pages/GRZX/gz_complaintContent"]
+	},
 }
 
 
