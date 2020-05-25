@@ -2657,16 +2657,16 @@
 										title: '订单已支付',
 										icon: 'none'
 									})
+									//订单已经支付可以退票
+									if(that.ky_currentType == '客运退票'){
+										that.GetBounceChargeByOrderNumber(orderNumber);
+									}
 									clearInterval(timer);
 								} else {
 									clearInterval(timer);
-									if(that.ky_currentType == '客运退票'){
-										that.GetBounceChargeByOrderNumber(orderNumber);
-									}else {
-										//客运支付
-										that.keYunPaymentData = JSON.parse(res.data.msg);
-										that.keYunPayment();
-									}
+									//客运支付
+									that.keYunPaymentData = JSON.parse(res.data.msg);
+									that.keYunPayment();
 								}
 							} else if (res.data.status == false) {
 								uni.hideLoading();
