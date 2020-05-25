@@ -142,7 +142,7 @@
 			that.tickettype = that.ticketInfo.shuttleType;
 
 			uni.showLoading({
-			    title: '加载中...'
+			    title: '正在下单...'
 			});
 			
 			that.totalPrice = param.totalPrice;//总价格

@@ -471,25 +471,27 @@
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
 				var that = this;
-				// #ifdef MP-WEIXIN
-				uni.showModal({
-					content:'小程序暂不支持地图显示',
-					showCancel:false,
-				})
-				// #endif
+				// // #ifdef MP-WEIXIN
+				// uni.showModal({
+				// 	content:'小程序暂不支持地图显示',
+				// 	showCancel:false,
+				// })
+				// // #endif
 				// #ifndef MP-WEIXIN
-				if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
-					if (this.ticketDetail.starSiteArr.length <= 2 && this.ticketDetail.endSiteArr.length <= 2) { //普通班车
-						uni.navigateTo({
-							url: '../MapMark/traditionCarMark?traditionArray=' + JSON.stringify(this.ticketDetail)
-						})
-					} else if (this.ticketDetail.starSiteArr.length > 2 || this.ticketDetail.endSiteArr.length > 2) { //定制班车
-						uni.navigateTo({
-							url: '../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
-						})
-					}
-				}
+				
 				// #endif
+				uni.navigateTo({
+					url: '../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
+				})
+				// if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
+				// 	if (this.ticketDetail.shuttleType == '普通班车') { //普通班车
+				// 		uni.navigateTo({
+				// 			url: '../MapMark/traditionCarMark?traditionArray=' + JSON.stringify(this.ticketDetail)
+				// 		})
+				// 	} else if (this.ticketDetail.shuttleType == '定制班车') { //定制班车
+						
+				// 	}
+				// }
 			},
 			//-------------------------------选择乘客-----------------------------
 			pickPassenger() {
@@ -555,9 +557,9 @@
 							uni.navigateTo({
 								url: '../../../../../pages/GRZX/addPassenger?type=add',
 							})
-						}else if(param == '儿童'){
+						}else if(param == '免童'){
 							uni.navigateTo({
-								url: '../../../../../pages/GRZX/addPassenger?type=add',
+								url: '../../../../../pages/GRZX/addFreeChildren?type=add',
 							})
 						}
 						
@@ -602,10 +604,10 @@
 						}
 					}
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + Number(insurePrice) * that.passengerNum
 				} else {
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + Number(insurePrice) * that.passengerNum
 				}
 			},
 

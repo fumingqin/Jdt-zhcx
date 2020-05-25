@@ -29,37 +29,43 @@
 					<view class="markType" style="border:#1EA2FF solid 1px;color:#1EA2FF;" v-if="item.shuttleType == '普通班车' && isFlowTickets(item) == '流水'">流水</view>
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{turnDate(item.setTime)}}</view>
 				</view>
-				<view v-if="item.shuttleType != '定制巴士'" style="margin-left: 25upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;margin-bottom: 16upx;">班次：{{getScheduleNum(item)}}</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">{{item.startStaion}}</view>
+				<view style="display: flex;align-items: center;justify-content: space-between;">
+					<view v-if="item.shuttleType != '定制巴士'" style="margin-left: 25upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;margin-bottom: 16upx;">班次：{{getScheduleNum(item)}}</view>
+					<view v-if="item.shuttleType != '定制巴士'" style="margin-right: 28upx;font-size: 24upx;font-style:
+					SourceHanSansSC-Regular; color: #FC4646;">成人票￥{{item.fare}}</view>
 				</view>
-				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;">
-					<image src="../../../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
-					<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-					color: #333333;">{{item.endStation}}</view>
+				
+				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;justify-content: space-between;">
+					<view style="display: flex;align-items: center;">
+						<image src="../../../../static/CTKY/startDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx; font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">{{item.startStaion}}</view>
+					</view>
+					<view v-if="item.shuttleType != '定制巴士'" style="margin-right: 28upx;font-size: 24upx;font-style:
+					SourceHanSansSC-Regular; color: #FC4646;">儿童票￥{{item.halfTicket}}</view>
+					<view v-if="item.shuttleType == '定制巴士'" style="margin-right: 28upx;font-size: 24upx;font-style:
+					SourceHanSansSC-Regular; color: #FC4646;">价格￥{{item.PriceRange}}</view>
 				</view>
+				<view style="margin-left: 25upx;display: flex;align-items: center;margin-bottom: 16upx;justify-content: space-between;">
+					<view style="display: flex;align-items: center;">
+						<image src="../../../../static/CTKY/endDot.png" style="width: 10upx ;height: 10upx;"></image>
+						<view style="margin-left: 16upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
+						color: #333333;">{{item.endStation}}</view>
+					</view>
+					<view style="margin-right: 28upx;font-size: 24upx;font-style:
+					SourceHanSansSC-Light; color: #666666;">余{{item.remainingVotes}}张</view>
+				</view>
+				
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
 				font-size: 28upx;color: #666666;"
 				 v-if="item.shuttleType == '普通班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票</view>
 				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
 				font-size: 28upx;color: #666666;"
 				 v-if="item.shuttleType == '定制班车'">{{item.carType}}/约{{item.duration}}分钟/儿童半票/站外上车</view>
-				 <view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
+				<view style="margin-left: 25upx;margin-bottom: 20upx;font-style: SourceHanSansSC-Light;font-weight: lighter;
 				 font-size: 28upx;color: #666666;"
 				  v-if="item.shuttleType == '定制巴士'">{{item.SetoutTimeDesc}}</view>
-			</view>
-			<view class="ctky_View_Right">
-				<view>
-					<view v-if="item.shuttleType != '定制巴士'" style="margin-right: 28upx;font-size: 30upx;font-style:
-		           SourceHanSansSC-Regular; color: #FC4646;">成人票￥{{item.fare}}</view>
-				   <view v-if="item.shuttleType != '定制巴士'" style="margin-right: 28upx;font-size: 30upx;font-style:
-				   SourceHanSansSC-Regular; color: #FC4646;">儿童票￥{{item.halfTicket}}</view>
-					<view style="margin-right: 28upx;margin-top: 20upx;font-size: 24upx;font-style:
-		           SourceHanSansSC-Light; color: #666666;">余{{item.remainingVotes}}张</view>
-				</view>
 			</view>
 		</view>
 	</view>
@@ -234,6 +240,7 @@
 										LineViaSiteName:res.data.ScheduleForSell[i].LineViaSiteName,
 										ScheduleID:res.data.ScheduleForSell[i].ScheduleID,
 										ScheduleCompanyCode:res.data.ScheduleForSell[i].ScheduleCompanyCode,
+										PriceRange:res.data.ScheduleForSell[i].PriceRange,
 									};
 									that.allTicketsList.push(array);
 								}
@@ -770,13 +777,7 @@
 		text-align: left;
 		display: flex;
 		flex-direction: column;
-		padding: 0;
-	}
-
-	.ctky_View_Right {
-		display: flex;
-		text-align: right;
-		align-items: center;
+		width: 100%;
 		padding: 0;
 	}
 </style>

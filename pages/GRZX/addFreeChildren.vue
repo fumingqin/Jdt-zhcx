@@ -26,7 +26,7 @@
 					</view>
 				</view>
 				<!-- 身份证 -->
-				<view v-if="code==0||code==1" class="itemClass borderTop">
+				<view v-if="code==0" class="itemClass borderTop">
 					<view class="fontStyle">证件号</view>
 					<input
 						placeholder="请保持与证件号码一致"
@@ -39,7 +39,7 @@
 					/>	
 				</view>
 				<!-- 出生证 -->
-				<view v-if="code==2" class="itemClass borderTop">
+				<view v-if="code==1" class="itemClass borderTop">
 					<view class="fontStyle">证件号</view>
 					<input
 						placeholder="请保持与证件号码一致"
@@ -50,7 +50,7 @@
 					/>	
 				</view>
 				<!-- 临时乘车编号 -->
-				<view v-if="code==3" class="itemClass borderTop">
+				<view v-if="code==2" class="itemClass borderTop">
 					<view class="fontStyle">证件号</view>
 					<input
 						placeholder="请保持与证件号码一致"
@@ -96,8 +96,9 @@
 				],
 				selectCode:['身份证','出生证','临时乘车编号'],
 				codeType:'身份证 >',
-				accompanyList:['1','2','3'],
-				accompanyPeople:'请选择',
+				accompanyList:[],
+				phoneList:[],
+				accompanyPeople:'',
 				user:{
 					passengerId:'',//乘车人id
 					userName:'',	
@@ -168,10 +169,23 @@
 						for(var i=0;i<data.length;i++){
 							if(data[i].userauditState!="半票儿童"&&data[i].userauditState!="免票儿童"){
 								that.list.push(data[i]);
+								if(data[i].userDefault){
+									that.accompanyPeople=data[i].userName+" >";
+									that.user.userPhoneNum=data[i].userPhoneNum;
+								}
+							}
+						}
+						for(var n=0;n<that.list.length;n++){
+							if(that.list[n].userDefault==true){
+								that.accompanyList.unshift(that.list[n].userName);
+								that.phoneList.unshift(that.list[n].userPhoneNum)
+							}else{
+								that.accompanyList.push(that.list[n].userName);
+								that.phoneList.push(that.list[n].userPhoneNum);
 							}
 						}
 					}
-				})	
+				})
 			},
 			//------------------选择性别----------------
 			radioClick:function(e){
@@ -181,10 +195,18 @@
 			formSubmit(e){
 				var data1=e.target.value;
 				var that=this;
-				data1.passengerId=that.user.passengerId;
 				// -------证件类型----------
-				data1.userauditState = "免票儿童";
-				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
+				data1.userType = "免票儿童";
+				data1.userauditState=that.codeType;
+				data1.userauditState = data1.userauditState.substring(0,data1.userauditState.length-2);
+				data1.userPhoneNum=that.user.userPhoneNum;
+				console.log(that.userId)
+				console.log(data1.userType)
+				console.log(data1.userName)
+				console.log(data1.userCodeNum)
+				console.log(data1.userPhoneNum)
+				console.log(data1.userauditState)
+				console.log(data1.userSex)
 				if(data1.userName==""||data1.userName==null){
 					uni.showToast({
 						title:'请输入姓名',
@@ -205,34 +227,17 @@
 						title:'输入的身份证号有误，请检查',
 						icon:'none',
 					})
-				}else if(data1.userauditState=="护照"&&!that.checkPass1(data1.userCodeNum)){
+				}else if(data1.userauditState=="出生证"&&!that.checkPass1(data1.userCodeNum)){
 					uni.showToast({
 						title:'输入的证件号有误，请检查',
 						icon:'none',
 					})
-				}else if(data1.userauditState=="港澳通行证"&&!that.checkPass2(data1.userCodeNum)){
+				}else if(data1.userauditState=="临时乘车编号"&&!that.checkPass2(data1.userCodeNum)){
 					uni.showToast({
 						title:'输入的证件号有误，请检查',
-						icon:'none',
-					})
-				}else if(data1.userauditState=="台胞证"&&!that.checkPass3(data1.userCodeNum)){
-					uni.showToast({
-						title:'输入的证件号有误，请检查',
-						icon:'none',
-					})
-				}else if(data1.userType=="请选择购票类型"){
-					uni.showToast({
-						title:'请选择购票类型',
 						icon:'none',
 					})
 				}else{
-					console.log(that.userId)
-					console.log(data1.passengerId)
-					console.log(data1.userType)
-					console.log(data1.userName)
-					console.log(data1.userCodeNum)
-					console.log(data1.userPhoneNum)
-					console.log(data1.userauditState)
 					uni.showLoading({
 						title:'保存中...'
 					})
@@ -240,7 +245,7 @@
 						url:that.$GrzxInter.Interface.changeUserInfo.value,
 						data:{
 							userId:that.userId, //账号id
-							passengerId:data1.passengerId, //乘车人id   
+							passengerId:'', //乘车人id   
 							userType:data1.userType,   //用户类别 成人/儿童 
 							userName:data1.userName,   //用户姓名   
 							userSex:data1.userSex,   //用户性别   
@@ -250,7 +255,7 @@
 						  	userEmergencyContact:'false',   //是否设置为紧急联系人 true/false
 							userfrontImg:'',  	//证件正面
 							userbackImg:'',		//证件主页
-							userauditState:data1.userauditState,   //审核状态
+							userauditState:data1.userauditState,  
 						},
 						method:that.$GrzxInter.Interface.changeUserInfo.method,
 						success(res) {
@@ -306,33 +311,19 @@
 			codeChange:function(e){
 				this.code=e.detail.value;
 				this.user.userCodeNum="";
-				if(e.detail.value==0){
-					this.codeType="请选择证件类型 >";
-				}else{
-					this.codeType=this.selectCode[e.detail.value]+" >";
-				}
+				this.codeType=this.selectCode[e.detail.value]+" >";
 			},
 			//------------------选择陪同乘客----------------
 			accompanyChange:function(e){
-				this.accompanyPeople=this.accompanyList[e.detail.value];
+				this.accompanyPeople=this.accompanyList[e.detail.value]+" >";
+				this.user.userPhoneNum=this.phoneList[e.detail.value];
 			},
 			//------------------重置信息----------------
 			resetClick:function(e){
 				console.log(e)
-				// this.user.date="请选择";
-				// this.user.userSex=0;
-				// this.user.show=true;
-				// this.user.userName="";
-				// this.user.userPhoneNum="";
-				// this.user.userCodeNum="";
-				// this.codeType="请选择证件类型 >";
-				// this.ticketType="请选择购票类型 >";
-				// this.selector="请选择特殊凭证 >";
-				// this.user.userDefault=false;
-				// this.code=0;
-				// this.user.prove=0;
-				// this.user.type=0;
-				// this.user.userEmergencyContact=false;
+				this.user.userSex=0;
+				this.user.userName="";
+				this.user.userCodeNum="";
 			},
 			//------------------是否选中本人----------------
 			checkChange:function(e){
@@ -426,13 +417,13 @@
 			},
 			//------------------校验出生证----------------
 			checkPass1:function(e){
-				// var reg=/^((1[45]\d{7})|(G\d{8})|(P\d{7})|(S\d{7,8}))?$/.test(e);
+				var reg= /^[a-zA-Z0-9]{5,21}$/.test(e);
 				return reg;
 			},
 			//------------------校验临时乘车编号----------------
 			checkPass2:function(e){
 				// var reg=/^[HMhm]{1}([0-9]{10}|[0-9]{8})$/.test(e);
-				return reg;
+				return true;
 			},
 		}
 	}

@@ -16,16 +16,20 @@
 				<text style="font-size:28rpx; margin-top: 20rpx; margin-left: 30rpx;">途经站</text>
 				<!-- 站点 -->
 				<view class="stationList">
-					<view class="deSelect" :class="{'select':selectIndex == index}" @tap="stationClick(stationArray[index])" v-for="(item,index) in stationArray" :key="index">
-						<text class="deSelectColor" :class="{'selectColor' : selectIndex == index}">{{item.SiteName}}</text>
+					<view class="deSelect" :class="{'select':selectIndex == index}" @tap="stationClick(stationArray[index],index)" v-for="(item,index) in stationArray" :key="index">
+						<text class="deSelectColor" :class="{'selectColor' : selectIndex == index}">{{item.stationName}}</text>
 					</view>
 				</view>
-				<!-- <text style="font-size:28rpx; margin-top: 20rpx; margin-left: 30rpx;">站点图片</text>
-				<view class="imageView">
-					<block v-for="(item,index) in imageArray" :key="index">
-						<image :src="item.image" lazy-load = "true" class="stationImage" @tap="picTap"></image>
+				<text style="font-size:28rpx; margin-top: 20rpx; margin-left: 30rpx;">站点图片</text>
+				<view class="imageView" v-if="arrayOrsingle == 'array'">
+					<block v-for="(item,index) in stationArray" :key="index">
+						<image :src="item.imageurl" lazy-load = "true" class="stationImage" @tap="picTap(index)"></image>
 					</block>
-				</view> -->
+					<!-- <image :src="imageURL" lazy-load = "true" class="stationImage" @tap="picTap"></image> -->
+				</view>
+				<view class="imageView" v-if="arrayOrsingle == 'single'">
+					<image :src="imageURL" lazy-load = "true" class="stationImage" @tap="picTap"></image>
+				</view>
 			</scroll-view>
 		</view>
 	</view>
@@ -33,6 +37,7 @@
 
 <script>
 	import $taxi from '@/common/Czc.js';
+	import $KyInterface from "@/common/Ctky.js"
 	export default {
 		data() {
 			return {
@@ -53,7 +58,7 @@
 				points:[],
 				polyline:[],//线
 				//标识显示的图片
-				markerIconPath:'../../static/CTKY/stationLocation.png',
+				markerIconPath:'../../../../static/CTKY/stationLocation.png',
 				//标识宽高
 				iconWidth:11,
 				iconHeight:13,
@@ -64,6 +69,8 @@
 				index: 0,
 				startArray:[],
 				endArray:[],
+				imageURL:'',//单个站点图片
+				arrayOrsingle:'array',
 			}
 		},
 		onLoad(param) {
@@ -76,47 +83,14 @@
 				}
 			});
 			that.orderInfo = JSON.parse(param.specialArray)
+			console.log('定制班车',that.orderInfo)
 			
 			that.startArray = that.orderInfo.starSiteArr[0]
 			that.endArray = that.orderInfo.endSiteArr[0]
 			var startLonLat = that.startArray.Longitude + ',' + that.startArray.Latitude
 			var endLonLat = that.endArray.Longitude + ',' + that.endArray.Latitude
-			that.getDirectionDriving(startLonLat,endLonLat);
-			//站点数组
-			that.stationArray = that.orderInfo.starSiteArr;
-			// 获取绘制线路数据
-			// uni.request({
-			// 	url:'http://111.231.109.113:8000/api/MyTest/GetBusLine',
-			// 	method:'GET',
-			// 	data:{
-			// 		LineCode:1
-			// 	},
-			// 	header : {'content-type':'application/json'},
-			// 	success: (res) => {
-			// 		//创建坐标数组保存坐标数据
-			// 		var coordinateArray = [];
-			// 		for (var i = 0; i < res.data.length; i++) {
-			// 			// 创建坐标数组,用来保存经纬度(这是绘制线路的经纬度数组)
-			// 			var coordinates = {
-			// 				latitude : res.data[i].Log_Latitude,
-			// 				longitude : res.data[i].Log_Longitude,
-			// 			}
-			// 			// 将坐标数组添加到标点数组--points是画线需要的标点数组
-			// 			that.points.push(coordinates);
-			// 		}
-			// 		//绘制线路对象(这是绘制线路的polyline)
-			// 		var obj = {
-			// 			points : that.points,
-			// 			color:"#669253",
-			// 			width:2,
-			// 			arrowLine: true,
-			// 		}
-			// 		that.polyline.push(obj);
-			// 	},
-			// 	fail:function(res){
-			// 		console.log('请求失败',res);
-			// 	},
-			// });
+			
+			that.getStationInfo();
 			
 			// 获取自身位置
 			that.getMyLocation();
@@ -174,50 +148,74 @@
 					}
 				});
 			},
+			//-------------------------------获取班次信息-------------------------------
+			getScheduleNum:function(param){
+				if(param.shuttleType != '定制巴士'){
+					var schedule = param.split('|');
+					return schedule[1];
+				}
+			},
+			//-------------------------------获取站点坐标和图片-------------------------------
 			getStationInfo() {
+				var that = this;
+				var scheduleCode = that.getScheduleNum(that.orderInfo.executeScheduleID);
+				console.log('班次编号',that.orderInfo.startStaion)
+				console.log('班次编号',that.orderInfo.endStation)
+				console.log('班次编号',scheduleCode)
 				// 获取站点数据
 				uni.request({
-					url:'http://111.231.109.113:8000/api/MyTest/GetBusLineStation',
-					method:'GET',
-					header:{'content-type':'application/json'},
+					url:$KyInterface.KyInterface.Ky_getLineRouteStationImage.Url,
+					method:$KyInterface.KyInterface.Ky_getLineRouteStationImage.method,
 					data:{
-						LineCode:1
+						startStation : that.orderInfo.startStaion,
+						endStation : that.orderInfo.endStation,
+						scheduleCode : scheduleCode,
 					},
 					success: (res) => {
-						// console.log(res.data);
-						for (var i = 0; i < res.data.length; i++) {
-							var that = this;
-							var stationInfo = {
-								latitude : res.data[i].Bst_Latitude,
-								longitude : res.data[i].Bst_Longitude,
-								// 站点名称
-								stationName : res.data[i].Bls_StationName,
-								index : i,
-							}
-							that.stationArray.push(stationInfo);
-							/---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------/
-							//创建绘制坐标点的对象marker
-							var marker = new Object();
-							marker = {
-								id : res.data[i].AID,
-								latitude : res.data[i].Bst_Latitude,
-								longitude : res.data[i].Bst_Longitude,
-							    iconPath : that.markerIconPath,//标识显示的图片
-								width : that.iconWidth,
-								height : that.iconHeight,
-								callout : {
-									content: res.data[i].Bls_StationName, //文本
-									color: '#FC4646', //文字颜色
-									fontSize: 12, //文本大小
-									borderRadius: 4, //边框圆角
-									bgColor: '#FFFFFF', //背景颜色
-									display: 'ALWAYS', //常显
-									padding:3,
+						console.log(res.data);
+						if(res.data.status == true) {
+							that.imageURL = res.data.data[0].imageurl;
+							
+							var length = res.data.data.length - 1;
+							var startLonLat = res.data.data[0].lon + ',' + res.data.data[0].lat;
+							var endLonLat = res.data.data[length].lon + ',' + res.data.data[length].lat;
+							//规划路线
+							that.getDirectionDriving(startLonLat,endLonLat);
+							
+							for (var i = 0; i < res.data.data.length; i++) {
+								var stationInfo = {
+									latitude : res.data.data[i].lat,
+									longitude : res.data.data[i].lon,
+									// 站点名称
+									stationName : res.data.data[i].stationName,
+									index : i,
+									imageurl : res.data.data[i].imageurl,
 								}
+								that.stationArray.push(stationInfo);
+								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
+								//创建绘制坐标点的对象marker
+								var marker = new Object();
+								marker = {
+									// id : res.data[i].AID,
+									latitude : res.data.data[i].lat,
+									longitude : res.data.data[i].lon,
+								    iconPath : that.markerIconPath,//标识显示的图片
+									width : that.iconWidth,
+									height : that.iconHeight,
+									callout : {
+										content: res.data.data[i].stationName, //文本
+										color: '#FC4646', //文字颜色
+										fontSize: 12, //文本大小
+										borderRadius: 4, //边框圆角
+										bgColor: '#FFFFFF', //背景颜色
+										display: 'ALWAYS', //常显
+										padding:3,
+									}
+								}
+								//将坐标集合添加到绘制坐标数组中
+								that.markers.push(marker);
+								//---------------------华丽的分割线--------------------------------------
 							}
-							//将坐标集合添加到绘制坐标数组中
-							that.markers.push(marker);
-							/---------------------华丽的分割线--------------------------------------/
 						}
 					},
 					fail:function(res){
@@ -246,9 +244,12 @@
 				});
 			},
 		    //选中站点
-			stationClick(e){
+			stationClick(e,index){
 				var that = this;
 				// console.log(e);
+				this.arrayOrsingle = 'single';
+				this.imageURL = this.stationArray[index].imageurl;
+				
 				//点击站点时将对应的站点坐标设置为地图中心位置，并放大地图
 				that.centerLatitude = e.latitude;
 				that.centerLongitude = e.longitude;
@@ -256,12 +257,13 @@
 				that.selectIndex = e.index;
 			},
 			//点击站点图片
-			picTap() {
+			picTap(index) {
+				
 				//设置本地缓存
-				uni.setStorageSync('imagePiclist', this.imageArray);
-				uni.navigateTo({
-					url: '/pages/LYFW/currency/imglist'
-				})
+				// uni.setStorageSync('imagePiclist', this.imageArray);
+				// uni.navigateTo({
+				// 	url: '/pages/LYFW/currency/imglist'
+				// })
 			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
