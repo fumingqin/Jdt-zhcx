@@ -349,7 +349,7 @@
 				uni.showLoading({
 					title:'加载中...'
 				})
-				console.log(orderInfo.scheduleCompanyCode,orderInfo.executeScheduleID,orderInfo.startSiteID,orderInfo.endSiteID,)
+				
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.Url,
 					method:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.method,
