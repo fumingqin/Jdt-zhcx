@@ -59,9 +59,9 @@
 			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
 				<view style="display: flex;margin-bottom: 35upx;">
-					<button @tap="addPassenger('成人')" style="padding: 0 40rpx; height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加成人/儿童</button>
-					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
-					<button @tap="addPassenger('免童')" style="height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">携带免童</button>
+					<button @tap="addPassenger('成人')" class="button_1"  style="border: #AAAAAA 1px solid;padding: 0 40rpx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加成人/儿童</button>
+					<button @tap="pickPassenger" class="button_1" style="border: #AAAAAA 1px solid;width: 150upx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+					<button @tap="addPassenger('免童')" class="button_1" style="border: #AAAAAA 1px solid;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">携带免童</button>
 				</view>
 				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in passengerInfo" :key=index
 				 v-model="passengerInfo">
@@ -593,8 +593,8 @@
 					for (var i = 0; i < that.passengerInfo.length; i++) {
 						that.passengerNum++;
 						//把儿童票筛选出来
-						if (that.passengerInfo[i].userType == '儿童') {
-							//将儿童票加入数组
+						if (that.passengerInfo[i].userType == '半票儿童') {
+							//将半价儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;
 						} else {
@@ -974,5 +974,9 @@
 		&.tapColor {
 			background: #FC4646;
 		}
+	}
+	
+	.button_1::after {
+		border: none;
 	}
 </style>

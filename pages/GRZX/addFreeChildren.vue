@@ -167,7 +167,7 @@
 						console.log(res,'res')
 						var data=res.data.data;
 						for(var i=0;i<data.length;i++){
-							if(data[i].userauditState!="半票儿童"&&data[i].userauditState!="免票儿童"){
+							if(data[i].userType!="半票儿童"&&data[i].userType!="免票儿童"){
 								that.list.push(data[i]);
 								if(data[i].userDefault){
 									that.accompanyPeople=data[i].userName+" >";
@@ -175,6 +175,7 @@
 								}
 							}
 						}
+						console.log(that.list,"list")
 						for(var n=0;n<that.list.length;n++){
 							if(that.list[n].userDefault==true){
 								that.accompanyList.unshift(that.list[n].userName);
@@ -536,6 +537,8 @@
 		margin-left: 7.47%;
 		margin-bottom: 150upx;
 		border-radius: 25upx;
+		font-size: 28upx;
+		font-weight: 300;
 	}
 	.txtClass{
 		width: 82%;

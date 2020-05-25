@@ -175,14 +175,14 @@
 					method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
 					header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
 					data: {
-						systemName: $KyInterface.KyInterface.Ky_ScheduleUrl.systemName,
+						systemName: $KyInterface.KyInterface.systemName.systemName,
 						startPosition: that.startStation,
 						endPosition: that.endStation,
 						date: date,
 					},
 					success: (res) => {
 						// uni.hideLoading();
-						// console.log(res.data);
+						// console.log(res);
 						//非空判断
 						if (res.data.status == true) {
 							if(res.data.data){
@@ -680,12 +680,14 @@
 	}
 
 	.headerClass {
+		position: sticky;
 		width: 100%;
 		background: #FFFFFF;
 		height: 109upx;
 		//padding-left: 10upx;
 		margin-bottom: 10upx;
 		display: flex;
+		z-index: 9999999999999;
 	}
 
 	.scrollClass {

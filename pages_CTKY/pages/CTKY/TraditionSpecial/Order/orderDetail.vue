@@ -13,7 +13,7 @@
 			<!-- 发车时间 -->
 			<view class="headText"> 发车时间：{{orderInfo.setOutTime}}</view>
 			<view class="headText"> 司机姓名：{{getDetailInfo(orderInfo.driverName)}}</view>
-			<view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view>
+			<!-- <view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view> -->
 			<view class="headText"> 车牌号：{{getDetailInfo(orderInfo.vehicleNumber)}}</view>
 			<view class="headText"> 检票口：未知</view>
 		</view>
@@ -157,6 +157,8 @@
 			getDetailInfo(param){
 				if(!param) {
 					return '该车未报班，无法获取详细信息'
+				}else{
+					return param
 				}
 			},
 			//-------------------------------获取乘车人信息-------------------------------
