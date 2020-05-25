@@ -2131,6 +2131,8 @@
 									halfTicket:0,
 									orderNumber:res.data.bookLogs[i].AID,
 									CheckInfoList:res.data.bookLogs[i].CheckInfoList,
+									driverName:res.data.bookLogs[i].driverName,
+									vehicleNumber:res.data.bookLogs[i].vehicleNumber,
 								};
 								orderArray.push(array);
 								that.info.push(array);
