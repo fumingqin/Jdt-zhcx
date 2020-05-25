@@ -2053,7 +2053,7 @@
 						clientID: that.userInfo.userId,
 					},
 					success: (res) => {
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 						console.log('客运订单数据', res.data);
 						that.ctkyOrderNum = res.data.orderNumber;
@@ -2081,7 +2081,7 @@
 					fail(res) {
 						uni.hideLoading();
 						//请求数据失败，停止刷新
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						// console.log('错误', res);
 					}
 				})
@@ -2099,6 +2099,7 @@
 					},
 					success(res) {
 						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						console.log('定制巴士订单数据',res)
 						if (res.data.Successed == true) {
 							var orderArray = [];
@@ -2138,6 +2139,7 @@
 					},
 					fail(res) {
 						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						console.log(res)
 					}
 				})
@@ -3691,6 +3693,7 @@
 							},
 							success: (res) => {
 								uni.hideLoading();
+								uni.stopPullDownRefresh();
 								if (res.data.msg == '订单获取成功') {
 									that.info = res.data.data;
 									that.finishArr = [];
@@ -3727,7 +3730,7 @@
 					},
 					fail() {
 						//请求数据失败，停止刷新
-						// uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh();
 						uni.hideLoading();
 						// #ifdef H5
 						uni.showToast({
@@ -4291,6 +4294,8 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						this.userInfo = res.data;
 						uni.request({
 							url: $bcfw.Interface.spt_RequestTicketsList.value,
@@ -4334,6 +4339,7 @@
 					},
 					fail() {
 						//请求数据失败，停止刷新
+						uni.hideLoading();
 						uni.stopPullDownRefresh();
 						uni.showToast({
 							title: '暂无订单数据，请先登录后查看订单',
