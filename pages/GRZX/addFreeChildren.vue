@@ -537,6 +537,8 @@
 		margin-left: 7.47%;
 		margin-bottom: 150upx;
 		border-radius: 25upx;
+		font-size: 28upx;
+		font-weight: 300;
 	}
 	.txtClass{
 		width: 82%;
