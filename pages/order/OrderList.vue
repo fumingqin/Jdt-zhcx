@@ -1864,12 +1864,24 @@
 				that.cancelArr = [];
 				if(that.selectorIndex==0){
 					that.getUserInfo();//加载传统客运订单方法
-					that.GetBookLogInfoByUserId();//加载定制巴士订单方法
-					that.loadczcData();//加载出租车订单方法
-					that.getOrderList();//加载出租车-专线车订单方法
-					that.getSfcOrderList();//加载出租车-顺风车订单方法
-					that.getArrayInfo();//加载包车服务方法
-					that.toFinished();//加载景区订单方法
+					setTimeout(function(){
+						that.GetBookLogInfoByUserId();//加载定制巴士订单方法
+					},200)
+					setTimeout(function(){
+						that.loadczcData();//加载出租车订单方法
+					},400)
+					setTimeout(function(){
+						that.getOrderList();//加载出租车-专线车订单方法
+					},600)
+					setTimeout(function(){
+						that.getSfcOrderList();//加载出租车-顺风车订单方法
+					},800)
+					setTimeout(function(){
+						that.getArrayInfo();//加载包车服务方法
+					},1000)
+					setTimeout(function(){
+						that.toFinished();//加载景区订单方法
+					},1200)
 				}else if(that.selectorIndex==1){
 					that.getUserInfo();//加载传统客运订单方法
 				}else if(that.selectorIndex==2){
@@ -3014,6 +3026,7 @@
 							},
 							method: 'POST',
 							success: (res) => {
+								console.log('出租车',res);
 								uni.hideLoading();
 								uni.stopPullDownRefresh();
 								if (res.data.status) {
@@ -3126,6 +3139,7 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
+						console.log('专线车',res);
 						uni.hideLoading();
 						uni.stopPullDownRefresh();
 						if (res.data.status) {
@@ -3404,6 +3418,7 @@
 						UserID: that.userInfo.userId,
 					},
 					success: function(res) {
+						console.log('顺风车',res);
 						uni.hideLoading();
 						uni.stopPullDownRefresh();
 						if (res.data.status) {
@@ -3674,89 +3689,39 @@
 			//-------------------------请求订单列表-------------------------
 			toFinished: function() {
 				var that = this;
-				uni.getStorage({
-					key: 'userInfo',
-					success: (res) => {
-						uni.showLoading(
-						{
-							title:'订单加载中...'
-						});
-						this.userInfo = res.data;
-						uni.request({
-							url: $lyfw.Interface.spt_RequestTicketsList.value,
-							method: $lyfw.Interface.spt_RequestTicketsList.method,
-							data: {
-								userId: this.userInfo.userId
-							},
-							header: {
-								'content-type': 'application/json'
-							},
-							success: (res) => {
-								uni.hideLoading();
-								uni.stopPullDownRefresh();
-								if (res.data.msg == '订单获取成功') {
-									that.info = res.data.data;
-									that.finishArr = [];
-									that.goingArr = [];
-									that.unfinishArr = [];
-									that.cancelArr = [];
-									if (that.info) {
-										for (var i = 0; i < that.info.length; i++) {
-											if (that.info[i].orderType == '已完成' || that.info[i].orderType == '已使用') {
-												that.finishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '进行中' || that.info[i].orderType == '待使用') {
-												that.goingArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '未支付' || that.info[i].orderType == '待支付') {
-												that.unfinishArr.push(that.info[i]);
-											} else if (that.info[i].orderType == '已取消' || that.info[i].orderType == '已退票' || that.info[i].orderType ==
-												'支付超时' || that.info[i].orderType == '已失效') {
-												that.cancelArr.push(that.info[i]);
-											}
-										}
-									}
-									//客运
-									//获取用户信息
-									that.tp_orderListData();
-								} else {
-									that.info = [];
-									that.finishArr = [];
-									that.goingArr = [];
-									that.unfinishArr = [];
-									that.cancelArr = [];
-									that.tp_orderListData();
-								}
-							}
-						})
+				uni.request({
+					url: $lyfw.Interface.spt_RequestTicketsList.value,
+					method: $lyfw.Interface.spt_RequestTicketsList.method,
+					data: {
+						userId: this.userInfo.userId
 					},
-					fail() {
-						//请求数据失败，停止刷新
-						uni.stopPullDownRefresh();
+					header: {
+						'content-type': 'application/json'
+					},
+					success: (res) => {
+						console.log('景区门票',res);
 						uni.hideLoading();
-						// #ifdef H5
-						uni.showToast({
-							title: '请允许授权给公众号，即将为您返回主页！',
-							icon:'none'
-						})
-						uni.switchTab({
-							url:'../../../../pages/Home/Index'
-						})
-						// #endif
-						// #ifdef MP-WEIXIN
-						uni.showToast({
-							title: '请允许授权给小程序，即将跳转登录！'
-						})
-						uni.navigateTo({
-							url:'../../../../pages/Home/wxAuthorize'
-						})
-						// #endif
-						// #ifdef APP-NVUE
-						uni.showToast({
-							title: '未登录账号，即将跳转登录！'
-						})
-						uni.navigateTo({
-							url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
-						})
-						// #endif
+						uni.stopPullDownRefresh();
+						if (res.data.status == true) {
+								for (var i = 0; i < res.data.data.length; i++) {
+										that.info.push(res.data.data[i]);
+								}
+								for (var i = 0; i < res.data.data.length; i++) {
+									if (res.data.data[i].orderType == '已完成' || res.data.data[i].orderType == '已使用') {
+										that.finishArr.push(res.data.data[i]);
+									} else if (res.data.data[i].orderType == '进行中' || res.data.data[i].orderType == '待使用') {
+										that.goingArr.push(res.data.data[i]);
+									} else if (res.data.data[i].orderType == '未支付' || res.data.data[i].orderType == '待支付') {
+										that.unfinishArr.push(res.data.data[i]);
+									} else if (res.data.data[i].orderType == '已取消' || res.data.data[i].orderType == '已退票' || res.data.data[i].orderType == '支付超时' || res.data.data[i].orderType == '已失效') {
+										that.cancelArr.push(res.data.data[i]);
+									}
+								}
+							//执行旅游产品列表接口
+							that.tp_orderListData();
+						} else {
+							that.tp_orderListData();
+						}
 					}
 				})
 			},
@@ -4291,65 +4256,43 @@
 			//-------------------包车订单添加-------------------------
 			getArrayInfo: function() {
 				var that = this;
-				uni.getStorage({
-					key: 'userInfo',
+				uni.request({
+					url: $bcfw.Interface.spt_RequestTicketsList.value,
+					method: $bcfw.Interface.spt_RequestTicketsList.method,
+					data: {
+						userId: this.userInfo.userId
+					},
+				
+					header: {
+						'content-type': 'application/json'
+					},
 					success: (res) => {
-						uni.hideLoading();
-						uni.stopPullDownRefresh();
-						this.userInfo = res.data;
-						uni.request({
-							url: $bcfw.Interface.spt_RequestTicketsList.value,
-							method: $bcfw.Interface.spt_RequestTicketsList.method,
-							data: {
-								userId: this.userInfo.userId
-							},
-
-							header: {
-								'content-type': 'application/json'
-							},
-							success: (res) => {
-								// console.log(res);
-								if (res.data.msg == '订单查询完成') {
-									for (var i = 0; i < res.data.data.length; i++) {
-										if (res.data.data[i].or_Type == '6' || res.data.data[i].or_Type == '9' || res.data.data[i].or_Type ==
-											'12') {} else {
-											that.info.push(res.data.data[i]);
-										}
-
-									}
-									if (res.data.data !== '') {
-										for (var i = 0; i < res.data.data.length; i++) {
-											if (res.data.data[i].or_Type == '13') {
-												that.finishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '0' || res.data.data[i].or_Type == '1' || res.data.data[i].or_type ==
-												'2' || res.data.data[i].or_type ==
-												'3' || res.data.data[i].or_Type == '4' || res.data.data[i].or_Type == '10' || res.data.data[i].or_Type ==
-												'11') {
-												that.goingArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '5') {
-												that.unfinishArr.push(res.data.data[i]);
-											} else if (res.data.data[i].or_Type == '8' || res.data.data[i].or_Type == '7') {
-												that.cancelArr.push(res.data.data[i]);
-											}
-										}
+						// console.log(res);
+						if (res.data.msg == '订单查询完成') {
+							for (var i = 0; i < res.data.data.length; i++) {
+								if (res.data.data[i].or_Type == '6' || res.data.data[i].or_Type == '9' || res.data.data[i].or_Type ==
+									'12') {} else {
+									that.info.push(res.data.data[i]);
+								}
+				
+							}
+							if (res.data.data !== '') {
+								for (var i = 0; i < res.data.data.length; i++) {
+									if (res.data.data[i].or_Type == '13') {
+										that.finishArr.push(res.data.data[i]);
+									} else if (res.data.data[i].or_Type == '0' || res.data.data[i].or_Type == '1' || res.data.data[i].or_type ==
+										'2' || res.data.data[i].or_type ==
+										'3' || res.data.data[i].or_Type == '4' || res.data.data[i].or_Type == '10' || res.data.data[i].or_Type ==
+										'11') {
+										that.goingArr.push(res.data.data[i]);
+									} else if (res.data.data[i].or_Type == '5') {
+										that.unfinishArr.push(res.data.data[i]);
+									} else if (res.data.data[i].or_Type == '8' || res.data.data[i].or_Type == '7') {
+										that.cancelArr.push(res.data.data[i]);
 									}
 								}
 							}
-						})
-					},
-					fail() {
-						//请求数据失败，停止刷新
-						uni.hideLoading();
-						uni.stopPullDownRefresh();
-						uni.showToast({
-							title: '暂无订单数据，请先登录后查看订单',
-							icon: 'none',
-							success: function() {
-								uni.redirectTo({
-									url: '../GRZX/userLogin?loginType=1&&urlData=2'
-								})
-							}
-						})
+						}
 					}
 				})
 			},
