@@ -357,7 +357,7 @@
 				this.adultTotalPrice = adult.length * this.orderInfo[0].ticketAdultPrice;
 				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
 			},
-			//--------------------------计时器--------------------------
+			//--------------------------下单--------------------------
 			getOrder: function() {
 				var that = this;
 				var timer = null;

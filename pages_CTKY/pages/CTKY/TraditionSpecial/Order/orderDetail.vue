@@ -99,7 +99,7 @@
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
 			this.specialCodeArray = orderInfo.CheckInfoList;
-			// console.log(orderInfo);
+			console.log(orderInfo);
 			// console.log(orderInfo.CheckInfoList);
 			that.stringTurnArray(orderInfo.iDNameType);
 			//检票号---生成二维码
@@ -147,7 +147,9 @@
 			},
 			//-------------------------------判断是否有保险-------------------------------
 			isInsured:function(param) {
-				if(param == 'False') {
+				if(this.orderInfo.carType == '定制巴士'){
+					return '无保险'
+				}else if(param == 'False') {
 					return '无保险'
 				}else {
 					return '乘车险 x1'

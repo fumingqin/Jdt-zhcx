@@ -205,10 +205,12 @@
 						if (that.passengerInfo.length > 0) {
 							for (let i = 0; i < that.passengerInfo.length; i++) {
 								var type = '';
-								if (data.data[i].userType == '免票儿童' || data.data[i].userType == '半票儿童') {
+								if (data.data[i].userType == '半票儿童') {
 									type = 0;
 								} else if (data.data[i].userType == '成人') {
 									type = 2;
+								}else if (data.data[i].userType == '免票儿童') {
+									type = 1;
 								}
 								//拼接id name type
 								// that.idNameTypeStr += data.data[i].userCodeNum + ',' + data.data[i].userName + ',' + type + '|';
@@ -302,7 +304,6 @@
 				var timer = null;
 				var setTime = that.ticketInfo.date.replace('T', ' ');
 				var companyCode = '';
-				
 				// #ifdef H5
 				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
 				// #endif
@@ -317,7 +318,6 @@
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_BookingTicket.Url,
 					method:$KyInterface.KyInterface.Cs_BookingTicket.method,
-					// header:$KyInterface.KyInterface.Cs_BookingTicket.header,
 					data: {
 						sellerCompanyCode: companyCode,//公司代码
 						priceAID:that.ticketInfo.priceAID,//价格id

@@ -620,7 +620,12 @@
 						title: '请选择乘车人',
 						icon: 'none'
 					})
-				} else if (that.selectedValue == 0) {
+				} else if (that.adultNum == 0) {
+					uni.showToast({
+						title: '免童/儿童不可单独购票',
+						icon: 'none'
+					})
+				}else if (that.selectedValue == 0) {
 					uni.showToast({
 						title: '请同意购买须知',
 						icon: 'none'
