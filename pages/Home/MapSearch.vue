@@ -42,20 +42,27 @@
 			})
 		},
 		onShow() {
+			let that = this;
 			uni.getLocation({ //获取当前定位
 				type: 'gcj02',
 				geocode:true,
 				success: function(res) {
-					this.city=res.altitude.city;
+					console.log(res)
+					// #ifdef APP-PLUS
+					that.city=res.altitude.city;
+					// #endif
+					// #ifdef MP-WEIXIN
+					that.city=="泉州";
+					// #endif
 				},
 				fail() {
-					this.city="泉州";
+					that.city="泉州";
 				}
 			});
 		},
 		methods: {
 			searchList(n) {
-				let that = this
+				let that = this;
 				qqmapsdk.getSuggestion({
 					keyword:   n,
 					region:that.city,
@@ -87,7 +94,6 @@
 				console.log(item);
 				let pages = getCurrentPages()
 				let prePages = pages[pages.length - 2].$vm
-
 				console.log(prePages);
 				let list = prePages.list
 				let map = prePages.map
@@ -101,9 +107,9 @@
 					latitude: item.location.lat
 				}
 				prePages.checked = 0
-				uni.navigateBack({
-					delta: 1
-				})
+				// uni.navigateBack({
+				// 	delta: 1
+				// })
 			},
 			setData(obj) {
 				Object.assign(this, obj)
