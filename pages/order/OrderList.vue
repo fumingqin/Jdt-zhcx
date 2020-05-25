@@ -3722,6 +3722,10 @@
 						} else {
 							that.tp_orderListData();
 						}
+					},
+					fail:function(){
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 					}
 				})
 			},
@@ -3741,6 +3745,8 @@
 					},
 					success: (res) => {
 						console.log('旅游产品',res);
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						if (res.data.status == true) {
 							for (var i = 0; i < res.data.data.length; i++) {
 									that.info.push(res.data.data[i]);
@@ -3757,9 +3763,11 @@
 									that.cancelArr.push(res.data.data[i]);
 								}
 							}
-							
 						}
-							
+					},
+					fail:function(){
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 					}
 				})
 			},
@@ -4267,7 +4275,9 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						// console.log(res);
+						console.log('包车服务',res);
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 						if (res.data.msg == '订单查询完成') {
 							for (var i = 0; i < res.data.data.length; i++) {
 								if (res.data.data[i].or_Type == '6' || res.data.data[i].or_Type == '9' || res.data.data[i].or_Type ==
@@ -4293,6 +4303,10 @@
 								}
 							}
 						}
+					},
+					fail:function(){
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
 					}
 				})
 			},
