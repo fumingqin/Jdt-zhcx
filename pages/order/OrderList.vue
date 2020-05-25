@@ -2293,8 +2293,9 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						console.log('退票结果', respones)
+						// console.log('退票结果', respones)
 						if (respones.data.status == true) {
+							this.$refs.popup2.close()
 							uni.hideLoading()
 							if(respones.data.msg == '退票成功'){
 								uni.showToast({
@@ -2306,9 +2307,8 @@
 									title: respones.data.msg
 								})
 							}
-							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
-						} else {
+						} else if (respones.data.status == false){
 							uni.hideLoading()
 							if(respones.data.msg) {
 								uni.showToast({
