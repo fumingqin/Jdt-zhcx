@@ -38,6 +38,12 @@
 						<text class="MP_number">×{{childrenNum}}</text>
 						<text class="MP_userCost">¥{{orderInfo.halfTicket}}</text>
 					</view>
+					
+					<view class="MP_cost" v-if="freeTicketNum>=1">
+						<text>携带免童票</text>
+						<text class="MP_number">×{{freeTicketNum}}</text>
+						<text class="MP_userCost">¥{{orderInfo.halfTicket}}</text>
+					</view>
 
 					<!-- 保险 -->
 					<view class="MP_cost" v-if="isInsurance == 1 ">
@@ -113,8 +119,9 @@
 				passengerInfo: [], //乘车人信息
 				idNameTypeStr: '', //乘车人信息字符串（发送请求需要）（小叶接口）
 				ticketNum: '0', //总票数
-				adultNum: '0', //成人数量
-				childrenNum: '0', //儿童数量	
+				adultNum: 0, //成人数量
+				childrenNum: 0, //儿童数量
+				freeTicketNum: 0,//免童
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
 				totalPrice: '0', //总价格
@@ -260,20 +267,24 @@
 						if (that.passengerInfo.length > 0) {
 							for (let i = 0; i < that.passengerInfo.length; i++) {
 								var type = '';
-								if (data.data[i].userType == '儿童') {
+								if (data.data[i].userType == '免票儿童') {
 									type = 0;
 								} else if (data.data[i].userType == '成人') {
 									type = 2;
+								}else if (data.data[i].userType == '半票儿童') {
+									type = 1;
 								}
 								//拼接id name type
 								that.idNameTypeStr += data.data[i].userCodeNum + ',' + data.data[i].userName + ',' + type + '|';
 
 								that.ticketNum++;
 								//把儿童票筛选出来
-								if (that.passengerInfo.userType == '儿童') {
+								if (that.passengerInfo.userType == '半票儿童') {
 									that.childrenNum++;
-								} else {
+								} else if (that.passengerInfo.userType == '成人'){
 									that.adultNum++;
+								}else if(that.passengerInfo.userType == '免票儿童'){
+									that.freeTicketNum++;
 								}
 							}
 							//把最后面的'｜'去掉
@@ -388,7 +399,7 @@
 				
 					fullTicket: that.adultNum, //全票人数
 					halfTicket: that.childrenNum, //半票人数
-					carryChild: that.childrenNum, //携童人数
+					carryChild: that.freeTicketNum, //携童人数
 					idNameType: that.idNameTypeStr, //乘车人信息
 					insured: that.isInsurance, //是否选择了保险
 					openId: openId,//oI1cA0k7cBdeZ_jA0fd_OdEO6kls

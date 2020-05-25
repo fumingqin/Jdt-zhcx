@@ -57,9 +57,9 @@
 			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
 				<view style="display: flex;margin-bottom: 35upx;">
-					<button @tap="addPassenger('成人')" style="padding: 0 40rpx; height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加成人/儿童</button>
-					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
-					<button @tap="addPassenger('免童')" style="height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">携带免童</button>
+					<button @tap="addPassenger('成人')" class="button_1"  style="border: #AAAAAA 1px solid;padding: 0 40rpx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加成人/儿童</button>
+					<button @tap="pickPassenger" class="button_1" style="border: #AAAAAA 1px solid;width: 150upx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+					<button @tap="addPassenger('免童')" class="button_1" style="border: #AAAAAA 1px solid;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">携带免童</button>
 				</view>
 				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in passengerInfo" :key=index
 				 v-model="passengerInfo">
@@ -279,7 +279,6 @@
 					that.sepecialStartArray = data.data.LineViaSiteName.split(',');
 					//定制班车终点数组
 					that.specialEndArray = data.data.LineViaSiteName.split(',');
-					// console.log('车票数据', that.ticketDetail)
 					that.getPriceForm(that.ScheduleID);
 				}
 			})
@@ -334,7 +333,6 @@
 							for(let i = 0; i < that.specialTicketArray.length;i++) {
 								let station = that.specialTicketArray[i].station;
 								if(that.startEndStation == station) {
-									// that.totalPrice = that.specialTicketArray[i].FullPrice
 									that.oneTicketPrice = that.specialTicketArray[i].FullPrice
 									that.PriceID = that.specialTicketArray[i].PriceID
 									that.calculateTotalPrice();
@@ -365,7 +363,6 @@
 						executeScheduleID:that.ScheduleID
 					},
 					success(res) {
-						console.log(res)
 						if(res.data.Successed == true){
 							for(let i = 0; i < res.data.ScheduleForSell.length;i++){
 								var array = {
@@ -387,7 +384,10 @@
 						}
 					},
 					fail(res) {
-						console.log(res)
+						uni.showToast({
+							title:'网络错误',
+							icon:'none'
+						})
 					}
 				})
 			},
@@ -428,7 +428,6 @@
 			},
 			//-------------------------------删除乘车人-----------------------------
 			deleteInfo(e) {
-				console.log(e)
 				this.passengerInfo.splice(e, 1)
 				this.passengerNum--
 				this.calculateTotalPrice();
@@ -446,7 +445,6 @@
 			},
 			//-------------------------------优惠券赋值-----------------------------
 			couponEvent() {
-				console.log('1111111')
 			},
 			//-------------------------------取消优惠券-----------------------------
 			couponReset: function(index) {
@@ -583,17 +581,18 @@
 				let adultArray = [];
 				//车票单价
 				let price = that.oneTicketPrice;
+				console.log(that.passengerInfo)
 				//查看乘车人个数
 				if (that.passengerInfo.length > 0) {
 					for (var i = 0; i < that.passengerInfo.length; i++) {
 						that.passengerNum++;
 						//把儿童票筛选出来
-						if (that.passengerInfo[i].userType == '儿童') {
+						if (that.passengerInfo[i].userType == '半票儿童') {
 							//将儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;
 							
-						} else {
+						} else if(that.passengerInfo[i].userType == '成人'){
 							//将成人票加入数组
 							adultArray.push(that.passengerInfo[i]);
 							adultNum++;
@@ -950,5 +949,8 @@
 		&.tapColor {
 			background: #FC4646;
 		}
+	}
+	.button_1::after {
+		border: none;
 	}
 </style>

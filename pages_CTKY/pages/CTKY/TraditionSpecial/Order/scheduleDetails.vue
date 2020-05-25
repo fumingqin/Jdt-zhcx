@@ -597,7 +597,7 @@
 							//将半价儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;
-						} else {
+						} else if(that.passengerInfo[i].userType == '成人'){
 							//将成人票加入数组
 							adultArray.push(that.passengerInfo[i]);
 							adultNum++;
