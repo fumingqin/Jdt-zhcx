@@ -329,7 +329,7 @@
 			//路由统一事件
 			godetail4: function(url) {
 				uni.showToast({
-					title:'功能测试中...',
+					title:'功能测试中，敬请期待！',
 					icon:'none'
 				})
 			},
@@ -445,7 +445,7 @@
 						fail(err){
 							console.log(err)
 							uni.showToast({
-								title:"err是"+err.errMsg,
+								title:"登录失败",
 								icon:'none'
 							})
 						}

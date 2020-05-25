@@ -209,23 +209,16 @@
 						count++;
 					}
 				}
-				if(e.userauditState=='审核通过'||e.userType=="儿童"||e.userType=="成人"||e.userType=="老人"){
-					if(e.hiddenIndex==1){
-						e.hiddenIndex=0;
-					}else if(count>(this.limit-1) && this.submitType==2){
-						uni.showToast({
-							title: '乘客最多只能添加'+this.limit+'名',
-							icon:"none"
-						});
-					}else{
-						e.hiddenIndex=1;
-					}		
-				}else{
+				if(e.hiddenIndex==1){
+					e.hiddenIndex=0;
+				}else if(count>(this.limit-1) && this.submitType==2){
 					uni.showToast({
-						title: '该审核未通过或待审核，无法选用',
+						title: '乘客最多只能添加'+this.limit+'名',
 						icon:"none"
 					});
-				}
+				}else{
+					e.hiddenIndex=1;
+				}		
 			},
 			definite(){ //提交array
 				var data=this.passengerList;
