@@ -244,7 +244,7 @@
 				    provider: "weixin",
 				    scene: "WXSceneSession",
 				    type: 0,
-				    href: "http://uniapp.dcloud.io/",
+				    href: "https://zntc.145u.net:9099/h5/#/pages_CZC/pages/CZC/TripShare?type=出租车_专线&orderNumber="+that.orderNumber,
 				    title: "行程分享",
 				    summary: "你的好友给你分享了一个行程,赶紧查看！",
 				    imageUrl: "https://zntc.145u.net:9099/UpLoadImages/Image/QuanYunLogo.png",
