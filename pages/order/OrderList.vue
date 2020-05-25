@@ -2293,17 +2293,17 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						// console.log('退票结果', respones)
+						console.log('退票结果', respones)
 						if (respones.data.status == true) {
 							uni.hideLoading()
-							if(respones.data.msg){
-								uni.showToast({
-									title: respones.data.msg
-								})
-							}else {
+							if(respones.data.msg == '退票成功'){
 								uni.showToast({
 									title: '退票成功',
 									duration: 3000,
+								})
+							}else {
+								uni.showToast({
+									title: respones.data.msg
 								})
 							}
 							this.$refs.popup2.close()
@@ -2952,7 +2952,7 @@
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
 						} else {
-							that.showToast("网络连接失败")
+							that.showToast("支付失败")
 						}
 					}
 				});

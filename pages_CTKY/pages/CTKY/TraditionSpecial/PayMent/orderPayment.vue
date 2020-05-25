@@ -138,7 +138,7 @@
 			}
 		},
 		onLoad: function(param) {
-			console.log(param)
+			// console.log(param)
 			var that = this;
 			that.ticketInfo = JSON.parse(param.array);
 			//定制班车上车点
@@ -153,6 +153,7 @@
 			});
 			
 			that.totalPrice = param.totalPrice;//总价格
+			// console.log('总价格',that.totalPrice)
 			that.insuredPrice = that.ticketInfo.insuredPrice;//保险价格
 			if (param.isInsurance == 1) {
 				that.insurance = '保险';

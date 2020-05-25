@@ -108,7 +108,7 @@
 				// 	this.ticketNumber = orderInfo.ticketNumber;
 				// 	that.make(this.orderInfo.ticketNumber,i);
 				// }
-			}else {
+			}else {//定制巴士
 				for(let i = 0;i < orderInfo.CheckInfoList.length;i++){
 					this.ticketNumber = orderInfo.CheckInfoList[i].CheckCode;
 					that.make(this.ticketNumber,i);
@@ -123,14 +123,14 @@
 			//-------------------------------生成二维码-------------------------------
 			make(param,index) {
 				if(param) {
-					// console.log(param);
+					console.log('二维码数据',param);
 					uQRCode.make({
 						canvasId: 'ctkyQrcode' + index,
 						text: param,
 						size: this.qrcodeSize,
 						margin: 20,
 						success: res => {
-							console.log(res);
+							console.log('生成二维码成功',res);
 							// console.log('完成')
 							this.qrcodeSrc = res
 						},
@@ -178,7 +178,7 @@
 					that.passageInfo.push(passenger);
 					
 					this.ticketNumber = that.orderInfo.ticketNumber;
-					that.make(this.orderInfo.ticketNumber);
+					that.make(this.orderInfo.ticketNumber,0);
 				}else {//多人订票
 					//存在'|'
 					var array = param.split('|');

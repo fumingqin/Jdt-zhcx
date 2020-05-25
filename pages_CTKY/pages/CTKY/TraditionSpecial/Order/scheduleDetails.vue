@@ -349,6 +349,7 @@
 				uni.showLoading({
 					title:'加载中...'
 				})
+				console.log(orderInfo.scheduleCompanyCode,orderInfo.executeScheduleID,orderInfo.startSiteID,orderInfo.endSiteID,)
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.Url,
 					method:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.method,
@@ -472,18 +473,19 @@
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
 				var that = this;
-				// // #ifdef MP-WEIXIN
-				// uni.showModal({
-				// 	content:'小程序暂不支持地图显示',
-				// 	showCancel:false,
-				// })
-				// // #endif
-				// #ifndef MP-WEIXIN
-				
+				// #ifdef MP-WEIXIN
+				uni.showModal({
+					content:'小程序暂不支持地图显示',
+					showCancel:false,
+				})
 				// #endif
+				
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
 				})
+				// #endif
+				
 				// if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
 				// 	if (this.ticketDetail.shuttleType == '普通班车') { //普通班车
 				// 		uni.navigateTo({
