@@ -101,19 +101,20 @@
 			this.specialCodeArray = orderInfo.CheckInfoList;
 			// console.log(orderInfo);
 			// console.log(orderInfo.CheckInfoList);
+			that.stringTurnArray(orderInfo.iDNameType);
 			//检票号---生成二维码
 			if(orderInfo.carType != '定制巴士'){
-				for(let i = 0;i < orderInfo.passageInfo.length;i++){
-					this.ticketNumber = orderInfo.ticketNumber;
-					that.make(this.orderInfo.ticketNumber,i);
-				}
+				// for(let i = 0;i < orderInfo.passageInfo.length;i++){
+				// 	this.ticketNumber = orderInfo.ticketNumber;
+				// 	that.make(this.orderInfo.ticketNumber,i);
+				// }
 			}else {
 				for(let i = 0;i < orderInfo.CheckInfoList.length;i++){
 					this.ticketNumber = orderInfo.CheckInfoList[i].CheckCode;
 					that.make(this.ticketNumber,i);
 				}
 			}
-			that.stringTurnArray(orderInfo.iDNameType);
+			
 			that.getTicketNum(orderInfo);
 			
 			that.getOneTicketNum();
@@ -171,6 +172,9 @@
 						userCodeNum:array[0],
 					}
 					that.passageInfo.push(passenger);
+					
+					this.ticketNumber = that.orderInfo.ticketNumber;
+					that.make(this.orderInfo.ticketNumber);
 				}else {//多人订票
 					//存在'|'
 					var array = param.split('|');
@@ -181,6 +185,9 @@
 							userCodeNum:singleArray[0],
 						}
 						that.passageInfo.push(passenger);
+						
+						this.ticketNumber = that.orderInfo.ticketNumber;
+						that.make(this.orderInfo.ticketNumber,i);
 					}
 				}
 			},
