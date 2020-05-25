@@ -177,7 +177,7 @@
 			}
 		},
 		onLoad() {
-			this.getcharteredBus();
+			// this.getcharteredBus();
 			this.getuser();
 			this.remove();
 		},
@@ -189,11 +189,11 @@
 
 		methods: {
 			//获取模拟数据
-			async getcharteredBus() {
-				let charteredBus = await this.$api.bcfwzyx('charteredBus');
-				this.charteredBus = charteredBus.data;
-				// console.log(charteredBus)
-			},
+			// async getcharteredBus() {
+			// 	let charteredBus = await this.$api.bcfwzyx('charteredBus');
+			// 	this.charteredBus = charteredBus.data;
+			// 	// console.log(charteredBus)
+			// },
 			getuser:function(){
 				var that=this;
 				if(that.index == 0){
