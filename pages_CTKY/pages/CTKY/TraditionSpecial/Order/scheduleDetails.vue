@@ -252,6 +252,7 @@
 				sepecialStartArray: [], //定制班车起点数组
 				specialEndArray: [], //定制班车终点数组
 				InsurePrice:'',//保险价格
+				adultNum:0,//成人数
 			}
 		},
 
@@ -601,6 +602,7 @@
 							//将成人票加入数组
 							adultArray.push(that.passengerInfo[i]);
 							adultNum++;
+							that.adultNum = adultNum;
 						}
 					}
 					//计算总价

@@ -255,6 +255,7 @@
 				startEndStation:'',//上下车点拼接
 				oneTicketPrice:'',//车票单价
 				PriceID:'',//票价ID
+				adultNum:0,//成人数
 			}
 		},
 
@@ -596,6 +597,7 @@
 							//将成人票加入数组
 							adultArray.push(that.passengerInfo[i]);
 							adultNum++;
+							that.adultNum = adultNum;
 						}
 					}
 					//计算总价
