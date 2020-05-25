@@ -399,7 +399,7 @@
 								<button class="allBtn" @click="KyComplain(item)">投诉</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
 								<!-- #ifndef MP-WEIXIN -->
-								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- <button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button> -->
 								<!-- #endif -->
 								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.state=='尚未支付'" @tap="open3(item.orderNumber,'cs2')">取消</button>
@@ -2300,7 +2300,6 @@
 							if(respones.data.msg == '退票成功'){
 								uni.showToast({
 									title: '退票成功',
-									duration: 3000,
 								})
 							}else {
 								uni.showToast({
