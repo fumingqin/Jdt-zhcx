@@ -45,7 +45,7 @@
 			<text class="moreClass">更多服务</text>
 			<!-- <view class="boxClass marginTop" @click="QQLogin">
 				<image src="../../static/GRZX/tubiao_fapiao.png" class="iconClass1"></image>
-				<text class="fontStyle">测试QQ登录</text>
+				<text class="fontStyle">电子发票</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view> -->
 			<view class="boxClass marginTop" @click="phoneClick">
@@ -89,12 +89,11 @@
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 		</view>
-		
-		
+		<!-- 添加紧急联系人弹窗 -->
 		<view :hidden="userFeedbackHidden" class="popup_content">
 			<view class="popup_title">添加</view>
 			<view class="popup_textarea_item">
-				<input class="inputClass" v-model="contantPhone" placeholder="输入紧急联系人的手机号码" type="number" maxlength="11"/>
+				<input class="inputClass" v-model="contantPhone" placeholder="输入紧急联系人的手机号码" type="number" maxlength="11" :focus='focusType'/>
 				<view>
 					<button class="popup_button" @click="submit">确定</button>
 				</view>
@@ -129,6 +128,7 @@
 				birthday:'',
 				gender:'',
 				port:'',
+				focusType:false,
 			}
 		},
 		computed: {
@@ -143,7 +143,6 @@
 			// ---------------------------加载图片----------------------------
 			loadImg(){
 				var that=this;
-				// console.log(that.$GrzxInter.GetImage.url,"144")
 				uni.request({
 					url:that.$GrzxInter.GetImage.url,
 					data:{
@@ -151,12 +150,10 @@
 					},
 					method:'POST',
 					success(res) {
-						// console.log(res,"153")
 						var image=res.data.data.filter(item => {
 							return item.type=='广告';
 						})
 						that.advert=image[0].imageUrl;
-						// console.log(that.advert,'that.advert')
 					}
 				})
 			},
@@ -230,12 +227,14 @@
 					}
 				})
 			},
+			// ---------------------------跳转订单的点击-----------------------
 			orderClick(e){
 				uni.setStorageSync('currentNum',e)
 				uni.switchTab({
 					url:'/pages/order/OrderList',
 				})
 			},
+			// --------------------------设置，通知，扫一扫--------------------
 			navTo(e){
 				if(e=='set'){
 					uni.navigateTo({
@@ -267,7 +266,10 @@
 				})
 			},
 			//--------------------添加紧急联系人的电话号码--------------------
-			addContact(){				
+			addContact(){
+				// setTimeout(function(){
+					this.focusType=true;
+				// },5000);
 				var that=this;
 				uni.getStorage({
 					key:'userInfo',
@@ -302,42 +304,29 @@
 					// #endif
 				}else{
 					uni.request({
-						url:that.$GrzxInter.Interface.changeInfo.value,
+						url:that.$GrzxInter.Interface.AddEmergencyContact.value,
 						data:{
-							userId:that.userId,
-							gender:that.gender,
-							openId_qq:that.openId_qq,
-							openId_wx:that.openId_wx,
-							openId_xcx:that.openId_xcx,
-							address:that.address,
-							nickname:that.nickname,
-							birthday:that.birthday,
-							autograph:that.contantPhone,
-							phoneNumber:that.phoneNumber,
+							UserId:that.userId,
+							Autograph:that.contantPhone,
 						},
-						method:that.$GrzxInter.Interface.changeInfo.method,
+						method:that.$GrzxInter.Interface.AddEmergencyContact.method,
 						success(res) {
-							console.log(res,'271')
-							uni.request({
-								url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-								data:{
-									portrait:that.port,
-									userId:that.userId,
-								},
-								method:that.$GrzxInter.Interface.changeInfoPortrait.method,
-								success(res1) {
-									if(res.data.data!=""){
-										console.log(res.data.data,'296')
-										uni.setStorageSync('userInfo',res1.data.data)
-									}
-									that.userFeedbackHidden=true;
-								}
+							if(res.data.data!=""){
+								console.log(res.data.data,'296')
+								uni.setStorageSync('userInfo',res.data.data)
+							}
+							uni.showToast({
+								title:'保存成功',
+								icon:'success'
 							})
+							that.focusType=false;
+							that.userFeedbackHidden=true;
 						}
 					})
 				}
 			},
 			hideDiv(){
+				this.focusType=false;
 				this.userFeedbackHidden=true;
 			},
 			//------------------------------投诉---------------------------
@@ -347,15 +336,17 @@
 					url:this.$GrzxInter.Route.complaint.url,
 				})  
 			},
+			//------------------------------意见反馈-----------------------
 			feedbackClick(){
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
 					url:this.$GrzxInter.Route.feedback.url,
 				})  				
 			},
-			// ---------------------------是否登录----------------------------
+			// ---------------------------是否登录--------------------------
 			checkLogin(){
 				var that=this;
+				// ---------------APP,WX--------------
 				//#ifndef H5
 				var user=uni.getStorageSync('userInfo');
 				if(user.userId==""||user.userId==null){
@@ -385,6 +376,7 @@
 					})  
 				}
 				//#endif
+				// ---------------H5--------------
 				//#ifdef H5
 				var user1=uni.getStorageSync('userInfo');
 				console.log(user1,"1111")
@@ -408,6 +400,7 @@
 				}
 				//#endif
 			},
+			// ---------------------------收藏--------------------------
 			collectionClick(){
 				// uni.navigateTo({
 				// 	url:'/pages/GRZX/collection'
@@ -417,6 +410,7 @@
 					icon:'none'
 				})
 			},
+			// ---------------------------历史--------------------------
 			historyClick(){
 				// uni.navigateTo({
 				// 	url:'/pages/GRZX/history'
@@ -426,12 +420,7 @@
 					icon:'none'
 				})
 			},
-			scanClick(){
-				uni.showToast({
-					title : '扫一扫',
-					icon : 'none',
-				})
-			},
+			// ---------------------------电话客服--------------------------
 			phoneClick(){
 				var that=this;
 				uni.request({
@@ -448,6 +437,7 @@
 					}
 				})
 			},
+			// ---------------------------QQ客服--------------------------
 			QQClick(){
 				// #ifdef APP-PLUS
 				var that=this;
@@ -463,7 +453,7 @@
 				})
 				//#endif
 			},
-			//------------判断是否为base64格式-----------
+			//----------------------判断是否为base64格式-------------------
 			isBase64:function(str) {
 			    if (str ==='' || str.trim() ===''){ return false; }
 			    try {
@@ -472,7 +462,8 @@
 			        return false;
 			    }
 			},
-			judgeNum(val){  //只能输入数字
+			//----------------------判断是否为数字-----------------------
+			judgeNum(val){
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
 				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
 				    if(regPos.test(val) || regNeg.test(val)) {
@@ -505,7 +496,7 @@
 		
 	}
 </script>
-
+ 
 <style lang="scss">
 	page{
 		background-color: #F5F9FA;

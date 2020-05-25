@@ -60,6 +60,7 @@
 			this.loadData();
 		},
 		methods:{
+			//------------------加载通知----------------
 			loadData(){
 				var that=this;
 				that.tweetArticle=[];
@@ -75,6 +76,7 @@
 					}
 				})
 			},
+			//------------------选择通知----------------
 			selete(e){
 				uni.setStorage({
 					key:'detailTweet',

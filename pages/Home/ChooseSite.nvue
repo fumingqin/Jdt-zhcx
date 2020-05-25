@@ -87,7 +87,7 @@
 					</scroll-view>
 				</view>
 				<view v-if="IsSearch">
-				<!-- 	<view class="history">
+					<!-- 	<view class="history">
 						<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
 							<view style="flex-direction: row;align-items: center;justify-content: space-between;">
 								<view style="flex-direction: row;align-items: center;">
@@ -103,7 +103,7 @@
 							</view>
 						</view>
 					</view> -->
-					<view class="history">
+					<view class="history" @click="GotoTaxi">
 						<view style="height: 180rpx;justify-content: space-between;margin-left: 30rpx;margin-right: 30rpx;padding-top: 30rpx;padding-bottom: 20rpx;">
 							<view style="flex-direction: row;align-items: center;justify-content: space-between;">
 								<view style="flex-direction: row;align-items: center;">
@@ -225,17 +225,19 @@
 							</view>
 							<view style="flex-direction: row;justify-content: center;align-items: center;width: 329rpx;flex-wrap: wrap;"
 							 @click="selectPassenger">
-							<view style="flex-direction: row;align-items: center;justify-content: center;" v-for="(item,index) in Passenger" :key="index">
-								<text style="font-size: 28rpx;" >{{item.userName}} </text>
-								<text v-if="index!=(Passenger.length-1)">,</text>
-							</view>
+								<view style="flex-direction: row;align-items: center;justify-content: center;" v-for="(item,index) in Passenger"
+								 :key="index">
+									<text style="font-size: 28rpx;">{{item.userName}} </text>
+									<text v-if="index!=(Passenger.length-1)">,</text>
+								</view>
 								<uni-icons type="arrowright" size="19"></uni-icons>
 							</view>
 						</view>
 						<view style="height: 97rpx;flex-direction: row;justify-content: center;" v-if="IsClick" @click="selectPassenger">
 							<view style="flex-direction: row;justify-content: center;align-items: center;">
-								<view style="flex-direction: row;align-items: center;justify-content: center;" v-for="(item,index) in Passenger" :key="index">
-									<text style="font-size: 28rpx;" >{{item.userName}} </text>
+								<view style="flex-direction: row;align-items: center;justify-content: center;" v-for="(item,index) in Passenger"
+								 :key="index">
+									<text style="font-size: 28rpx;">{{item.userName}} </text>
 									<text v-if="index!=(Passenger.length-1)">,</text>
 								</view>
 								<uni-icons type="arrowright" size="19"></uni-icons>
@@ -394,6 +396,7 @@
 					imageUrl: ''
 				}], //banner图片
 				TopHeight: 0, //小程序距离顶部的距离
+				IsCallAgain:false,
 			}
 		},
 
@@ -436,7 +439,10 @@
 			if (options.current) {
 				that.current = parseInt(options.current);
 			}
-			that.intervalGet();
+			if(options.callagain==1){
+				that.IsCallAgain=true;
+			}
+			// that.intervalGet();
 		},
 		onUnload() {
 			uni.removeStorage({
@@ -460,7 +466,7 @@
 					that.startLon = res.data.lng;
 					that.startLat = res.data.lat;
 					that.startlocation = res.data;
-					// console.log(that.startLonLat);
+					console.log(res.data);
 				}
 			});
 			uni.getStorage({ //获取终点
@@ -472,6 +478,9 @@
 					that.endLat = res.data.lat;
 					that.endlocation = res.data;
 					that.destinationArea = res.data.district; //目标区域
+					if(that.IsCallAgain){
+						that.search();
+					}
 				}
 			});
 			uni.getStorage({ //获取乘车人
@@ -522,6 +531,9 @@
 					title: msg,
 					icon: icon
 				})
+			},
+			GotoTaxi: function() {
+				this.current = 2;
 			},
 			setHeight: function() {
 				var that = this;
@@ -643,34 +655,41 @@
 								userType: 0,
 							},
 							success: function(res) {
-								console.log(res)
 								uni.hideLoading();
 								if (res.data.status) {
 									that.showToast(res.data.msg);
 									orderNumber = res.data.data.orderNumber;
-									uni.navigateTo({
-										url: '/pages_CZC/pages/CZC/CallAndDrive?orderNumber=' + orderNumber,
-										animationType: 'pop-in',
-										animationDuration: 200,
-										success: function() {
-											uni.removeStorage({
-												key: "passengerList"
-											})
-											uni.removeStorage({
-												key: "StartPoint"
-											})
-											uni.removeStorage({
-												key: "EndPoint"
+									setTimeout(function() {
+										if (that.IsClick) {
+											uni.navigateTo({
+												url: '/pages_CZC/pages/CZC/CallAndDrive?orderNumber=' + orderNumber,
+												animationType: 'pop-in',
+												animationDuration: 200,
+												success: function() {
+													uni.removeStorage({
+														key: "passengerList"
+													})
+													uni.removeStorage({
+														key: "StartPoint"
+													})
+													uni.removeStorage({
+														key: "EndPoint"
+													})
+												}
+											});
+										} else {
+											uni.switchTab({
+												url: "/pages/order/OrderList",
 											})
 										}
-									});
+									},2000)
 								} else if (!res.data.status && res.data.msg == "抱歉!下单失败,您当前有未完成的订单") {
 									that.showToast(res.data.msg);
 									setTimeout(function() {
 										uni.switchTab({
 											url: "../order/OrderList"
 										})
-									}, 1000)
+									}, 2000)
 								}
 							},
 							fail: function(res) {
@@ -710,7 +729,7 @@
 						uni.$off('startstaionChange');
 					});
 					uni.navigateTo({
-						url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian',
+						url: '../../pages_CTKY/pages/CTKY/TraditionSpecial/stationPicker/homeSattionPick?&station=' + 'qidian',
 					})
 				} else {
 					uni.navigateTo({
@@ -1248,7 +1267,7 @@
 				})
 			},
 			downwindCarClick: function(value) { //点击顺风车 
-			console.log(value)
+				console.log(value)
 				var that = this;
 				if (that.startAddress == '' || that.endAddress == '') {
 					uni.showToast({
@@ -1264,9 +1283,11 @@
 					uni.setStorage({ //顺风车信息
 						key: "downwindCarendlocation",
 						data: that.endlocation,
-						success(){
+						success() {
 							uni.navigateTo({
-								url:"../../pages_CZC/pages/CZC/DownwindCar?seat="+value.Seat+"&driverID="+value.DriverID+"&lineID="+value.AID+"&departureTime="+value.DepartureTime+"&Price="+value.Price+"&vehicleNumber="+value.VehicleNumber,
+								url: "../../pages_CZC/pages/CZC/DownwindCar?seat=" + value.Seat + "&driverID=" + value.DriverID +
+									"&lineID=" + value.AID + "&departureTime=" + value.DepartureTime + "&Price=" + value.Price +
+									"&vehicleNumber=" + value.VehicleNumber,
 							})
 						}
 					})

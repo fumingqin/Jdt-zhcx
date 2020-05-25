@@ -8,12 +8,12 @@
 		<view class="head">
 			<!-- 起始站/价格 -->
 			<view class="u-f-jsb">
-				<view>{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
+				<view>{{orderInfo.carType}}:{{orderInfo.startSiteName}} — {{orderInfo.endSiteName}}  x{{getTicketNum(orderInfo)}}</view>
 			</view>
 			<!-- 发车时间 -->
 			<view class="headText"> 发车时间：{{orderInfo.setOutTime}}</view>
 			<view class="headText"> 司机姓名：{{getDetailInfo(orderInfo.driverName)}}</view>
-			<view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view>
+			<!-- <view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view> -->
 			<view class="headText"> 车牌号：{{getDetailInfo(orderInfo.vehicleNumber)}}</view>
 			<view class="headText"> 检票口：未知</view>
 		</view>
@@ -51,15 +51,19 @@
 					<!-- 二维码 -->
 					<view style="justify-content: center; align-items: center;display: flex;">
 						<view class="QRImage">
-							<canvas v-if="ticketNumber" canvas-id="ctkyQrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+							<canvas v-if="isShowQrcode == true" :canvas-id="'ctkyQrcode' + index" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
 							<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
-							<view v-if="ticketNumber == ''" style="font-weight: 300;color: #2C2D2D;font-size: 32rpx;justify-content: center; align-items: center;">{{getQRCodeStatus(orderInfo.state)}}</view>
+							<!-- 如果没有取票号就显示相应的状态 -->
+							<view v-if="isShowQrcode == false" style="font-weight: 300;color: #2C2D2D;font-size: 32rpx;justify-content: center; align-items: center;">{{getQRCodeStatus(orderInfo.state)}}</view>
 						</view>
 					</view>
 					
-					<view style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
+					<view v-if="orderInfo.carType != '定制巴士'" style="color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
 						  取票号 {{getOneTicketNum(orderInfo.ticketNumber,index)}}
 					</view>
+					<!-- <view v-if="orderInfo.carType == '定制巴士'" style="width: 100%;text-overflow: ellipsis;white-space: nowrap;overflow: hidden; color: #2C2D2D;font-size: 32rpx;font-weight: 300; padding-bottom: 10rpx;">
+						  取票号 {{getSpecialOneTicketNum(specialCodeArray,index)}}
+					</view> -->
 					<view style="color: #999999;font-size: 28rpx;font-weight: 300; padding-bottom: 50rpx;">
 						出示二维码，检票上车
 					</view>
@@ -86,32 +90,47 @@
 				qrcodeSize: 150,
 				ticketNumber:'',
 				ticktIndex:'',//车票下标
+				specialCodeArray:[],
+				isShowQrcode:'',
 			}
 		},
 		onLoad(res) {
 			var that = this;
-			console.log(res);
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
+			this.specialCodeArray = orderInfo.CheckInfoList;
 			console.log(orderInfo);
-			
-			this.ticketNumber = orderInfo.ticketNumber;
+			// console.log(orderInfo.CheckInfoList);
 			that.stringTurnArray(orderInfo.iDNameType);
+			//检票号---生成二维码
+			if(orderInfo.carType != '定制巴士'){
+				// for(let i = 0;i < orderInfo.passageInfo.length;i++){
+				// 	this.ticketNumber = orderInfo.ticketNumber;
+				// 	that.make(this.orderInfo.ticketNumber,i);
+				// }
+			}else {//定制巴士
+				for(let i = 0;i < orderInfo.CheckInfoList.length;i++){
+					this.ticketNumber = orderInfo.CheckInfoList[i].CheckCode;
+					that.make(this.ticketNumber,i);
+				}
+			}
+			
 			that.getTicketNum(orderInfo);
-			that.make(this.orderInfo.ticketNumber);
+			
 			that.getOneTicketNum();
 		},
 		methods: {
 			//-------------------------------生成二维码-------------------------------
-			make(param) {
+			make(param,index) {
 				if(param) {
-					// console.log(param);
+					console.log('二维码数据',param);
 					uQRCode.make({
-						canvasId: 'ctkyQrcode',
+						canvasId: 'ctkyQrcode' + index,
 						text: param,
 						size: this.qrcodeSize,
-						margin: 10,
+						margin: 20,
 						success: res => {
+							console.log('生成二维码成功',res);
 							// console.log('完成')
 							this.qrcodeSrc = res
 						},
@@ -128,17 +147,20 @@
 			},
 			//-------------------------------判断是否有保险-------------------------------
 			isInsured:function(param) {
-				console.log(param)
-				if(param == 'False') {
+				if(this.orderInfo.carType == '定制巴士'){
+					return '无保险'
+				}else if(param == 'False') {
 					return '无保险'
 				}else {
-					return '乘车险'
+					return '乘车险 x1'
 				}
 			},
 			//-------------------------------报班信息-------------------------------
 			getDetailInfo(param){
 				if(!param) {
 					return '该车未报班，无法获取详细信息'
+				}else{
+					return param
 				}
 			},
 			//-------------------------------获取乘车人信息-------------------------------
@@ -154,6 +176,9 @@
 						userCodeNum:array[0],
 					}
 					that.passageInfo.push(passenger);
+					
+					this.ticketNumber = that.orderInfo.ticketNumber;
+					that.make(this.orderInfo.ticketNumber,0);
 				}else {//多人订票
 					//存在'|'
 					var array = param.split('|');
@@ -164,6 +189,9 @@
 							userCodeNum:singleArray[0],
 						}
 						that.passageInfo.push(passenger);
+						
+						this.ticketNumber = that.orderInfo.ticketNumber;
+						that.make(this.orderInfo.ticketNumber,i);
 					}
 				}
 			},
@@ -182,6 +210,12 @@
 					}
 				}
 			},
+			//-------------------------------获取定制巴士取票号-------------------------------
+			getSpecialOneTicketNum(res,index){
+				if(this.orderInfo.carType == '定制巴士'){
+					return res[index].CheckCode
+				}
+			},
 			//-------------------------------计算车票数量-------------------------------
 			getTicketNum(param) {
 				return Number(param.fullTicket) + Number(param.halfTicket) + Number(param.carryChild)
@@ -189,18 +223,33 @@
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {
 				if (!(/(^[1-9]\d*$)/.test(param))){//如果不是数字
+				    if(param == '尚未支付'){
+						this.isShowQrcode = false;
+					}else if(param == '作废'){
+						this.isShowQrcode = false;
+					}else if(param == '已退票'){
+						this.isShowQrcode = false;
+					}else {
+						this.isShowQrcode = true;
+					}
 					return param
 				}else if (param == 4) {
+					this.isShowQrcode = true;
 					return '进行中'
 				} else if (param == 5) {
+					this.isShowQrcode = true;
 					return '已完成'
 				} else if (param == 6) {
+					this.isShowQrcode = false;
 					return '已退票'
 				} else if (param == 7) {
+					this.isShowQrcode = false;
 					return '未支付'
 				} else if (param == 9) {
+					this.isShowQrcode = false;
 					return '已撤销'
 				} else if (param == 22) {
+					this.isShowQrcode = true;
 					return '已改签'
 				}
 			},
@@ -212,6 +261,12 @@
 					return '订单未支付'
 				} else if (param == 9) {//已撤销
 					return '订单已撤销'
+				}else if (param == '已退票') {//已退票-----定制巴士
+					return '订单已退票'
+				}else if (param == '尚未支付') {//作废
+					return '尚未支付'
+				}else if (param == '作废') {//作废
+					return '订单已作废'
 				}
 			},
 		}

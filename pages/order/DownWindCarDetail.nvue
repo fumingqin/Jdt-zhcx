@@ -41,8 +41,10 @@
 						<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#2C2D2D;">请对本次路程进行评价！</text>
 					</view>
 					<view style="flex-direction: row;margin-left: 30px;margin-right: 30px;justify-content: space-between;margin-top: 20rpx;">
-						<image src="../../static/Order/Satisfy.png" @click="openPopup('bottomPopup')" style="width: 180rpx;height: 70rpx;"></image>
-						<image src="../../static/Order/Unsatisfy.png" @click="openPopup('bottomPopup1')" style="width: 215rpx;height: 70rpx;"></image>
+						<text style="font-size:32rpx;font-family:Source Han Sans SC;font-weight:400;color:#0055ff; margin-left: 180rpx;"
+						 @click="openPopup('bottomPopup')">去评价 ></text>
+						<!-- <image src="../../static/Order/Satisfy.png" @click="openPopup('bottomPopup')" style="width: 180rpx;height: 70rpx;"></image>
+						<image src="../../static/Order/Unsatisfy.png" @click="openPopup('bottomPopup1')" style="width: 215rpx;height: 70rpx;"></image> -->
 					</view>
 				</view>
 				<view v-if="IsEvaluate" style="background-color: #FFFFFF;padding: 40rpx;margin-top: 20rpx;border-radius: 20upx;box-shadow:0rpx 6rpx 20rpx 0rpx rgba(231,231,231,0.53);">
@@ -78,10 +80,15 @@
 						<uni-rate size="28" margin="20" :value="num" @change="onchange" />
 					</view>
 					<!-- 评价框 -->
-					<view style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
+					<view v-if="show" style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
 						<view :class="[rSelect.indexOf(index)>-1?'cur':'unCur']" @tap="tapInfo(index)" v-for="(item,index) in evaluate"
 						 :key="index">
 							<text :class="[rSelect.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
+						</view>
+					</view>
+					<view v-if="!show" style="flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-left: 40rpx; margin-top: 40rpx; margin-right: 20rpx;">
+						<view :class="[rSelect1.indexOf(index)>-1?'cur':'unCur']"  @tap="tapInfo1(index)" v-for="(item,index) in badevaluate" :key="index">
+							<text :class="[rSelect1.indexOf(index)>-1?'color':'unColor']">{{item}}</text>
 						</view>
 					</view>
 					<!-- 文本框 -->
@@ -203,6 +210,7 @@
 				orderInfo:[],//订单数据
 				userInfo:'',
 				num:'5',
+				show:true,
 				orderNumber:'',
 				includepoints:[],
 				driverName:'',
@@ -277,7 +285,10 @@
 									}
 								}
 								that.IsEvaluate=true;//位置必须在最后
-							}
+							}else
+								{
+									that.openPopup('bottomPopup');//没有评价才自动弹出评价框
+								}
 						}else{
 							uni.showToast({
 								title:res.data.msg,
@@ -328,6 +339,11 @@
 			},
 			onchange(e){
 				this.num = e.value;
+				if(this.num>3){
+					this.show=true;
+				}else{
+					this.show=false;
+				}
 			},
 			 tapInfo(e) {
 				        if (this.rSelect.indexOf(e) == -1) {
@@ -350,7 +366,11 @@
 				var that = this;
 				this.textareaValue = e.detail.value.textareaValue;
 				that.closePopup("bottomPopup");
-				that.getOrderValuate(that.orderNumber,'是');
+				var value="是"
+				if(!that.show){
+					value="否"
+					}
+				that.getOrderValuate(that.orderNumber,value);
 				
 			},
 			/**

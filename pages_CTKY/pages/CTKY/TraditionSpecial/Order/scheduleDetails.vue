@@ -10,17 +10,19 @@
 					<!-- 时间-价格 -->
 					<view class="ticketContent">
 						<view class="textCLass" style="font-size: 28upx;color: #333333;">{{turnDate(ticketDetail.setTime)}}出发</view>
-						<view class="textCLass" style="font-size: 34upx;color: #FC4646;">￥{{ticketDetail.fare}}</view>
+						<view class="textCLass" style="font-size: 28upx;color: #FC4646;">成人票￥{{ticketDetail.fare}}</view>
 					</view>
 					<!-- 站点-余票 -->
 					<view class="ticketContent">
 						<view class="textCLass" style="font-size: 32upx;color: #333333;">{{ticketDetail.startStaion}}→
 							{{ticketDetail.endStation}}</view>
-						<view class="textCLass" style="font-size: 24upx;font-style: SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.remainingVotes}}张</view>
+						<view class="textCLass" style="font-size: 28upx;color: #FC4646;">半价票￥{{ticketDetail.halfTicket}}</view>
+						
 					</view>
 					<!-- 车型-儿童半价 -->
 					<view class="ticketContent">
 						<view class="textCLass" style="font-size: 24upx;color: #999999;">{{ticketDetail.carType}} 儿童半票</view>
+						<view class="textCLass" style="font-size: 24upx;font-style: SourceHanSansSC-Light; color: #666666;">余{{ticketDetail.remainingVotes}}张</view>
 					</view>
 				</view>
 			</view>
@@ -56,9 +58,10 @@
 			<!-- 乘车人信息 -->
 			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
-				<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
-					<button @tap="addPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
-					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+				<view style="display: flex;margin-bottom: 35upx;">
+					<button @tap="addPassenger('成人')" class="button_1"  style="border: #AAAAAA 1px solid;padding: 0 40rpx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加成人/儿童</button>
+					<button @tap="pickPassenger" class="button_1" style="border: #AAAAAA 1px solid;width: 150upx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+					<button @tap="addPassenger('免童')" class="button_1" style="border: #AAAAAA 1px solid;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">携带免童</button>
 				</view>
 				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in passengerInfo" :key=index
 				 v-model="passengerInfo">
@@ -128,10 +131,10 @@
 			</popup>
 
 			<!-- 乘车险 -->
-			<view class="orderCommonClass" v-if="ticketDetail.insurePrice != 0">
+			<view class="orderCommonClass">
 				<view style="display: flex; align-items: center;">
 					<view style="margin-left: 41upx;margin-top: 35upx;margin-bottom: 35upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">购买乘车险</view>
-					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">{{ticketDetail.insurePrice}}元</view>
+					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">{{InsurePrice}}元</view>
 				</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
 					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="isInsurance===1 ? true : false" @click="insuranceTap"></radio>
@@ -154,46 +157,41 @@
 						<scroll-view class="noticeBox" scroll-y="ture">
 							<text class="Nb_text4">
 								购票
-								1. 票价说明：坐车网所代售的客运站车票票价与窗口售票保持一致，不加收任何服务费用。坐车网暂 不提供特殊旅客（包括伤病旅客、残疾旅客、军人、孕妇、婴儿和儿童等）优惠车票的购票服务，如 需购买，建议直接到客运站售票窗口购买。
-								2. 预购时间：坐车网可以为您提供当天当前时间3小时以后至未来数天内的预购票服务，最大预购天数 会根据坐车网业务调整可能有所不同，具体以坐车网售票系统为准。
-								3. 取票人信息：取票人的相关个人信息和联系方式将是您取票的重要凭证。提交订单时，请确认您输入 的取票人信息正确无误，并保持所填的手机处在通讯畅通状态，以便坐车网的服务人员能及时与您联系
-								。如您所留的电话号码长时间处于无人接听、忙音等状况而使我们的服务人员不能及时联系到您，由此 导致的不能及时确认、无法及时出票等问题，坐车网将不承担任何法律责任。
-								4. 支付说明：自成功提交订单起，订单的支付入口有效时间为10分钟，订单的有效时间为30分钟。您需 要在提交订单起30分钟内完成操作，逾时则被视作支付不成功，该订单所含车票会被退回系统。
-								5. 支付安全：为了确保您的财产安全，在线支付时请务必保管好您个人银行帐号、密码、回单等资料，建 议避免在网吧等公共场所进行网银支付等操作。
-								6. 车票信息：您购票成功后，系统会自动向您填写的手机号码发送电子票号、取票密码，电子票号、取 票密码以及个人信息是您取票时的重要凭证，请妥善保管。
-								7. 特价优惠车票：坐车网不定期推出特价优惠等购票活动，如选择参与活动的车票进行购买即可享受优 惠。
-								8. 退票说明：坐车网不办理退票，如需退票，请您在发车前至乘车站按客运站规定办理。
-								9. 班次、票价变动：坐车网客运联网售票系统所提供班次信息查询及售票服务与客运站售票系统同步，但 客运站方（或承运方）在实际发车时仍可能临时取消相应班次或变动发车时间、调整票价、要求补差价或加
-								收燃油附加费，出现上述情况请购票乘客尽量与客运站方直接协商解决。坐车网可提供一定协助，但不承诺 解决，同时坐车网不承担相应责任。
-								10. 特价优惠活动：坐车网不定期会推出特价立减返现等优惠活动，如所选的线路刚好有符合优惠条件，可以 享受比窗口更优惠的价格。
+								1. 票价说明：所代售的客运站车票票价与窗口售票保持一致，不加收任何服务费用。暂不提供特殊旅客（包括伤病旅客、残疾旅客、军人、孕妇、婴儿和儿童等）优惠车票的购票服务，如 需购买，建议直接到客运站售票窗口购买。
+								2. 预购时间：可以为您提供当天当前时间3小时以后至未来数天内的预购票服务，最大预购天数会根据坐车网业务调整可能有所不同，具体以坐车网售票系统为准。
+								3. 取票人信息：取票人的相关个人信息和联系方式将是您取票的重要凭证。提交订单时，请确认您输入的取票人信息正确无误，并保持所填的手机处在通讯畅通状态，以便服务人员能及时与您联系
+								。如您所留的电话号码长时间处于无人接听、忙音等状况而使我们的服务人员不能及时联系到您，由此导致的不能及时确认、无法及时出票等问题，我司将不承担任何法律责任。
+								4. 支付说明：自成功提交订单起，订单的支付入口有效时间为2分钟，订单的有效时间为2分钟。您需要在提交订单起2分钟内完成操作，逾时则被视作支付不成功，该订单所含车票会被退回系统。
+								5. 支付安全：为了确保您的财产安全，在线支付时请务必保管好您个人银行帐号、密码、回单等资料，建议避免在网吧等公共场所进行网银支付等操作。
+								6. 车票信息：您购票成功后，系统会自动向您填写的手机号码发送电子票号、取票密码，电子票号、取票密码以及个人信息是您取票时的重要凭证，请妥善保管。
+								7. 特价优惠车票：不定期推出特价优惠等购票活动，如选择参与活动的车票进行购买即可享受优惠。
+								8. 退票说明：退票将收取相应手续费。
+								9. 班次、票价变动：客运联网售票系统所提供班次信息查询及售票服务与客运站售票系统同步，但客运站方（或承运方）在实际发车时仍可能临时取消相应班次或变动发车时间、调整票价、要求补差价或加
+								收燃油附加费，出现上述情况请购票乘客尽量与客运站方直接协商解决。坐车网可提供一定协助，但不承诺解决，同时坐车网不承担相应责任。
+								10. 特价优惠活动：不定期会推出特价立减返现等优惠活动，如所选的线路刚好有符合优惠条件，可以 享受比窗口更优惠的价格。
 								取票
-								1. 取票方式： 旅客在坐车网成功购票后，有自助取票和人工取票两种方式，不同车票支持的取票方式不同 ： 一自助取票，车站有自助取票机的刷身份证或输入订单相关信息自动打印；二人工出票，到乘车站售票
-								窗口或咨询服务台出示身份凭证报订单相关信息人工出票。订票后请查看订单详情仔细阅读取票说明，按要 求取票。
-								如订广州地区的车票（除番禺汽车站外），订票成功2小时起即可凭身份证和取票密码到发车站珠江通取票机 刷身份证或凭密码登录进行取票，建议平峰期提前30分钟，高峰期提前60分钟到站取票。
-								在珠江通操作打印车票时，如遇机器故障未能出票，请勿离开该台机子，并即刻联系96900协助处理，如无法 及时联系，我司将无法了解当时情况，对因此造成的损失本公司将不承担任何责任。
-								如订广州番禺汽车站的车票，订票成功后，可凭身份证、订单信息到发车站售票窗口报订单号进行取票，建议 平峰期提前30分钟，高峰期提前60分钟到站取票。
-								如订肇庆地区的车票，订票成功后，可凭身份证、订单号(或手机号)到发车站票窗或咨询台进行取票，建议提前 30分钟到站，发车后将不能取/退票，详询4008802805
-								如订深圳地区的车票，订票成功后，可凭身份证原件+取票密码到发车站售票窗口进行取票，建议提前30分钟到 站，发车后将不能取/退票，详询4008802805
-								如订珠海地区的车票，订票成功后，可凭身份证、订单号(或手机号)到发车站售票窗口进行取票，建议提前30分钟 到站，发车后将不能取/退票，详询4008802805
-								如订茂名地区的车票，订票成功后，可凭身份证、订单号(或手机号)到发车站售票窗口进行取票，建议提前30分钟 到站，发车后将不能取/退票，详询4008802805
+								1. 取票方式： 旅客成功购票后，有自助取票和人工取票两种方式，不同车票支持的取票方式不同 ： 一自助取票，车站有自助取票机的刷身份证或输入订单相关信息自动打印；二人工出票，到乘车站售票
+								窗口或咨询服务台出示身份凭证报订单相关信息人工出票。订票后请查看订单详情仔细阅读取票说明，按要求取票。
+								订票成功2小时起即可凭身份证和取票密码到发车站珠江通取票机刷身份证或凭密码登录进行取票，建议平峰期提前30分钟，高峰期提前60分钟到站取票。
+								
 								2. 取票时间规定：
 								（1）广州地区：您需要在购票成功2小时后才能到发车站进行取票。
 								（2）深圳地区、肇庆地区、珠海地区、茂名地区等等：您在坐车网购票成功后即可到发车站进行取票。
-								（3）请在车站营业时间内取票，前往客运站取票时，应把握好取票时间（平常应比发车时间至少提前30分钟以上， 节假日应至少提前1小时以上），避免错过班车。如超过发车时间仍未取票，坐车网不承担责任。
+								（3）请在车站营业时间内取票，前往客运站取票时，应把握好取票时间（平常应比发车时间至少提前30分钟以上，节假日应至少提前1小时以上），避免错过班车。如超过发车时间仍未取票，我司不承担责任。
 								退改签
 								1. 线下退票、改签：统暂不提供网上退改签服务。如需办理请于发车前尽快到发车站换取纸质车票后，凭纸质车票到退改 签窗口按车站规定办理。坐车网部分特价优惠车票不支持退改签服务，请订票时知悉。
 								2. 手续费：办理退票改签业务所发生的费用按发车站的规定执行，一般情况，1)退票手续费发车前2小时外按票面10%计收，发车前 2小时内按票面20%计收，2)发车前免费改签一次 ，详细以发车站窗口执行为准。
 								注意事项
-								1. 信息准确：您需要确保所提交的订单信息准确无误，由于用户原因（包括但不限于错误提供取票人姓名、证件号码、发车时间、 发车班次、手机号码等信息）导致购票错误，坐车网不承担任何法律责任。
+								1. 信息准确：您需要确保所提交的订单信息准确无误，由于用户原因（包括但不限于错误提供取票人姓名、证件号码、发车时间、 发车班次、手机号码等信息）导致购票错误，我司不承担任何法律责任。
 								2. 剩余票数：于售票渠道的多样性，系统所显示的剩余票数可能与实际剩余票数不一致，故系统所显示的剩余票数仅供参考。
 								3. 重复支付：当你进行支付后，系统如没有返回电子票号或显示“服务器繁忙”、“支付失败”、“购票失败”、乱码或“查 询不到你的电子票号”等信息提示时，请按以下提示操作：
 								请于开始订票后30分钟起通过网站登录“我的订单”查询订单状态， 在没有最终确定购票结果前，切勿重复提交订单。重复提交订单将会导致重购购票，由此所产生的损失将由购票人全部承担。
 								如果支付完成后发现支付银行账户扣费成功，但订单显示为“等待支付”状态，是因为银行数据没有即时返回给我们，请在订单有 效期内耐心等候。 如旅客没有确定购票结果，从而没有去发车站取票乘车，由此所产生的损失将由旅客本人全部承担。
 								核实票款和订单状态请随时联系坐车网 票务服务中心 4008-802-805（8:30-20:30）
-								4. 短信下发超时或失败：用户在购票成功后，坐车网会通过短信将班次信息、电子票号、取票密码等内容发送至所填写的手机号码 中。但该短信不作为成功订票的凭证，如果购票成功后超过20分钟没有收到通知短信，可能是网络延时而导致，
-								请直接登录坐车网 查询订单状态。确认为已成交状态可点击“重发取票密码”重新获取短信提示。如多次发送失败，请与坐车网客服人员联系。
-								5. 取票延误或不取票：用户在坐车网购票成功，但没有到发车站取票乘车的，或误期取票导致错过乘车时间的，所造成的损失由用户 个人全部承担。
-								6. 坐车网客户服务范围：坐车网客户服务不受理在线或电话的订票退改签服务，购票成功后的订单详情请直接登录坐车网“网上售票” ->“我的订单”进行查询；其他客运站信息请直接拨打客运站联系电话进行咨询。
+								4. 短信下发超时或失败：用户在购票成功后，会通过短信将班次信息、电子票号、取票密码等内容发送至所填写的手机号码中。但该短信不作为成功订票的凭证，如果购票成功后超过20分钟没有收到通知短信，可能是网络延时而导致，
+								请与客服人员联系。
+								5. 取票延误或不取票：用户在坐车网购票成功，但没有到发车站取票乘车的，或误期取票导致错过乘车时间的，所造成的损失由用户个人全部承担。
+								6. 客户服务范围：客户服务不受理在线或电话的订票退改签服务。
 								7. 关于客运实名制须知： 根据中华人民共和国交通运输部《道路旅客运输及客运站管理规定》第三十六条规定“通过网络、电话等方式实名购票的，购票人应当提供真实准确的旅客有效身份证件信息”。
 								根据《反恐怖主义法》第二十一条规定长途客运业务经营者、服务提供者，应当对客户身份进行查验。对身份不明或者拒绝身份查验的，不得提供服务。
 								请确保所填乘客证件信息准确用于客运进站安检、检票乘车进行查验，若因填写错误导致无法进站乘车责任自负。 我们将依照注册协议相关隐私条款保护您所填证件信息。
@@ -218,15 +216,14 @@
 </template>
 
 <script>
+	import $KyInterface from "@/common/Ctky.js"
 	import popup from "@/pages_CTKY/components/CTKY/uni-popup/uni-popup.vue";
-	import utils from "@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js";
 	export default {
 		components: {
 			popup
 		},
 		data() {
 			return {
-				utils: utils,
 				title: '',
 				isNormal: 0, //判断是普通购票还是定制班车:1是普通0是定制
 				count: 1,
@@ -254,6 +251,8 @@
 				shuttleType: '', //班车类型'定制班车''普通班车'
 				sepecialStartArray: [], //定制班车起点数组
 				specialEndArray: [], //定制班车终点数组
+				InsurePrice:'',//保险价格
+				adultNum:0,//成人数
 			}
 		},
 
@@ -273,20 +272,15 @@
 					that.ticketDetail = data.data; //车票数组
 					that.totalPrice = data.data.fare; //价格
 					that.shuttleType = data.data.shuttleType; //班车类型
-					console.log(data)
 					
 					//定制班车起点数组
 					that.sepecialStartArray = data.data.starSiteArr;
 					//定制班车终点数组
 					that.specialEndArray = data.data.endSiteArr
-
+					//读取保险信息
+					that.getExecuteScheduleInfoForSellByID(that.ticketDetail);
 					console.log('车票数据', that.ticketDetail)
 					
-					if (data.data.insurePrice == 0) {
-						that.isInsurance = 0;
-					} else {
-						that.isInsurance = 1;
-					}
 				}
 			})
 		},
@@ -349,13 +343,50 @@
 					}
 				})
 			},
+			//--------------------------获取保险信息--------------------------
+			getExecuteScheduleInfoForSellByID:function(orderInfo){
+				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
+				console.log(orderInfo.scheduleCompanyCode,orderInfo.executeScheduleID,orderInfo.startSiteID,orderInfo.endSiteID,)
+				uni.request({
+					url:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.Url,
+					method:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.method,
+					header:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.header,
+					data:{
+						systemName:$KyInterface.KyInterface.systemName.systemName,
+						scheduleCompanyCode:orderInfo.scheduleCompanyCode,
+						ExecuteScheduleID:orderInfo.executeScheduleID,
+						StartSiteID:orderInfo.startSiteID,
+						EndSiteID:orderInfo.endSiteID,
+					},
+					success(res) {
+						uni.hideLoading();
+						console.log('保险数据',res);
+						var respones = res.data;
+						if(respones.Successed == true){
+							that.InsurePrice = respones.ScheduleInfos[0].InsurePrice;
+							//计算价格
+							that.calculateTotalPrice();
+						}else {
+							that.InsurePrice = 0;
+							//计算价格
+							that.calculateTotalPrice();
+						}
+					},
+					fail(res) {
+						uni.hideLoading();
+						console.log(res);
+					}
+				})
+			},
 			//-------------------------------时间转换-------------------------------
 			turnDate(date) {
 				if (date) {
 					var setTime = date.replace('T', ' ');
 					return setTime;
 				}
-				// return utils.timeTodate('Y-m-d H:i:s',new Date(date).getTime());
 			},
 			//-------------------------------点击定制班车上车点-----------------------------
 			startStationTap() {
@@ -442,17 +473,28 @@
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
 				var that = this;
-				if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
-					if (this.ticketDetail.starSiteArr.length <= 2 && this.ticketDetail.endSiteArr.length <= 2) { //普通班车
-						uni.navigateTo({
-							url: '../MapMark/traditionCarMark?traditionArray=' + JSON.stringify(this.ticketDetail)
-						})
-					} else if (this.ticketDetail.starSiteArr.length > 2 || this.ticketDetail.endSiteArr.length > 2) { //定制班车
-						uni.navigateTo({
-							url: '../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
-						})
-					}
-				}
+				// #ifdef MP-WEIXIN
+				uni.showModal({
+					content:'小程序暂不支持地图显示',
+					showCancel:false,
+				})
+				// #endif
+				
+				// #ifndef MP-WEIXIN
+				uni.navigateTo({
+					url: '../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
+				})
+				// #endif
+				
+				// if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
+				// 	if (this.ticketDetail.shuttleType == '普通班车') { //普通班车
+				// 		uni.navigateTo({
+				// 			url: '../MapMark/traditionCarMark?traditionArray=' + JSON.stringify(this.ticketDetail)
+				// 		})
+				// 	} else if (this.ticketDetail.shuttleType == '定制班车') { //定制班车
+						
+				// 	}
+				// }
 			},
 			//-------------------------------选择乘客-----------------------------
 			pickPassenger() {
@@ -488,7 +530,7 @@
 				})
 			},
 			//点击添加乘客
-			addPassenger() {
+			addPassenger(param) {
 				uni.getStorage({
 					key: 'userInfo',
 					fail() {
@@ -514,9 +556,16 @@
 					},
 					success() {
 						//跳转到添加乘客页面
-						uni.navigateTo({
-							url: '../../../../../pages/GRZX/addPassenger?type=add',
-						})
+						if(param == '成人'){
+							uni.navigateTo({
+								url: '../../../../../pages/GRZX/addPassenger?type=add',
+							})
+						}else if(param == '免童'){
+							uni.navigateTo({
+								url: '../../../../../pages/GRZX/addFreeChildren?type=add',
+							})
+						}
+						
 					}
 				})
 
@@ -538,7 +587,7 @@
 				let price = that.ticketDetail.fare;
 				//半价票单价
 				let halfPrice = that.ticketDetail.halfTicket;
-				let insurePrice = that.ticketDetail.insurePrice;
+				let insurePrice = that.InsurePrice;
 				if (that.isInsurance == 0) { //不选择保险
 					insurePrice = 0;
 				}
@@ -547,28 +596,28 @@
 					for (var i = 0; i < that.passengerInfo.length; i++) {
 						that.passengerNum++;
 						//把儿童票筛选出来
-						if (that.passengerInfo[i].userType == '儿童') {
-							//将儿童票加入数组
+						if (that.passengerInfo[i].userType == '半票儿童') {
+							//将半价儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;
-						} else {
+						} else if(that.passengerInfo[i].userType == '成人'){
 							//将成人票加入数组
 							adultArray.push(that.passengerInfo[i]);
 							adultNum++;
+							that.adultNum = adultNum;
 						}
 					}
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + Number(insurePrice) * that.passengerNum
 				} else {
 					//计算总价
-					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + insurePrice
+					that.totalPrice = Number(price) * adultNum + Number(halfPrice) * childNum + Number(insurePrice) * that.passengerNum
 				}
 			},
 
-			//-------------------------------点击订单预定-----------------------------
+			//-------------------------------------点击订单预定-----------------------------------
 			reserveTap() {
 				var that = this;
-				console.log(that.startStation,that.endStation)
 				if(that.shuttleType == '普通班车') {
 					that.startStation = " "
 					that.endStation = " "
@@ -585,6 +634,11 @@
 							title: '请选择乘车人',
 							icon: 'none'
 						})
+					} else if (that.adultNum == 0) {
+						uni.showToast({
+							title: '免童/儿童不可单独购票',
+							icon: 'none'
+						})
 					} else if (that.selectedValue == 0) {
 						uni.showToast({
 							title: '请同意购买须知',
@@ -599,7 +653,12 @@
 							title: '请选择乘车人',
 							icon: 'none'
 						})
-					} else if (that.selectedValue == 0) {
+					} else if (that.adultNum == 0) {
+						uni.showToast({
+							title: '免童/儿童不可单独购票',
+							icon: 'none'
+						})
+					}else if (that.selectedValue == 0) {
 						uni.showToast({
 							title: '请同意购买须知',
 							icon: 'none'
@@ -609,18 +668,19 @@
 					}
 				}
 			},
-			//-----------------------------跳转-----------------------------
+			//-----------------------------------跳转-----------------------------------
 			jumpTo() {
 				var that = this;
 				//计算价格
 				that.calculateTotalPrice();
 				//请求成功之后跳转到支付页面,传是否选择保险1:选择 0:未选择
 				var array = {
-					isInsurance: that.isInsurance,
-					totalPrice: that.totalPrice,
-					shuttleType: that.shuttleType,
-					getOnPoint: that.startStation,
-					getOffPoint: that.endStation
+					isInsurance: that.isInsurance,//是否选择了保险
+					totalPrice: that.totalPrice,//总价格
+					shuttleType: that.shuttleType,//班车类型
+					getOnPoint: that.startStation,//起点
+					getOffPoint: that.endStation,//终点
+					insuredPrice: that.InsurePrice,//保险价格
 				}
 				uni.navigateTo({
 					url: '../PayMent/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' +
@@ -927,5 +987,9 @@
 		&.tapColor {
 			background: #FC4646;
 		}
+	}
+	
+	.button_1::after {
+		border: none;
 	}
 </style>

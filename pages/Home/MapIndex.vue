@@ -235,7 +235,7 @@
 						})
 						//#endif
 					}
-				}, 200)
+				}, 500)
 			},
 			bindAddress(index) {
 				let list = this.list

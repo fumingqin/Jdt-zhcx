@@ -408,7 +408,38 @@
 						// console.log("你拒绝了授权，无法获得周边信息")
 					}
 				})
-			}
+			},
+			
+			// 获取地理位置
+			getLocationInfo() {
+				uni.getLocation({
+					type: 'wgs84',
+					success(res) {
+						// console.log(res);
+					}
+				});
+			},
+			
+			// 再次获取授权
+			// 当用户第一次拒绝后再次请求授权
+			openConfirm() {
+				uni.showModal({
+					title: '请求授权当前位置',
+					content: '需要获取您的地理位置，请确认授权',
+					success: (res) => {
+						// console.log(res)
+						if (res.confirm) {
+							uni.openSetting(); // 打开地图权限设置
+						} else if (res.cancel) {
+							uni.showToast({
+								title: '你拒绝了授权，无法获得周边信息',
+								icon: 'none',
+								duration: 1000
+							})
+						}
+					}
+				});
+			},
 
 		}
 	}
