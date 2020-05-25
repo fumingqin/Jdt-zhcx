@@ -593,8 +593,8 @@
 					for (var i = 0; i < that.passengerInfo.length; i++) {
 						that.passengerNum++;
 						//把儿童票筛选出来
-						if (that.passengerInfo[i].userType == '儿童') {
-							//将儿童票加入数组
+						if (that.passengerInfo[i].userType == '半票儿童') {
+							//将半价儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;
 						} else {
