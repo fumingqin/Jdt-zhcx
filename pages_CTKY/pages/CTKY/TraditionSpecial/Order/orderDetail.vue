@@ -13,7 +13,7 @@
 			<!-- 发车时间 -->
 			<view class="headText"> 发车时间：{{orderInfo.setOutTime}}</view>
 			<view class="headText"> 司机姓名：{{getDetailInfo(orderInfo.driverName)}}</view>
-			<view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view>
+			<!-- <view class="headText"> 随车手机号：{{getDetailInfo(orderInfo.driverPhone)}}</view> -->
 			<view class="headText"> 车牌号：{{getDetailInfo(orderInfo.vehicleNumber)}}</view>
 			<view class="headText"> 检票口：未知</view>
 		</view>
@@ -101,19 +101,20 @@
 			this.specialCodeArray = orderInfo.CheckInfoList;
 			// console.log(orderInfo);
 			// console.log(orderInfo.CheckInfoList);
+			that.stringTurnArray(orderInfo.iDNameType);
 			//检票号---生成二维码
 			if(orderInfo.carType != '定制巴士'){
-				for(let i = 0;i < orderInfo.passageInfo.length;i++){
-					this.ticketNumber = orderInfo.ticketNumber;
-					that.make(this.orderInfo.ticketNumber,i);
-				}
+				// for(let i = 0;i < orderInfo.passageInfo.length;i++){
+				// 	this.ticketNumber = orderInfo.ticketNumber;
+				// 	that.make(this.orderInfo.ticketNumber,i);
+				// }
 			}else {
 				for(let i = 0;i < orderInfo.CheckInfoList.length;i++){
 					this.ticketNumber = orderInfo.CheckInfoList[i].CheckCode;
 					that.make(this.ticketNumber,i);
 				}
 			}
-			that.stringTurnArray(orderInfo.iDNameType);
+			
 			that.getTicketNum(orderInfo);
 			
 			that.getOneTicketNum();
@@ -156,6 +157,8 @@
 			getDetailInfo(param){
 				if(!param) {
 					return '该车未报班，无法获取详细信息'
+				}else{
+					return param
 				}
 			},
 			//-------------------------------获取乘车人信息-------------------------------
@@ -171,6 +174,9 @@
 						userCodeNum:array[0],
 					}
 					that.passageInfo.push(passenger);
+					
+					this.ticketNumber = that.orderInfo.ticketNumber;
+					that.make(this.orderInfo.ticketNumber);
 				}else {//多人订票
 					//存在'|'
 					var array = param.split('|');
@@ -181,6 +187,9 @@
 							userCodeNum:singleArray[0],
 						}
 						that.passageInfo.push(passenger);
+						
+						this.ticketNumber = that.orderInfo.ticketNumber;
+						that.make(this.orderInfo.ticketNumber,i);
 					}
 				}
 			},

@@ -12,48 +12,56 @@
 					<text class="sv_text">车票订购</text>
 				</view>
 
-				<view class="sv_view3" @click="natTo2('/pages/Home/ChooseSite?current=2')">
+				<!-- <view class="sv_view3" @click="natTo2('/pages/Home/ChooseSite?current=2')">
 					<image class="sv_print" src="../../static/Home/serve/wlyueche.png" mode="aspectFit"></image>
 					<text class="sv_text">网络约车</text>
-				</view>
+				</view> -->
 
 				<view class="sv_view3" @click="natTo('/pages_GJCX/pages/GJCX/busH5')">
 					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" mode="aspectFit"></image>
 					<text class="sv_text">公交查询</text>
 				</view>
 
-				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
+				<!-- <view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
 					<text class="sv_text">包车服务</text>
 				</view>
+				
 				<view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
 					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image>
 					<text class="sv_text">定制巴士</text>
-				</view>
+				</view> -->
+				
 				</view>
 		</view>
 
-		<view class="sv_view2">
+		<!-- <view class="sv_view2">
 			<view class="sv_title">旅游</view>
 			<view style="display: flex; flex-wrap: wrap;">
+				
 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/independentTravel/it_list')">
 				<image class="sv_print" src="../../static/Home/serve/ziyouxing.png" mode="aspectFit"></image>
 				<text class="sv_text">自由行</text>
 			</view>
+			
 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/groupTour/groupTourList')">
 				<image class="sv_print" src="../../static/Home/serve/gentuanyou.png" mode="aspectFit"></image>
 				<text class="sv_text">跟团游</text>
 			</view>
+			
 			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
 				<image class="sv_print" src="../../static/Home/serve/jqgoupiao.png" mode="aspectFit"></image>
 				<text class="sv_text">景区购票</text>
 			</view>
+			
 			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
 				<image class="sv_print" src="../../static/Home/lvyouchanping.png" mode="aspectFit"></image>
 				<text class="sv_text">旅游产品</text>
 			</view>
+			
 			</view>
-		</view>
+		</view> -->
+		
 		<!-- <view class="sv_view2">
 			<view class="sv_title">防控</view>
 			<view style="display: flex; flex-wrap: wrap;">
