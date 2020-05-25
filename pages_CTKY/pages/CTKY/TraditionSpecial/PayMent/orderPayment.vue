@@ -119,9 +119,9 @@
 				passengerInfo: [], //乘车人信息
 				idNameTypeStr: '', //乘车人信息字符串（发送请求需要）（小叶接口）
 				ticketNum: '0', //总票数
-				adultNum: 0, //成人数量
-				childrenNum: 0, //儿童数量
-				freeTicketNum: 0,//免童
+				adultNum: '0', //成人数量
+				childrenNum: '0', //儿童数量
+				freeTicketNum: '0',//免童
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
 				totalPrice: '0', //总价格
@@ -279,11 +279,11 @@
 
 								that.ticketNum++;
 								//把儿童票筛选出来
-								if (that.passengerInfo.userType == '半票儿童') {
+								if (that.passengerInfo[i].userType == '半票儿童') {
 									that.childrenNum++;
-								} else if (that.passengerInfo.userType == '成人'){
+								} else if (that.passengerInfo[i].userType == '成人'){
 									that.adultNum++;
-								}else if(that.passengerInfo.userType == '免票儿童'){
+								}else if(that.passengerInfo[i].userType == '免票儿童'){
 									that.freeTicketNum++;
 								}
 							}

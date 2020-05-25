@@ -120,10 +120,10 @@
 				ticketNum: 0, //总票数
 				adultNum: 0, //成人数量
 				freeTicketNum: 0,//免童
-				childrenNum: '0', //儿童数量	
+				childrenNum: 0, //儿童数量	
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
-				totalPrice: '0', //总价格
+				totalPrice: 0, //总价格
 				paymentData: [], //保存支付参数
 				timer: '', //定时器数据
 				isPayEnable: false, //当前是否可以点击支付
@@ -218,11 +218,11 @@
 								that.passengerIDs.push(data.data[i].userCodeNum)
 								that.ticketNum++;
 								//把儿童票筛选出来
-								if (that.passengerInfo.userType == '半票儿童') {
+								if (that.passengerInfo[i].userType == '半票儿童') {
 									that.childrenNum++;
-								} else if (that.passengerInfo.userType == '成人'){
+								} else if (that.passengerInfo[i].userType == '成人'){
 									that.adultNum++;
-								}else if(that.passengerInfo.userType == '免票儿童'){
+								}else if(that.passengerInfo[i].userType == '免票儿童'){
 									that.freeTicketNum++;
 								}
 							}
@@ -314,6 +314,8 @@
 				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
 				// #endif
 				var childNum = Number(that.childrenNum) + Number(that.freeTicketNum)
+				
+				console.log(companyCode,that.ticketInfo.priceAID,that.userInfo.phoneNumber,that.adultNum,childNum,that.passengerIDs,that.passengerNames,that.userInfo.userId)
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_BookingTicket.Url,
@@ -532,7 +534,7 @@
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
 						} else {
-							that.showToast("网络连接失败")
+							that.showToast("支付失败")
 						}
 					}
 				});
