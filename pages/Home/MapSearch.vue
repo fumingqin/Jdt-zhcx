@@ -94,7 +94,6 @@
 				console.log(item);
 				let pages = getCurrentPages()
 				let prePages = pages[pages.length - 2].$vm
-				console.log(prePages);
 				let list = prePages.list
 				let map = prePages.map
 				map.longitude = item.location.lng
@@ -107,9 +106,9 @@
 					latitude: item.location.lat
 				}
 				prePages.checked = 0
-				// uni.navigateBack({
-				// 	delta: 1
-				// })
+				uni.navigateBack({
+					delta: 1
+				})
 			},
 			setData(obj) {
 				Object.assign(this, obj)
