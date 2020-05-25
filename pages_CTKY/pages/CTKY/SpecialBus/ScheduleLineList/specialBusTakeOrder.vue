@@ -56,9 +56,10 @@
 			<!-- 乘车人信息 -->
 			<view class="orderCommonClass" style="flex-direction: column;padding-bottom: 25upx;">
 				<view style="margin-top: 35upx;margin-bottom: 35upx;margin-left: 41upx;font-size:SourceHanSansSC-Regular ;color: #2C2D2D;font-size: 30upx;">乘车人信息</view>
-				<view style="display: flex;margin-left: 165upx;margin-right: 165upx;margin-bottom: 35upx;">
-					<button @tap="addPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加</button>
-					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 28upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+				<view style="display: flex;margin-bottom: 35upx;">
+					<button @tap="addPassenger('成人')" style="padding: 0 40rpx; height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">添加成人/儿童</button>
+					<button @tap="pickPassenger" style="width: 150upx;height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">选择</button>
+					<button @tap="addPassenger('免童')" style="height: 66upx;align-items: center;font-size: 25upx; color:#2C2D2D ;text-align: center;background: #FFFFFF;">携带免童</button>
 				</view>
 				<view style="flex-direction: column;background: #FFFFFF; " v-for="(items,index) in passengerInfo" :key=index
 				 v-model="passengerInfo">
@@ -528,7 +529,7 @@
 				})
 			},
 			//点击添加乘客
-			addPassenger() {
+			addPassenger(param) {
 				uni.getStorage({
 					key: 'userInfo',
 					fail() {
@@ -554,9 +555,15 @@
 					},
 					success() {
 						//跳转到添加乘客页面
-						uni.navigateTo({
-							url: '../../../../../pages/GRZX/addPassenger?type=add',
-						})
+						if(param == '成人'){
+							uni.navigateTo({
+								url: '../../../../../pages/GRZX/addPassenger?type=add',
+							})
+						}else if(param == '免童'){
+							uni.navigateTo({
+								url: '../../../../../pages/GRZX/addFreeChildren?type=add',
+							})
+						}
 					}
 				})
 
