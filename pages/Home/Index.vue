@@ -437,7 +437,7 @@
 						fail(err){
 							console.log(err)
 							uni.showToast({
-								title:"err是"+err.errMsg,
+								title:"登录失败",
 								icon:'none'
 							})
 						}
