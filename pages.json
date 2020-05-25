@@ -157,7 +157,6 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
-        
     ],
 
 	"subPackages": [
@@ -786,6 +785,22 @@
 					"style": {
 						"navigationBarTitleText": "意见反馈"
 					}
+				},
+				{
+				    "path" : "pages/GRZX/gz_complaintList",
+				    "style" : {}
+				}
+				,{
+				    "path" : "pages/GRZX/gz_complaintContent",
+				    "style" : {}
+				}
+				,{
+				    "path" : "pages/GRZX/gz_complaintsPage",
+				    "style" : {}
+				}
+				,{
+				    "path" : "pages/GRZX/gz_complaintText",
+				    "style" : {}
 				}
 			]
 		}

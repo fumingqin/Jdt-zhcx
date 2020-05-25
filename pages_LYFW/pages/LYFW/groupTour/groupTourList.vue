@@ -321,6 +321,7 @@
 						// // #ifndef H5
 						// regionWeixin: this.regionWeixin,
 						// // #endif
+						regionWeixin: this.regionWeixin,
 						GroupTitle: this.searchValue,
 					},
 					header: {
@@ -328,7 +329,7 @@
 					},
 
 					success: function(res) {
-						// console.log(res)
+						console.log(res)
 						if (res.data.data) {
 							that.searchData = res.data.data;
 							// console.log(268, that.searchData)
