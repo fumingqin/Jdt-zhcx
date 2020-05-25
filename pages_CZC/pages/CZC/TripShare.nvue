@@ -4,7 +4,7 @@
 			<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
 			 :polyline="polyline" :markers="markers" :show-location="true">
 			</map>
-			<view style="position: fixed; top: 100px;">
+			<view class="mainpage">
 				<view style=" background-color: #FFF;height: 90px;width: 690rpx;left: 30rpx;right: 30rpx;border-radius: 20rpx;padding: 30rpx;">
 					<view style="flex-direction: row;justify-content: space-between;">
 						<view style="flex-direction: row;">
@@ -431,8 +431,15 @@
 	.map {
 		width: 750rpx;
 	}
-
-
+	.mainpage{
+		position: fixed; 
+		/* #ifdef MP-WEIXIN */
+		top: 100px;
+		/* #endif */
+		/* #ifdef H5 */
+		top: 50px;
+		/* #endif */
+	}
 	.bluering {
 		width: 20rpx;
 		height: 20rpx;
