@@ -88,6 +88,11 @@
 				<text class="fontStyle">意见反馈</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
+			<view class="boxClass borderTop" @click="pictureClick">
+				<image src="../../static/GRZX/paizhao.png" class="iconClass6"></image>
+				<text class="fontStyle">拍照返现</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
 		</view>
 		<!-- 添加紧急联系人弹窗 -->
 		<view :hidden="userFeedbackHidden" class="popup_content">
@@ -341,6 +346,13 @@
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
 					url:this.$GrzxInter.Route.feedback.url,
+				})  				
+			},
+			//--------------------拍照返现--------------------
+			pictureClick(){
+				uni.navigateTo({
+					// url:'/pages/GRZX/feedback'
+					url:'../../pages_GRZX/pages/GRZX/printSubmit',
 				})  				
 			},
 			// ---------------------------是否登录--------------------------
@@ -744,6 +756,12 @@
 	.iconClass5{  //意见反馈图标
 		width: 36upx;
 		height: 39upx;
+		margin-top: 31upx;
+		margin-left: 13upx;
+	}
+	.iconClass6{  //拍照返现图标
+		width: 36upx;
+		height: 35upx;
 		margin-top: 31upx;
 		margin-left: 13upx;
 	}
