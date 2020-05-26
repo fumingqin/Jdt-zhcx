@@ -356,6 +356,7 @@
 					url:$KyInterface.KyInterface.Ky_PaymentUrl.Url,
 					method:$KyInterface.KyInterface.Ky_PaymentUrl.method,
 					// header:$KyInterface.KyInterface.Ky_PaymentUrl.header,
+					
 					data: {
 						companyCode: companyCode,
 						clientID: that.userInfo.userId, //用户ID
