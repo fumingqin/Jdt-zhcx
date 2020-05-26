@@ -469,9 +469,6 @@
 										title: res.data.msg,
 										icon: 'none'
 									})
-									if(res.data.msg == '订票失败'){//如果订票失败就取消当前订单
-										that.keYunCancelTicket(orderNumber)
-									}
 								}
 							}
 						},
@@ -484,24 +481,7 @@
 					})
 				}, 3000)
 			},
-			// -------------------------客运取消-------------------------
-			keYunCancelTicket: function(orderNumber) {
-				var that = this;
-				uni.request({
-					url: $KyInterface.KyInterface.Ky_CancelTicket.Url,
-					method: $KyInterface.KyInterface.Ky_CancelTicket.method,
-					header: $KyInterface.KyInterface.Ky_CancelTicket.header,
-					data: {
-						orderNumber: orderNumber,
-					},
-					success: (respones) => {
-						console.log('取消结果', respones)
-					},
-					fail: (respones) => {
-						console.log('取消结果', respones)
-					}
-				})
-			},
+			
 			//--------------------------调起支付--------------------------
 			payment: function() {
 				var that = this;
