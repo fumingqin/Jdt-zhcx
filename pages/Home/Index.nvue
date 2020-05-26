@@ -5,13 +5,13 @@
 
 		</map>
 
-		<view class="SearchBarBlock">
+		<!-- <view class="SearchBarBlock">
 			<view class="SearchBar" elevation='5px' style="">
 				<image class="topContent-image" src="../../static/Home/Search.png"></image>
 				<text @click="chooseSite" style="width: 500rpx;line-height: 45rpx;font-size:32rpx;font-family:Source Han Sans SC;font-weight:400; color:rgba(153,153,153,1);">{{Address}}</text>
-				<!-- <image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image> -->
+				<image @click="camera" class="topContent-image" src="../../static/Home/QRcode.png"></image>
 			</view>
-		</view>
+		</view> -->
 
 		<view class="bottomContent" elevation='5px' style="width: 100%;">
 			<!-- <view style="width: 60rpx;height: 10rpx;border-radius:5px;background-color: #D6D6D6;margin-top: 40rpx;">
@@ -479,7 +479,12 @@
 
 	.bottomContent {
 		position: fixed;
-		bottom: 0;
+		/* #ifndef MP-WEIXIN */
+		bottom: 50px;
+		/* #endif */
+		/* #ifdef MP-WEIXIN */
+		bottom: 0px;
+		/* #endif */
 		left: 0;
 		right: 0;
 		background-color: #FFFFFF;
