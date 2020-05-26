@@ -399,7 +399,7 @@
 								<button class="allBtn" @click="KyComplain(item)">投诉</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
 								<!-- #ifndef MP-WEIXIN -->
-								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- <button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button> -->
 								<!-- #endif -->
 								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.state=='尚未支付'" @tap="open3(item.orderNumber,'cs2')">取消</button>
@@ -2224,7 +2224,8 @@
 			endorse:function(item) {
 				// console.log(item)
 				uni.showToast({
-					title:'待开放...'
+					title:'待开放...',
+					icon:'none'
 				})
 				// uni.navigateTo({
 				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Order/selectTickets?orderInfo=' + JSON.stringify(item) + '&isEndores=' + "true"
@@ -2256,7 +2257,8 @@
 							let BounceMoney = respones.data.data.BounceMoney;
 							uni.showModal({
 								title:'温馨提示',
-								content:'退票将收取手续费，退款金额为' + BounceMoney + '元',
+								// content:'退票将收取手续费，退款金额为' + BounceMoney + '元',
+								content:'退票将收取手续费，是否继续退票',
 								success(res) {
 									if(res.confirm) {
 										that.keYunRefundTicket(orderNumber)
@@ -2291,21 +2293,21 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						console.log('退票结果', respones)
+						// console.log('退票结果', respones)
 						if (respones.data.status == true) {
+							this.$refs.popup2.close()
 							uni.hideLoading()
-							if(respones.data.msg){
+							if(respones.data.msg == '退票成功'){
 								uni.showToast({
-									title: respones.data.msg
+									title: '退票成功',
 								})
 							}else {
 								uni.showToast({
-									title: '退票成功'
+									title: respones.data.msg
 								})
 							}
-							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
-						} else {
+						} else if (respones.data.status == false){
 							uni.hideLoading()
 							if(respones.data.msg) {
 								uni.showToast({
@@ -2335,7 +2337,24 @@
 			cs_refundStateCheck:function(item){
 				var that = this;
 				that.ky_currentType = '定制巴士退票';
+				//退票
 				that.csRefundTicket(item);
+				// that.Cs_GetInsuranceCheckState(item);
+			},
+			//-------------------------定制巴士退票获取业务参数接口-------------------------
+			Cs_GetInsuranceCheckState:function(item){
+				uni.request({
+					url: $KyInterface.KyInterface.Cs_GetInsuranceCheckState.Url,
+					method: $KyInterface.KyInterface.Cs_GetInsuranceCheckState.method,
+					success(res) {
+						console.log('定制巴士退票参数',res)
+						//退票
+						// that.csRefundTicket(item);
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
 			},
 			//退票
 			csRefundTicket:function(item){
@@ -2638,7 +2657,9 @@
 				var that = this;
 				var timer = null;
 				that.timer = timer;
-				uni.showLoading();
+				uni.showLoading({
+					title:'正在检测订单...'
+				})
 				timer = setInterval(function() {
 					uni.request({
 						url: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
@@ -2648,25 +2669,26 @@
 							orderNumber: orderNumber,
 						},
 						success: (res) => {
-							console.log('支付参数返回数据', res);
+							// console.log('支付参数返回数据', res);
 							if (res.data.status == true) {
 								uni.hideLoading();
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
-									uni.showToast({
-										title: '订单已支付',
-										icon: 'none'
-									})
 									clearInterval(timer);
-								} else {
-									clearInterval(timer);
+									//订单已经支付可以退票
 									if(that.ky_currentType == '客运退票'){
 										that.GetBounceChargeByOrderNumber(orderNumber);
 									}else {
-										//客运支付
-										that.keYunPaymentData = JSON.parse(res.data.msg);
-										that.keYunPayment();
+										uni.showToast({
+											title: '订单已支付',
+											icon: 'none'
+										})
 									}
+								} else {
+									clearInterval(timer);
+									//客运支付
+									that.keYunPaymentData = JSON.parse(res.data.msg);
+									that.keYunPayment();
 								}
 							} else if (res.data.status == false) {
 								uni.hideLoading();
@@ -2929,7 +2951,7 @@
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
 						} else {
-							that.showToast("网络连接失败")
+							that.showToast("支付失败")
 						}
 					}
 				});
@@ -2985,15 +3007,15 @@
 				console.log(item)
 				if(item.carType=='普通班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=普通班车&tsData=' + '普通班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=普通班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制班车&tsData=' + '定制班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制巴士'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制巴士&tsData=' + '定制巴士' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制巴士&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}
 			},
@@ -4254,12 +4276,12 @@
 				console.log(item)
 				if(item.or_class=='包车-定制'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-定制&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 				if(item.or_class=='包车-专线'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=专线&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-专线&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 			},

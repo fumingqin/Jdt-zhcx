@@ -77,7 +77,7 @@ const KyInterface = {
 		Url: scheduleUrl + '/CTKY/getExecuteScheduleInfoForSellByID',
 		name:'客运-请求保险信息',
 		method:'POST',
-		header:{'content-type': 'application/json'},
+		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
 	Ky_AddPicture:{
 		Url: Url + '/api/zhcx/getImage',
@@ -253,7 +253,11 @@ const KyInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
-	
+	Cs_GetInsuranceCheckState:{
+		Url:Url + 'Business/GetInsuranceCheckState',
+		name:'定制巴士-获取业务参数接口--退票参数',
+		method:'POST',
+	},
 }
 // 接口声明区
 export default {

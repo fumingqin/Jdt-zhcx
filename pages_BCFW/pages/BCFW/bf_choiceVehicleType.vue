@@ -70,7 +70,7 @@
 						</view>
 					</view>
 				</scroll-view>
-
+				
 				<!-- 选择车 -->
 				<scroll-view class="sr_scroll" scroll-x="true">
 					<view class="sc_choiceCar">
@@ -125,7 +125,7 @@
 				isNormal: 0, //判断是普通购票还是定制班车:1是普通0是定制
 				value: 0, //默认值
 				value2: 0,
-				value3: -1,
+				value3: 0,
 				selectedValue: 0, //同意须知的选中值
 				// status: false, //隐藏状态
 				addressContent: {
@@ -191,7 +191,8 @@
 					},
 
 					success: (res) => {
-						// console.log(res)
+						console.log(this.cvt_vehicle)
+						console.log(res)
 						this.vehicleSelection = res.data.data;
 					}
 				})
@@ -228,15 +229,23 @@
 
 			buttonClick: function(item, index) {
 				// console.log(a)
-				console.log(index)
-				this.value2 = index;
+				// console.log(index)
+				if(item.cvt_vehicle.length !==0){
+					this.value2 = index;
+				}else if(item.cvt_vehicle.length ==0){
+					uni.showToast({
+						title:'该价位目前无车辆，请选择其他价位',
+						icon: 'none',
+					},2000)
+				}
+				
 				// var test = item;
 				// this.carIndex = test.vehicle;
 
 			},
 
 			carClick: function(res) {
-				console.log(typeof res)
+				// console.log(typeof res)
 				// var test = res;
 				// this.carIndex = test.vehicle;
 				this.value3 = res;

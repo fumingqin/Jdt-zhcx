@@ -38,6 +38,12 @@
 						<text class="MP_number">×{{childrenNum}}</text>
 						<text class="MP_userCost">¥{{orderInfo.halfTicket}}</text>
 					</view>
+					
+					<view class="MP_cost" v-if="freeTicketNum>=1">
+						<text>携带免童票</text>
+						<text class="MP_number">×{{freeTicketNum}}</text>
+						<text class="MP_userCost">¥{{orderInfo.halfTicket}}</text>
+					</view>
 
 					<!-- 保险 -->
 					<view class="MP_cost" v-if="isInsurance == 1 ">
@@ -114,7 +120,8 @@
 				idNameTypeStr: '', //乘车人信息字符串（发送请求需要）（小叶接口）
 				ticketNum: '0', //总票数
 				adultNum: '0', //成人数量
-				childrenNum: '0', //儿童数量	
+				childrenNum: '0', //儿童数量
+				freeTicketNum: '0',//免童
 				adultTotalPrice: '', //成人总价
 				childrenTotalPrice: '', //儿童总价
 				totalPrice: '0', //总价格
@@ -131,7 +138,7 @@
 			}
 		},
 		onLoad: function(param) {
-			console.log(param)
+			// console.log(param)
 			var that = this;
 			that.ticketInfo = JSON.parse(param.array);
 			//定制班车上车点
@@ -146,6 +153,7 @@
 			});
 			
 			that.totalPrice = param.totalPrice;//总价格
+			// console.log('总价格',that.totalPrice)
 			that.insuredPrice = that.ticketInfo.insuredPrice;//保险价格
 			if (param.isInsurance == 1) {
 				that.insurance = '保险';
@@ -260,20 +268,24 @@
 						if (that.passengerInfo.length > 0) {
 							for (let i = 0; i < that.passengerInfo.length; i++) {
 								var type = '';
-								if (data.data[i].userType == '儿童') {
+								if (data.data[i].userType == '免票儿童') {
 									type = 0;
 								} else if (data.data[i].userType == '成人') {
 									type = 2;
+								}else if (data.data[i].userType == '半票儿童') {
+									type = 1;
 								}
 								//拼接id name type
 								that.idNameTypeStr += data.data[i].userCodeNum + ',' + data.data[i].userName + ',' + type + '|';
 
 								that.ticketNum++;
 								//把儿童票筛选出来
-								if (that.passengerInfo.userType == '儿童') {
+								if (that.passengerInfo[i].userType == '半票儿童') {
 									that.childrenNum++;
-								} else {
+								} else if (that.passengerInfo[i].userType == '成人'){
 									that.adultNum++;
+								}else if(that.passengerInfo[i].userType == '免票儿童'){
+									that.freeTicketNum++;
 								}
 							}
 							//把最后面的'｜'去掉
@@ -346,7 +358,7 @@
 				this.adultTotalPrice = adult.length * this.orderInfo[0].ticketAdultPrice;
 				this.childrenTotalPrice = children.length * this.orderInfo[0].ticketChildPrice;
 			},
-			//--------------------------计时器--------------------------
+			//--------------------------下单--------------------------
 			getOrder: function() {
 				var that = this;
 				var timer = null;
@@ -369,36 +381,6 @@
 				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
 				// #endif
 				//--------------------------发起下单请求-----------------------
-				var data ={
-					companyCode: companyCode,
-					clientID: that.userInfo.userId, //用户ID
-					clientName: that.userInfo.nickname, //用户名
-					phoneNumber: that.userInfo.phoneNumber, //手机号码
-				
-					scheduleCompanyCode: that.orderInfo.scheduleCompanyCode, //班次代码
-					executeScheduleID: that.orderInfo.executeScheduleID, //班次ID
-					startSiteID: that.orderInfo.startSiteID, //上车点ID
-					endSiteID: that.orderInfo.endSiteID, //下车点ID
-					startSiteName: that.orderInfo.startStaion, //起点站
-					endSiteName: that.orderInfo.endStation, //终点站
-					priceID: that.orderInfo.priceID, //价格ID
-					setOutTime: setTime, //发车时间
-					insuredPrice: that.insuredPrice, //保险价格
-					carType: that.orderInfo.shuttleType, //班车类型
-				
-					fullTicket: that.adultNum, //全票人数
-					halfTicket: that.childrenNum, //半票人数
-					carryChild: that.childrenNum, //携童人数
-					idNameType: that.idNameTypeStr, //乘车人信息
-					insured: that.isInsurance, //是否选择了保险
-					openId: openId,//oI1cA0k7cBdeZ_jA0fd_OdEO6kls
-					totalPrice: that.totalPrice, //总价格
-					payParameter: '', //不需要的参数，传空
-				
-					getOnPoint: that.specialStartStation, //定制班车上车点
-					getOffPoint: that.specialEndStation, //定制班车下车点
-				};
-				console.log('下单请求参数',data)
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_PaymentUrl.Url,
 					method:$KyInterface.KyInterface.Ky_PaymentUrl.method,
@@ -422,7 +404,7 @@
 
 						fullTicket: that.adultNum, //全票人数
 						halfTicket: that.childrenNum, //半票人数
-						carryChild: that.childrenNum, //携童人数
+						carryChild: that.freeTicketNum, //携童人数
 						idNameType: that.idNameTypeStr, //乘车人信息
 						insured: that.isInsurance, //是否选择了保险
 						openId: openId,//oI1cA0k7cBdeZ_jA0fd_OdEO6kls
@@ -486,6 +468,8 @@
 							
 							if (res.data) {
 								if (res.data.status == true) {
+									clearInterval(timer);
+									
 									var msgArray = JSON.parse(res.data.msg);
 									console.log(msgArray)
 									if (msgArray.oldState == '结束') {
@@ -494,7 +478,6 @@
 											title: msgArray.message,
 											icon: 'none'
 										})
-										clearInterval(timer);
 									} else if (msgArray.oldState == '支付系统申请支付订单') {
 										that.paymentData = msgArray;
 										uni.hideLoading();
@@ -506,10 +489,11 @@
 												}
 											}
 										})
-										//回调失败，取消定时器
-										clearInterval(timer);
 									}
 								} else if (res.data.status == false) {
+									//回调失败，取消定时器
+									clearInterval(timer);
+									
 									// alert('获取支付参数状态失败',res.data.status)
 									var msgArray = JSON.parse(res.data.msg);
 									uni.hideLoading();
@@ -517,16 +501,15 @@
 										title: msgArray.message,
 										icon: 'none'
 									})
-									//回调失败，取消定时器
-									clearInterval(timer);
+									
 								}
 							}
 						},
 						fail(res) {
+							clearInterval(timer);
 							uni.hideLoading();
 							console.log('失败');
 							//回调失败，取消定时器
-							clearInterval(timer);
 						}
 					})
 				}, 3000)

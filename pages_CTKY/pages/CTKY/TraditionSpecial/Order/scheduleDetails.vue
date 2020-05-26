@@ -252,6 +252,7 @@
 				sepecialStartArray: [], //定制班车起点数组
 				specialEndArray: [], //定制班车终点数组
 				InsurePrice:'',//保险价格
+				adultNum:0,//成人数
 			}
 		},
 
@@ -348,6 +349,7 @@
 				uni.showLoading({
 					title:'加载中...'
 				})
+				
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.Url,
 					method:$KyInterface.KyInterface.Ky_getExecuteScheduleInfoForSellByID.method,
@@ -471,18 +473,19 @@
 			//-------------------------------跳转到地图标点-----------------------------
 			checkLocation() {
 				var that = this;
-				// // #ifdef MP-WEIXIN
-				// uni.showModal({
-				// 	content:'小程序暂不支持地图显示',
-				// 	showCancel:false,
-				// })
-				// // #endif
-				// #ifndef MP-WEIXIN
-				
+				// #ifdef MP-WEIXIN
+				uni.showModal({
+					content:'小程序暂不支持地图显示',
+					showCancel:false,
+				})
 				// #endif
+				
+				// #ifndef MP-WEIXIN
 				uni.navigateTo({
 					url: '../MapMark/specialMark?specialArray=' + JSON.stringify(this.ticketDetail)
 				})
+				// #endif
+				
 				// if (that.ticketDetail.starSiteArr && that.ticketDetail.endSiteArr) {
 				// 	if (this.ticketDetail.shuttleType == '普通班车') { //普通班车
 				// 		uni.navigateTo({
@@ -597,10 +600,11 @@
 							//将半价儿童票加入数组
 							childArray.push(that.passengerInfo[i]);
 							childNum++;
-						} else {
+						} else if(that.passengerInfo[i].userType == '成人'){
 							//将成人票加入数组
 							adultArray.push(that.passengerInfo[i]);
 							adultNum++;
+							that.adultNum = adultNum;
 						}
 					}
 					//计算总价
@@ -611,10 +615,9 @@
 				}
 			},
 
-			//-------------------------------点击订单预定-----------------------------
+			//-------------------------------------点击订单预定-----------------------------------
 			reserveTap() {
 				var that = this;
-				console.log(that.startStation,that.endStation)
 				if(that.shuttleType == '普通班车') {
 					that.startStation = " "
 					that.endStation = " "
@@ -631,6 +634,11 @@
 							title: '请选择乘车人',
 							icon: 'none'
 						})
+					} else if (that.adultNum == 0) {
+						uni.showToast({
+							title: '免童/儿童不可单独购票',
+							icon: 'none'
+						})
 					} else if (that.selectedValue == 0) {
 						uni.showToast({
 							title: '请同意购买须知',
@@ -645,7 +653,12 @@
 							title: '请选择乘车人',
 							icon: 'none'
 						})
-					} else if (that.selectedValue == 0) {
+					} else if (that.adultNum == 0) {
+						uni.showToast({
+							title: '免童/儿童不可单独购票',
+							icon: 'none'
+						})
+					}else if (that.selectedValue == 0) {
 						uni.showToast({
 							title: '请同意购买须知',
 							icon: 'none'
@@ -655,7 +668,7 @@
 					}
 				}
 			},
-			//-----------------------------跳转-----------------------------
+			//-----------------------------------跳转-----------------------------------
 			jumpTo() {
 				var that = this;
 				//计算价格

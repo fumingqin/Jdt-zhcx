@@ -174,8 +174,8 @@ const Route={
 		name:'我的收藏页面',
 	},
 	complaint:{
-		url:SubPackage+'/complaint',
-		name:'我要投诉页面',
+		url:SubPackage+'/gz_complaintList',
+		name:'我的投诉页面',
 	},
 	coupon:{
 		url:SubPackage+'/coupon',

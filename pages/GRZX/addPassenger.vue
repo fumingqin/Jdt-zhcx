@@ -328,8 +328,7 @@
 				}else{
 					data1.userType=that.ticketType;
 				}
-				data1.userType = data1.userType.substring(0,data1.userType.length-2);
-				data1.userauditState = data1.userauditState.substring(0,data1.userauditState.length-2);
+				
 				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
 				if(data1.userName==""||data1.userName==null){
 					uni.showToast({
@@ -346,7 +345,7 @@
 						icon:'none',
 						title:'输入的手机号有误，请检查'
 					})
-				}else if(data1.userauditState=="请选择证件类型"){
+				}else if(data1.userauditState=="请选择证件类型 >"){
 					uni.showToast({
 						title:'请选择证件类型',
 						icon:'none',
@@ -356,33 +355,34 @@
 						title:'请输入证件号',
 						icon:'none',
 					})
-				}else if(data1.userauditState=="身份证"&&!that.checkIDCard(data1.userCodeNum)){
+				}else if(data1.userauditState=="身份证 >"&&!that.checkIDCard(data1.userCodeNum)){
 					uni.showToast({
 						title:'输入的身份证号有误，请检查',
 						icon:'none',
 					})
-				}else if(data1.userauditState=="护照"&&!that.checkPass1(data1.userCodeNum)){
+				}else if(data1.userauditState=="护照 >"&&!that.checkPass1(data1.userCodeNum)){
 					uni.showToast({
 						title:'输入的证件号有误，请检查',
 						icon:'none',
 					})
-				}else if(data1.userauditState=="港澳通行证"&&!that.checkPass2(data1.userCodeNum)){
+				}else if(data1.userauditState=="港澳通行证 >"&&!that.checkPass2(data1.userCodeNum)){
 					uni.showToast({
 						title:'输入的证件号有误，请检查',
 						icon:'none',
 					})
-				}else if(data1.userauditState=="台胞证"&&!that.checkPass3(data1.userCodeNum)){
+				}else if(data1.userauditState=="台胞证 >"&&!that.checkPass3(data1.userCodeNum)){
 					uni.showToast({
 						title:'输入的证件号有误，请检查',
 						icon:'none',
 					})
-				}else if(data1.userType=="请选择购票类型"){
+				}else if(data1.userType=="请选择购票类型 >"){
 					uni.showToast({
 						title:'请选择购票类型',
 						icon:'none',
 					})
 				}else{
-					
+					data1.userType = data1.userType.substring(0,data1.userType.length-2);
+					data1.userauditState = data1.userauditState.substring(0,data1.userauditState.length-2);
 					uni.showLoading({
 						title:'保存中...'
 					})

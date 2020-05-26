@@ -167,7 +167,6 @@
 				"navigationBarTitleText": "服务"
 			}
 		}
-        
     ],
 
 	"subPackages": [
@@ -800,6 +799,52 @@
 					"style": {
 						"navigationBarTitleText": "意见反馈"
 					}
+				},
+				{
+					"path": "pages/GRZX/pictureList",
+					"style": {
+						"navigationBarTitleText": "拍照返现"
+					}
+				},
+				{
+				    "path" : "pages/GRZX/printDetails",
+				    "style" : {
+						"navigationBarTitleText": "提交详情"
+					}
+				},
+				{
+				    "path" : "pages/GRZX/printSubmit",
+				    "style" : {
+						"navigationBarTitleText": "图片提交"
+					}
+				}
+				,{
+				    "path" : "pages/GRZX/printRoute",
+				    "style" : {
+						"navigationBarTitleText": "线路选择"
+					}
+				}
+				,{
+				    "path" : "pages/GRZX/printSite",
+				    "style" : {
+						"navigationBarTitleText": "站点选择"
+					}
+				},
+				{
+				    "path" : "pages/GRZX/gz_complaintList",
+				    "style" : {}
+				}
+				,{
+				    "path" : "pages/GRZX/gz_complaintContent",
+				    "style" : {}
+				}
+				,{
+				    "path" : "pages/GRZX/gz_complaintsPage",
+				    "style" : {}
+				}
+				,{
+				    "path" : "pages/GRZX/gz_complaintText",
+				    "style" : {}
 				}
 			]
 		}
