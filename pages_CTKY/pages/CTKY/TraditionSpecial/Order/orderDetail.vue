@@ -51,7 +51,8 @@
 					<!-- 二维码 -->
 					<view style="justify-content: center; align-items: center;display: flex;">
 						<view class="QRImage">
-							<canvas v-if="isShowQrcode == true" :canvas-id="'ctkyQrcode' + index" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+							<!-- <canvas v-if="isShowQrcode == true" :canvas-id="'ctkyQrcode' + index" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" /> -->
+							<tki-qrcode v-if="ifShow" :cid="qrcodeIndex+index" ref="qrcode" :val="getOneTicketNum(orderInfo.ticketNumber,index)" :size="size" :unit="unit" :background="background" :pdground="pdground" :icon="icon" :iconSize="iconsize" :lv="lv" :onval="onval" :loadMake="loadMake" :usingComponents="true" @result="qrR" />
 							<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
 							<!-- 如果没有取票号就显示相应的状态 -->
 							<view v-if="isShowQrcode == false" style="font-weight: 300;color: #2C2D2D;font-size: 32rpx;justify-content: center; align-items: center;">{{getQRCodeStatus(orderInfo.state)}}</view>
@@ -76,7 +77,9 @@
 
 <script>
 	import uQRCode from '@/pages_CTKY/components/CTKY/uni-qrcode/uqrcode.js'
+	import tkiQrcode from '@/pages_CTKY/components/CTKY/tki-qrcode/tki-qrcode.vue'
 	export default {
+		components: {tkiQrcode},
 		
 		data() {
 			return {
@@ -93,26 +96,43 @@
 				specialCodeArray:[],
 				isShowQrcode:'',
 				orderState:'',//订单状态
+				
+				
+				qrcodeIndex:'qrcodeIndex',
+				ifShow: true,
+				val: '二维码', // 要生成的二维码值
+				size: 300, // 二维码大小
+				unit: 'upx', // 单位
+				background: '#b4e9e2', // 背景色
+				// foreground: '#ffffff', // 前景色
+				pdground: '#32dbc6', // 角标色
+				icon: '', // 二维码图标
+				iconsize: 40, // 二维码图标大小
+				lv: 3, // 二维码容错级别 ， 一般不用设置，默认就行
+				onval: false, // val值变化时自动重新生成二维码
+				loadMake: true, // 组件加载完成后自动生成二维码
+				src: '' // 二维码生成后的图片地址或base64
 			}
 		},
 		onLoad(res) {
 			var that = this;
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
+			console.log(that.orderInfo)
 			that.orderState = orderInfo.state;
 			this.specialCodeArray = orderInfo.CheckInfoList;
 			that.stringTurnArray(orderInfo.iDNameType);
 			//检票号---生成二维码
-			if(orderInfo.carType != '定制巴士'){
+			if(orderInfo.carType == '定制巴士'){
 				// for(let i = 0;i < orderInfo.passageInfo.length;i++){
 				// 	this.ticketNumber = orderInfo.ticketNumber;
 				// 	that.make(this.orderInfo.ticketNumber,i);
 				// }
 			}else {//定制巴士
-				for(let i = 0;i < orderInfo.CheckInfoList.length;i++){
-					this.ticketNumber = orderInfo.CheckInfoList[i].CheckCode;
-					that.make(this.ticketNumber,i);
-				}
+				// for(let i = 0;i < orderInfo.CheckInfoList.length;i++){
+				// 	this.ticketNumber = orderInfo.CheckInfoList[i].CheckCode;
+				// 	that.make(this.ticketNumber,i);
+				// }
 			}
 			//计算车票数量
 			that.getTicketNum(orderInfo);
@@ -175,7 +195,7 @@
 					that.passageInfo.push(passenger);
 					console.log('只有一张票')
 					// this.ticketNumber = that.orderInfo.ticketNumber;
-					that.make(this.orderInfo.ticketNumber,0);
+					// that.make(this.orderInfo.ticketNumber,0);
 				}else {//多人订票
 					//存在'|'
 					var array = param.split('|');
@@ -186,11 +206,14 @@
 							userCodeNum:singleArray[0],
 						}
 						that.passageInfo.push(passenger);
-						console.log(that.isShowQrcode)
 						// this.ticketNumber = that.orderInfo.ticketNumber;
-						that.make(that.getOneTicketNum(this.orderInfo.ticketNumber,i),i);
+						// that.make(that.getOneTicketNum(this.orderInfo.ticketNumber,i),i);
 					}
 				}
+			},
+			//-------------------------------二维码生成后的图片地址或base64-------------------------------
+			qrR(res) {
+				this.src = res
 			},
 			//-------------------------------获取取票号-------------------------------
 			getOneTicketNum(ticketNum,index){
