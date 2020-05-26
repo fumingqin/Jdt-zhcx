@@ -2241,13 +2241,50 @@
 					url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/MapMark/checkBusLocation?busInfo=' + JSON.stringify(loaction)
 				})
 			},
+			//--------------------------退票之前获取车票支付参数--------------------------
+			refund_getTicketPaymentInfo: function(orderNumber) {
+				var that = this;
+				var timer = null;
+				that.timer = timer;
+				uni.showLoading({
+					title: '查询支付状态...'
+				});
+				timer = setInterval(function() {
+					uni.request({
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						data: {
+							orderNumber: orderNumber,
+						},
+						success: (res) => {
+							if (res.data.data == '车票已退票') {
+								uni.stopPullDownRefresh();
+								uni.hideLoading();
+								clearInterval(timer);
+								uni.showToast({
+									title: '车票已退票',
+									icon: 'none',
+								})
+							}else {
+								clearInterval(timer);
+								that.GetBounceChargeByOrderNumber(orderNumber);
+							}
+						},
+						fail(res) {
+							uni.stopPullDownRefresh();
+							uni.hideLoading();
+							//回调失败，取消定时器
+							clearInterval(timer);
+						}
+					})
+				}, 3000)
+			},
 			// -------------------------客运退票--查询费率-------------------------
 			GetBounceChargeByOrderNumber:function(orderNumber){
 				var that = this;
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.Url,
 					method: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.method,
-					// header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -2288,7 +2325,6 @@
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_RefundTicket.Url,
 					method: $KyInterface.KyInterface.Ky_RefundTicket.method,
-					header: $KyInterface.KyInterface.Ky_RefundTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -2339,23 +2375,8 @@
 				that.ky_currentType = '定制巴士退票';
 				//退票
 				that.csRefundTicket(item);
-				// that.Cs_GetInsuranceCheckState(item);
 			},
-			//-------------------------定制巴士退票获取业务参数接口-------------------------
-			Cs_GetInsuranceCheckState:function(item){
-				uni.request({
-					url: $KyInterface.KyInterface.Cs_GetInsuranceCheckState.Url,
-					method: $KyInterface.KyInterface.Cs_GetInsuranceCheckState.method,
-					success(res) {
-						console.log('定制巴士退票参数',res)
-						//退票
-						// that.csRefundTicket(item);
-					},
-					fail(res) {
-						console.log(res)
-					}
-				})
-			},
+			
 			//退票
 			csRefundTicket:function(item){
 				var that = this;
@@ -2409,7 +2430,7 @@
 							uni.showToast({
 								title: respones.data.msg,
 								complete() {
-									console.log('退票成功，开始刷新');
+									// console.log('退票成功，开始刷新');
 									uni.startPullDownRefresh();
 								}
 							})
@@ -2485,7 +2506,7 @@
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_CancelTicket.Url,
 					method: $KyInterface.KyInterface.Ky_CancelTicket.method,
-					header: $KyInterface.KyInterface.Ky_CancelTicket.header,
+					// header: $KyInterface.KyInterface.Ky_CancelTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -2543,20 +2564,31 @@
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_CheckPayState.Url,
 					method:$KyInterface.KyInterface.Cs_CheckPayState.method,
-					header:$KyInterface.KyInterface.Cs_CheckPayState.header,
+					// header:$KyInterface.KyInterface.Cs_CheckPayState.header,
 					data:{
 						orderNumber:orderNumber,
 						payType:payType
 					},
 					success(res) {
-						if(res.data.msg == '不存在该订单，请输入正确订单号'){
-							if(that.ky_currentType == '定制巴士取消') {
+						console.log(res)
+						if(that.ky_currentType == '定制巴士取消') {
+							if(res.data.msg == '支付成功') {
+								uni.showToast({
+									title:'订单已支付',
+									icon:'none'
+								})
+							}else {
 								that.Cs_cancelTicket(orderNumber)
-							}else if(that.ky_currentType == '定制巴士退票'){
+							}
+						}
+						if(res.data.msg == '不存在该订单，请输入正确订单号'){
+							if(that.ky_currentType == '定制巴士退票'){
 								that.csRefundTicket(orderNumber);
 							}else if(that.ky_currentType == '定制巴士支付'){
 								that.getSpecialBusPaymentInfo(orderNumber,totalPrice);
 							}
+						}else if(res.data.msg == '获取二维码尚未支付'){
+							
 						}else if(res.data.msg == '支付成功'){
 							uni.showToast({
 								title:'订单已支付',
@@ -2670,26 +2702,21 @@
 					uni.request({
 						url: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
 						method: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
-						header: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
+						// header: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
 						success: (res) => {
-							// console.log('支付参数返回数据', res);
+							console.log('支付参数返回数据', res);
 							if (res.data.status == true) {
 								uni.hideLoading();
 								var info = JSON.parse(res.data.msg);
 								if (info.oldState == '结束') {
 									clearInterval(timer);
-									//订单已经支付可以退票
-									if(that.ky_currentType == '客运退票'){
-										that.GetBounceChargeByOrderNumber(orderNumber);
-									}else {
-										uni.showToast({
-											title: '订单已支付',
-											icon: 'none'
-										})
-									}
+									uni.showToast({
+										title: '订单已支付',
+										icon: 'none'
+									})
 								} else {
 									clearInterval(timer);
 									//未支付，客运支付
@@ -2835,7 +2862,7 @@
 						},
 						fail(res) {
 							console.log(res)
-							if (res.errMsg == "requestPayment:fail canceled") {
+							if (res.errMsg == "requestPayment:fail cancel") {
 								setTimeout(function() {
 									that.showToast("支付失败，请重新支付")
 								}, 1000)
@@ -2981,18 +3008,23 @@
 					uni.request({
 						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
 						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
-						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
+						// header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
 						success: (res) => {
-							console.log('支付参数返回数据', res);
+							// console.log('支付参数返回数据', res);
 							uni.stopPullDownRefresh();
-							if (res.data.status == true) {
+							if (res.data.data == '订票成功') {
 								uni.hideLoading();
 								clearInterval(timer);
-							} else if (res.data.status == false) {
-								clearInterval(timer);
+								uni.showToast({
+									title: '出票成功',
+									icon: 'none',
+								})
+								uni.redirectTo({
+									url: './CTKYPaySuccess'
+								})
 							}
 						},
 						fail(res) {
@@ -3939,9 +3971,9 @@
 				if (this.exitindex == '2') {
 					//请求费率
 					// this.GetBounceChargeByOrderNumber(that.ticketOrderNumber)
-					that.ky_currentType = '客运退票';
+					// that.ky_currentType = '客运退票';
 					//先查询订单状态-->执行费率查询-->执行退票
-					that.getTicketPaymentInfo(that.ticketOrderNumber)
+					that.refund_getTicketPaymentInfo(that.ticketOrderNumber)
 				} else if(this.exitindex == 'cs2tui'){
 					//先检测订单支付状态再执行退票操作
 					this.cs_refundStateCheck(that.csRefundInfo)

@@ -123,14 +123,15 @@
 			//-------------------------------生成二维码-------------------------------
 			make(param,index) {
 				if(param) {
-					console.log('二维码数据',param);
+					// console.log('二维码数据',param);
+					// console.log('生成二维码成功',index);
 					uQRCode.make({
 						canvasId: 'ctkyQrcode' + index,
 						text: param,
 						size: this.qrcodeSize,
 						margin: 20,
 						success: res => {
-							console.log('生成二维码成功',res);
+							console.log('生成二维码成功',param);
 							// console.log('完成')
 							this.qrcodeSrc = res
 						},
@@ -177,7 +178,7 @@
 					}
 					that.passageInfo.push(passenger);
 					
-					this.ticketNumber = that.orderInfo.ticketNumber;
+					// this.ticketNumber = that.orderInfo.ticketNumber;
 					that.make(this.orderInfo.ticketNumber,0);
 				}else {//多人订票
 					//存在'|'
@@ -190,8 +191,8 @@
 						}
 						that.passageInfo.push(passenger);
 						
-						this.ticketNumber = that.orderInfo.ticketNumber;
-						that.make(this.orderInfo.ticketNumber,i);
+						// this.ticketNumber = that.orderInfo.ticketNumber;
+						that.make(that.getOneTicketNum(this.orderInfo.ticketNumber,i),i);
 					}
 				}
 			},

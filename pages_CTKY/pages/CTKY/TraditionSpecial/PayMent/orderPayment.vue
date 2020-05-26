@@ -588,7 +588,7 @@
 							});
 							setTimeout(function(){
 								that.getTicketPaymentInfo_ticketIssue(that.orderNum);
-							},2000)
+							},4000)
 						}else if (res.errMsg == "requestPayment:fail cancel") {
 							setTimeout(function() {
 								that.showToast("您取消了支付，请重新支付")
@@ -640,7 +640,7 @@
 						},
 						success: (res) => {
 							console.log('支付参数返回数据', res);
-							if (res.data.status == true) {
+							if (res.data.data == '订票成功') {
 								uni.hideLoading();
 								clearInterval(timer);
 								uni.showToast({
@@ -649,17 +649,6 @@
 								})
 								uni.redirectTo({
 									url: './CTKYPaySuccess'
-								})
-							} else if (res.data.status == false) {
-								clearInterval(timer);
-								// uni.showToast({
-								// 	title: '出票失败',
-								// 	icon: 'none',
-								// })
-								console.log(res)
-								uni.showToast({
-									title: res.data.msg,
-									icon: 'none'
 								})
 							}
 						},
