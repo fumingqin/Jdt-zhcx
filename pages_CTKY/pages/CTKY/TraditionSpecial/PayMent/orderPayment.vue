@@ -422,6 +422,7 @@
 			//--------------------------获取车票支付参数--------------------------
 			getTicketPaymentInfo: function(orderNumber) {
 				var that = this;
+				console.log(orderNumber)
 				var timer = null;
 				that.timer = timer;
 				timer = setInterval(function() {

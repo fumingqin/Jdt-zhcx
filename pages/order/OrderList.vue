@@ -2523,13 +2523,13 @@
 			// -------------------------客运支付-------------------------
 			keYunPay: function(item,carType) {
 				// var orderInfo = this.info[index];
+				var that = this;
 				console.log(item.orderNumber,carType,item.totalPrice);
 				if(carType == '定制巴士') {
-					var that = this;
 					that.ky_currentType = '定制巴士支付';
 					this.Cs_CheckPayState(item.orderNumber,item.totalPrice)
 				}else {
-					that.ky_currentType = '';
+					this.ky_currentType = '';
 					this.ky_orderStatus = '客运支付订单检索';
 					this.getTicketPaymentInfo(item.orderNumber);
 				}
