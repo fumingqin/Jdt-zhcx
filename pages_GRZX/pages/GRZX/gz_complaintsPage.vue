@@ -51,6 +51,7 @@
 				or_class:'',//投诉模块名
 				or_name:'',//投诉对象
 				or_nameId:'',//投诉对象id
+				or_phoneNumber:'',//投诉对象手机号
 				a:'',//投诉原因
 				complaintObject:'',//投诉对象
 				userInfo:[],//个人信息
@@ -72,6 +73,7 @@
 			that.or_class = param.or_class;
 			that.or_name = param.or_name;
 			that.or_nameId = param.or_nameId;
+			that.or_phoneNumber = param.or_phoneNumber;
 			that.routeInit();
 			//读取个人信息缓存数据
 			uni.getStorage({
@@ -96,7 +98,8 @@
 					// #endif
 					// #ifdef MP-WEIXIN
 					uni.showToast({
-						title: '请允许授权给小程序，即将跳转登录！'
+						title: '请允许授权给小程序，即将跳转登录！',
+						icon:'none'
 					})
 					uni.navigateTo({
 						url:'../../../../pages/Home/wxAuthorize'
@@ -104,7 +107,8 @@
 					// #endif
 					// #ifdef APP-NVUE
 					uni.showToast({
-						title: '未登录账号，即将跳转登录！'
+						title: '未登录账号，即将跳转登录！',
+						icon:'none'
 					})
 					uni.navigateTo({
 						url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
@@ -189,6 +193,7 @@
 								or_content:that.detailInfo.a,
 								or_name:that.or_name,
 								or_nameId:that.or_nameId,
+								or_phoneNumber : that.or_phoneNumber,
 								or_entrance:that.or_entrance,
 								or_telephone:that.or_telephone,
 								userId:that.userId,

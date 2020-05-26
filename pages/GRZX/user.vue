@@ -73,19 +73,24 @@
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<!-- <view class="boxClass borderTop" @click="complaintClick">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
-				<text class="fontStyle">我要投诉</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view> -->
 			<view class="boxClass borderTop" @click="addContact">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<image src="../../static/GRZX/tubiao_lianxiren.png" class="iconClass4"></image>
 				<text class="fontStyle">紧急联系人</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="complaintClick">
+				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<text class="fontStyle">我的投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="feedbackClick">
 				<image src="../../static/GRZX/tubiao_fankui.png" class="iconClass5"></image>
 				<text class="fontStyle">意见反馈</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="pictureClick">
+				<image src="../../static/GRZX/paizhao.png" class="iconClass6"></image>
+				<text class="fontStyle">拍照返现</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 		</view>
@@ -332,7 +337,7 @@
 			//------------------------------投诉---------------------------
 			complaintClick(){
 				uni.navigateTo({
-					// url:'/pages/GRZX/complaint'
+					// url:'/pages/GRZX/gz_complaintList'
 					url:this.$GrzxInter.Route.complaint.url,
 				})  
 			},
@@ -341,6 +346,13 @@
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
 					url:this.$GrzxInter.Route.feedback.url,
+				})  				
+			},
+			//--------------------拍照返现--------------------
+			pictureClick(){
+				uni.navigateTo({
+					// url:'/pages/GRZX/feedback'
+					url:'../../pages_GRZX/pages/GRZX/printSubmit',
 				})  				
 			},
 			// ---------------------------是否登录--------------------------
@@ -744,6 +756,12 @@
 	.iconClass5{  //意见反馈图标
 		width: 36upx;
 		height: 39upx;
+		margin-top: 31upx;
+		margin-left: 13upx;
+	}
+	.iconClass6{  //拍照返现图标
+		width: 36upx;
+		height: 35upx;
 		margin-top: 31upx;
 		margin-left: 13upx;
 	}

@@ -399,7 +399,7 @@
 								<button class="allBtn" @click="KyComplain(item)">投诉</button>
 								<button class="allBtn" v-if="item.state=='4'" @tap="endorse(item)">改签</button>
 								<!-- #ifndef MP-WEIXIN -->
-								<button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button>
+								<!-- <button class="allBtn" v-if="item.state=='4'" @click="busLocation(item)">车辆位置</button> -->
 								<!-- #endif -->
 								<button class="allBtn" v-if="item.state=='支付正常' || item.state=='改签'" @tap="open2(item,'cs2tui')">退票</button>
 								<button class="allBtn" v-if="item.state=='尚未支付'" @tap="open3(item.orderNumber,'cs2')">取消</button>
@@ -2293,22 +2293,21 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						console.log('退票结果', respones)
+						// console.log('退票结果', respones)
 						if (respones.data.status == true) {
+							this.$refs.popup2.close()
 							uni.hideLoading()
 							if(respones.data.msg == '退票成功'){
 								uni.showToast({
 									title: '退票成功',
-									duration: 3000,
 								})
 							}else {
 								uni.showToast({
 									title: respones.data.msg
 								})
 							}
-							this.$refs.popup2.close()
 							uni.startPullDownRefresh();
-						} else {
+						} else if (respones.data.status == false){
 							uni.hideLoading()
 							if(respones.data.msg) {
 								uni.showToast({
@@ -3008,15 +3007,15 @@
 				console.log(item)
 				if(item.carType=='普通班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=普通班车&tsData=' + '普通班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=普通班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制班车&tsData=' + '定制班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制巴士'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制巴士&tsData=' + '定制巴士' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制巴士&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}
 			},
@@ -4277,12 +4276,12 @@
 				console.log(item)
 				if(item.or_class=='包车-定制'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-定制&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 				if(item.or_class=='包车-专线'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=专线&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-专线&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 			},

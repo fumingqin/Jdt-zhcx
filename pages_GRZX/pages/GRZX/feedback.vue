@@ -6,12 +6,12 @@
 			<textarea class="fb_Textarea" placeholder-style="#AAAAAA" placeholder="您的宝贵意见将会让我们提供更好的服务质量" maxlength="500" v-model="ideaContent" @input="descInput" />
 			<view class="fb_words">{{remnant}}/500字</view>
 		</view>
-		<!-- <view class="fb_view2">
+		<view class="fb_view2">
 			<text class="fb_Text2">上传图片</text>
 			<view class="scClass">
 				<robby-image-upload v-model="detailInfo.imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
 			</view>
-		</view> -->
+		</view>
 		<view class="fb_view3">
 			<button class="fb_btn" form-type="submit">提交</button>
 		</view>
