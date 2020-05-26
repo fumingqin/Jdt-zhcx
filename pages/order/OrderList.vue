@@ -2335,14 +2335,15 @@
 							uni.hideLoading()
 							if(respones.data.msg == '退票成功'){
 								uni.showToast({
-									title: '退票成功',
+									title: '退票成功'
 								})
+								uni.startPullDownRefresh();
 							}else {
 								uni.showToast({
 									title: respones.data.msg
 								})
+								uni.startPullDownRefresh();
 							}
-							uni.startPullDownRefresh();
 						} else if (respones.data.status == false){
 							uni.hideLoading()
 							if(respones.data.msg) {
@@ -2502,6 +2503,9 @@
 			// -------------------------客运取消-------------------------
 			keYunCancelTicket: function(orderNumber) {
 				var that = this;
+				uni.showLoading({
+					title:'获取数据...'
+				})
 				that.ky_currentType = '传统客运';
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_CancelTicket.Url,
@@ -2511,21 +2515,21 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
-						console.log('取消结果', respones)
+						// console.log('取消结果', respones)
 						if (respones.data.status == true) {
 							uni.hideLoading()
+							this.$refs.popup3.close()
 							uni.showToast({
 								title: '取消成功'
 							})
-							this.$refs.popup3.close()
 							uni.startPullDownRefresh();
 						} else {
 							uni.hideLoading()
+							this.$refs.popup3.close()
 							uni.showToast({
 								title: '取消失败',
 								icon: 'none'
 							})
-							this.$refs.popup3.close()
 							uni.startPullDownRefresh();
 						}
 					},

@@ -92,15 +92,15 @@
 				ticktIndex:'',//车票下标
 				specialCodeArray:[],
 				isShowQrcode:'',
+				orderState:'',//订单状态
 			}
 		},
 		onLoad(res) {
 			var that = this;
 			var orderInfo = JSON.parse(res.orderInfo);
 			that.orderInfo = orderInfo;
+			that.orderState = orderInfo.state;
 			this.specialCodeArray = orderInfo.CheckInfoList;
-			console.log(orderInfo);
-			// console.log(orderInfo.CheckInfoList);
 			that.stringTurnArray(orderInfo.iDNameType);
 			//检票号---生成二维码
 			if(orderInfo.carType != '定制巴士'){
@@ -114,17 +114,13 @@
 					that.make(this.ticketNumber,i);
 				}
 			}
-			
+			//计算车票数量
 			that.getTicketNum(orderInfo);
-			
-			that.getOneTicketNum();
 		},
 		methods: {
 			//-------------------------------生成二维码-------------------------------
 			make(param,index) {
 				if(param) {
-					// console.log('二维码数据',param);
-					// console.log('生成二维码成功',index);
 					uQRCode.make({
 						canvasId: 'ctkyQrcode' + index,
 						text: param,
@@ -177,7 +173,7 @@
 						userCodeNum:array[0],
 					}
 					that.passageInfo.push(passenger);
-					
+					console.log('只有一张票')
 					// this.ticketNumber = that.orderInfo.ticketNumber;
 					that.make(this.orderInfo.ticketNumber,0);
 				}else {//多人订票
@@ -190,7 +186,7 @@
 							userCodeNum:singleArray[0],
 						}
 						that.passageInfo.push(passenger);
-						
+						console.log(that.isShowQrcode)
 						// this.ticketNumber = that.orderInfo.ticketNumber;
 						that.make(that.getOneTicketNum(this.orderInfo.ticketNumber,i),i);
 					}
@@ -198,17 +194,75 @@
 			},
 			//-------------------------------获取取票号-------------------------------
 			getOneTicketNum(ticketNum,index){
-				if(ticketNum) {
-					let a = ticketNum.indexOf(',')
-					if(a == -1) {
-						return ticketNum;
-					}else {
-						var array = ticketNum.split('-');
-						let ticketHeader = array[0];
-						var array2 = array[1];
-						var array3 = array2.split(',');
-						return ticketHeader + '-' + array3[index];
+				var that = this;
+				if (!(/(^[1-9]\d*$)/.test(that.orderState))){//如果不是数字
+				    if(that.orderState == '尚未支付'){
+				    	return '尚未支付'
+				    }else if(that.orderState == '作废'){
+				    	return '尚未支付'
+				    }else if(that.orderState == '已退票'){
+				    	return '尚未支付'
+				    }else if(that.orderState == '支付正常') {
+				    	if(ticketNum) {
+				    		let a = ticketNum.indexOf(',')
+				    		if(a == -1) {
+				    			return ticketNum;
+				    		}else {
+				    			var array = ticketNum.split('-');
+				    			let ticketHeader = array[0];
+				    			var array2 = array[1];
+				    			var array3 = array2.split(',');
+				    			return ticketHeader + '-' + array3[index];
+				    		}
+				    	}
+				    }else if(that.orderState == '已完成') {
+				    	if(ticketNum) {
+				    		let a = ticketNum.indexOf(',')
+				    		if(a == -1) {
+				    			return ticketNum;
+				    		}else {
+				    			var array = ticketNum.split('-');
+				    			let ticketHeader = array[0];
+				    			var array2 = array[1];
+				    			var array3 = array2.split(',');
+				    			return ticketHeader + '-' + array3[index];
+				    		}
+				    	}
+				    }
+				}else if (that.orderState == 4) {
+					if(ticketNum) {
+						let a = ticketNum.indexOf(',')
+						if(a == -1) {
+							return ticketNum;
+						}else {
+							var array = ticketNum.split('-');
+							let ticketHeader = array[0];
+							var array2 = array[1];
+							var array3 = array2.split(',');
+							return ticketHeader + '-' + array3[index];
+						}
 					}
+				} else if (that.orderState == 5) {
+					if(ticketNum) {
+						let a = ticketNum.indexOf(',')
+						if(a == -1) {
+							return ticketNum;
+						}else {
+							var array = ticketNum.split('-');
+							let ticketHeader = array[0];
+							var array2 = array[1];
+							var array3 = array2.split(',');
+							return ticketHeader + '-' + array3[index];
+						}
+					}
+				} else if (that.orderState == 6) {
+					return '已退票'
+				} else if (that.orderState == 7) {
+					return '未支付'
+				} else if (that.orderState == 9) {
+					return '已撤销'
+				} else if (that.orderState == 22) {
+					return '已改签'
 				}
 			},
 			//-------------------------------获取定制巴士取票号-------------------------------
@@ -223,34 +277,35 @@
 			},
 			//-------------------------判断订单状态-------------------------
 			getCtkyOrderStatus(param) {
+				var that = this;
 				if (!(/(^[1-9]\d*$)/.test(param))){//如果不是数字
 				    if(param == '尚未支付'){
-						this.isShowQrcode = false;
+						that.isShowQrcode = false;
 					}else if(param == '作废'){
-						this.isShowQrcode = false;
+						that.isShowQrcode = false;
 					}else if(param == '已退票'){
-						this.isShowQrcode = false;
+						that.isShowQrcode = false;
 					}else {
-						this.isShowQrcode = true;
+						that.isShowQrcode = true;
 					}
 					return param
 				}else if (param == 4) {
-					this.isShowQrcode = true;
+					that.isShowQrcode = true;
 					return '进行中'
 				} else if (param == 5) {
-					this.isShowQrcode = true;
+					that.isShowQrcode = true;
 					return '已完成'
 				} else if (param == 6) {
-					this.isShowQrcode = false;
+					that.isShowQrcode = false;
 					return '已退票'
 				} else if (param == 7) {
-					this.isShowQrcode = false;
+					that.isShowQrcode = false;
 					return '未支付'
 				} else if (param == 9) {
-					this.isShowQrcode = false;
+					that.isShowQrcode = false;
 					return '已撤销'
 				} else if (param == 22) {
-					this.isShowQrcode = true;
+					that.isShowQrcode = true;
 					return '已改签'
 				}
 			},
