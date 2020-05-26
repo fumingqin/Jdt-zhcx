@@ -3007,15 +3007,15 @@
 				console.log(item)
 				if(item.carType=='普通班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=普通班车&tsData=' + '普通班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=普通班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制班车&tsData=' + '定制班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制巴士'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制巴士&tsData=' + '定制巴士' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制巴士&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}
 			},
@@ -4276,12 +4276,12 @@
 				console.log(item)
 				if(item.or_class=='包车-定制'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-定制&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 				if(item.or_class=='包车-专线'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=专线&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-专线&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 			},
