@@ -152,10 +152,9 @@
 			    title: '正在下单...'
 			});
 			
-			that.totalPrice = param.totalPrice;//总价格
-			// console.log('总价格',that.totalPrice)
+			that.totalPrice = that.ticketInfo.totalPrice;//总价格
 			that.insuredPrice = that.ticketInfo.insuredPrice;//保险价格
-			if (param.isInsurance == 1) {
+			if (that.ticketInfo.isInsurance == 1) {
 				that.insurance = '保险';
 				that.isInsurance = true;
 			} else {
@@ -184,34 +183,6 @@
 				if (that.timer) {
 					clearInterval(that.timer);
 				}
-
-				//当页面返回的时候取消订单
-				// var that = this;
-				// console.log('param',param);
-				// uni.request({
-				// 	url:'http://218.67.107.93:9210/api/app/returnCpxsOrder',
-				// 	method:'POST',
-				// 	header:{'content-type':'application/x-www-form-urlencoded'},
-				// 	data:{
-				// 		id : param
-				// 	},
-				// 	success: (res) => {
-				// 		uni.showToast({
-				// 			title:res.data.msg,
-				// 			icon:'none'
-				// 		})
-				// 		//刷新
-				// 		this.info = [];
-				// 		//景区订单数据
-				// 		this.toFinished(); 
-				// 		//客运订单数据
-				// 		this.getUserInfo();
-				// 	},
-				// 	fail(res) {
-				// 		console.log('错误',res);
-				// 	}
-				// })
-
 			}
 		},
 		methods: {
@@ -449,7 +420,7 @@
 				})
 			},
 			//--------------------------获取车票支付参数--------------------------
-			getTicketPaymentInfo: function(res) {
+			getTicketPaymentInfo: function(orderNumber) {
 				var that = this;
 				var timer = null;
 				that.timer = timer;
@@ -460,7 +431,7 @@
 						header:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							//订单编号
-							orderNumber: res
+							orderNumber: orderNumber
 						},
 						
 						success: (res) => {
@@ -493,15 +464,14 @@
 								} else if (res.data.status == false) {
 									//回调失败，取消定时器
 									clearInterval(timer);
-									
-									// alert('获取支付参数状态失败',res.data.status)
-									var msgArray = JSON.parse(res.data.msg);
 									uni.hideLoading();
 									uni.showToast({
-										title: msgArray.message,
+										title: res.data.msg,
 										icon: 'none'
 									})
-									
+									if(res.data.msg == '订票失败'){//如果订票失败就取消当前订单
+										that.keYunCancelTicket(orderNumber)
+									}
 								}
 							}
 						},
@@ -513,6 +483,24 @@
 						}
 					})
 				}, 3000)
+			},
+			// -------------------------客运取消-------------------------
+			keYunCancelTicket: function(orderNumber) {
+				var that = this;
+				uni.request({
+					url: $KyInterface.KyInterface.Ky_CancelTicket.Url,
+					method: $KyInterface.KyInterface.Ky_CancelTicket.method,
+					header: $KyInterface.KyInterface.Ky_CancelTicket.header,
+					data: {
+						orderNumber: orderNumber,
+					},
+					success: (respones) => {
+						console.log('取消结果', respones)
+					},
+					fail: (respones) => {
+						console.log('取消结果', respones)
+					}
+				})
 			},
 			//--------------------------调起支付--------------------------
 			payment: function() {
@@ -609,19 +597,37 @@
 					paySign:that.paymentData.jsapi.PaySign,
 					success(res) {
 						console.log(res)
-						uni.showToast({
-							title: '支付成功',
-						})
-						that.getTicketPaymentInfo_ticketIssue(that.orderNum);
-					},
-					fail(res) {
-						console.log(res)
-						if (res.errMsg == "requestPayment:fail canceled") {
+						if (res.errMsg == "requestPayment:ok") {
+							uni.showToast({
+								title: '支付成功',
+								icon: 'none',
+							})
+							uni.showLoading({
+							    title: '加载中...'
+							});
+							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+						}else if (res.errMsg == "requestPayment:fail cancel") {
+							setTimeout(function() {
+								that.showToast("您取消了支付，请重新支付")
+							}, 1000)
+						}else if (res.errMsg == "requestPayment:fail errors") {
 							setTimeout(function() {
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
-						} else {
-							that.showToast("支付失败")
+						}
+					},
+					fail(res) {
+						console.log(res)
+						if (res.errMsg == "requestPayment:fail cancel") {
+							setTimeout(function() {
+								that.showToast("您取消了支付，请重新支付")
+							}, 1000)
+						}else if (res.errMsg == "requestPayment:fail errors") {
+							setTimeout(function() {
+								that.showToast("支付失败，请重新支付")
+							}, 1000)
+						}else {
+							that.showToast("支付出错")
 						}
 					}
 				});
@@ -657,17 +663,20 @@
 								uni.showToast({
 									title: '出票成功',
 									icon: 'none',
-									success(){
-										uni.redirectTo({
-											url: './CTKYPaySuccess'
-										})
-									}
+								})
+								uni.redirectTo({
+									url: './CTKYPaySuccess'
 								})
 							} else if (res.data.status == false) {
 								clearInterval(timer);
+								// uni.showToast({
+								// 	title: '出票失败',
+								// 	icon: 'none',
+								// })
+								console.log(res)
 								uni.showToast({
-									title: '出票失败',
-									icon: 'none',
+									title: res.data.msg,
+									icon: 'none'
 								})
 							}
 						},

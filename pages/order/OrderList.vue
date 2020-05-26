@@ -2371,7 +2371,7 @@
 						if (respones.data.Successed == true) {
 							uni.hideLoading()
 							uni.showToast({
-								title: respones.data.BookResult.Message
+								title: respones.data.BookResult.Message,
 							})
 							that.$refs.popup2.close()
 							that.Cs_BouncePay(item);
@@ -2407,16 +2407,21 @@
 					success: (respones) => {
 						if (respones.data.Successed == true) {
 							uni.showToast({
-								title: respones.data.msg
+								title: respones.data.msg,
+								complete() {
+									console.log('退票成功，开始刷新');
+									uni.startPullDownRefresh();
+								}
 							})
-							uni.startPullDownRefresh();
 						} else if (respones.data.Successed == false){
 							uni.hideLoading()
 							uni.showToast({
 								title: respones.data.msg,
-								icon: 'none'
+								icon: 'none',
+								complete() {
+									uni.startPullDownRefresh();
+								}
 							})
-							uni.startPullDownRefresh();
 						}
 					},
 					fail: (respones) => {
@@ -2524,7 +2529,8 @@
 					that.ky_currentType = '定制巴士支付';
 					this.Cs_CheckPayState(item.orderNumber,item.totalPrice)
 				}else {
-					this.ky_orderStatus = '客运支付订单检索'
+					that.ky_currentType = '';
+					this.ky_orderStatus = '客运支付订单检索';
 					this.getTicketPaymentInfo(item.orderNumber);
 				}
 			},
@@ -2686,7 +2692,7 @@
 									}
 								} else {
 									clearInterval(timer);
-									//客运支付
+									//未支付，客运支付
 									that.keYunPaymentData = JSON.parse(res.data.msg);
 									that.keYunPayment();
 								}
