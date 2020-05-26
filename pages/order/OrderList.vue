@@ -2670,7 +2670,7 @@
 					uni.request({
 						url: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
 						method: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
-						// header: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
+						header: $KyInterface.KyInterface.Ky_getTicketPaymentInfo.header,
 						data: {
 							orderNumber: orderNumber,
 						},
