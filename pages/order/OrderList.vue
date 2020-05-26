@@ -2247,7 +2247,7 @@
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.Url,
 					method: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.method,
-					header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
+					// header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
 					data: {
 						orderNumber: orderNumber,
 					},

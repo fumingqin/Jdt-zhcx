@@ -586,7 +586,9 @@
 							uni.showLoading({
 							    title: '加载中...'
 							});
-							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+							setTimeout(function(){
+								that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+							},2000)
 						}else if (res.errMsg == "requestPayment:fail cancel") {
 							setTimeout(function() {
 								that.showToast("您取消了支付，请重新支付")
