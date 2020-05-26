@@ -803,7 +803,7 @@
 				{
 					"path": "pages/GRZX/pictureList",
 					"style": {
-						"navigationBarTitleText": "拍照返现"
+						"navigationBarTitleText": "提交列表"
 					}
 				},
 				{

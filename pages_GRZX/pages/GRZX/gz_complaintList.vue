@@ -25,7 +25,7 @@
 					<text class="im_text">暂无数据</text>
 				</view>
 			</view>
-			<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='投诉成功' || item.or_Type=='投诉失败' || item.or_Type=='已提交'">
+			<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='投诉成功' || item.or_Type=='投诉失败' || item.or_Type=='已提交' || item.or_date=='' ">
 				<view class="pd_view">{{item.or_date}}</view>
 				<view class="cm_view">
 					<view class="cm_titleView" v-if="item.or_entrance==0">
@@ -68,7 +68,7 @@
 					<text class="im_text">暂无数据</text>
 				</view>
 			</view>
-			<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='审核中' || item.or_Type=='投诉失败' || item.or_Type=='已提交'">
+			<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='审核中' || item.or_Type=='投诉失败' || item.or_Type=='已提交' || item.or_date=='' ">
 				<view class="pd_view">{{item.or_date}}</view>
 				<view class="cm_view">
 					<view class="cm_titleView" v-if="item.or_entrance==0">
@@ -103,6 +103,7 @@
 
 		<!-- 未通过 -->
 		<view v-if="type==2">
+			
 			<view class="pd_image" v-if="complaintListIndex3==0">
 				<view>
 					<image class="im_image" src="../../../static/Order/tslb.gif"></image>
@@ -111,37 +112,37 @@
 					<text class="im_text">暂无数据</text>
 				</view>
 			</view>
-			<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='投诉成功' || item.or_Type=='审核中' || item.or_Type=='已提交'">
-				<view class="pd_view">{{item.or_date}}</view>
-				<view class="cm_view">
-					<view class="cm_titleView" v-if="item.or_entrance==0">
-						<image v-if="item.or_class=='包车'" class="cm_icon" src="../../../static/Order/baoche.png" mode="aspectFill"></image>
-						<image v-if="item.or_class=='旅游'" class="cm_icon" src="../../../static/Order/lvyou.png" mode="aspectFill"></image>
-						<image v-if="item.or_class=='客车'" class="cm_icon" src="../../../static/Order/keche.png" mode="aspectFill"></image>
-						<image v-if="item.or_class=='出驻车'" class="cm_icon" src="../../../static/Order/Car1.png" mode="aspectFill"></image>
-						<image v-if="item.or_class=='公交'" class="cm_icon" src="../../../static/Order/gongjiao.png" mode="aspectFill"></image>
-						<text class="cm_title">{{item.or_class}}</text>
-						<text class="cm_status">{{item.or_Type}}</text>
-					</view>
-					<view class="cm_titleView" v-if="item.or_entrance==1">
-						<image v-if="item.or_complaintObject=='包车'" class="cm_icon" src="../../../static/Order/baoche.png" mode="aspectFill"></image>
-						<image v-if="item.or_complaintObject=='旅游'" class="cm_icon" src="../../../static/Order/lvyou.png" mode="aspectFill"></image>
-						<image v-if="item.or_complaintObject=='客车'" class="cm_icon" src="../../../static/Order/keche.png" mode="aspectFill"></image>
-						<image v-if="item.or_complaintObject=='出驻车'" class="cm_icon" src="../../../static/Order/Car1.png" mode="aspectFill"></image>
-						<image v-if="item.or_complaintObject=='公交'" class="cm_icon" src="../../../static/Order/gongjiao.png" mode="aspectFill"></image>
-						<text class="cm_title">{{item.or_complaintObject}}</text>
-						<text class="cm_status">{{item.or_Type}}</text>
-					</view>
-					<view class="cm_contentView">
-						<text class="cm_contentText">投诉对象：&nbsp;{{item.or_complainant}}</text>
-						<text class="cm_contentText">投诉时间：&nbsp;{{item.or_dateString}}</text>
-						<text class="cm_contentText">投诉内容：&nbsp;{{item.or_content}}</text>
-					</view>
-					<view class="cm_buttonView">
-						<view class="cm_button cm_btDetails" @click="jump2(index)">详情</view>
+				<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='投诉成功' || item.or_Type=='审核中' || item.or_Type=='已提交' || item.or_date=='' ">
+					<view class="pd_view">{{item.or_date}}</view>
+					<view class="cm_view">
+						<view class="cm_titleView" v-if="item.or_entrance==0">
+							<image v-if="item.or_class=='包车'" class="cm_icon" src="../../../static/Order/baoche.png" mode="aspectFill"></image>
+							<image v-if="item.or_class=='旅游'" class="cm_icon" src="../../../static/Order/lvyou.png" mode="aspectFill"></image>
+							<image v-if="item.or_class=='客车'" class="cm_icon" src="../../../static/Order/keche.png" mode="aspectFill"></image>
+							<image v-if="item.or_class=='出驻车'" class="cm_icon" src="../../../static/Order/Car1.png" mode="aspectFill"></image>
+							<image v-if="item.or_class=='公交'" class="cm_icon" src="../../../static/Order/gongjiao.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.or_class}}</text>
+							<text class="cm_status">{{item.or_Type}}</text>
+						</view>
+						<view class="cm_titleView" v-if="item.or_entrance==1">
+							<image v-if="item.or_complaintObject=='包车'" class="cm_icon" src="../../../static/Order/baoche.png" mode="aspectFill"></image>
+							<image v-if="item.or_complaintObject=='旅游'" class="cm_icon" src="../../../static/Order/lvyou.png" mode="aspectFill"></image>
+							<image v-if="item.or_complaintObject=='客车'" class="cm_icon" src="../../../static/Order/keche.png" mode="aspectFill"></image>
+							<image v-if="item.or_complaintObject=='出驻车'" class="cm_icon" src="../../../static/Order/Car1.png" mode="aspectFill"></image>
+							<image v-if="item.or_complaintObject=='公交'" class="cm_icon" src="../../../static/Order/gongjiao.png" mode="aspectFill"></image>
+							<text class="cm_title">{{item.or_complaintObject}}</text>
+							<text class="cm_status">{{item.or_Type}}</text>
+						</view>
+						<view class="cm_contentView">
+							<text class="cm_contentText">投诉对象：&nbsp;{{item.or_complainant}}</text>
+							<text class="cm_contentText">投诉时间：&nbsp;{{item.or_dateString}}</text>
+							<text class="cm_contentText">投诉内容：&nbsp;{{item.or_content}}</text>
+						</view>
+						<view class="cm_buttonView">
+							<view class="cm_button cm_btDetails" @click="jump2(index)">详情</view>
+						</view>
 					</view>
 				</view>
-			</view>
 		</view>
 		<view class="cl_bottom"></view>
 		<view class="tjButton" @click="jump">前往投诉</view>
@@ -206,7 +207,8 @@
 					// #endif
 					// #ifdef MP-WEIXIN
 					uni.showToast({
-						title: '请允许授权给小程序，即将跳转登录！'
+						title: '请允许授权给小程序，即将跳转登录！',
+						icon:'none'
 					})
 					uni.navigateTo({
 						url:'../../../../pages/Home/wxAuthorize'
@@ -214,7 +216,8 @@
 					// #endif
 					// #ifdef APP-NVUE
 					uni.showToast({
-						title: '未登录账号，即将跳转登录！'
+						title: '未登录账号，即将跳转登录！',
+						icon:'none'
 					})
 					uni.navigateTo({
 						url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'

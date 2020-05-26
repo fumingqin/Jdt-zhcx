@@ -73,14 +73,14 @@
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<!-- <view class="boxClass borderTop" @click="complaintClick">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
-				<text class="fontStyle">我要投诉</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view> -->
 			<view class="boxClass borderTop" @click="addContact">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<image src="../../static/GRZX/tubiao_lianxiren.png" class="iconClass4"></image>
 				<text class="fontStyle">紧急联系人</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="complaintClick">
+				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<text class="fontStyle">我的投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="feedbackClick">
@@ -90,7 +90,7 @@
 			</view>
 			<view class="boxClass borderTop" @click="pictureClick">
 				<image src="../../static/GRZX/paizhao.png" class="iconClass6"></image>
-				<text class="fontStyle">拍照返现</text>
+				<text class="fontStyle">站点拍照</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 		</view>
@@ -337,7 +337,7 @@
 			//------------------------------投诉---------------------------
 			complaintClick(){
 				uni.navigateTo({
-					// url:'/pages/GRZX/complaint'
+					// url:'/pages/GRZX/gz_complaintList'
 					url:this.$GrzxInter.Route.complaint.url,
 				})  
 			},
@@ -352,7 +352,7 @@
 			pictureClick(){
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
-					url:'../../pages_GRZX/pages/GRZX/printSubmit',
+					url:'../../pages_GRZX/pages/GRZX/pictureList',
 				})  				
 			},
 			// ---------------------------是否登录--------------------------

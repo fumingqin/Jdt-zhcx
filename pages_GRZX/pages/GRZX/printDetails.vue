@@ -32,11 +32,11 @@
 				<text class="ct_text2">{{info.checkcontent}}</text>
 			</view>
 		</view>
-		<view class="fb_view3">
+		<!-- <view class="fb_view3">
 			<view class="fb_btn" form-type="submit" @click="submitState">
 				<view class="fb_text">修改提交</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -124,11 +124,11 @@
 					}
 				})
 			},
-			submitState(){
-				uni.navigateTo({
-					url: 'printSubmit?print_number='+this.print_number
-				})
-			}
+			// submitState(){
+			// 	uni.navigateTo({
+			// 		url: 'printSubmit?print_number='+this.print_number
+			// 	})
+			// }
 
 		}
 	}
@@ -217,7 +217,7 @@
 	.cc_content {
 		background-color: #ffffff;
 		// padding-bottom: 32upx;
-		margin-top: 20upx;
+		margin-top: 40upx;
 		padding-left: 30upx;
 		padding-right: 30upx;
 

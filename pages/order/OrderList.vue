@@ -2247,7 +2247,7 @@
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.Url,
 					method: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.method,
-					header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
+					// header: $KyInterface.KyInterface.Ky_GetBounceChargeByOrderNumber.header,
 					data: {
 						orderNumber: orderNumber,
 					},
@@ -2371,7 +2371,7 @@
 						if (respones.data.Successed == true) {
 							uni.hideLoading()
 							uni.showToast({
-								title: respones.data.BookResult.Message
+								title: respones.data.BookResult.Message,
 							})
 							that.$refs.popup2.close()
 							that.Cs_BouncePay(item);
@@ -2407,16 +2407,21 @@
 					success: (respones) => {
 						if (respones.data.Successed == true) {
 							uni.showToast({
-								title: respones.data.msg
+								title: respones.data.msg,
+								complete() {
+									console.log('退票成功，开始刷新');
+									uni.startPullDownRefresh();
+								}
 							})
-							uni.startPullDownRefresh();
 						} else if (respones.data.Successed == false){
 							uni.hideLoading()
 							uni.showToast({
 								title: respones.data.msg,
-								icon: 'none'
+								icon: 'none',
+								complete() {
+									uni.startPullDownRefresh();
+								}
 							})
-							uni.startPullDownRefresh();
 						}
 					},
 					fail: (respones) => {
@@ -2518,13 +2523,14 @@
 			// -------------------------客运支付-------------------------
 			keYunPay: function(item,carType) {
 				// var orderInfo = this.info[index];
+				var that = this;
 				console.log(item.orderNumber,carType,item.totalPrice);
 				if(carType == '定制巴士') {
-					var that = this;
 					that.ky_currentType = '定制巴士支付';
 					this.Cs_CheckPayState(item.orderNumber,item.totalPrice)
 				}else {
-					this.ky_orderStatus = '客运支付订单检索'
+					this.ky_currentType = '';
+					this.ky_orderStatus = '客运支付订单检索';
 					this.getTicketPaymentInfo(item.orderNumber);
 				}
 			},
@@ -2686,7 +2692,7 @@
 									}
 								} else {
 									clearInterval(timer);
-									//客运支付
+									//未支付，客运支付
 									that.keYunPaymentData = JSON.parse(res.data.msg);
 									that.keYunPayment();
 								}
@@ -3007,15 +3013,15 @@
 				console.log(item)
 				if(item.carType=='普通班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=普通班车&tsData=' + '普通班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=普通班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制班车'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制班车&tsData=' + '定制班车' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制班车&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}else if(item.carType=='定制巴士'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制巴士&tsData=' + '定制巴士' +'&orderNumber='+ item.orderNumber
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=定制巴士&or_name=' + item.driverName +'&or_nameId=0' +'&or_phoneNumber' +item.driverPhone
 					})
 				}
 			},
@@ -4276,12 +4282,12 @@
 				console.log(item)
 				if(item.or_class=='包车-定制'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=定制&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-定制&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 				if(item.or_class=='包车-专线'){
 					uni.navigateTo({
-						url:'complaint?tsTitle=专线&tsData=' + item.cm_driverName +'&orderNumber='+ item.or_number
+						url:'../../pages_GRZX/pages/GRZX/gz_complaintsPage?or_entrance=1&or_class=包车-专线&or_name=' + item.cm_driverName +'&or_nameId='+ item.or_number
 					})
 				}
 			},

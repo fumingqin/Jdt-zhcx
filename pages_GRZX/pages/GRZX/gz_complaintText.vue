@@ -8,17 +8,16 @@
 	export default {
 		data() {
 			return {
-				or_entrance: 0,
-				or_class: '旅游',
-				or_name: '黄仙剑',
-				or_nameId: 1,
+				or_entrance: 0, //入口编号，订单列表点投诉景区传0
+				or_class: '旅游服务', //模块名
+				or_name: '黄仙剑', //司机名
+				or_nameId: 1, //司机ID
 			}
 		},
 		methods: {
 			jump() {
 				uni.navigateTo({
-					url: './gz_complaintsPage?or_entrance=' + this.or_entrance + '&or_class=' + this.or_class + '&or_name=' + this.or_name +
-						'&or_nameId=' + this.or_nameId
+					url: './gz_complaintsPage?or_entrance=' + this.or_entrance + '&or_class=' + this.or_class + '&or_name=' + this.or_name +'&or_nameId=' + this.or_nameId
 				})
 			}
 		}

@@ -17,33 +17,33 @@
 		<!-- 联动列表 -->
 		<view class="list_box" v-if="isShowAllList">
 			<!-- 左边的列表 -->
-			<view class="left">
+			<view class="left" v-if="true">
 				<scroll-view scroll-y="true" :style="{ 'height':scrollHeight }">
 					<view class="item" 
-						v-for="(item,index) in stationArray"
+						v-for="(item,index) in mainArray"
 						:key="index" 
 						:class="{ 'active':index==leftIndex }" 
 						:data-index="index"
-						@tap="leftTap"
-					>{{item.SiteName}}</view>
+						@tap="detailStationTap(item)"
+					>{{item.lineName}}</view>
 		        </scroll-view>
 			</view>
 			<!-- 右边的列表 -->
-			<view class="main" v-if="isShowAllList">
+			<view class="main" v-if="false">
 				<swiper class="swiper" :style="{ 'height':scrollHeight }" 
 					:current="leftIndex" @change="swiperChange"
 					 vertical="true" duration="300">
-					<swiper-item v-for="(item,index) in stationArray" :key="index">
-						<scroll-view  scroll-y="true" :style="{ 'height':scrollHeight }">
+					<!-- <swiper-item v-for="(item,index) in stationArray" :key="index"> -->
+						<scroll-view  scroll-y="true" :style="{'height':scrollHeight}">
 							<view class="item">
 								<view class="goods" v-for="(item2,index2) in mainArray" :key="index2" @tap="detailStationTap(item2)">
 									<view>
-										<view>{{item2.countys}}</view>
+										<view>{{item2.lineName}}</view>
 									</view>
 								</view>
 							</view>
 						</scroll-view>
-					</swiper-item>
+					<!-- </swiper-item> -->
 				</swiper>
 			</view>
 		</view>
@@ -60,64 +60,63 @@
 				leftArray:[],
 				mainArray:[],
 				leftIndex:0,
+				startPosition:'',
+				endPosition:'',
 				keywordList: [],
-				routeorigin:'',
-				routedestination:'',
 				isShowAllList:true,//是否显示联动列表
 				isShowList:false,//是否显示站点列表
-				stationType:'',//判断上个页面点击的是上车点还是下车点
 			}
 		},
 		onLoad(param){
 			var that = this;
-			console.log(param);
-			that.stationType = param.station;
-			that.routeorigin=param.routeorigin;
-			that.routedestination=param.routedestination;
-			//获取站点列表
-			that.getBusStationList();
+			that.startPosition=param.routeorigin;
+			that.endPosition=param.routedestination;
+			//获取专线
+			that.GetAllLine();
 			/* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
 			uni.getSystemInfo({
 				success:(res)=>{
 					this.scrollHeight=`${res.windowHeight}px`;
 				}
 			});
+			
 		},
 		methods: {
-			//-------------------------获取车站列表数据-------------------------
-			getBusStationList() {
-				var that=this;
-				uni.showLoading();
+			//-------------------------获取专线列表数据-------------------------
+			GetAllLine(){
+				var that = this;
 				uni.request({
-					url: $KyInterface.KyInterface.Ky_ScheduleUrl.Url,
-					method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
-					header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
-					data: {
-						systemName: $KyInterface.KyInterface.Ky_ScheduleUrl.systemName,
-						startPosition: '惠安',
-						endPosition: '石狮',
-						date:'2020/5/26',
+					url:'http://27.148.155.9:9056/CTKY/getLineSite',
+					method:'POST',
+					header:{'content-type':'application/x-www-form-urlencoded'},
+					data:{
+						systemName:'泉运公司综合出行',
+						startPosition :that.startPosition,
+						endPosition:that.endPosition,
 					},
-					success: (res) => {
+					success(res) {
 						console.log(res)
-						uni.hideLoading();
-						let that = this;
-						console.log(res.data.data[0])
-						if (res.data.data.length != 0) {
-								var cityNameArray = {
-									SiteName : res.data.data[0].starSiteArr.SiteName,
-								}
-								this.stationArray.push(cityNameArray);
-								for (var j = 0; j < res.data[i].countys.length;j++) {
-									var countysArray = {
-										countys : res.data[i].countys[j]
-									}
-									this.mainArray.push(countysArray);
-								}
+						if(res.data.msg=='查询失败，查询不到'+that.startPosition+'到'+that.endPosition+'的线路！'){
+							uni.showToast({
+								title:'该线路暂未开通',
+								icon:'none'
+							})
 						}
+						if (res.data) {
+							if(res.data.data.length>0){
+								for (var i = 0; i < res.data.data[0].lineSiteArr.length; i++) {
+									if(res.data.data[0].lineSiteArr[i].SiteName!='晋江'){
+										var cityNameArray = {
+											lineName : res.data.data[0].lineSiteArr[i].SiteName,
+										}
+										that.mainArray.push(cityNameArray);
+										}
+								}
+							}
+					    }
 					},
 					fail(res) {
-						uni.hideLoading();
+						console.log(res)
 					}
 				})
 			},
@@ -132,34 +131,15 @@
 				}
 				this.isShowList = true;
 				this.isShowAllList = false;
-				//以下示例截取淘宝的关键字，请替换成你的接口
-				uni.showLoading();
-				uni.request({
-					url:$KyInterface.KyInterface.Ky_GetSatartSite.Url,
-					method:$KyInterface.KyInterface.Ky_GetSatartSite.method,
-					header:$KyInterface.KyInterface.Ky_GetSatartSite.header,
-					data:{
-						systemName:'泉运公司综合出行',
-						keyword:keyword
-					},
-					success: (res) => {
-						uni.hideLoading();
-						// console.log(res);
-						this.keywordList = [];
-						this.keywordList = this.drawCorrelativeKeyword(res.data, keyword);
-					},
-					fail(res) {
-						uni.hideLoading();
-					}
-				});
+				this.keywordList = [];
+				this.keywordList = this.drawCorrelativeKeyword(this.mainArray, keyword);
 			},
 			//-------------------------高亮关键字-------------------------
 			drawCorrelativeKeyword(keywords, keyword) {
-				// console.log(keywords);
 				var len = keywords.length,
 					keywordArr = [];
 				for (var i = 0; i < len; i++) {
-					var row = keywords[i].siteName;
+					var row = keywords[i].lineName;
 					//定义高亮#9f9f9f
 					var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
 					html = '<div>' + html + '</div>';
@@ -176,28 +156,20 @@
 				var that = this;
 				//获取点击选项的文字
 				var key = this.keywordList[index].keyword;
-				
-				if (that.stationType == 'zhandian') {
-					//当前是上车点
-					uni.$emit('startstaionChange', {
-					    data: key
-					});
-					uni.navigateBack({ });
-				}
+				uni.$emit('printSiteChange', {
+				    data: key
+				});
+				uni.navigateBack({ });
 			},
 			//-------------------------点击站点-------------------------
 			detailStationTap(item){
-				// console.log(item.countys);
+				console.log(item)
 				var that = this;
-				if (that.stationType == 'zhandian') {
-					//当前是上车点
-					uni.$emit('startstaionChange', {
-					    data: item.countys
-					});
-					uni.navigateBack({ });
-				}
-				
-			},
+				uni.$emit('printSiteChange', {
+				    data: item.lineName
+				});
+				uni.navigateBack({ });
+				},
 			
 			//-------------------------左侧导航点击-------------------------
 			leftTap(e){
@@ -258,7 +230,7 @@
 	font-size: 28rpx;
 	
 	.left{
-		width: 200rpx;
+		width: 100%;
 		background-color: #f6f6f6;
 		line-height: 80rpx;
 		box-sizing: border-box;

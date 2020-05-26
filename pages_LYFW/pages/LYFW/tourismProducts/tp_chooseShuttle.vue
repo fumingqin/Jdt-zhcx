@@ -154,7 +154,7 @@
 							console.log(res)
 							if(res.data.status == true){
 								this.departureData = res.data.data;
-							}else if(res.data.status == false){
+							}else if(res.data.status == false){ 
 								uni.showToast({
 									title:'所选日期暂无班次',
 									icon:'none'
