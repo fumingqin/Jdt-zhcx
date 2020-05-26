@@ -182,7 +182,7 @@
 					},
 					success: (res) => {
 						// uni.hideLoading();
-						// console.log(res);
+						console.log('客运班次信息',res);
 						//非空判断
 						if (res.data.status == true) {
 							if(res.data.data){
@@ -223,7 +223,7 @@
 						LineName: LineName,
 					},
 					success: (res) => {
-						console.log(res)
+						console.log('定制巴士班次数据',res)
 						uni.hideLoading();
 						//非空判断
 						if (res.data.Successed == true) {
@@ -281,6 +281,7 @@
 				}
 				return param;
 			},
+			//-------------------------------点击日期-------------------------------
 			viewClick: function(e, item) {
 				this.selectIndex = e;
 				this.date = item.longDate;

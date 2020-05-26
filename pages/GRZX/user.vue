@@ -73,14 +73,14 @@
 				<text class="fontStyle">信息管理</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
-			<!-- <view class="boxClass borderTop" @click="complaintClick">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
-				<text class="fontStyle">我要投诉</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view> -->
 			<view class="boxClass borderTop" @click="addContact">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<image src="../../static/GRZX/tubiao_lianxiren.png" class="iconClass4"></image>
 				<text class="fontStyle">紧急联系人</text>
+				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			</view>
+			<view class="boxClass borderTop" @click="complaintClick">
+				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
+				<text class="fontStyle">我的投诉</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 			<view class="boxClass borderTop" @click="feedbackClick">
@@ -337,7 +337,7 @@
 			//------------------------------投诉---------------------------
 			complaintClick(){
 				uni.navigateTo({
-					// url:'/pages/GRZX/complaint'
+					// url:'/pages/GRZX/gz_complaintList'
 					url:this.$GrzxInter.Route.complaint.url,
 				})  
 			},

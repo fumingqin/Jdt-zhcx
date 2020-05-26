@@ -5,7 +5,7 @@
 			 :polyline="polyline" :markers="markers" :show-location="true">
 			</map>
 			<view class="mainpage">
-				<view style=" background-color: #FFF;height: 90px;width: 690rpx;left: 30rpx;right: 30rpx;border-radius: 20rpx;padding: 30rpx;">
+				<view style=" background-color: #FFF;height: 180rpx;width: 690rpx;left: 30rpx;right: 30rpx;border-radius: 20rpx;padding: 30rpx;">
 					<view style="flex-direction: row;justify-content: space-between;">
 						<view style="flex-direction: row;">
 							<image src="../../static/CZC/HeadPhoto.png" style="width: 100rpx;height: 100rpx;">
@@ -26,7 +26,7 @@
 						</view>
 					</view>
 				</view>
-				<view style=" background-color: #FFF;height: 90px;width: 690rpx;left: 30rpx;right: 30rpx;border-radius: 20rpx;padding: 30rpx;margin-top: 30rpx;justify-content: center;">
+				<view style=" background-color: #FFF;height: 180rpx;width: 690rpx;left: 30rpx;right: 30rpx;border-radius: 20rpx;padding: 30rpx;margin-top: 30rpx;justify-content: center;">
 					<view style="height: 100rpx;justify-content: space-between;">
 						<view style="flex-direction: row;align-items: center;">
 							<view class="bluering"></view>

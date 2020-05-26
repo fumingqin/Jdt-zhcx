@@ -279,7 +279,7 @@
 					that.specialEndArray = data.data.endSiteArr
 					//读取保险信息
 					that.getExecuteScheduleInfoForSellByID(that.ticketDetail);
-					console.log('车票数据', that.ticketDetail)
+					console.log('选择车票的班次数据', that.ticketDetail)
 					
 				}
 			})
@@ -683,8 +683,7 @@
 					insuredPrice: that.InsurePrice,//保险价格
 				}
 				uni.navigateTo({
-					url: '../PayMent/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' +
-						JSON.stringify(array)
+					url: '../PayMent/orderPayment?array=' + JSON.stringify(array)
 				})
 			}
 		}
