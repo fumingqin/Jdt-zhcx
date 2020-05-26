@@ -90,7 +90,7 @@
 			</view>
 			<view class="boxClass borderTop" @click="pictureClick">
 				<image src="../../static/GRZX/paizhao.png" class="iconClass6"></image>
-				<text class="fontStyle">拍照返现</text>
+				<text class="fontStyle">站点拍照</text>
 				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
 			</view>
 		</view>
@@ -352,7 +352,7 @@
 			pictureClick(){
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
-					url:'../../pages_GRZX/pages/GRZX/printSubmit',
+					url:'../../pages_GRZX/pages/GRZX/pictureList',
 				})  				
 			},
 			// ---------------------------是否登录--------------------------
