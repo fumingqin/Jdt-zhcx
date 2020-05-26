@@ -1367,7 +1367,7 @@ let uQRCode = {};
 							}, options.componentInstance);
 						}, options.text.length + 100);
 					});
-				}, 150);
+				}, 1500);
 			}
 			
 			createCanvas();
