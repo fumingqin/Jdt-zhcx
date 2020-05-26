@@ -52,7 +52,7 @@
 					<view style="justify-content: center; align-items: center;display: flex;">
 						<view class="QRImage">
 							<!-- <canvas v-if="isShowQrcode == true" :canvas-id="'ctkyQrcode' + index" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" /> -->
-							<tki-qrcode v-if="ifShow" :cid="qrcodeIndex+index" ref="qrcode" :val="getOneTicketNum(orderInfo.ticketNumber,index)" :size="size" :unit="unit" :background="background" :pdground="pdground" :icon="icon" :iconSize="iconsize" :lv="lv" :onval="onval" :loadMake="loadMake" :usingComponents="true" @result="qrR" />
+							<tki-qrcode v-if="isShowQrcode" :cid="qrcodeIndex+index" ref="qrcode" :val="getOneTicketNum(orderInfo.ticketNumber,index)" :size="size" :unit="unit" :background="background" :pdground="pdground" :icon="icon" :iconSize="iconsize" :lv="lv" :onval="onval" :loadMake="loadMake" :usingComponents="true" @result="qrR" />
 							<!-- <image style="width: 300rpx; height: 300rpx;" :src="qrcodeSrc"  ></image> -->
 							<!-- 如果没有取票号就显示相应的状态 -->
 							<view v-if="isShowQrcode == false" style="font-weight: 300;color: #2C2D2D;font-size: 32rpx;justify-content: center; align-items: center;">{{getQRCodeStatus(orderInfo.state)}}</view>
@@ -94,12 +94,12 @@
 				ticketNumber:'',
 				ticktIndex:'',//车票下标
 				specialCodeArray:[],
-				isShowQrcode:'',
+				// isShowQrcode:'',
 				orderState:'',//订单状态
 				
 				
 				qrcodeIndex:'qrcodeIndex',
-				ifShow: true,
+				isShowQrcode: true,
 				val: '二维码', // 要生成的二维码值
 				size: 300, // 二维码大小
 				unit: 'upx', // 单位

@@ -137,6 +137,7 @@
 					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">{{InsurePrice}}元</view>
 				</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
+					<view style="font-size: 30upx;color: #2C2D2D;">已选{{passengerNum}}份</view>
 					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="isInsurance===1 ? true : false" @click="insuranceTap"></radio>
 				</view>
 			</view>
