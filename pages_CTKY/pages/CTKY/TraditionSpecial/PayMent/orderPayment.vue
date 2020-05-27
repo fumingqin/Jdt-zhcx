@@ -436,7 +436,7 @@
 							orderNumber: orderNumber
 						},
 						success: (res) => {
-							console.log(res);
+							console.log('下单返回结果',res);
 							
 							if (res.data) {
 								if (res.data.status == true) {
@@ -476,7 +476,7 @@
 						fail(res) {
 							clearInterval(timer);
 							uni.hideLoading();
-							console.log('失败');
+							console.log('失败',res);
 							//回调失败，取消定时器
 						}
 					})

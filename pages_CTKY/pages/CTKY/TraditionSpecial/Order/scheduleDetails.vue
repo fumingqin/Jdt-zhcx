@@ -252,7 +252,7 @@
 				shuttleType: '', //班车类型'定制班车''普通班车'
 				sepecialStartArray: [], //定制班车起点数组
 				specialEndArray: [], //定制班车终点数组
-				InsurePrice:'',//保险价格
+				InsurePrice:'0',//保险价格
 				adultNum:0,//成人数
 			}
 		},

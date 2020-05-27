@@ -2257,6 +2257,7 @@
 							orderNumber: orderNumber,
 						},
 						success: (res) => {
+							console.log(res)
 							if (res.data.data == '车票已退票') {
 								uni.stopPullDownRefresh();
 								uni.hideLoading();
@@ -2291,6 +2292,7 @@
 					success(respones) {
 						if(respones.data.status == true){
 							uni.hideLoading();
+							that.$refs.popup2.close()
 							let BounceMoney = respones.data.data.BounceMoney;
 							uni.showModal({
 								title:'温馨提示',
@@ -2304,9 +2306,15 @@
 							})
 						}else if(respones.data.status == false){
 							uni.hideLoading();
+							that.$refs.popup2.close()
 							uni.showToast({
 								title:respones.data.msg,
-								icon:'none'
+								icon:'none',
+								complete() {
+									setTimeout(function(){
+										uni.startPullDownRefresh();
+									},1500)
+								}
 							})
 						}
 					},
@@ -2329,15 +2337,18 @@
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
+						uni.hideLoading()
 						// console.log('退票结果', respones)
 						if (respones.data.status == true) {
-							this.$refs.popup2.close()
-							uni.hideLoading()
 							if(respones.data.msg == '退票成功'){
 								uni.showToast({
-									title: '退票成功'
+									title:"退票成功",
+									complete() {
+										setTimeout(function(){
+											uni.startPullDownRefresh();
+										},1500)
+									}
 								})
-								uni.startPullDownRefresh();
 							}else {
 								uni.showToast({
 									title: respones.data.msg
@@ -2500,37 +2511,89 @@
 					}
 				})
 			},
+			//--------------------------客运取消之前获取车票支付参数--------------------------
+			cancel_getTicketPaymentInfo: function(orderNumber) {
+				var that = this;
+				var timer = null;
+				that.timer = timer;
+				uni.showLoading({
+					title: '查询支付状态...'
+				});
+				timer = setInterval(function() {
+					uni.request({
+						url:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.Url,
+						method:$KyInterface.KyInterface.Ky_getTicketPaymentInfo.method,
+						data: {
+							orderNumber: orderNumber,
+						},
+						success: (res) => {
+							console.log('取消结果',res);
+							if (res.data.data == '订票成功，待支付' || res.data.msg == '订票成功，待支付') {//可以取消
+								clearInterval(timer);
+								that.keYunCancelTicket(orderNumber);
+							}else if (res.data.data == '订票成功' || res.data.msg == '订票成功'){//已付钱，不可取消
+								clearInterval(timer);
+								uni.hideLoading();
+								that.$refs.popup3.close()
+								uni.showModal({
+									title:'温馨提示',
+									content:'您的订单已购票成功，不可取消',
+									showCancel:false,
+									complete() {
+										uni.startPullDownRefresh()
+									}
+								})
+							}else if (res.data.msg == '订票失败' || res.data.data == '订票失败'){//可取消
+								clearInterval(timer);
+								that.keYunCancelTicket(orderNumber);
+							}else {
+								clearInterval(timer);
+								uni.hideLoading();
+								that.$refs.popup3.close()
+							}
+						},
+						fail(res) {
+							uni.stopPullDownRefresh();
+							uni.hideLoading();
+							//回调失败，取消定时器
+							clearInterval(timer);
+						}
+					})
+				}, 3000)
+			},
 			// -------------------------客运取消-------------------------
 			keYunCancelTicket: function(orderNumber) {
 				var that = this;
-				uni.showLoading({
-					title:'获取数据...'
-				})
 				that.ky_currentType = '传统客运';
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_CancelTicket.Url,
 					method: $KyInterface.KyInterface.Ky_CancelTicket.method,
-					// header: $KyInterface.KyInterface.Ky_CancelTicket.header,
 					data: {
 						orderNumber: orderNumber,
 					},
 					success: (respones) => {
+						uni.hideLoading()
+						that.$refs.popup3.close()
 						// console.log('取消结果', respones)
 						if (respones.data.status == true) {
-							uni.hideLoading()
-							this.$refs.popup3.close()
 							uni.showToast({
-								title: '取消成功'
+								title: '取消成功',
+								complete() {
+									setTimeout(function(){
+										uni.startPullDownRefresh();
+									},1500)
+								}
 							})
-							uni.startPullDownRefresh();
 						} else {
-							uni.hideLoading()
-							this.$refs.popup3.close()
 							uni.showToast({
 								title: '取消失败',
-								icon: 'none'
+								icon: 'none',
+								complete() {
+									setTimeout(function(){
+										uni.startPullDownRefresh();
+									},1500)
+								}
 							})
-							uni.startPullDownRefresh();
 						}
 					},
 					fail: (respones) => {
@@ -2719,7 +2782,12 @@
 									clearInterval(timer);
 									uni.showToast({
 										title: '订单已支付',
-										icon: 'none'
+										icon: 'none',
+										complete() {
+											setTimeout(function(){
+												uni.startPullDownRefresh()
+											},1500)
+										}
 									})
 								} else {
 									clearInterval(timer);
@@ -4119,8 +4187,10 @@
 							})
 						}
 					})
-				} else if (this.exitindex == '2') {//客运
-					this.keYunCancelTicket(this.ticketOrderNumber);
+				} else if (this.exitindex == '2') {//客运取消
+					// this.keYunCancelTicket(this.ticketOrderNumber);
+					//客运取消之前先检测当前车票状态
+					this.cancel_getTicketPaymentInfo(this.ticketOrderNumber);
 				}else if (this.exitindex == 'cs2') {//定制巴士取消
 					this.Cs_cancelStateCheck(this.ticketOrderNumber);
 				}else if (this.exitindex == '5') {
