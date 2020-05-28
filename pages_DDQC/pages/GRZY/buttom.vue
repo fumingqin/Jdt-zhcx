@@ -3,6 +3,7 @@
 		<view>
 			<button class="tjButton" @click="jump">单车/助力车</button>
 			<button class="tjButton" @click="jump2">个人主页</button>
+			<button class="tjButton" @click="jump3">充值金额</button>
 		</view>
 	</view>
 </template>
@@ -26,6 +27,11 @@
 				uni.navigateTo({
 					url:'zy_homepage'
 				})
+			},
+			jump3:function(){
+				uni.navigateTo({
+					url:'topUp'
+				})
 			}
 		}
 	}
@@ -33,9 +39,8 @@
 
 <style>
 	.tjButton{
-		padding: 24upx 0;
 		border-radius: 64upx;
-		margin: 0 40upx;
+		margin: 20upx 40upx;
 		background: #1EA2FF;
 		text-align: center;
 		color: #FFFFFF;

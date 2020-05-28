@@ -862,6 +862,24 @@
 				    "style" : {}
 				},
 				{
+				    "path" : "pages/GRZY/combo",
+				    "style" : {
+						"navigationBarTitleText": "套餐"
+					}
+				},
+				{
+				    "path" : "pages/GRZY/topUp",
+				    "style" : {
+						"navigationBarTitleText": "充值"
+					}
+				},
+				{
+				    "path" : "pages/GRZY/wallet",
+				    "style" : {
+						"navigationBarTitleText": "钱包"
+					}
+				},
+				{
 				    "path" : "pages/GRZY/buttom",
 				    "style" : {}
 				}

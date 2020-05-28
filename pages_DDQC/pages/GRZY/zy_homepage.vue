@@ -18,7 +18,7 @@
 			<view class="hp_view">
 				<view class="ve_view">
 					<!-- 金额 -->
-					<view class="ve_Text" @click="natTo">
+					<view class="ve_Text" @click="natTo('/pages_DDQC/pages/GRZY/wallet')">
 						<view class="tx_text1">金额</view>
 						<view class="tx_text2">{{personalHomepage.cost}}<text class="tx_text3">元</text></view>
 					</view>
@@ -37,23 +37,28 @@
 			</view>
 
 			<!-- 套餐 -->
-			<view class="ve_view2" @click="natTo">
+			<view class="ve_view2" @click="natTo('/pages_DDQC/pages/GRZY/combo')">
 				<image class="vi_image" src="../../static/GRZY/taocan.png" mode="aspectFill"></image>
 			</view>
 
 			<!-- 电话客服 -->
-			<view class="ve_view3">
+			<view class="ve_view3" @click="makePhone(17764540647)">
 				<text class="vi_text">电话客服</text>
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 我要投诉 -->
-			<view class="ve_view4">
+			<view class="ve_view4" @click="natTo('/pages_GRZX/pages/GRZX/gz_complaintList')">
 				<text class="vi_text2">我要投诉</text>
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 我的反馈 -->
-			<view class="ve_view4">
+			<!-- <view class="ve_view4">
 				<text class="vi_text2">我的反馈</text>
+				<text class="jdticon icon-you"></text>
+			</view> -->
+			<!-- 充值金额 -->
+			<view class="ve_view4" @click="natTo('/pages_DDQC/pages/GRZY/topUp')">
+				<text class="vi_text2">充值金额</text>
 				<text class="jdticon icon-you"></text>
 			</view>
 
@@ -190,6 +195,12 @@
 				uni.navigateTo({
 					url:e,
 					// url:
+				})
+			},
+			
+			makePhone:function(e){
+				uni.makePhoneCall({
+					phoneNumber:e
 				})
 			}
 		}

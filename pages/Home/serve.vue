@@ -12,22 +12,27 @@
 					<text class="sv_text">车票订购</text>
 				</view>
 
-				<!-- <view class="sv_view3" @click="natTo2('/pages/Home/ChooseSite?current=2')">
+				<view class="sv_view3" @click="natTo2('/pages/Home/ChooseSite?current=2')">
 					<image class="sv_print" src="../../static/Home/serve/wlyueche.png" mode="aspectFit"></image>
 					<text class="sv_text">网络约车</text>
-				</view> -->
+				</view>
 
 				<view class="sv_view3" @click="natTo('/pages_GJCX/pages/GJCX/busH5')">
 					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" mode="aspectFit"></image>
 					<text class="sv_text">公交查询</text>
 				</view>
 
-				<!-- <view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
+				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
 					<text class="sv_text">包车服务</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
+				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
+					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
+					<text class="sv_text">达达骑车</text>
+				</view>
+				
+				<!-- <view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
 					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image>
 					<text class="sv_text">定制巴士</text>
 				</view> -->
