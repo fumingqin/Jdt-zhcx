@@ -26,7 +26,7 @@
 				</view>
 			</view>
 			<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='投诉成功' || item.or_Type=='投诉失败' || item.or_Type=='已提交' || item.or_date=='' ">
-				<view class="pd_view">{{item.or_date}}</view>
+				<!-- <view class="pd_view">{{item.or_date}}</view> -->
 				<view class="cm_view">
 					<view class="cm_titleView" v-if="item.or_entrance==0">
 						<image v-if="item.or_class=='包车'" class="cm_icon" src="../../../static/Order/baoche.png" mode="aspectFill"></image>
@@ -69,7 +69,7 @@
 				</view>
 			</view>
 			<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='审核中' || item.or_Type=='投诉失败' || item.or_Type=='已提交' || item.or_date=='' ">
-				<view class="pd_view">{{item.or_date}}</view>
+				<!-- <view class="pd_view">{{item.or_date}}</view> -->
 				<view class="cm_view">
 					<view class="cm_titleView" v-if="item.or_entrance==0">
 						<image v-if="item.or_class=='包车'" class="cm_icon" src="../../../static/Order/baoche.png" mode="aspectFill"></image>
@@ -113,7 +113,7 @@
 				</view>
 			</view>
 				<view v-for="(item,index) in complaintList" :key="index" :hidden="item.or_Type=='投诉成功' || item.or_Type=='审核中' || item.or_Type=='已提交' || item.or_date=='' ">
-					<view class="pd_view">{{item.or_date}}</view>
+					<!-- <view class="pd_view">{{item.or_date}}</view> -->
 					<view class="cm_view">
 						<view class="cm_titleView" v-if="item.or_entrance==0">
 							<image v-if="item.or_class=='包车'" class="cm_icon" src="../../../static/Order/baoche.png" mode="aspectFill"></image>
@@ -304,7 +304,11 @@
 
 	//筛选样式
 	.screen {
-
+		height: 87upx;
+		background-color: #f6f6f6;
+		position: sticky;
+		top: 0;
+		z-index: 999;
 		.screenView {
 			left: 0;
 			display: flex;
