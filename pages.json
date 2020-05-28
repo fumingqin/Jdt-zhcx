@@ -860,6 +860,10 @@
 				{
 				    "path" : "pages/GRZY/zy_expenseDetails",
 				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/buttom",
+				    "style" : {}
 				}
 			]
 		}

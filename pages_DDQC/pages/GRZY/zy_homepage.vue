@@ -18,7 +18,7 @@
 			<view class="hp_view">
 				<view class="ve_view">
 					<!-- 金额 -->
-					<view class="ve_Text">
+					<view class="ve_Text" @click="natTo">
 						<view class="tx_text1">金额</view>
 						<view class="tx_text2">{{personalHomepage.cost}}<text class="tx_text3">元</text></view>
 					</view>
@@ -37,7 +37,7 @@
 			</view>
 
 			<!-- 套餐 -->
-			<view class="ve_view2">
+			<view class="ve_view2" @click="natTo">
 				<image class="vi_image" src="../../static/GRZY/taocan.png" mode="aspectFill"></image>
 			</view>
 
@@ -185,6 +185,13 @@
 				}
 
 			},
+			
+			natTo:function(e){
+				uni.navigateTo({
+					url:e,
+					// url:
+				})
+			}
 		}
 	}
 </script>
