@@ -27,7 +27,7 @@
 					<text class="sv_text">包车服务</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
 					<image class="sv_print2" src="../../static/Home/DDQC.png" mode="aspectFit"></image>
 					<text class="sv_text">达达骑车</text>
 				</view>
@@ -126,7 +126,7 @@
 					// #endif
 				}else{
 					uni.navigateTo({
-						url: url
+						url: url,
 					});
 				}
 				

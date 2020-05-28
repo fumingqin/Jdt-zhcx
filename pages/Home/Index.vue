@@ -35,7 +35,7 @@
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('../../pages_LYFW/pages/LYFW/currency/ho_zhly')">
+				<view class="tabItem" @click="godetail('../../pages_DDQC/pages/GRZY/buttom')">
 					<image class="tabItem-image2" src="../../static/Home/DDQC.png" mode="aspectFill"></image>
 					<view class="tabItem-font"><text >达达骑车</text></view>
 				</view>

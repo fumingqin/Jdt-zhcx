@@ -22,7 +22,7 @@
 					<checkbox value="cb" checked="true" />同意资金存管协议
 				</label>
 			</checkbox-group>
-			<view class="tu_notice"@click="open()">说明></view>
+			<view class="tu_notice" @click="open()">说明></view>
 		</view>
 		<uni-popup ref="popup2" type="bottom">
 			<view class="boxVlew">
@@ -95,7 +95,7 @@
 
 <style lang="scss">
 	page {
-		background-color: #f6f6f6;
+		background-color: #f5f9fc;
 	}
 
 

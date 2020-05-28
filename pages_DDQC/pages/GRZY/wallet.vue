@@ -4,7 +4,7 @@
 		<view class="wl_balance">账户余额</view>
 		<view class="wl_money">0.00元</view>
 		<view class="wl_btn">
-			<view class="wl_text"@click="topUp()">充值</view>
+			<view class="wl_text" @click="topUp()">充值</view>
 		</view>
 	</view>
 </template>
@@ -28,7 +28,7 @@
 
 <style lang="scss">
 	page{
-		background-color: #f6f6f6;
+		background-color: #f5f9fc;
 	}
 .wl_img{
 	width: 193upx;
