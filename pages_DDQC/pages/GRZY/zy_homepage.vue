@@ -127,7 +127,7 @@
 </template>
 
 <script>
-	import uniPopup from '@/pages_GRZY/components/GRZY/uni-popup/uni-popup.vue';
+	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
 	export default {
 		components: {
 			uniPopup,
@@ -192,7 +192,7 @@
 <style lang="scss">
 	//默认背景颜色
 	page {
-		background-color: #f6f6f6;
+		background-color: #f5f9fc;
 	}
 
 	//筛选样式
