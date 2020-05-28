@@ -850,7 +850,7 @@
 		},
 		//---------------------------------------------第七个包：达达通------------------------------------------
 		{
-			"root": "pages_GRZY/",
+			"root": "pages_DDQC/",
 			"pages": [
 				//----------------------------------个人主页--------------------------------------------
 				{
@@ -858,22 +858,8 @@
 					"style": {}
 				},
 				{
-					"path": "pages/GRZY/combo",
-					"style": {
-						"navigationBarTitleText": "套餐"
-					}
-				},
-				{
-					"path": "pages/GRZY/topUp",
-					"style": {
-						"navigationBarTitleText": "充值金额"
-					}
-				},
-				{
-					"path": "pages/GRZY/wallet",
-					"style": {
-						"navigationBarTitleText": "钱包"
-					}
+				    "path" : "pages/GRZY/zy_expenseDetails",
+				    "style" : {}
 				}
 			]
 		}
