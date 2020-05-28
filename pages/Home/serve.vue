@@ -40,7 +40,7 @@
 				</view>
 		</view>
 
-		<!-- <view class="sv_view2">
+		<view class="sv_view2">
 			<view class="sv_title">旅游</view>
 			<view style="display: flex; flex-wrap: wrap;">
 				
@@ -54,18 +54,18 @@
 				<text class="sv_text">跟团游</text>
 			</view>
 			
-			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
+			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
 				<image class="sv_print" src="../../static/Home/serve/jqgoupiao.png" mode="aspectFit"></image>
 				<text class="sv_text">景区购票</text>
 			</view>
 			
-			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
+			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
 				<image class="sv_print" src="../../static/Home/lvyouchanping.png" mode="aspectFit"></image>
 				<text class="sv_text">旅游产品</text>
 			</view>
 			
 			</view>
-		</view> -->
+		</view>
 		
 		<!-- <view class="sv_view2">
 			<view class="sv_title">防控</view>
@@ -144,11 +144,6 @@
 				})
 				// #endif
 				
-			},
-			natTo3: function(url) {
-				uni.navigateTo({
-					url
-				})
 			},
 		}
 	}
