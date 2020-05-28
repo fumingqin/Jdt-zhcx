@@ -878,6 +878,10 @@
 				    "style" : {
 						"navigationBarTitleText": "钱包"
 					}
+				},
+				{
+				    "path" : "pages/GRZY/buttom",
+				    "style" : {}
 				}
 			]
 		}
