@@ -192,7 +192,7 @@
 <style lang="scss">
 	//默认背景颜色
 	page {
-		background-color: #f6f6f6;
+		background-color: #f5f9fc;
 	}
 
 	//筛选样式

@@ -415,6 +415,20 @@ const drivingRecord = {
 	msg: '提示'
 }
 
+const expenseDetail = {
+	status: 1, //1成功,0失败提示返回值
+	data: {
+		date:'2020-05-14',
+		time:'18:00',
+		timeUse:'10',
+		cost:2,
+		startCost:2,
+		durationCost:4,
+		packageOffer:6,
+	},
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	userInfo,
@@ -434,4 +448,5 @@ export default {
 	complaintList2,
 	complaintList3,
 	drivingRecord,
+	expenseDetail,
 }
