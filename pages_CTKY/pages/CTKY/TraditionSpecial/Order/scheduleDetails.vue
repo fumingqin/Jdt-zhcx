@@ -137,6 +137,7 @@
 					<view style="margin-left: 16upx;color:#FC4B4B ; font-size:30upx ;">{{InsurePrice}}元</view>
 				</view>
 				<view style="display: flex;margin-right: 41upx;align-items: center;">
+					<view style="font-size: 30upx;color: #2C2D2D;">已选{{passengerNum}}份</view>
 					<radio class="Mp_box" value="1" :color="'#01aaef'" :checked="isInsurance===1 ? true : false" @click="insuranceTap"></radio>
 				</view>
 			</view>
@@ -251,7 +252,7 @@
 				shuttleType: '', //班车类型'定制班车''普通班车'
 				sepecialStartArray: [], //定制班车起点数组
 				specialEndArray: [], //定制班车终点数组
-				InsurePrice:'',//保险价格
+				InsurePrice:'0',//保险价格
 				adultNum:0,//成人数
 			}
 		},
@@ -279,7 +280,7 @@
 					that.specialEndArray = data.data.endSiteArr
 					//读取保险信息
 					that.getExecuteScheduleInfoForSellByID(that.ticketDetail);
-					console.log('车票数据', that.ticketDetail)
+					console.log('选择车票的班次数据', that.ticketDetail)
 					
 				}
 			})
@@ -683,8 +684,7 @@
 					insuredPrice: that.InsurePrice,//保险价格
 				}
 				uni.navigateTo({
-					url: '../PayMent/orderPayment?isInsurance=' + that.isInsurance + '&totalPrice=' + that.totalPrice + '&array=' +
-						JSON.stringify(array)
+					url: '../PayMent/orderPayment?array=' + JSON.stringify(array)
 				})
 			}
 		}

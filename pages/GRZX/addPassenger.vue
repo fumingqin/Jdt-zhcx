@@ -4,7 +4,7 @@
 			<view class="box1">
 				<view class="itemClass">
 					<view class="fontStyle">姓名	</view>
-					<input placeholder="与证件姓名一致" class="inputClass"  name="userName" v-model="user.userName"/> 
+					<input placeholder="与证件姓名一致" class="inputClass"  name="userName" v-model="user.userName" @blur="nameClick"/> 
 				</view>
 				<view class="itemClass borderTop">
 					<view class="fontStyle">性别</view>
@@ -333,6 +333,11 @@
 				if(data1.userName==""||data1.userName==null){
 					uni.showToast({
 						title:'请输入姓名',
+						icon:'none',
+					})
+				}else if(data1.userName.length<2){
+					uni.showToast({
+						title:'输入的姓名不能少于2位',
 						icon:'none',
 					})
 				}else if(data1.userPhoneNum==""||data1.userPhoneNum==null){
@@ -678,6 +683,19 @@
 			checkPass4:function(e){
 				// var reg=/^[HMhm]{1}([0-9]{10}|[0-9]{8})$/.test(e);
 				return true;
+			},
+			//------------------校验姓名----------------
+			nameClick(e){
+				if(e.detail.value==""){
+					console.log("空的")
+				}else if(e.detail.value.length>=2){
+					console.log("正确")
+				}else{
+					uni.showToast({
+						title:'输入的姓名不能少于2位',
+						icon:'none'
+					})
+				}
 			},
 		}
 	}
