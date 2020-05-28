@@ -127,7 +127,7 @@
 </template>
 
 <script>
-	import uniPopup from '@/pages_GRZY/components/GRZY/uni-popup/uni-popup.vue';
+	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
 	export default {
 		components: {
 			uniPopup,
