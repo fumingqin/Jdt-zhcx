@@ -38,7 +38,7 @@
 				</view>
 				
 				<view class="tabItem" @click="godetail('../../pages_LYFW/pages/LYFW/currency/ho_zhly')">
-					<image class="tabItem-image2" src="../../static/Home/DDQC.png"></image>
+					<image class="tabItem-image2" src="../../static/Home/DDQC.png"  mode="aspectFill"></image>
 					<text class="tabItem-font">达达骑车</text>
 				</view>
 			</view>

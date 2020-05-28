@@ -28,7 +28,7 @@
 				</view>
 				
 				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
-					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
+					<image class="sv_print2" src="../../static/Home/DDQC.png" mode="aspectFit"></image>
 					<text class="sv_text">达达骑车</text>
 				</view>
 				
@@ -195,6 +195,11 @@
 
 				.sv_print {
 					width: 56upx;
+					height: 56upx;
+				}
+				
+				.sv_print2 {
+					width: 75upx;
 					height: 56upx;
 				}
 
