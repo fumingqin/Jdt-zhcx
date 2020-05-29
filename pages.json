@@ -882,9 +882,9 @@
 				{
 				    "path" : "pages/GRZY/buttom",
 				    "style" : {}
-				}
-			    ,{
-                    "path" : "pages_DDQC/RentBike/RentBike",
+				} 
+                ,{
+                    "path" : "pages/RentBike/RentBikeHome",
                     "style" : {}
                 }
             ]
