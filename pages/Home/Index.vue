@@ -35,10 +35,14 @@
 					<image class="tabItem-image" src="../../static/Home/BCFW.png"></image>
 					<view class="tabItem-font"><text >包车服务</text></view>
 				</view>
-				<view class="tabItem" @click="godetail('../../pages_DDQC/pages/GRZY/buttom')">
+				<view class="tabItem" @click="godetail2('../../pages_LYFW/pages/LYFW/currency/ho_zhly')">
+					<image class="tabItem-image" src="../../static/Home/LVFW.png" ></image>
+					<view class="tabItem-font"><text >旅游服务</text></view>
+				</view>
+				<!-- <view class="tabItem" @click="godetail('../../pages_DDQC/pages/GRZY/buttom')">
 					<image class="tabItem-image2" src="../../static/Home/DDQC.png" mode="aspectFill"></image>
 					<view class="tabItem-font"><text >达达骑车</text></view>
-				</view>
+				</view> -->
 			</view>
 		</view>
 
@@ -354,7 +358,7 @@
 			godetail2: function(url) {
 				// #ifdef MP-WEIXIN
 				uni.redirectTo({
-					url: url
+					url: url,
 				});
 				// #endif
 				// #ifndef MP-WEIXIN

@@ -1,5 +1,5 @@
 {
-    "name" : "泉运出行综合平台",
+    "name" : "南平综合出行平台",
     "appid" : "__UNI__7BBF03F",
     "description" : "",
     "versionName" : "1.0.0",
@@ -131,7 +131,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx8dcbb62a76885221",
+        "appid" : "wxf64bf945b37a9939",
         "setting" : {
             "es6" : false,
             "postcss" : false,
