@@ -25,7 +25,7 @@
 					<!-- 卡券 -->
 					<view class="ve_Text">
 						<view class="tx_text1">卡券</view>
-						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
 					</view>
 					<!-- 押金 -->
 					<view class="ve_Text" @click="open">
@@ -42,7 +42,7 @@
 			</view>
 
 			<!-- 电话客服 -->
-			<view class="ve_view3" @click="makePhone(17764540647)">
+			<view class="ve_view3" @click="makePhone">
 				<text class="vi_text">电话客服</text>
 				<text class="jdticon icon-you"></text>
 			</view>
@@ -198,9 +198,9 @@
 				})
 			},
 			
-			makePhone:function(e){
+			makePhone:function(){
 				uni.makePhoneCall({
-					phoneNumber:e
+					phoneNumber:'17764540647'
 				})
 			}
 		}

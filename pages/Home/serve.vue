@@ -28,12 +28,12 @@
 				</view>
 				
 				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
-					<image class="sv_print2" src="../../static/Home/DDQC.png" mode="aspectFit"></image>
+					<image class="sv_print2" src="../../static/Home/serve/DDQC.png" mode="aspectFit"></image>
 					<text class="sv_text">达达骑车</text>
 				</view>
 				
 				<!-- <view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
-					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image>
+					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image> 
 					<text class="sv_text">定制巴士</text>
 				</view> -->
 				
@@ -199,7 +199,7 @@
 				}
 				
 				.sv_print2 {
-					width: 75upx;
+					width: 79upx;
 					height: 56upx;
 				}
 
