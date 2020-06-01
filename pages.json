@@ -803,7 +803,7 @@
 				{
 					"path": "pages/GRZX/pictureList",
 					"style": {
-						"navigationBarTitleText": "拍照返现"
+						"navigationBarTitleText": "提交列表"
 					}
 				},
 				{
@@ -838,7 +838,7 @@
 				    "path" : "pages/GRZX/gz_complaintContent",
 				    "style" : {}
 				}
-				,{
+				,{	
 				    "path" : "pages/GRZX/gz_complaintsPage",
 				    "style" : {}
 				}
@@ -847,6 +847,47 @@
 				    "style" : {}
 				}
 			]
+		},
+		//---------------------------------------------第七个包：达达通------------------------------------------
+		{
+			"root": "pages_DDQC/",
+			"pages": [
+				//----------------------------------个人主页--------------------------------------------
+				{
+					"path": "pages/GRZY/zy_homepage",
+					"style": {}
+				},
+				{
+				    "path" : "pages/GRZY/zy_expenseDetails",
+				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/combo",
+				    "style" : {
+						"navigationBarTitleText": "套餐"
+					}
+				},
+				{
+				    "path" : "pages/GRZY/topUp",
+				    "style" : {
+						"navigationBarTitleText": "充值"
+					}
+				},
+				{
+				    "path" : "pages/GRZY/wallet",
+				    "style" : {
+						"navigationBarTitleText": "钱包"
+					}
+				},
+				{
+				    "path" : "pages/GRZY/buttom",
+				    "style" : {}
+				} 
+                ,{
+                    "path" : "pages/RentBike/RentBikeHome",
+                    "style" : {}
+                }
+            ]
 		}
 	],
 
