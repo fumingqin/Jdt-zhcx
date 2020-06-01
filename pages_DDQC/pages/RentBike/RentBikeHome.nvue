@@ -8,7 +8,7 @@
 		
 		<view class="unLock" @click="unLockClick">
 			<image class="scan" src="../../static/GRZY/scan.png"></image>
-			<view style="margin-left: 20rpx;">扫码开锁</view>
+			<view style="margin-left: 20rpx;color: #FFFFFF;">扫码开锁</view>
 		</view>
 		
 		<image src="../../static/GRZY/personal.png" class="personal" @click="personalClick"></image>
@@ -111,7 +111,6 @@
 		margin-left: 160rpx;
 		align-items: center;
 		font-size: 42rpx;
-		color: #FFFFFF;
 		bottom: 30rpx;
 	},
 	.scan {
