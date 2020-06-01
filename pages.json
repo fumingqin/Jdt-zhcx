@@ -887,6 +887,12 @@
                     "path" : "pages/RentBike/RentBikeHome",
                     "style" : {}
                 }
+                ,{
+                    "path" : "pages/RentBike/unLockView",
+                    "style" : {
+						"navigationBarTitleText": "开锁中"
+					}
+                }
             ]
 		}
 	],
