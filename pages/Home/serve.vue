@@ -32,6 +32,36 @@
 					<text class="sv_text">达达骑车</text>
 				</view>
 				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/gwzhuche.png" mode="aspectFit"></image>
+					<text class="sv_text">公务租车</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/jpyuyue.png" mode="aspectFit"></image>
+					<text class="sv_text">检票预约</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/xjkuaidi.png" mode="aspectFit"></image>
+					<text class="sv_text">小件快递</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/tianqi.png" mode="aspectFit"></image>
+					<text class="sv_text">天气</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/hangban.png" mode="aspectFit"></image>
+					<text class="sv_text">航班</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/huoche.png" mode="aspectFit"></image>
+					<text class="sv_text">火车</text>
+				</view>
+				
 				<!-- <view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
 					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image> 
 					<text class="sv_text">定制巴士</text>
