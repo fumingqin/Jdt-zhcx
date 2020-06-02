@@ -134,7 +134,7 @@
 	import hTimePicker from "@/pages_CZC/components/CZC/h-timePicker/h-timePicker.vue";
 	import utils from "@/pages_CZC/components/CZC/shoyu-date/utils.filter.js"; //时间格式转换
 	import uniPopup from "@/pages_CZC/components/CZC/uni-popup/uni-popup.vue";
-	import homeJS from 'common/Home.js';
+	import homeJS from '@/common/Home.js';
 	export default {
 		components: {
 			uniIcons,
