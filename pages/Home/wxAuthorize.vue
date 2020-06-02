@@ -152,7 +152,7 @@ export default{
 		},
 		getPhoneNumber(e) {  
 			var WXBizDataCrypt = require('@/common/WXBizDataCrypt')
-			var appId = 'wx8dcbb62a76885221';
+			var appId = 'wxf64bf945b37a9939';
 			var encryptedData =e.detail.encryptedData;
 			var iv = e.detail.iv;
 			var pc = new WXBizDataCrypt(appId, this.sessionKey)
