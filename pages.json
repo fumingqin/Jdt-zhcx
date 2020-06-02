@@ -885,7 +885,23 @@
 				} 
                 ,{
                     "path" : "pages/RentBike/RentBikeHome",
-                    "style" : {}
+                    "style" : {
+						"navigationStyle":"custom"
+						// "app-plus":{
+						// 	"titleNView":{
+						// 		"buttons":[
+						// 			{
+						// 				"text":"单车",
+						// 				"fontSize":"19px"
+						// 			},
+						// 			{
+						// 				"text":"助力车",
+						// 				"fontSize":"19px"
+						// 			}
+						// 		]
+						// 	}
+						// }
+					}
                 }
                 ,{
                     "path" : "pages/RentBike/unLockView",
