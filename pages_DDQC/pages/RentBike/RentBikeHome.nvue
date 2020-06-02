@@ -70,7 +70,10 @@
 			},
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick:function(){
-				console.log('点击了扫码解锁');
+				uni.navigateTo({
+					url:"./Riding"
+				})
+				// console.log('点击了扫码解锁');
 			}
 		}
 	}

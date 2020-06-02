@@ -887,6 +887,10 @@
                     "path" : "pages/RentBike/RentBikeHome",
                     "style" : {}
                 }
+                ,{
+                    "path" : "pages/RentBike/Riding",
+                    "style" : {}
+                }
             ]
 		}
 	],
