@@ -16,7 +16,9 @@
 		
 		<view class="unLock">
 			<image class="scan" src="../../static/GRZY/unlocking.png"></image>
-			<view style="margin-left: 20rpx;color: #FFFFFF;">开锁中</view>
+			<view style="margin-left: 20rpx;">
+				<text style="color: #FFFFFF;">开锁中</text>
+			</view>
 		</view>
 		
 		<!-- <image src="../../static/GRZY/personal.png" class="personal" @click="personalClick"></image> -->
@@ -98,9 +100,11 @@
 		align-items: center;
 	},
 	.imageview{
-		/* position: fixed; */
 		flex-direction: row;
+		/* app设置宽度会偏移，其他端需要加条件编译 */
+		/* #ifndef APP-NVUE */
 		width: 80%;
+		/* #endif */
 		margin-left: 30rpx;
 		margin-right: 30rpx;
 		margin-top: 20rpx;

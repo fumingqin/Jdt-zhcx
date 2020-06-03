@@ -47,6 +47,10 @@
 				polyline: [], //画线数组
 				mapContext: '',
 				isClick: '助力车', //是否点击
+				markerIconPath:'../../static/GRZY/power.png',
+				//标识宽高
+				iconWidth:40,
+				iconHeight:40,
 				appMap:'',
 				position:[],
 			}
@@ -61,25 +65,28 @@
 				}
 			});
 			// 获取自身位置
-			that.getMyLocation();
+			// that.getMyLocation();
+			that.GetStationByRange();
+			that.GetBHTStationByRange();
 		},
+		
 		onReady() {
 			var that = this;
 			//mapContext 通过 mapId 跟一个 <map> 组件绑定，通过它可以操作对应的 <map> 组件
 			that.mapContext = uni.createMapContext("map", this);
-			that.mapContext.onstatuschanged = function(e){
-				console.log(e)
-				var res = JSON.parse(JSON.stringify(e));
-				if(!res.center.longitude || !res.center.latitude) {
-					console.log('获取中心坐标点为空')
-					return;
-				}
-				that.position = {
-					latitude: res.center.latitude,
-					longitude: res.center.longitude
-				}
-				console.log(that.position)
-			}
+			// that.mapContext.onstatuschanged = function(e){
+			// 	console.log(e)
+			// 	var res = JSON.parse(JSON.stringify(e));
+			// 	if(!res.center.longitude || !res.center.latitude) {
+			// 		console.log('获取中心坐标点为空')
+			// 		return;
+			// 	}
+			// 	that.position = {
+			// 		latitude: res.center.latitude,
+			// 		longitude: res.center.longitude
+			// 	}
+			// 	console.log(that.position)
+			// }
 		},
 		methods: {
 			//-------------------------------获取自身位置-------------------------------
@@ -97,6 +104,78 @@
 						that.centerLatitude = res.latitude;
 					}
 				});
+			},
+			//-------------------------------有桩数据-------------------------------
+			GetStationByRange:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetStationByRange.Url,
+					method:$DDTInterface.DDTInterface.GetStationByRange.method,
+					data:{
+						Longitude:117.6536981221,//经度
+						Latitude:24.517346,//纬度
+						Range:500,//范围（米）
+					},
+					success(res) {
+						console.log('有桩数据',res)
+						if(res.data.status == true){
+							for (var i = 0; i < res.data.data.length; i++) {
+								let display = '';
+								if(res.data.data.status == 7){//正常
+									that.markerIconPath = '../../static/GRZY/power.png'
+								}else if(res.data.data.status == 9){//离线
+									that.markerIconPath = '../../static/GRZY/zixingche.png'
+								}
+								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
+								//创建绘制坐标点的对象marker
+								var marker = new Object();
+								//坐标里面包含经纬度，需要将经纬度分离取出来
+								var gps = res.data.data[i].gps.split(','),
+								marker = {
+									id : res.data.data[i].id,
+									latitude : gps[1],
+									longitude : gps[0],
+								    iconPath : that.markerIconPath,//标识显示的图片
+									width : that.iconWidth,
+									height : that.iconHeight,
+									callout : {
+										content: res.data.data[i].name, //文本
+										color: '#FC4646', //文字颜色
+										fontSize: 12, //文本大小
+										borderRadius: 4, //边框圆角
+										bgColor: '#FFFFFF', //背景颜色
+										display: 'BYCLICK', //'BYCLICK':点击显示; 'ALWAYS':常显
+										padding:3,
+									}
+								}
+								//将坐标集合添加到绘制坐标数组中
+								that.markers.push(marker);
+								//---------------------华丽的分割线--------------------------------------
+							}
+						}
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
+			//-------------------------------无桩数据-------------------------------
+			GetBHTStationByRange:function(){
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
+					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
+					data:{
+						Longitude:117.6536981221,//经度
+						Latitude:24.517346,//纬度
+						Range:0,//范围（米）
+					},
+					success(res) {
+						console.log('无桩数据',res)
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
 			},
 			//-------------------------------返回上一个页面-------------------------------
 			NavBack: function() {
@@ -117,6 +196,7 @@
 				//回到我的位置：将地图中心移动到当前定位点，需要配合map组件的show-location使用
 				that.mapContext.moveToLocation();
 			},
+			
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
@@ -131,7 +211,7 @@
 					}
 				});
 			}
-		}
+		},
 	}
 </script>
 

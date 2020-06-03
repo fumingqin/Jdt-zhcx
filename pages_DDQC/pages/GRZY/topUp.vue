@@ -5,14 +5,14 @@
 		</view>
 		<view style="display: flex;">
 			<view class="tu_symbol">￥{{cost}}</view>
-			<view class="tu_balance">当前余额￥{{balance.toFixed(2)}}</view>
+			<view class="tu_balance">当前余额￥{{fixed(balance)}}</view>
 		</view>
 		<view style=" width:670upx;margin-left: 40upx; margin-top:40upx;border: 1px solid #E2E2E2;"></view>
 		<view class="tu_view">
 			<view v-for="(item,index) in info" :key="index">
 				<view class="tu_square" :class="{current2: value===index}" @click="affirm(index,item.money)">
-					<view class="tu_money">￥{{item.money.toFixed(2)}}</view>
-					<view class="tu_award">赠送 ￥{{item.award.toFixed(2)}}</view>
+					<view class="tu_money">￥{{fixed(item.money)}}</view>
+					<view class="tu_award">赠送 ￥{{fixed(item.award)}}</view>
 				</view>
 			</view>
 		</view>
@@ -59,8 +59,8 @@
 			return {
 				value: 0,
 				info: {
-					money: 0,
-					award: 0,
+					money:'',
+					award:'',
 				},
 				security:'',
 				cost: 10,
@@ -71,6 +71,12 @@
 			this.getlist();
 		},
 		methods: {
+			fixed(e){
+				if(e>=0){
+					e=e.toFixed(2);
+					return e;
+				}
+			},
 			affirm(index, e) {
 				this.value = index;
 				this.cost = e;
@@ -163,7 +169,7 @@
 		margin-left: 37upx;
 		display: flex;
 		.tu_notice {
-			margin-left: 296upx;
+			margin-left: 266upx;
 			font-size: 26upx;
 			color: #4281FF;
 		}
