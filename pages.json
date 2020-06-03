@@ -909,6 +909,10 @@
 						"navigationBarTitleText": "开锁中"
 					}
                 }
+                ,{
+                    "path" : "pages/RentBike/Riding",
+                    "style" : {}
+                }
             ]
 		}
 	],

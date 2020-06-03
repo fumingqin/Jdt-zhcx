@@ -35,16 +35,15 @@
 </template>
 
 <script>
-	import $DDTInterface from "@/common/DDT.js"
 	export default {
 		data() {
 			return {
 				mapHeight: '', //地图高度
-				centerLatitude: 24.517346, //地图中心点纬度
-				centerLongitude: 117.6536981221, //地图中心点经度
+				centerLatitude: "", //地图中心点纬度
+				centerLongitude: "", //地图中心点经度
 				markers: [], //标记点坐标数组
 				showLocation: true,
-				scale: 15, //地图缩放比例,值越小地图可视范围越大
+				scale: 13, //地图缩放比例,值越小地图可视范围越大
 				polyline: [], //画线数组
 				mapContext: '',
 				isClick: '助力车', //是否点击
@@ -70,6 +69,7 @@
 			that.GetStationByRange();
 			that.GetBHTStationByRange();
 		},
+		
 		onReady() {
 			var that = this;
 			//mapContext 通过 mapId 跟一个 <map> 组件绑定，通过它可以操作对应的 <map> 组件
@@ -196,6 +196,7 @@
 				//回到我的位置：将地图中心移动到当前定位点，需要配合map组件的show-location使用
 				that.mapContext.moveToLocation();
 			},
+			
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
@@ -210,7 +211,7 @@
 					}
 				});
 			}
-		}
+		},
 	}
 </script>
 
