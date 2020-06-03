@@ -122,7 +122,10 @@
 	export default {
 		data() {
 			return {
-				imageIndex : '',//首页图片
+				imageIndex:[{
+				imageUrl:'',
+				}
+				]//首页图片
 			}
 		},
 		onLoad:function(){
