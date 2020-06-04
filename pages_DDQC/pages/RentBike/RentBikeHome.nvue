@@ -6,7 +6,10 @@
 		</map>
 		<!-- 自定义导航栏 -->
 		<view class="navgator">
-			<image src="../../static/GRZY/back.png" style="width: 20rpx;height: 35rpx;margin-left: 40rpx;" @click="NavBack"></image>
+			<view style="width: 40rpx;height: 35rpx;margin-left: 40rpx;" @click="NavBack">
+				<image src="../../static/GRZY/back.png" style="width: 20rpx;height: 35rpx;"></image>
+			</view>
+			
 
 			<view class="navTitleView">
 				<view>
@@ -68,7 +71,7 @@
 			});
 			// 获取自身位置
 			// that.getMyLocation();
-			that.GetStationByRange();
+			that.GetStationByRange(117.6536981221,24.517346);
 			that.GetBHTStationByRange();
 		},
 		
@@ -107,33 +110,35 @@
 					}
 				});
 			},
-			mapChange(e){
+			//-------------------------------获取地图中心坐标信息-------------------------------
+			mapChange:function(e){
 				var that = this;
 				console.log(e)
 				if (e.type == 'regionchange' || e.type == 'end') {
-					that.mapCtx = uni.createMapContext('map')
-					that.mapCtx.getCenterLocation({
+					that.mapContext = uni.createMapContext('map')
+					that.mapContext.getCenterLocation({
 						success: res => {
 							console.log(res.latitude,res.longitude)
-							
-							
+							//当地图移动的时候，改变坐标显示周围的车辆位置信息
+							that.GetStationByRange(res.longitude,res.latitude)
 						}
 					})
 				}
-				
 			},
 			//-------------------------------有桩数据-------------------------------
-			GetStationByRange:function(){
+			GetStationByRange:function(longitude,latitude){
 				var that = this;
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetStationByRange.method,
 					data:{
-						Longitude:117.6536981221,//经度
-						Latitude:24.517346,//纬度
+						Longitude:longitude,//经度
+						Latitude:latitude,//纬度
 						Range:500,//范围（米）
 					},
 					success(res) {
+						//请求数据成功之后先清空之前的数据
+						that.markers = [];
 						console.log('有桩数据',res)
 						if(res.data.status == true){
 							for (var i = 0; i < res.data.data.length; i++) {
@@ -205,9 +210,12 @@
 			titleClick: function(res) {
 				var that = this;
 				that.isClick = res;
-				if(res == '单车'){//当前选中的是单车
+				if(res == '单车'){
+					//当前选中的是单车，加载单车的数据
 					
-				}else if(res == '助力车') {//当前选中的是助力车
+					
+				}else if(res == '助力车') {
+					//当前选中的是助力车，加载助力车的数据
 					
 				}
 			},
@@ -217,20 +225,71 @@
 				//回到我的位置：将地图中心移动到当前定位点，需要配合map组件的show-location使用
 				that.mapContext.moveToLocation();
 			},
-			
+			//-------------------------------跳转个人中心-------------------------------
+			personalClick:function(){
+				uni.navigateTo({
+					url: "../GRZY/zy_homepage"
+				})
+			},
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
 				//扫描二维码
-				uni.scanCode({
-					onlyFromCamera: true,
-					success: function(res) {
-						console.log('扫描结果',res)
-					},
-					fail:function(){
+				// uni.scanCode({
+				// 	onlyFromCamera: true,
+				// 	success: function(res) {
+				// 		console.log('扫描结果',res)
+				// 	},
+				// 	fail:function(){
 						
+				// 	}
+				// });
+				uni.requestPayment({
+					provider: 'wxpay',
+					orderInfo: {
+						// appid: 'wx4394e02214803063',
+						timestamp: '1591185789',
+						noncestr: 'xaa2yfpoy1imam07anohs5arfwsrh130',
+						package: 'Sign=WXPay',
+						sign: '8A69553C5D0268F0D40809D13CC352F7',
+						partnerid: '1324016301',
+						prepayid: 'wx032003092832798201a7d3b71926726700',
+					},
+					success: function(res) {
+						// uni.showModal({
+						// 	title: '提示',
+						// 	content: res,
+						// 	showCancel: false
+						// })
+						console.log(res)
+						
+						if (res.errMsg == 'requestPayment:ok') { //成功
+							uni.showToast({
+								title: '支付成功',
+							})
+							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none'
+							})
+						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
+							uni.showToast({
+								title: '您取消了支付',
+								icon: 'none'
+							})
+						}
+					},
+				
+					fail: function(ee) {
+						console.log(ee)
+						uni.showToast({
+							title: '拉起支付失败，请检查网络后重试',
+							icon: 'none',
+							duration: 3000
+						})
 					}
-				});
+				})
 			}
 		},
 	}

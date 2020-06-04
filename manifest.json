@@ -19,9 +19,9 @@
         "modules" : {
             "Maps" : {},
             "OAuth" : {},
-            "Payment" : {},
             "Share" : {},
-            "Push" : {}
+            "Push" : {},
+            "Payment" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -66,11 +66,7 @@
                 },
                 "ad" : {},
                 "payment" : {
-                    "alipay" : {},
-                    "weixin" : {
-                        "appid" : "wx4394e02214803063",
-                        "UniversalLinks" : ""
-                    }
+                    "alipay" : {}
                 },
                 "push" : {},
                 "oauth" : {
@@ -135,7 +131,7 @@
         "setting" : {
             "es6" : false,
             "postcss" : false,
-            "minified" : true,
+            "minified" : false,
             "urlCheck" : false
         },
         "usingComponents" : true,
