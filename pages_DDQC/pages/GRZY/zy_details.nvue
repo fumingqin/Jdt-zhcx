@@ -1,0 +1,421 @@
+<template>
+	<view>
+		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
+		 :polyline="polyline" :markers="markers" :show-location="false">
+			<!-- <view id="map1" style="width:100%;background:rgba(0,0,0,1);opacity:0.76;border-radius:39px;padding: 49upx 26upx;position: fixed;">
+			 <image style="width: 47upx;height: 36upx;" src="../../static/GRZY/qixing.png"></image>
+			 <text style="font-size: 28upx;color: #FFFFFF;">{{time}}分钟{{minute}}秒</text>
+		 </view> -->
+		</map>
+
+		<view style="position: fixed;bottom: 0;">
+			<view class="ct_state">
+				<text class="sa_text">行程<text class="sa_text2">{{expenseDetail.durationCost}}元</text></text>
+				<text class="sa_text3" @click="jump">查看明细></text>
+			</view>
+
+			<!-- 押金支付弹框 -->
+			<!-- <uni-popup ref="popup" type="bottom">
+				<view class="po_boxVlew">
+					<view class="bv_topText">
+						<text class="tt_text">查看明细</text>
+						<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
+					</view>
+					<view class="tt_view">
+						<rich-text class="tt_tear" :nodes="expenseDetail.way"></rich-text>
+					</view>
+					<view class="vi_bottom"></view>
+				</view>
+			</uni-popup> -->
+
+			<view class="ct_state2">
+				<view></view>
+				<text class="sa_text4">请对本次骑行进行评价！</text>
+				<view></view>
+				<view class="st_view">
+					<image class="vi_img" src="../../static/GRZY/manyi.png"></image>
+					<image class="vi_img2" src="../../static/GRZY/bumanyi.png"></image>
+				</view>
+			</view>
+
+			<view class="ct_state3">
+				<view></view>
+				<text class="sa_text5">骑行疑问？</text>
+				<view></view>
+
+				<view class="st_view2">
+					<view class="vi_view">
+						<text class="vi_text">报故障</text>
+					</view>
+					<view class="vi_view2">
+						<text class="vi_text2">联系客服</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import $bcfw from '@/common/BCFW/bcfw.js';
+	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
+	import Map from '@/pages_DDQC/components/GRZY/my-openMap/openMap.js';
+	export default {
+		components: {
+			uniPopup,
+		},
+		data() {
+			return {
+				scale: 14,
+				longitude: "118.600608", //地图中心点经度
+				latitude: "24.889217", //地图中心点纬度
+				points: [],
+				polyline: [],
+				markers: [],
+				mapHeight: '',
+				viewHeight: '',
+				time: 10,
+				minute: 26,
+				travelTime:'10分26秒',
+
+				expenseDetail: '',
+			}
+		},
+
+		onLoad() {
+			var that = this;
+			uni.getSystemInfo({
+				//设置地图高度为可使用的高度
+				success: function(res) {
+					that.mapHeight = res.windowHeight + 'px';
+					that.viewHeight = (res.windowHeight * 0.4) + 'px'
+				}
+			});
+			that.lunBoInit();
+			that.setMarker(1, 118.600608, 24.889217, '../../static/GRZY/start.png');
+			that.setMarkers(2, 118.613688, 24.912702, '../../static/GRZY/end.png');
+			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
+		},
+
+		methods: {
+			//------------------------------规划路线-----------------------------
+			setMarker: function(id, lon, lat, iconPath) {
+				var width = 20;
+				var height = 20;
+				//描绘点的方法
+				var that = this;
+				var marker = new Object();
+				//画起点经纬度
+				marker = {
+					id: id,
+					latitude: lat,
+					longitude: lon,
+					iconPath: iconPath,
+					width: width,
+					height: height,
+					anchor: {
+					    x: 0.5,
+					    y: 1
+					},
+					//气泡callout
+					// callout: {
+					// 	//iconPath:'../../static/GRZY/zixin.png',
+					// 	content: that.travelTime, //文本
+					// 	color: '#fff', //文本颜色
+					// 	borderRadius: 39, //边框圆角
+					// 	borderWidth: 1, //边框宽度
+					// 	bgColor: '#000000', //背景色
+					// 	padding: 5, //文本边缘留白
+					// 	textAlign: 'center' //文本对齐方式。有效值: left, right, center
+					// },
+					
+					callout: {
+					    content: '骑行时间:' + this.travelTime,
+					    color: '#fff',
+					    fontSize: 13,
+					    borderRadius: 39,
+					    borderWidth: 1,
+					    borderColor: '#000000',
+					    bgColor: '#000000',
+					    padding: '5',
+					    display: 'ALWAYS'
+					}
+				};
+				var str = JSON.stringify(that.markers) ;
+				var arr = JSON.parse(str);
+				arr.push(marker);
+				that.markers = arr;
+				console.log(this.markers);
+				//that.markers.push(marker);
+			},
+			setMarkers: function(id, lon, lat, iconPath) {
+				var width = 20;
+				var height = 20;
+				//描绘点的方法
+				var that = this;
+				var marker = new Object();
+				//画终点经纬度
+				marker = {
+					id: id,
+					latitude: lat,
+					longitude: lon,
+					iconPath: iconPath,
+					width: width,
+					height: height,
+				};
+				that.markers.push(marker);
+			},
+			getDirectionDriving: function(startLonLat, endLonLat) {
+				//调用高德api取得路径规划并绘制线路 
+				var that = this;
+				uni.request({
+					url: $bcfw.InterfaceAddress[0],
+					data: {
+						startLonLat: startLonLat,
+						endLonLat: endLonLat,
+					},
+					method: "GET",
+					success: function(res) {
+						//日后会加入定时，此处需清空
+						console.log(res)
+						that.points = [];
+						that.polyline = [];
+
+						var polylineArr = [];
+						var points = [];
+
+						polylineArr = res.data.Polyline;
+
+						for (var i = 0; i < polylineArr.length; i++) {
+							var arr = polylineArr[i].split(';');
+							for (var j = 0; j < arr.length; j++) {
+								points.push(arr[j]);
+							}
+						}
+						//根据文件建设对象经纬度数组
+						for (var i = 0; i < points.length; i++) {
+							var arr = points[i].split(',');
+							var obj = {
+								longitude: arr[0],
+								latitude: arr[1]
+							}
+							that.points.push(obj);
+						}
+						var obj = {
+							points: that.points,
+							color: "#4281FF",
+							arrowLine: true,
+							width: 5
+						};
+						that.polyline.push(obj);
+					},
+					fail: function(res) {
+						// console.log(res);
+					}
+				});
+			},
+
+			//------------------------------弹框事件-----------------------------------------
+
+			open() {
+				// 需要在 popup 组件，指定 ref 为 popup
+				this.$refs.popup.open()
+			},
+			//关闭
+			close(e) {
+				if (e == 1) {
+					this.$refs.popup.close()
+				}
+			},
+			
+			jump:function(){
+				uni.navigateTo({
+					url:'./zy_expenseDetails'
+				})
+			},
+
+			//------------------------模拟数据----------------------------------------------
+
+			async lunBoInit() {
+				let expenseDetail = await this.$api.lyfwcwd('expenseDetail');
+				this.expenseDetail = expenseDetail.data;
+			},
+		}
+	}
+</script>
+
+<style lang="scss">
+	.map {
+		width: 750rpx;
+	}
+
+	.ct_state {
+		flex-direction: row;
+		justify-content: space-between;
+		width: 698upx;
+		border-radius: 10px;
+		padding: 30upx;
+		background-color: #fff;
+		margin-bottom: 20upx;
+		font-weight: bold;
+		font-size: 34upx;
+		margin-left: 26upx;
+	}
+
+	.sa_text {
+		font-size: 30upx;
+		text-align: left;
+	}
+
+	.sa_text2 {
+		color: #E74246;
+		font-size: 30upx;
+		padding-left: 20upx;
+		font-weight: 500;
+	}
+
+	.sa_text3 {
+		font-weight: 500;
+		color: #4281FF;
+		font-size: 28upx;
+	}
+
+	//顶部
+	.po_boxVlew {
+		z-index: 999;
+		background-color: #FFFFFF;
+		border-radius: 28upx;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.bv_topText {
+		display: flex;
+		position: relative;
+		padding-top: 48upx;
+		padding-left: 51upx;
+		padding-right: 51upx;
+
+		.tt_text {
+			font-size: 28upx;
+			margin: 0 auto;
+			color: #333333;
+		}
+
+		.tt_icon {
+			position: absolute;
+			font-size: 32upx;
+			right: 0;
+			padding-right: 42upx;
+		}
+	}
+
+	.tt_view {
+		padding-left: 42upx;
+		padding-right: 42upx;
+		padding-top: 20upx;
+
+		.tt_tear {
+			font-size: 30upx;
+			text-align: justify;
+			line-height: 47upx;
+			color: #333333;
+		}
+	}
+
+	.vi_bottom {
+		padding-top: 40upx;
+	}
+
+	.sa_text4 {
+		font-size: 30upx;
+		text-align: center;
+		font-weight: 500;
+	}
+
+	.sa_text5 {
+		font-size: 30upx;
+		text-align: center;
+		font-weight: 500;
+	}
+
+	.ct_state2 {
+		width: 698upx;
+		border-radius: 10px;
+		padding: 30upx;
+		background-color: #fff;
+		margin-bottom: 20upx;
+		font-weight: bold;
+		font-size: 34upx;
+		margin-left: 26upx;
+	}
+
+	.st_view {
+		flex-direction: row;
+		justify-content: space-between;
+		padding-top: 50upx;
+		padding-bottom: 40upx;
+		padding-left: 83upx;
+		padding-right: 82upx;
+	}
+
+	.vi_img {
+		width: 180upx;
+		height: 72upx;
+	}
+
+	.vi_img2 {
+		width: 215upx;
+		height: 72upx;
+	}
+
+	.ct_state3 {
+		width: 698upx;
+		border-radius: 10px;
+		padding: 30upx;
+		background-color: #fff;
+		margin-bottom: 20upx;
+		font-weight: bold;
+		font-size: 30upx;
+		margin-left: 26upx;
+	}
+
+	.st_view2 {
+		flex-direction: row;
+		justify-content: space-between;
+		padding-left: 35upx;
+		padding-right: 35upx;
+	}
+
+	.vi_view {
+		width: 259upx;
+		height: 85upx;
+		margin-top: 35upx;
+		border: 1px solid rgba(101, 195, 109, 1);
+		border-radius: 69upx;
+	}
+
+	.vi_text {
+		font-size: 34upx;
+		padding-top: 18upx;
+		padding-left: 84upx;
+		font-weight: 400;
+		color: rgba(101, 195, 109, 1);
+	}
+
+	.vi_view2 {
+		width: 259upx;
+		height: 85upx;
+		margin-top: 35upx;
+		background: rgba(101, 195, 109, 1);
+		border-radius: 69upx;
+	}
+
+	.vi_text2 {
+		font-size: 34upx;
+		padding-top: 18upx;
+		padding-left: 63upx;
+		font-weight: 400;
+		color: #FFFFFF;
+	}
+</style>

@@ -880,9 +880,13 @@
 					}
 				},
 				{
-				    "path" : "pages/GRZY/buttom",
+				    "path" : "pages/GRZY/zy_details",
 				    "style" : {}
-				} 
+				},
+				{
+				    "path" : "pages/GRZY/zy_zhcx",
+				    "style" : {}
+				}
                 ,{
                     "path" : "pages/RentBike/RentBikeHome",
                     "style" : {

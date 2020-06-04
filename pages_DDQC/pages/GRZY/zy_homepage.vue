@@ -23,9 +23,9 @@
 						<view class="tx_text2">{{personalHomepage.cost}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
-					<view class="ve_Text">
-						<view class="tx_text1">卡券</view>
-						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
+					<view class="ve_Text" @click="Jump">
+						<view class="tx_text1">骑行数</view>
+						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">次</text></view>
 					</view>
 					<!-- 押金 -->
 					<view class="ve_Text" @click="open">
@@ -112,7 +112,7 @@
 			</view>
 
 			<!-- 行车记录 -->
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index">
+			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2">
 				<view>
 					<text class="rc_text">{{item.model}}</text>
 				</view>
@@ -190,17 +190,27 @@
 				}
 
 			},
-			
-			natTo:function(e){
+
+			natTo: function(e) {
 				uni.navigateTo({
-					url:e,
+					url: e,
 					// url:
 				})
 			},
-			
-			makePhone:function(){
+
+			makePhone: function() {
 				uni.makePhoneCall({
-					phoneNumber:'17764540647'
+					phoneNumber: '17764540647'
+				})
+			},
+			
+			Jump(){
+				this.type=1
+			},
+			
+			Jump2:function(){
+				uni.navigateTo({
+					url:'./zy_details'
 				})
 			}
 		}

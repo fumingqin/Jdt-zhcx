@@ -425,7 +425,23 @@ const expenseDetail = {
 		startCost:2,
 		durationCost:4,
 		packageOffer:6,
+		totalCost:6,
+		way: '1、您所购买的助力车套餐仅限在购买时所在城市内使用，但该城市内有特别使用规范的区域（如合作景区、园区）除外； <p></p>2、本助力车套餐不适用于单车，未满16周岁不可购卡； <p></p>3、助力车天数骑行卡套餐生效期间，每日可持卡骑行 2 次，每次骑行前 30 分钟免费，超出部分按照正常计费规则（即无优惠的规则）计费； <p></p>4 、助力车套餐在购买时立即生效，并于生效日最后一日的 23:59:59 或次数用完后失效；若您当前持有生效中的骑行卡套餐，可叠加购买相同类型的骑行卡套餐，新购买的卡将在前置卡失效后自动生效并开始计算有效期； <p></p>5、助力车套餐在结费时是否适用，以开锁时助力车套餐的生效状态为准；助力车套餐生效期间，不支持更换套餐或退款；助力车套餐中的优惠不可叠加使用，同一行程中只能使用1种优惠；购买时暂不支持使用账户余额支付。',
 	},
+	msg: '提示'
+}
+
+const homePage = {
+	status: 1, //1成功,0失败提示返回值
+	data: [{
+		hp_img:'../../static/GRZY/guanggao1.png',
+	},
+	{
+		hp_img:'../../static/GRZY/guanggao2.png',
+	},
+	{
+		hp_img:'../../static/GRZY/guanggao3.png',
+	}],
 	msg: '提示'
 }
 
@@ -449,4 +465,5 @@ export default {
 	complaintList3,
 	drivingRecord,
 	expenseDetail,
+	homePage,
 }
