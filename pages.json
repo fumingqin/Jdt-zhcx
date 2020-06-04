@@ -882,6 +882,14 @@
 				{
 				    "path" : "pages/GRZY/buttom",
 				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/zy_details",
+				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/zy_zhcx",
+				    "style" : {}
 				}
 			]
 		}
