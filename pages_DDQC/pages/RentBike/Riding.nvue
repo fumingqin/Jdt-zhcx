@@ -1,0 +1,222 @@
+<template>
+	<view>
+		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
+		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls">
+		</map>
+		<view style="position: fixed; bottom: 0;margin-left: 30rpx;margin-right: 30rpx;">
+			<view style="flex-direction: row;justify-content: space-between;width: 690rpx;">
+				<image src="../../static/GRZY/Position.png" style="width: 120rpx;height: 120rpx;" @click="MoveToThisLocation"></image>
+				<image src="../../static/GRZY/personal.png" style="width: 120rpx;height: 120rpx;" @click="GotoHome"></image>
+			</view>
+			<view v-if="!Isreturn">
+				<view class="ridestate">
+					<text style="color:#333333;font-size: 36rpx;font-weight: 500;">骑行中</text>
+					<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;">如遇故障，2分钟可免费还车</text>
+				</view>
+				<view class="detail">
+					<view style="align-items: center;justify-content: center;">
+						<view>
+							<text style="color: #666666;font-size: 32rpx;">骑行时间</text>
+						</view>
+						<view style="margin-top: 20rpx;">
+							<text style="color: #333;font-size: 50rpx;font-weight: 500;">{{minute}}:{{seconds}}</text>
+						</view>
+						<view style="margin-top: 30rpx;">
+							<text style="color: #999;font-size: 28rpx;font-weight: 300;">电量充足，可骑行59公里</text>
+						</view>
+						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;">
+							<button class="bt_lock" @click="Lock">
+								<text style="color: #FFF;font-size: 40rpx;">临时锁车</text>
+							</button>
+							<button class="bt_returnbike" @click="returnBike">
+								<text style="color: #FFF;font-size: 40rpx;">还车</text>
+							</button>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="detail" v-if="Isreturn">
+				<view style="align-items: center;">
+					<image src="../../static/RentBike/arrive.png" style="width:183rpx;height: 129rpx;" mode="widthFix"></image>
+					<view style="margin-top: 50rpx;">
+						<text style="color: #65C36D;font-size: 38rpx;">已到达停车点</text>
+					</view>
+					<view style="margin-top: 30rpx;">
+						<text style="color: #999999;font-size: 32rpx;">感谢您的骑行体验～</text>
+					</view>
+				</view>
+				<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;">
+					<button class="bt_continuebike" @click="continueRide">
+						<text style="color: #65C36D;font-size: 40rpx;">继续骑行</text>
+					</button>
+					<button class="bt_returnbike" @click="returnBike">
+						<text style="color: #FFF;font-size: 40rpx;">确认还车</text>
+					</button>
+				</view>
+				<view>
+
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				mapHeight: '', //地图高度
+				scale: 15,
+				polyline: [],
+				centerLatitude: 118.6,
+				centerLongitude: 24.3,
+				markers: [],
+				showLocation: true,
+				Isreturn: false,
+				minute: "00", //分钟
+				seconds: "00", //秒
+				timeInterval: '',
+			}
+		},
+		mounted() {
+			var that = this;
+			//获取系统信息
+			uni.getSystemInfo({
+				success: function(res) {
+					//地图高度
+					that.mapHeight = res.windowHeight + 'px';
+				}
+			});
+		},
+		onLoad() {
+			var that = this;
+			// 获取自身位置
+			that.getMyLocation();
+			that.countTime();
+		},
+		created() {
+			uni.setNavigationBarTitle({
+				title: "骑行中"
+			})
+		},
+		methods: {
+			countTime: function() { //计时
+				var that = this;
+				clearInterval(that.timeInterval)
+				that.timeInterval = setInterval(function() {
+					if (that.seconds >= 59) {
+						that.seconds = "00";
+						that.minute++;
+						if (that.minute < 10) {
+							that.minute = "0" + that.minute;
+						}
+					} else {
+						that.seconds++;
+						if (that.seconds < 10) {
+							that.seconds = "0" + that.seconds;
+						}
+					}
+				}, 1000);
+			},
+			GotoHome: function() {
+				uni.navigateTo({
+					url: "../GRZY/zy_homepage"
+				})
+			},
+			MoveToThisLocation: function() {
+				var maps = uni.createMapContext("map", this);
+				maps.moveToLocation()
+			},
+			getMyLocation: function() {
+				var that = this;
+				uni.getLocation({
+					type: "gcj02",
+					//是否解析地址信息，默认false
+					geocode: true,
+					success: function(res) {
+						that.centerLongitude = res.longitude;
+						that.centerLatitude = res.latitude;
+					}
+				});
+			},
+			returnBike: function() { //还车
+				var that = this;
+				uni.setNavigationBarTitle({
+					title: "还车"
+				})
+				uni.showToast({
+					title: "关锁中...",
+					mask: true,
+					// image: "../../RentBike/static/lock.png",
+					icon: "none",
+				})
+				that.Isreturn = true;
+			},
+			Lock: function() { //临时锁车
+				var that = this;
+				that.Isreturn = true;
+			},
+			continueRide: function() {
+				var that = this;
+				that.Isreturn = false;
+			}
+		}
+	}
+</script>
+
+<style>
+	.bt_lock {
+		/* 临时锁车 */
+		background-color: #BCBCBC;
+		border-radius: 50px;
+		width: 290rpx;
+		padding-top: 30rpx;
+		padding-bottom: 30rpx;
+		margin-right: 20rpx;
+		border-width: 0;
+	}
+
+	.bt_returnbike {
+		/* 还车 */
+		background-color: #65C36D;
+		border-radius: 50px;
+		width: 290rpx;
+		padding-top: 30rpx;
+		padding-bottom: 30rpx;
+		border-width: 0;
+	}
+
+	.ridestate {
+		width: 690rpx;
+		background-color: #FFF;
+		padding: 30rpx;
+		padding-top: 35rpx;
+		padding-bottom: 35rpx;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		border-radius: 20rpx;
+	}
+
+	.detail {
+		width: 690rpx;
+		padding: 30rpx;
+		padding-bottom: 50rpx;
+		padding-top: 60rpx;
+		background-color: #FFF;
+		margin-top: 20rpx;
+		border-top-left-radius: 20rpx;
+		border-top-right-radius: 20rpx;
+	}
+
+	.bt_continuebike {
+		/* 继续骑行 */
+		background-color: #FFF;
+		border-radius: 50px;
+		width: 290rpx;
+		padding-top: 30rpx;
+		padding-bottom: 30rpx;
+		border-width: 1rpx;
+		border-color: #65C36D;
+	}
+</style>

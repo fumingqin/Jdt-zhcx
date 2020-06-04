@@ -116,7 +116,7 @@
 				</view>
 			</uni-popup>
 			<view class="ci_affirmView">
-				<!-- <text class="av_money">￥{{carprice}}</text> -->
+				<text class="av_money">总计￥{{carprice}},预付￥{{advance}}</text>
 				<view class="av_atOnceView" enabl :class="{submitColor: selectedValue===1 && nickName!==''}" @click="submitState">
 					<text class="aov_atOnce">立即包车</text>
 				</view>
@@ -153,6 +153,7 @@
 				carNumberSeats: '',
 				carName: '',
 				carprice: '',
+				advance:'',
 				userInfo: [],
 				charteredBus: [],
 				nickName: '', //包车人姓名
@@ -279,6 +280,7 @@
 					},
 					success: () => {
 						var a='';
+						var rate=0.1;
 						uni.getStorage({
 							
 							key: 'homePageInfo',
@@ -306,7 +308,7 @@
 								this.carNumberSeats = res.data.cvt_carNumberSeats;
 								this.carName = res.data.cvt_Name;	
 								this.carprice = res.data.cvt_carprice;
-								// console.log(res.data);
+								this.advance=(parseFloat(this.carprice)*parseFloat(rate)).toFixed(2);
 							}
 						});
 						uni.getStorage({
@@ -474,180 +476,378 @@
 			},
 
 			//提交表单
+			// submit: function() {
+			// 	var that=this;
+			// 	that.index =0;
+			// 	uni.setStorage({
+			// 		key: 'charteredBusInfo',
+			// 		data:{nickName:that.nickName,
+			// 		      nickId:that.nickId,
+			// 		      nickPhone:that.nickPhone,
+			// 		},
+			// 	})
+			// 	uni.showLoading({
+			// 		title: '提交订单中...'
+			// 	})
+			// 	uni.getStorage({
+			// 		key: 'userInfo',
+			// 		success: (res) => {
+			// 			this.userInfo = res.data;
+			// 		}
+			// 	})
+			// 	uni.request({
+			// 		url: $bcfw.Interface.spt_RequestTicketsList.value,
+			// 		method: $bcfw.Interface.spt_RequestTickets.method,
+			// 		data: {
+			// 			userId: this.userId,
+			// 		},
+			// 		success: (res) => {
+			// 			console.log(res)
+			// 			var a = '';
+			// 			if (res.data.msg == '订单查询完成') {
+			// 				a = res.data.data.filter(item => {
+			// 					return item.or_Type == 0;
+			// 				})
+			// 			}
+			// 			if (a == '') {
+			// 				if(that.isNormal===0){
+			// 					that.destination=that.privateSite;
+								
+			// 				}
+							 
+							
+			// 				// #ifdef H5
+			// 				uni.request({
+			// 					url: $bcfw.Interface.spt_AddtouristOrder.value,
+			// 					method:$bcfw.Interface.spt_AddtouristOrder.method,
+			// 					data: {
+			// 						userId: that.userId,
+			// 						privateSite:that.privateSite, //专线目的地
+			// 						datestring:that.datestring, //选择时间
+			// 						or_boardingPoint:that.initialPoint,
+			// 						or_destination:that.destination,
+			// 						cm_day: that.dayContentObject,
+			// 						carNumberSeats:that.carNumberSeats,
+			// 						carName: that.carName,
+			// 						carprice:that.carprice,
+			// 						nickName:that.nickName,
+			// 						nickId:that.nickId,
+			// 						nickPhone: that.nickPhone,								
+			// 						couponID:that.couponColor,
+			// 						st_Longitude:that.st_Longitude,
+			// 						st_Latitude:that.st_Latitude,
+			// 						de_Longitude:that.de_Longitude,
+			// 						de_Latitude:that.de_Latitude,
+			// 						dl_Longitude:that.dl_Longitude,
+			// 						dl_Latitude:that.dl_Latitude,
+			// 						isNormal:that.isNormal,								
+			// 					},
+
+
+			// 					//向服务器发送订单数据，返回订单编号
+			// 					success: (res) => {
+			// 						console.log(res)
+			// 						uni.hideLoading()
+			// 						if (res.data.status) {
+			// 							uni.redirectTo({
+			// 								url: './BCsuccessfulPayment'
+			// 							})
+			// 						}
+			// 					},
+			// 					fail:(res)=>{
+			// 						console.log('shibai')
+			// 					}
+			// 				})
+			// 				// #endif
+
+			// 				// #ifdef APP-PLUS
+							
+			// 				uni.request({
+			// 					url: $bcfw.Interface.spt_AddtouristOrder.value,
+			// 					method:$bcfw.Interface.spt_AddtouristOrder.method,
+			// 					data: {
+			// 						userId: that.userId,
+			// 						privateSite:that.privateSite, //专线目的地
+			// 						datestring:that.datestring, //选择时间
+			// 						or_boardingPoint:that.initialPoint,
+			// 						or_destination:that.destination,
+			// 						cm_day: that.dayContentObject,
+			// 						carNumberSeats:that.carNumberSeats,
+			// 						carName: that.carName,
+			// 						carprice:that.carprice,
+			// 						nickName:that.nickName,
+			// 						nickId:that.nickId,
+			// 						nickPhone: that.nickPhone,								
+			// 						couponID:that.couponColor,
+			// 						st_Longitude:that.st_Longitude,
+			// 						st_Latitude:that.st_Latitude,
+			// 						de_Longitude:that.de_Longitude,
+			// 						de_Latitude:that.de_Latitude,
+			// 						dl_Longitude:that.dl_Longitude,
+			// 						dl_Latitude:that.dl_Latitude,
+			// 						isNormal:that.isNormal,
+								
+			// 					},
+			// 					header: {'content-type': 'application/json'},
+			// 					success:(res)=>{
+			// 						console.log(res)
+			// 						uni.hideLoading()
+			// 						if (res.data.status) {
+			// 							uni.redirectTo({
+			// 								url: './BCsuccessfulPayment'
+			// 							})
+			// 						}
+			// 					},
+			// 					fail:(res)=>{
+			// 						console.log('shibai')
+			// 					}
+			// 				})
+			// 				// #endif
+							
+			// 				// #ifdef MP-WEIXIN
+			// 				console.log(that.userId);
+			// 				uni.request({
+			// 					url: $bcfw.Interface.spt_AddtouristOrder.value,
+			// 					method:$bcfw.Interface.spt_AddtouristOrder.method,
+			// 					data: {
+			// 						userId: that.userId,
+			// 						privateSite:that.privateSite, //专线目的地
+			// 						datestring:that.datestring, //选择时间
+			// 						or_boardingPoint:that.initialPoint,
+			// 						or_destination:that.destination,
+			// 						cm_day: that.dayContentObject,
+			// 						carNumberSeats:that.carNumberSeats,
+			// 						carName: that.carName,
+			// 						carprice:that.carprice,
+			// 						nickName:that.nickName,
+			// 						nickId:that.nickId,
+			// 						nickPhone: that.nickPhone,								
+			// 						couponID:that.couponColor,
+			// 						st_Longitude:that.st_Longitude,
+			// 						st_Latitude:that.st_Latitude,
+			// 						de_Longitude:that.de_Longitude,
+			// 						de_Latitude:that.de_Latitude,
+			// 						dl_Longitude:that.dl_Longitude,
+			// 						dl_Latitude:that.dl_Latitude,
+			// 						isNormal:that.isNormal,
+								
+			// 					},
+			// 					header: {'content-type': 'application/json'},
+			// 					success:(res)=>{
+			// 						console.log(res)
+			// 						uni.hideLoading()
+			// 						if (res.data.status) {
+			// 							uni.redirectTo({
+			// 								url: './BCsuccessfulPayment'
+			// 							})
+			// 						}
+			// 					},
+			// 					fail:(res)=>{
+			// 						console.log('shibai')
+			// 					}
+			// 				})
+			// 				// #endif
+
+
+			// 			} else if (a.length > 0) {
+			// 				uni.hideLoading()
+			// 				uni.showToast({
+			// 					title: '订单中，存在待接单订单，请取消后再下单',
+			// 					icon: 'none',
+			// 					success() {
+			// 						setTimeout(function(){
+			// 						uni.switchTab({
+			// 							url: '../../../pages/order/OrderList'
+			// 						})		
+			// 						},2000)						
+			// 					}
+			// 				})
+							
+			// 			}
+			// 		},
+			// 		fail: function(ee) {
+			// 			console.log(ee)
+			// 		}
+			// 	})
+
+
+			// },
+			//提交表单
 			submit: function() {
-				var that=this;
-				that.index =0;
-				uni.setStorage({
-					key: 'charteredBusInfo',
-					data:{nickName:that.nickName,
-					      nickId:that.nickId,
-					      nickPhone:that.nickPhone,
-					},
-				})
-				uni.showLoading({
-					title: '提交订单中...'
-				})
-				uni.getStorage({
-					key: 'userInfo',
-					success: (res) => {
-						this.userInfo = res.data;
-					}
-				})
-				uni.request({
-					url: $bcfw.Interface.spt_RequestTicketsList.value,
-					method: $bcfw.Interface.spt_RequestTickets.method,
-					data: {
-						userId: this.userId,
-					},
-					success: (res) => {
-						console.log(res)
-						var a = '';
-						if (res.data.msg == '订单查询完成') {
+				
+					var that=this;
+					uni.showLoading({
+						title: '提交订单中...'
+					})
+					uni.getStorage({
+						key: 'userInfo',
+						success: (res) => {
+							this.userInfo = res.data;
+							console.log(this.userInfo)
+						}
+					})
+					uni.request({
+						url: $bcfw.Interface.spt_RequestTicketsList.value,
+						method: $bcfw.Interface.spt_RequestTickets.method,
+						data: {
+							userId: this.userInfo.userId,
+						},
+						success: (res) => {
+							console.log(res)
+							var a = '';
+							if (res.data.msg == '订单查询完成') {
 							a = res.data.data.filter(item => {
 								return item.or_Type == 0;
 							})
 						}
-						if (a == '') {
-							if(that.isNormal===0){
-								that.destination=that.privateSite;
-								
-							}
-							 
-							
-							// #ifdef H5
-							uni.request({
-								url: $bcfw.Interface.spt_AddtouristOrder.value,
-								method:$bcfw.Interface.spt_AddtouristOrder.method,
-								data: {
-									userId: that.userId,
-									privateSite:that.privateSite, //专线目的地
-									datestring:that.datestring, //选择时间
-									or_boardingPoint:that.initialPoint,
-									or_destination:that.destination,
-									cm_day: that.dayContentObject,
-									carNumberSeats:that.carNumberSeats,
-									carName: that.carName,
-									carprice:that.carprice,
-									nickName:that.nickName,
-									nickId:that.nickId,
-									nickPhone: that.nickPhone,								
-									couponID:that.couponColor,
-									st_Longitude:that.st_Longitude,
-									st_Latitude:that.st_Latitude,
-									de_Longitude:that.de_Longitude,
-									de_Latitude:that.de_Latitude,
-									dl_Longitude:that.dl_Longitude,
-									dl_Latitude:that.dl_Latitude,
-									isNormal:that.isNormal,								
-								},
-
-
-								//向服务器发送订单数据，返回订单编号
-								success: (res) => {
-									console.log(res)
-									uni.hideLoading()
-									if (res.data.status) {
-										uni.redirectTo({
-											url: './BCsuccessfulPayment'
-										})
-									}
-								},
-								fail:(res)=>{
-									console.log('shibai')
+							if (a == '') {
+								if(that.isNormal===0){
+									that.destination=that.privateSite;
+									
 								}
-							})
-							// #endif
-
-							// #ifdef APP-PLUS
-							
-							uni.request({
-								url: $bcfw.Interface.spt_AddtouristOrder.value,
-								method:$bcfw.Interface.spt_AddtouristOrder.method,
-								data: {
-									userId: that.userId,
-									privateSite:that.privateSite, //专线目的地
-									datestring:that.datestring, //选择时间
-									or_boardingPoint:that.initialPoint,
-									or_destination:that.destination,
-									cm_day: that.dayContentObject,
-									carNumberSeats:that.carNumberSeats,
-									carName: that.carName,
-									carprice:that.carprice,
-									nickName:that.nickName,
-									nickId:that.nickId,
-									nickPhone: that.nickPhone,								
-									couponID:that.couponColor,
-									st_Longitude:that.st_Longitude,
-									st_Latitude:that.st_Latitude,
-									de_Longitude:that.de_Longitude,
-									de_Latitude:that.de_Latitude,
-									dl_Longitude:that.dl_Longitude,
-									dl_Latitude:that.dl_Latitude,
-									isNormal:that.isNormal,
+								 
 								
-								},
-								header: {'content-type': 'application/json'},
-								success:(res)=>{
-									console.log(res)
-									uni.hideLoading()
-									if (res.data.status) {
-										uni.redirectTo({
-											url: './BCsuccessfulPayment'
-										})
+								// #ifdef H5
+								uni.request({
+									url: $bcfw.Interface.spt_AddtouristOrder.value,
+									method:$bcfw.Interface.spt_AddtouristOrder.method,
+									data: {
+										userId: that.userId,
+										privateSite:that.privateSite, //专线目的地
+										datestring:that.datestring, //选择时间
+										or_boardingPoint:that.initialPoint,
+										or_destination:that.destination,
+										cm_day: that.dayContentObject,
+										carNumberSeats:that.carNumberSeats,
+										carName: that.carName,
+										carprice:that.carprice,
+										advance:that.advance,
+										nickName:that.nickName,
+										nickId:that.nickId,
+										nickPhone: that.nickPhone,								
+										couponID:that.couponColor,
+										st_Longitude:that.st_Longitude,
+										st_Latitude:that.st_Latitude,
+										de_Longitude:that.de_Longitude,
+										de_Latitude:that.de_Latitude,
+										dl_Longitude:that.dl_Longitude,
+										dl_Latitude:that.dl_Latitude,
+										isNormal:that.isNormal,								
+									},
+				
+				
+									//向服务器发送订单数据，返回订单编号
+									success: (res) => {
+										console.log(res)
+										uni.hideLoading()
+										if (res.data.status) {
+											uni.redirectTo({
+												url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
+											})
+										}
+									},
+									fail:(res)=>{
+										console.log('shibai')
 									}
-								},
-								fail:(res)=>{
-									console.log('shibai')
-								}
-							})
-							// #endif
-							
-							// #ifdef MP-WEIXIN
-							console.log(that.userId);
-							uni.request({
-								url: $bcfw.Interface.spt_AddtouristOrder.value,
-								method:$bcfw.Interface.spt_AddtouristOrder.method,
-								data: {
-									userId: that.userId,
-									privateSite:that.privateSite, //专线目的地
-									datestring:that.datestring, //选择时间
-									or_boardingPoint:that.initialPoint,
-									or_destination:that.destination,
-									cm_day: that.dayContentObject,
-									carNumberSeats:that.carNumberSeats,
-									carName: that.carName,
-									carprice:that.carprice,
-									nickName:that.nickName,
-									nickId:that.nickId,
-									nickPhone: that.nickPhone,								
-									couponID:that.couponColor,
-									st_Longitude:that.st_Longitude,
-									st_Latitude:that.st_Latitude,
-									de_Longitude:that.de_Longitude,
-									de_Latitude:that.de_Latitude,
-									dl_Longitude:that.dl_Longitude,
-									dl_Latitude:that.dl_Latitude,
-									isNormal:that.isNormal,
+								})
+								// #endif
+				
+								// #ifdef APP-PLUS
+								uni.request({
+									url: $bcfw.Interface.spt_AddtouristOrder.value,
+									method:$bcfw.Interface.spt_AddtouristOrder.method,
+									data: {
+										userId: that.userId,
+										privateSite:that.privateSite, //专线目的地
+										datestring:that.datestring, //选择时间
+										or_boardingPoint:that.initialPoint,
+										or_destination:that.destination,
+										cm_day: that.dayContentObject,
+										carNumberSeats:that.carNumberSeats,
+										carName: that.carName,
+										carprice:that.carprice,
+										advance:that.advance,
+										nickName:that.nickName,
+										nickId:that.nickId,
+										nickPhone: that.nickPhone,								
+										couponID:that.couponColor,
+										st_Longitude:that.st_Longitude,
+										st_Latitude:that.st_Latitude,
+										de_Longitude:that.de_Longitude,
+										de_Latitude:that.de_Latitude,
+										dl_Longitude:that.dl_Longitude,
+										dl_Latitude:that.dl_Latitude,
+										isNormal:that.isNormal,
+									
+									},
+									header: {'content-type': 'application/json'},
+									success:function(res){
+										console.log(res)
+										uni.hideLoading()
+										if (res.data.msg=='订单下单成功') {
+											uni.redirectTo({
+												url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
+											})
+										}else if(res.data.status==false){
+											uni.showToast({
+												title:'下单失败',
+												icon:'none'
+											})
+										}
+									},
+									fail:(res)=>{
+										console.log('shibai')
+									}
+								})
+								// #endif
 								
-								},
-								header: {'content-type': 'application/json'},
-								success:(res)=>{
-									console.log(res)
-									uni.hideLoading()
-									if (res.data.status) {
-										uni.redirectTo({
-											url: './BCsuccessfulPayment'
-										})
+								// #ifdef MP-WEIXIN
+								
+								uni.request({
+									url: $bcfw.Interface.spt_AddtouristOrder.value,
+									method:$bcfw.Interface.spt_AddtouristOrder.method,
+									data: {
+										userId: that.userId,
+										privateSite:that.privateSite, //专线目的地
+										datestring:that.datestring, //选择时间
+										or_boardingPoint:that.initialPoint,
+										or_destination:that.destination,
+										cm_day: that.dayContentObject,
+										carNumberSeats:that.carNumberSeats,
+										carName: that.carName,
+										carprice:that.carprice,
+										advance:that.advance,
+										nickName:that.nickName,
+										nickId:that.nickId,
+										nickPhone: that.nickPhone,								
+										couponID:that.couponColor,
+										st_Longitude:that.st_Longitude,
+										st_Latitude:that.st_Latitude,
+										de_Longitude:that.de_Longitude,
+										de_Latitude:that.de_Latitude,
+										dl_Longitude:that.dl_Longitude,
+										dl_Latitude:that.dl_Latitude,
+										isNormal:that.isNormal,
+									
+									},
+									header: {'content-type': 'application/json'},
+									success:(res)=>{
+										console.log(res)
+										uni.hideLoading()
+										if (res.data.status) {
+											uni.navigateTo({
+												url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
+											})
+										}
+									},
+									fail:(res)=>{
+										console.log('shibai')
 									}
-								},
-								fail:(res)=>{
-									console.log('shibai')
-								}
-							})
-							// #endif
-
-
-						} else if (a.length > 0) {
+								})
+								// #endif
+				
+				
+							} else if (a.length > 0) {
 							uni.hideLoading()
 							uni.showToast({
 								title: '订单中，存在待接单订单，请取消后再下单',
@@ -662,209 +862,14 @@
 							})
 							
 						}
-					},
-					fail: function(ee) {
-						console.log(ee)
-					}
-				})
-
-
-			},
-			//提交表单
-			// submit: function() {
-				
-			// 		var that=this;
-			// 		uni.showLoading({
-			// 			title: '提交订单中...'
-			// 		})
-			// 		uni.getStorage({
-			// 			key: 'userInfo',
-			// 			success: (res) => {
-			// 				this.userInfo = res.data;
-			// 				console.log(this.userInfo)
-			// 			}
-			// 		})
-			// 		uni.request({
-			// 			url: $bcfw.Interface.spt_RequestTicketsList.value,
-			// 			method: $bcfw.Interface.spt_RequestTickets.method,
-			// 			data: {
-			// 				userId: this.userInfo.userId,
-			// 			},
-			// 			success: (res) => {
-			// 				console.log(res)
-			// 				var a = '';
-			// 				if (res.data.msg == '订单查询完成') {
-			// 				a = res.data.data.filter(item => {
-			// 					return item.or_Type == 0;
-			// 				})
-			// 			}
-			// 				if (a == '') {
-			// 					if(that.isNormal===0){
-			// 						that.destination=that.privateSite;
-									
-			// 					}
-								 
-								
-			// 					// #ifdef H5
-			// 					uni.request({
-			// 						url: $bcfw.Interface.spt_AddtouristOrder.value,
-			// 						method:$bcfw.Interface.spt_AddtouristOrder.method,
-			// 						data: {
-			// 							userId: that.userId,
-			// 							privateSite:that.privateSite, //专线目的地
-			// 							datestring:that.datestring, //选择时间
-			// 							or_boardingPoint:that.initialPoint,
-			// 							or_destination:that.destination,
-			// 							cm_day: that.dayContentObject,
-			// 							carNumberSeats:that.carNumberSeats,
-			// 							carName: that.carName,
-			// 							carprice:that.carprice,
-			// 							nickName:that.nickName,
-			// 							nickId:that.nickId,
-			// 							nickPhone: that.nickPhone,								
-			// 							couponID:that.couponColor,
-			// 							st_Longitude:that.st_Longitude,
-			// 							st_Latitude:that.st_Latitude,
-			// 							de_Longitude:that.de_Longitude,
-			// 							de_Latitude:that.de_Latitude,
-			// 							dl_Longitude:that.dl_Longitude,
-			// 							dl_Latitude:that.dl_Latitude,
-			// 							isNormal:that.isNormal,								
-			// 						},
+						},
+						fail: function(ee) {
+							console.log(ee)
+						}
+					})
 				
 				
-			// 						//向服务器发送订单数据，返回订单编号
-			// 						success: (res) => {
-			// 							console.log(res)
-			// 							uni.hideLoading()
-			// 							if (res.data.status) {
-			// 								uni.redirectTo({
-			// 									url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
-			// 								})
-			// 							}
-			// 						},
-			// 						fail:(res)=>{
-			// 							console.log('shibai')
-			// 						}
-			// 					})
-			// 					// #endif
-				
-			// 					// #ifdef APP-PLUS
-			// 					uni.request({
-			// 						url: $bcfw.Interface.spt_AddtouristOrder.value,
-			// 						method:$bcfw.Interface.spt_AddtouristOrder.method,
-			// 						data: {
-			// 							userId: that.userId,
-			// 							privateSite:that.privateSite, //专线目的地
-			// 							datestring:that.datestring, //选择时间
-			// 							or_boardingPoint:that.initialPoint,
-			// 							or_destination:that.destination,
-			// 							cm_day: that.dayContentObject,
-			// 							carNumberSeats:that.carNumberSeats,
-			// 							carName: that.carName,
-			// 							carprice:that.carprice,
-			// 							nickName:that.nickName,
-			// 							nickId:that.nickId,
-			// 							nickPhone: that.nickPhone,								
-			// 							couponID:that.couponColor,
-			// 							st_Longitude:that.st_Longitude,
-			// 							st_Latitude:that.st_Latitude,
-			// 							de_Longitude:that.de_Longitude,
-			// 							de_Latitude:that.de_Latitude,
-			// 							dl_Longitude:that.dl_Longitude,
-			// 							dl_Latitude:that.dl_Latitude,
-			// 							isNormal:that.isNormal,
-									
-			// 						},
-			// 						header: {'content-type': 'application/json'},
-			// 						success:function(res){
-			// 							console.log(res)
-			// 							uni.hideLoading()
-			// 							if (res.data.msg=='订单下单成功') {
-			// 								uni.redirectTo({
-			// 									url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
-			// 								})
-			// 							}else if(res.data.status==false){
-			// 								uni.showToast({
-			// 									title:'下单失败',
-			// 									icon:'none'
-			// 								})
-			// 							}
-			// 						},
-			// 						fail:(res)=>{
-			// 							console.log('shibai')
-			// 						}
-			// 					})
-			// 					// #endif
-								
-			// 					// #ifdef MP-WEIXIN
-								
-			// 					uni.request({
-			// 						url: $bcfw.Interface.spt_AddtouristOrder.value,
-			// 						method:$bcfw.Interface.spt_AddtouristOrder.method,
-			// 						data: {
-			// 							userId: that.userId,
-			// 							privateSite:that.privateSite, //专线目的地
-			// 							datestring:that.datestring, //选择时间
-			// 							or_boardingPoint:that.initialPoint,
-			// 							or_destination:that.destination,
-			// 							cm_day: that.dayContentObject,
-			// 							carNumberSeats:that.carNumberSeats,
-			// 							carName: that.carName,
-			// 							carprice:that.carprice,
-			// 							nickName:that.nickName,
-			// 							nickId:that.nickId,
-			// 							nickPhone: that.nickPhone,								
-			// 							couponID:that.couponColor,
-			// 							st_Longitude:that.st_Longitude,
-			// 							st_Latitude:that.st_Latitude,
-			// 							de_Longitude:that.de_Longitude,
-			// 							de_Latitude:that.de_Latitude,
-			// 							dl_Longitude:that.dl_Longitude,
-			// 							dl_Latitude:that.dl_Latitude,
-			// 							isNormal:that.isNormal,
-									
-			// 						},
-			// 						header: {'content-type': 'application/json'},
-			// 						success:(res)=>{
-			// 							console.log(res)
-			// 							uni.hideLoading()
-			// 							if (res.data.status) {
-			// 								uni.navigateTo({
-			// 									url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
-			// 								})
-			// 							}
-			// 						},
-			// 						fail:(res)=>{
-			// 							console.log('shibai')
-			// 						}
-			// 					})
-			// 					// #endif
-				
-				
-			// 				} else if (a.length > 0) {
-						// 	uni.hideLoading()
-						// 	uni.showToast({
-						// 		title: '订单中，存在待接单订单，请取消后再下单',
-						// 		icon: 'none',
-						// 		success() {
-						// 			setTimeout(function(){
-						// 			uni.switchTab({
-						// 				url: '../../../pages/order/OrderList'
-						// 			})		
-						// 			},2000)						
-						// 		}
-						// 	})
-							
-						// }
-			// 			},
-			// 			fail: function(ee) {
-			// 				console.log(ee)
-			// 			}
-			// 		})
-				
-				
-			// 	},
+				},
 
 
 			//同意购买-点击事件

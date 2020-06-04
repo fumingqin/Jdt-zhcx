@@ -190,23 +190,23 @@
 				}
 
 			},
-			
-			natTo:function(e){
+
+			natTo: function(e) {
 				uni.navigateTo({
-					url:e,
+					url: e,
 					// url:
 				})
 			},
-			
-			makePhone:function(){
+
+			makePhone: function() {
 				uni.makePhoneCall({
-					phoneNumber:'17764540647'
+					phoneNumber: '17764540647'
 				})
 			},
 			
-			Jump:function(){
+			Jump(){
 				this.type=1
-			},
+			}
 		}
 	}
 </script>

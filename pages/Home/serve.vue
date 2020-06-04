@@ -27,20 +27,50 @@
 					<text class="sv_text">包车服务</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
-					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/DDQC.png" mode="aspectFit"></image>
 					<text class="sv_text">达达骑车</text>
 				</view>
 				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/gwzhuche.png" mode="aspectFit"></image>
+					<text class="sv_text">公务租车</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/jpyuyue.png" mode="aspectFit"></image>
+					<text class="sv_text">检票预约</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/xjkuaidi.png" mode="aspectFit"></image>
+					<text class="sv_text">小件快递</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/tianqi.png" mode="aspectFit"></image>
+					<text class="sv_text">天气</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/hangban.png" mode="aspectFit"></image>
+					<text class="sv_text">航班</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/huoche.png" mode="aspectFit"></image>
+					<text class="sv_text">火车</text>
+				</view>
+				
 				<!-- <view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
-					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image>
+					<image class="sv_print" src="../../static/Home/serve/dzbashi.png" mode="aspectFit"></image> 
 					<text class="sv_text">定制巴士</text>
 				</view> -->
 				
 				</view>
 		</view>
 
-		<!-- <view class="sv_view2">
+		<view class="sv_view2">
 			<view class="sv_title">旅游</view>
 			<view style="display: flex; flex-wrap: wrap;">
 				
@@ -54,18 +84,18 @@
 				<text class="sv_text">跟团游</text>
 			</view>
 			
-			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
+			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
 				<image class="sv_print" src="../../static/Home/serve/jqgoupiao.png" mode="aspectFit"></image>
 				<text class="sv_text">景区购票</text>
 			</view>
 			
-			<view class="sv_view3" @click="natTo3('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
+			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
 				<image class="sv_print" src="../../static/Home/lvyouchanping.png" mode="aspectFit"></image>
 				<text class="sv_text">旅游产品</text>
 			</view>
 			
 			</view>
-		</view> -->
+		</view>
 		
 		<!-- <view class="sv_view2">
 			<view class="sv_title">防控</view>
@@ -92,7 +122,10 @@
 	export default {
 		data() {
 			return {
-				imageIndex : '',//首页图片
+				imageIndex:[{
+				imageUrl:'',
+				}
+				]//首页图片
 			}
 		},
 		onLoad:function(){
@@ -126,7 +159,7 @@
 					// #endif
 				}else{
 					uni.navigateTo({
-						url: url
+						url: url,
 					});
 				}
 				
@@ -144,11 +177,6 @@
 				})
 				// #endif
 				
-			},
-			natTo3: function(url) {
-				uni.navigateTo({
-					url
-				})
 			},
 		}
 	}
@@ -200,6 +228,11 @@
 
 				.sv_print {
 					width: 56upx;
+					height: 56upx;
+				}
+				
+				.sv_print2 {
+					width: 79upx;
 					height: 56upx;
 				}
 

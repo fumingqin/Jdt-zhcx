@@ -36,11 +36,11 @@
 					<view class="MP_title">费用详情</view>
 					<view class="MP_cost" v-if="orderInfo.or_class=='包车-定制'">
 						<text>定制费用</text>
-						<text class="MP_userCost">¥{{orderInfo.cm_totalCost}}</text>
+						<text class="MP_userCost">¥{{orderInfo.cm_advance}}</text>
 					</view>
 					<view class="MP_cost" v-if="orderInfo.or_class=='包车-专线'">
 						<text>专线费用</text>
-						<text class="MP_userCost">¥{{orderInfo.cm_totalCost}}</text>
+						<text class="MP_userCost">¥{{orderInfo.cm_advance}}</text>
 					</view>
 
 					<!-- 优惠券 -->
@@ -52,7 +52,7 @@
 
 
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{orderInfo.cm_totalCost}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo.cm_advance}}</text>
 					</view>
 
 				</view>
@@ -82,7 +82,7 @@
 			
 
 			<view class="MP_information3" @click="paymentSatas">
-				支付{{orderInfo.cm_totalCost}}元
+				支付{{orderInfo.cm_advance}}元
 			</view>
 
 		</view>
@@ -115,6 +115,7 @@
 					billDescript:'',//订单描述
 					
 					cm_totalCost:'',//总计
+					cm_advance:'',//预付款
 					or_dateString:'',//出发时间
 					or_boardingPoint: '',//出发地
 					or_destination:'',//目的地
@@ -368,7 +369,7 @@
 						method:$bcfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
-							price: that.orderInfo.cm_totalCost,
+							price: that.orderInfo.cm_advance,
 							orderNumber: that.orderInfo.or_number,
 							goodsName: that.orderInfo.or_class,
 							billDescript: that.orderInfo.billDescript
@@ -386,7 +387,7 @@
 										method:$bcfw.Interface.spt_CheckPayState.method,
 										data: {
 											or_number: that.orderInfo.or_number,
-											factPayPrice: that.orderInfo.cm_totalCost,
+											factPayPrice: that.orderInfo.cm_advance,
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
@@ -463,7 +464,7 @@
 						method:$bcfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
-							price: that.orderInfo.cm_totalCost,
+							price: that.orderInfo.cm_advance,
 							orderNumber: that.orderInfo.or_number,
 							goodsName: that.orderInfo.or_class,
 							billDescript: that.orderInfo.billDescript
@@ -481,7 +482,7 @@
 										method:$bcfw.Interface.spt_CheckPayState.method,
 										data: {
 											or_number: that.orderInfo.or_number,
-											factPayPrice: that.orderInfo.cm_totalCost,
+											factPayPrice: that.orderInfo.cm_advance,
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
@@ -549,7 +550,7 @@
 						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
 						data: {
 							payType: payTypeIndex,
-							price: this.orderInfo.cm_totalCost,
+							price: this.orderInfo.cm_advance,
 							orderNum: this.orderInfo.or_number,
 						},
 						method: 'POST',

@@ -3,7 +3,6 @@
 		<view>
 			<button class="tjButton" @click="jump">单车/助力车</button>
 			<button class="tjButton" @click="jump2">个人主页</button>
-			<button class="tjButton" @click="jump3">充值金额</button>
 		</view>
 	</view>
 </template>
@@ -26,11 +25,6 @@
 			jump2:function(){
 				uni.navigateTo({
 					url:'zy_homepage'
-				})
-			},
-			jump3:function(){
-				uni.navigateTo({
-					url:'topUp'
 				})
 			}
 		}

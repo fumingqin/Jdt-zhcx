@@ -1,5 +1,5 @@
 {
-    "name" : "泉运出行综合平台",
+    "name" : "南平综合出行平台",
     "appid" : "__UNI__7BBF03F",
     "description" : "",
     "versionName" : "1.0.0",
@@ -18,10 +18,10 @@
         /* 模块配置 */
         "modules" : {
             "Maps" : {},
-            "Push" : {},
             "OAuth" : {},
             "Payment" : {},
-            "Share" : {}
+            "Share" : {},
+            "Push" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -119,9 +119,9 @@
             },
             "splashscreen" : {
                 "android" : {
-                    "hdpi" : "C:/Users/32589/Desktop/启动图480x762.png",
-                    "xhdpi" : "C:/Users/32589/Desktop/启动图720x1242.png",
-                    "xxhdpi" : "C:/Users/32589/Desktop/启动图1080x1882.png"
+                    "hdpi" : "",
+                    "xhdpi" : "",
+                    "xxhdpi" : ""
                 }
             }
         },
@@ -131,7 +131,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx8dcbb62a76885221",
+        "appid" : "wxf64bf945b37a9939",
         "setting" : {
             "es6" : false,
             "postcss" : false,

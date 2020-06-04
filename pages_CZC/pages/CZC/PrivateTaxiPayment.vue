@@ -18,7 +18,7 @@
 					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">下车点：{{EndAddress}}</view>
 					<view style="color: #888;font-size: 30rpx;line-height: 60rpx;">预约时间：{{AppointmentTime}}</view>
 				</view>
-				<view style="padding-top:30rpx;" v-show="isHidden">
+				<view style="padding-top:30rpx;" v-show="isHidden" v-if="personArr.length>0">
 					<view style="color: #2C2D2D;font-size:36rpx;font-weight: bold;">乘车人信息</view>
 					<view style="border-bottom: solid 1rpx#F5F5F5;" v-for="(item,index) in personArr" :key="index">
 						<view style="color: #2C2D2D;font-size: 32rpx;line-height: 60rpx;display: flex;">
