@@ -15,7 +15,6 @@
 			
 			<!-- 按钮颜色和发送验证码的样式 -->
 			<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
-			<image src="../../static/GRZX/btnLogin1.png" class="btnLogin" ></image>
 			<text class="fontStyle" @click="loginClick">确定</text>
 		</view>
 		
@@ -52,6 +51,7 @@
 			this.load(options.loginType);
 		},
 		methods: {
+			//---------------加载图片----------------
 			loadImg(){
 				var that=this;
 				console.log(that.$GrzxInter.GetImage.url,"144")
@@ -63,11 +63,11 @@
 					method:'POST',
 					success(res) {
 						var image1=res.data.data.filter(item => {
-							return item.type=='背景图';
+							return item.type=='南平背景图';
 						})
 						that.background=image1[0].imageUrl;
 						var image2=res.data.data.filter(item => {
-							return item.type=='logo';
+							return item.type=='nanpinglogo';
 						})
 						that.logo=image2[0].imageUrl;
 						// console.log(that.logo,'that.logo')
@@ -537,9 +537,9 @@
 		line-height: 64upx;
 		height: 64upx;
 	}
-	.style1{	
-		border:1px solid #ED1C24;
-		color: #ED1C24;
+	.style1{	//获取验证码
+		border:1px solid #FF971E;
+		color: #FF971E;
 	}	
 	.style2{
 		border:1px solid #1D2087;
@@ -551,13 +551,14 @@
 	}	
 	.fontStyle{		//确定字体样式
 		position: absolute;
-		top: 450upx;
+		top: 480upx;
 		left: 5%;
 		text-align: center;
 		font-size: 36upx;
 		color: #FFFFFF;
 		width: 90%;
-		height: 100upx;
-		line-height: 100upx;
+		padding: 25upx 0;
+		border-radius: 20upx;
+		background:linear-gradient(54deg,rgba(255,128,8,1) 0%,rgba(255,200,55,1) 100%);
 	}
 </style>
