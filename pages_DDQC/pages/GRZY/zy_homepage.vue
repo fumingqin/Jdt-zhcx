@@ -112,7 +112,7 @@
 			</view>
 
 			<!-- 行车记录 -->
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index">
+			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2">
 				<view>
 					<text class="rc_text">{{item.model}}</text>
 				</view>
@@ -206,6 +206,12 @@
 			
 			Jump(){
 				this.type=1
+			},
+			
+			Jump2:function(){
+				uni.navigateTo({
+					url:'./zy_details'
+				})
 			}
 		}
 	}

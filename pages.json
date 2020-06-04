@@ -880,10 +880,6 @@
 					}
 				},
 				{
-				    "path" : "pages/GRZY/buttom",
-				    "style" : {}
-				},
-				{
 				    "path" : "pages/GRZY/zy_details",
 				    "style" : {}
 				},

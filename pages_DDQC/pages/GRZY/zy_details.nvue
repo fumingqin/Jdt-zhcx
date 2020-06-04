@@ -11,11 +11,11 @@
 		<view style="position: fixed;bottom: 0;">
 			<view class="ct_state">
 				<text class="sa_text">行程<text class="sa_text2">{{expenseDetail.durationCost}}元</text></text>
-				<text class="sa_text3" @click="open">查看明细></text>
+				<text class="sa_text3" @click="jump">查看明细></text>
 			</view>
 
 			<!-- 押金支付弹框 -->
-			<uni-popup ref="popup" type="bottom">
+			<!-- <uni-popup ref="popup" type="bottom">
 				<view class="po_boxVlew">
 					<view class="bv_topText">
 						<text class="tt_text">查看明细</text>
@@ -26,7 +26,7 @@
 					</view>
 					<view class="vi_bottom"></view>
 				</view>
-			</uni-popup>
+			</uni-popup> -->
 
 			<view class="ct_state2">
 				<view></view>
@@ -226,6 +226,12 @@
 				if (e == 1) {
 					this.$refs.popup.close()
 				}
+			},
+			
+			jump:function(){
+				uni.navigateTo({
+					url:'./zy_expenseDetails'
+				})
 			},
 
 			//------------------------模拟数据----------------------------------------------
