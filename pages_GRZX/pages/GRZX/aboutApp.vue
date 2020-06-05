@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image src="../../static/GRZX/logo_quanzhou.png" class="logoClass"></image>
+		<image :src="logo" class="logoClass"></image>
 		<text class="titleClass">{{title}}</text>
 		<text class="versionClass">{{versionNum}}{{version}}</text>
 		<view class="boxClass1">
@@ -30,7 +30,7 @@
 	export default{
 		data(){
 			return{
-				title:'泉州综合出行',
+				title:'南平综合出行',
 				versionNum:'Version ',
 				functionIntroduction:'功能介绍',
 				checkVersion:'检查新版本',
@@ -40,12 +40,33 @@
 				copyright2:'Copyright©2020 Journey',
 				copyright3:'All Rights Reserved',
 				version:'',
+				logo:'../../static/GRZX/logo.png',
 			}
 		},
 		onLoad(){
+			// this.loadImg();
+			// #ifdef APP-PLUS
 			this.version=plus.runtime.version;
+			//#endif
 		},
 		methods:{
+			loadImg(){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.GetImage.url,
+					data:{
+						model:5,
+					},
+					method:'POST',
+					success(res) {
+						var image=res.data.data.filter(item => {
+							return item.type=='nanpinglogo';
+						})
+						that.logo=image[0].imageUrl;
+						// console.log(that.logo,'that.logo')
+					}
+				})
+			},
 			functionClick(){
 				uni.showToast({
 					icon:'none',
@@ -68,10 +89,10 @@
 							    success: (e)=>{
 							    	if(e.confirm){
 										//plus.runtime.openURL(res.data.DownLoadUrl);
-										// #ifdef APP-PLUS || H5
+										// #ifdef APP-PLUS
 										plus.runtime.openURL("http://27.148.155.9:9248/LoadAppWebsite/泉运出行综合平台.apk");
 										// #endif
-										// #ifndef APP-PLUS || H5
+										// #ifndef APP-PLUS
 										uni.showToast({
 											title:'暂无法下载新版本'
 										})
@@ -115,8 +136,9 @@
 		position: absolute;
 		top:100upx;
 		left: 39%;
-		width: 160upx;
-		height: 160upx;
+		width: 180upx;
+		height: 180upx;
+		border-radius: 50%;
 	}
 	.titleClass{	//大武夷智慧游
 		position: absolute;
