@@ -10,13 +10,12 @@
 				<image src="../../static/GRZY/back.png" style="width: 20rpx;height: 35rpx;"></image>
 			</view>
 			
-
 			<view class="navTitleView">
 				<view>
-					<text style="color: #333333;" @click="titleClick('单车')" :class="{'Btn_click' : isClick == '单车'}">单车</text>
+					<text style="color: #333333;" @click="titleClick('有桩')" :class="{'Btn_click' : isClick == '有桩'}">有桩</text>
 				</view>
 				<view style="margin-left: 30rpx;">
-					<text style="color: #65C36D;" @click="titleClick('助力车')" :class="{'Btn_click' : isClick == '助力车'}">助力车</text>
+					<text style="color: #65C36D;" @click="titleClick('无桩')" :class="{'Btn_click' : isClick == '无桩'}">无桩</text>
 				</view>
 			</view>
 
@@ -152,7 +151,9 @@
 								//创建绘制坐标点的对象marker
 								var marker = new Object();
 								//坐标里面包含经纬度，需要将经纬度分离取出来
-								var gps = res.data.data[i].gps.split(','),
+								var gps = res.data.data[i].gps.split(',');
+								//冒泡显示文本 ---  可租数量，可还数量，可用时长
+								var content = '可租数量：' + res.data.data[i].rentCount + ' ' + '可还数量：' + res.data.data[i].restoreCount;
 								marker = {
 									id : res.data.data[i].id,
 									latitude : gps[1],
@@ -161,7 +162,7 @@
 									width : that.iconWidth,
 									height : that.iconHeight,
 									callout : {
-										content: res.data.data[i].name, //文本
+										content: content, //文本res.data.data[i].name
 										color: '#FC4646', //文字颜色
 										fontSize: 12, //文本大小
 										borderRadius: 4, //边框圆角
@@ -193,7 +194,7 @@
 					data:{
 						Longitude:117.6536981221,//经度
 						Latitude:24.517346,//纬度
-						Range:0,//范围（米）
+						Range:1000,//范围（米）
 					},
 					success(res) {
 						console.log('无桩数据',res)
@@ -210,13 +211,13 @@
 			titleClick: function(res) {
 				var that = this;
 				that.isClick = res;
-				if(res == '单车'){
-					//当前选中的是单车，加载单车的数据
+				if(res == '有桩'){
+					//当前选中的是单车，加载单车的数据,经纬度传当前位置
+					// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
 					
-					
-				}else if(res == '助力车') {
-					//当前选中的是助力车，加载助力车的数据
-					
+				}else if(res == '无桩') {
+					//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
+					// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
 				}
 			},
 			//-------------------------------返回自身位置-------------------------------
@@ -247,7 +248,7 @@
 				uni.requestPayment({
 					provider: 'wxpay',
 					orderInfo: {
-						// appid: 'wx4394e02214803063',
+						appid: 'wx4394e02214803063',
 						timestamp: '1591185789',
 						noncestr: 'xaa2yfpoy1imam07anohs5arfwsrh130',
 						package: 'Sign=WXPay',
