@@ -86,7 +86,6 @@
 </template>
 
 <script>
-	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
 	export default {
 		data(){
 			return{
@@ -116,9 +115,6 @@
 		},
 		onLoad (){	
 			this.loadUnid();
-		},
-		components:{
-		     wPicker
 		},
 		methods:{
 			//------------------加载账号id----------------
