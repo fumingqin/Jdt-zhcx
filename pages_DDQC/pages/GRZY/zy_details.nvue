@@ -2,10 +2,6 @@
 	<view>
 		<map id="map1" ref="map1" class="map" :style="{height:mapHeight}" :scale="scale" :longitude="longitude" :latitude="latitude"
 		 :polyline="polyline" :markers="markers" :show-location="false">
-			<!-- <view id="map1" style="width:100%;background:rgba(0,0,0,1);opacity:0.76;border-radius:39px;padding: 49upx 26upx;position: fixed;">
-			 <image style="width: 47upx;height: 36upx;" src="../../static/GRZY/qixing.png"></image>
-			 <text style="font-size: 28upx;color: #FFFFFF;">{{time}}分钟{{minute}}秒</text>
-		 </view> -->
 		</map>
 
 		<view style="position: fixed;bottom: 0;">
@@ -14,30 +10,100 @@
 				<text class="sa_text3" @click="jump">查看明细></text>
 			</view>
 
-			<!-- 押金支付弹框 -->
-			<!-- <uni-popup ref="popup" type="bottom">
-				<view class="po_boxVlew">
-					<view class="bv_topText">
-						<text class="tt_text">查看明细</text>
-						<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
-					</view>
-					<view class="tt_view">
-						<rich-text class="tt_tear" :nodes="expenseDetail.way"></rich-text>
-					</view>
-					<view class="vi_bottom"></view>
-				</view>
-			</uni-popup> -->
-
 			<view class="ct_state2">
 				<view></view>
 				<text class="sa_text4">请对本次骑行进行评价！</text>
 				<view></view>
 				<view class="st_view">
-					<image class="vi_img" src="../../static/GRZY/manyi.png"></image>
-					<image class="vi_img2" src="../../static/GRZY/bumanyi.png"></image>
+					<!-- 满意 -->
+					<image class="vi_img" src="../../static/GRZY/manyi.png" @click="open"></image>
+					<!-- 不满意 -->
+					<image class="vi_img2" src="../../static/GRZY/bumanyi.png" @click="open"></image>
 				</view>
 			</view>
 
+			<!-- 满意弹出框 -->
+			<uni-popup ref="bottomPopup" type="bottom">
+				<form @submit="submit">
+					<view class="dt_view">
+						<view style="flex-direction: row;
+						justify-content: space-between; 
+						margin-top: 20rpx;">
+							<view>
+								<!-- 请勿删除 -->
+							</view>
+							<view>
+								<text style="font-size:38rpx;
+								font-family:Source Han Sans SC;
+								font-weight:400;color:#2C2D2D;">评价</text>
+							</view>
+							<view style="right: 30rpx;">
+								<uni-icons @click="close(1)" type="closeempty" size="30"></uni-icons>
+							</view>
+						</view>
+						<!-- 五角星 -->
+						<view style="margin-top: 60rpx; margin-left: 92rpx;">
+							<uni-rate size="28" margin="20" :value="num" @change="onchange" />
+						</view>
+						<!-- 评价框 -->
+						<view v-if="show" style="flex-direction: row; 
+						flex-wrap: wrap; 
+						justify-content: flex-start; 
+						margin-left: 40rpx; 
+						margin-top: 40rpx; 
+						margin-right: 20rpx;">
+							<view :class="[rSelect.indexOf(item)>-1?'cur':'unCur']" @tap="tapInfo(item)" v-for="(item,index) in evaluate"
+							 :key="index">
+								<text :class="[rSelect.indexOf(item)>-1?'color':'unColor']">{{item}}</text>
+							</view>
+						</view>
+						<view v-if="!show" style="flex-direction: row; 
+						flex-wrap: wrap; 
+						justify-content: flex-start; 
+						margin-left: 40rpx; 
+						margin-top: 40rpx; 
+						margin-right: 20rpx;">
+							<view :class="[rSelect1.indexOf(item)>-1?'cur':'unCur']" @tap="tapInfo1(item)" v-for="(item,index) in badevaluate"
+							 :key="index">
+								<text :class="[rSelect1.indexOf(item)>-1?'color':'unColor']">{{item}}</text>
+							</view>
+						</view>
+						<!-- 文本框 -->
+						<view>
+							<textarea placeholder="请提出您的宝贵意见！" style="width:648rpx;
+							height:164rpx;
+							border-width: 1px;
+							border-color: #AAAAAA;
+							border-radius:6rpx;
+							margin-top: 30rpx; 
+							margin-left: 40rpx;
+							font-size:28rpx;
+							font-family:Source Han Sans SC;
+							font-weight:300;
+							color:#999999; 
+							padding: 10rpx;"
+							 name="textareaValue" />
+							</view>
+					<!-- 提交按钮 -->
+					<view>
+						<button form-type="submit" style="width:648rpx;
+						height:84rpx; 
+						border-radius:12rpx; 
+						background-color: #FC4646;
+						border-color: #AAAAAA;
+						 margin-top: 30rpx; 
+						 margin-left: 40rpx;">
+							<text style="color: #FFFFFF;
+							align-items: center; 
+							font-size: 34rpx; 
+							font-weight:400; 
+							font-family:Source Han Sans SC;">提交</text>
+						</button>
+					</view>
+				</view>
+				</form>
+			</uni-popup>
+			
 			<view class="ct_state3">
 				<view></view>
 				<text class="sa_text5">骑行疑问？</text>
@@ -60,15 +126,27 @@
 	import $bcfw from '@/common/BCFW/bcfw.js';
 	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
 	import Map from '@/pages_DDQC/components/GRZY/my-openMap/openMap.js';
+	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
+	import uniRate from '@/components/Order/StarJudge/uni-rate/uni-rate.vue';
 	export default {
 		components: {
 			uniPopup,
+			uniIcons,
+			uniRate,
 		},
 		data() {
 			return {
+				selectContent:'',
 				scale: 14,
 				longitude: "118.600608", //地图中心点经度
 				latitude: "24.889217", //地图中心点纬度
+				evaluate: ['动作娴熟', '服务态度好', '热情', '技术高超好', '绅士', '服务周到', '攀谈', '风度翩翩', '成熟稳重', '笑容满面','没有绕路',],
+				badevaluate: ['动作不熟', '服务态度差', '冷漠', '技术较差', '无情', '服务不周到', '不守时', '衣衫不整', '不严肃', '愁眉苦脸','司机绕路',],
+				textareaValue:"",//意见信息
+				show:true,//满意或不满意状态  true为满意  false为不满意
+				rSelect:[],//高评星选择
+				rSelect1:[],//低评星选择
+				num:'5',//星星数量
 				points: [],
 				polyline: [],
 				markers: [],
@@ -76,8 +154,7 @@
 				viewHeight: '',
 				time: 10,
 				minute: 26,
-				travelTime:'10分26秒',
-
+				travelTime:'10分',
 				expenseDetail: '',
 			}
 		},
@@ -117,17 +194,6 @@
 					    x: 0.5,
 					    y: 1
 					},
-					//气泡callout
-					// callout: {
-					// 	//iconPath:'../../static/GRZY/zixin.png',
-					// 	content: that.travelTime, //文本
-					// 	color: '#fff', //文本颜色
-					// 	borderRadius: 39, //边框圆角
-					// 	borderWidth: 1, //边框宽度
-					// 	bgColor: '#000000', //背景色
-					// 	padding: 5, //文本边缘留白
-					// 	textAlign: 'center' //文本对齐方式。有效值: left, right, center
-					// },
 					
 					callout: {
 					    content: '骑行时间:' + this.travelTime,
@@ -215,16 +281,16 @@
 				});
 			},
 
-			//------------------------------弹框事件-----------------------------------------
+			//------------------------------满意弹框事件-----------------------------------------
 
 			open() {
 				// 需要在 popup 组件，指定 ref 为 popup
-				this.$refs.popup.open()
+				this.$refs.bottomPopup.open();
 			},
 			//关闭
 			close(e) {
 				if (e == 1) {
-					this.$refs.popup.close()
+					this.$refs.bottomPopup.close();
 				}
 			},
 			
@@ -240,6 +306,53 @@
 				let expenseDetail = await this.$api.lyfwcwd('expenseDetail');
 				this.expenseDetail = expenseDetail.data;
 			},
+			
+			//----------------------------------评星---------------------------------------
+			
+			onchange(e){
+				this.num = e.value;
+				if(this.num>3){
+					this.show=true;
+				}else{
+					this.show=false;
+				}
+			},
+			
+			//--------------------------------评星选择框事件----------------------------------
+			
+			 tapInfo:function(e) {
+						// console.log(e)
+				        if (this.rSelect.indexOf(e) == -1) {
+							this.rSelect.push(e);//选中添加到数组里
+							this.selectContent=e;
+							console.log(this.selectContent)
+				        } else {
+					        this.rSelect.splice(this.rSelect.indexOf(e), 1); //取消
+					    }
+			        },
+			tapInfo1:function(item,e) {
+						 if (this.rSelect1.indexOf(e) == -1) {
+							this.rSelect1.push(e);//选中添加到数组里
+							this.selectContent=e;
+							console.log(this.selectContent)
+							} else {
+							this.rSelect1.splice(this.rSelect1.indexOf(e), 1); //取消
+						}
+					},
+			
+			//-------------------------------@name 评价提交-----------------------------
+			submit(e){
+				var that = this;
+				this.textareaValue = e.detail.value.textareaValue;
+				that.close(1);
+				var value="是"
+				if(!that.show){
+					value="否"
+					}
+				that.getOrderValuate(that.orderNumber,value);
+				
+			},
+			
 		}
 	}
 </script>
@@ -280,52 +393,52 @@
 		font-size: 28upx;
 	}
 
-	//顶部
-	.po_boxVlew {
-		z-index: 999;
-		background-color: #FFFFFF;
-		border-radius: 28upx;
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-	}
+	// //顶部
+	// .po_boxVlew {
+	// 	z-index: 999;
+	// 	background-color: #FFFFFF;
+	// 	border-radius: 28upx;
+	// 	border-bottom-left-radius: 0;
+	// 	border-bottom-right-radius: 0;
+	// }
 
-	.bv_topText {
-		display: flex;
-		position: relative;
-		padding-top: 48upx;
-		padding-left: 51upx;
-		padding-right: 51upx;
+	// .bv_topText {
+	// 	display: flex;
+	// 	position: relative;
+	// 	padding-top: 48upx;
+	// 	padding-left: 51upx;
+	// 	padding-right: 51upx;
+	// }
+	
+	// .tt_text {
+	// 	font-size: 28upx;
+	// 	margin: 0 auto;
+	// 	color: #333333;
+	// }
+	
+	// .tt_icon {
+	// 	position: absolute;
+	// 	font-size: 32upx;
+	// 	right: 0;
+	// 	padding-right: 42upx;
+	// }
+	
+	// .tt_view {
+	// 	padding-left: 42upx;
+	// 	padding-right: 42upx;
+	// 	padding-top: 20upx;
+	// }
+	
+	// .tt_tear {
+	// 	font-size: 30upx;
+	// 	text-align: justify;
+	// 	line-height: 47upx;
+	// 	color: #333333;
+	// }
 
-		.tt_text {
-			font-size: 28upx;
-			margin: 0 auto;
-			color: #333333;
-		}
-
-		.tt_icon {
-			position: absolute;
-			font-size: 32upx;
-			right: 0;
-			padding-right: 42upx;
-		}
-	}
-
-	.tt_view {
-		padding-left: 42upx;
-		padding-right: 42upx;
-		padding-top: 20upx;
-
-		.tt_tear {
-			font-size: 30upx;
-			text-align: justify;
-			line-height: 47upx;
-			color: #333333;
-		}
-	}
-
-	.vi_bottom {
-		padding-top: 40upx;
-	}
+	// .vi_bottom {
+	// 	padding-top: 40upx;
+	// }
 
 	.sa_text4 {
 		font-size: 30upx;
@@ -391,7 +504,8 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
-		border: 1px solid rgba(101, 195, 109, 1);
+		border-width: 1px;
+		border-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
 	}
 
@@ -407,7 +521,7 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
-		background: rgba(101, 195, 109, 1);
+		background-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
 	}
 
@@ -417,5 +531,60 @@
 		padding-left: 63upx;
 		font-weight: 400;
 		color: #FFFFFF;
+	}
+	
+	/* 点击文字框后样式 */
+	.cur {
+		height:54rpx;
+		border-width: 1px;
+		border-radius:8rpx; 
+		justify-content: center; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+		background-color: #FC4646;
+		border-color: #FC4646;
+	}
+	/* 点击文字后样式 */
+	.color{
+		color: #FFFFFF;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.unCur{
+		height:54rpx;
+		border-width: 1px;
+		border-color: #AAAAAA;
+		border-radius:8rpx; 
+		justify-content: center; 
+		padding: 8rpx; 
+		margin-top: 30rpx;
+		margin-right: 20rpx;
+	}
+	.unColor{
+		color:#AAAAAA;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+	}
+	.textArea{
+		height:164rpx;
+		border-width: 1px;
+		padding: 10rpx;
+		border-color: #AAAAAA;
+		border-radius:6rpx;
+		margin-top: 30rpx;
+		font-size:28rpx;
+		font-family:Source Han Sans SC;
+		font-weight:300;
+		color:#999999;
+	}
+	
+	.dt_view{
+		height: 780rpx;
+		background-color: #FFFFFF; 
+		border-top-left-radius: 20rpx; 
+		border-top-right-radius: 20rpx;
 	}
 </style>

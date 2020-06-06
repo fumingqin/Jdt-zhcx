@@ -445,6 +445,44 @@ const homePage = {
 	msg: '提示'
 }
 
+const selectBank = {
+	status: 1, //1成功,0失败提示返回值
+	data: [{
+		txt:'请选择',
+	},
+	{
+		txt:'工商银行',
+	},
+	{
+		txt:'兴业银行',
+	},
+	{
+		txt:'宁波银行',
+	},
+	{
+		txt:'汉口银行',
+	},
+	{
+		txt:'南京银行',
+	},
+	{
+		txt:'江苏银行',
+	},
+	{
+		txt:'杭州银行',
+	},
+	{
+		txt:'民生银行',
+	},
+	{
+		txt:'平安银行',
+	},
+	{
+		txt:'中信银行',
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	userInfo,
@@ -466,4 +504,5 @@ export default {
 	drivingRecord,
 	expenseDetail,
 	homePage,
+	selectBank,
 }
