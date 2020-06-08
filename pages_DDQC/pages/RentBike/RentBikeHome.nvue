@@ -507,7 +507,9 @@
 					success(response) {
 						console.log(response)
 						if(response.data.status == true){
-							
+							uni.navigateTo({
+								url:'./Riding?OrderId=' + response.data.OrderId
+							})
 						}else if(response.data.status == false){
 							
 						}
@@ -531,7 +533,9 @@
 					success(response) {
 						console.log(response)
 						if(response.data.status == true){
-							
+							uni.navigateTo({
+								url:'./Riding?OrderId=' + response.data.OrderId
+							})
 						}else if(response.data.status == false){
 							
 						}
