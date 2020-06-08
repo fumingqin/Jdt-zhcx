@@ -60,7 +60,7 @@
 			//保存下车点数组
 			that.endStationList = that.arrayDistinct(stationArray.specialEndArray);
 			
-			if(stationArray.startStaionIndex == ''||stationArray.endStationIndex == '') {
+			if(stationArray.startStaionIndex == "" && stationArray.endStationIndex == "") {
 				//定位已选择的上车点
 				that.startSelectIndex = 0;
 				//定位已选择的下车点

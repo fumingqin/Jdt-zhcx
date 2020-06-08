@@ -42,6 +42,7 @@
 	export default {
 		data() {
 			return {
+				userInfo: [], //用户信息
 				mapHeight: '', //地图高度
 				centerLatitude: "24.517346", //地图中心点纬度
 				centerLongitude: "117.6536981221", //地图中心点经度
@@ -57,6 +58,7 @@
 				iconHeight:40,
 				appMap:'',
 				position:[],
+				system:'',
 			}
 		},
 		onLoad() {
@@ -64,7 +66,16 @@
 			//获取系统信息
 			uni.getSystemInfo({
 				success: function(res) {
+					console.log('当前设备信息',res)
 					//地图高度
+					if(res.system.indexOf('iOS') == -1){
+						//当前不是iOS
+						that.system = 'Android'
+					}else {
+						//当前是iOS
+						that.system = 'iOS'
+					}
+					// console.log(that.system)
 					that.mapHeight = res.windowHeight + 'px';
 				}
 			});
@@ -73,7 +84,10 @@
 			that.GetStationByRange(117.6536981221,24.517346);
 			that.GetBHTStationByRange();
 		},
-		
+		onShow() {
+			var that = this;
+			that.getUserInfo();
+		},
 		onReady() {
 			var that = this;
 			//mapContext 通过 mapId 跟一个 <map> 组件绑定，通过它可以操作对应的 <map> 组件
@@ -93,6 +107,17 @@
 			// }
 		},
 		methods: {
+			//--------------------------读取用户信息--------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key: 'userInfo',
+					success: function(data) {
+						that.userInfo = data.data;
+					}
+				})
+			},
 			//-------------------------------获取自身位置-------------------------------
 			getMyLocation: function() {
 				var that = this;
@@ -194,7 +219,7 @@
 					data:{
 						Longitude:117.6536981221,//经度
 						Latitude:24.517346,//纬度
-						Range:1000,//范围（米）
+						Range:5000,//范围（米）
 					},
 					success(res) {
 						console.log('无桩数据',res)
@@ -236,59 +261,68 @@
 			unLockClick: function() {
 				let that = this;
 				//扫描二维码
-				// uni.scanCode({
-				// 	onlyFromCamera: true,
-				// 	success: function(res) {
-				// 		console.log('扫描结果',res)
-				// 	},
-				// 	fail:function(){
-						
-				// 	}
-				// });
-				uni.requestPayment({
-					provider: 'wxpay',
-					orderInfo: {
-						appid: 'wx4394e02214803063',
-						timestamp: '1591185789',
-						noncestr: 'xaa2yfpoy1imam07anohs5arfwsrh130',
-						package: 'Sign=WXPay',
-						sign: '8A69553C5D0268F0D40809D13CC352F7',
-						partnerid: '1324016301',
-						prepayid: 'wx032003092832798201a7d3b71926726700',
-					},
+				uni.scanCode({
+					onlyFromCamera: true,
 					success: function(res) {
-						// uni.showModal({
-						// 	title: '提示',
-						// 	content: res,
-						// 	showCancel: false
-						// })
-						console.log(res)
-						
-						if (res.errMsg == 'requestPayment:ok') { //成功
-							uni.showToast({
-								title: '支付成功',
-							})
-							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
-						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
-							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
-							})
-						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
-							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
-							})
-						}
+						console.log('扫描结果',res)
 					},
-				
-					fail: function(ee) {
-						console.log(ee)
-						uni.showToast({
-							title: '拉起支付失败，请检查网络后重试',
-							icon: 'none',
-							duration: 3000
-						})
+					fail:function(){
+						console.log('扫描结果',res)
+					}
+				});
+			},
+			//-------------------------------查询业户信息-------------------------------
+			GetBizStatus:function(param){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
+					method:$DDTInterface.DDTInterface.GetBizStatus.method,
+					data:{
+						loginname:that.userInfo.phoneNumber,//手机号
+					},
+					success(response) {
+						console.log(response)
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
+			},
+			//-------------------------------有桩租车请求-------------------------------
+			Rent:function(param){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.Rent.Url,
+					method:$DDTInterface.DDTInterface.Rent.method,
+					data:{
+						phone:'',
+						QRcode:'',
+						SystemType: that.system,
+					},
+					success(response) {
+						console.log(response)
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
+			},
+			//-------------------------------无桩租车请求-------------------------------
+			Rent_hire:function(param){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.Rent_hire.Url,
+					method:$DDTInterface.DDTInterface.Rent_hire.method,
+					data:{
+						phone:'',
+						QRcode:'',
+						SystemType: that.system,
+					},
+					success(response) {
+						console.log(response)
+					},
+					fail(response) {
+						console.log(response)
 					}
 				})
 			}
