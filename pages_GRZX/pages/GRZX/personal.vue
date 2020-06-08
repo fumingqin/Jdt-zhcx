@@ -50,7 +50,7 @@
 </template>
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
-	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
+	import wPicker from "@/pages_GRZX/components/GRZX/w-picker/w-picker.vue";
 	export default {
 		data() {
 			return {
@@ -63,7 +63,7 @@
 				nickname : '',
 				gender:'',
 				birthday : '请选择',
-				address : '',
+				address : '请选择',
 				autograph : '',
 				userId:'',
 				openId_qq:'',
@@ -71,21 +71,22 @@
 				openId_xcx:'',
 				phoneNumber:'',
 				port:'',
+				
 			};
 		},
+		components:{
+		            wPicker
+		        },
 		onLoad:function(){
 			this.loadUserInfo();
 		},
 		computed:{
 			startDate() {
-			            return this.getDate('start');
-			        }, 
+			    return this.getDate('start');
+			}, 
 			endDate() {
-			            return this.getDate('end');
-			        }
-		},
-		components:{
-		     wPicker
+			    return this.getDate('end');
+			},
 		},
 		methods:{
 			loadUserInfo(){
@@ -198,20 +199,20 @@
 			},
 			// --------获得日期---------
 			getDate(type) {
-						const date = new Date();
-						let year = date.getFullYear();
-						let month = date.getMonth() + 1;
-						let day = date.getDate();
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
 
-						if (type === 'start') {
-							year = year - 60;
-						} else if (type === 'end') {
-							year = year + 2;
-						}
-						month = month > 9 ? month : '0' + month;;
-						day = day > 9 ? day : '0' + day;
-						return `${year}-${month}-${day}`;
-					},
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
 			// --------地址切换---------
 			toggleTab(e){
 				this.$refs[this.mode].show(); 
@@ -414,6 +415,21 @@
 			font-size: 40upx;
 			margin-top: 48upx; 
 			margin-bottom: 48upx;
+		}
+		.addressClass{
+			position: relative;
+			width: 90%;
+			height: 104upx;
+			left: 36upx;
+			text-align: right;
+			border-bottom:#F5F5F5 1px solid;
+			border-left-width:0px;
+			border-right-width:0px;
+			border-top-width:0px;
+		}
+		.txtClass{
+			position: relative;
+			top: 25rpx;
 		}
 	}
 

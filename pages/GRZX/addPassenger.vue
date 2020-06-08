@@ -150,7 +150,6 @@
 </template>
 
 <script>
-	import wPicker from "@/components/GRZX/w-picker/w-picker.vue";
 	export default {
 		data(){
 			return{
@@ -194,9 +193,6 @@
 			if(options.type=="edit"){
 				this.loadData(type);
 			}
-		},
-		components:{
-		     wPicker
 		},
 		methods:{
 			//------------------加载账号id----------------

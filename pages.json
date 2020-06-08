@@ -880,9 +880,13 @@
 					}
 				},
 				{
-				    "path" : "pages/GRZY/buttom",
+				    "path" : "pages/GRZY/zy_details",
 				    "style" : {}
-				} 
+				},
+				{
+				    "path" : "pages/GRZY/zy_zhcx",
+				    "style" : {}
+				}
                 ,{
                     "path" : "pages/RentBike/RentBikeHome",
                     "style" : {
@@ -908,11 +912,19 @@
                     "style" : {
 						"navigationBarTitleText": "开锁中"
 					}
-                }
-                ,{
+                },
+				{
                     "path" : "pages/RentBike/Riding",
                     "style" : {}
-                }
+                },
+				{
+				    "path" : "pages/GRZY/zy_information",
+				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/zy_faultReport",
+				    "style" : {}
+				}
             ]
 		}
 	],

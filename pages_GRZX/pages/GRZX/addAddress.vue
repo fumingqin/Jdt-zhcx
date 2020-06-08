@@ -14,9 +14,9 @@
 			
 			<view class="districtClass">
 				<view class="fontStyle">所在地区</view>
-				 <pickerAddress @change="districtChange">
+				<!-- <pickerAddress @change="districtChange">
 					 <view class="inputClass">{{address.district}}</view>
-				 </pickerAddress>
+				 </pickerAddress> -->
 			</view>
 			
 			<view class="addressClass">
@@ -47,11 +47,11 @@
 </template>
 
 <script>
-	import pickerAddress from '@/pages_GRZX/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue' 
+	// import pickerAddress from '@/pages_GRZX/components/GRZX/wangding-pickerAddress/wangding-pickerAddress.vue' 
 	export default {
-		components:{
-			pickerAddress
-		},
+		// components:{
+		// 	pickerAddress
+		// },
 		data(){	
 			return{			
 				address:{

@@ -27,7 +27,7 @@
 					<text class="sv_text">包车服务</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/RentBike/RentBikeHome')">
 					<image class="sv_print2" src="../../static/Home/serve/DDQC.png" mode="aspectFit"></image>
 					<text class="sv_text">达达骑车</text>
 				</view>

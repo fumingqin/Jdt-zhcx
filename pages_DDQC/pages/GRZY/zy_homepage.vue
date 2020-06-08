@@ -23,15 +23,20 @@
 						<view class="tx_text2">{{personalHomepage.cost}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
-					<view class="ve_Text">
-						<view class="tx_text1">卡券</view>
-						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
+					<view class="ve_Text" @click="Jump">
+						<view class="tx_text1">骑行数</view>
+						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">次</text></view>
 					</view>
 					<!-- 押金 -->
-					<view class="ve_Text" @click="open">
-						<image v-if="personalHomepage.deposit==0" class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
+					<view class="ve_Text" v-if="personalHomepage.depositBalance==0" @click="open">
+						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
-						<view class="tx_text2">{{personalHomepage.deposit}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2">{{personalHomepage.depositBalance}}<text class="tx_text3">元</text></view>
+					</view>
+					
+					<view class="ve_Text" v-if="personalHomepage.depositBalance==199" @click="open2">
+						<view class="tx_text1">押金</view>
+						<view class="tx_text2">{{personalHomepage.depositBalance}}<text class="tx_text3">元</text></view>
 					</view>
 				</view>
 			</view>
@@ -80,8 +85,24 @@
 						<image class="ra_img" src="../../static/GRZY/weixin.png"></image>
 						<text class="ra_text2">微信支付</text>
 					</view>
-
 					<view class="tjButton">确认支付</view>
+					<view class="vi_bottom"></view>
+				</view>
+			</uni-popup>
+			
+			<!-- 押金退款弹框 -->
+			<uni-popup ref="popup2" type="bottom">
+				<view class="po_boxVlew">
+					<view class="bv_topText">
+						<text class="tt_text">押金退款</text>
+						<text class="tt_icon jdticon icon-fork " @click="close2(1)"></text>
+					</view>
+					<!-- 退押金 -->
+					<view class="bv_rechargeAmount">
+						<text class="ra_text">退款金额:</text>
+						<text class="ra_text2">&nbsp;￥{{personalHomepage.deposit}}</text>
+					</view>
+					<view class="tjButton2">确认退款</view>
 					<view class="vi_bottom"></view>
 				</view>
 			</uni-popup>
@@ -92,19 +113,18 @@
 			<!-- 顶部里程 -->
 			<view class="ve_top">
 				<view class="ve_view">
-					<!-- 金额 -->
+					<!-- 里程 -->
 					<view class="ve_Text">
 						<view class="tx_text1">里程</view>
 						<view class="tx_text2">{{personalHomepage.mileage}}</view>
 					</view>
-					<!-- 卡券 -->
+					<!-- 减排 -->
 					<view class="ve_Text">
 						<view class="tx_text1">减排(千克)</view>
 						<view class="tx_text2">{{personalHomepage.emissionReduction}}</view>
 					</view>
-					<!-- 押金 -->
-					<view class="ve_Text" @click="open">
-						<image v-if="personalHomepage.deposit==0" class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
+					<!-- 消耗 -->
+					<view class="ve_Text">
 						<view class="tx_text1">消耗(千克)</view>
 						<view class="tx_text2">{{personalHomepage.consume}}</view>
 					</view>
@@ -112,7 +132,7 @@
 			</view>
 
 			<!-- 行车记录 -->
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index">
+			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2">
 				<view>
 					<text class="rc_text">{{item.model}}</text>
 				</view>
@@ -144,6 +164,7 @@
 					cost: 0.8, //价格
 					coupon: 10, //卡券数量
 					deposit: 199, //押金
+					depositBalance:199,
 
 					mileage: 20, //总里程
 					emissionReduction: 0.6, //减排
@@ -176,6 +197,18 @@
 					this.$refs.popup.close()
 				}
 			},
+			
+			//退款弹框
+			open2() {
+				// 需要在 popup 组件，指定 ref 为 popup
+				this.$refs.popup2.open()
+			},
+			//关闭
+			close2(e) {
+				if (e == 1) {
+					this.$refs.popup2.close()
+				}
+			},
 
 			//-----------------tab事件---------------------------------------
 			tabClick(e) {
@@ -190,17 +223,27 @@
 				}
 
 			},
-			
-			natTo:function(e){
+
+			natTo: function(e) {
 				uni.navigateTo({
-					url:e,
+					url: e,
 					// url:
 				})
 			},
-			
-			makePhone:function(){
+
+			makePhone: function() {
 				uni.makePhoneCall({
-					phoneNumber:'17764540647'
+					phoneNumber: '17764540647'
+				})
+			},
+			
+			Jump(){
+				this.type=1
+			},
+			
+			Jump2:function(){
+				uni.navigateTo({
+					url:'./zy_details'
 				})
 			}
 		}
@@ -216,7 +259,7 @@
 	//筛选样式
 	.screen {
 		height: 87upx;
-		background-color: #f6f6f6;
+		background-color: #f5f9fc;
 		position: sticky;
 		top: 0;
 		z-index: 1;
@@ -463,6 +506,19 @@
 		border-radius: 64upx;
 		margin: 62upx 40upx 0 40upx;
 		background: #70c778;
+		text-align: center;
+		color: #FFFFFF;
+		font-size: 38upx;
+		font-weight: 400;
+		box-shadow: 0px 0.2px 0px #aaa;
+	}
+	
+	//底部按钮
+	.tjButton2 {
+		padding: 24upx 0;
+		border-radius: 64upx;
+		margin: 62upx 40upx 0 40upx;
+		background: #ffaa15;
 		text-align: center;
 		color: #FFFFFF;
 		font-size: 38upx;
