@@ -25,9 +25,10 @@
 							<text style="color: #999;font-size: 28rpx;font-weight: 300;">电量充足，可骑行59公里</text>
 						</view>
 						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;">
-							<button class="bt_lock" @click="Lock">
+							<!-- <button class="bt_lock" @click="Lock">
 								<text style="color: #FFF;font-size: 40rpx;">临时锁车</text>
-							</button>
+							</button> -->
+
 							<button class="bt_returnbike" @click="returnBike">
 								<text style="color: #FFF;font-size: 40rpx;">还车</text>
 							</button>
@@ -46,10 +47,10 @@
 					</view>
 				</view>
 				<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;">
-					<button class="bt_continuebike" @click="continueRide">
+					<!-- <button class="bt_continuebike" @click="continueRide">
 						<text style="color: #65C36D;font-size: 40rpx;">继续骑行</text>
-					</button>
-					<button class="bt_returnbike" @click="returnBike">
+					</button> -->
+					<button class="bt_returnbike" @click="continueRide">
 						<text style="color: #FFF;font-size: 40rpx;">确认还车</text>
 					</button>
 				</view>
@@ -62,20 +63,26 @@
 </template>
 
 <script>
+	import uniTransition from '@/components/Order/uni-transition/uni-transition.vue'
 	export default {
+		components: {
+			uniTransition
+		},
 		data() {
 			return {
 				mapHeight: '', //地图高度
 				scale: 15,
 				polyline: [],
-				centerLatitude: 118.6,
-				centerLongitude: 24.3,
+				centerLatitude: "23.931668",
+				centerLongitude: "117.636783",
 				markers: [],
 				showLocation: true,
 				Isreturn: false,
 				minute: "00", //分钟
 				seconds: "00", //秒
 				timeInterval: '',
+				credential: '',
+				id: '',
 			}
 		},
 		mounted() {
@@ -91,8 +98,8 @@
 		onLoad() {
 			var that = this;
 			// 获取自身位置
-			that.getMyLocation();
-			that.countTime();
+			// that.getMyLocation();
+			// that.countTime();
 		},
 		created() {
 			uni.setNavigationBarTitle({
@@ -159,7 +166,7 @@
 			continueRide: function() {
 				var that = this;
 				that.Isreturn = false;
-			}
+			},
 		}
 	}
 </script>
@@ -180,7 +187,7 @@
 		/* 还车 */
 		background-color: #65C36D;
 		border-radius: 50px;
-		width: 290rpx;
+		width: 600rpx;
 		padding-top: 30rpx;
 		padding-bottom: 30rpx;
 		border-width: 0;

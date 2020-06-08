@@ -2,7 +2,7 @@
 	<view class="content">
 		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
 		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange'>
-		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img"></cover-image>
+		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
 		<!-- 自定义导航栏 -->
 		<view class="navgator">
@@ -41,6 +41,7 @@
 		data() {
 			return {
 				mapHeight: '', //地图高度
+				Height:'',
 				centerLatitude: "24.517346", //地图中心点纬度
 				centerLongitude: "117.6536981221", //地图中心点经度
 				markers: [], //标记点坐标数组
@@ -64,6 +65,7 @@
 				success: function(res) {
 					//地图高度
 					that.mapHeight = res.windowHeight + 'px';
+					that.Height=res.windowHeight/2 + 'px';
 				}
 			});
 			// 获取自身位置
@@ -71,7 +73,18 @@
 			that.GetStationByRange();
 			that.GetBHTStationByRange();
 		},
-		
+		onShow() {
+			var that=this;
+			setTimeout(function() {
+				let query = uni.createSelectorQuery().in(that).select("#map");
+				query.fields({
+					size: true,
+					scrollOffset: true
+				}, data => {
+						console.log(data);
+				}).exec();
+			}, 200)
+		},
 		onReady() {
 			var that = this;
 			//mapContext 通过 mapId 跟一个 <map> 组件绑定，通过它可以操作对应的 <map> 组件
@@ -115,8 +128,6 @@
 					that.mapCtx.getCenterLocation({
 						success: res => {
 							console.log(res.latitude,res.longitude)
-							
-							
 						}
 					})
 				}
@@ -241,13 +252,9 @@
 		width: 750rpx;
 		background-color: #FFFFFF;
 	}
-
-	,
 	.map {
 		width: 750rpx;
 	}
-
-	,
 	.navgator {
 		position: fixed;
 		flex-direction: row;
@@ -261,19 +268,13 @@
 		right: 0;
 		padding-bottom: 30rpx;
 	}
-
-	,
 	.Btn_click {
 		color: #65C36D;
 	}
-
-	,
 	.navTitleView {
 		flex-direction: row;
 
 	}
-
-	,
 	.bottomView {
 		background-color: #FFFFFF;
 		/* opacity: 0; */
@@ -284,8 +285,6 @@
 		right: 0rpx;
 		width: 100%; //如果视图发生位移就改这里
 	}
-
-	,
 	.dingwei {
 		position: fixed;
 		bottom: 20rpx;
@@ -293,8 +292,6 @@
 		height: 120rpx;
 		left: 20rpx;
 	}
-
-	,
 	.unLock {
 		position: fixed;
 		flex-direction: row;
@@ -307,8 +304,6 @@
 		font-size: 42rpx;
 		bottom: 30rpx;
 	}
-
-	,
 	.scan {
 		width: 50rpx;
 		height: 50rpx;
@@ -325,9 +320,7 @@
 	.icon-img {
 		width: 36px;
 		height: 36px;
-		/* display: block; */
 		position: fixed;
-		top: 810rpx;
 		left: 375rpx;
 		transform: translate(-50%, -50%);
 	}
