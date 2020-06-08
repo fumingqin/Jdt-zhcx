@@ -52,8 +52,9 @@
 				scale: 15, //地图缩放比例,值越小地图可视范围越大
 				polyline: [], //画线数组
 				mapContext: '',
-				isClick: '助力车', //是否点击
+				isClick: '无桩', //是否点击
 				markerIconPath:'../../static/GRZY/power.png',
+				bicycleIconPath:'../../static/RentBike/bicycle.png',
 				//标识宽高
 				iconWidth:40,
 				iconHeight:40,
@@ -83,8 +84,7 @@
 			});
 			// 获取自身位置
 			// that.getMyLocation();
-			that.GetStationByRange(117.6536981221,24.517346);
-			that.GetBHTStationByRange();
+			that.GetBHTStationByRange(117.6536981221,24.517346);//无桩			
 		},
 		onShow() {
 			var that=this;
@@ -125,7 +125,11 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
+						console.log('用户数据',data)
 						that.userInfo = data.data;
+					},
+					fail(data) {
+						console.log('用户数据',data)
 					}
 				})
 			},
@@ -153,9 +157,14 @@
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
 						success: res => {
-							console.log(res.latitude,res.longitude)
-							//当地图移动的时候，改变坐标显示周围的车辆位置信息
-							that.GetStationByRange(res.longitude,res.latitude)
+							// console.log(res.latitude,res.longitude)
+							if(that.isClick == '有桩'){
+								//当地图移动的时候，改变坐标显示周围的车辆位置信息
+								that.GetStationByRange(res.longitude,res.latitude)
+							}else if(that.isClick == '无桩'){
+								//当地图移动的时候，改变坐标显示周围的车辆位置信息
+								that.GetBHTStationByRange(res.longitude,res.latitude)
+							}
 						}
 					})
 				}
@@ -163,6 +172,9 @@
 			//-------------------------------有桩数据-------------------------------
 			GetStationByRange:function(longitude,latitude){
 				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetStationByRange.method,
@@ -172,6 +184,7 @@
 						Range:500,//范围（米）
 					},
 					success(res) {
+						uni.hideLoading()
 						//请求数据成功之后先清空之前的数据
 						that.markers = [];
 						console.log('有桩数据',res)
@@ -194,7 +207,7 @@
 									id : res.data.data[i].id,
 									latitude : gps[1],
 									longitude : gps[0],
-								    iconPath : that.markerIconPath,//标识显示的图片
+								    iconPath : that.bicycleIconPath,//标识显示的图片
 									width : that.iconWidth,
 									height : that.iconHeight,
 									callout : {
@@ -210,6 +223,8 @@
 								var json = JSON.stringify(that.markers);
 								var arr = JSON.parse(json);
 								arr.push(marker);
+								//当标记点加载完之后重新设置地图比例
+								that.scale = 15;
 								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
 								// that.markers.push(marker);
@@ -218,24 +233,76 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						console.log(res)
 					}
 				})
 			},
 			//-------------------------------无桩数据-------------------------------
 			GetBHTStationByRange:function(){
+				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
 					data:{
 						Longitude:117.6536981221,//经度
 						Latitude:24.517346,//纬度
-						Range:5000,//范围（米）
+						Range:50000,//范围（米）
 					},
 					success(res) {
+						uni.hideLoading()
 						console.log('无桩数据',res)
+						//请求数据成功之后先清空之前的数据
+						that.markers = [];
+						if(res.data.status == true){
+							for (var i = 0; i < res.data.data.length; i++) {
+								// let display = '';
+								// if(res.data.data.status == 7){//正常
+								// 	that.markerIconPath = '../../static/GRZY/power.png'
+								// }else if(res.data.data.status == 9){//离线
+								// 	that.markerIconPath = '../../static/GRZY/zixingche.png'
+								// }
+								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
+								//创建绘制坐标点的对象marker
+								var marker = new Object();
+								//坐标里面包含经纬度，需要将经纬度分离取出来
+								var gps = res.data.data[i].gps.split(',');
+								//冒泡显示文本 ---  可租数量，可还数量，可用时长
+								// var content = '可租数量：' + res.data.data[i].rentCount + ' ' + '可还数量：' + res.data.data[i].restoreCount;
+								marker = {
+									id : res.data.data[i].id,
+									latitude : gps[1],
+									longitude : gps[0],
+								    iconPath : that.markerIconPath,//标识显示的图片
+									width : that.iconWidth,
+									height : that.iconHeight,
+									callout : {
+										content: res.data.data[i].name, //文本res.data.data[i].name
+										color: '#FC4646', //文字颜色
+										fontSize: 12, //文本大小
+										borderRadius: 4, //边框圆角
+										bgColor: '#FFFFFF', //背景颜色
+										display: 'BYCLICK', //'BYCLICK':点击显示; 'ALWAYS':常显
+										padding:3,
+									}
+								}
+								var json = JSON.stringify(that.markers);
+								var arr = JSON.parse(json);
+								arr.push(marker);
+								//当标记点加载完之后重新设置地图比例
+								that.scale = 15;
+								that.markers = arr;
+								//将坐标集合添加到绘制坐标数组中
+								// that.markers.push(marker);
+								//---------------------华丽的分割线--------------------------------------
+							}
+						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						console.log(res)
 					}
 				})
@@ -244,16 +311,18 @@
 			NavBack: function() {
 				uni.navigateBack();
 			},
+			//-------------------------------点击标题-------------------------------
 			titleClick: function(res) {
 				var that = this;
 				that.isClick = res;
 				if(res == '有桩'){
 					//当前选中的是单车，加载单车的数据,经纬度传当前位置
 					// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
-					
+					that.GetStationByRange(117.6536981221,24.517346);//有桩
 				}else if(res == '无桩') {
 					//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
 					// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
+					that.GetBHTStationByRange(117.6536981221,24.517346);
 				}
 			},
 			//-------------------------------返回自身位置-------------------------------
@@ -271,6 +340,52 @@
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
+				//扫码开锁之前先查一下是否可以租车
+				that.GetBizStatus();
+			},
+			//-------------------------------查询业户信息-------------------------------
+			GetBizStatus:function(){
+				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
+					method:$DDTInterface.DDTInterface.GetBizStatus.method,
+					data:{
+						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
+						loginname:13906963039,//手机号that.userInfo.phoneNumber
+						
+					},
+					success(response) {
+						uni.hideLoading()
+						if(response.data.status == true){
+							if(response.data.data == '新建'){
+								that.myShowModal('未交押金无法用车，是否立即支付押金？');
+							}else if(response.data.data == '业务开通支付中'){
+								that.myShowModal('业务开通支付中');
+							}else if(response.data.data == '已租车'){
+								that.myShowModal('当前有行程未结束无法租车');
+							}else if(response.data.data == '租车超时支付中'){
+								that.myShowModal('租车超时支付中，请完成支付');
+							}else if(response.data.data == '业务已注销'){
+								that.myShowModal('业务已注销，无法租车');
+							}else if(response.data.data == '可用'){
+								//已交押金，开始扫码租车
+								that.scanQrcode();
+							}
+						}else {
+							
+						}
+						console.log(response)
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
+			},
+			//-------------------------------二维码扫描-------------------------------
+			scanQrcode:function(){
 				//扫描二维码
 				uni.scanCode({
 					onlyFromCamera: true,
@@ -282,20 +397,17 @@
 					}
 				});
 			},
-			//-------------------------------查询业户信息-------------------------------
-			GetBizStatus:function(param){
-				var that = this;
-				uni.request({
-					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
-					method:$DDTInterface.DDTInterface.GetBizStatus.method,
-					data:{
-						loginname:that.userInfo.phoneNumber,//手机号
-					},
-					success(response) {
-						console.log(response)
-					},
-					fail(response) {
-						console.log(response)
+			//-------------------------------便捷弹框提示-------------------------------
+			myShowModal(content){
+				uni.showModal({
+					title:'温馨提示',
+					content:content,
+					success() {
+						if(content == '未交押金无法用车，是否立即支付押金？'){
+							console.log(content)
+						}else{
+							
+						}
 					}
 				})
 			},
