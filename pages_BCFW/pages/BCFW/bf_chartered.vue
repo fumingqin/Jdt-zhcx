@@ -149,7 +149,11 @@
 				index: 0, //指数
 				noticeContent: '', //须知内容
 				datestring: '', //当前日期和时间字符串
-				datestring2:'',
+				datestring2: '', //当前日期和时间字符串
+				datestring3: '', //当前日期和时间字符串
+				timestring: '',
+				timestring2: '',
+				timestring3: '',
 				privateSite: '', //专线
 				initialPoint: '', //起始点
 				destination: '', //目的地
@@ -180,8 +184,10 @@
 					de_Latitude: '', //目的地纬度
 					dl_Longitude: '', //专线经度
 					dl_Latitude: '', //专线经度
-					ct_EndAddress:'',//专线终点
+					ct_EndAddress: '', //专线终点
 					isNormal: '',
+					timer2: '',
+					dateParameter:'',
 
 				},
 			}
@@ -205,6 +211,7 @@
 			if (that.destination == '') {
 				that.destination = '请选择目的点'
 			}
+
 			// if (that.datestring == '') {
 			// 	that.datestring = '请选择时间'
 			// }
@@ -235,7 +242,7 @@
 					// data即为传过来的值，给上车点赋值
 					that.privateSite = '';
 					that.privateSite = data.data.ct_dedicatedLine;
-					that.ct_EndAddress=data.data.ct_EndAddress;
+					that.ct_EndAddress = data.data.ct_EndAddress;
 					that.dl_Latitude = data.data.ct_latitude;
 					that.dl_Longitude = data.data.ct_longitude;
 					// console.log(that.ct_EndAddress)
@@ -308,20 +315,48 @@
 					this.$refs.popup.close()
 				}
 			},
-			
+
 			//---------------------------------获取当前日期---------------------------------
-			getTodayDate() {
+			getTodayDate: function() {
+				/*
+				当前选择时间（必须选择2天后的时间）
+				*/
 				var date = new Date(),
 					year = date.getFullYear(),
 					month = date.getMonth() + 1,
-					day = date.getDate(),
+					day = date.getDate() + 2,
 					hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
 					minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
 				month >= 1 && month <= 9 ? (month = "0" + month) : "";
 				day >= 0 && day <= 9 ? (day = "0" + day) : "";
-				var timer = year + '/' + month + '/' + day + ' ' + hour + ':' + minutes;
-				this.datestring = timer;
-				this.datestring2 = timer;
+				var timer = year + '/' + month + '/' + day + ' ' + hour + ':' + minutes; //当前年月日时分
+				this.datestring = timer; //截取日期
+				this.datestring2 = timer.substr(0, 10); //截取日期
+				// this.datestring3 = timer.substr(0, 10); //截取日期
+				console.log(this.datestring2)
+				// console.log(this.timestring)
+
+				/*
+				早上6点的时间
+				*/
+				var date2 = new Date(date);
+				date2.setHours(6);
+				date2.setMinutes(0);
+				var timer4 = (date2.getHours() < 10 ? "0" + date2.getHours() : date2.getHours()) + ':' + (date2.getMinutes() < 10 ?
+					"0" + date2.getMinutes() : date2.getMinutes());
+
+				/*
+				晚上6点的时间
+				*/
+				var date3 = new Date(date);
+				date3.setHours(18);
+				date3.setMinutes(0);
+				var timer5 = (date3.getHours() < 10 ? "0" + date3.getHours() : date3.getHours()) + ':' + (date3.getMinutes() < 10 ?
+					"0" + date3.getMinutes() : date3.getMinutes());
+				this.timestring2 = timer4;
+				this.timestring3 = timer5;
+				console.log(this.timestring2)
+				console.log(this.timestring3)
 			},
 
 			//---------------------------------时间日期---------------------------------
@@ -331,18 +366,33 @@
 				this.value = this[type];
 			},
 			onSelected(e) { //选择
-				this.showPicker = false;
+				// this.showPicker = false;
 				if (e) {
 					this[this.type] = e.value;
 					this.datestring = this[this.type];
 					this.queryWeek(e.date.toString().substring(0, 3));
-					//选择的值
-					// console.log('value => ' + e.value);
-					//原始的Date对象
-					// console.log('date => ' + e.date);
 					this.date = e.value;
+					
+					if (this.datestring.substr(0, 10) >= this.datestring2) {
+						if (this.timestring2 <= this.datestring.substr(11, 16) && this.datestring.substr(11, 16) <= this.timestring3) {
+							this.showPicker = false;
+						} else {
+							this.showPicker = true;
+							uni.showToast({
+								title: '请选择早上6点至晚上18点的时间',
+								icon: 'none'
+							})
+						}
+					} else {
+						this.showPicker = true;
+						uni.showToast({
+							title: '低于指定时间，请重新选择',
+							icon: 'none'
+						})
+					}
 				}
 			},
+			
 			//周期
 			queryWeek(e) {
 				// console.log(e);
@@ -389,7 +439,7 @@
 			subit: function() {
 				// console.log(this.datestring)
 				// console.log(this.datestring2)
-				if(this.datestring >= this.datestring2){
+				if (this.datestring.substr(0, 10) >= this.datestring2 && this.timestring2 <= this.datestring.substr(11, 16) && this.datestring.substr(11, 16) <= this.timestring3) {
 					if (this.isNormal == 0) {
 						if (this.privateSite == '请选择专线') {
 							uni.showToast({
@@ -401,7 +451,7 @@
 								title: '请选择上车点',
 								icon: 'none'
 							})
-						}else {
+						} else {
 							this.homePageInfo.isNormal = this.isNormal;
 							this.homePageInfo.privateSite = this.privateSite;
 							this.homePageInfo.initialPoint = this.initialPoint;
@@ -415,6 +465,7 @@
 							this.homePageInfo.dl_Latitude = this.dl_Latitude;
 							this.homePageInfo.ct_EndAddress = this.ct_EndAddress;
 							this.homePageInfo.dayContentObject = this.dayContent[this.index];
+							this.homePageInfo.dateParameter = this.datestring.substr(0, 10);
 							// console.log(this.homePageInfo.dl_Longitude + " " + this.homePageInfo.dl_Latitude)
 							// console.log(this.vehicleSelection[this.value])
 							uni.setStorage({
@@ -438,7 +489,7 @@
 								title: '请选择目的点',
 								icon: 'none'
 							})
-						}else if (this.dayContent[this.index] == '请选择') {
+						} else if (this.dayContent[this.index] == '请选择') {
 							uni.showToast({
 								title: '请选择包车天数',
 								icon: 'none'
@@ -457,6 +508,7 @@
 							this.homePageInfo.dl_Latitude = this.dl_Latitude;
 							this.homePageInfo.ct_EndAddress = this.ct_EndAddress;
 							this.homePageInfo.dayContentObject = this.dayContent[this.index];
+							this.homePageInfo.dateParameter = this.datestring.substr(0, 10);
 							// console.log(this.homePageInfo.initialPoint+" "+this.homePageInfo.destination+" "+this.homePageInfo.datestring+" "+this.homePageInfo.dayContentObject)
 							// console.log(this.vehicleSelection[this.value])
 							uni.setStorage({
@@ -470,16 +522,16 @@
 							})
 						}
 					}
-				}else{
+				} else {
 					uni.showToast({
-						title:'选择时间比当前时间早，请重新选择！',
-						icon:'none'
+						title: '选择时间比当前时间早，请重新选择！',
+						icon: 'none'
 					})
 				}
-				
-				
-				
-				
+
+
+
+
 			},
 
 			//------------------------------开启定位功能----------------------------------

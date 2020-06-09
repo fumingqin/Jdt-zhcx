@@ -1,11 +1,14 @@
 <template>
 	<view>
+		<view>
 		<!-- #ifdef MP-WEIXIN -->
 		<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view>
 		<!-- #endif -->
 		<!-- #ifndef MP-WEIXIN -->
 		<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 88upx;">倒计时：{{countDownDate}}秒</view>
-		<!-- #endif -->
+		<!-- #endif -->	
+		</view>
+
 
 		<!-- 顶部背景 -->
 		<view class="ob_background">
@@ -36,11 +39,11 @@
 					<view class="MP_title">费用详情</view>
 					<view class="MP_cost" v-if="orderInfo.or_class=='包车-定制'">
 						<text>定制费用</text>
-						<text class="MP_userCost">¥{{orderInfo.cm_advance}}</text>
+						<text class="MP_userCost">¥{{orderInfo.advance}}</text>
 					</view>
 					<view class="MP_cost" v-if="orderInfo.or_class=='包车-专线'">
 						<text>专线费用</text>
-						<text class="MP_userCost">¥{{orderInfo.cm_advance}}</text>
+						<text class="MP_userCost">¥{{orderInfo.advance}}</text>
 					</view>
 
 					<!-- 优惠券 -->
@@ -52,7 +55,7 @@
 
 
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{orderInfo.cm_advance}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo.advance}}</text>
 					</view>
 
 				</view>
@@ -82,7 +85,7 @@
 			
 
 			<view class="MP_information3" @click="paymentSatas">
-				支付{{orderInfo.cm_advance}}元
+				支付{{orderInfo.advance}}元
 			</view>
 
 		</view>
@@ -115,7 +118,7 @@
 					billDescript:'',//订单描述
 					
 					cm_totalCost:'',//总计
-					cm_advance:'',//预付款
+					advance:0,//预付款
 					or_dateString:'',//出发时间
 					or_boardingPoint: '',//出发地
 					or_destination:'',//目的地
@@ -149,8 +152,9 @@
 			}
 		},
 		onLoad: function(options) {
+			console.log(options)
 			this.or_number=JSON.parse(decodeURIComponent(options.or_number));
-			
+			console.log(this.or_number)
 			uni.showLoading({
 				title: '拉起订单中...'
 			})
@@ -163,12 +167,13 @@
 				url: $bcfw.Interface.fw_charterDetails.value,
 				method: $bcfw.Interface.fw_charterDetails.method,
 				data:{
-					or_number :options.or_number
+					or_number :this.or_number
 				},
 				
 				success: (res) => {
-					// console.log(res)
+					console.log(res)
 					this.orderInfo = res.data.data;
+					console.log(this.orderInfo)
 					if(this.orderInfo.or_class=='包车-定制'){
 						this.orderInfo.billDescript='包车定制费用'
 						}else{
@@ -288,8 +293,8 @@
 							or_number :this.orderInfo.or_number
 						},
 					success: (res) => {
-						// console.log(res)
-						if (res.data.data.or_Type == '0') {
+						console.log(res)
+						if (res.data.data.or_Type == '5') {
 							uni.request({
 								url: $bcfw.Interface.spt_CancelTickets.value,
 								method: $bcfw.Interface.spt_CancelTickets.method,
@@ -369,7 +374,7 @@
 						method:$bcfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
-							price: that.orderInfo.cm_advance,
+							price: that.orderInfo.advance,
 							orderNumber: that.orderInfo.or_number,
 							goodsName: that.orderInfo.or_class,
 							billDescript: that.orderInfo.billDescript
@@ -387,7 +392,7 @@
 										method:$bcfw.Interface.spt_CheckPayState.method,
 										data: {
 											or_number: that.orderInfo.or_number,
-											factPayPrice: that.orderInfo.cm_advance,
+											factPayPrice: that.orderInfo.advance,
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
@@ -464,7 +469,7 @@
 						method:$bcfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
-							price: that.orderInfo.cm_advance,
+							price: that.orderInfo.advance,
 							orderNumber: that.orderInfo.or_number,
 							goodsName: that.orderInfo.or_class,
 							billDescript: that.orderInfo.billDescript
@@ -482,7 +487,7 @@
 										method:$bcfw.Interface.spt_CheckPayState.method,
 										data: {
 											or_number: that.orderInfo.or_number,
-											factPayPrice: that.orderInfo.cm_advance,
+											factPayPrice: that.orderInfo.advance,
 										},
 										header: {'content-type': 'application/json'},
 										success: function(res) {
@@ -550,7 +555,7 @@
 						url: 'http://218.67.107.93:9210/api/app/getScenicSpotPayParam',
 						data: {
 							payType: payTypeIndex,
-							price: this.orderInfo.cm_advance,
+							price: this.orderInfo.advance,
 							orderNum: this.orderInfo.or_number,
 						},
 						method: 'POST',

@@ -84,7 +84,8 @@
 			});
 			// 获取自身位置
 			// that.getMyLocation();
-			that.GetBHTStationByRange(117.6536981221,24.517346);//无桩			
+			that.GetBHTStationByRange(117.6536981221,24.517346);//无桩	
+			
 		},
 		onShow() {
 			var that=this;
@@ -188,12 +189,12 @@
 						console.log('有桩数据',res)
 						if(res.data.status == true){
 							for (var i = 0; i < res.data.data.length; i++) {
-								// let display = '';
-								// if(res.data.data.status == 7){//正常
-								// 	that.markerIconPath = '../../static/GRZY/power.png'
-								// }else if(res.data.data.status == 9){//离线
-								// 	that.markerIconPath = '../../static/GRZY/zixingche.png'
-								// }
+								// let markerIconPath = '';
+								if(res.data.data[i].status == 7){//正常
+									that.bicycleIconPath = '../../static/RentBike/bicycle.png'
+								}else if(res.data.data[i].status == 9){//离线
+									that.bicycleIconPath = '../../static/RentBike/bicycleOutline.png'
+								}
 								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
 								//创建绘制坐标点的对象marker
 								var marker = new Object();
@@ -257,11 +258,11 @@
 						if(res.data.status == true){
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let display = '';
-								// if(res.data.data.status == 7){//正常
-								// 	that.markerIconPath = '../../static/GRZY/power.png'
-								// }else if(res.data.data.status == 9){//离线
-								// 	that.markerIconPath = '../../static/GRZY/zixingche.png'
-								// }
+								if(res.data.data[i].status == 7){//正常
+									that.markerIconPath = '../../static/GRZY/power.png'
+								}else if(res.data.data[i].status == 9){//离线
+									that.markerIconPath = '../../static/GRZY/powerOutline.png'
+								}
 								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
 								//创建绘制坐标点的对象marker
 								var marker = new Object();
@@ -291,9 +292,9 @@
 								arr.push(marker);
 								//当标记点加载完之后重新设置地图比例
 								that.scale = 15;
-								that.markers = arr;
+								// that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
-								// that.markers.push(marker);
+								that.markers.push(marker);
 								//---------------------华丽的分割线--------------------------------------
 							}
 						}
@@ -351,14 +352,17 @@
 					method:$DDTInterface.DDTInterface.GetBizStatus.method,
 					data:{
 						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
-						loginname:13906963039,//手机号that.userInfo.phoneNumber
+						// loginname:that.userInfo.phoneNumber,//手机号
+						loginname:13906963039,//手机号
 						
 					},
 					success(response) {
 						uni.hideLoading()
 						if(response.data.status == true){
 							if(response.data.data == '新建'){
-								that.myShowModal('未交押金无法用车，是否立即支付押金？');
+								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
+								//开通租车业务
+								
 							}else if(response.data.data == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data == '已租车'){
@@ -383,13 +387,23 @@
 			},
 			//-------------------------------二维码扫描-------------------------------
 			scanQrcode:function(){
+				var that = this;
 				//扫描二维码
 				uni.scanCode({
 					onlyFromCamera: true,
 					success: function(res) {
 						console.log('扫描结果',res)
+						//先判断当前扫码是有桩还是无桩
+						if(that.isClick == '有桩'){
+							//有桩
+							that.Rent(res.result);
+						}else if(that.isClick == '无桩'){
+							//无桩
+							that.Rent_hire(res.result);
+						}
+						
 					},
-					fail:function(){
+					fail:function(res){
 						console.log('扫描结果',res)
 					}
 				});
@@ -408,6 +422,74 @@
 					}
 				})
 			},
+			//-------------------------------开通租车业务-------------------------------
+			OpenRentRequest:function(){
+				var that = this;
+				console.log(that.userInfo.phoneNumber)
+				
+				uni.request({
+					url:$DDTInterface.DDTInterface.OpenRentRequest.Url,
+					method:$DDTInterface.DDTInterface.OpenRentRequest.method,
+					data:{
+						loginname:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						if(res.data.status == true && res.data.data == '可用') {
+							uni.showToast({
+								title:'开通成功'
+							})
+						}else if(res.data.status == true && res.data.data == '未知异常'){
+							uni.showToast({
+								title:'该账户已开通业务，请勿重复开通',
+								icon:'none'
+							})
+						}else{
+							uni.showToast({
+								title:res.data.data,
+								icon:'none'
+							})
+						}
+						console.log('开通租车业务成功返回数据',res)
+					},
+					fail(res) {
+						console.log('开通租车业务失败返回数据',res)
+					}
+				})
+			},
+			//-------------------------------关闭租车业务-------------------------------
+			CloseRentRequest:function(){
+				var that = this;
+				console.log(that.userInfo.phoneNumber)
+				
+				uni.request({
+					url:$DDTInterface.DDTInterface.CloseRentRequest.Url,
+					method:$DDTInterface.DDTInterface.CloseRentRequest.method,
+					data:{
+						loginname:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						if(res.data.status == true && res.data.data == '业务已注销') {
+							uni.showToast({
+								title:'业务注销成功'
+							})
+						}else if(res.data.status == true && res.data.data == '未知异常'){
+							uni.showToast({
+								title:'该账户已注销，请勿重复注销',
+								icon:'none'
+							})
+						}else{
+							uni.showToast({
+								title:res.data.data,
+								icon:'none'
+							})
+						}
+						console.log('关闭租车业务成功返回数据',res)
+					},
+					fail(res) {
+						console.log('关闭租车业务失败返回数据',res)
+					}
+				})
+			},
 			//-------------------------------有桩租车请求-------------------------------
 			Rent:function(param){
 				var that = this;
@@ -415,12 +497,19 @@
 					url:$DDTInterface.DDTInterface.Rent.Url,
 					method:$DDTInterface.DDTInterface.Rent.method,
 					data:{
-						phone:'',
-						QRcode:'',
+						phone:13906963039,//that.userInfo.phoneNumber
+						QRcode:param,
 						SystemType: that.system,
 					},
 					success(response) {
 						console.log(response)
+						if(response.data.status == true){
+							uni.navigateTo({
+								url:'./Riding?OrderId=' + response.data.OrderId
+							})
+						}else if(response.data.status == false){
+							
+						}
 					},
 					fail(response) {
 						console.log(response)
@@ -434,12 +523,20 @@
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
 					data:{
-						phone:'',
-						QRcode:'',
+						phone:13906963039,//that.userInfo.phoneNumber
+						QRcode:param,
 						SystemType: that.system,
 					},
 					success(response) {
 						console.log(response)
+						if(response.data.status == true){
+							uni.navigateTo({
+								url:'./Riding?OrderId=' + response.data.OrderId
+							})
+						}else if(response.data.status == false){
+							
+						}
+						
 					},
 					fail(response) {
 						console.log(response)
