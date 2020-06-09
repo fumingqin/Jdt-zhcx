@@ -322,17 +322,21 @@
 							</view>
 
 							<!-- 待补款 -->
-							<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
+							<view class="cm_buttonView" v-if="item.or_Type=='11'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-						</view> -->
-							<!-- 订单执行中 -->
-							<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
+							<view class="cm_button cm_btToPay" @click="topay3(item.or_number)">去支付</view>
+						</view>
+							<!-- 等待接单中 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='0'">
 								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
 							</view>
+							<!-- 订单执行中 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='4'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
+							</view>
 							<!-- 进行中 -->
-							<view class="cm_buttonView" v-if="item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='1'">
+							<view class="cm_buttonView" v-if="item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='1'||item.or_Type=='10'">
 								<view class="cm_button cm_contact" @click="tel(item.or_driverTelephone)">联系司机</view>
 								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
@@ -896,15 +900,19 @@
 								<view v-if="item.or_class=='包车-定制'"><text class="cm_contentText">包车天数：&nbsp;{{item.cm_day}}天</text></view>
 							</view>
 							<!-- 待补款 -->
-							<!-- <view class="cm_buttonView" v-if="item.or_Type=='11'">
+							<view class="cm_buttonView" v-if="item.or_Type=='11'">
 							<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
-							<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
-						</view> -->
+							<view class="cm_button cm_btToPay" @click="topay3(item.or_number)">去支付</view>
+						</view>
 
-							<!-- 订单进行中 -->
-							<view class="cm_buttonView" v-if="item.or_Type=='0'||item.or_Type=='4'">
+							<!-- 等待接单-->
+							<view class="cm_buttonView" v-if="item.or_Type=='0'">
 								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 								<view class="cm_button cm_btDelete" @click="open3(item.or_number,'4')">取消</view>
+							</view>
+							<!-- 订单执行中 -->
+							<view class="cm_buttonView" v-if="item.or_Type=='4'">
+								<view class="cm_button cm_btDetails" @click="details2(item.or_number)">详情</view>
 							</view>
 							<!-- 进行中 -->
 							<view class="cm_buttonView" v-if="item.or_Type=='1'||item.or_Type=='2'||item.or_Type=='3'||item.or_Type=='10'">
@@ -4049,8 +4057,9 @@
 				} else if(this.exitindex == 'cs2tui'){
 					//先检测订单支付状态再执行退票操作
 					this.cs_refundStateCheck(that.csRefundInfo)
-				}else if (this.exitindex == '3') {
+				}else if (that.exitindex == '3') {
 					console.log('景区门票')
+					console.log(this.exitindex)
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
@@ -4061,18 +4070,26 @@
 							'content-type': 'application/json'
 						},
 						success: (e) => {
-							// console.log(e)
-							uni.hideLoading()
-							uni.showToast({
-								title: '退票成功',
-								icon: 'success',
-							})
-							this.close2()
-							this.toFinished();
+							console.log(e)
+							if(e.data.status==false){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票失败，服务器异常，请联系客服！',
+									icon: 'none',
+								})
+							}else if(e.data.status==true){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票成功',
+								})
+								this.close2()
+								this.toFinished();
+							}
+							
 						},
 						fail: function() {
 							uni.showToast({
-								title: '退票失败',
+								title: '退票失败，网络异常',
 								icon: 'none',
 							})
 							uni.hideLoading()
@@ -4091,17 +4108,25 @@
 						},
 						success: (e) => {
 							console.log(e)
-							uni.hideLoading()
-							uni.showToast({
-								title: '退票成功',
-								icon: 'success',
-							})
-							this.close2()
-							this.toFinished();
+							if(e.data.status==false){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票失败，服务器异常，请联系客服！',
+									icon: 'none',
+								})
+							}else if(e.data.status==true){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票成功',
+								})
+								this.close2()
+								this.toFinished();
+							}
+							
 						},
 						fail: function() {
 							uni.showToast({
-								title: '退票失败',
+								title: '退票失败，网络异常',
 								icon: 'none',
 							})
 							uni.hideLoading()
@@ -4461,7 +4486,13 @@
 			//-------------------------包车-去支付-------------------------
 			topay2: function(e) {
 				uni.navigateTo({
-					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?orderNumber=' + JSON.stringify(e)
+					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?or_number=' + JSON.stringify(e)
+				})
+			},
+			//-------------------------包车-去支付-------------------------
+			topay3: function(e) {
+				uni.navigateTo({
+					url: '../../pages_BCFW/pages/BCFW/balacePayment?or_number=' + JSON.stringify(e)
 				})
 			},
 			//-------------------------判断订单状态-------------------------
@@ -4484,9 +4515,9 @@
 					return '已取消'
 				} else if (param == '13') {
 					return '已完成'
-				} // else if (param == '11') {
-				// 	return '待补款'
-				// }
+				}  else if (param == '11') {
+				 	return '待补款'
+				 }
 			},
 			getCurrent(){
 				var that=this;

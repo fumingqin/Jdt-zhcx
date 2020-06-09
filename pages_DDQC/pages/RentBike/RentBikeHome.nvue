@@ -2,7 +2,7 @@
 	<view class="content">
 		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
 		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange'>
-		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img"></cover-image>
+		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
 		<!-- 自定义导航栏 -->
 		<view class="navgator">
@@ -42,7 +42,9 @@
 	export default {
 		data() {
 			return {
+				userInfo: [], //用户信息
 				mapHeight: '', //地图高度
+				Height:'',
 				centerLatitude: "24.517346", //地图中心点纬度
 				centerLongitude: "117.6536981221", //地图中心点经度
 				markers: [], //标记点坐标数组
@@ -50,13 +52,15 @@
 				scale: 15, //地图缩放比例,值越小地图可视范围越大
 				polyline: [], //画线数组
 				mapContext: '',
-				isClick: '助力车', //是否点击
+				isClick: '无桩', //是否点击
 				markerIconPath:'../../static/GRZY/power.png',
+				bicycleIconPath:'../../static/RentBike/bicycle.png',
 				//标识宽高
 				iconWidth:40,
 				iconHeight:40,
 				appMap:'',
 				position:[],
+				system:'',
 			}
 		},
 		onLoad() {
@@ -64,16 +68,38 @@
 			//获取系统信息
 			uni.getSystemInfo({
 				success: function(res) {
+					console.log('当前设备信息',res)
 					//地图高度
+					if(res.system.indexOf('iOS') == -1){
+						//当前不是iOS
+						that.system = 'Android'
+					}else {
+						//当前是iOS
+						that.system = 'iOS'
+					}
+					// console.log(that.system)
 					that.mapHeight = res.windowHeight + 'px';
+					that.Height=res.windowHeight/2 + 'px';
 				}
 			});
 			// 获取自身位置
 			// that.getMyLocation();
-			that.GetStationByRange(117.6536981221,24.517346);
-			that.GetBHTStationByRange();
+			that.GetBHTStationByRange(117.6536981221,24.517346);//无桩	
+			
 		},
-		
+		onShow() {
+			var that=this;
+			that.getUserInfo();
+			setTimeout(function() {
+				let query = uni.createSelectorQuery().in(that).select("#map");
+				query.fields({
+					size: true,
+					scrollOffset: true
+				}, data => {
+						console.log(data);
+				}).exec();
+			}, 200)
+		},
 		onReady() {
 			var that = this;
 			//mapContext 通过 mapId 跟一个 <map> 组件绑定，通过它可以操作对应的 <map> 组件
@@ -93,6 +119,21 @@
 			// }
 		},
 		methods: {
+			//--------------------------读取用户信息--------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key: 'userInfo',
+					success: function(data) {
+						console.log('用户数据',data)
+						that.userInfo = data.data;
+					},
+					fail(data) {
+						console.log('用户数据',data)
+					}
+				})
+			},
 			//-------------------------------获取自身位置-------------------------------
 			getMyLocation: function() {
 				var that = this;
@@ -117,9 +158,14 @@
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
 						success: res => {
-							console.log(res.latitude,res.longitude)
-							//当地图移动的时候，改变坐标显示周围的车辆位置信息
-							that.GetStationByRange(res.longitude,res.latitude)
+							// console.log(res.latitude,res.longitude)
+							if(that.isClick == '有桩'){
+								//当地图移动的时候，改变坐标显示周围的车辆位置信息
+								that.GetStationByRange(res.longitude,res.latitude)
+							}else if(that.isClick == '无桩'){
+								//当地图移动的时候，改变坐标显示周围的车辆位置信息
+								that.GetBHTStationByRange(res.longitude,res.latitude)
+							}
 						}
 					})
 				}
@@ -127,6 +173,9 @@
 			//-------------------------------有桩数据-------------------------------
 			GetStationByRange:function(longitude,latitude){
 				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetStationByRange.method,
@@ -136,17 +185,18 @@
 						Range:500,//范围（米）
 					},
 					success(res) {
+						uni.hideLoading()
 						//请求数据成功之后先清空之前的数据
 						that.markers = [];
 						console.log('有桩数据',res)
 						if(res.data.status == true){
 							for (var i = 0; i < res.data.data.length; i++) {
-								// let display = '';
-								// if(res.data.data.status == 7){//正常
-								// 	that.markerIconPath = '../../static/GRZY/power.png'
-								// }else if(res.data.data.status == 9){//离线
-								// 	that.markerIconPath = '../../static/GRZY/zixingche.png'
-								// }
+								// let markerIconPath = '';
+								if(res.data.data[i].status == 7){//正常
+									that.bicycleIconPath = '../../static/RentBike/bicycle.png'
+								}else if(res.data.data[i].status == 9){//离线
+									that.bicycleIconPath = '../../static/RentBike/bicycleOutline.png'
+								}
 								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
 								//创建绘制坐标点的对象marker
 								var marker = new Object();
@@ -158,7 +208,7 @@
 									id : res.data.data[i].id,
 									latitude : gps[1],
 									longitude : gps[0],
-								    iconPath : that.markerIconPath,//标识显示的图片
+								    iconPath : that.bicycleIconPath,//标识显示的图片
 									width : that.iconWidth,
 									height : that.iconHeight,
 									callout : {
@@ -174,6 +224,8 @@
 								var json = JSON.stringify(that.markers);
 								var arr = JSON.parse(json);
 								arr.push(marker);
+								//当标记点加载完之后重新设置地图比例
+								that.scale = 15;
 								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
 								// that.markers.push(marker);
@@ -182,24 +234,76 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						console.log(res)
 					}
 				})
 			},
 			//-------------------------------无桩数据-------------------------------
 			GetBHTStationByRange:function(){
+				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
 					data:{
 						Longitude:117.6536981221,//经度
 						Latitude:24.517346,//纬度
-						Range:1000,//范围（米）
+						Range:50000,//范围（米）
 					},
 					success(res) {
+						uni.hideLoading()
 						console.log('无桩数据',res)
+						//请求数据成功之后先清空之前的数据
+						that.markers = [];
+						if(res.data.status == true){
+							for (var i = 0; i < res.data.data.length; i++) {
+								// let display = '';
+								if(res.data.data[i].status == 7){//正常
+									that.markerIconPath = '../../static/GRZY/power.png'
+								}else if(res.data.data[i].status == 9){//离线
+									that.markerIconPath = '../../static/GRZY/powerOutline.png'
+								}
+								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
+								//创建绘制坐标点的对象marker
+								var marker = new Object();
+								//坐标里面包含经纬度，需要将经纬度分离取出来
+								var gps = res.data.data[i].gps.split(',');
+								//冒泡显示文本 ---  可租数量，可还数量，可用时长
+								// var content = '可租数量：' + res.data.data[i].rentCount + ' ' + '可还数量：' + res.data.data[i].restoreCount;
+								marker = {
+									id : res.data.data[i].id,
+									latitude : gps[1],
+									longitude : gps[0],
+								    iconPath : that.markerIconPath,//标识显示的图片
+									width : that.iconWidth,
+									height : that.iconHeight,
+									callout : {
+										content: res.data.data[i].name, //文本res.data.data[i].name
+										color: '#FC4646', //文字颜色
+										fontSize: 12, //文本大小
+										borderRadius: 4, //边框圆角
+										bgColor: '#FFFFFF', //背景颜色
+										display: 'BYCLICK', //'BYCLICK':点击显示; 'ALWAYS':常显
+										padding:3,
+									}
+								}
+								var json = JSON.stringify(that.markers);
+								var arr = JSON.parse(json);
+								arr.push(marker);
+								//当标记点加载完之后重新设置地图比例
+								that.scale = 15;
+								// that.markers = arr;
+								//将坐标集合添加到绘制坐标数组中
+								that.markers.push(marker);
+								//---------------------华丽的分割线--------------------------------------
+							}
+						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						console.log(res)
 					}
 				})
@@ -208,16 +312,18 @@
 			NavBack: function() {
 				uni.navigateBack();
 			},
+			//-------------------------------点击标题-------------------------------
 			titleClick: function(res) {
 				var that = this;
 				that.isClick = res;
 				if(res == '有桩'){
 					//当前选中的是单车，加载单车的数据,经纬度传当前位置
 					// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
-					
+					that.GetStationByRange(117.6536981221,24.517346);//有桩
 				}else if(res == '无桩') {
 					//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
 					// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
+					that.GetBHTStationByRange(117.6536981221,24.517346);
 				}
 			},
 			//-------------------------------返回自身位置-------------------------------
@@ -235,60 +341,208 @@
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
-				//扫描二维码
-				// uni.scanCode({
-				// 	onlyFromCamera: true,
-				// 	success: function(res) {
-				// 		console.log('扫描结果',res)
-				// 	},
-				// 	fail:function(){
+				//扫码开锁之前先查一下是否可以租车
+				that.GetBizStatus();
+			},
+			//-------------------------------查询业户信息-------------------------------
+			GetBizStatus:function(){
+				var that = this;
+				uni.showLoading({
+					title:'加载中...'
+				})
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
+					method:$DDTInterface.DDTInterface.GetBizStatus.method,
+					data:{
+						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
+						// loginname:that.userInfo.phoneNumber,//手机号
+						loginname:13906963039,//手机号
 						
-				// 	}
-				// });
-				uni.requestPayment({
-					provider: 'wxpay',
-					orderInfo: {
-						appid: 'wx4394e02214803063',
-						timestamp: '1591185789',
-						noncestr: 'xaa2yfpoy1imam07anohs5arfwsrh130',
-						package: 'Sign=WXPay',
-						sign: '8A69553C5D0268F0D40809D13CC352F7',
-						partnerid: '1324016301',
-						prepayid: 'wx032003092832798201a7d3b71926726700',
 					},
+					success(response) {
+						uni.hideLoading()
+						if(response.data.status == true){
+							if(response.data.data == '新建'){
+								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
+								//开通租车业务
+								
+							}else if(response.data.data == '业务开通支付中'){
+								that.myShowModal('业务开通支付中');
+							}else if(response.data.data == '已租车'){
+								that.myShowModal('当前有行程未结束无法租车');
+							}else if(response.data.data == '租车超时支付中'){
+								that.myShowModal('租车超时支付中，请完成支付');
+							}else if(response.data.data == '业务已注销'){
+								that.myShowModal('业务已注销，无法租车');
+							}else if(response.data.data == '可用'){
+								//已交押金，开始扫码租车
+								that.scanQrcode();
+							}
+						}else {
+							
+						}
+						console.log(response)
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
+			},
+			//-------------------------------二维码扫描-------------------------------
+			scanQrcode:function(){
+				var that = this;
+				//扫描二维码
+				uni.scanCode({
+					onlyFromCamera: true,
 					success: function(res) {
-						// uni.showModal({
-						// 	title: '提示',
-						// 	content: res,
-						// 	showCancel: false
-						// })
-						console.log(res)
+						console.log('扫描结果',res)
+						//先判断当前扫码是有桩还是无桩
+						if(that.isClick == '有桩'){
+							//有桩
+							that.Rent(res.result);
+						}else if(that.isClick == '无桩'){
+							//无桩
+							that.Rent_hire(res.result);
+						}
 						
-						if (res.errMsg == 'requestPayment:ok') { //成功
+					},
+					fail:function(res){
+						console.log('扫描结果',res)
+					}
+				});
+			},
+			//-------------------------------便捷弹框提示-------------------------------
+			myShowModal(content){
+				uni.showModal({
+					title:'温馨提示',
+					content:content,
+					success() {
+						if(content == '未交押金无法用车，是否立即支付押金？'){
+							console.log(content)
+						}else{
+							
+						}
+					}
+				})
+			},
+			//-------------------------------开通租车业务-------------------------------
+			OpenRentRequest:function(){
+				var that = this;
+				console.log(that.userInfo.phoneNumber)
+				
+				uni.request({
+					url:$DDTInterface.DDTInterface.OpenRentRequest.Url,
+					method:$DDTInterface.DDTInterface.OpenRentRequest.method,
+					data:{
+						loginname:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						if(res.data.status == true && res.data.data == '可用') {
 							uni.showToast({
-								title: '支付成功',
+								title:'开通成功'
 							})
-							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
-						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
+						}else if(res.data.status == true && res.data.data == '未知异常'){
 							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
+								title:'该账户已开通业务，请勿重复开通',
+								icon:'none'
 							})
-						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
+						}else{
 							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
+								title:res.data.data,
+								icon:'none'
 							})
 						}
+						console.log('开通租车业务成功返回数据',res)
 					},
+					fail(res) {
+						console.log('开通租车业务失败返回数据',res)
+					}
+				})
+			},
+			//-------------------------------关闭租车业务-------------------------------
+			CloseRentRequest:function(){
+				var that = this;
+				console.log(that.userInfo.phoneNumber)
 				
-					fail: function(ee) {
-						console.log(ee)
-						uni.showToast({
-							title: '拉起支付失败，请检查网络后重试',
-							icon: 'none',
-							duration: 3000
-						})
+				uni.request({
+					url:$DDTInterface.DDTInterface.CloseRentRequest.Url,
+					method:$DDTInterface.DDTInterface.CloseRentRequest.method,
+					data:{
+						loginname:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						if(res.data.status == true && res.data.data == '业务已注销') {
+							uni.showToast({
+								title:'业务注销成功'
+							})
+						}else if(res.data.status == true && res.data.data == '未知异常'){
+							uni.showToast({
+								title:'该账户已注销，请勿重复注销',
+								icon:'none'
+							})
+						}else{
+							uni.showToast({
+								title:res.data.data,
+								icon:'none'
+							})
+						}
+						console.log('关闭租车业务成功返回数据',res)
+					},
+					fail(res) {
+						console.log('关闭租车业务失败返回数据',res)
+					}
+				})
+			},
+			//-------------------------------有桩租车请求-------------------------------
+			Rent:function(param){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.Rent.Url,
+					method:$DDTInterface.DDTInterface.Rent.method,
+					data:{
+						phone:13906963039,//that.userInfo.phoneNumber
+						QRcode:param,
+						SystemType: that.system,
+					},
+					success(response) {
+						console.log(response)
+						if(response.data.status == true){
+							uni.navigateTo({
+								url:'./Riding?OrderId=' + response.data.OrderId
+							})
+						}else if(response.data.status == false){
+							
+						}
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
+			},
+			//-------------------------------无桩租车请求-------------------------------
+			Rent_hire:function(param){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.Rent_hire.Url,
+					method:$DDTInterface.DDTInterface.Rent_hire.method,
+					data:{
+						phone:13906963039,//that.userInfo.phoneNumber
+						QRcode:param,
+						SystemType: that.system,
+					},
+					success(response) {
+						console.log(response)
+						if(response.data.status == true){
+							uni.navigateTo({
+								url:'./Riding?OrderId=' + response.data.OrderId
+							})
+						}else if(response.data.status == false){
+							
+						}
+						
+					},
+					fail(response) {
+						console.log(response)
 					}
 				})
 			}
@@ -301,13 +555,9 @@
 		width: 750rpx;
 		background-color: #FFFFFF;
 	}
-
-	,
 	.map {
 		width: 750rpx;
 	}
-
-	,
 	.navgator {
 		position: fixed;
 		flex-direction: row;
@@ -321,19 +571,13 @@
 		right: 0;
 		padding-bottom: 30rpx;
 	}
-
-	,
 	.Btn_click {
 		color: #65C36D;
 	}
-
-	,
 	.navTitleView {
 		flex-direction: row;
 
 	}
-
-	,
 	.bottomView {
 		background-color: #FFFFFF;
 		/* opacity: 0; */
@@ -344,8 +588,6 @@
 		right: 0rpx;
 		width: 100%; //如果视图发生位移就改这里
 	}
-
-	,
 	.dingwei {
 		position: fixed;
 		bottom: 20rpx;
@@ -353,8 +595,6 @@
 		height: 120rpx;
 		left: 20rpx;
 	}
-
-	,
 	.unLock {
 		position: fixed;
 		flex-direction: row;
@@ -367,8 +607,6 @@
 		font-size: 42rpx;
 		bottom: 30rpx;
 	}
-
-	,
 	.scan {
 		width: 50rpx;
 		height: 50rpx;
@@ -385,9 +623,7 @@
 	.icon-img {
 		width: 36px;
 		height: 36px;
-		/* display: block; */
 		position: fixed;
-		top: 810rpx;
 		left: 375rpx;
 		transform: translate(-50%, -50%);
 	}
