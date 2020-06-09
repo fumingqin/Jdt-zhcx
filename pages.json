@@ -924,6 +924,10 @@
 				{
 				    "path" : "pages/GRZY/zy_faultReport",
 				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/zy_newsScreening",
+				    "style" : {}
 				}
             ]
 		}
