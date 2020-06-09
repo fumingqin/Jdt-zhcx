@@ -12,10 +12,10 @@
 			
 			<view class="navTitleView">
 				<view>
-					<text style="color: #333333;" @click="titleClick('有桩')" :class="{'Btn_click' : isClick == '有桩'}">有桩</text>
+					<text style="color: #65C36D;" @click="titleClick('无桩')" :class="{'Btn_click' : isClick == '无桩'}">无桩</text>
 				</view>
 				<view style="margin-left: 30rpx;">
-					<text style="color: #65C36D;" @click="titleClick('无桩')" :class="{'Btn_click' : isClick == '无桩'}">无桩</text>
+					<text style="color: #333333;" @click="titleClick('有桩')" :class="{'Btn_click' : isClick == '有桩'}">有桩</text>
 				</view>
 			</view>
 
@@ -68,7 +68,7 @@
 			//获取系统信息
 			uni.getSystemInfo({
 				success: function(res) {
-					console.log('当前设备信息',res)
+					// console.log('当前设备信息',res)
 					//地图高度
 					if(res.system.indexOf('iOS') == -1){
 						//当前不是iOS
@@ -96,7 +96,7 @@
 					size: true,
 					scrollOffset: true
 				}, data => {
-						console.log(data);
+						// console.log(data);
 				}).exec();
 			}, 200)
 		},
@@ -130,7 +130,6 @@
 						that.userInfo = data.data;
 					},
 					fail(data) {
-						console.log('用户数据',data)
 					}
 				})
 			},
@@ -153,7 +152,6 @@
 			//-------------------------------获取地图中心坐标信息-------------------------------
 			mapChange:function(e){
 				var that = this;
-				console.log(e)
 				if (e.type == 'regionchange' || e.type == 'end') {
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
@@ -255,7 +253,6 @@
 					},
 					success(res) {
 						uni.hideLoading()
-						console.log('无桩数据',res)
 						//请求数据成功之后先清空之前的数据
 						that.markers = [];
 						if(res.data.status == true){
@@ -316,7 +313,7 @@
 			titleClick: function(res) {
 				var that = this;
 				that.isClick = res;
-				if(res == '有桩'){
+				if(res == '有桩'){ 
 					//当前选中的是单车，加载单车的数据,经纬度传当前位置
 					// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
 					that.GetStationByRange(117.6536981221,24.517346);//有桩

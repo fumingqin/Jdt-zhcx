@@ -320,6 +320,7 @@
 						  tempFilePath: tempFilePaths[0],
 						  success: function (res1) {
 							 that.portrait=res1.savedFilePath;
+							 console.log(that.portrait)
 							 pathToBase64(res1.savedFilePath)
 							 .then(base64 => {
 								 that.port=base64;

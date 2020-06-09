@@ -6,7 +6,7 @@
 		<view style="position: fixed; bottom: 0;margin-left: 30rpx;margin-right: 30rpx;">
 			<view style="flex-direction: row;justify-content: space-between;width: 690rpx;">
 				<image src="../../static/GRZY/Position.png" style="width: 120rpx;height: 120rpx;" @click="MoveToThisLocation"></image>
-				<image src="../../static/GRZY/personal.png" style="width: 120rpx;height: 120rpx;" @click="GotoHome"></image>
+				<image src="../../static/GRZY/personal.png" style="width: 120rpx;height: 120rpx;" @click="getOrderInfo"></image>
 			</view>
 			<view v-if="!Isreturn">
 				<view class="ridestate">
@@ -124,6 +124,8 @@
 						}
 					}
 				}, 1000);
+			},
+			getOrderInfo:function(){
 			},
 			GotoHome: function() {
 				uni.navigateTo({
