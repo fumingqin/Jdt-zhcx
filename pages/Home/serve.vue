@@ -8,57 +8,57 @@
 			<view class="sv_title">出行</view>
 			<view style="display: flex; flex-wrap: wrap;">
 				<view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex')">
-					<image class="sv_print" src="../../static/Home/serve/cpdinggou.png"></image>
+					<image class="sv_print" src="../../static/Home/serve/cpdinggou.png" mode="aspectFit"></image>
 					<text class="sv_text">车票订购</text>
 				</view>
 
 				<view class="sv_view3" @click="natTo2('/pages/Home/ChooseSite?current=2')">
-					<image class="sv_print" src="../../static/Home/serve/wlyueche.png"></image>
+					<image class="sv_print" src="../../static/Home/serve/wlyueche.png" mode="aspectFit"></image>
 					<text class="sv_text">网络约车</text>
 				</view>
 
 				<view class="sv_view3" @click="natTo('/pages_GJCX/pages/GJCX/busH5')">
-					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" ></image>
+					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" mode="aspectFit"></image>
 					<text class="sv_text">公交查询</text>
 				</view>
 
 				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
-					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png"></image>
+					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png" mode="aspectFit"></image>
 					<text class="sv_text">包车服务</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
-					<image class="sv_print2" src="../../static/Home/serve/DDQC.png" ></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/RentBike/RentBikeHome')">
+					<image class="sv_print2" src="../../static/Home/serve/DDQC.png" mode="aspectFit"></image>
 					<text class="sv_text">达达骑车</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo(1)">
-					<image class="sv_print" src="../../static/Home/serve/gwzhuche.png" ></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/gwzhuche.png" mode="aspectFit"></image>
 					<text class="sv_text">公务租车</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo(1)">
-					<image class="sv_print" src="../../static/Home/serve/jpyuyue.png"></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/jpyuyue.png" mode="aspectFit"></image>
 					<text class="sv_text">检票预约</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo(1)">
-					<image class="sv_print" src="../../static/Home/serve/xjkuaidi.png"></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/xjkuaidi.png" mode="aspectFit"></image>
 					<text class="sv_text">小件快递</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo(1)">
-					<image class="sv_print" src="../../static/Home/serve/tianqi.png"></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/tianqi.png" mode="aspectFit"></image>
 					<text class="sv_text">天气</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo(1)">
-					<image class="sv_print" src="../../static/Home/serve/hangban.png"></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/hangban.png" mode="aspectFit"></image>
 					<text class="sv_text">航班</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo(1)">
-					<image class="sv_print" src="../../static/Home/serve/huoche.png"></image>
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/GRZY/buttom')">
+					<image class="sv_print2" src="../../static/Home/serve/huoche.png" mode="aspectFit"></image>
 					<text class="sv_text">火车</text>
 				</view>
 				
@@ -75,22 +75,22 @@
 			<view style="display: flex; flex-wrap: wrap;">
 				
 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/independentTravel/it_list')">
-				<image class="sv_print3" src="../../static/Home/serve/ziyouxing.png" style="width:47upx;"></image>
+				<image class="sv_print" src="../../static/Home/serve/ziyouxing.png" mode="aspectFit"></image>
 				<text class="sv_text">自由行</text>
 			</view>
 			
 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/groupTour/groupTourList')">
-				<image class="sv_print3" src="../../static/Home/serve/gentuanyou.png" style="width: 57upx;" ></image>
+				<image class="sv_print" src="../../static/Home/serve/gentuanyou.png" mode="aspectFit"></image>
 				<text class="sv_text">跟团游</text>
 			</view>
 			
 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
-				<image class="sv_print3" src="../../static/Home/serve/jqgoupiao.png" style="width: 52upx;"></image>
+				<image class="sv_print" src="../../static/Home/serve/jqgoupiao.png" mode="aspectFit"></image>
 				<text class="sv_text">景区购票</text>
 			</view>
 			
 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
-				<image class="sv_print3" src="../../static/Home/lvyouchanping.png" style="width: 54upx;" ></image>
+				<image class="sv_print" src="../../static/Home/lvyouchanping.png" mode="aspectFit"></image>
 				<text class="sv_text">旅游产品</text>
 			</view>
 			
@@ -101,15 +101,15 @@
 			<view class="sv_title">防控</view>
 			<view style="display: flex; flex-wrap: wrap;">
 			<view class="sv_view3">
-				<image class="sv_print" src="../../static/Home/serve/cxshenqing.png" ></image>
+				<image class="sv_print" src="../../static/Home/serve/cxshenqing.png" mode="aspectFit"></image>
 				<text class="sv_text">出行申请</text>
 			</view>
 			<view class="sv_view3">
-				<image class="sv_print" src="../../static/Home/serve/qyrenzheng.png"></image>
+				<image class="sv_print" src="../../static/Home/serve/qyrenzheng.png" mode="aspectFit"></image>
 				<text class="sv_text">企业认证</text>
 			</view>
 			<view class="sv_view3">
-				<image class="sv_print" src="../../static/Home/serve/zfchaxun.png"></image>
+				<image class="sv_print" src="../../static/Home/serve/zfchaxun.png" mode="aspectFit"></image>
 				<text class="sv_text">政府查询</text>
 			</view>
 			</view>
@@ -157,11 +157,6 @@
 						url: url
 					});
 					// #endif
-				}else if(url==1){
-					uni.showToast({
-						title:'正在开发中，敬请期待...',
-						icon:'none'
-					})
 				}else{
 					uni.navigateTo({
 						url: url,
@@ -225,7 +220,6 @@
 			margin-top: 43upx;
 			padding-bottom: 56upx;
 			border-radius: 20upx;
-			margin-bottom: 30upx;
 
 			.sv_view3 {
 				width: 20%;
@@ -233,17 +227,13 @@
 				margin-top: 45upx;
 
 				.sv_print {
-					width: 60upx;
-					height: 60upx;
+					width: 56upx;
+					height: 56upx;
 				}
 				
 				.sv_print2 {
 					width: 79upx;
 					height: 56upx;
-				}
-				.sv_print3 {
-					// width: 79upx;
-					height: 60upx;
 				}
 
 				.sv_text {

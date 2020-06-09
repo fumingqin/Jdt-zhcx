@@ -4057,8 +4057,9 @@
 				} else if(this.exitindex == 'cs2tui'){
 					//先检测订单支付状态再执行退票操作
 					this.cs_refundStateCheck(that.csRefundInfo)
-				}else if (this.exitindex == '3') {
+				}else if (that.exitindex == '3') {
 					console.log('景区门票')
+					console.log(this.exitindex)
 					uni.request({
 						url: $lyfw.Interface.spt_BounceTickets.value,
 						method: $lyfw.Interface.spt_BounceTickets.method,
@@ -4069,18 +4070,26 @@
 							'content-type': 'application/json'
 						},
 						success: (e) => {
-							// console.log(e)
-							uni.hideLoading()
-							uni.showToast({
-								title: '退票成功',
-								icon: 'success',
-							})
-							this.close2()
-							this.toFinished();
+							console.log(e)
+							if(e.data.status==false){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票失败，服务器异常，请联系客服！',
+									icon: 'none',
+								})
+							}else if(e.data.status==true){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票成功',
+								})
+								this.close2()
+								this.toFinished();
+							}
+							
 						},
 						fail: function() {
 							uni.showToast({
-								title: '退票失败',
+								title: '退票失败，网络异常',
 								icon: 'none',
 							})
 							uni.hideLoading()
@@ -4099,17 +4108,25 @@
 						},
 						success: (e) => {
 							console.log(e)
-							uni.hideLoading()
-							uni.showToast({
-								title: '退票成功',
-								icon: 'success',
-							})
-							this.close2()
-							this.toFinished();
+							if(e.data.status==false){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票失败，服务器异常，请联系客服！',
+									icon: 'none',
+								})
+							}else if(e.data.status==true){
+								uni.hideLoading()
+								uni.showToast({
+									title: '退票成功',
+								})
+								this.close2()
+								this.toFinished();
+							}
+							
 						},
 						fail: function() {
 							uni.showToast({
-								title: '退票失败',
+								title: '退票失败，网络异常',
 								icon: 'none',
 							})
 							uni.hideLoading()
