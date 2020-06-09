@@ -293,7 +293,7 @@
 					},
 					fail: function(response) {
 						that.ctkyOpenID = response.data
-						that.getOrder();
+						// that.getOrder();
 					}
 				})
 			},

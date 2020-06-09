@@ -455,7 +455,7 @@
 					"path": "pages/BCFW/charteredBusPayment",
 					"style": {}
 				}
-			]
+            ]
 		},
 		//---------------------------------------------第五个包：旅游服务------------------------------------------
 		{
@@ -919,11 +919,23 @@
                     "style" : {
 						"navigationBarTitleText": "开锁中"
 					}
-                }
-                ,{
+                },
+				{
                     "path" : "pages/RentBike/Riding",
                     "style" : {}
-                }
+                },
+				{
+				    "path" : "pages/GRZY/zy_information",
+				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/zy_faultReport",
+				    "style" : {}
+				},
+				{
+				    "path" : "pages/GRZY/zy_newsScreening",
+				    "style" : {}
+				}
             ]
 		}
 	],

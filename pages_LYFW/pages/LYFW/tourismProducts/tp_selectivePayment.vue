@@ -396,7 +396,8 @@
 					this.payment()
 				} else if (this.paymentValue == true) {
 					uni.showToast({
-						title: '请勿重复点击支付'
+						title: '请勿重复点击支付',
+						icon:'none'
 					})
 				}
 			},
@@ -498,7 +499,8 @@
 								fail: function(e) {
 									console.log(e)
 									uni.showToast({
-										title: '拉起支付失败，请查看网络状态'
+										title: '拉起支付失败，请查看网络状态',
+										icon:'none'
 									})
 								}
 														
@@ -506,7 +508,8 @@
 							},
 							fail: function() {
 								uni.showToast({
-									title: '请求支付参数失败，请查看网络状态'
+									title: '请求支付参数失败，请查看网络状态',
+									icon:'none'
 								})
 							}
 						})
@@ -608,7 +611,8 @@
 							},
 							fail: function() {
 								uni.showToast({
-									title: '请求支付参数失败，请查看网络状态'
+									title: '请求支付参数失败，请查看网络状态',
+									icon:'none'
 								})
 							}
 						})

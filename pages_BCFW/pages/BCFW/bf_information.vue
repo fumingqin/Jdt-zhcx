@@ -742,7 +742,7 @@
 										uni.hideLoading()
 										if (res.data.status) {
 											uni.redirectTo({
-												url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
+												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)
 											})
 										}
 									},
@@ -786,7 +786,7 @@
 										uni.hideLoading()
 										if (res.data.msg=='订单下单成功') {
 											uni.redirectTo({
-												url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
+												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)
 											})
 										}else if(res.data.status==false){
 											uni.showToast({
@@ -836,7 +836,7 @@
 										uni.hideLoading()
 										if (res.data.status) {
 											uni.navigateTo({
-												url: 'charteredBusPayment?or_number=' +res.data.data.OrderNumber
+												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)
 											})
 										}
 									},
@@ -1264,7 +1264,7 @@
 
 		.av_atOnceView {
 			width: 310upx;
-			height: 100upx;
+			height: 90upx;
 			background: #FC4B4B;
 			position: absolute;
 			right: 0upx;
