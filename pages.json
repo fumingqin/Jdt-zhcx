@@ -845,6 +845,13 @@
 				,{
 				    "path" : "pages/GRZX/gz_complaintText",
 				    "style" : {}
+				},
+				{
+					"path": "pages/GRZX/realName", //实名认证
+					"style": {
+						"navigationBarTitleText": "实名认证",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
 				}
 			]
 		},
