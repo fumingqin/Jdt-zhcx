@@ -90,7 +90,7 @@
 			</view>
 			
 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
-				<image class="sv_print3" src="../../static/Home/lvyouchanping.png" 	style="width: 45upx;"></image>
+				<image class="sv_print3" src="../../static/Home/serve/lvyouchanping.png" style="width: 62upx;"></image>
 				<text class="sv_text">旅游产品</text>
 			</view>
 			
