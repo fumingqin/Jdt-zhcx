@@ -372,7 +372,7 @@
 			//获取openid
 			getCode() {
 				let that=this;
-			    let Appid = "wx14af28006f937f6e";//appid
+			    let Appid = "wxef946aa6ab5788a3";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
 				let local = "http://zntc.145u.net/h5/#/";
@@ -387,7 +387,7 @@
 				} else {
 				  // 存在则通过code传向后台调用接口返回微信的个人信息
 					uni.request({
-						url:'http://27.148.155.9:9056/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=9cda28b050341aca1f674d2043b01358',
+						url:'http://27.148.155.9:9056/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=6db2b79e1669f727c246d9c8ae928ecf',
 						header: {'content-type': 'application/x-www-form-urlencoded'},
 						method:'POST',
 						success(res) {
