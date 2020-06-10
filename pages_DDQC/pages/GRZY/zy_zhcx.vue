@@ -61,7 +61,7 @@
 					<text class="zl_noText">{{Announcement.zl_title}}</text>
 					<view class="zl_label">
 						<view class="la_label" v-for="(item,index) in Announcement.LabelContent" :key="index" v-if="index<2">
-							<text class="la_background" style="background-color: #e2f1fa;border-radius:20px;">{{item.lc_text}}</text>
+							<text class="la_background" style="background-color: #e2f1fa;border-radius:20px;" @click="Jump">{{item.lc_text}}</text>
 						</view>
 					</view>
 				</view>
@@ -155,7 +155,7 @@
 				Announcement:'',//资讯动态
 				sixPalaceList:'',
 				goodsList:'',
-				zy_dataIndex: 4, //列表默认数量
+				zy_dataIndex: 6, //列表默认数量
 				disStatus:0,
 				loadingText: {
 					down: '上拉加载更多',
@@ -275,6 +275,20 @@
 			// 		this.type = 1;
 			// 	}
 			// },
+			
+			//---------------------资讯详情页-----------------------------------
+			
+			informationTo: function(e) {
+				uni.navigateTo({
+					url:'../../../pages/Home/InformationDetails?aid=' + e
+				})
+			},
+			
+			Jump(){
+				uni.navigateTo({
+					url:'./zy_newsScreening'
+				})
+			}
 		}
 	}
 </script>
