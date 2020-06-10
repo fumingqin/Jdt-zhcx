@@ -2386,7 +2386,9 @@
 				var that = this;
 				that.ky_currentType = '定制巴士退票';
 				//退票
-				that.csRefundTicket(item);
+				// that.csRefundTicket(item);
+				//检测支付状态
+				that.Cs_CheckPayState(item);
 			},
 			
 			//退票
@@ -2400,21 +2402,25 @@
 						bookID: item.orderNumber,
 					},
 					success: (respones) => {
-						// console.log(respones)
+						console.log('退票结果',respones)
 						if (respones.data.Successed == true) {
 							uni.hideLoading()
 							uni.showToast({
 								title: respones.data.BookResult.Message,
+								complete() {
+									that.Cs_BouncePay(item);
+									that.$refs.popup2.close()
+								}
 							})
-							that.$refs.popup2.close()
-							that.Cs_BouncePay(item);
 						} else {
 							uni.hideLoading()
 							uni.showToast({
 								title: respones.data.FaildMessage,
-								icon: 'none'
+								icon: 'none',
+								complete() {
+									this.$refs.popup2.close()
+								}
 							})
-							this.$refs.popup2.close()
 						}
 					},
 					fail: (respones) => {
@@ -2438,7 +2444,8 @@
 						price: item.totalPrice
 					},
 					success: (respones) => {
-						if (respones.data.Successed == true) {
+						console.log('退款结果',respones)
+						if (respones.data.status == true) {
 							uni.showToast({
 								title: respones.data.msg,
 								complete() {
@@ -2446,8 +2453,7 @@
 									uni.startPullDownRefresh();
 								}
 							})
-						} else if (respones.data.Successed == false){
-							uni.hideLoading()
+						} else if (respones.data.status == false){
 							uni.showToast({
 								title: respones.data.msg,
 								icon: 'none',
@@ -2627,17 +2633,23 @@
 			Cs_CheckPayState:function(orderNumber,totalPrice){
 				var that = this;
 				var payType = $KyInterface.KyInterface.payType.payType;
-				console.log(orderNumber,payType)
+				console.log('检测订单支付状态',orderNumber,payType)
+				var number = '';
+				if(that.ky_currentType == '定制巴士退票'){
+					number = orderNumber;
+				}else {
+					number = orderNumber.orderNumber;
+				}
 				uni.request({
 					url:$KyInterface.KyInterface.Cs_CheckPayState.Url,
 					method:$KyInterface.KyInterface.Cs_CheckPayState.method,
-					// header:$KyInterface.KyInterface.Cs_CheckPayState.header,
 					data:{
-						orderNumber:orderNumber,
+						orderNumber:number,
 						payType:payType
 					},
 					success(res) {
-						console.log(res)
+						console.log('支付状态',res)
+						console.log('ky_currentType',that.ky_currentType)
 						if(that.ky_currentType == '定制巴士取消') {
 							if(res.data.msg == '支付成功') {
 								uni.showToast({
@@ -2650,7 +2662,7 @@
 						}
 						if(res.data.msg == '不存在该订单，请输入正确订单号'){
 							if(that.ky_currentType == '定制巴士退票'){
-								that.csRefundTicket(orderNumber);
+								// that.csRefundTicket(orderNumber);
 							}else if(that.ky_currentType == '定制巴士支付'){
 								that.getSpecialBusPaymentInfo(orderNumber,totalPrice);
 							}
