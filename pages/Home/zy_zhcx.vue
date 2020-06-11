@@ -6,53 +6,69 @@
 				<image :src="item.hp_img" mode="aspectFill" />
 			</swiper-item>
 		</swiper>
-		
+
 		<swiper class="zl_swi" :indicator-dots="true" indicator-active-color="#70c778" indicator-color="#f6f6f6">
 			<swiper-item class="swiItem">
 				<view class="zl_topClick">
 					<!-- 车票订购 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../../static/Home/CPDG.png"></image>
+						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
 						<text class="zl_toText">车票订购</text>
 					</view>
-					<!-- 网络约车 -->
+					<!-- 新区专线 -->
 					<view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../../static/Home/WLYC.png"></image>
-						<text class="zl_caText">网络约车</text>
+						<image class="zl_caImage" src="../../static/Home/WLYC.png"></image>
+						<text class="zl_caText">新区专线</text>
 					</view>
 					<!-- 公交查询 -->
 					<view class="zl_transit">
-						<image class="zl_tsImage" src="../../../static/Home/GJCX.png"></image>
+						<image class="zl_tsImage" src="../../static/Home/GJCX.png"></image>
 						<text class="zl_tsText">公交查询</text>
 					</view>
 					<!-- 包车服务 -->
 					<view class="zl_charterService">
-						<image class="zl_csImage" src="../../../static/Home/BCFW.png"></image>
+						<image class="zl_csImage" src="../../static/Home/BCFW.png"></image>
 						<text class="zl_csText">包车服务</text>
 					</view>
-					<!-- 旅游服务 -->
+					<!-- 景区门票 -->
 					<view class="zl_tourismServices">
-						<image class="zl_teImage" src="../../../static/Home/LVFW.png"></image>
-						<text class="zl_teText">旅游服务</text>
+						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<text class="zl_teText">景区门票</text>
 					</view>
 				</view>
 			</swiper-item>
 			<swiper-item class="swiItem">
 				<view class="zl_topClick">
-					<!-- 车票订购 -->
+					<!-- 旅游产品 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../../static/Home/CPDG.png"></image>
-						<text class="zl_toText">车票订购</text>
+						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<text class="zl_toText">旅游产品</text>
 					</view>
-					<!-- 网络约车 -->
+					<!-- 预约检测 -->
 					<view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../../static/Home/WLYC.png"></image>
-						<text class="zl_caText">网络约车</text>
+						<image class="zl_caImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<text class="zl_caText">预约检测</text>
+					</view>
+					<!-- 自由行 -->
+					<view class="zl_ticketOrdering">
+						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<text class="zl_toText">自由行</text>
+					</view>
+					<!-- 跟团游 -->
+					<view class="zl_ticketOrdering">
+						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<text class="zl_toText">跟团游</text>
+					</view>
+					<!-- 村村通 -->
+					<view class="zl_ticketOrdering">
+						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<text class="zl_toText">村村通</text>
 					</view>
 				</view>
 			</swiper-item>
 		</swiper>
-		
+		</swiper>
+
 		<!-- 咨询动态 -->
 		<view class="notice">
 			<view class="zl_content">
@@ -67,7 +83,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<!-- 旅游推荐 -->
 		<view class="zl_recommend">
 			<view>
@@ -89,7 +105,7 @@
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text>
 					</view>
 				</view>
-		
+
 				<view class="zl_contentImage2">
 					<!-- 泉州钟楼 -->
 					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
@@ -109,7 +125,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<!-- 新闻资讯 -->
 		<view class="titNp">新闻资讯</view>
 		<view class="guess-section">
@@ -125,12 +141,12 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; margin: 16upx 0; color: #aaa;">
 			<text v-if="current==0" :hidden="disStatus== 1">{{loadingType== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
 			<text v-if="current==0" :hidden="disStatus== 0">暂无历史数据</text>
 		</view>
-		
+
 		<!-- tab按钮 -->
 		<!-- <view class="zc_TabBackground">
 			<view class="tb_tab">
@@ -152,11 +168,11 @@
 			return {
 				homePage: '', //轮播图
 				type: 0,
-				Announcement:'',//资讯动态
-				sixPalaceList:'',
-				goodsList:'',
+				Announcement: '', //资讯动态
+				sixPalaceList: '',
+				goodsList: '',
 				zy_dataIndex: 6, //列表默认数量
-				disStatus:0,
+				disStatus: 0,
 				loadingText: {
 					down: '上拉加载更多',
 					refresh: '正在加载...',
@@ -171,7 +187,7 @@
 			this.lunBoInit();
 			this.loadData();
 		},
-		
+
 		//页面触底
 		onReachBottom() {
 			uni.showLoading({
@@ -180,7 +196,7 @@
 			})
 			this.getMore();
 		},
-		
+
 		methods: {
 
 			//----------------------读取静态页面json.js-------------------------------
@@ -192,24 +208,24 @@
 				this.Announcement = Announcement.data;
 				// console.log(this.homePage)
 			},
-			
+
 			//----------------------接口数据-------------------------------
-			
+
 			loadData: function() {
 				//请求新闻资讯
 				uni.request({
-					url:$lyfw.Interface.currency_zhly.value,
-					method:$lyfw.Interface.currency_zhly.method,
+					url: $lyfw.Interface.currency_zhly.value,
+					method: $lyfw.Interface.currency_zhly.method,
 					success: (e) => {
 						console.log(e)
-						if(e.data.msg=='获取成功'){
-							if(e.data.data.length==0){
+						if (e.data.msg == '获取成功') {
+							if (e.data.data.length == 0) {
 								this.disStatus = 1;
-							}else{
+							} else {
 								this.goodsList = e.data.data;
 								this.disStatus = 0;
 							}
-						}else{
+						} else {
 							uni.hideLoading()
 							uni.stopPullDownRefresh()
 							this.goodsList = '';
@@ -228,11 +244,11 @@
 						})
 					}
 				})
-				
+
 				//请求六宫格数据
 				uni.request({
-					url:$lyfw.Interface.spt_GetticketSearchByrequestArea.value,
-					method:$lyfw.Interface.spt_GetticketSearchByrequestArea.method,
+					url: $lyfw.Interface.spt_GetticketSearchByrequestArea.value,
+					method: $lyfw.Interface.spt_GetticketSearchByrequestArea.method,
 					data: {
 						// requestArea : this.regionWeixin,
 						requestArea: '泉州市'
@@ -245,28 +261,28 @@
 						this.sixPalaceList = res.data.data;
 					}
 				})
-				
+
 				uni.stopPullDownRefresh();
 			},
-			
-			
+
+
 			//---------------------页面触底加载信息-----------------------------
-			
-			getMore(){
+
+			getMore() {
 				this.loadingType = 1;
-				if(this.current == 0){
+				if (this.current == 0) {
 					if (this.zy_dataIndex < this.goodsList.length) {
 						var a = this.zy_dataIndex + 4;
 						this.zy_dataIndex = a;
 						this.loadingType = 0;
 						uni.hideLoading()
-					}else if (this.zy_dataIndex >= this.goodsList.length) {
+					} else if (this.zy_dataIndex >= this.goodsList.length) {
 						this.loadingType = 2;
 						uni.hideLoading()
 					}
 				}
 			},
-			
+
 			//-----------------tab事件---------------------------------------
 			// tabClick(e) {
 			// 	if (e == 0) {
@@ -275,18 +291,18 @@
 			// 		this.type = 1;
 			// 	}
 			// },
-			
+
 			//---------------------资讯详情页-----------------------------------
-			
+
 			informationTo: function(e) {
 				uni.navigateTo({
-					url:'../../../pages/Home/InformationDetails?aid=' + e
+					url: '../../../pages/Home/InformationDetails?aid=' + e
 				})
 			},
-			
-			Jump(){
+
+			Jump() {
 				uni.navigateTo({
-					url:'./zy_newsScreening'
+					url: './zy_newsScreening'
 				})
 			}
 		}
@@ -405,34 +421,34 @@
 			}
 		}
 	}
-	
-	.zl_swi{
+
+	.zl_swi {
 		height: 230upx;
 		width: 100%;
-		
+
 		.swiItem {
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
 			background-color: #FFFFFF;
-			
+
 			.zl_topClick {
 				display: flex;
 				top: 0;
-			
+
 				// 车票订购
 				.zl_ticketOrdering {
 					width: 20%;
 					height: 178upx;
 					text-align: center;
 					align-items: center;
-			
+
 					.zl_toImage {
 						width: 60rpx;
 						height: 60rpx;
 						margin-top: 50upx;
 					}
-			
+
 					.zl_toText {
 						margin-top: 10rpx;
 						font-size: 24rpx;
@@ -442,20 +458,20 @@
 						display: block;
 					}
 				}
-			
+
 				//网络约车
 				.zl_carAppointment {
 					width: 20%;
 					height: 178upx;
 					text-align: center;
 					align-items: center;
-			
+
 					.zl_caImage {
 						width: 60rpx;
 						height: 60rpx;
 						margin-top: 50upx;
 					}
-			
+
 					.zl_caText {
 						margin-top: 10rpx;
 						font-size: 24rpx;
@@ -465,20 +481,20 @@
 						display: block;
 					}
 				}
-			
+
 				//公交查询
 				.zl_transit {
 					width: 20%;
 					height: 178upx;
 					text-align: center;
 					align-items: center;
-			
+
 					.zl_tsImage {
 						width: 60rpx;
 						height: 60rpx;
 						margin-top: 50upx;
 					}
-			
+
 					.zl_tsText {
 						margin-top: 10rpx;
 						font-size: 24rpx;
@@ -488,20 +504,20 @@
 						display: block;
 					}
 				}
-			
+
 				//包车服务
 				.zl_charterService {
 					width: 20%;
 					height: 178upx;
 					text-align: center;
 					align-items: center;
-			
+
 					.zl_csImage {
 						width: 60rpx;
 						height: 60rpx;
 						margin-top: 50upx;
 					}
-			
+
 					.zl_csText {
 						margin-top: 10rpx;
 						font-size: 24rpx;
@@ -511,20 +527,20 @@
 						display: block;
 					}
 				}
-			
+
 				//旅游服务
 				.zl_tourismServices {
 					width: 20%;
 					height: 178upx;
 					text-align: center;
 					align-items: center;
-			
+
 					.zl_teImage {
-						width: 79rpx;
+						width: 60rpx;
 						height: 60rpx;
 						margin-top: 50upx;
 					}
-			
+
 					.zl_teText {
 						margin-top: 10rpx;
 						font-size: 24rpx;
@@ -537,24 +553,24 @@
 			}
 		}
 	}
-	
+
 	//咨询动态
 	.notice {
 		background: #fff;
 		margin-top: 20upx;
-	
+
 		.zl_content {
 			display: flex;
-	
+
 			.zl_noImage {
 				width: 146upx;
 				height: 83upx;
 				margin: 47upx 0upx;
 				margin-left: 31upx;
 			}
-	
+
 			.zl_noContent {
-	
+
 				.zl_noText {
 					display: flex;
 					font-size: 26upx;
@@ -562,15 +578,15 @@
 					margin-top: 35upx;
 					margin-left: 55upx;
 				}
-	
+
 				.zl_label {
 					display: flex;
 					margin-left: 45upx;
 					margin-top: 27upx;
-	
+
 					.la_label {
 						margin-right: 10upx;
-	
+
 						.la_background {
 							background-color: #e2f1fa;
 							border-radius: 20px;
@@ -583,23 +599,23 @@
 			}
 		}
 	}
-	
+
 	// .zl_topClick {
 	// 	display: flex;
 	// 	background-color: #FFFFFF;
-		
+
 	// 	// 车票订购
 	// 	.zl_vajraDistrict {
 	// 		width: 190upx;
 	// 		height: 178upx;
 	// 		text-align: center;
-		
+
 	// 		.zl_vdImage {
 	// 			width: 60rpx;
 	// 			height: 60rpx;
 	// 			margin-top: 50upx;
 	// 		}
-		
+
 	// 		.zl_vdText {
 	// 			margin-top: 10rpx;
 	// 			font-size: 24rpx;
@@ -610,23 +626,23 @@
 	// 		}
 	// 	}
 	// }
-	
+
 	// 旅游推荐
 	.zl_recommend {
 		background: #fff;
 		margin-top: 20upx;
 		padding: 0 31upx;
-	
+
 		.zl_reContent {
 			position: relative;
 			padding-top: 40upx;
-	
+
 			.zl_reTitle {
 				font-size: 32upx;
 				color: #333333;
 				font-weight: bold;
 			}
-	
+
 			.zl_reMore {
 				position: absolute;
 				padding-right: 31upx;
@@ -636,27 +652,27 @@
 				color: #5E5E60;
 			}
 		}
-	
+
 		.zl_reContent2 {
 			padding-top: 42upx;
 			padding-bottom: 40upx;
-	
+
 			.zl_contentImage1 {
 				display: flex;
-	
+
 				// 泉州小西埕
 				.ct_content1 {
 					display: flex;
 					position: relative;
 					margin-right: 10upx;
-	
+
 					.ct_image1 {
 						width: 454upx;
 						height: 207upx;
 						overflow: hidden;
-	
+
 					}
-	
+
 					.ct_text1 {
 						position: absolute;
 						font-size: 22upx;
@@ -665,19 +681,19 @@
 						color: #fff;
 					}
 				}
-	
+
 				// 稻田摸鱼
 				.ct_content2 {
 					display: flex;
 					position: relative;
-	
+
 					.ct_image2 {
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
-	
+
 					}
-	
+
 					.ct_text2 {
 						position: absolute;
 						font-size: 22upx;
@@ -690,23 +706,23 @@
 					}
 				}
 			}
-	
+
 			.zl_contentImage2 {
 				display: flex;
 				margin-top: 20upx;
-	
+
 				// 泉州钟楼
 				.ct_content3 {
 					display: flex;
 					position: relative;
-	
+
 					.ct_image3 {
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
-	
+
 					}
-	
+
 					.ct_text3 {
 						position: absolute;
 						font-size: 22upx;
@@ -718,20 +734,20 @@
 						overflow: hidden;
 					}
 				}
-	
+
 				// 泉州洛阳桥
 				.ct_content4 {
 					display: flex;
 					position: relative;
 					margin-left: 10upx;
-	
+
 					.ct_image4 {
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
-	
+
 					}
-	
+
 					.ct_text4 {
 						position: absolute;
 						font-size: 22upx;
@@ -743,20 +759,20 @@
 						overflow: hidden;
 					}
 				}
-	
+
 				// 七彩官畲
 				.ct_content5 {
 					display: flex;
 					position: relative;
 					margin-left: 10upx;
-	
+
 					.ct_image5 {
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
-	
+
 					}
-	
+
 					.ct_text5 {
 						position: absolute;
 						font-size: 22upx;
@@ -771,38 +787,38 @@
 			}
 		}
 	}
-	
+
 	/* 南平周边-样式*/
 	.guess-section {
 		display: flex;
 		flex-wrap: wrap;
 		padding: 0 30upx;
 		background: #fff;
-	
+
 		.guess-item {
 			display: flex;
 			flex-direction: column;
 			width: 48%;
 			padding-bottom: 40upx;
-	
+
 			&:nth-child(2n+1) {
 				margin-right: 4%;
 			}
 		}
-	
+
 		.image-wrapper {
 			width: 100%;
 			height: 360upx;
 			border-radius: 3px;
 			overflow: hidden;
-	
+
 			image {
 				width: 100%;
 				height: 100%;
 				opacity: 1;
 			}
 		}
-	
+
 		.title {
 			font-size: 32upx;
 			color: #333;
@@ -813,13 +829,13 @@
 			overflow: hidden;
 			width: 160px;
 		}
-	
+
 		.Portrait {
 			width: 40upx;
 			height: 40upx;
 			opacity: 1;
 		}
-	
+
 		.price {
 			position: relative;
 			font-size: 26upx;
@@ -834,7 +850,7 @@
 			width: 76px;
 			margin-top: -80upx;
 		}
-	
+
 		.price-zan {
 			font-size: 24upx;
 			color: #666;
@@ -842,7 +858,7 @@
 			margin-top: 3upx;
 		}
 	}
-	
+
 	/*通用字体样式*/
 	.titNp {
 		margin-top: 20upx;
@@ -851,6 +867,6 @@
 		font-size: 34upx;
 		font-weight: bold;
 		background: #fff;
-	
+
 	}
 </style>
