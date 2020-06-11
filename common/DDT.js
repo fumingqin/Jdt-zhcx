@@ -1,6 +1,11 @@
 //接口域名
 const Url = 'http://111.231.109.113:8004';
 
+// 接口声明区
+export default {
+	DDTInterface
+}
+
 //接口对象
 const DDTInterface = {
 	GetStationByRange:{
@@ -59,10 +64,7 @@ const DDTInterface = {
 	},
 }
 
-// 接口声明区
-export default {
-	DDTInterface
-}
+
 
 
 
