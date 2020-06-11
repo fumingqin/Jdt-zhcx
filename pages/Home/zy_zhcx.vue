@@ -72,7 +72,7 @@
 		<!-- 咨询动态 -->
 		<view class="notice">
 			<view class="zl_content">
-				<image class="zl_noImage" src="../../static/GRZY/zixundongtai.png" mode="aspectFill"></image>
+				<image class="zl_noImage" src="@/pages_DDQC/static/GRZY/zixundongtai.png" mode="aspectFill"></image>
 				<view class="zl_noContent">
 					<text class="zl_noText">{{Announcement.zl_title}}</text>
 					<view class="zl_label">
@@ -135,7 +135,7 @@
 				</view>
 				<view class="title clamp">{{item.title}}</view>
 				<view>
-					<image class="Portrait" src="../../static/GRZY/missing-face.png" mode="aspectFill"></image>
+					<image class="Portrait" src="@/pages_GRZX/static/GRZX/missing-face.png" mode="aspectFill"></image>
 					<text class="price">{{item.reportTime}}</text>
 					<text class="price-zan">阅读{{item.viewsCount+1080}}</text>
 				</view>
