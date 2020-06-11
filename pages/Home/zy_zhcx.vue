@@ -188,6 +188,15 @@
 			this.loadData();
 		},
 
+		onShow(){
+			// #ifdef MP-WEIXIN
+			this.getLoginState();
+			//#endif
+			// #ifdef  H5
+			 this.getCode();
+			//#endif
+		},
+		
 		//页面触底
 		onReachBottom() {
 			uni.showLoading({
@@ -304,7 +313,126 @@
 				uni.navigateTo({
 					url: './zy_newsScreening'
 				})
-			}
+			},
+			
+			// #ifdef  H5
+			//获取openid
+			getCode() {
+				let that=this;
+			    let Appid = "wxef946aa6ab5788a3";//appid
+				let code = this.getUrlParam('code'); //是否存在code
+				console.log(code);
+				let local = "http://zntc.145u.net/#/";
+				if (code == null || code === "") {
+				  //不存在就打开上面的地址进行授权
+					window.location.href =
+						"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+						Appid +
+						"&redirect_uri=" +
+						encodeURIComponent(local) +
+						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"; 
+				} else {
+				  // 存在则通过code传向后台调用接口返回微信的个人信息
+					uni.request({
+						url:'http://27.148.155.9:9056/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=6db2b79e1669f727c246d9c8ae928ecf',
+						header: {'content-type': 'application/x-www-form-urlencoded'},
+						method:'POST',
+						success(res) {
+							console.log(res,"res")
+							if(res.data.openid!=""&&res.data.openid!=null){
+								uni.setStorageSync('scenicSpotOpenId',res.data.openid)
+							}
+							uni.setStorageSync('wxuserInfo',res.data)
+							let openid=uni.getStorageSync('scenicSpotOpenId')||'';
+							console.log(openid,"openid")
+							if(openid!=""&&openid!=null&&openid!=undefined){
+								uni.request({
+									//url:'http://zntc.145u.net/api/person/changeInfo',
+									url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
+									data:{
+										openId_wx:openid,
+									},
+									method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
+									success(res1) {
+										console.log(res1,'res1')
+										//判断是否有绑定手机号
+										if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+											uni.showModal({
+												content:'您暂未绑定手机号，是否绑定',
+												confirmText:'去绑定',
+												cancelText:'暂不绑定',
+												success(res1) {
+													if (res1.confirm) {
+														uni.navigateTo({
+															url:'/pages/GRZX/wxLogin'
+														})
+													} else if (res1.cancel) {
+														// console.log('用户点击取消');
+														uni.showToast({
+															title:'未绑定手机号，将会影响部分功能的正常运行',
+															icon:'none'
+														})
+													}
+												}
+											})
+										}
+										console.log(openid,'openid1')
+										if(openid==res1.data.data.openId_wx&&openid!=""){
+											uni.setStorageSync('userInfo',res1.data.data)
+										}	
+									}
+								})
+							}
+						},
+						fail(err){
+							console.log(err)
+							uni.showToast({
+								title:"登录失败",
+								icon:'none'
+							})
+						}
+					})
+				}
+			},
+			//判断code信息是否存在
+			getUrlParam(name) {
+				  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')  
+				  let url = window.location.href.split('#')[0]   
+				  let search = url.split('?')[1]  
+				  if (search) {  
+				    var r = search.substr(0).match(reg)  
+				    if (r !== null) return unescape(r[2])  
+				    return null  
+				  } else {  
+				    return null  
+				  }  
+			},
+			 //#endif
+			// #ifdef MP-WEIXIN
+			getLoginState(){
+				uni.getStorage({
+					key:'isCanUse',
+					success(res){
+					},
+					fail(err){
+						uni.showModal({
+							content:'您暂未登录，是否登录',
+							confirmText:'去登录',
+							cancelText:'暂不登录',
+							success(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url:'/pages/Home/wxAuthorize?type=index'
+									})
+								} else if (res.cancel) {
+									// console.log('用户点击取消');
+								}
+							}
+						})
+					}
+				})
+			} 
+			//#endif
 		}
 	}
 </script>
