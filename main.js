@@ -8,7 +8,6 @@ import Lyfwcwd from 'common/LYFW/LyfwCwd.js' //旅游服务-测试用数据-蔡�
 // import store from 'common/login.js' //登录
 import BcfwZyx from 'common/BCFW/BcfwZyx.js' //包车服务-测试用数据-郑育兴
 import zyx from 'common/ZYX.js'
-
 import Sceniclist from 'common/scenicSpotDistribution.js' //旅游服务-景区目录-测试用数据
 
 Vue.config.productionTip = false
