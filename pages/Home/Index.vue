@@ -375,7 +375,7 @@
 			    let Appid = "wxef946aa6ab5788a3";//appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
-				let local = "http://zntc.145u.net/h5/#/";
+				let local = "http://zntc.145u.net/#/";
 				if (code == null || code === "") {
 				  //不存在就打开上面的地址进行授权
 					window.location.href =
@@ -410,15 +410,6 @@
 										console.log(res1,'res1')
 										//判断是否有绑定手机号
 										if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
-											// uni.showToast({
-											// 	title:'您未绑定手机号，请绑定手机号！',
-											// 	icon:'none',
-											// })
-											// setTimeout(function(){
-											// 	uni.navigateTo({
-											// 		url:'/pages/GRZX/wxLogin'
-											// 	})
-											// },1000);
 											uni.showModal({
 												content:'您暂未绑定手机号，是否绑定',
 												confirmText:'去绑定',
