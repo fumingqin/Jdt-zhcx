@@ -17,7 +17,7 @@
 					</view>
 					<!-- 新区专线 -->
 					<view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../static/Home/WLYC.png"></image>
+						<image class="zl_caImage" src="../../static/Home/XQZX.png"></image>
 						<text class="zl_caText">新区专线</text>
 					</view>
 					<!-- 公交查询 -->
