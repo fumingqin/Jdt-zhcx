@@ -41,27 +41,27 @@
 				<view class="zl_topClick">
 					<!-- 旅游产品 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
 						<text class="zl_toText">旅游产品</text>
 					</view>
 					<!-- 预约检测 -->
 					<view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_caImage" src="../../static/Home/YYJC.png"></image>
 						<text class="zl_caText">预约检测</text>
 					</view>
 					<!-- 自由行 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/ZYX.png"></image>
 						<text class="zl_toText">自由行</text>
 					</view>
 					<!-- 跟团游 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/GTY.png"></image>
 						<text class="zl_toText">跟团游</text>
 					</view>
 					<!-- 村村通 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/CCT.png"></image>
 						<text class="zl_toText">村村通</text>
 					</view>
 				</view>
