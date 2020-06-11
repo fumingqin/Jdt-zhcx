@@ -135,7 +135,7 @@
 				</view>
 				<view class="title clamp">{{item.title}}</view>
 				<view>
-					<image class="Portrait" src="@/pages_GRZX/static/GRZX/missing-face.png" mode="aspectFill"></image>
+					<image class="Portrait" src="@/static/GRZX/missing-face.png" mode="aspectFill"></image>
 					<text class="price">{{item.reportTime}}</text>
 					<text class="price-zan">阅读{{item.viewsCount+1080}}</text>
 				</view>
