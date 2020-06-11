@@ -3,7 +3,7 @@
 		<!-- 轮播图-->
 		<swiper class="swi" circular autoplay>
 			<swiper-item class="swiItem" v-for="(item,index) in homePage" :key="index">
-				<image :src="item.hp_img" mode="aspectFill" />
+				<image :src="item.imageUrl" mode="aspectFill" />
 			</swiper-item>
 		</swiper>
 
@@ -72,7 +72,7 @@
 		<!-- 咨询动态 -->
 		<view class="notice">
 			<view class="zl_content">
-				<image class="zl_noImage" src="@/pages_DDQC/static/GRZY/zixundongtai.png" mode="aspectFill"></image>
+				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill"></image>
 				<view class="zl_noContent">
 					<text class="zl_noText">{{Announcement.zl_title}}</text>
 					<view class="zl_label">
@@ -135,7 +135,7 @@
 				</view>
 				<view class="title clamp">{{item.title}}</view>
 				<view>
-					<image class="Portrait" src="@/static/GRZX/missing-face.png" mode="aspectFill"></image>
+					<image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
 					<text class="price">{{item.reportTime}}</text>
 					<text class="price-zan">阅读{{item.viewsCount+1080}}</text>
 				</view>
@@ -166,6 +166,7 @@
 	export default {
 		data() {
 			return {
+				imgXXDT:[],//咨询动态
 				homePage: '', //轮播图
 				type: 0,
 				Announcement: '', //资讯动态
@@ -188,15 +189,15 @@
 			this.loadData();
 		},
 
-		onShow(){
+		onShow() {
 			// #ifdef MP-WEIXIN
 			this.getLoginState();
 			//#endif
 			// #ifdef  H5
-			 this.getCode();
+			this.getCode();
 			//#endif
 		},
-		
+
 		//页面触底
 		onReachBottom() {
 			uni.showLoading({
@@ -211,8 +212,8 @@
 			//----------------------读取静态页面json.js-------------------------------
 
 			async lunBoInit() {
-				let homePage = await this.$api.lyfwcwd('homePage');
-				this.homePage = homePage.data;
+				// let homePage = await this.$api.lyfwcwd('homePage');
+				// this.homePage = homePage.data;
 				let Announcement = await this.$api.lyfwcwd('Announcement');
 				this.Announcement = Announcement.data;
 				// console.log(this.homePage)
@@ -271,6 +272,28 @@
 					}
 				})
 
+				//请求图片
+				uni.request({
+					url: $lyfw.Interface.qg_GetImage.value,
+					method: $lyfw.Interface.qg_GetImage.method,
+					data: {
+						model: 9
+					},
+					header: {
+						'content-type': 'application/json'
+					},
+					success: (res) => {
+						// console.log(res)
+						this.homePage = res.data.data.filter(item => {
+							return item.type == 'banner2' || item.type == 'banner1';
+						})
+						this.imgXXDT = res.data.data.filter(item => {
+							return item.type == 'dongtai';
+						})
+						// console.log(this.imgXXDT)
+					}
+				})
+
 				uni.stopPullDownRefresh();
 			},
 
@@ -305,90 +328,93 @@
 
 			informationTo: function(e) {
 				uni.navigateTo({
-					url: '../../../pages/Home/InformationDetails?aid=' + e
+					url: './InformationDetails?aid=' + e
 				})
 			},
 
 			Jump() {
 				uni.navigateTo({
-					url: './zy_newsScreening'
+					url:'../../pages_DDQC/pages/GRZY/zy_newsScreening'
 				})
 			},
-			
+
 			// #ifdef  H5
 			//获取openid
 			getCode() {
-				let that=this;
-			    let Appid = "wxef946aa6ab5788a3";//appid
+				let that = this;
+				let Appid = "wxef946aa6ab5788a3"; //appid
 				let code = this.getUrlParam('code'); //是否存在code
 				console.log(code);
 				let local = "http://zntc.145u.net/#/";
 				if (code == null || code === "") {
-				  //不存在就打开上面的地址进行授权
+					//不存在就打开上面的地址进行授权
 					window.location.href =
 						"https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
 						Appid +
 						"&redirect_uri=" +
 						encodeURIComponent(local) +
-						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"; 
+						"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
 				} else {
-				  // 存在则通过code传向后台调用接口返回微信的个人信息
+					// 存在则通过code传向后台调用接口返回微信的个人信息
 					uni.request({
-						url:'http://27.148.155.9:9056/CTKY/getWxUserinfo?code='+code+'&Appid='+Appid+'&Appsecret=6db2b79e1669f727c246d9c8ae928ecf',
-						header: {'content-type': 'application/x-www-form-urlencoded'},
-						method:'POST',
+						url: 'http://27.148.155.9:9056/CTKY/getWxUserinfo?code=' + code + '&Appid=' + Appid +
+							'&Appsecret=6db2b79e1669f727c246d9c8ae928ecf',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						method: 'POST',
 						success(res) {
-							console.log(res,"res")
-							if(res.data.openid!=""&&res.data.openid!=null){
-								uni.setStorageSync('scenicSpotOpenId',res.data.openid)
+							console.log(res, "res")
+							if (res.data.openid != "" && res.data.openid != null) {
+								uni.setStorageSync('scenicSpotOpenId', res.data.openid)
 							}
-							uni.setStorageSync('wxuserInfo',res.data)
-							let openid=uni.getStorageSync('scenicSpotOpenId')||'';
-							console.log(openid,"openid")
-							if(openid!=""&&openid!=null&&openid!=undefined){
+							uni.setStorageSync('wxuserInfo', res.data)
+							let openid = uni.getStorageSync('scenicSpotOpenId') || '';
+							console.log(openid, "openid")
+							if (openid != "" && openid != null && openid != undefined) {
 								uni.request({
 									//url:'http://zntc.145u.net/api/person/changeInfo',
-									url:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
-									data:{
-										openId_wx:openid,
+									url: that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.value,
+									data: {
+										openId_wx: openid,
 									},
-									method:that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
+									method: that.$GrzxInter.Interface.GetUserInfoByOpenId_wx.method,
 									success(res1) {
-										console.log(res1,'res1')
+										console.log(res1, 'res1')
 										//判断是否有绑定手机号
-										if(res1.data.msg=="获取用户信息失败,不存在该openID用户信息"){
+										if (res1.data.msg == "获取用户信息失败,不存在该openID用户信息") {
 											uni.showModal({
-												content:'您暂未绑定手机号，是否绑定',
-												confirmText:'去绑定',
-												cancelText:'暂不绑定',
+												content: '您暂未绑定手机号，是否绑定',
+												confirmText: '去绑定',
+												cancelText: '暂不绑定',
 												success(res1) {
 													if (res1.confirm) {
 														uni.navigateTo({
-															url:'/pages/GRZX/wxLogin'
+															url: '/pages/GRZX/wxLogin'
 														})
 													} else if (res1.cancel) {
 														// console.log('用户点击取消');
 														uni.showToast({
-															title:'未绑定手机号，将会影响部分功能的正常运行',
-															icon:'none'
+															title: '未绑定手机号，将会影响部分功能的正常运行',
+															icon: 'none'
 														})
 													}
 												}
 											})
 										}
-										console.log(openid,'openid1')
-										if(openid==res1.data.data.openId_wx&&openid!=""){
-											uni.setStorageSync('userInfo',res1.data.data)
-										}	
+										console.log(openid, 'openid1')
+										if (openid == res1.data.data.openId_wx && openid != "") {
+											uni.setStorageSync('userInfo', res1.data.data)
+										}
 									}
 								})
 							}
 						},
-						fail(err){
+						fail(err) {
 							console.log(err)
 							uni.showToast({
-								title:"登录失败",
-								icon:'none'
+								title: "登录失败",
+								icon: 'none'
 							})
 						}
 					})
@@ -396,33 +422,32 @@
 			},
 			//判断code信息是否存在
 			getUrlParam(name) {
-				  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')  
-				  let url = window.location.href.split('#')[0]   
-				  let search = url.split('?')[1]  
-				  if (search) {  
-				    var r = search.substr(0).match(reg)  
-				    if (r !== null) return unescape(r[2])  
-				    return null  
-				  } else {  
-				    return null  
-				  }  
+				var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+				let url = window.location.href.split('#')[0]
+				let search = url.split('?')[1]
+				if (search) {
+					var r = search.substr(0).match(reg)
+					if (r !== null) return unescape(r[2])
+					return null
+				} else {
+					return null
+				}
 			},
-			 //#endif
+			//#endif
 			// #ifdef MP-WEIXIN
-			getLoginState(){
+			getLoginState() {
 				uni.getStorage({
-					key:'isCanUse',
-					success(res){
-					},
-					fail(err){
+					key: 'isCanUse',
+					success(res) {},
+					fail(err) {
 						uni.showModal({
-							content:'您暂未登录，是否登录',
-							confirmText:'去登录',
-							cancelText:'暂不登录',
+							content: '您暂未登录，是否登录',
+							confirmText: '去登录',
+							cancelText: '暂不登录',
 							success(res) {
 								if (res.confirm) {
 									uni.navigateTo({
-										url:'/pages/Home/wxAuthorize?type=index'
+										url: '/pages/Home/wxAuthorize?type=index'
 									})
 								} else if (res.cancel) {
 									// console.log('用户点击取消');
@@ -431,7 +456,7 @@
 						})
 					}
 				})
-			} 
+			}
 			//#endif
 		}
 	}
@@ -793,11 +818,13 @@
 					display: flex;
 					position: relative;
 					margin-right: 10upx;
+					
 
 					.ct_image1 {
 						width: 454upx;
 						height: 207upx;
 						overflow: hidden;
+						border-radius: 15upx;
 
 					}
 
@@ -819,6 +846,7 @@
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
+						border-radius: 15upx;
 
 					}
 
@@ -848,6 +876,7 @@
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
+						border-radius: 15upx;
 
 					}
 
@@ -873,6 +902,7 @@
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
+						border-radius: 15upx;
 
 					}
 
@@ -898,6 +928,7 @@
 						width: 222upx;
 						height: 207upx;
 						overflow: hidden;
+						border-radius: 15upx;
 
 					}
 
