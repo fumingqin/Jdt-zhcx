@@ -281,9 +281,9 @@
 								arr.push(marker);
 								//当标记点加载完之后重新设置地图比例
 								that.scale = 15;
-								// that.markers = arr;
+								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
-								that.markers.push(marker);
+								// that.markers.push(marker);
 								//---------------------华丽的分割线--------------------------------------
 							}
 						}
@@ -496,9 +496,11 @@
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
 							if(response.data.BizStatus == '已租车'){
 								var responseArr = {
+									bikeType:'有桩',
 									OrderId: response.data.OrderId,//订单ID
 									bikeId: response.data.bikeId,//车辆编号
 									operationId: response.data.operationId,//操作编号
+									phoneNumber: that.userInfo.phoneNumber,//手机号
 								}
 								//当前状态可以租车
 								uni.navigateTo({
@@ -534,9 +536,11 @@
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
 							if(response.data.BizStatus == '已租车'){
 								var responseArr = {
+									bikeType:'无桩',
 									OrderId: response.data.OrderId,//订单ID
 									bikeId: response.data.bikeId,//车辆编号
 									operationId: response.data.operationId,//操作编号
+									phoneNumber: that.userInfo.phoneNumber,//手机号
 								}
 								//当前状态可以租车
 								uni.navigateTo({

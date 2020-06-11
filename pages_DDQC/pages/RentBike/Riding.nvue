@@ -83,6 +83,7 @@
 				orderId: '', //订单id
 				operatorId: '', //操作ID，用于还车
 				interval: '', //定时器
+				rentInfo:[],//保存租车信息
 			}
 		},
 		mounted() {
@@ -95,11 +96,15 @@
 				}
 			});
 		},
-		onLoad() {
+		onLoad(item) {
 			var that = this;
 			// 获取自身位置
 			// that.getMyLocation();
 			// that.countTime();
+			
+			//将上一个页面传过来的参数转为数组
+			that.rentInfo = JSON.parse(item.responseArr);
+			
 		},
 		created() {
 			uni.setNavigationBarTitle({
@@ -107,7 +112,8 @@
 			})
 		},
 		methods: {
-			countTime: function() { //计时
+			//--------------------------计时--------------------------
+			countTime: function() {
 				var that = this;
 				clearInterval(that.timeInterval)
 				that.timeInterval = setInterval(function() {
@@ -125,7 +131,9 @@
 					}
 				}, 1000);
 			},
-			getOrderInfo: function() { //获取订单信息、检测订单状态
+			//--------------------------获取订单信息、检测订单状态--------------------------
+			//自行车还车，定时器检索订单状态，直到订单结束
+			getOrderInfo: function() {
 				let that = this;
 				that.interval = setInterval(function() {
 					uni.request({
@@ -136,10 +144,23 @@
 							orderId: that.orderId
 						},
 						success(res) {
-							console.log(res)
+							console.log('订单状态res',res)
+							if(res.data.status == true){
+								if(res.data.bizStatus == '还车成功') {
+									uni.showToast({
+										title:'还车成功',
+										icon:'none'
+									})
+								}
+							}else {
+								uni.showToast({
+									title:res.data.msg,
+									icon:'none'
+								})
+							}
 						},
 						fail(err) {
-							console.log(err)
+							console.log('订单状态err',err)
 						}
 					})
 				}, 3000)
@@ -165,7 +186,8 @@
 					}
 				});
 			},
-			returnBike: function() { //还车
+			//--------------------------助力车还车--------------------------
+			returnBike: function() {
 				var that = this;
 				uni.setNavigationBarTitle({
 					title: "还车"
@@ -180,13 +202,32 @@
 					url: $DDTInterface.DDTInterface.TransferHire.Url,
 					method: $DDTInterface.DDTInterface.TransferHire.method,
 					data: {
-
+						phoneNo:that.rentInfo.phoneNumber,//手机号
+						//经纬度可以不需要传，现在的业务没有用到这两个参数
+						lat:0.1,//纬度
+						lng:0.1,//经度
+						coordinateType:2,//坐标类型   1:百度 2:高德 3:GPS坐标
+						operationId:that.rentInfo.operationId,//操作编号
+						bikeId:that.rentInfo.bikeId,//车辆编号
 					},
 					success(res) {
-						console.log(res);
+						console.log('还车成功结果',res);
+						if(res.data.status == true){
+							if(res.data.retcode == 0) {//返回编号（0代表完成）
+								uni.showToast({
+									title:'还车成功',
+									icon:'none'
+								})
+							}
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}
 					},
 					fail(err) {
-						console.log(err)
+						console.log('还车失败结果',err)
 					}
 				})
 				that.Isreturn = true;
