@@ -4,6 +4,7 @@
 		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange'>
 		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
+		
 		<!-- 自定义导航栏 -->
 		<view class="navgator">
 			<view style="width: 40rpx;height: 35rpx;margin-left: 40rpx;" @click="NavBack">
@@ -12,13 +13,14 @@
 			
 			<view class="navTitleView">
 				<view>
-					<text style="color: #333333;" @click="titleClick('有桩')" :class="{'Btn_click' : isClick == '有桩'}">有桩</text>
-				</view>
-				<view style="margin-left: 30rpx;">
 					<text style="color: #65C36D;" @click="titleClick('无桩')" :class="{'Btn_click' : isClick == '无桩'}">无桩</text>
 				</view>
+				<view style="margin-left: 30rpx;">
+					<text style="color: #333333;" @click="titleClick('有桩')" :class="{'Btn_click' : isClick == '有桩'}">有桩</text>
+				</view>
 			</view>
-
+			
+			<!-- 布局需要，不要删 -->
 			<view style="width: 60rpx;">
 
 			</view>
@@ -68,7 +70,7 @@
 			//获取系统信息
 			uni.getSystemInfo({
 				success: function(res) {
-					console.log('当前设备信息',res)
+					// console.log('当前设备信息',res)
 					//地图高度
 					if(res.system.indexOf('iOS') == -1){
 						//当前不是iOS
@@ -96,7 +98,7 @@
 					size: true,
 					scrollOffset: true
 				}, data => {
-						console.log(data);
+						// console.log(data);
 				}).exec();
 			}, 200)
 		},
@@ -104,19 +106,6 @@
 			var that = this;
 			//mapContext 通过 mapId 跟一个 <map> 组件绑定，通过它可以操作对应的 <map> 组件
 			that.mapContext = uni.createMapContext("map", this);
-			// that.mapContext.onstatuschanged = function(e){
-			// 	console.log(e)
-			// 	var res = JSON.parse(JSON.stringify(e));
-			// 	if(!res.center.longitude || !res.center.latitude) {
-			// 		console.log('获取中心坐标点为空')
-			// 		return;
-			// 	}
-			// 	that.position = {
-			// 		latitude: res.center.latitude,
-			// 		longitude: res.center.longitude
-			// 	}
-			// 	console.log(that.position)
-			// }
 		},
 		methods: {
 			//--------------------------读取用户信息--------------------------
@@ -130,7 +119,6 @@
 						that.userInfo = data.data;
 					},
 					fail(data) {
-						console.log('用户数据',data)
 					}
 				})
 			},
@@ -153,7 +141,6 @@
 			//-------------------------------获取地图中心坐标信息-------------------------------
 			mapChange:function(e){
 				var that = this;
-				console.log(e)
 				if (e.type == 'regionchange' || e.type == 'end') {
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
@@ -240,7 +227,7 @@
 				})
 			},
 			//-------------------------------无桩数据-------------------------------
-			GetBHTStationByRange:function(){
+			GetBHTStationByRange:function(longitude,latitude){
 				var that = this;
 				uni.showLoading({
 					title:'加载中...'
@@ -249,13 +236,12 @@
 					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
 					data:{
-						Longitude:117.6536981221,//经度
-						Latitude:24.517346,//纬度
-						Range:50000,//范围（米）
+						Longitude:longitude,//经度
+						Latitude:latitude,//纬度
+						Range:500,//范围（米）
 					},
 					success(res) {
 						uni.hideLoading()
-						console.log('无桩数据',res)
 						//请求数据成功之后先清空之前的数据
 						that.markers = [];
 						if(res.data.status == true){
@@ -316,7 +302,7 @@
 			titleClick: function(res) {
 				var that = this;
 				that.isClick = res;
-				if(res == '有桩'){
+				if(res == '有桩'){ 
 					//当前选中的是单车，加载单车的数据,经纬度传当前位置
 					// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
 					that.GetStationByRange(117.6536981221,24.517346);//有桩
@@ -365,7 +351,7 @@
 							if(response.data.data == '新建'){
 								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
 								//开通租车业务
-								
+								that.myShowModal('新建用户');
 							}else if(response.data.data == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data == '已租车'){
@@ -507,11 +493,23 @@
 					success(response) {
 						console.log(response)
 						if(response.data.status == true){
-							uni.navigateTo({
-								url:'./Riding?OrderId=' + response.data.OrderId
-							})
+							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
+							if(response.data.BizStatus == '已租车'){
+								var responseArr = {
+									OrderId: response.data.OrderId,//订单ID
+									bikeId: response.data.bikeId,//车辆编号
+									operationId: response.data.operationId,//操作编号
+								}
+								//当前状态可以租车
+								uni.navigateTo({
+									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+								})
+							}
 						}else if(response.data.status == false){
-							
+							uni.showToast({
+								title:response.data.msg,
+								icon:'none'
+							})
 						}
 					},
 					fail(response) {
@@ -533,11 +531,23 @@
 					success(response) {
 						console.log(response)
 						if(response.data.status == true){
-							uni.navigateTo({
-								url:'./Riding?OrderId=' + response.data.OrderId
-							})
+							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
+							if(response.data.BizStatus == '已租车'){
+								var responseArr = {
+									OrderId: response.data.OrderId,//订单ID
+									bikeId: response.data.bikeId,//车辆编号
+									operationId: response.data.operationId,//操作编号
+								}
+								//当前状态可以租车
+								uni.navigateTo({
+									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+								})
+							}
 						}else if(response.data.status == false){
-							
+							uni.showToast({
+								title:response.data.msg,
+								icon:'none'
+							})
 						}
 						
 					},
