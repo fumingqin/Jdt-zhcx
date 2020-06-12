@@ -101,10 +101,8 @@
 			// 获取自身位置
 			// that.getMyLocation();
 			// that.countTime();
-			
 			//将上一个页面传过来的参数转为数组
 			that.rentInfo = JSON.parse(item.responseArr);
-			
 		},
 		created() {
 			uni.setNavigationBarTitle({
@@ -135,6 +133,7 @@
 			//自行车还车，定时器检索订单状态，直到订单结束
 			getOrderInfo: function() {
 				let that = this;
+				clearInterval(that.interval);
 				that.interval = setInterval(function() {
 					uni.request({
 						url: $DDTInterface.DDTInterface.CheckOrderStatus.Url,
@@ -165,12 +164,12 @@
 					})
 				}, 3000)
 			},
-			GotoHome: function() {
+			GotoHome: function() {//前往个人中心
 				uni.navigateTo({
 					url: "../GRZY/zy_homepage"
 				})
 			},
-			MoveToThisLocation: function() {
+			MoveToThisLocation: function() {//移动到当前定位点
 				var maps = uni.createMapContext("map", this);
 				maps.moveToLocation()
 			},

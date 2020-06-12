@@ -236,7 +236,7 @@
 				uni.showLoading({
 					title:'加载中...',
 					mask:true
-				})
+				}) 
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
