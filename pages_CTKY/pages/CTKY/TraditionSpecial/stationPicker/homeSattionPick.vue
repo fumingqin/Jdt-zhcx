@@ -83,12 +83,22 @@
 			//-------------------------获取车站列表数据-------------------------
 			getBusStationList() {
 				uni.showLoading();
+				var systemName = '';
+				// #ifdef H5
+				systemName = $KyInterface.KyInterface.systemName.systemNameNPH5;
+				// #endif
+				// #ifdef APP-PLUS
+				systemName = $KyInterface.KyInterface.systemName.systemNameNPAPP;
+				// #endif
+				// #ifdef MP-WEIXIN
+				systemName = $KyInterface.KyInterface.systemName.systemNameNPWeiXin;
+				// #endif
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_GetStations.Url,
 					method:$KyInterface.KyInterface.Ky_GetStations.method,
 					header:$KyInterface.KyInterface.Ky_GetStations.header,
 					data:{
-						systemName:'泉运公司综合出行'
+						systemName:systemName
 					},
 					success: (res) => {
 						console.log(res)
@@ -128,12 +138,22 @@
 				this.isShowAllList = false;
 				//以下示例截取淘宝的关键字，请替换成你的接口
 				uni.showLoading();
+				var systemName = '';
+				// #ifdef H5
+				systemName = $KyInterface.KyInterface.systemName.systemNameNPH5;
+				// #endif
+				// #ifdef APP-PLUS
+				systemName = $KyInterface.KyInterface.systemName.systemNameNPAPP;
+				// #endif
+				// #ifdef MP-WEIXIN
+				systemName = $KyInterface.KyInterface.systemName.systemNameNPWeiXin;
+				// #endif
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_GetSatartSite.Url,
 					method:$KyInterface.KyInterface.Ky_GetSatartSite.method,
 					header:$KyInterface.KyInterface.Ky_GetSatartSite.header,
 					data:{
-						systemName:'泉运公司综合出行',
+						systemName:systemName,
 						keyword:keyword
 					},
 					success: (res) => {

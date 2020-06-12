@@ -21,7 +21,7 @@
 		data() {
 			return {
 				goodsList:'',
-				zy_dataIndex: 4, //列表默认数量
+				zy_dataIndex: 6, //列表默认数量
 				disStatus:0,
 				loadingText: {
 					down: '上拉加载更多',
@@ -90,7 +90,7 @@
 				this.loadingType = 1;
 				if(this.current == 0){
 					if (this.zy_dataIndex < this.goodsList.length) {
-						var a = this.zy_dataIndex + 4;
+						var a = this.zy_dataIndex + 6;
 						this.zy_dataIndex = a;
 						this.loadingType = 0;
 						uni.hideLoading()

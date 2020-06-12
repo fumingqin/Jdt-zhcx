@@ -24,7 +24,7 @@
 		<view class="boxClass heightClass" @click="chooseFrontImg">
 			<view v-if="state1==0" class="flexDirection">
 				<image src="../../../static/GRZX/addImg.png" class="addClass"></image>
-				<text class="textClass">点击上传证件的正面</text>
+				<text class="textClass">点击上传证件的正面(带头像)</text>
 			</view>
 			<view v-if="state1==1" style="width: 100%;height: 100%;">
 				<image :src="front" style="width: 100%;height: 100%;" name="front" mode="aspectFit"></image>
@@ -35,7 +35,7 @@
 		<view class="boxClass heightClass mb" @click="chooseBackImg">
 			<view v-if="state2==0" class="flexDirection">
 				<image src="../../../static/GRZX/addImg.png" class="addClass"></image>
-				<text class="textClass">点击上传证件的背面</text>
+				<text class="textClass">点击上传证件的背面(带国徽)</text>
 			</view>
 			<view v-if="state2==1" style="width: 100%;height: 100%;">
 				<image :src="back" style="width: 100%;height: 100%;" name="back" mode="aspectFit"></image>
@@ -64,10 +64,11 @@
 				state2:0,
 				front:'',
 				back:'',
+				userInfo:[],
 			}	
 		},
 		onLoad (){
-			
+			this.loadUserInfo();
 		},
 		computed:{
 			startDate() {
@@ -78,6 +79,22 @@
 			},
 		},
 		methods:{
+			//--------------------加载用户信息-------------------
+			loadUserInfo:function(){
+				var that=this;
+				uni.getStorage({
+					key:'userInfo',
+					success(res) {
+						that.userInfo=res.data;	
+					},
+					fail() {
+						uni.showToast({
+							title:'请先登录',
+							icon:'none'
+						})
+					}
+				})
+			},
 			//--------------------校验姓名-------------------
 			nameBlur:function(e){
 				if(e.detail.value==""){
@@ -161,6 +178,13 @@
 					count:1,
 					//sourceType:['album'],
 					success(res) {
+						var size=1.5*1024*1000;
+						if(res.tempFiles[0].size>size){
+							uni.showToast({
+								title:'图片大小建议不要超过 1.5M',
+								icon:'none',
+							})
+						}
 						var tempFilePaths = res.tempFilePaths;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
@@ -184,6 +208,13 @@
 					count:1,
 					//sourceType:['album'],
 					success(res) {
+						var size=1.5*1024*1000;
+						if(res.tempFiles[0].size>size){
+							uni.showToast({
+								title:'图片大小建议不要超过 1.5M',
+								icon:'none',
+							})
+						}
 						var tempFilePaths = res.tempFilePaths;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],

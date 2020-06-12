@@ -4,6 +4,7 @@
 		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange' @markertap="aa">
 		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
+		
 		<!-- 自定义导航栏 -->
 		<view class="navgator">
 			<view style="width: 40rpx;height: 35rpx;margin-left: 40rpx;" @click="NavBack">
@@ -18,7 +19,8 @@
 					<text style="color: #333333;" @click="titleClick('有桩')" :class="{'Btn_click' : isClick == '有桩'}">有桩</text>
 				</view>
 			</view>
-
+			
+			<!-- 布局需要，不要删 -->
 			<view style="width: 60rpx;">
 
 			</view>
@@ -104,19 +106,6 @@
 			var that = this;
 			//mapContext 通过 mapId 跟一个 <map> 组件绑定，通过它可以操作对应的 <map> 组件
 			that.mapContext = uni.createMapContext("map", this);
-			// that.mapContext.onstatuschanged = function(e){
-			// 	console.log(e)
-			// 	var res = JSON.parse(JSON.stringify(e));
-			// 	if(!res.center.longitude || !res.center.latitude) {
-			// 		console.log('获取中心坐标点为空')
-			// 		return;
-			// 	}
-			// 	that.position = {
-			// 		latitude: res.center.latitude,
-			// 		longitude: res.center.longitude
-			// 	}
-			// 	console.log(that.position)
-			// }
 		},
 		methods: {
 			aa:function(e){
@@ -242,7 +231,7 @@
 				})
 			},
 			//-------------------------------无桩数据-------------------------------
-			GetBHTStationByRange:function(){
+			GetBHTStationByRange:function(longitude,latitude){
 				var that = this;
 				uni.showLoading({
 					title:'加载中...',
@@ -252,9 +241,9 @@
 					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
 					data:{
-						Longitude:117.6536981221,//经度
-						Latitude:24.517346,//纬度
-						Range:50000,//范围（米）
+						Longitude:longitude,//经度
+						Latitude:latitude,//纬度
+						Range:500,//范围（米）
 					},
 					success(res) {
 						uni.hideLoading()
@@ -297,9 +286,9 @@
 								arr.push(marker);
 								//当标记点加载完之后重新设置地图比例
 								that.scale = 15;
-								// that.markers = arr;
+								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
-								that.markers.push(marker);
+								// that.markers.push(marker);
 								//---------------------华丽的分割线--------------------------------------
 							}
 						}
@@ -367,7 +356,7 @@
 							if(response.data.data == '新建'){
 								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
 								//开通租车业务
-								
+								that.myShowModal('新建用户');
 							}else if(response.data.data == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data == '已租车'){
@@ -509,11 +498,25 @@
 					success(response) {
 						console.log(response)
 						if(response.data.status == true){
-							uni.navigateTo({
-								url:'./Riding?OrderId=' + response.data.OrderId
-							})
+							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
+							if(response.data.BizStatus == '已租车'){
+								var responseArr = {
+									bikeType:'有桩',
+									OrderId: response.data.OrderId,//订单ID
+									bikeId: response.data.bikeId,//车辆编号
+									operationId: response.data.operationId,//操作编号
+									phoneNumber: that.userInfo.phoneNumber,//手机号
+								}
+								//当前状态可以租车
+								uni.navigateTo({
+									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+								})
+							}
 						}else if(response.data.status == false){
-							
+							uni.showToast({
+								title:response.data.msg,
+								icon:'none'
+							})
 						}
 					},
 					fail(response) {
@@ -535,11 +538,25 @@
 					success(response) {
 						console.log(response)
 						if(response.data.status == true){
-							uni.navigateTo({
-								url:'./Riding?OrderId=' + response.data.OrderId
-							})
+							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
+							if(response.data.BizStatus == '已租车'){
+								var responseArr = {
+									bikeType:'无桩',
+									OrderId: response.data.OrderId,//订单ID
+									bikeId: response.data.bikeId,//车辆编号
+									operationId: response.data.operationId,//操作编号
+									phoneNumber: that.userInfo.phoneNumber,//手机号
+								}
+								//当前状态可以租车
+								uni.navigateTo({
+									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+								})
+							}
 						}else if(response.data.status == false){
-							
+							uni.showToast({
+								title:response.data.msg,
+								icon:'none'
+							})
 						}
 						
 					},
