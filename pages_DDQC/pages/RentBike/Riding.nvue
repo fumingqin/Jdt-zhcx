@@ -82,7 +82,8 @@
 				id: '',
 				orderId: '', //订单id
 				operatorId: '', //操作ID，用于还车
-				interval: '', //定时器
+				orderInterval: '', //订单定时器
+				phoneNo:'',//
 			}
 		},
 		mounted() {
@@ -101,6 +102,9 @@
 			// that.getMyLocation();
 			// that.countTime();
 		},
+		onUnload() {
+			clearInterval(that.orderInterval);
+		},
 		created() {
 			uni.setNavigationBarTitle({
 				title: "骑行中"
@@ -109,7 +113,7 @@
 		methods: {
 			countTime: function() { //计时
 				var that = this;
-				clearInterval(that.timeInterval)
+				clearInterval(that.timeInterval);
 				that.timeInterval = setInterval(function() {
 					if (that.seconds >= 59) {
 						that.seconds = "00";
@@ -127,7 +131,8 @@
 			},
 			getOrderInfo: function() { //获取订单信息、检测订单状态
 				let that = this;
-				that.interval = setInterval(function() {
+				clearInterval(that.orderInterval);
+				that.orderInterval = setInterval(function() {
 					uni.request({
 						url: $DDTInterface.DDTInterface.CheckOrderStatus.Url,
 						method: $DDTInterface.DDTInterface.CheckOrderStatus.method,
@@ -136,6 +141,9 @@
 							orderId: that.orderId
 						},
 						success(res) {
+							if(res.data.data.checkStatus){
+								
+							}
 							console.log(res)
 						},
 						fail(err) {
@@ -180,7 +188,12 @@
 					url: $DDTInterface.DDTInterface.TransferHire.Url,
 					method: $DDTInterface.DDTInterface.TransferHire.method,
 					data: {
-
+						phoneNo: '',
+						lat: '',
+						lng: '',
+						coordinateType: '',
+						operationId: '',
+						bikeId: '',
 					},
 					success(res) {
 						console.log(res);
