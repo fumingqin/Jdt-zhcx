@@ -22,16 +22,16 @@
 					<text class="sv_text">包车服务</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/RentBike/RentBikeHome')">
+				<view class="sv_view3" @click="natTo('../../pages_CCT/pages/CCT/villageBus')">
 					<image class="sv_print" src="../../static/Home/serve/cuncuntong.png"></image>
 					<text class="sv_text">村村通</text>
 				</view>
-				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/RentBike/RentBikeHome')">
+				<view class="sv_view3" @click="natTo('../../pages_XQZX/pages/XQZX/districtLine')">
 					<image class="sv_print" src="../../static/Home/serve/xqzhuanxian.png"></image>
 					<text class="sv_text">新区专线</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo3()">
+				<view class="sv_view3" @click="natTo('../../pages_JCYY/pages/JCYY/theDay')">
 					<image class="sv_print" src="../../static/Home/serve/jcyuyue.png"></image>
 					<text class="sv_text">检测预约</text>
 				</view>
