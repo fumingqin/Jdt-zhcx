@@ -166,6 +166,11 @@
 				// #endif
 				"navigationBarTitleText": "服务"
 			}
+		},
+		//------------首页----------------------
+		{
+			"path": "pages/Home/zy_zhcx",
+			"style": {}
 		}
     ],
 
@@ -852,6 +857,13 @@
 						"navigationBarTitleText": "实名认证",
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
+				},
+				{
+					"path": "pages/GRZX/replacePhoneNum", //更换手机号
+					"style": {
+						"navigationBarTitleText": "更换手机号",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
 				}
 			]
 		},
@@ -890,11 +902,7 @@
 				    "path" : "pages/GRZY/zy_details",
 				    "style" : {}
 				},
-				{
-				    "path" : "pages/GRZY/zy_zhcx",
-				    "style" : {}
-				}
-                ,{
+                {
                     "path" : "pages/RentBike/RentBikeHome",
                     "style" : {
 						"navigationStyle":"custom"
@@ -960,9 +968,13 @@
 				"pagePath": "pages/Home/Index",
 				"text": "出行"
 			},
+			// {
+			// 	"pagePath": "pages/GRZX/notice",
+			// 	"text": "通知"
+			// },
 			{
-				"pagePath": "pages/GRZX/notice",
-				"text": "通知"
+				"pagePath": "pages/Home/zy_zhcx",
+				"text": "首页"
 			},
 			{
 				"pagePath": "pages/Home/serve",

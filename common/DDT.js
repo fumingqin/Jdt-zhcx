@@ -1,6 +1,11 @@
 //接口域名
 const Url = 'http://111.231.109.113:8004';
 
+// 接口声明区
+export default {
+	DDTInterface
+}
+
 //接口对象
 const DDTInterface = {
 	GetStationByRange:{
@@ -45,12 +50,21 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	CheckOrderStatus:{
+		Url:Url + '/api/SmartBike/CheckOrderStatus',
+		name:'检测订单状态',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	TransferHire:{
+		Url:Url + '/api/SmartBike/TransferHire',
+		name:'助力车还车',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 }
 
-// 接口声明区
-export default {
-	DDTInterface
-}
+
 
 
 

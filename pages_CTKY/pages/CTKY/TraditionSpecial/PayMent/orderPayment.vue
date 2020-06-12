@@ -343,13 +343,13 @@
 				// #endif
 				var companyCode = '';
 				// #ifdef H5
-				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
+				companyCode = $KyInterface.KyInterface.systemName.systemNameNPH5;
 				// #endif
 				// #ifdef APP-PLUS
-				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
+				companyCode = $KyInterface.KyInterface.systemName.systemNameNPAPP;
 				// #endif
 				// #ifdef MP-WEIXIN
-				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
+				companyCode = $KyInterface.KyInterface.systemName.systemNameNPH5;
 				// #endif
 				//--------------------------发起下单请求-----------------------
 				uni.request({
