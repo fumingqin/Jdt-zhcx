@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
-		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange'>
+		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange' @markertap="aa">
 		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
 		
@@ -51,7 +51,7 @@
 				centerLongitude: "117.6536981221", //地图中心点经度
 				markers: [], //标记点坐标数组
 				showLocation: true,
-				scale: 15, //地图缩放比例,值越小地图可视范围越大
+				scale: 18, //地图缩放比例,值越小地图可视范围越大
 				polyline: [], //画线数组
 				mapContext: '',
 				isClick: '无桩', //是否点击
@@ -81,7 +81,7 @@
 					}
 					// console.log(that.system)
 					that.mapHeight = res.windowHeight + 'px';
-					that.Height=res.windowHeight/2 + 'px';
+					that.Height=res.windowHeight/2 -4+ 'px';
 				}
 			});
 			// 获取自身位置
@@ -108,6 +108,9 @@
 			that.mapContext = uni.createMapContext("map", this);
 		},
 		methods: {
+			aa:function(e){
+				console.log(e);
+			},
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -160,9 +163,13 @@
 			//-------------------------------有桩数据-------------------------------
 			GetStationByRange:function(longitude,latitude){
 				var that = this;
+				that.centerLongitude=longitude;
+				that.centerLatitude=latitude;
 				uni.showLoading({
-					title:'加载中...'
+					title:'加载中...',
+					mask:true
 				})
+				console.log(longitude+','+latitude); 
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetStationByRange.method,
@@ -170,7 +177,7 @@
 						Longitude:longitude,//经度
 						Latitude:latitude,//纬度
 						Range:500,//范围（米）
-					},
+					}, 
 					success(res) {
 						uni.hideLoading()
 						//请求数据成功之后先清空之前的数据
@@ -229,9 +236,12 @@
 			//-------------------------------无桩数据-------------------------------
 			GetBHTStationByRange:function(longitude,latitude){
 				var that = this;
+				that.centerLongitude=longitude;
+				that.centerLatitude=latitude;
 				uni.showLoading({
-					title:'加载中...'
-				})
+					title:'加载中...',
+					mask:true
+				}) 
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
@@ -327,15 +337,16 @@
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
+				uni.showLoading({
+					title:'加载中...',
+					mask:true
+				})
 				//扫码开锁之前先查一下是否可以租车
 				that.GetBizStatus();
 			},
 			//-------------------------------查询业户信息-------------------------------
 			GetBizStatus:function(){
 				var that = this;
-				uni.showLoading({
-					title:'加载中...'
-				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
 					method:$DDTInterface.DDTInterface.GetBizStatus.method,
