@@ -178,7 +178,7 @@
 			}
 		},
 		onLoad() {
-			// this.getcharteredBus();
+			this.getcharteredBus();
 			this.getuser();
 			this.remove();
 		},
@@ -190,11 +190,11 @@
 
 		methods: {
 			//获取模拟数据
-			// async getcharteredBus() {
-			// 	let charteredBus = await this.$api.bcfwzyx('charteredBus');
-			// 	this.charteredBus = charteredBus.data;
-			// 	// console.log(charteredBus)
-			// },
+			async getcharteredBus() {
+				let charteredBus = await this.$api.bcfwzyx('charteredBus');
+				this.charteredBus = charteredBus.data;
+				console.log(this.charteredBus)
+			},
 			getuser:function(){
 				var that=this;
 				if(that.index == 0){
@@ -676,6 +676,13 @@
 			submit: function() {
 				
 					var that=this;
+						uni.setStorage({
+							key: 'charteredBusInfo',
+							data:{nickName:that.nickName,
+							      nickId:that.nickId,
+							      nickPhone:that.nickPhone,
+							},
+						}),
 					uni.showLoading({
 						title: '提交订单中...'
 					})
@@ -836,7 +843,7 @@
 										uni.hideLoading()
 										if (res.data.status) {
 											uni.navigateTo({
-												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)
+												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)+'&&state=0'
 											})
 										}
 									},
