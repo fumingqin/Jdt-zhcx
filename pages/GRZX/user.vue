@@ -43,57 +43,65 @@
 	
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
-			<!-- <view class="boxClass marginTop" @click="QQLogin">
-				<image src="../../static/GRZX/tubiao_fapiao.png" class="iconClass1"></image>
-				<text class="fontStyle">电子发票</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view> -->
-			<view class="boxClass marginTop" @click="phoneClick">
-				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
-				<text class="fontStyle">电话客服</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			<!-- 分割线 -->
+			<view class="lineClass"></view>
+			
+			<!-- 第一排 -->
+			<view class="boxClass">
+				<view class="itemClass" @click="infoClick">
+					<image src="../../static/GRZX/ServiceIcon/tb_XXGL.png" class="XXGLicon"></image>
+					<text class="fontStyle">信息管理</text>
+				</view>
+				<view class="itemClass" @click="pictureClick">
+					<image src="../../static/GRZX/ServiceIcon/tb_ZDPZ.png" class="ZDPZicon"></image>
+					<text class="fontStyle">站点拍照</text>
+				</view>
+				<view class="itemClass" @click="complaintClick">
+					<image src="../../static/GRZX/ServiceIcon/tb_WDTS.png" class="WDTSicon"></image>
+					<text class="fontStyle">我的投诉</text>
+				</view>
+				<view class="itemClass" @click="addContact">
+					<image src="../../static/GRZX/ServiceIcon/tb_JJLXR.png" class="JJLXRicon"></image>
+					<text class="fontStyle">紧急联系人</text>
+				</view>
 			</view>
-			<!-- #ifdef APP-PLUS -->
-			<view class="boxClass borderTop" @click="QQClick">
-				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
-				<text class="fontStyle">QQ客服</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			<!-- 第二排 -->
+			<view class="boxClass">
+				<view class="itemClass" @click="realName">
+					<image src="../../static/GRZX/ServiceIcon/tb_SMRZ.png" class="SMRZicon"></image>
+					<text class="fontStyle">实名认证</text>
+				</view>
+				<view class="itemClass" @click="replacePhoneNum">
+					<image src="../../static/GRZX/ServiceIcon/tb_GHSJH.png" class="GHSJHicon"></image>
+					<text class="fontStyle">更换手机号</text>
+				</view>
+				<view class="itemClass" @click="phoneClick">
+					<image src="../../static/GRZX/ServiceIcon/tb_DHKF.png" class="DHKFicon"></image>
+					<text class="fontStyle">电话客服</text>
+				</view>
+				<view class="itemClass" @click="feedbackClick">
+					<image src="../../static/GRZX/ServiceIcon/tb_YJFK.png" class="YJFKicon"></image>
+					<text class="fontStyle">意见反馈</text>
+				</view>
 			</view>
-			<!-- #endif -->
-			<!-- #ifdef MP-WEIXIN -->
-			<view class="boxClass borderTop">
-				<image src="../../static/GRZX/tubiao_kefu.png" class="iconClass2"></image>
-				<button open-type="contact" class="contactClass">在线客服</button>
-				<!-- <text class="fontStyle">在线客服</text> -->
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
-			<!-- #endif -->
-			<view class="boxClass borderTop" @click="infoClick">
-				<image src="../../static/GRZX/tubiao_zhengzhao.png" class="iconClass3"></image>
-				<text class="fontStyle">信息管理</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
-			<view class="boxClass borderTop" @click="addContact">
-				<image src="../../static/GRZX/tubiao_lianxiren.png" class="iconClass4"></image>
-				<text class="fontStyle">紧急联系人</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
-			<view class="boxClass borderTop" @click="complaintClick">
-				<image src="../../static/GRZX/tubiao_tousu.png" class="iconClass4"></image>
-				<text class="fontStyle">我的投诉</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
-			<view class="boxClass borderTop" @click="feedbackClick">
-				<image src="../../static/GRZX/tubiao_fankui.png" class="iconClass5"></image>
-				<text class="fontStyle">意见反馈</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
-			</view>
-			<view class="boxClass borderTop" @click="pictureClick">
-				<image src="../../static/GRZX/paizhao.png" class="iconClass6"></image>
-				<text class="fontStyle">站点拍照</text>
-				<image src="../../static/GRZX/tubiao_Right.png" class="btnClass"></image>
+			<!-- 第三排 -->
+			<view class="boxClass mb">
+				<!-- #ifdef MP-WEIXIN -->
+				<view class="itemClass" style="position: relative;">
+					<image src="../../static/GRZX/ServiceIcon/tb_ZXKF.png" class="ZXKFicon"></image>
+					<button open-type="contact" class="contactClass"></button>
+					<text class="fontStyle">在线客服</text>
+				</view>
+				<!-- #endif -->
+				<!-- #ifdef APP-PLUS -->
+				<view class="itemClass" @click="QQClick">
+					<image src="../../static/GRZX/ServiceIcon/tb_QQKF.png" class="QQKFicon"></image>
+					<text class="fontStyle">QQ客服</text>
+				</view>
+				<!-- #endif -->
 			</view>
 		</view>
+		
 		<!-- 添加紧急联系人弹窗 -->
 		<view :hidden="userFeedbackHidden" class="popup_content">
 			<view class="popup_title">添加</view>
@@ -348,7 +356,7 @@
 					url:this.$GrzxInter.Route.feedback.url,
 				})  				
 			},
-			//--------------------拍照返现--------------------
+			//-----------------------------拍照返现------------------------
 			pictureClick(){
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
@@ -465,6 +473,18 @@
 				})
 				//#endif
 			},
+			// ---------------------------实名认证--------------------------
+			realName(){
+				uni.navigateTo({
+					url:this.$GrzxInter.Route.realName.url,
+				})
+			},
+			// ---------------------------更换手机号--------------------------
+			replacePhoneNum(){
+				uni.navigateTo({
+					url:this.$GrzxInter.Route.replacePhoneNum.url,
+				})
+			},
 			//----------------------判断是否为base64格式-------------------
 			isBase64:function(str) {
 			    if (str ==='' || str.trim() ===''){ return false; }
@@ -484,26 +504,6 @@
 				        return false;
 				    }
 			},
-			// QQLogin(){
-			// 	uni.getProvider({
-			// 	    service: 'oauth',
-			// 	    success: function (res) {
-			// 	        if (~res.provider.indexOf('qq')) {
-			// 	            uni.login({
-			// 	                provider: 'qq',
-			// 	                success: function (loginRes) {
-			// 	                    uni.getUserInfo({
-			// 	                    	provider: 'qq',
-			// 							success(logRes) {
-			// 								console.log(logRes,"logRes")
-			// 							}
-			// 	                    })
-			// 	                }
-			// 	            });
-			// 	        }
-			// 	    }
-			// 	})
-			// },
 		}
 		
 	}
@@ -706,8 +706,13 @@
 		margin-top: 10upx;
 		margin-left: 4.27%;
 		display: flex;
-		flex-direction: column;
+		flex-direction: column; //column:纵向排列，row横向排列
 		margin-bottom: 30upx;
+	}
+	.lineClass{      //更多服务下面的分隔线
+		border-top:2upx solid #EAEAEA;
+		width: 90%;
+		margin: 30upx 5% 20upx 5%;
 	}
 	.moreClass{		
 		font-size:32upx ;
@@ -717,54 +722,74 @@
 		margin-left: 3.55%;
 	}
 	.boxClass{
-		width: 620upx;
-		height: 104upx;
-		margin-top: 0upx;
-		margin-left: 4.27%;	
-		position: relative;
+		width: 100%;
+		// border: 1upx solid red;
+		display: flex;
+		flex-direction: row; //column:纵向排列，row横向排列
 	}
-	.marginTop{
-		margin-top: 18upx;
+	.itemClass{
+		width: 25%;
+		// border: 1upx solid black;
+		display: flex;
+		flex-direction: column; //column:纵向排列，row横向排列
+		margin-bottom: 30upx;
 	}
-	.iconClass1{  //电子发票图标
-		width: 38upx;
-		height: 37upx;
-		position: absolute;
-		left: 11upx;
-		top:34upx;
-		/* margin-top: 34upx;
-		margin-left: 11upx; */
+	
+	//图标样式开始
+	//第一排
+	.XXGLicon{
+		width: 50upx;
+		height: 54upx;
+		margin: 30upx 60upx 16upx 60upx;
 	}
-	.iconClass2{  //在线客服图标
-		width: 40upx;
-		height: 38upx;
-		margin-top: 34upx;
-		margin-left: 9upx;
+	.ZDPZicon{
+		width: 48upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
 	}
-	.iconClass3{  //证照信息图标
+	.WDTSicon{
 		width: 42upx;
-		height: 34upx;
-		margin-top: 34upx;
-		margin-left: 8upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
 	}
-	.iconClass4{  //我的投诉图标
-		width: 35upx;
-		height: 40upx;
-		margin-top: 31upx;
-		margin-left: 13upx;
+	.JJLXRicon{
+		width: 45upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
 	}
-	.iconClass5{  //意见反馈图标
-		width: 36upx;
-		height: 39upx;
-		margin-top: 31upx;
-		margin-left: 13upx;
+	//第二排
+	.SMRZicon{
+		width: 44upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
 	}
-	.iconClass6{  //拍照返现图标
-		width: 36upx;
-		height: 35upx;
-		margin-top: 31upx;
-		margin-left: 13upx;
+	.GHSJHicon{
+		width: 38upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
 	}
+	.DHKFicon{
+		width: 41upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
+	}
+	.YJFKicon{
+		width: 41upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
+	}   
+	//第三排
+	.QQKFicon{
+		width: 43upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
+	}
+	.ZXKFicon{
+		width: 45upx;
+		height: 50upx;
+		margin: 30upx 60upx 20upx 60upx;
+	}
+	//图标样式结束	
 	.btnClass{
 		width: 11upx;
 		height: 22upx;
@@ -775,14 +800,15 @@
 	.fontStyle{
 		font-size: 28upx;
 		color: #2C2D2D;
-		position: absolute;
-		left: 80upx;
-		top:33upx;
+		width: 100%;
+		text-align: center;
 	}
 	.borderTop{
 		border-top: 1upx solid #EAEAEA;
 	}
-	
+	.mb{
+		margin-bottom: 10upx;
+	}
 	//弹窗
 	.popup_overlay {
 		position: fixed;
@@ -848,20 +874,12 @@
 		margin-left: 8%;
 	}
 	.contactClass{
-		width: 91%;
-		height: 100upx;
-		line-height: 100upx;
-		// border: 1upx solid red;
 		position: absolute;
-		left: 8%;
-		top:0upx;
-		background-color: #FFFFFF;
-		border: 1upx solid #FFFFFF;
-		font-size: 28upx;
-		color: #2C2D2D;
-		text-align: left;
+		width: 100%;
+		height: 140upx;
+		opacity:0;
 	}
-	.contactClass::after{
-		border: none; 
-	}
+	// .contactClass::after{
+	// 	border: none; 
+	// }
 </style>
