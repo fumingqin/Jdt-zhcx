@@ -163,6 +163,7 @@
 
 <script>
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //引用路径
+	import $Home from '@/common/Home.js' //引用路径
 	export default {
 		data() {
 			return {
@@ -181,10 +182,27 @@
 				},
 				loadingType: 0, //加载更多状态
 				current: 0, //标题下标
+				version:'',//版本号
+				platform:'',//系统平台
 			}
 		},
-
 		onLoad() {
+			var that = this;
+			// #ifdef APP-PLUS
+			//获取系统信息
+			uni.getSystemInfo({
+				success(res) {
+					//获取系统平台 iOS Android
+					that.platform = res.platform;
+					// 获取本地应用资源版本号  
+					plus.runtime.getProperty(plus.runtime.appid,function(inf){
+					    that.version = inf.version;  //获取当前版本号
+						//检测升级
+						that.updateAPP();
+					});
+				}
+			})
+			// #endif
 			this.lunBoInit();
 			this.loadData();
 		},
@@ -206,8 +224,25 @@
 			})
 			this.getMore();
 		},
-
+		
 		methods: {
+			//----------------------自动更新-------------------------------
+			updateAPP:function(){
+				var that = this;
+				uni.request({
+					url:$Home.Interface.UpDateVersion.url,
+					method:$Home.Interface.UpDateVersion.method,
+					data:{
+						systemType:that.platform
+					},
+					success(res) {
+						console.log(res)
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 
 			//----------------------读取静态页面json.js-------------------------------
 
@@ -283,13 +318,14 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						this.homePage = res.data.data.filter(item => {
 							return item.type == 'banner2' || item.type == 'banner1';
 						})
 						this.imgXXDT = res.data.data.filter(item => {
 							return item.type == 'dongtai';
 						})
+						
 						// console.log(this.imgXXDT)
 					}
 				})
