@@ -28,12 +28,14 @@
 		<!-- 回到自身定位按钮 -->
 		<image src="../../static/GRZY/Position.png" class="dingwei" @click="backToMyLocation"></image>
 		<!-- 扫码开锁按钮 -->
-		<view class="unLock" @click="unLockClick">
-			<image class="scan" src="../../static/GRZY/scan.png"></image>
-			<view style="margin-left: 20rpx;">
-				<text style="color: #FFFFFF;">扫码开锁</text>
+		<button class="unLock" @click="unLockClick" :disabled="disabled">
+			<view class="unLockView">
+				<image class="scan" src="../../static/GRZY/scan.png"></image>
+				<view style="margin-left: 20rpx;">
+					<text style="color: #FFFFFF;">扫码开锁</text>
+				</view>
 			</view>
-		</view>
+		</button>
 
 		<image src="../../static/GRZY/personal.png" class="personal" @click="personalClick"></image>
 	</view>
@@ -63,6 +65,7 @@
 				appMap:'',
 				position:[],
 				system:'',
+				disabled:true,//判断扫码按钮是否可以点击
 			}
 		},
 		onLoad() {
@@ -91,6 +94,8 @@
 		},
 		onShow() {
 			var that=this;
+			//恢复扫码按钮点击
+			that.disabled = true;
 			that.getUserInfo();
 			setTimeout(function() {
 				let query = uni.createSelectorQuery().in(that).select("#map");
@@ -353,6 +358,8 @@
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
+				//禁用按钮点击，防止用户多次点击
+				that.disabled = false;
 				uni.showLoading({
 					title:'加载中...',
 					mask:true
@@ -647,6 +654,14 @@
 		align-items: center;
 		font-size: 42rpx;
 		bottom: 30rpx;
+	}
+	.unLockView{
+		/* position: fixed; */
+		flex-direction: row;
+		height: 100rpx;
+		width: 440rpx;
+		align-items: center;
+		border-radius: 60rpx;
 	}
 	.scan {
 		width: 50rpx;

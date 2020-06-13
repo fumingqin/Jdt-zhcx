@@ -232,6 +232,7 @@
 				// console.log(index)
 				if(item.cvt_vehicle.length !==0){
 					this.value2 = index;
+					this.value3 = 0;
 				}else if(item.cvt_vehicle.length ==0){
 					uni.showToast({
 						title:'该价位目前无车辆，请选择其他价位',
@@ -249,6 +250,7 @@
 				// var test = res;
 				// this.carIndex = test.vehicle;
 				this.value3 = res;
+				console.log(this.value3)
 			},
 
 			//---------------------读取数据-----------------
