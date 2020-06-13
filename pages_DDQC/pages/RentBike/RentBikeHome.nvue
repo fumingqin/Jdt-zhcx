@@ -89,7 +89,7 @@
 			});
 			// 获取自身位置
 			// that.getMyLocation();
-			that.GetBHTStationByRange(117.6536981221,24.517346);//无桩	
+			that.GetBHTStationByRange(117.63370822482639,23.93265109592014);//无桩	
 			
 		},
 		onShow() {
@@ -139,7 +139,7 @@
 					//是否解析地址信息，默认false
 					geocode: true,
 					success: function(res) {
-						console.log(res)
+						// console.log(res)
 						//如果地图中心位置坐标为空，将当前位置坐标设置为地图中心坐标
 						that.centerLongitude = res.longitude;
 						that.centerLatitude = res.latitude;
@@ -153,7 +153,7 @@
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
 						success: res => {
-							// console.log(res.latitude,res.longitude)
+							// console.log(res.longitude+','+res.latitude)
 							if(that.isClick == '有桩'){
 								//当地图移动的时候，改变坐标显示周围的车辆位置信息
 								that.GetStationByRange(res.longitude,res.latitude)
@@ -174,20 +174,19 @@
 					title:'加载中...',
 					mask:true
 				})
-				console.log(longitude+','+latitude); 
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetStationByRange.method,
 					data:{
 						Longitude:longitude,//经度
 						Latitude:latitude,//纬度
-						Range:500,//范围（米）
+						Range:1000,//范围（米）
 					}, 
 					success(res) {
 						uni.hideLoading()
 						//请求数据成功之后先清空之前的数据
 						that.markers = [];
-						console.log('有桩数据',res)
+						// console.log('有桩数据',res)
 						if(res.data.status == true){
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let markerIconPath = '';
@@ -224,7 +223,6 @@
 								var arr = JSON.parse(json);
 								arr.push(marker);
 								//当标记点加载完之后重新设置地图比例
-								that.scale = 15;
 								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
 								// that.markers.push(marker);
@@ -253,12 +251,13 @@
 					data:{
 						Longitude:longitude,//经度
 						Latitude:latitude,//纬度
-						Range:500,//范围（米）
+						Range:1000,//范围（米） 
 					},
 					success(res) {
 						uni.hideLoading()
 						//请求数据成功之后先清空之前的数据
 						that.markers = [];
+						// console.log('有桩数据',res)
 						if(res.data.status == true){
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let display = '';
@@ -295,7 +294,6 @@
 								var arr = JSON.parse(json);
 								arr.push(marker);
 								//当标记点加载完之后重新设置地图比例
-								that.scale = 15;
 								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
 								// that.markers.push(marker);
@@ -316,22 +314,40 @@
 			//-------------------------------点击标题-------------------------------
 			titleClick: function(res) {
 				var that = this;
-				that.isClick = res;
-				if(res == '有桩'){ 
-					//当前选中的是单车，加载单车的数据,经纬度传当前位置
-					// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
-					that.GetStationByRange(117.6536981221,24.517346);//有桩
-				}else if(res == '无桩') {
-					//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
-					// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
-					that.GetBHTStationByRange(117.6536981221,24.517346);
-				}
+				that.mapContext.getScale({
+					success(res) {
+						console.log(res)
+						that.scale=res.scale; 
+					}
+				})
+				setTimeout(function(){
+					that.scale=18
+					that.isClick = res;
+					if(res == '有桩'){ 
+						//当前选中的是单车，加载单车的数据,经纬度传当前位置
+						// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
+						that.GetStationByRange(117.6536981221,24.517346);//有桩
+					}else if(res == '无桩') {
+						//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
+						// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
+						that.GetBHTStationByRange(117.6536981221,24.517346);
+					}
+				},10)
 			},
 			//-------------------------------返回自身位置-------------------------------
 			backToMyLocation: function() {
 				var that = this;
 				//回到我的位置：将地图中心移动到当前定位点，需要配合map组件的show-location使用
-				that.mapContext.moveToLocation();
+				that.mapContext.getScale({
+					success(res) {
+						console.log(res)
+						that.scale=res.scale; 
+					}
+				})
+				setTimeout(function(){
+					that.scale=18
+					that.mapContext.moveToLocation();
+				},10)
 			},
 			//-------------------------------跳转个人中心-------------------------------
 			personalClick:function(){
