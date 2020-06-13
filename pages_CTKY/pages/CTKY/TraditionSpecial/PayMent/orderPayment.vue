@@ -380,7 +380,7 @@
 					getOnPoint: that.specialStartStation, //定制班车上车点
 					getOffPoint: that.specialEndStation, //定制班车下车点
 				};
-				console.log('下单数据',data)
+				console.log(data)
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_PaymentUrl.Url,
