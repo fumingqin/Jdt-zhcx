@@ -22,6 +22,12 @@ const Interface = {
 		name:'获取业务参数接口',
 		method:'POST',//GET-POST
 		pages:[]
+	},
+		
+	UpDateVersion:{
+		Url: Url + '/api/Business/GetInsuranceCheckState',
+		name:'自动更新接口',
+		method:'POST',//GET-POST
 	}
 }
 

@@ -21,6 +21,9 @@ const scheduleUrl = 'http://27.148.155.9:9056';//班次列表
 const scheduleUrl = 'https://zhcx.npzhly.com:9098';//班次列表https请求
 // #endif
 
+//以下为南平综合出行的接口
+const npUrl = 'http://27.148.155.9:9055';
+
 
 const systemName = '泉运公司综合出行';
 
@@ -47,7 +50,11 @@ const KyInterface = {
 		systemNameApp:'泉运公司综合出行APP',
 		systemNameH5:'泉运公司综合出行H5',
 		systemNameWeiXin:'泉运公司综合出行小程序',
+		systemNameNPH5:'南平综合出行H5',
+		systemNameNPAPP:'南平综合出行APP',
+		systemNameNPWeiXin:'南平综合出行小程序',
 	},
+	//--------------------------------------通用接口--------------------------------------
 	commonPayment:{
 		Url:Url + '/api/Pay/getCommonPayparameter',
 		name:'通用支付接口',
@@ -65,6 +72,31 @@ const KyInterface = {
 		name:'通用退款接口',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	//--------------------------------------南平传统/定制客运--------------------------------------
+	Ky_GetStations:{
+		Url: npUrl + '/CTKY/getStations',
+		name:'客运-获取车站列表数据',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_GetSatartSite:{
+		Url: npUrl + '/CTKY/getSatartSite',
+		name:'客运-模糊查询',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_getListSchedulesInfo:{
+		Url: scheduleUrl + '/CTKY/getListSchedulesInfo',
+		name:'客运-班次列表',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	Ky_PaymentUrl:{
+		Url: Url + '/api/ky/SellTicket_NoBill_Booking',
+		name:'客运-下单',
+		method:'GET',
+		header:{'content-type': 'application/json'},
 	},
 	//--------------------------------------传统/定制客运--------------------------------------
 	Ky_getHomeSchedulesInfo:{
@@ -87,34 +119,8 @@ const KyInterface = {
 		header:{'content-type': 'application/json'},
 		systemName:systemName,
 	},
-	Ky_GetStations:{
-		Url: scheduleUrl + '/CTKY/getStations',
-		name:'客运-获取车站列表数据',
-		method:'POST',
-		header:{'content-type':'application/x-www-form-urlencoded'},
-	},
-	Ky_GetSatartSite:{
-		Url: scheduleUrl + '/CTKY/getSatartSite',
-		name:'客运-模糊查询',
-		method:'POST',
-		header:{'content-type':'application/x-www-form-urlencoded'},
-	},
-	Ky_ScheduleUrl:{
-		Url: scheduleUrl + '/CTKY/getListSchedulesInfo',
-		name:'客运-班次列表',
-		method:'POST',
-		pages:["CTKY/TraditionSpecoal/Order/selectTickets.vue"],
-		header:{'content-type':'application/x-www-form-urlencoded'},
-		systemName:systemName,
-	},
-	Ky_PaymentUrl:{
-		Url: Url + '/api/ky/SellTicket_NoBill_Booking',
-		name:'客运-下单',
-		method:'GET',
-		pages:["CTKY/TraditionSpecoal/PayMent/orderPayment.vue"],
-		header:{'content-type': 'application/json'},
-		systemName:systemName,
-	},
+	
+	
 	Ky_getTicketPaymentInfo:{
 		Url: Url + '/api/ky/SellTicket_Flow',
 		name:'客运-获取支付参数',

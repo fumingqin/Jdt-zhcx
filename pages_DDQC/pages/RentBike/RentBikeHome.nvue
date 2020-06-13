@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
-		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange'>
+		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange' @markertap="aa">
 		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
 		
@@ -28,12 +28,14 @@
 		<!-- 回到自身定位按钮 -->
 		<image src="../../static/GRZY/Position.png" class="dingwei" @click="backToMyLocation"></image>
 		<!-- 扫码开锁按钮 -->
-		<view class="unLock" @click="unLockClick">
-			<image class="scan" src="../../static/GRZY/scan.png"></image>
-			<view style="margin-left: 20rpx;">
-				<text style="color: #FFFFFF;">扫码开锁</text>
+		<button class="unLock" @click="unLockClick" :disabled="disabled">
+			<view class="unLockView">
+				<image class="scan" src="../../static/GRZY/scan.png"></image>
+				<view style="margin-left: 20rpx;">
+					<text style="color: #FFFFFF;">扫码开锁</text>
+				</view>
 			</view>
-		</view>
+		</button>
 
 		<image src="../../static/GRZY/personal.png" class="personal" @click="personalClick"></image>
 	</view>
@@ -51,7 +53,7 @@
 				centerLongitude: "117.6536981221", //地图中心点经度
 				markers: [], //标记点坐标数组
 				showLocation: true,
-				scale: 15, //地图缩放比例,值越小地图可视范围越大
+				scale: 18, //地图缩放比例,值越小地图可视范围越大
 				polyline: [], //画线数组
 				mapContext: '',
 				isClick: '无桩', //是否点击
@@ -63,6 +65,7 @@
 				appMap:'',
 				position:[],
 				system:'',
+				disabled:true,//判断扫码按钮是否可以点击
 			}
 		},
 		onLoad() {
@@ -81,16 +84,18 @@
 					}
 					// console.log(that.system)
 					that.mapHeight = res.windowHeight + 'px';
-					that.Height=res.windowHeight/2 + 'px';
+					that.Height=res.windowHeight/2 -4+ 'px';
 				}
 			});
 			// 获取自身位置
 			// that.getMyLocation();
-			that.GetBHTStationByRange(117.6536981221,24.517346);//无桩	
+			that.GetBHTStationByRange(117.63370822482639,23.93265109592014);//无桩	
 			
 		},
 		onShow() {
 			var that=this;
+			//恢复扫码按钮点击
+			that.disabled = true;
 			that.getUserInfo();
 			setTimeout(function() {
 				let query = uni.createSelectorQuery().in(that).select("#map");
@@ -108,6 +113,9 @@
 			that.mapContext = uni.createMapContext("map", this);
 		},
 		methods: {
+			aa:function(e){
+				console.log(e);
+			},
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -131,7 +139,7 @@
 					//是否解析地址信息，默认false
 					geocode: true,
 					success: function(res) {
-						console.log(res)
+						// console.log(res)
 						//如果地图中心位置坐标为空，将当前位置坐标设置为地图中心坐标
 						that.centerLongitude = res.longitude;
 						that.centerLatitude = res.latitude;
@@ -145,8 +153,9 @@
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
 						success: res => {
-							// console.log(res.latitude,res.longitude)
+							console.log(res.longitude+','+res.latitude)
 							if(that.isClick == '有桩'){
+								
 								//当地图移动的时候，改变坐标显示周围的车辆位置信息
 								that.GetStationByRange(res.longitude,res.latitude)
 							}else if(that.isClick == '无桩'){
@@ -160,8 +169,11 @@
 			//-------------------------------有桩数据-------------------------------
 			GetStationByRange:function(longitude,latitude){
 				var that = this;
+				that.centerLongitude=longitude;
+				that.centerLatitude=latitude;
 				uni.showLoading({
-					title:'加载中...'
+					title:'加载中...',
+					mask:true
 				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetStationByRange.Url,
@@ -170,13 +182,13 @@
 						Longitude:longitude,//经度
 						Latitude:latitude,//纬度
 						Range:500,//范围（米）
-					},
+					}, 
 					success(res) {
 						uni.hideLoading()
-						//请求数据成功之后先清空之前的数据
-						that.markers = [];
-						console.log('有桩数据',res)
+						// console.log('有桩数据',res)
 						if(res.data.status == true){
+							//请求数据成功之后先清空之前的数据
+							that.markers = [];
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let markerIconPath = '';
 								if(res.data.data[i].status == 7){//正常
@@ -212,7 +224,6 @@
 								var arr = JSON.parse(json);
 								arr.push(marker);
 								//当标记点加载完之后重新设置地图比例
-								that.scale = 15;
 								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
 								// that.markers.push(marker);
@@ -229,22 +240,27 @@
 			//-------------------------------无桩数据-------------------------------
 			GetBHTStationByRange:function(longitude,latitude){
 				var that = this;
+				that.centerLongitude=longitude;
+				that.centerLatitude=latitude;
 				uni.showLoading({
-					title:'加载中...'
-				})
+					title:'加载中...',
+					mask:true
+				}) 
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetBHTStationByRange.Url,
 					method:$DDTInterface.DDTInterface.GetBHTStationByRange.method,
 					data:{
 						Longitude:longitude,//经度
 						Latitude:latitude,//纬度
-						Range:500,//范围（米）
+						Range:1000,//范围（米） 
 					},
 					success(res) {
 						uni.hideLoading()
-						//请求数据成功之后先清空之前的数据
-						that.markers = [];
+						
+						console.log('无桩数据',res)
 						if(res.data.status == true){
+							//请求数据成功之后先清空之前的数据
+							that.markers = [];
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let display = '';
 								if(res.data.data[i].status == 7){//正常
@@ -280,7 +296,6 @@
 								var arr = JSON.parse(json);
 								arr.push(marker);
 								//当标记点加载完之后重新设置地图比例
-								that.scale = 15;
 								that.markers = arr;
 								//将坐标集合添加到绘制坐标数组中
 								// that.markers.push(marker);
@@ -301,22 +316,40 @@
 			//-------------------------------点击标题-------------------------------
 			titleClick: function(res) {
 				var that = this;
-				that.isClick = res;
-				if(res == '有桩'){ 
-					//当前选中的是单车，加载单车的数据,经纬度传当前位置
-					// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
-					that.GetStationByRange(117.6536981221,24.517346);//有桩
-				}else if(res == '无桩') {
-					//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
-					// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
-					that.GetBHTStationByRange(117.6536981221,24.517346);
-				}
+				that.mapContext.getScale({
+					success(res) {
+						console.log(res)
+						that.scale=res.scale; 
+					}
+				})
+				setTimeout(function(){
+					that.scale=18
+					that.isClick = res;
+					if(res == '有桩'){ 
+						//当前选中的是单车，加载单车的数据,经纬度传当前位置
+						// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
+						that.GetStationByRange(117.6536981221,24.517346);//有桩
+					}else if(res == '无桩') {
+						//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
+						// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
+						that.GetBHTStationByRange(117.6536981221,24.517346);
+					}
+				},10)
 			},
 			//-------------------------------返回自身位置-------------------------------
 			backToMyLocation: function() {
 				var that = this;
 				//回到我的位置：将地图中心移动到当前定位点，需要配合map组件的show-location使用
-				that.mapContext.moveToLocation();
+				that.mapContext.getScale({
+					success(res) {
+						console.log(res)
+						that.scale=res.scale; 
+					}
+				})
+				setTimeout(function(){
+					that.scale=18
+					that.mapContext.moveToLocation();
+				},10)
 			},
 			//-------------------------------跳转个人中心-------------------------------
 			personalClick:function(){
@@ -327,15 +360,18 @@
 			//-------------------------------扫码开锁-------------------------------
 			unLockClick: function() {
 				let that = this;
+				//禁用按钮点击，防止用户多次点击
+				that.disabled = false;
+				uni.showLoading({
+					title:'加载中...',
+					mask:true
+				})
 				//扫码开锁之前先查一下是否可以租车
 				that.GetBizStatus();
 			},
 			//-------------------------------查询业户信息-------------------------------
 			GetBizStatus:function(){
 				var that = this;
-				uni.showLoading({
-					title:'加载中...'
-				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
 					method:$DDTInterface.DDTInterface.GetBizStatus.method,
@@ -620,6 +656,14 @@
 		align-items: center;
 		font-size: 42rpx;
 		bottom: 30rpx;
+	}
+	.unLockView{
+		/* position: fixed; */
+		flex-direction: row;
+		height: 100rpx;
+		width: 440rpx;
+		align-items: center;
+		border-radius: 60rpx;
 	}
 	.scan {
 		width: 50rpx;

@@ -343,14 +343,44 @@
 				// #endif
 				var companyCode = '';
 				// #ifdef H5
-				companyCode = $KyInterface.KyInterface.systemName.systemNameH5;
+				companyCode = $KyInterface.KyInterface.systemName.systemNameNPH5;
 				// #endif
 				// #ifdef APP-PLUS
-				companyCode = $KyInterface.KyInterface.systemName.systemNameApp;
+				companyCode = $KyInterface.KyInterface.systemName.systemNameNPAPP;
 				// #endif
 				// #ifdef MP-WEIXIN
-				companyCode = $KyInterface.KyInterface.systemName.systemNameWeiXin;
+				companyCode = $KyInterface.KyInterface.systemName.systemNameNPH5;
 				// #endif
+				var data = {
+					companyCode: companyCode,
+					clientID: that.userInfo.userId, //用户ID
+					clientName: that.userInfo.nickname, //用户名
+					phoneNumber: that.userInfo.phoneNumber, //手机号码
+				
+					scheduleCompanyCode: that.orderInfo.scheduleCompanyCode, //班次代码
+					executeScheduleID: that.orderInfo.executeScheduleID, //班次ID
+					startSiteID: that.orderInfo.startSiteID, //上车点ID
+					endSiteID: that.orderInfo.endSiteID, //下车点ID
+					startSiteName: that.orderInfo.startStaion, //起点站
+					endSiteName: that.orderInfo.endStation, //终点站
+					priceID: that.orderInfo.priceID, //价格ID
+					setOutTime: setTime, //发车时间
+					insuredPrice: that.insuredPrice, //保险价格
+					carType: that.orderInfo.shuttleType, //班车类型
+				
+					fullTicket: that.adultNum, //全票人数
+					halfTicket: that.childrenNum, //半票人数
+					carryChild: that.freeTicketNum, //携童人数
+					idNameType: that.idNameTypeStr, //乘车人信息
+					insured: that.isInsurance, //是否选择了保险
+					openId: openId,//oI1cA0k7cBdeZ_jA0fd_OdEO6kls
+					totalPrice: that.totalPrice, //总价格
+					payParameter: '', //不需要的参数，传空
+				
+					getOnPoint: that.specialStartStation, //定制班车上车点
+					getOffPoint: that.specialEndStation, //定制班车下车点
+				};
+				console.log(data)
 				//--------------------------发起下单请求-----------------------
 				uni.request({
 					url:$KyInterface.KyInterface.Ky_PaymentUrl.Url,
@@ -388,7 +418,7 @@
 					},
 
 					success: (res) => {
-						console.log(res)
+						console.log('下单返回结果',res)
 						
 						if (res.data) {
 							if (res.data.status == true) {
@@ -436,7 +466,7 @@
 							orderNumber: orderNumber
 						},
 						success: (res) => {
-							console.log('下单返回结果',res);
+							console.log('支付参数',res);
 							
 							if (res.data) {
 								if (res.data.status == true) {

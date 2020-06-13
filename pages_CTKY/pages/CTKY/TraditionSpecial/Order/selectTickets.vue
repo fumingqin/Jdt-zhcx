@@ -30,8 +30,9 @@
 					<view style="margin-left:19upx ;font-family: SourceHanSansSC-Bold;font-weight: bold;">{{turnDate(item.setTime)}}</view>
 				</view>
 				<view style="display: flex;align-items: center;justify-content: space-between;">
+					<!-- 班次：{{getScheduleNum(item)}} 这里没有班次信息，暂时不显示 -->
 					<view v-if="item.shuttleType != '定制巴士'" style="margin-left: 25upx;font-size: 30upx;font-style:SourceHanSansSC-Regular ;
-						color: #333333;margin-bottom: 16upx;">班次：{{getScheduleNum(item)}}</view>
+						color: #333333;margin-bottom: 16upx;"></view>
 					<view v-if="item.shuttleType != '定制巴士'" style="margin-right: 28upx;font-size: 24upx;font-style:
 					SourceHanSansSC-Regular; color: #FC4646;">成人票￥{{item.fare}}</view>
 				</view>
@@ -170,12 +171,22 @@
 					date = new Date();
 				}
 				that.allTicketsList = [];
+				var systemName = '';
+				// #ifdef H5
+				systemName = '南平旅游H5';
+				// #endif
+				// #ifdef APP-PLUS
+				systemName = '南平旅游APP';
+				// #endif
+				// #ifdef MP-WEIXIN
+				systemName = '南平旅游H5';
+				// #endif
 				uni.request({
-					url: $KyInterface.KyInterface.Ky_ScheduleUrl.Url,
-					method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
-					header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
+					url: $KyInterface.KyInterface.Ky_getListSchedulesInfo.Url,
+					method: $KyInterface.KyInterface.Ky_getListSchedulesInfo.method,
+					header: $KyInterface.KyInterface.Ky_getListSchedulesInfo.header,
 					data: {
-						systemName: $KyInterface.KyInterface.systemName.systemName,
+						systemName: systemName,
 						startPosition: that.startStation,
 						endPosition: that.endStation,
 						date: date,
@@ -588,7 +599,7 @@
 				let Appid = "wx14af28006f937f6e"; //appid
 				let code = this.getUrlParam('code'); //是否存在code
 				
-				let local = $KyInterface.KyInterface.Ky_ScheduleUrl.Url;
+				let local = $KyInterface.KyInterface.Ky_getListSchedulesInfo.Url;
 				if (code == null || code === "") {
 					//不存在就打开上面的地址进行授权
 					window.location.href =
@@ -605,8 +616,8 @@
 					uni.request({
 						url: 'https://27.148.155.9:9056/CTKY/getWxUserinfo?code=' + code + '&Appid=' + Appid +
 							'&Appsecret=9cda28b050341aca1f674d2043b01358',
-						header: $KyInterface.KyInterface.Ky_ScheduleUrl.header,
-						method: $KyInterface.KyInterface.Ky_ScheduleUrl.method,
+						header: $KyInterface.KyInterface.Ky_getListSchedulesInfo.header,
+						method: $KyInterface.KyInterface.Ky_getListSchedulesInfo.method,
 						success(res) {
 							console.log(res, "res")
 							uni.setStorageSync('scenicSpotOpenId', res.data.openid)

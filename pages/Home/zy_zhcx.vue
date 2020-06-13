@@ -41,27 +41,27 @@
 				<view class="zl_topClick">
 					<!-- 旅游产品 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
 						<text class="zl_toText">旅游产品</text>
 					</view>
 					<!-- 预约检测 -->
 					<view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_caImage" src="../../static/Home/YYJC.png"></image>
 						<text class="zl_caText">预约检测</text>
 					</view>
 					<!-- 自由行 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/ZYX.png"></image>
 						<text class="zl_toText">自由行</text>
 					</view>
 					<!-- 跟团游 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/GTY.png"></image>
 						<text class="zl_toText">跟团游</text>
 					</view>
 					<!-- 村村通 -->
 					<view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<image class="zl_toImage" src="../../static/Home/CCT.png"></image>
 						<text class="zl_toText">村村通</text>
 					</view>
 				</view>
@@ -163,6 +163,7 @@
 
 <script>
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //引用路径
+	import $Home from '@/common/Home.js' //引用路径
 	export default {
 		data() {
 			return {
@@ -181,10 +182,27 @@
 				},
 				loadingType: 0, //加载更多状态
 				current: 0, //标题下标
+				version:'',//版本号
+				platform:'',//系统平台
 			}
 		},
-
 		onLoad() {
+			var that = this;
+			// #ifdef APP-PLUS
+			//获取系统信息
+			uni.getSystemInfo({
+				success(res) {
+					//获取系统平台 iOS Android
+					that.platform = res.platform;
+					// 获取本地应用资源版本号  
+					plus.runtime.getProperty(plus.runtime.appid,function(inf){
+					    that.version = inf.version;  //获取当前版本号
+						//检测升级
+						that.updateAPP();
+					});
+				}
+			})
+			// #endif
 			this.lunBoInit();
 			this.loadData();
 		},
@@ -206,8 +224,25 @@
 			})
 			this.getMore();
 		},
-
+		
 		methods: {
+			//----------------------自动更新-------------------------------
+			updateAPP:function(){
+				var that = this;
+				uni.request({
+					url:$Home.Interface.UpDateVersion.url,
+					method:$Home.Interface.UpDateVersion.method,
+					data:{
+						systemType:that.platform
+					},
+					success(res) {
+						console.log(res)
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
+			},
 
 			//----------------------读取静态页面json.js-------------------------------
 
@@ -283,13 +318,14 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						this.homePage = res.data.data.filter(item => {
 							return item.type == 'banner2' || item.type == 'banner1';
 						})
 						this.imgXXDT = res.data.data.filter(item => {
 							return item.type == 'dongtai';
 						})
+						
 						// console.log(this.imgXXDT)
 					}
 				})

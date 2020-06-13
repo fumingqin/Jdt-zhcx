@@ -12,11 +12,6 @@
 					<text class="sv_text">车票订购</text>
 				</view>
 
-				<view class="sv_view3" @click="natTo2('/pages/Home/ChooseSite?current=2')">
-					<image class="sv_print" src="../../static/Home/serve/wlyueche.png" ></image>
-					<text class="sv_text">网络约车</text>
-				</view>
-
 				<view class="sv_view3" @click="natTo('/pages_GJCX/pages/GJCX/busH5')">
 					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" ></image>
 					<text class="sv_text">公交查询</text>
@@ -27,19 +22,34 @@
 					<text class="sv_text">包车服务</text>
 				</view>
 				
-				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/RentBike/RentBikeHome')">
+				<view class="sv_view3" @click="natTo('../../pages_CCT/pages/CCT/villageBus')">
+					<image class="sv_print" src="../../static/Home/serve/cuncuntong.png"></image>
+					<text class="sv_text">村村通</text>
+				</view>
+				<view class="sv_view3" @click="natTo('../../pages_XQZX/pages/XQZX/districtLine')">
+					<image class="sv_print" src="../../static/Home/serve/xqzhuanxian.png"></image>
+					<text class="sv_text">新区专线</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo('../../pages_JCYY/pages/JCYY/theDay')">
+					<image class="sv_print" src="../../static/Home/serve/jcyuyue.png"></image>
+					<text class="sv_text">检测预约</text>
+				</view>
+				
+				<view class="sv_view3" @click="natTo3()">
+					<image class="sv_print" src="../../static/Home/serve/wlyueche.png" ></image>
+					<text class="sv_text">网络约车</text>
+				</view>
+				
+				
+				<!-- <view class="sv_view3" @click="natTo('../../pages_DDQC/pages/RentBike/RentBikeHome')">
 					<image class="sv_print2" src="../../static/Home/serve/DDQC.png"></image>
 					<text class="sv_text">达达骑车</text>
-				</view>
+				</view> -->
 				
 				<view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/gwzhuche.png"></image>
 					<text class="sv_text">公务租车</text>
-				</view>
-				
-				<view class="sv_view3" @click="natTo3()">
-					<image class="sv_print" src="../../static/Home/serve/jpyuyue.png"></image>
-					<text class="sv_text">检票预约</text>
 				</view>
 				 
 				<view class="sv_view3" @click="natTo3()">
