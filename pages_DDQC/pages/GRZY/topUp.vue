@@ -67,7 +67,7 @@
 				cost: 10,
 				balance: 0,
 				userInfo:[],//用户信息
-				paymentInfo:[],//支付参数
+				paymentData:[],//支付参数
 			}
 		},
 		onLoad() {
@@ -107,16 +107,84 @@
 						userID:that.userInfo.userId,
 						timeExpire:'',//过期时间(时间戳)
 						chargeType:1,//0:充值押金 1充值钱包 
-						totalPrice:10,//金额
+						totalPrice:0.1,//金额
 					},
 					success(res) {
 						console.log('钱包充值成功',res)
 						if(res.status == true){
-							that.paymentInfo = res.data.credential;
+							that.paymentData = res.data.credential;
+							that.payment();
 						}
 					},
 					fail(res) {
 						console.log('钱包充值失败',res)
+					}
+				})
+			},
+			//--------------------------调起支付--------------------------
+			payment: function() {
+				var that = this;
+				// #ifdef APP-PLUS
+				uni.hideLoading()
+				uni.requestPayment({
+					provider: 'wxpay',
+					orderInfo: {
+						appid: that.paymentData.wechat_app.appid,
+						timestamp: that.paymentData.wechat_app.timestamp,
+						noncestr: that.paymentData.wechat_app.noncestr,
+						package: 'Sign=WXPay',
+						sign: that.paymentData.wechat_app.sign,
+						partnerid: that.paymentData.wechat_app.partnerid,
+						prepayid: that.paymentData.wechat_app.prepayid,
+					},
+					success: function(res) {
+						console.log(res)
+						if (res.errMsg == 'requestPayment:ok') { //成功
+							uni.showToast({
+								title: '支付成功',
+							})
+							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none'
+							})
+						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
+							uni.showToast({
+								title: '您取消了支付',
+								icon: 'none'
+							})
+						}
+					},
+				
+					fail: function(ee) {
+						uni.showToast({
+							title: '拉起支付失败，请检查网络后重试',
+							icon: 'none',
+							duration: 3000
+						})
+					}
+				})
+				// #endif
+			},
+			//--------------------------钱包消费接口--------------------------
+			GetTransaction:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetTransaction.Url,
+					method:$DDTInterface.DDTInterface.GetTransaction.method,
+					data:{
+						
+					},
+					success(res) {
+						console.log('钱包消费',res)
+						if(res.status == true){
+							that.paymentData = res.data.credential;
+							that.payment();
+						}
+					},
+					fail(res) {
+						console.log('钱包消费',res)
 					}
 				})
 			},

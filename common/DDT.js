@@ -83,6 +83,12 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	GetTransaction:{
+		Url:Url + '/api/Purse/GetTransaction',
+		name:'钱包消费',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 }
 
 	// 接口声明区
