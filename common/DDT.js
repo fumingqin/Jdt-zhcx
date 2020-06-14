@@ -65,6 +65,24 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	GetPurseDetail:{
+		Url:Url + '/api/Purse/GetPurseDetail',
+		name:'获取钱包数据',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	GetRefund:{
+		Url:Url + '/api/Purse/GetRefund',
+		name:'钱包退押金',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	GetRecharge:{
+		Url:Url + '/api/Purse/GetRecharge',
+		name:'钱包充值',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 }
 
 	// 接口声明区

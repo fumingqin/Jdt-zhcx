@@ -41,7 +41,7 @@
 			<view class="tv_text">应付金额</view>
 			<view class="tv_money">￥{{cost}}</view>
 			<view class="tv_atOnceView">
-				<view style="text-align: center;margin-top: 20upx;">立即支付</view>
+				<view style="text-align: center;margin-top: 20upx;" @click="GetRecharge">立即支付</view>
 			</view>
 		</view>
 	</view>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+	import $DDTInterface from '@/common/DDT.js'
 	import uniPopup from "../../components/GRZY/uni-popup/uni-popup.vue"
 	export default {
 		components: {
@@ -65,12 +66,60 @@
 				security:'',
 				cost: 10,
 				balance: 0,
+				userInfo:[],//用户信息
+				paymentInfo:[],//支付参数
 			}
 		},
 		onLoad() {
 			this.getlist();
 		},
+		onShow() {
+			var that = this;
+			that.getUserInfo();
+		},
 		methods: {
+			//--------------------------读取用户信息--------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key: 'userInfo',
+					success: function(data) {
+						console.log('用户数据',data)
+						that.userInfo = data.data;
+						
+					},
+					fail(data) {
+					}
+				})
+			},
+			//--------------------------钱包充值--------------------------
+			GetRecharge:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetRecharge.Url,
+					method:$DDTInterface.DDTInterface.GetRecharge.method,
+					data:{
+						channel:'wechat_app',//微信
+						title:'钱包充值',
+						body:'钱包充值',
+						phoneNumber:that.userInfo.phoneNumber,
+						userID:that.userInfo.userId,
+						timeExpire:'',//过期时间(时间戳)
+						chargeType:1,//0:充值押金 1充值钱包 
+						totalPrice:10,//金额
+					},
+					success(res) {
+						console.log('钱包充值成功',res)
+						if(res.status == true){
+							that.paymentInfo = res.data.credential;
+						}
+					},
+					fail(res) {
+						console.log('钱包充值失败',res)
+					}
+				})
+			},
 			fixed(e){
 				if(e>=0){
 					e=e.toFixed(2);
