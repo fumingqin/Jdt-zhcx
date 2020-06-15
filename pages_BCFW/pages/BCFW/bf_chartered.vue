@@ -13,7 +13,7 @@
 				<view class="qt_typePicker" :class="{'qt_typePickerClick':specialPickerNum == 1}" style="border-top-left-radius: 0;"
 				 @tap="typeSelect('special')">定制</view>
 			</view>
-
+			
 			<!-- 专线 -->
 			<view class="ho_ticketView" v-if="normalPickerNum == 1">
 				<!-- 选择专线 -->
@@ -45,7 +45,7 @@
 					</view>
 					<mx-date-picker :show="showPicker" :showSeconds="false" :type="type" :value="value" :show-tips="true" :begin-text="'入住'"
 					 :end-text="'离店'" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
-
+					
 					<!-- 上车点 -->
 					<view class="dl_selectionTime">上车点</view>
 					<view class="dl_boardingPoint">
@@ -702,6 +702,7 @@
 						font-weight: bold;
 						top: 8upx;
 						margin-bottom: 16upx;
+						margin: 0 auto;
 					}
 
 					.tv_text2 {
@@ -735,6 +736,7 @@
 		}
 
 		.dl_time {
+			display: flex;
 			font-size: 32upx;
 			border-bottom: 1px #F5F5F5 dotted; //虚线
 			padding: 39upx 0 40upx 0;

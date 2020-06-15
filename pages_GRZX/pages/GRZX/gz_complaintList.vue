@@ -247,24 +247,26 @@
 					success:(e) => {
 						console.log(e)
 						that.complaintList=e.data.data,
-						this.screenUser();
+						that.screenUser();
 					}
 				})
 			},
 			//------------------------数组提取----------------------------------
 			screenUser: function() {
-				let complaintList1 = this.complaintList.filter(item => {
-					return item.or_Type == '审核中';
-				})
-				let complaintList2 = this.complaintList.filter(item => {
-					return item.or_Type == '投诉成功';
-				})
-				let complaintList3 = this.complaintList.filter(item => {
-					return item.or_Type == '投诉失败';
-				})
-				this.complaintListIndex1 = complaintList1.length;
-				this.complaintListIndex2 = complaintList2.length;
-				this.complaintListIndex3 = complaintList3.length;
+				if(this.complaintList!=""){
+					let complaintList1 = this.complaintList.filter(item => {
+						return item.or_Type == '审核中';
+					})
+					let complaintList2 = this.complaintList.filter(item => {
+						return item.or_Type == '投诉成功';
+					})
+					let complaintList3 = this.complaintList.filter(item => {
+						return item.or_Type == '投诉失败';
+					})
+					this.complaintListIndex1 = complaintList1.length;
+					this.complaintListIndex2 = complaintList2.length;
+					this.complaintListIndex3 = complaintList3.length;
+				}
 				// console.log(this.complaintListIndex1)
 			},
 
