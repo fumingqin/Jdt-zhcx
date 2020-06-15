@@ -224,6 +224,9 @@
 				// let that = this;
 				// this.value = vehicleSelection[e];
 				this.value = e;
+				if(this.value!==0){
+					this.value2 = 0;
+				}
 				// this.status = true;
 			},
 
@@ -272,26 +275,33 @@
 			//------------------------------提交数据-------------------------------------
 			sbuit: function() {
 				// console.log(value3)
-				if (this.value3 !== -1) {
-					this.information.cvt_carImage = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carImage;
-					this.information.cvt_Name = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_Name;
-					this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3]
-						.cvt_carNumberSeats;
-					this.information.cvt_carprice = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carprice;
-
-					// console.log(this.vehicleSelection[this.value])
-					uni.setStorage({
-						key: 'vehicleInformation',
-						data: this.information,
-						success: () => {
-							uni.navigateTo({
-								url: './bf_information?isNormal=' + this.isNormal
-							})
-						}
-					})
-				} else {
+				if(this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].length !==0){
+					if (this.value3 !== -1) {
+						this.information.cvt_carImage = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carImage;
+						this.information.cvt_Name = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_Name;
+						this.information.cvt_carNumberSeats = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3]
+							.cvt_carNumberSeats;
+						this.information.cvt_carprice = this.vehicleSelection[this.value].cvt_cost[this.value2].cvt_vehicle[this.value3].cvt_carprice;
+					
+						// console.log(this.vehicleSelection[this.value])
+						uni.setStorage({
+							key: 'vehicleInformation',
+							data: this.information,
+							success: () => {
+								uni.navigateTo({
+									url: './bf_information?isNormal=' + this.isNormal
+								})
+							}
+						})
+					} else {
+						uni.showToast({
+							title: '请选择包车',
+							icon: 'none'
+						})
+					}
+				}else{
 					uni.showToast({
-						title: '请选择包车',
+						title: '请选择车辆',
 						icon: 'none'
 					})
 				}
