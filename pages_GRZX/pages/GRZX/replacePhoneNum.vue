@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		
+		<view>当前绑定的手机号为：{{phone}}</view>
 	</view>
 </template>
 
@@ -9,19 +9,21 @@
 		data(){	
 			return{			
 				userInfo:[],
+				phone:'',
 			}	
 		},
 		onLoad (){
 			this.loadUserInfo();
 		},
 		methods:{
-			//--------------------加载用户信息-------------------
+			//--------------------加载用户信息-------------------that.userInfo.phoneNumber.substring(0,3)+'****'+
 			loadUserInfo:function(){
 				var that=this;
 				uni.getStorage({
 					key:'userInfo',
 					success(res) {
-						that.userInfo=res.data;	
+						that.userInfo=res.data;
+						that.phone=that.userInfo.phoneNumber.substring(0,3)+'****'+that.userInfo.phoneNumber.substring(7,11);
 					},
 					fail() {
 						uni.showToast({
