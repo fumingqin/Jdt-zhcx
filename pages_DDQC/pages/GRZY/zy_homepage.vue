@@ -28,13 +28,13 @@
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">次</text></view>
 					</view>
 					<!-- 押金 -->
-					<view class="ve_Text" v-if="depositStatus==1" @click="open">
+					<view class="ve_Text" v-if="depositStatus==0" @click="open">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view>
 					
-					<view class="ve_Text" v-if="depositStatus==0" @click="open2">
+					<view class="ve_Text" v-if="depositStatus==1" @click="open2">
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view>

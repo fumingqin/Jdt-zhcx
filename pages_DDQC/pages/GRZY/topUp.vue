@@ -60,15 +60,16 @@
 			return {
 				value: 0,
 				info: {
-					money:'',
-					award:'',
+					money: '',
+					award: '',
 				},
-				checked:0,
-				security:'',
+				checked: 0,
+				security: '',
 				cost: 10,
 				balance: 0,
-				userInfo:[],//用户信息
-				paymentData:[],//支付参数
+				chargeRate: '',
+				userInfo: [], //用户信息
+				paymentData: [], //支付参数
 			}
 		},
 		onLoad() {
@@ -86,26 +87,46 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
-						console.log('用户数据',data)
+						console.log('用户数据', data)
 						that.userInfo = data.data;
-						
+						that.GetPurseDetail();
 					},
-					fail(data) {
-					}
+					fail(data) {}
 				})
 			},
 			//--------------------------钱包充值--------------------------
-			GetRecharge:function(){
+			GetPurseDetail: function() {
 				var that = this;
-				if(that.checked == 0){
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
+					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
+					data: {
+						phoneNumber: that.userInfo.phoneNumber,
+						userID: that.userInfo.userId,
+					},
+					success(res) {
+						console.log('获取钱包数据成功', res)
+						if (res.status == true && res.msg == '请求成功') {
+							that.balance = res.data.data.balance;
+							that.chargeRate = res.data.data.chargeRate;
+						}
+					},
+					fail(res) {
+						console.log('获取钱包数据失败', res)
+					}
+				})
+			},
+			GetRecharge: function() {
+				var that = this;
+				if (that.checked == 0) {
 					uni.showToast({
-						title:'请勾选协议',
-						icon:'none'
+						title: '请勾选协议',
+						icon: 'none'
 					})
-				}else{
+				} else {
 					uni.showToast({
-						title:'正在获取支付...',
-						icon:'none'
+						title: '正在获取支付...',
+						icon: 'none'
 					})
 					let now = new Date();
 					console.log(now)
@@ -113,29 +134,29 @@
 					let Time = new Date(timeExpire).getTime();
 					console.log(Time)
 					uni.request({
-						url:$DDTInterface.DDTInterface.GetRecharge.Url,
-						method:$DDTInterface.DDTInterface.GetRecharge.method,
-						data:{
-							channel:'wechat_app',//微信
-							title:'钱包充值',
-							body:'钱包充值',
-							phoneNumber:that.userInfo.phoneNumber,
-							userID:that.userInfo.userId,
+						url: $DDTInterface.DDTInterface.GetRecharge.Url,
+						method: $DDTInterface.DDTInterface.GetRecharge.method,
+						data: {
+							channel: 'wechat_app', //微信
+							title: '钱包充值',
+							body: '钱包充值',
+							phoneNumber: that.userInfo.phoneNumber,
+							userID: that.userInfo.userId,
 							// timeExpire:timestemp,//过期时间(时间戳)
-							chargeType:1,//0:充值押金 1充值钱包
-							totalPrice:0.1,//金额
+							chargeType: 1, //0:充值押金 1充值钱包
+							totalPrice: 0.1, //金额
 						},
 						success(res) {
 							uni.hideLoading();
-							console.log('钱包充值返回支付参数成功结果',res)
-							if(res.status == true){
+							console.log('钱包充值返回支付参数成功结果', res)
+							if (res.status == true) {
 								that.paymentData = res.data.data.credential;
 								that.payment();
 							}
 						},
 						fail(res) {
 							uni.hideLoading();
-							console.log('钱包充值返回支付参数失败',res)
+							console.log('钱包充值返回支付参数失败', res)
 						}
 					})
 				}
@@ -161,20 +182,22 @@
 							uni.showToast({
 								title: '支付成功',
 							})
-							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
+							that.WirteRechargeLog(1);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
 							})
+							that.WirteRechargeLog(2);
 						}
 					},
-				
+
 					fail: function(ee) {
 						uni.showToast({
 							title: '拉起支付失败，请检查网络后重试',
@@ -186,38 +209,86 @@
 				// #endif
 			},
 			//--------------------------钱包消费接口--------------------------
-			GetTransaction:function(){
+			GetTransaction: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetTransaction.Url,
-					method:$DDTInterface.DDTInterface.GetTransaction.method,
-					data:{
-						
+					url: $DDTInterface.DDTInterface.GetTransaction.Url,
+					method: $DDTInterface.DDTInterface.GetTransaction.method,
+					data: {
+
 					},
 					success(res) {
-						console.log('钱包消费',res)
-						if(res.status == true){
+						console.log('钱包消费', res)
+						if (res.status == true) {
 							that.paymentData = res.data.credential;
 							that.payment();
 						}
 					},
 					fail(res) {
-						console.log('钱包消费',res)
+						console.log('钱包消费', res)
 					}
 				})
 			},
+			
+			GetTransaction: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetTransaction.Url,
+					method: $DDTInterface.DDTInterface.GetTransaction.method,
+					data: {
+			
+					},
+					success(res) {
+						console.log('钱包消费', res)
+						if (res.status == true) {
+							that.paymentData = res.data.credential;
+							that.payment();
+						}
+					},
+					fail(res) {
+						console.log('钱包消费', res)
+					}
+				})
+			},
+			
+
+			//--------------------------钱包充值记录--------------------------
+			WirteRechargeLog: function(state) {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.WirteRechargeLog.Url,
+					method: $DDTInterface.DDTInterface.WirteRechargeLog.method,
+					data: {
+						channel: "wechat_app",
+						title: "钱包充值记录",
+						body: "钱包充值记录测试",
+						phoneNumber: that.userInfo.phoneNumber,
+						chargeType: 1,
+						totalPrice: 0.1,
+						userID: that.userInfo.userId,
+						state: state,
+					},
+					success(res) {
+						console.log('钱包充值记录成功',res);
+					},
+					fail(res) {
+						console.log('钱包充值记录失败',res)
+					}
+				})
+			},
+			
 			//--------------------------单选框点击--------------------------
-			checkChange:function(){
+			checkChange: function() {
 				if (this.checked == 0) {
 					this.checked = 1;
 				} else {
 					this.checked = 0;
 				}
 			},
-			
-			fixed(e){
-				if(e>=0){
-					e=e.toFixed(2);
+
+			fixed(e) {
+				if (e >= 0) {
+					e = e.toFixed(2);
 					return e;
 				}
 			},
@@ -228,7 +299,7 @@
 			async getlist() {
 				let array = await this.$api.zyxinfo('topupInfo');
 				this.info = array.data;
-				this.security=array.security;
+				this.security = array.security;
 				console.log(this.info)
 			},
 
@@ -255,14 +326,16 @@
 		font-size: 38upx;
 		font-weight: 600;
 	}
-	.moneyView{
+
+	.moneyView {
 		display: flex;
-		align-items: center; 
+		align-items: center;
 		margin-top: 71rpx;
 		justify-content: space-between;
 		margin-left: 38upx;
 		margin-right: 38rpx;
 	}
+
 	.tu_symbol {
 		font-size: 38upx;
 		font-weight: 600;
@@ -311,11 +384,13 @@
 			font-weight: 300;
 		}
 	}
-	.tu_check{
+
+	.tu_check {
 		margin-top: 44upx;
 		margin-left: 37upx;
 		display: flex;
 		align-items: center;
+
 		.tu_notice {
 			margin-left: 266upx;
 			font-size: 26upx;
@@ -361,17 +436,18 @@
 			text-align: center;
 		}
 	}
+
 	.boxVlew {
 		width: 90%;
 		padding: 16upx 40upx;
 		padding-bottom: 92upx;
 		background: #FFFFFF;
 		z-index: 999;
-	
+
 		.titleView {
 			margin: 24upx 0;
 			text-align: center;
-	
+
 			//弹框标题
 			.Nb_text1 {
 				position: relative;
@@ -380,7 +456,7 @@
 				top: 8upx;
 				margin-bottom: 16upx;
 			}
-	
+
 			//弹框关闭按钮
 			.Nb_text2 {
 				width: 20upx;
@@ -391,11 +467,11 @@
 				font-size: 32upx;
 			}
 		}
-	
+
 		.noticeBox {
 			height: 800upx;
 			line-height: 32upx;
-	
+
 			.Nb_text4 {
 				display: block;
 				line-height: 64upx;

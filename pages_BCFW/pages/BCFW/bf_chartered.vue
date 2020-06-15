@@ -704,7 +704,7 @@
 						margin-bottom: 16upx;
 						margin: 0 auto;
 					}
-
+				
 					.tv_text2 {
 						margin-top: 8upx;
 						float: right;
