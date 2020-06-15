@@ -217,6 +217,14 @@ const Route={
 		url:SubPackage+'/replacePhoneNum',
 		name:'更换手机号',
 	},
+	verificateName:{
+		url:SubPackage+'/verificateName',
+		name:'实名验证',
+	},
+	newPhone:{
+		url:SubPackage+'/newPhone',
+		name:'更换成新手机号',
+	},
 }
 
 const GetImage={
