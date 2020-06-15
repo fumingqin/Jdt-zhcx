@@ -50,9 +50,9 @@ const KyInterface = {
 		systemNameApp:'泉运公司综合出行APP',
 		systemNameH5:'泉运公司综合出行H5',
 		systemNameWeiXin:'泉运公司综合出行小程序',
-		systemNameNPH5:'南平旅游H5',
-		systemNameNPAPP:'南平旅游APP',
-		systemNameNPWeiXin:'南平旅游H5',
+		systemNameNPH5:'南平综合出行H5',
+		systemNameNPAPP:'南平综合出行APP',
+		systemNameNPWeiXin:'南平综合出行小程序',
 	},
 	//--------------------------------------通用接口--------------------------------------
 	commonPayment:{

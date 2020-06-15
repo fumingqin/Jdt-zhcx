@@ -209,6 +209,14 @@ const Route={
 		url:SubPackage+'/set',
 		name:'设置页面',
 	},
+	realName:{
+		url:SubPackage+'/realName',
+		name:'实名认证',
+	},
+	replacePhoneNum:{
+		url:SubPackage+'/replacePhoneNum',
+		name:'更换手机号',
+	},
 }
 
 const GetImage={

@@ -173,13 +173,13 @@
 				that.allTicketsList = [];
 				var systemName = '';
 				// #ifdef H5
-				systemName = $KyInterface.KyInterface.systemName.systemNameNPH5;
+				systemName = '南平旅游H5';
 				// #endif
 				// #ifdef APP-PLUS
-				systemName = $KyInterface.KyInterface.systemName.systemNameNPAPP;
+				systemName = '南平旅游APP';
 				// #endif
 				// #ifdef MP-WEIXIN
-				systemName = $KyInterface.KyInterface.systemName.systemNameNPWeiXin;
+				systemName = '南平旅游H5';
 				// #endif
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_getListSchedulesInfo.Url,

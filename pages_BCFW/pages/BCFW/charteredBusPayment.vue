@@ -1,12 +1,12 @@
 <template>
 	<view>
 		<view>
-		<!-- #ifdef MP-WEIXIN -->
-		<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view>
-		<!-- #endif -->
-		<!-- #ifndef MP-WEIXIN -->
-		<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 88upx;">倒计时：{{countDownDate}}秒</view>
-		<!-- #endif -->	
+			<!-- #ifdef MP-WEIXIN -->
+			<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 24upx;">倒计时：{{countDownDate}}秒</view>
+			<!-- #endif -->
+			<!-- #ifndef MP-WEIXIN -->
+			<view style="color: #FFFFFF; font-size: 26upx; position: absolute; right: 32upx; z-index: 1; top: 88upx;">倒计时：{{countDownDate}}秒</view>
+			<!-- #endif -->
 		</view>
 
 
@@ -21,7 +21,7 @@
 				<text class="MP_text">上车点：{{orderInfo.or_boardingPoint}}</text>
 				<text class="MP_text">目的地：{{orderInfo.or_destination}}</text>
 				<view v-if="orderInfo.or_class=='包车-定制'"><text class="MP_text">包车天数：{{orderInfo.cm_day}}天</text></view>
-				
+
 
 				<view class="MP_selectionDate">
 					<view class="MP_title">出发时间</view>
@@ -31,21 +31,38 @@
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">包车人信息</view>
 					<text class="MP_text">包车人：{{orderInfo.nickName}}</text>
-					<text class="MP_text">身份证：{{orderInfo.nickId}}</text>	
-					<text class="MP_text">手机号：{{orderInfo.nickPhone}}</text>						
+					<text class="MP_text">身份证：{{orderInfo.nickId}}</text>
+					<text class="MP_text">手机号：{{orderInfo.nickPhone}}</text>
 				</view>
 
 				<view class="MP_selectionDate" :hidden="hiddenValues==0">
 					<view class="MP_title">费用详情</view>
-					<view class="MP_cost" v-if="orderInfo.or_class=='包车-定制'">
-						<text>定制费用</text>
-						<text class="MP_userCost">¥{{orderInfo.advance}}</text>
+					<view v-if="state==0">
+						<view class="MP_cost" v-if="orderInfo.or_class=='包车-定制'">
+							<text>定制费用-预付款</text>
+							<text class="MP_userCost">¥{{orderInfo.advance}}</text>
+						</view>
+						<view class="MP_cost" v-if="orderInfo.or_class=='包车-专线'">
+							<text>专线费用-预付款</text>
+							<text class="MP_userCost">¥{{orderInfo.advance}}</text>
+						</view>
 					</view>
-					<view class="MP_cost" v-if="orderInfo.or_class=='包车-专线'">
-						<text>专线费用</text>
-						<text class="MP_userCost">¥{{orderInfo.advance}}</text>
+					<view v-if="state==1">
+						<view class="MP_cost" v-if="orderInfo.or_class=='包车-定制'">
+							<text>定制费用-余下费用</text>
+							<text class="MP_userCost">¥{{orderInfo.cm_money}}</text>
+						</view>
+						<view class="MP_cost" v-if="orderInfo.or_class=='包车-专线'">
+							<text>专线费用-余下费用</text>
+							<text class="MP_userCost">¥{{orderInfo.cm_money}}</text>
+						</view>
 					</view>
-
+					<view v-if="state==2">
+						<view class="MP_cost">
+							<text>专线费用-余下费用</text>
+							<text class="MP_userCost">¥{{orderInfo.cm_money}}</text>
+						</view>
+					</view>
 					<!-- 优惠券 -->
 					<view class="MP_cost" v-if="orderInfo.couponPrice>0">
 						<text>{{orderInfo.couponTitle}}</text>
@@ -55,13 +72,15 @@
 
 
 					<view class="MP_cost">
-						<text class="MP_total">共计&nbsp;¥{{orderInfo.advance}}</text>
+						<text class="MP_total">共计&nbsp;¥{{orderInfo.cm_money}}</text>
 					</view>
 
 				</view>
 
-				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)" :hidden="hiddenValues==1"></view>
-				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)" :hidden="hiddenValues==0"></view>
+				<view class="jdticon icon-xia" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(0)"
+				 :hidden="hiddenValues==1"></view>
+				<view class="jdticon icon-shang" style="padding: 24upx 0upx; text-align: center; margin-top: 64upx;" @click="hide(1)"
+				 :hidden="hiddenValues==0"></view>
 
 			</view>
 
@@ -72,22 +91,26 @@
 					<radio class="Mp_box" :checked="channeIndex===0" :color="'#36cb59'" @click="Selection"></radio>
 				</view>
 			</view>
-			
+
 			<!-- #ifndef H5 -->
 			<!-- <view class="MP_information2"> -->
-				<!-- <view class="MP_optionBar">
+			<!-- <view class="MP_optionBar">
 					<text class="Mp-icon jdticon icon-alipay"></text>
 					<text class="Mp_title">支付宝</text>
 					<radio class="Mp_box" :checked="channeIndex===1" :color="'#01aaef'" @click="Selection"></radio>
 				</view> -->
 			<!-- </view> -->
 			<!-- #endif -->
-			
-
-			<view class="MP_information3" @click="paymentSatas">
-				支付{{orderInfo.advance}}元
+			<view v-if="state==0">
+				<view class="MP_information3" @click="paymentSatas">
+					支付{{orderInfo.advance}}元
+				</view>
 			</view>
-
+			<view v-if="state==1">
+				<view class="MP_information3" @click="paymentSatas">
+					支付{{orderInfo.cm_money}}元
+				</view>
+			</view>
 		</view>
 
 	</view>
@@ -101,47 +124,49 @@
 				countDownDate: 300, //倒计时时间
 				returnIndex: false, //页面点击上一页
 				hiddenValues: '0', //隐藏状态值
+				state: '0',
 				channel: [{
 					name: '微信'
 				}, {
 					name: '支付宝'
 				}],
 				channeIndex: 0, //选择支付方式
-				paymentValue:false,//默认未拉起状态
-				
-				orderInfo: [{
-					or_number: '',//订单编号
-					or_type: '',//订单状态
-					or_class: '',//包车类型
-					or_date:'',
-					or_time:'',//下单时间
-					billDescript:'',//订单描述
-					
-					cm_totalCost:'',//总计
-					advance:0,//预付款
-					or_dateString:'',//出发时间
-					or_boardingPoint: '',//出发地
-					or_destination:'',//目的地
-					cm_day:0,					
-					nickName:'',//包车人
-					nickId:'',//包车人身份证
-					nickPhone:'',//包车人电话
-					
-					
+				paymentValue: false, //默认未拉起状态
 
-					couponID:'',//优惠券编号
-					couponTitle: '',//优惠券标题
-					couponPrice: '',//优惠券价格
-					couponCondition: '',//使用门槛
+				orderInfo: [{
+					or_number: '', //订单编号
+					or_type: '', //订单状态
+					or_class: '', //包车类型
+					or_date: '',
+					or_time: '', //下单时间
+					billDescript: '', //订单描述
+					cm_totalCost: '', //总计
+					advance: 0, //预付款
+					cm_money:'',
+					
+					or_dateString: '', //出发时间
+					or_boardingPoint: '', //出发地
+					or_destination: '', //目的地
+					cm_day: 0,
+					nickName: '', //包车人
+					nickId: '', //包车人身份证
+					nickPhone: '', //包车人电话
+
+
+
+					couponID: '', //优惠券编号
+					couponTitle: '', //优惠券标题
+					couponPrice: '', //优惠券价格
+					couponCondition: '', //使用门槛
 
 				}],
-				
-				
-				submitH5Data : '',//公众号H5支付参数
-				
+
+
+				submitH5Data: '', //公众号H5支付参数
+
 				testOrderInfo: {
 					appid: 'wxefe31fcc2fba222e',
-					partnerid: '1583195951', 
+					partnerid: '1583195951',
 					prepayid: 'wx18222142102675887d734e111119533100',
 					package: 'Sign=WXPay',
 					noncestr: 'xZtDRvJXIjVWYssG',
@@ -153,47 +178,48 @@
 		},
 		onLoad: function(options) {
 			console.log(options)
-			this.or_number=JSON.parse(decodeURIComponent(options.or_number));
+			this.or_number = JSON.parse(decodeURIComponent(options.or_number));
+			this.state = options.state;
 			console.log(this.or_number)
 			uni.showLoading({
 				title: '拉起订单中...'
 			})
 			this.returnIndex = false;
 			uni.setStorage({
-				key: 'returnIndex',
-				data: this.returnIndex,
-			}),
-			uni.request({
-				url: $bcfw.Interface.fw_charterDetails.value,
-				method: $bcfw.Interface.fw_charterDetails.method,
-				data:{
-					or_number :this.or_number
-				},
-				
-				success: (res) => {
-					console.log(res)
-					this.orderInfo = res.data.data;
-					console.log(this.orderInfo)
-					if(this.orderInfo.or_class=='包车-定制'){
-						this.orderInfo.billDescript='包车定制费用'
-						}else{
-						this.orderInfo.billDescript='包车专线费用'
+					key: 'returnIndex',
+					data: this.returnIndex,
+				}),
+				uni.request({
+					url: $bcfw.Interface.fw_charterDetails.value,
+					method: $bcfw.Interface.fw_charterDetails.method,
+					data: {
+						or_number: this.or_number
+					},
+
+					success: (res) => {
+						console.log(res)
+						this.orderInfo = res.data.data;
+						console.log(this.orderInfo)
+						if (this.orderInfo.or_class == '包车-定制') {
+							this.orderInfo.billDescript = '包车定制费用'
+						} else {
+							this.orderInfo.billDescript = '包车专线费用'
 						}
-					// console.log(this.orderInfo.billDescript)
-					this.getDate();
-					uni.hideLoading()
-				}
-			})
-			
+						// console.log(this.orderInfo.billDescript)
+						this.getDate();
+						uni.hideLoading()
+					}
+				})
+
 			// #ifdef H5
 			uni.getStorage({
-				key:'submitH5Data',
-				success:function(res){
+				key: 'submitH5Data',
+				success: function(res) {
 					this.submitH5Data = res.data;
 				}
 			})
 			// #endif
-			
+
 		},
 		onBackPress: function() {
 			this.returnIndex = true;
@@ -234,7 +260,7 @@
 			//获取当前时间并格式化
 			getDate: function() {
 				//先提取订单下单时间把空格转换成T
-				var a =(this.orderInfo.or_date + ' '+this.orderInfo.or_time).replace(' ', 'T')
+				var a = (this.orderInfo.or_date + ' ' + this.orderInfo.or_time).replace(' ', 'T')
 				// console.log(a);
 				//把时间转换成时间戳
 				var b = new Date(a).getTime();
@@ -289,18 +315,18 @@
 				uni.request({
 					url: $bcfw.Interface.fw_charterDetails.value,
 					method: $bcfw.Interface.fw_charterDetails.method,
-					data:{
-							or_number :this.orderInfo.or_number
-						},
+					data: {
+						or_number: this.orderInfo.or_number
+					},
 					success: (res) => {
 						console.log(res)
 						if (res.data.data.or_Type == '5') {
 							uni.request({
 								url: $bcfw.Interface.spt_CancelTickets.value,
 								method: $bcfw.Interface.spt_CancelTickets.method,
-								data:{
-										or_number :this.orderInfo.or_number
-									},
+								data: {
+									or_number: this.orderInfo.or_number
+								},
 								success() {
 									// console.log('取消成功')
 									uni.showToast({
@@ -341,24 +367,24 @@
 				})
 
 			},
-			
+
 			//禁止重复提交操作
-			paymentSatas:function(){
-				if(this.paymentValue == false){
+			paymentSatas: function() {
+				if (this.paymentValue == false) {
 					this.paymentValue == true
 					this.payment()
-				}else if(this.paymentValue == true){
+				} else if (this.paymentValue == true) {
 					uni.showToast({
-						title:'请勿重复点击支付'
+						title: '请勿重复点击支付'
 					})
 				}
 			},
-			
+
 			//调起支付
 			payment: function() {
 				var that = this;
 				uni.showLoading({
-					title:'拉起支付中...'
+					title: '拉起支付中...'
 				})
 				// 查看服务商
 				// uni.getProvider({
@@ -367,106 +393,108 @@
 				// 		console.log(res)
 				// 	}
 				// })
-				
+
 				// #ifdef H5
-					uni.request({
-						url:$bcfw.Interface.spt_Pay.value,
-						method:$bcfw.Interface.spt_Pay.method,
-						data: {
-							payType: 3,
-							price: that.orderInfo.advance,
-							orderNumber: that.orderInfo.or_number,
-							goodsName: that.orderInfo.or_class,
-							billDescript: that.orderInfo.billDescript
-						},
-						success:function(e){
-							// console.log(e)
-							uni.hideLoading()
-							uni.requestPayment({
-								provider: 'wxpay',
-								orderInfo: e.data.data,
-								success: function(res) {
-									console.log(res)
-									uni.request({
-										url:$bcfw.Interface.spt_CheckPayState.value,
-										method:$bcfw.Interface.spt_CheckPayState.method,
-										data: {
-											or_number: that.orderInfo.or_number,
-											factPayPrice: that.orderInfo.advance,
-										},
-										header: {'content-type': 'application/json'},
-										success: function(res) {
-											// console.log(res)
-											if (res.data.status ==true) {
-												uni.redirectTo({
-													url: 'BCsuccessfulPayment'
-												})
-											} else {
-												uni.showToast({
-													title: '下单失败，联系客服出示订单编号',
-													icon: 'none',
-													duration: 3000
-												})
-											}
-										},
-										fail: function() {
+				uni.request({
+					url: $bcfw.Interface.spt_Pay.value,
+					method: $bcfw.Interface.spt_Pay.method,
+					data: {
+						payType: 3,
+						price: that.orderInfo.advance,
+						orderNumber: that.orderInfo.or_number,
+						goodsName: that.orderInfo.or_class,
+						billDescript: that.orderInfo.billDescript
+					},
+					success: function(e) {
+						// console.log(e)
+						uni.hideLoading()
+						uni.requestPayment({
+							provider: 'wxpay',
+							orderInfo: e.data.data,
+							success: function(res) {
+								console.log(res)
+								uni.request({
+									url: $bcfw.Interface.spt_CheckPayState.value,
+									method: $bcfw.Interface.spt_CheckPayState.method,
+									data: {
+										or_number: that.orderInfo.or_number,
+										factPayPrice: that.orderInfo.advance,
+									},
+									header: {
+										'content-type': 'application/json'
+									},
+									success: function(res) {
+										// console.log(res)
+										if (res.data.status == true) {
+											uni.redirectTo({
+												url: 'BCsuccessfulPayment'
+											})
+										} else {
 											uni.showToast({
-												title: '下单失败，请联系客服出示订单编号',
+												title: '下单失败，联系客服出示订单编号',
 												icon: 'none',
 												duration: 3000
 											})
 										}
-									})
-								},
-					
-								fail: function(e) {
-									// console.log(e)
-									if (e.errMsg == 'requestPayment:fail canceled') {
+									},
+									fail: function() {
 										uni.showToast({
-											title: '您放弃了支付',
-											icon: 'none',
-											duration: 3000
-										})
-									} else if (e.errMsg == 'requestPayment:fail errors') {
-										uni.showToast({
-											title: '支付失败，请重试',
-											icon: 'none',
-											duration: 3000
-										})
-									} else {
-										uni.showToast({
-											title: '网络异常，请检查网络后重试',
+											title: '下单失败，请联系客服出示订单编号',
 											icon: 'none',
 											duration: 3000
 										})
 									}
-					
+								})
+							},
+
+							fail: function(e) {
+								// console.log(e)
+								if (e.errMsg == 'requestPayment:fail canceled') {
+									uni.showToast({
+										title: '您放弃了支付',
+										icon: 'none',
+										duration: 3000
+									})
+								} else if (e.errMsg == 'requestPayment:fail errors') {
+									uni.showToast({
+										title: '支付失败，请重试',
+										icon: 'none',
+										duration: 3000
+									})
+								} else {
+									uni.showToast({
+										title: '网络异常，请检查网络后重试',
+										icon: 'none',
+										duration: 3000
+									})
 								}
-							})
-						},
-						fail: () => {
-							uni.hideLoading()
-							uni.showToast({
-								// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
-								title: '请求支付参数失败，请检查网络后重试',
-								icon: 'none',
-								duration: 3000
-							})
-						}
-					})
-				
-				
-					
+
+							}
+						})
+					},
+					fail: () => {
+						uni.hideLoading()
+						uni.showToast({
+							// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
+							title: '请求支付参数失败，请检查网络后重试',
+							icon: 'none',
+							duration: 3000
+						})
+					}
+				})
+
+
+
 				// #endif
 
 
 				// #ifdef APP-PLUS
 				if (this.channeIndex == 0) {
-					that=this;
+					that = this;
 					uni.hideLoading()
 					uni.request({
-						url:$bcfw.Interface.spt_Pay.value,
-						method:$bcfw.Interface.spt_Pay.method,
+						url: $bcfw.Interface.spt_Pay.value,
+						method: $bcfw.Interface.spt_Pay.method,
 						data: {
 							payType: 3,
 							price: that.orderInfo.advance,
@@ -474,7 +502,7 @@
 							goodsName: that.orderInfo.or_class,
 							billDescript: that.orderInfo.billDescript
 						},
-						success:function(e){
+						success: function(e) {
 							// console.log(e)
 							uni.hideLoading()
 							uni.requestPayment({
@@ -483,16 +511,18 @@
 								success: function(res) {
 									// console.log(res)
 									uni.request({
-										url:$bcfw.Interface.spt_CheckPayState.value,
-										method:$bcfw.Interface.spt_CheckPayState.method,
+										url: $bcfw.Interface.spt_CheckPayState.value,
+										method: $bcfw.Interface.spt_CheckPayState.method,
 										data: {
 											or_number: that.orderInfo.or_number,
 											factPayPrice: that.orderInfo.advance,
 										},
-										header: {'content-type': 'application/json'},
+										header: {
+											'content-type': 'application/json'
+										},
 										success: function(res) {
 											// console.log(res)
-											if (res.data.status ==true) {
+											if (res.data.status == true) {
 												uni.redirectTo({
 													url: 'BCsuccessfulPayment'
 												})
@@ -513,7 +543,7 @@
 										}
 									})
 								},
-					
+
 								fail: function(e) {
 									// console.log(e)
 									if (e.errMsg == 'requestPayment:fail canceled') {
@@ -535,7 +565,7 @@
 											duration: 3000
 										})
 									}
-					
+
 								}
 							})
 						},
@@ -559,40 +589,40 @@
 							orderNum: this.orderInfo.or_number,
 						},
 						method: 'POST',
-						success:function(e){
+						success: function(e) {
 							// console.log(e)
 							uni.hideLoading()
 							uni.requestPayment({
 								provider: 'alipay',
 								orderInfo: e.data.data.appUrl,
-								success:function(res){
+								success: function(res) {
 									// console.log(res)
 									uni.request({
-										url:'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber='+that.orderInfo.or_number,
-										method:'POST',
-										success:function(res){
-											if(res.data.msg == '出票成功'){
+										url: 'http://218.67.107.93:9210/api/app/ScenicSpotIssueTicket?orderNumber=' + that.orderInfo.or_number,
+										method: 'POST',
+										success: function(res) {
+											if (res.data.msg == '出票成功') {
 												uni.redirectTo({
 													url: '/pages/LYFW/scenicSpotTickets/successfulPayment'
 												})
-											}else{
+											} else {
 												uni.showToast({
-													title:'出票失败，联系客服出示订单编号',
-													icon:'none',
-													duration:3000
+													title: '出票失败，联系客服出示订单编号',
+													icon: 'none',
+													duration: 3000
 												})
 											}
 										},
-										fail:function(){
+										fail: function() {
 											uni.showToast({
-												title:'出票失败，请联系客服出示订单编号',
-												icon:'none',
-												duration:3000
+												title: '出票失败，请联系客服出示订单编号',
+												icon: 'none',
+												duration: 3000
 											})
 										}
 									})
 								},
-						
+
 								fail: function(ee) {
 									// console.log(ee)
 									uni.showToast({

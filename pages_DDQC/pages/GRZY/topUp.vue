@@ -3,11 +3,11 @@
 		<view>
 			<view class="tu_title">充值金额</view>
 		</view>
-		<view style="display: flex;">
+		<view class="moneyView">
 			<view class="tu_symbol">￥{{cost}}</view>
 			<view class="tu_balance">当前余额￥{{fixed(balance)}}</view>
 		</view>
-		<view style=" width:670upx;margin-left: 40upx; margin-top:40upx;border: 1px solid #E2E2E2;"></view>
+		<view style=" width:670upx;margin-left: 40upx; margin-top:10upx;border: 0.8px solid #E2E2E2;"></view>
 		<view class="tu_view">
 			<view v-for="(item,index) in info" :key="index">
 				<view class="tu_square" :class="{current2: value===index}" @click="affirm(index,item.money)">
@@ -17,9 +17,9 @@
 			</view>
 		</view>
 		<view class="tu_check">
-			<checkbox-group>
-				<label>
-					<checkbox value="cb" checked="true" />同意资金存管协议
+			<checkbox-group @change="checkChange">
+				<label style="font-size: 30rpx;font-weight: 300;">
+					<checkbox value="cb" :checked="checked == 1 ? true: false" />同意资金存管协议
 				</label>
 			</checkbox-group>
 			<view class="tu_notice" @click="open()">说明></view>
@@ -41,7 +41,7 @@
 			<view class="tv_text">应付金额</view>
 			<view class="tv_money">￥{{cost}}</view>
 			<view class="tv_atOnceView">
-				<view style="text-align: center;margin-top: 20upx;">立即支付</view>
+				<view style="text-align: center;margin-top: 20upx;" @click="GetRecharge">立即支付</view>
 			</view>
 		</view>
 	</view>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+	import $DDTInterface from '@/common/DDT.js'
 	import uniPopup from "../../components/GRZY/uni-popup/uni-popup.vue"
 	export default {
 		components: {
@@ -62,15 +63,158 @@
 					money:'',
 					award:'',
 				},
+				checked:0,
 				security:'',
 				cost: 10,
 				balance: 0,
+				userInfo:[],//用户信息
+				paymentData:[],//支付参数
 			}
 		},
 		onLoad() {
 			this.getlist();
 		},
+		onShow() {
+			var that = this;
+			that.getUserInfo();
+		},
 		methods: {
+			//--------------------------读取用户信息--------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key: 'userInfo',
+					success: function(data) {
+						console.log('用户数据',data)
+						that.userInfo = data.data;
+						
+					},
+					fail(data) {
+					}
+				})
+			},
+			//--------------------------钱包充值--------------------------
+			GetRecharge:function(){
+				var that = this;
+				if(that.checked == 0){
+					uni.showToast({
+						title:'请勾选协议',
+						icon:'none'
+					})
+				}else{
+					uni.showToast({
+						title:'正在获取支付...',
+						icon:'none'
+					})
+					let now = new Date();
+					console.log(now)
+					let timeExpire = '02:00';
+					let Time = new Date(timeExpire).getTime();
+					console.log(Time)
+					uni.request({
+						url:$DDTInterface.DDTInterface.GetRecharge.Url,
+						method:$DDTInterface.DDTInterface.GetRecharge.method,
+						data:{
+							channel:'wechat_app',//微信
+							title:'钱包充值',
+							body:'钱包充值',
+							phoneNumber:that.userInfo.phoneNumber,
+							userID:that.userInfo.userId,
+							// timeExpire:timestemp,//过期时间(时间戳)
+							chargeType:1,//0:充值押金 1充值钱包
+							totalPrice:0.1,//金额
+						},
+						success(res) {
+							uni.hideLoading();
+							console.log('钱包充值返回支付参数成功结果',res)
+							if(res.status == true){
+								that.paymentData = res.data.data.credential;
+								that.payment();
+							}
+						},
+						fail(res) {
+							uni.hideLoading();
+							console.log('钱包充值返回支付参数失败',res)
+						}
+					})
+				}
+			},
+			//--------------------------调起支付--------------------------
+			payment: function() {
+				var that = this;
+				// #ifdef APP-PLUS
+				uni.requestPayment({
+					provider: 'wxpay',
+					orderInfo: {
+						appid: that.paymentData.wechat_app.appid,
+						timestamp: that.paymentData.wechat_app.timestamp,
+						noncestr: that.paymentData.wechat_app.noncestr,
+						package: 'Sign=WXPay',
+						sign: that.paymentData.wechat_app.sign,
+						partnerid: that.paymentData.wechat_app.partnerid,
+						prepayid: that.paymentData.wechat_app.prepayid,
+					},
+					success: function(res) {
+						console.log(res)
+						if (res.errMsg == 'requestPayment:ok') { //成功
+							uni.showToast({
+								title: '支付成功',
+							})
+							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none'
+							})
+						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
+							uni.showToast({
+								title: '您取消了支付',
+								icon: 'none'
+							})
+						}
+					},
+				
+					fail: function(ee) {
+						uni.showToast({
+							title: '拉起支付失败，请检查网络后重试',
+							icon: 'none',
+							duration: 3000
+						})
+					}
+				})
+				// #endif
+			},
+			//--------------------------钱包消费接口--------------------------
+			GetTransaction:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetTransaction.Url,
+					method:$DDTInterface.DDTInterface.GetTransaction.method,
+					data:{
+						
+					},
+					success(res) {
+						console.log('钱包消费',res)
+						if(res.status == true){
+							that.paymentData = res.data.credential;
+							that.payment();
+						}
+					},
+					fail(res) {
+						console.log('钱包消费',res)
+					}
+				})
+			},
+			//--------------------------单选框点击--------------------------
+			checkChange:function(){
+				if (this.checked == 0) {
+					this.checked = 1;
+				} else {
+					this.checked = 0;
+				}
+			},
+			
 			fixed(e){
 				if(e>=0){
 					e=e.toFixed(2);
@@ -111,17 +255,20 @@
 		font-size: 38upx;
 		font-weight: 600;
 	}
-
-	.tu_symbol {
-		margin-top: 71upx;
+	.moneyView{
+		display: flex;
+		align-items: center; 
+		margin-top: 71rpx;
+		justify-content: space-between;
 		margin-left: 38upx;
+		margin-right: 38rpx;
+	}
+	.tu_symbol {
 		font-size: 38upx;
 		font-weight: 600;
 	}
 
 	.tu_balance {
-		margin-top: 71upx;
-		margin-left: 321upx;
 		font-size: 32upx;
 		font-weight: 300;
 	}
@@ -168,6 +315,7 @@
 		margin-top: 44upx;
 		margin-left: 37upx;
 		display: flex;
+		align-items: center;
 		.tu_notice {
 			margin-left: 266upx;
 			font-size: 26upx;

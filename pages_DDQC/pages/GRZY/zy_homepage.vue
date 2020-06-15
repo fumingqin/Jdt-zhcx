@@ -20,7 +20,7 @@
 					<!-- 金额 -->
 					<view class="ve_Text" @click="natTo('/pages_DDQC/pages/GRZY/wallet')">
 						<view class="tx_text1">金额</view>
-						<view class="tx_text2">{{personalHomepage.cost}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
 					<view class="ve_Text" @click="Jump">
@@ -28,15 +28,15 @@
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">次</text></view>
 					</view>
 					<!-- 押金 -->
-					<view class="ve_Text" v-if="personalHomepage.depositBalance==0" @click="open">
+					<view class="ve_Text" v-if="depositStatus==1" @click="open">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
-						<view class="tx_text2">{{personalHomepage.depositBalance}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view>
 					
-					<view class="ve_Text" v-if="personalHomepage.depositBalance==199" @click="open2">
+					<view class="ve_Text" v-if="depositStatus==0" @click="open2">
 						<view class="tx_text1">押金</view>
-						<view class="tx_text2">{{personalHomepage.depositBalance}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view>
 				</view>
 			</view>
@@ -100,9 +100,9 @@
 					<!-- 退押金 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">退款金额:</text>
-						<text class="ra_text2">&nbsp;￥{{personalHomepage.deposit}}</text>
+						<text class="ra_text2">&nbsp;￥{{deposit}}</text>
 					</view>
-					<view class="tjButton2">确认退款</view>
+					<view class="tjButton2" @click="GetRefund">确认退款</view>
 					<view class="vi_bottom"></view>
 				</view>
 			</uni-popup>
@@ -152,6 +152,7 @@
 </template>
 
 <script>
+	import $DDTInterface from '@/common/DDT.js'
 	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
 	export default {
 		components: {
@@ -159,12 +160,16 @@
 		},
 		data() {
 			return {
+				userInfo:[],//用户信息
 				type: 0,
+				balance:0,//钱包金额
+				deposit:0,//押金金额
+				depositStatus:0,//押金状态
 				personalHomepage: {
 					cost: 0.8, //价格
 					coupon: 10, //卡券数量
-					deposit: 199, //押金
-					depositBalance:199,
+					deposit: 0, //押金
+					depositBalance:0,
 
 					mileage: 20, //总里程
 					emissionReduction: 0.6, //减排
@@ -176,8 +181,116 @@
 		},
 		onLoad() {
 			this.lunBoInit();
+			
+		},
+		onShow() {
+			var that = this;
+			that.getUserInfo();
 		},
 		methods: {
+			//--------------------------读取用户信息--------------------------
+			getUserInfo() {
+				var that = this;
+				//读取用户ID
+				uni.getStorage({
+					key: 'userInfo',
+					success: function(data) {
+						console.log('用户数据',data)
+						that.userInfo = data.data;
+						//钱包注册
+						// that.GetEnrollment();
+						//获取钱包数据
+						that.GetPurseDetail();
+					},
+					fail(data) {
+					}
+				})
+			},
+			//--------------------------获取钱包数据--------------------------
+			GetEnrollment:function(){
+				var that = this;
+				console.log(that.userInfo.phoneNumber)
+				uni.request({
+					url:'http://111.231.109.113:8004/api/Purse/GetEnrollment',
+					method:'POST',
+					data:{
+						phoneNumber:that.userInfo.phoneNumber,
+						userID:that.userInfo.userId,
+						userName:'林先生',
+						uuid:'123',
+						userId:'350322199109101514'
+					},
+					success(res) {
+						console.log('钱包注册成功数据',res)
+						if(res.msg == '请求成功'){
+							uni.showToast({
+								title:'请求成功',
+								icon:'none'
+							})
+						}
+					},
+					fail(res) {
+						console.log('钱包注册失败数据',res)
+					}
+				})
+			},
+			GetPurseDetail:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetPurseDetail.Url,
+					method:$DDTInterface.DDTInterface.GetPurseDetail.method,
+					data:{
+						phoneNumber:that.userInfo.phoneNumber,
+						userID:that.userInfo.userId,
+					},
+					success(res) {
+						console.log('获取钱包数据成功',res)
+						if(res.status == true && res.msg == '请求成功'){
+							that.balance = res.data.data.balance;
+							that.deposit = res.data.data.deposit;
+							that.depositStatus = res.data.data.depositStatus;
+						}
+					},
+					fail(res) {
+						console.log('获取钱包数据失败',res)
+					}
+				})
+			},
+			//--------------------------钱包退押金--------------------------
+			GetRefund:function(){
+				uni.showLoading({
+					title:'正在退押金...'
+				})
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetRefund.Url,
+					method:$DDTInterface.DDTInterface.GetRefund.method,
+					data:{
+						userMobileNumber:that.userInfo.phoneNumber,
+						userID:that.userInfo.userId,
+						requestType:2,// 2:退款押金
+					},
+					success(res) {
+						uni.hideLoading();
+						console.log('钱包退押金成功',res)
+						if(res.data.status == true){
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}else if(res.data.status == false){
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}
+					},
+					fail(res) {
+						uni.hideLoading();
+						console.log('钱包退押金失败',res)
+					}
+				})
+			},
 			//------------------------模拟数据----------------------------------------------
 
 			async lunBoInit() {
