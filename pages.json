@@ -854,7 +854,21 @@
 				{
 					"path": "pages/GRZX/replacePhoneNum", //更换手机号
 					"style": {
-						"navigationBarTitleText": "更换手机号",
+						"navigationBarTitleText": "手机号码",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
+				},
+				{
+					"path": "pages/GRZX/verificateName", //实名验证
+					"style": {
+						"navigationBarTitleText": "实名验证",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
+				},
+				{
+					"path": "pages/GRZX/newPhone", //新手机号
+					"style": {
+						"navigationBarTitleText": "手机号码",
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
 				}

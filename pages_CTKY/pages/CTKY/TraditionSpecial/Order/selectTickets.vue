@@ -173,13 +173,13 @@
 				that.allTicketsList = [];
 				var systemName = '';
 				// #ifdef H5
-				systemName = $KyInterface.KyInterface.systemName.systemNameNPH5;
+				systemName = '南平旅游H5';
 				// #endif
 				// #ifdef APP-PLUS
-				systemName = $KyInterface.KyInterface.systemName.systemNameNPAPP;
+				systemName = '南平旅游APP';
 				// #endif
 				// #ifdef MP-WEIXIN
-				systemName = $KyInterface.KyInterface.systemName.systemNameNPWeiXin;
+				systemName = '南平旅游H5';
 				// #endif
 				uni.request({
 					url: $KyInterface.KyInterface.Ky_getListSchedulesInfo.Url,
@@ -193,7 +193,7 @@
 					},
 					success: (res) => {
 						// uni.hideLoading();
-						console.log('客运班次信息',res);
+						// console.log('客运班次信息',res);
 						//非空判断
 						if (res.data.status == true) {
 							if(res.data.data){
@@ -234,7 +234,7 @@
 						LineName: LineName,
 					},
 					success: (res) => {
-						console.log('定制巴士班次数据',res)
+						// console.log('定制巴士班次数据',res)
 						uni.hideLoading();
 						//非空判断
 						if (res.data.Successed == true) {

@@ -150,8 +150,9 @@
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
 						success: res => {
-							// console.log(res.longitude+','+res.latitude)
+							console.log(res.longitude+','+res.latitude)
 							if(that.isClick == '有桩'){
+								
 								//当地图移动的时候，改变坐标显示周围的车辆位置信息
 								that.GetStationByRange(res.longitude,res.latitude)
 							}else if(that.isClick == '无桩'){
@@ -177,14 +178,14 @@
 					data:{
 						Longitude:longitude,//经度
 						Latitude:latitude,//纬度
-						Range:1000,//范围（米）
+						Range:500,//范围（米）
 					}, 
 					success(res) {
 						uni.hideLoading()
-						//请求数据成功之后先清空之前的数据
-						that.markers = [];
 						// console.log('有桩数据',res)
 						if(res.data.status == true){
+							//请求数据成功之后先清空之前的数据
+							that.markers = [];
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let markerIconPath = '';
 								if(res.data.data[i].status == 7){//正常
@@ -252,10 +253,11 @@
 					},
 					success(res) {
 						uni.hideLoading()
-						//请求数据成功之后先清空之前的数据
-						that.markers = [];
-						// console.log('有桩数据',res)
+						
+						console.log('无桩数据',res)
 						if(res.data.status == true){
+							//请求数据成功之后先清空之前的数据
+							that.markers = [];
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let display = '';
 								if(res.data.data[i].status == 7){//正常
