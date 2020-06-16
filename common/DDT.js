@@ -89,6 +89,12 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	WirteRechargeLog:{
+		Url:Url + '/api/Purse/WirteRechargeLog',
+		name:'钱包充值记录',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 }
 
 	// 接口声明区
