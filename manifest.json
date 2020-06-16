@@ -55,7 +55,15 @@
                 ]
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+				 "capabilities": {  
+				        "entitlements": {  
+				            "com.apple.developer.associated-domains": [  
+				                "applinks:zntc.145u.net"  
+				            ]  
+				        }  
+				    }
+			},
             /* SDK配置 */
             "sdkConfigs" : {
                 "maps" : {

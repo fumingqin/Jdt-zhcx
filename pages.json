@@ -170,7 +170,11 @@
 		//------------首页----------------------
 		{
 			"path": "pages/Home/zy_zhcx",
-			"style": {}
+			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom"
+				// #endif
+			}
 		}
 	],
 
