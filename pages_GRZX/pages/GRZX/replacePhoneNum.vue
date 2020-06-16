@@ -11,8 +11,8 @@
 		<view class="itemClass">
 			<view class="codeClass3" @click="getCodeClick">{{textCode}}</view>
 		</view>
-		<view class="btnClass" @click="submitClick">更换手机号</view>
-		<view class="cancellationClass" @click="cancellationClick">手机号已注销，请点击此处</view>
+		<view class="btnClass" @click="submitClick">验&nbsp;证</view>
+		<!-- <view class="cancellationClass" @click="cancellationClick">无法收到验证码，请点击此处</view> -->
 	</view>
 </template>
 
@@ -55,20 +55,61 @@
 			},
 			//--------------------提交-------------------
 			submitClick:function(){
-				
+				var that=this;
+				console.log(that.code)
+				if(that.code!=null&&that.code!=""){
+					uni.getStorage({
+						key:'Code',
+						success(res) {
+							console.log(res.data)
+							if(res.data==that.code){
+								that.code="";
+								uni.showToast({
+									title:'验证成功',
+									icon:'success'
+								})
+								setTimeout(function(){
+									uni.navigateTo({
+										url:that.$GrzxInter.Route.newPhone.url,
+									})
+								},300);
+							}else{
+								uni.showToast({
+									title:'输入的验证码错误',
+									icon:'none',
+								})
+							}
+						},
+						fail(err) {
+							uni.showToast({
+								title:'请先获取验证码',
+								icon:'none',
+							})
+						}
+					})
+				}else if(that.code==""){
+					uni.showToast({
+						title:'请输入验证码',
+						icon:'none',
+					})
+				}else{
+					uni.showToast({
+						title:'请输入正确的验证码',
+						icon:'none',
+					})
+				}
 			},
 			//--------------------获取验证码-------------------
 			getCodeClick:function(){
 				var that=this;
-				const {phoneNumber, captchaCode} = this;		
 				var timer=null,second=59; //倒计时的时间
-				if(that.textCode == "获取验证码"){
+				if(that.textCode == "点击获取验证码"){
 					that.textCode = second+"秒后重发";
 					if(that.textCode == "59秒后重发"){
 						timer=setInterval(function(){
 						second--;
 							if(second<=0){	
-								that.textCode = "获取验证码";
+								that.textCode = "点击获取验证码";
 								clearInterval(timer);
 								second=59;	
 							}
@@ -84,26 +125,20 @@
 				uni.request({
 					url:that.$GrzxInter.Interface.getLoginCode.value,
 					data:{
-						phoneNumber:that.phone,
+						phoneNumber:that.userInfo.phoneNumber,
 					},
 					method:that.$GrzxInter.Interface.getLoginCode.method,
 					success:(res)=>{
-						console.log(res,"340");
+						// console.log(res,"340");
 						console.log(res.data.data);
-						uni.setStorage({
-							key:'captchaCode',
-							data:{
-								code:res.data.data,
-								phone:that.phone,
-							}
-						})
+						uni.setStorageSync('Code',res.data.data)
 						uni.showToast({
 							title:"验证码已发送，仅在5分钟内有效!",
 							icon:"none"
 						})
 						setTimeout(function(){
 							uni.removeStorage({
-								key:'captchaCode',
+								key:'Code',
 							})
 						},300000);
 					}
@@ -187,6 +222,6 @@
 		font-size: 30upx;
 		text-align: center;
 		margin-top: 22upx;
-		color: #55aaff;
+		color: #7289A8;
 	}
 </style>
