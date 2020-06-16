@@ -55,7 +55,15 @@
                 ]
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+				 "capabilities": {  
+				        "entitlements": {  
+				            "com.apple.developer.associated-domains": [  
+				                "applinks:zntc.145u.net"  
+				            ]  
+				        }  
+				    }
+			},
             /* SDK配置 */
             "sdkConfigs" : {
                 "maps" : {
@@ -118,9 +126,9 @@
             },
             "splashscreen" : {
                 "android" : {
-                    "hdpi" : "C:/Users/32589/Desktop/启动图480x762.png",
-                    "xhdpi" : "C:/Users/32589/Desktop/启动图720x1242.png",
-                    "xxhdpi" : "C:/Users/32589/Desktop/启动图1080x1882.png"
+                    "hdpi" : "",
+                    "xhdpi" : "",
+                    "xxhdpi" : ""
                 }
             }
         },
@@ -134,7 +142,7 @@
         "setting" : {
             "es6" : false,
             "postcss" : false,
-            "minified" : false,
+            "minified" : true,
             "urlCheck" : false
         },
         "usingComponents" : true,

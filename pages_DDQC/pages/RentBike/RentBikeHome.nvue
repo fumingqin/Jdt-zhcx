@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
-		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange' @markertap="aa">
+		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls" @regionchange='mapChange'>
 		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
 		
@@ -113,9 +113,6 @@
 			that.mapContext = uni.createMapContext("map", this);
 		},
 		methods: {
-			aa:function(e){
-				console.log(e);
-			},
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;

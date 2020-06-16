@@ -117,13 +117,13 @@
 				"navigationStyle": "custom"
 			}
 		},
-{
+		{
 			"path": "pages/order/DownWindCarDetail",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
-//----------------------------投诉页面----------------------------
+		//----------------------------投诉页面----------------------------
 		{
 			"path": "pages/order/complaint",
 			"style": {
@@ -170,9 +170,13 @@
 		//------------首页----------------------
 		{
 			"path": "pages/Home/zy_zhcx",
-			"style": {}
+			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom"
+				// #endif
+			}
 		}
-    ],
+	],
 
 	"subPackages": [
 		//---------------------------------------------第一个包：传统客运------------------------------------------
@@ -191,22 +195,22 @@
 					"style": {}
 				},
 				{
-				    "path" : "pages/CTKY/SpecialBus/ScheduleLineList/specialBusLineList",
-				    "style" : {
+					"path": "pages/CTKY/SpecialBus/ScheduleLineList/specialBusLineList",
+					"style": {
 						"navigationBarTitleText": "班次列表"
 					}
 				},
 				{
-				    "path" : "pages/CTKY/SpecialBus/ScheduleLineList/specialBusTakeOrder",
-				    "style" : {}
+					"path": "pages/CTKY/SpecialBus/ScheduleLineList/specialBusTakeOrder",
+					"style": {}
 				},
 				{
-				    "path" : "pages/CTKY/SpecialBus/stationPicker/specialBusStationPicker",
-				    "style" : {}
+					"path": "pages/CTKY/SpecialBus/stationPicker/specialBusStationPicker",
+					"style": {}
 				},
 				{
-				    "path" : "pages/CTKY/SpecialBus/specialBusOrderPayment/specialBusOrderPayment",
-				    "style" : {}
+					"path": "pages/CTKY/SpecialBus/specialBusOrderPayment/specialBusOrderPayment",
+					"style": {}
 				},
 				//----------------------------------传统班车/定制班车-----------------------------------
 				{
@@ -301,7 +305,7 @@
 
 					}
 				}
-            ]
+			]
 		},
 		//---------------------------------------------第二个包：网络约车------------------------------------------
 		{
@@ -359,35 +363,33 @@
 					}
 				}
 
-			    ,{
-                    "path" : "pages/CZC/TaxiPayment",
-                    "style" : {
+				, {
+					"path": "pages/CZC/TaxiPayment",
+					"style": {
 						"navigationStyle": "custom"
 					}
-                }
-                ,{
-                    "path" : "pages/CZC/DownwindCar",
-                    "style" : {
+				}, {
+					"path": "pages/CZC/DownwindCar",
+					"style": {
 						"navigationStyle": "custom"
 					}
-                }
-                ,{
-                    "path" : "pages/CZC/DownWindCarOrder",
-                    "style" : {
+				}, {
+					"path": "pages/CZC/DownWindCarOrder",
+					"style": {
 						"navigationStyle": "custom"
 					}
-                }
-                ,{
-                    "path" : "pages/CZC/DownWindCarPay",
-                    "style" : {
+				}, {
+					"path": "pages/CZC/DownWindCarPay",
+					"style": {
 						"navigationStyle": "custom"
 					}
-                }
-                ,{
-                    "path" : "pages/CZC/TripShare",
-                    "style" : {"navigationStyle": "custom"}
-                }
-            ]
+				}, {
+					"path": "pages/CZC/TripShare",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}
+			]
 		},
 		//---------------------------------------------第三个包：公交查询------------------------------------------
 		{
@@ -460,7 +462,7 @@
 					"path": "pages/BCFW/charteredBusPayment",
 					"style": {}
 				}
-            ]
+			]
 		},
 		//---------------------------------------------第五个包：旅游服务------------------------------------------
 		{
@@ -627,11 +629,11 @@
 						}
 					}
 				},
-				
+
 				//----------------------------------旅游产品页面----------------------------------
 				{
 					"path": "pages/LYFW/tourismProducts/tp_ticketsList",
-				
+
 					"style": {
 						"navigationBarTitleText": "产品列表",
 						"enablePullDownRefresh": true,
@@ -656,7 +658,7 @@
 						}
 					}
 				},
-				
+
 				{
 					"path": "pages/LYFW/tourismProducts/tp_selectivePayment",
 					"style": {
@@ -710,12 +712,12 @@
 							}
 						}
 					}
-				},{
-					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle",
-					"style" : {}
-				},{
-					"path" : "pages/LYFW/tourismProducts/tp_chooseShuttle2",
-					"style" : {}
+				}, {
+					"path": "pages/LYFW/tourismProducts/tp_chooseShuttle",
+					"style": {}
+				}, {
+					"path": "pages/LYFW/tourismProducts/tp_chooseShuttle2",
+					"style": {}
 				}
 			]
 		},
@@ -812,44 +814,39 @@
 					}
 				},
 				{
-				    "path" : "pages/GRZX/printDetails",
-				    "style" : {
+					"path": "pages/GRZX/printDetails",
+					"style": {
 						"navigationBarTitleText": "提交详情"
 					}
 				},
 				{
-				    "path" : "pages/GRZX/printSubmit",
-				    "style" : {
+					"path": "pages/GRZX/printSubmit",
+					"style": {
 						"navigationBarTitleText": "图片提交"
 					}
-				}
-				,{
-				    "path" : "pages/GRZX/printRoute",
-				    "style" : {
+				}, {
+					"path": "pages/GRZX/printRoute",
+					"style": {
 						"navigationBarTitleText": "线路选择"
 					}
-				}
-				,{
-				    "path" : "pages/GRZX/printSite",
-				    "style" : {
+				}, {
+					"path": "pages/GRZX/printSite",
+					"style": {
 						"navigationBarTitleText": "站点选择"
 					}
 				},
 				{
-				    "path" : "pages/GRZX/gz_complaintList",
-				    "style" : {}
-				}
-				,{
-				    "path" : "pages/GRZX/gz_complaintContent",
-				    "style" : {}
-				}
-				,{	
-				    "path" : "pages/GRZX/gz_complaintsPage",
-				    "style" : {}
-				}
-				,{
-				    "path" : "pages/GRZX/gz_complaintText",
-				    "style" : {}
+					"path": "pages/GRZX/gz_complaintList",
+					"style": {}
+				}, {
+					"path": "pages/GRZX/gz_complaintContent",
+					"style": {}
+				}, {
+					"path": "pages/GRZX/gz_complaintsPage",
+					"style": {}
+				}, {
+					"path": "pages/GRZX/gz_complaintText",
+					"style": {}
 				},
 				{
 					"path": "pages/GRZX/realName", //实名认证
@@ -896,35 +893,35 @@
 					"style": {}
 				},
 				{
-				    "path" : "pages/GRZY/zy_expenseDetails",
-				    "style" : {}
+					"path": "pages/GRZY/zy_expenseDetails",
+					"style": {}
 				},
 				{
-				    "path" : "pages/GRZY/combo",
-				    "style" : {
+					"path": "pages/GRZY/combo",
+					"style": {
 						"navigationBarTitleText": "套餐"
 					}
 				},
 				{
-				    "path" : "pages/GRZY/topUp",
-				    "style" : {
+					"path": "pages/GRZY/topUp",
+					"style": {
 						"navigationBarTitleText": "充值"
 					}
 				},
 				{
-				    "path" : "pages/GRZY/wallet",
-				    "style" : {
+					"path": "pages/GRZY/wallet",
+					"style": {
 						"navigationBarTitleText": "钱包"
 					}
 				},
 				{
-				    "path" : "pages/GRZY/zy_details",
-				    "style" : {}
+					"path": "pages/GRZY/zy_details",
+					"style": {}
 				},
-                {
-                    "path" : "pages/RentBike/RentBikeHome",
-                    "style" : {
-						"navigationStyle":"custom"
+				{
+					"path": "pages/RentBike/RentBikeHome",
+					"style": {
+						"navigationStyle": "custom"
 						// "app-plus":{
 						// 	"titleNView":{
 						// 		"buttons":[
@@ -940,30 +937,40 @@
 						// 	}
 						// }
 					}
-                }
-                ,{
-                    "path" : "pages/RentBike/unLockView",
-                    "style" : {
+				}, {
+					"path": "pages/RentBike/unLockView",
+					"style": {
 						"navigationBarTitleText": "开锁中"
 					}
-                },
-				{
-                    "path" : "pages/RentBike/Riding",
-                    "style" : {}
-                },
-				{
-				    "path" : "pages/GRZY/zy_information",
-				    "style" : {}
 				},
 				{
-				    "path" : "pages/GRZY/zy_faultReport",
-				    "style" : {}
+					"path": "pages/RentBike/Riding",
+					"style": {}
 				},
 				{
-				    "path" : "pages/GRZY/zy_newsScreening",
-				    "style" : {}
+					"path": "pages/GRZY/zy_information",
+					"style": {}
+				},
+				{
+					"path": "pages/GRZY/zy_faultReport",
+					"style": {}
+				},
+				{
+					"path": "pages/GRZY/zy_newsScreening",
+					"style": {}
+				}, {
+					"path": "pages/RentBike/Payment",
+					"style": {
+						"navigationBarTitleText": "支付",
+						"app-plus": {
+							"titleNView": {
+								"autoBackButton":"false",
+								"homeButton":true
+							}
+						}
+					}
 				}
-            ]
+			]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{
@@ -982,10 +989,10 @@
 			"pages": [
 				//----------------------------------新区专线--------------------------------------------
 				{
-                    "path" : "pages/XQZX/districtLine",
-                    "style" : {}
-                }
-            ]
+					"path": "pages/XQZX/districtLine",
+					"style": {}
+				}
+			]
 		},
 		//---------------------------------------------第十个包：村村通------------------------------------------
 		{
@@ -993,10 +1000,10 @@
 			"pages": [
 				//----------------------------------村村通--------------------------------------------
 				{
-                    "path" : "pages/CCT/villageBus",
-                    "style" : {}
-                }
-            ]
+					"path": "pages/CCT/villageBus",
+					"style": {}
+				}
+			]
 		}
 	],
 
