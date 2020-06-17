@@ -137,7 +137,31 @@ const Interface={
 		name:'达达通注册自行车用户',
 		method:'POST',//GET-POST
 		pages:[]
-	}
+	},
+	GetUserByUserID:{
+		value: ddtUrl + '/api/SmartBikePerson/GetUserByUserID',
+		name:'通过用户Id获取用户是否实名',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	UpdateRealNamePhoto:{
+		value: ddtUrl + '/api/SmartBikePerson/UpdateRealNamePhoto',
+		name:'自行车用户上传实名认证照片',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	UserVerified:{
+		value: ddtUrl + '/api/SmartBikePerson/UserVerified',
+		name:'自行车用户实名认证',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	GetEnrollment:{
+		value: ddtUrl + '/api/Purse/GetEnrollment',
+		name:'钱包注册新用户',
+		method:'POST',//GET-POST
+		pages:[]
+	},
 	//-----------------------达达通end------------------------
 }
 
@@ -225,6 +249,10 @@ const Route={
 	realName:{
 		url:SubPackage+'/realName',
 		name:'实名认证',
+	},
+	uploadPhoto:{
+		url:SubPackage+'/uploadPhoto',
+		name:'上传照片',
 	},
 	replacePhoneNum:{
 		url:SubPackage+'/replacePhoneNum',
