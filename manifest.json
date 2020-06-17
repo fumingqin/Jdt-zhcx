@@ -19,9 +19,9 @@
         "modules" : {
             "Maps" : {},
             "OAuth" : {},
-            "Share" : {},
             "Push" : {},
-            "Payment" : {}
+            "Payment" : {},
+            "Share" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -76,7 +76,7 @@
                 "payment" : {
                     "weixin" : {
                         "appid" : "wx4394e02214803063",
-                        "UniversalLinks" : ""
+                        "UniversalLinks" : "https://zntc.145u.net/ulink/"
                     }
                 },
                 "push" : {},
@@ -88,7 +88,7 @@
                 "share" : {
                     "weixin" : {
                         "appid" : "wx4394e02214803063",
-                        "UniversalLinks" : ""
+                        "UniversalLinks" : "https://zntc.145u.net/ulink/"
                     }
                 }
             },
