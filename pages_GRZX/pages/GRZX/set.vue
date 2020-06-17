@@ -94,6 +94,7 @@
 							success: (e)=>{
 								if(e.confirm){
 									uni.removeStorageSync('userInfo');
+									uni.removeStorageSync('RealNameInfo');
 									setTimeout(()=>{
 										uni.switchTab({
 											url:'/pages/GRZX/user'
@@ -128,13 +129,14 @@
 			//清除缓存
 			clearStorage(){
 				var user=uni.getStorageSync('userInfo');
+				var RealNameInfo=uni.getStorageSync('RealNameInfo');
 				uni.showModal({
 				    content: '是否清除数据',
 				    success: (e)=>{
 				    	if(e.confirm){
 							uni.clearStorageSync();
 							uni.setStorageSync('userInfo',user);
-							var user1=uni.getStorageSync('userInfo');
+							uni.setStorageSync('RealNameInfo',RealNameInfo);
 							uni.redirectTo({
 								// url:'/pages/GRZX/set'
 								url:this.$GrzxInter.Route.set.url,

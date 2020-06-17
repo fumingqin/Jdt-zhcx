@@ -236,6 +236,7 @@
 								url:that.$GrzxInter.Route.uploadPhoto.url,
 							})
 						}else{
+							uni.setStorageSync('RealNameInfo',res.data.data)
 							uni.showToast({
 								title:"登录成功!",
 								icon:"none"

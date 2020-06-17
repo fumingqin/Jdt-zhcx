@@ -176,6 +176,7 @@
 					method:that.$GrzxInter.Interface.UserVerified.method,
 					success(res) {
 						console.log(res)
+						uni.setStorageSync('RealNameInfo',res.data.data)
 						that.GetEnrollment(name,codeNum);
 					},
 					fail(){
