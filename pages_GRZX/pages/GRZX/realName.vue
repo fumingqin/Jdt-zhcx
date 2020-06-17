@@ -40,13 +40,7 @@
 			return{			
 				name:'',
 				codeNum:'',
-				validityTerm:'请选择 >',
-				frontImg:'',
-				backImg:'',
-				state1:0,
-				state2:0,
-				front:'',
-				back:'',
+				//validityTerm:'请选择 >',
 				userInfo:[],
 				menuButtonHeight: '',
 				menuButtonTop: '',
@@ -55,9 +49,9 @@
 		onLoad (){
 			this.loadUserInfo();
 			var that=this;
-			let menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-			that.menuButtonHeight = menuButtonInfo.height;
-			that.menuButtonTop = menuButtonInfo.top;
+			// let menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+			// that.menuButtonHeight = menuButtonInfo.height;
+			// that.menuButtonTop = menuButtonInfo.top;
 		},
 		computed:{
 			startDate() {
@@ -86,9 +80,10 @@
 			},
 			//--------------------返回-------------------
 			returnClick:function(){
-				uni.switchTab({
-					url:this.$GrzxInter.Interface.user.url,
-				})
+				// uni.switchTab({
+				// 	url:this.$GrzxInter.Route.user.url,
+				// })
+				uni.navigateBack();
 			},
 			//--------------------校验姓名-------------------
 			nameBlur:function(e){
@@ -142,9 +137,89 @@
 			},
 			//--------------------提交数据-------------------
 			submitClick:function(){
-				console.log(this.name)
-				console.log(this.codeNum)
-				console.log(this.validityTerm)
+				var that=this;
+				if(that.name<2){
+					uni.showToast({
+						title:'输入的姓名不能少于2位',
+						icon:'none'
+					})
+				}else if(that.codeNum==""){
+					uni.showToast({
+						title:'请输入您的身份证号',
+						icon:'none'
+					})
+				}else if(!that.checkIDCard(that.codeNum)){
+					uni.showToast({
+						title:'输入的身份证有误，请检查',
+						icon:'none'
+					})
+				}else{
+					console.log(that.name)
+					console.log(that.codeNum)
+					uni.showLoading({
+						title:'实名中...'
+					})
+					that.bikeUserVerified(that.name,that.codeNum)
+				}
+			},
+			//--------------------自行车用户实名认证-------------------
+			bikeUserVerified:function(name,codeNum){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.UserVerified.value,
+					data:{
+						userID:that.userInfo.userId,//用户id
+						phone:that.userInfo.phoneNumber,//手机号码
+						userIDNumber:codeNum,//身份证号
+						userName:name,//姓名
+					},
+					method:that.$GrzxInter.Interface.UserVerified.method,
+					success(res) {
+						console.log(res)
+						that.GetEnrollment(name,codeNum);
+					},
+					fail(){
+						// that.GetEnrollment(name,codeNum);
+						uni.showToast({
+							title:'实名失败',
+							icon:'none',
+						})
+					}
+				})
+			},
+			//--------------------钱包注册新用户-------------------
+			GetEnrollment:function(name,codeNum){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.GetEnrollment.value,
+					data:{
+						uuid:that.userInfo.userId,//用户id
+						phoneNumber:that.userInfo.phoneNumber,//手机号码
+						userId:codeNum,//身份证号
+						userName:name,//姓名
+					},
+					method:that.$GrzxInter.Interface.GetEnrollment.method,
+					success(res) {
+						console.log(res)
+						if(res.data.data.msg=='Success'){
+							uni.showToast({
+								title:'实名成功,请提交相关照片',
+								icon:'none',
+							})
+							setTimeout(function(){
+								uni.redirectTo({
+									url:that.$GrzxInter.Route.uploadPhoto.url,
+								})
+							},500);
+						}
+					},
+					fail(){
+						uni.showToast({
+							title:'实名失败',
+							icon:'none',
+						})
+					}
+				})
 			},
 			//--------------------有效期-------------------
 			dateChange : function(e){
