@@ -1,17 +1,14 @@
 <template>
 	<view class="content">
 		<view class="itemClass bt">
-			<view class="phoneClass1">新的手机号码</view>
-			<input type="number" placeholder="输入新的手机号" maxlength="11" class="phoneClass2" v-model="phone" />
+			<view class="phoneClass1">姓名</view>
+			<input placeholder="与证件姓名一致" class="phoneClass2" v-model="name" @blur="nameBlur"/>
 		</view>
 		<view class="itemClass">
-			<view class="codeClass1">验证码</view>
-			<input type="number" placeholder="输入验证码" maxlength="4" class="codeClass2" v-model="code" />
+			<view class="codeClass1">身份证号</view>
+			<input type="idcard" placeholder="请保持与证件号码一致" maxlength="18" class="codeClass2" v-model="idCode" @blur="codeBlur"/>
 		</view>
-		<view class="itemClass">
-			<view class="codeClass3">{{textCode}}</view>
-		</view>
-		<view class="btnClass">确定</view>
+		<view class="btnClass" @click="submitClick">验&nbsp;证</view>
 	</view>
 </template>
 
@@ -20,10 +17,8 @@
 		data(){	
 			return{			
 				userInfo:[],
-				phone:'',
-				code:'',
-				textCode:"点击获取验证码",
-				type:1,
+				name:'',
+				idCode:'',
 			}	
 		},
 		onLoad (){
@@ -47,7 +42,83 @@
 					}
 				})
 			},
-			
+			//--------------------校验姓名-------------------
+			nameBlur:function(e){
+				if(e.detail.value==""){
+					console.log("空的")
+				}else if(e.detail.value.length>=2){
+					console.log("正确")
+				}else{
+					uni.showToast({
+						title:'输入的姓名不能少于2位',
+						icon:'none'
+					})
+				}
+			},
+			//--------------------校验身份证号-------------------
+			codeBlur:function(e){
+				if(e.detail.value==""){
+					console.log("空的")
+				}else if(this.checkIDCard(e.detail.value)){
+					console.log("正确")
+				}else{
+					uni.showToast({
+						title:'输入的身份证有误，请检查',
+						icon:'none'
+					})
+				}
+			},
+			checkIDCard:function(idcode){
+			    // 加权因子
+			    var weight_factor = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
+			    // 校验码
+			    var check_code = ['1', '0', 'X' , '9', '8', '7', '6', '5', '4', '3', '2'];
+			    var code = idcode + "";
+			    var last = idcode[17];//最后一位
+			    var seventeen = code.substring(0,17);
+			    // 判断最后一位校验码是否正确
+			    var arr = seventeen.split("");
+			    var len = arr.length;
+			    var num = 0;
+			    for(var i = 0; i < len; i++){
+			        num = num + arr[i] * weight_factor[i];
+			    }
+			    // 获取余数
+			    var resisue = num%11;
+			    var last_no = check_code[resisue];
+				var idcard_patter = /^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/;
+				// 判断格式是否正确
+				var format = idcard_patter.test(idcode);
+				// 返回验证结果，校验码和格式同时正确才算是合法的身份证号码
+				return last === last_no && format ? true : false;
+			},
+			//--------------------提交-------------------
+			submitClick:function(){
+				var that=this;
+				if(that.name.length==0){
+					uni.showToast({
+						title:'请输入您的姓名',
+						icon:'none'
+					})
+				}else if(that.name.length<2){
+					uni.showToast({
+						title:'输入的姓名不能少于2位',
+						icon:'none'
+					})
+				}else if(that.idCode.length==0){
+					uni.showToast({
+						title:'请输入您的身份证号码',
+						icon:'none'
+					})
+				}else if(!that.checkIDCard(that.idCode)){
+					uni.showToast({
+						title:'输入的身份证有误，请检查',
+						icon:'none'
+					})
+				}else{
+					//验证成功
+				}
+			},
 		}	
 	}
 </script>
@@ -85,7 +156,8 @@
 		color: #333333;
 		position: absolute;
 		right: 5%;
-		line-height: 100upx;
+		top:25upx;
+		text-align: right;
 	}
 	.codeClass1{
 		font-size: 32upx;

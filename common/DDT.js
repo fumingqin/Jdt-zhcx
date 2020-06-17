@@ -95,6 +95,12 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	GetOrderByUserID:{
+		Url:Url + '/api/SmartBike/GetOrderByUserID',
+		name:'查询自行车订单',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 }
 
 	// 接口声明区
