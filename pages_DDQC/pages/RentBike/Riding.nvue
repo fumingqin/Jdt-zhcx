@@ -103,15 +103,14 @@
 			// that.getMyLocation();
 			// that.countTime();
 			//将上一个页面传过来的参数转为数组
-			that.getOrderInfo();
-			// if (item.responseArr) {
-			// 	that.rentInfo = JSON.parse();
-			// 	if (that.rentInfo.bikeType == "有桩") {
-			// 		that.CheckOrderStatus();
-			// 	}else{
-			// 		that.getOrderInfo();
-			// 	}
-			// }
+			if (item.responseArr) {
+				that.rentInfo = JSON.parse();
+				if (that.rentInfo.bikeType == "有桩") {
+					that.getOrderInfo();
+				} else {
+					that.getOrderInfo();
+				}
+			}
 		},
 		created() {
 			uni.setNavigationBarTitle({
@@ -151,7 +150,7 @@
 				if (date > 60) {
 					that.minute = parseInt(date / 60)
 					that.seconds = date % 60;
-					that.seconds=that.seconds<10?'0'+that.seconds:that.seconds;
+					that.seconds = that.seconds < 10 ? '0' + that.seconds : that.seconds;
 					that.countTime();
 				} else {
 					that.seconds = date;
@@ -177,7 +176,12 @@
 								if (res.data.bizStatus == '还车成功') {
 									uni.showToast({
 										title: '还车成功',
-										icon: 'none'
+										icon: 'none',
+										success() {
+											uni.redirectTo({
+												url:'./Payment'
+											})
+										}
 									})
 								}
 							} else {
@@ -290,6 +294,9 @@
 					success(res) {
 						console.log(res)
 						that.orderId = res.data.data[0].OrderId;
+						if (res.data.data[0].RestoreAction.Time != '' && that.rentInfo.bikeType == "有桩") {
+							that.CheckOrderStatus();
+						}
 						that.timeConcer(res.data.data[0].HireAction.Time);
 					},
 					fail(err) {
