@@ -118,9 +118,9 @@
             },
             "splashscreen" : {
                 "android" : {
-                    "hdpi" : "C:/Users/32589/Desktop/启动图480x762.png",
-                    "xhdpi" : "C:/Users/32589/Desktop/启动图720x1242.png",
-                    "xxhdpi" : "C:/Users/32589/Desktop/启动图1080x1882.png"
+                    "hdpi" : "",
+                    "xhdpi" : "",
+                    "xxhdpi" : ""
                 }
             }
         },
