@@ -16,6 +16,7 @@
 			<!-- 按钮颜色和发送验证码的样式 -->
 			<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
 			<text class="fontStyle" @click="loginClick">确定</text>
+			<!-- <text class="fontStyle" @click="checkRealName('1000067')">确定</text> -->
 		</view>
 		
 		<!-- logo -->
@@ -155,23 +156,20 @@
 											uni.removeStorageSync('captchaCode');
 											uni.setStorageSync('userInfo',res.data.data);
 											uni.hideLoading();
-											uni.showToast({
-												title:"登录成功!",
-												icon:"none"
-											})
+											
 											that.registerBike(res.data.data.userId,res.data.data.phoneNumber)  //注册自行车用户
-											if(that.urlData==1){
-												uni.switchTab({  //返回首页
-													url:'/pages/Home/Index',
-												}) 
-											}else if(that.urlData==2){
-												uni.switchTab({  //返回订单页
-													url:'/pages/order/OrderList',
-												}) 
-											}else{
-												console.log("返回上一页")
-												uni.navigateBack();//返回上一页
-											}
+											// if(that.urlData==1){
+											// 	uni.switchTab({  //返回首页
+											// 		url:'/pages/Home/Index',
+											// 	}) 
+											// }else if(that.urlData==2){
+											// 	uni.switchTab({  //返回订单页
+											// 		url:'/pages/order/OrderList',
+											// 	}) 
+											// }else{
+											// 	console.log("返回上一页")
+											// 	uni.navigateBack();//返回上一页
+											// }
 										}
 									})
 									
@@ -194,6 +192,7 @@
 			},
 			//-------------------------------------用户注册自行车----------------------------------
 			registerBike(id,phone){
+				var that=this;
 				uni.request({
 					url:that.$GrzxInter.Interface.RegistUser.value,
 					method:that.$GrzxInter.Interface.RegistUser.method,
@@ -202,7 +201,58 @@
 						phone:phone,
 					},
 					success(res) {
+						// console.log(res)
+						that.checkRealName(res.data.data.UserID);
+					},
+					fail() {
+						
+					}
+				})
+			},
+			//-------------------------------------检查是否实名----------------------------------
+			checkRealName(id){
+				// uni.showLoading({
+				// 	title:'登录中...'
+				// })
+				console.log(id,'checkRealName')
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.GetUserByUserID.value,
+					data:{
+						userID:id,
+					},
+					method:that.$GrzxInter.Interface.GetUserByUserID.method,
+					success(res) {
 						console.log(res)
+						uni.hideLoading();
+						if(res.data.data==""||res.data.data.UserName==""||res.data.data.UserIDNumber==""){
+							//实名认证
+							uni.redirectTo({
+								url:that.$GrzxInter.Route.realName.url,
+							})
+						}else if(res.data.data.RealNameStatus!==1){
+							//上传图片
+							uni.redirectTo({
+								url:that.$GrzxInter.Route.uploadPhoto.url,
+							})
+						}else{
+							uni.showToast({
+								title:"登录成功!",
+								icon:"none"
+							})
+							if(that.urlData==1){
+								uni.switchTab({  //返回首页
+									url:'/pages/Home/Index',
+								}) 
+							}else if(that.urlData==2){
+								uni.switchTab({  //返回订单页
+									url:'/pages/order/OrderList',
+								}) 
+							}else{
+								console.log("返回上一页")
+								uni.navigateBack();//返回上一页
+							}
+						}
 					}
 				})
 			},
