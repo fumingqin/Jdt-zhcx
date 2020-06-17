@@ -157,6 +157,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetBusCodeGen: {
+		Url: Url + '/api/Purse/GetBusCodeGen',
+		name: '公交二维码',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 
 // 接口声明区
