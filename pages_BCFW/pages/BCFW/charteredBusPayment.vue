@@ -137,7 +137,7 @@
 				countDownDate: 300, //倒计时时间
 				returnIndex: false, //页面点击上一页
 				hiddenValues: '0', //隐藏状态值
-				state: '2',
+				state:'0',
 				channel: [{
 					name: '微信'
 				}, {
@@ -193,6 +193,8 @@
 			console.log(options)
 			this.or_number = JSON.parse(decodeURIComponent(options.or_number));
 			this.state = options.state;
+			console.log(this.state);
+			console.log(options.state);
 			console.log(this.or_number)
 			uni.showLoading({
 				title: '拉起订单中...'

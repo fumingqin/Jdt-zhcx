@@ -10,9 +10,9 @@
 		<view style=" width:670upx;margin-left: 40upx; margin-top:10upx;border: 0.8px solid #E2E2E2;"></view>
 		<view class="tu_view">
 			<view v-for="(item,index) in info" :key="index">
-				<view class="tu_square" :class="{current2: value===index}" @click="affirm(index,item.money)">
-					<view class="tu_money">￥{{fixed(item.money)}}</view>
-					<view class="tu_award">赠送 ￥{{fixed(item.award)}}</view>
+				<view class="tu_square" :class="{current2: value===index}" @click="affirm(index,item[0])">
+					<view class="tu_money">￥{{fixed(parseInt(item[0]))}}</view>
+					<view class="tu_award">赠送 ￥{{fixed(parseInt(item[1]))}}</view>
 				</view>
 			</view>
 		</view>
@@ -59,13 +59,12 @@
 		data() {
 			return {
 				value: 0,
-				info: {
-					money:'',
-					award:'',
-				},
+				info:[],
+				paymaxid:'',
+				order_no:'',
 				checked:0,
 				security:'',
-				cost: 10,
+				cost: 0,
 				balance: 0,
 				userInfo:[],//用户信息
 				paymentData:[],//支付参数
@@ -77,6 +76,7 @@
 		onShow() {
 			var that = this;
 			that.getUserInfo();
+			that.getmoney();
 		},
 		methods: {
 			//--------------------------读取用户信息--------------------------
@@ -88,7 +88,6 @@
 					success: function(data) {
 						console.log('用户数据',data)
 						that.userInfo = data.data;
-						
 					},
 					fail(data) {
 					}
@@ -123,13 +122,15 @@
 							userID:that.userInfo.userId,
 							// timeExpire:timestemp,//过期时间(时间戳)
 							chargeType:1,//0:充值押金 1充值钱包
-							totalPrice:0.1,//金额
+							totalPrice:1,//金额
 						},
 						success(res) {
 							uni.hideLoading();
 							console.log('钱包充值返回支付参数成功结果',res)
-							if(res.status == true){
+							if(res.data.status == true){
 								that.paymentData = res.data.data.credential;
+								that.paymaxid=res.data.data.id;
+								that.order_no=res.data.data.order_no;
 								that.payment();
 							}
 						},
@@ -160,12 +161,52 @@
 						if (res.errMsg == 'requestPayment:ok') { //成功
 							uni.showToast({
 								title: '支付成功',
+							}),
+							uni.request({
+								url:$DDTInterface.DDTInterface.WirteRechargeLog.Url,
+								method:$DDTInterface.DDTInterface.WirteRechargeLog.method,
+								data:{
+									channel:'wechat_app',//微信
+									title:'钱包充值',
+									body:'钱包充值',
+									phoneNumber:that.userInfo.phoneNumber,
+									userID:that.userInfo.userId,
+									// timeExpire:timestemp,//过期时间(时间戳)
+									chargeType:1,//0:充值押金 1充值钱包
+									totalPrice:0.1,//金额
+									state:1,
+									id:that.paymaxid,
+									order_no:that.order_no,
+								},
+								success(res) {
+									console.log(res);
+								}
 							})
-							that.getTicketPaymentInfo_ticketIssue(that.orderNum);
+							that.getmoney();
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
+							}),
+							uni.request({
+								url:$DDTInterface.DDTInterface.WirteRechargeLog.Url,
+								method:$DDTInterface.DDTInterface.WirteRechargeLog.method,
+								data:{
+									channel:'wechat_app',//微信
+									title:'钱包充值',
+									body:'钱包充值',
+									phoneNumber:that.userInfo.phoneNumber,
+									userID:that.userInfo.userId,
+									// timeExpire:timestemp,//过期时间(时间戳)
+									chargeType:1,//0:充值押金 1充值钱包
+									totalPrice:0.1,//金额
+									state:1,
+									id:that.paymaxid,
+									order_no:that.order_no,
+								},
+								success(res) {
+									console.log(res);
+								}
 							})
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
@@ -176,8 +217,9 @@
 					},
 				
 					fail: function(ee) {
+						console.log(ee)
 						uni.showToast({
-							title: '拉起支付失败，请检查网络后重试',
+							title: '您取消了支付',
 							icon: 'none',
 							duration: 3000
 						})
@@ -214,6 +256,39 @@
 					this.checked = 0;
 				}
 			},
+			//-----------------查看充值套餐及用户余额-------------------------
+			getmoney: function() {
+				var that = this;
+				uni.getStorage({
+					key:'userInfo',
+					success: (res) => {
+						uni.request({
+							url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
+							method: $DDTInterface.DDTInterface.GetPurseDetail.method,
+							data: {
+								phoneNumber:that.userInfo.phoneNumber,
+								userID:that.userInfo.userId,
+							},
+							success: (res) => {
+								console.log(res)
+								if (res.data.msg == '请求成功') {
+									that.info=[];
+									let array=res.data.data.chargeRate.split(';');
+									for(var i=0;i<array.length;i++){			
+										that.info.push(array[i].split('&'));
+									}	
+									that.cost=that.info[0][0];
+									that.balance = res.data.data.balance/100;
+								}
+							},
+							fail(res) {
+								console.log(res)
+							}
+						})
+					}
+				})
+					
+			},
 			
 			fixed(e){
 				if(e>=0){
@@ -227,9 +302,8 @@
 			},
 			async getlist() {
 				let array = await this.$api.zyxinfo('topupInfo');
-				this.info = array.data;
+				console.log(array)
 				this.security=array.security;
-				console.log(this.info)
 			},
 
 			//打开弹窗

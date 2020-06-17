@@ -749,7 +749,7 @@
 										uni.hideLoading()
 										if (res.data.status) {
 											uni.redirectTo({
-												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)
+												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)+'&&state=0'
 											})
 										}
 									},
@@ -793,7 +793,7 @@
 										uni.hideLoading()
 										if (res.data.msg=='订单下单成功') {
 											uni.redirectTo({
-												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)
+												url: 'charteredBusPayment?or_number=' +JSON.stringify(res.data.data.OrderNumber)+'&&state=0'
 											})
 										}else if(res.data.status==false){
 											uni.showToast({

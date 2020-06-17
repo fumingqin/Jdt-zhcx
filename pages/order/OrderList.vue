@@ -4498,7 +4498,7 @@
 			//-------------------------包车-去支付-------------------------
 			topay2: function(e) {
 				uni.navigateTo({
-					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?or_number=' + JSON.stringify(e)
+					url: '../../pages_BCFW/pages/BCFW/charteredBusPayment?or_number=' + JSON.stringify(e)+'&&state=1'
 				})
 			},
 			//-------------------------包车-去支付-------------------------
