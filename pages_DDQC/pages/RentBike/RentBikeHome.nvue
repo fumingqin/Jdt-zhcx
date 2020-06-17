@@ -70,6 +70,7 @@
 		},
 		onLoad() {
 			var that = this;
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 			//获取系统信息
 			uni.getSystemInfo({
 				success: function(res) {
@@ -375,8 +376,6 @@
 					data:{
 						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
 						loginname:that.userInfo.phoneNumber,//手机号
-						// loginname:15394416322,//手机号13906963039
-						
 					},
 					success(response) {
 						uni.hideLoading()
@@ -511,7 +510,7 @@
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
 					data:{
-						phone:that.userInfo.phoneNumber,
+						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
 					},

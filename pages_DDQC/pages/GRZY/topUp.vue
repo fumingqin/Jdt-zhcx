@@ -7,6 +7,7 @@
 			<view class="tu_symbol">￥{{cost}}</view>
 			<view class="tu_balance">当前余额￥{{fixed(balance)}}</view>
 		</view>
+		
 		<view style=" width:670upx;margin-left: 40upx; margin-top:10upx;border: 0.8px solid #E2E2E2;"></view>
 		<view class="tu_view">
 			<view v-for="(item,index) in info" :key="index">
@@ -95,6 +96,8 @@
 			//--------------------------钱包充值--------------------------
 			GetPurseDetail: function() {
 				var that = this;
+				console.log(that.userInfo.phoneNumber)
+				console.log(that.userInfo.userId)
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
 					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
@@ -103,6 +106,7 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
+						uni.hideLoading()
 						console.log('获取钱包数据成功', res)
 						if (res.status == true && res.msg == '请求成功') {
 							that.balance = res.data.data.balance;
@@ -110,6 +114,7 @@
 						}
 					},
 					fail(res) {
+						uni.hideLoading()
 						console.log('获取钱包数据失败', res)
 					}
 				})
@@ -138,8 +143,8 @@
 							channel: 'wechat_app', //微信
 							title: '钱包充值',
 							body: '钱包充值',
-							phoneNumber: '13235912326',
-							userID: '1000075',
+							phoneNumber: that.userInfo.phoneNumber,
+							userID: that.userInfo.userId,
 							// timeExpire:timestemp,//过期时间(时间戳)
 							chargeType: 1, //0:充值押金 1充值钱包
 							totalPrice: 1, //金额
@@ -181,13 +186,13 @@
 								title: '支付成功',
 							})
 							
-							that.WirteRechargeLog(0);
+							that.WirteRechargeLog(1);
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
-							that.WirteRechargeLog(1);
+							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
@@ -214,7 +219,7 @@
 					url: $DDTInterface.DDTInterface.GetTransaction.Url,
 					method: $DDTInterface.DDTInterface.GetTransaction.method,
 					data: {
-
+						
 					},
 					success(res) {
 						console.log('钱包消费', res)
@@ -235,7 +240,7 @@
 					url: $DDTInterface.DDTInterface.GetTransaction.Url,
 					method: $DDTInterface.DDTInterface.GetTransaction.method,
 					data: {
-			
+						
 					},
 					success(res) {
 						console.log('钱包消费', res)
@@ -299,6 +304,7 @@
 								userID:that.userInfo.userId,
 							},
 							success: (res) => {
+								uni.hideLoading()
 								console.log(res)
 								if (res.data.msg == '请求成功') {
 									that.info=[];
@@ -311,6 +317,7 @@
 								}
 							},
 							fail(res) {
+								uni.hideLoading()
 								console.log(res)
 							}
 						})

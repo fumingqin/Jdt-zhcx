@@ -26,30 +26,35 @@
 				endTime: '',
 				Time: '',
 				orderId: '',
-				buttonName:'立即支付',
-				payTime:'',
+				buttonName: '立即支付',
+				payTime: '',
+				userInfo: '',
 			}
 		},
 		onLoad() {
-			this.getOrderInfo();
+			this.userInfo = uni.getStorageSync('userInfo') || '';
+			console.log(this.userInfo);
+			this.GetOrderByUserID();
+			// this.getOrderInfo();  
 		},
 		methods: {
-			payNow: function() { //立即支付
+			payNow: function() { //立即支付  
 				if (this.money > 0) {
 					this.walletPayment();
 				} else {
-					this.walletPayment();
-					console.log(this.getNowTiem());
-					console.log(this.payTime);
-					// uni.redirectTo({
-					// 	url: "../GRZY/zy_homepage"
-					// })
+					uni.redirectTo({
+						url: "../GRZY/zy_homepage"
+					})
 				}
 			},
 			//---------------------------------钱包支付---------------------------------
 			//每次调钱包接口都要调一次钱包消费接口
-			walletPayment: function() { 
+			walletPayment: function() {
 				let that = this;
+				uni.showLoading({
+					title: '支付中',
+					mask: true
+				})
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetTransaction.Url,
 					method: $DDTInterface.DDTInterface.GetTransaction.method,
@@ -57,57 +62,74 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						phoneNumber: 15106066029,
+						phoneNumber: that.userInfo.phoneNumber,
 						orderId: that.orderId,
 						amount: (that.money) * 100,
 						// amount: 10,
 						transTime: that.getNowTiem(), //交易时间
-						transType: 1,//1自行车消费，2公交车消费
+						transType: 1, //1自行车消费，2公交车消费
 						extra: '',
-						userID: 122,
+						userID: that.userInfo.userID,
 					},
 					success(res) {
-						if(res.data.msg==''){
-							// that.consumeRecord(1)
-						}else if(res.data.msg==''){
-							// that.consumeRecord(0)
+						uni.hideLoading();
+						if (res.data.msg == '请求成功 ') {
+							that.consumeRecord(1)
+							uni.showToast({
+								title: '支付成功'
+							})
+							setTimeout(function() {
+								uni.redirectTo({
+									url: '../GRZY/zy_homepage'
+								})
+							}, 1500)
+						} else if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
+							.msg == '钱包余额不足') {
+							that.consumeRecord(0)
+							uni.showToast({
+								title: res.data.msg,
+								icon:'none'
+							})
 						}
-						console.log(res);
 					},
 					fail(res) {
+						uni.hideLoading();
 						that.consumeRecord(0)
-						console.log(res)
+						uni.showToast({
+							title: "网络连接失败",
+							icon:'none'
+						})
 					}
 				})
 			},
 			//---------------------------------消费记录---------------------------------
 			//钱包消费完调用一次该接口
-			consumeRecord:function(State){
+			consumeRecord: function(State) {
 				uni.request({
 					url: $DDTInterface.DDTInterface.WriteTransactionLog.Url,
 					method: $DDTInterface.DDTInterface.WriteTransactionLog.method,
 					header: {
 						'content-type': 'application/json'
 					},
-					data:{
-						phoneNumber: 15106066029,
+					data: {
+						phoneNumber: that.userInfo.phoneNumber,
 						orderId: that.orderId,
 						amount: (that.money) * 100,
-						transTime: that.payTime, //交易时间
-						transType: 1,//1自行车消费，2公交车消费
+						transTime: that.payTime, //交易时间 
+						transType: 1, //1自行车消费，2公交车消费
 						extra: '',
-						userID: 122,//用户ID
-						State:State,
+						userID: that.userInfo.userID,
+						State: State,
 					},
-					success() {
-						
+					success(res) {
+
 					},
-					fail() {
-						
+					fail(err) {
+
 					}
 				})
 			},
-			GetBizStatus: function() { 
+			GetBizStatus: function() {
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetBizStatus.Url,
 					method: $DDTInterface.DDTInterface.GetBizStatus.method,
@@ -115,8 +137,8 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						loginname: 15106066029,
-						userID: 122
+						loginname: that.userInfo.phoneNumber,
+						userID: that.userInfo.userID,
 					},
 					success(res) {
 						console.log(res)
@@ -134,8 +156,52 @@
 				var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
 				var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
 				var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-				this.payTime=year+month+day+hours+minutes+seconds;
-				return year+month+day+hours+minutes+seconds;
+				this.payTime = year + month + day + hours + minutes + seconds;
+				return year + month + day + hours + minutes + seconds;
+			},
+			GetOrderByUserID: function() {
+				var that = this;
+				uni.showLoading({
+					title: '加载中',
+					mask: true
+				})
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetOrderByUserID.Url,
+					method: $DDTInterface.DDTInterface.GetOrderByUserID.method,
+					data: {
+						UserID: that.userInfo.userId,
+					},
+					success(res) {
+						console.log(res);
+						uni.hideLoading();
+						if (res.data.status) {
+							if (res.data.data[0].PayState == 1) {
+								uni.showToast({
+									title: '订单已支付',
+									icon: 'none'
+								})
+								setTimeout(function() {
+									uni.redirectTo({
+										url: '../GRZY/zy_homepage'
+									})
+								}, 1500)
+							} else {
+								that.beginTime = res.data.data[0].HireTime;
+								that.endTime = res.data.data[0].RestoreTime;
+								that.money = (res.data.data[0].Money) / 100;
+								if (that.money == 0) {
+									that.buttonName = '立即完成';
+								}
+								that.orderId = res.data.data[0].OrderId;
+								that.timeConcer(that.beginTime, that.endTime);
+							}
+						}
+					},
+					fail() {
+						uni.hideLoading();
+					}
+
+				})
 			},
 			getOrderInfo: function() { //查询最后一条行程信息
 				var that = this;
@@ -146,18 +212,19 @@
 						'content-type': 'application/json'
 					},
 					data: {
-						phoneNo: 13906963039,
+						phoneNo: that.userInfo.phoneNumber,
 						startIndex: 1,
 						retcount: 1,
-						userID: 122
+						userID: that.userInfo.userID,
 					},
 					success(res) {
 						if (res.data.status) {
+							console.log(res);
 							that.beginTime = res.data.data[0].HireAction.Time;
 							that.endTime = res.data.data[0].RestoreAction.Time;
 							that.money = (res.data.data[0].Money) / 100;
-							if(that.money==0){
-								that.buttonName='立即完成';
+							if (that.money == 0) {
+								that.buttonName = '立即完成';
 							}
 							that.orderId = res.data.data[0].OrderId;
 							that.timeConcer(that.beginTime, that.endTime);
