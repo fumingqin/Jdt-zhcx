@@ -175,7 +175,7 @@
 						console.log(res);
 						uni.hideLoading();
 						if (res.data.status) {
-							if (res.data.data[0].PayState == 0) {
+							if (res.data.data[0].PayState == 1) {
 								uni.showToast({
 									title: '订单已支付',
 									icon: 'none'
