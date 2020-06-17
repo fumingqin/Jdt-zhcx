@@ -7,7 +7,7 @@
 		<view style="position: fixed;bottom: 0;">
 			<view class="ct_state">
 				<text class="sa_text">行程</text>
-				<text class="sa_text2">{{drivingRecord.PayPrice}}元</text>
+				<text class="sa_text2">{{drivingRecord.PayPrice/100}}元</text>
 				<text class="sa_text3" @click="jump">查看明细></text>
 			</view>
 
@@ -164,6 +164,9 @@
 				StartLat:'',//起点纬度
 				EndLon:'',//终点经度
 				EndLat:'',//终点纬度
+				HireTime:'',
+				PayPrice:'',
+				RentType:'',
 			}
 		},
 		onLoad(param) {
@@ -191,6 +194,11 @@
 				    if (res) {
 				        // console.log('订单缓存数据',res)
 				        this.drivingRecord=res;
+						this.HireTime=res.HireTime;
+						this.PayPrice=res.PayPrice;
+						this.RentType=res.RentType;
+						// console.log(this.HireTime)
+						// console.log(this.PayPrice)
 						var HireCoord=this.drivingRecord.HireCoord;
 						var RestoreCoord=this.drivingRecord.RestoreCoord;
 						console.log('订单缓存数据2',this.drivingRecord)
@@ -406,7 +414,7 @@
 			
 			jump:function(){
 				uni.navigateTo({
-					url:'./zy_expenseDetails'
+					url:'./zy_expenseDetails?HireTime=' + this.HireTime + '&PayPrice=' +this.PayPrice/100 + '&RentType=' +this.RentType
 				})
 			},
 
@@ -608,6 +616,7 @@
 	.st_view2 {
 		flex-direction: row;
 		justify-content: space-between;
+		align-items: center;
 		padding-left: 35upx;
 		padding-right: 35upx;
 	}
@@ -616,6 +625,8 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
+		align-items: center;
+		justify-content: center;
 		border-width: 1px;
 		border-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
@@ -623,8 +634,6 @@
 
 	.vi_text {
 		font-size: 34upx;
-		padding-top: 18upx;
-		padding-left: 84upx;
 		font-weight: 400;
 		color: rgba(101, 195, 109, 1);
 	}
@@ -633,14 +642,14 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
+		align-items: center;
+		justify-content: center;
 		background-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
 	}
 
 	.vi_text2 {
 		font-size: 34upx;
-		padding-top: 18upx;
-		padding-left: 63upx;
 		font-weight: 400;
 		color: #FFFFFF;
 	}
@@ -695,7 +704,7 @@
 	
 	.dt_view{
 		height: 860rpx;
-		background-color: #FFFFFF; 
+		background-color: #FFFFFF;
 		border-top-left-radius: 20rpx; 
 		border-top-right-radius: 20rpx;
 	}

@@ -171,9 +171,7 @@
 		{
 			"path": "pages/Home/zy_zhcx",
 			"style": {
-				// #ifdef H5
 				"navigationStyle": "custom"
-				// #endif
 			}
 		}
 	],
@@ -1022,10 +1020,11 @@
 		//#ifdef APP-PLUS
 		"fontSize": "16px",
 		//#endif
-		"list": [{
-				"pagePath": "pages/Home/Index",
-				"text": "出行"
-			},
+		"list": [
+			// {
+			// 	"pagePath": "pages/Home/Index",
+			// 	"text": "出行"
+			// },
 			// {
 			// 	"pagePath": "pages/GRZX/notice",
 			// 	"text": "通知"

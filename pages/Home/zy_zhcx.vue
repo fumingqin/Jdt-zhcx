@@ -10,29 +10,63 @@
 		<swiper class="zl_swi" :indicator-dots="true" indicator-active-color="#70c778" indicator-color="#f6f6f6">
 			<swiper-item class="swiItem">
 				<view class="zl_topClick">
+					<!-- 达达骑车 -->
+					<view class="zl_carAppointment" @click="natTo2('../../pages_DDQC/pages/RentBike/RentBikeHome')">
+						<image class="zl_caImage" src="../../static/Home/DDQC.png"></image>
+						<text class="zl_caText">达达骑车</text>
+					</view>
+					
 					<!-- 车票订购 -->
-					<view class="zl_ticketOrdering">
+					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
 						<text class="zl_toText">车票订购</text>
+					</view> -->
+					
+					<!-- 车票订购 -->
+					<view class="zl_ticketOrdering" @click="natTo()">
+						<image class="zl_toImage" src="../../static/Home/CPDG2.png"></image>
+						<text class="zl_toText">车票订购</text>
 					</view>
+					
 					<!-- 新区专线 -->
-					<view class="zl_carAppointment">
+					<!-- <view class="zl_carAppointment">
 						<image class="zl_caImage" src="../../static/Home/XQZX.png"></image>
 						<text class="zl_caText">新区专线</text>
-					</view>
-					<!-- 公交查询 -->
-					<view class="zl_transit">
+					</view> -->
+					
+					<!-- 公交查询 --> 
+					<!-- <view class="zl_transit">
 						<image class="zl_tsImage" src="../../static/Home/GJCX.png"></image>
 						<text class="zl_tsText">公交查询</text>
+					</view> -->
+					
+					<!-- 公交查询 --> 
+					<view class="zl_transit" @click="natTo()">
+						<image class="zl_tsImage" src="../../static/Home/GJCX2.png"></image>
+						<text class="zl_tsText">公交查询</text>
 					</view>
+					
 					<!-- 包车服务 -->
-					<view class="zl_charterService">
+					<!-- <view class="zl_charterService">
 						<image class="zl_csImage" src="../../static/Home/BCFW.png"></image>
 						<text class="zl_csText">包车服务</text>
+					</view> -->
+					
+					<!-- 包车服务 -->
+					<view class="zl_charterService" @click="natTo()">
+						<image class="zl_csImage" src="../../static/Home/BCFW2.png"></image>
+						<text class="zl_csText">包车服务</text>
 					</view>
+					
 					<!-- 景区门票 -->
-					<view class="zl_tourismServices">
+					<!-- <view class="zl_tourismServices">
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
+						<text class="zl_teText">景区门票</text>
+					</view> -->
+					
+					<!-- 景区门票 -->
+					<view class="zl_tourismServices" @click="natTo()">
+						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
 						<text class="zl_teText">景区门票</text>
 					</view>
 				</view>
@@ -40,30 +74,58 @@
 			<swiper-item class="swiItem">
 				<view class="zl_topClick">
 					<!-- 旅游产品 -->
-					<view class="zl_ticketOrdering">
+					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
 						<text class="zl_toText">旅游产品</text>
+					</view> -->
+					
+					<!-- 旅游产品 -->
+					<view class="zl_ticketOrdering" @click="natTo()">
+						<image class="zl_toImage" src="../../static/Home/LYCP2.png"></image>
+						<text class="zl_toText">旅游产品</text>
 					</view>
+					
 					<!-- 预约检测 -->
-					<view class="zl_carAppointment">
+					<!-- <view class="zl_carAppointment">
 						<image class="zl_caImage" src="../../static/Home/YYJC.png"></image>
 						<text class="zl_caText">预约检测</text>
+					</view> -->
+					
+					<!-- 预约检测 -->
+					<view class="zl_carAppointment" @click="natTo()">
+						<image class="zl_caImage" src="../../static/Home/YYJC2.png"></image>
+						<text class="zl_caText">预约检测</text>
 					</view>
+					
 					<!-- 自由行 -->
-					<view class="zl_ticketOrdering">
+					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/ZYX.png"></image>
 						<text class="zl_toText">自由行</text>
+					</view> -->
+					
+					<!-- 自由行 -->
+					<view class="zl_ticketOrdering" @click="natTo()">
+						<image class="zl_toImage" src="../../static/Home/ZYX2.png"></image>
+						<text class="zl_toText">自由行</text>
 					</view>
+					
 					<!-- 跟团游 -->
-					<view class="zl_ticketOrdering">
+					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/GTY.png"></image>
 						<text class="zl_toText">跟团游</text>
+					</view> -->
+					
+					<!-- 跟团游 -->
+					<view class="zl_ticketOrdering" @click="natTo()">
+						<image class="zl_toImage" src="../../static/Home/GTY2.png"></image>
+						<text class="zl_toText">跟团游</text>
 					</view>
+					
 					<!-- 村村通 -->
-					<view class="zl_ticketOrdering">
+					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/CCT.png"></image>
 						<text class="zl_toText">村村通</text>
-					</view>
+					</view> -->
 				</view>
 			</swiper-item>
 		</swiper>
@@ -72,12 +134,18 @@
 		<!-- 咨询动态 -->
 		<view class="notice">
 			<view class="zl_content">
-				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill"></image>
+				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
-					<text class="zl_noText">{{Announcement.zl_title}}</text>
+					<swiper class="swi2 swiper-container" circular autoplay>
+						<swiper-item v-for="(item,index) in consultingService" :key="index">
+							<scroll-view scroll-y>
+								<view class="zl_noText">{{item.title}}</view>
+							</scroll-view>
+						</swiper-item>
+					</swiper>
 					<view class="zl_label">
 						<view class="la_label" v-for="(item,index) in Announcement.LabelContent" :key="index" v-if="index<2">
-							<text class="la_background" style="background-color: #e2f1fa;border-radius:20px;" @click="Jump">{{item.lc_text}}</text>
+							<text class="la_background" style="background-color: #e8f6e9;border-radius:20px;" @click="Jump">{{item.lc_text}}</text>
 						</view>
 					</view>
 				</view>
@@ -167,6 +235,12 @@
 	export default {
 		data() {
 			return {
+				consultingService:[{
+					title:'不负灿烂时光,周边游更精彩,美伦美焕',
+				},
+				{
+					title:'不负灿烂时光,周边游更精彩',
+				}],
 				imgXXDT:[],//咨询动态
 				homePage: '', //轮播图
 				type: 0,
@@ -373,6 +447,28 @@
 					url:'../../pages_DDQC/pages/GRZY/zy_newsScreening'
 				})
 			},
+			
+			natTo: function(url) {
+				uni.showToast({
+					title:'正在开发中，尽情期待..',
+					icon:'none'
+				})
+				
+			},
+			
+			natTo2: function(e) {
+				uni.navigateTo({
+					url:e
+				})
+			},
+			
+			//路由整合
+			godetail: function(e) {
+				uni.navigateTo({
+					// url:'../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+e,
+					url:'',
+				})
+			},
 
 			// #ifdef  H5
 			//获取openid
@@ -503,11 +599,14 @@
 	page {
 		background-color: #f6f6f6;
 	}
-
+	
+	.swiper-container{
+	    pointer-events: none;
+	}
 
 	//轮播图样式
 	.swi {
-		height: 340upx;
+		height: 420upx;
 		width: 100%;
 
 		.swiItem {
@@ -656,7 +755,7 @@
 					align-items: center;
 
 					.zl_caImage {
-						width: 60rpx;
+						width: 80rpx;
 						height: 60rpx;
 						margin-top: 50upx;
 					}
@@ -759,28 +858,33 @@
 			}
 
 			.zl_noContent {
-
-				.zl_noText {
-					display: flex;
-					font-size: 26upx;
-					color: #333333;
+				
+				.swi2{
+					width: 450upx;
+					height: 40upx;
 					margin-top: 35upx;
 					margin-left: 55upx;
+					
+					.zl_noText {
+						display: flex;
+						font-size: 26upx;
+						color: #333333;
+					}
 				}
 
 				.zl_label {
 					display: flex;
 					margin-left: 45upx;
-					margin-top: 27upx;
+					margin-top: 17upx;
 
 					.la_label {
 						margin-right: 10upx;
 
 						.la_background {
-							background-color: #e2f1fa;
+							background-color: #e8f6e9;
 							border-radius: 20px;
 							font-size: 24upx;
-							color: #7fbbe1;
+							color: #65C36D;
 							padding: 9upx 20upx;
 						}
 					}
