@@ -31,7 +31,7 @@
 					<view class="ve_Text" v-if="depositStatus==0" @click="open1">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
-						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2">0<text class="tx_text3">元</text></view>
 					</view>
 
 					<view class="ve_Text" v-if="depositStatus==1" @click="open2">
@@ -85,7 +85,7 @@
 						<image class="ra_img" src="../../static/GRZY/weixin.png"></image>
 						<text class="ra_text2">微信支付</text>
 					</view>
-					<view class="tjButton">确认支付</view>
+					<view class="tjButton" @click="GetRefund">确认支付</view>
 					<view class="vi_bottom"></view>
 				</view>
 			</uni-popup>
@@ -102,7 +102,7 @@
 						<text class="ra_text">退款金额:</text>
 						<text class="ra_text2">&nbsp;￥{{deposit}}</text>
 					</view>
-					<view class="tjButton2" @click="GetRefund">确认退款</view>
+					<view class="tjButton2" @click="GetRefund2">确认退款</view>
 					<view class="vi_bottom"></view>
 				</view>
 			</uni-popup>
@@ -165,15 +165,15 @@
 				userInfo: [], //用户信息
 				type: 0,
 				balance: 0, //钱包金额
-				deposit: 0, //押金金额
-				depositStatus: 0, //押金状态
+				deposit: '', //押金金额
+				depositStatus: '', //押金状态
 				id: '',
-				status:'',
-				order_no:'',
+				status: '',
+				order_no: '',
 				personalHomepage: {
 					cost: 0.8, //价格
 					coupon: 10, //卡券数量
-					deposit: 0, //押金
+					deposit: 2, //押金
 					depositBalance: 0,
 
 					mileage: 20, //总里程
@@ -185,6 +185,7 @@
 				HireCoord: '', //租车经纬度
 				RestoreCoord: '', //还车经纬度
 				bicycleOrderInfo: '',
+				paymentData: [], //支付参数
 
 			}
 		},
@@ -209,7 +210,8 @@
 						//钱包注册
 						// that.GetEnrollment();
 						//获取钱包数据
-						that.GetPurseDetail();
+						that.GetUserByUserID();
+						// that.GetPurseDetail();
 						//获取自行车订单数据
 						that.GetOrderByUserID();
 					},
@@ -226,8 +228,8 @@
 					data: {
 						phoneNumber: that.userInfo.phoneNumber,
 						userID: that.userInfo.userId,
-						userName: '林先生',
-						uuid: '123',
+						userName: that.userInfo.nickname,
+						uuid: that.userInfo.userId,
 						userId: '350322199109101514'
 					},
 					success(res) {
@@ -246,6 +248,12 @@
 			},
 			GetPurseDetail: function() {
 				var that = this;
+				uni.showLoading({
+					title:'加载中...',
+					
+				})
+				console.log(that.userInfo.phoneNumber);
+				console.log(that.userInfo.userId);
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
 					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
@@ -254,27 +262,212 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
+						uni.hideLoading()
 						console.log('获取钱包数据成功', res)
-						if (res.status == true && res.msg == '请求成功') {
-							that.balance = res.data.data.balance;
-							that.deposit = res.data.data.deposit;
+						if (res.data.status == true && res.data.msg == '请求成功') {
+							that.walletData=res.data.data;
+							that.balance = res.data.data.balance/100;
+							that.deposit = res.data.data.deposit/100;
 							that.depositStatus = res.data.data.depositStatus;
+							console.log("测试"+that.depositStatus); 
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
 							that.status = res.data.data.status;
 						}
+						console.log('获取押金状态', that.walletData)
 					},
 					fail(res) {
+						uni.hideLoading()
 						console.log('获取钱包数据失败', res)
 					}
 				})
 			},
-			//--------------------------钱包退押金--------------------------
+
+			//--------------------------押金充值--------------------------
 			GetRefund: function() {
+				uni.showLoading({
+					title: '正在交押金...'
+				})
+				var that = this;
+				that.$refs.popup.close()
+				const now = new Date();
+				const next = new Date(now.getTime() + 31536000000);
+				// console.log(now.toDateString());
+				// console.log(next.toDateString());
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetRecharge.Url,
+					method: $DDTInterface.DDTInterface.GetRecharge.method,
+					data: {
+						channel: 'wechat_app', //微信
+						title: '押金充值',
+						body: '押金充值',
+						phoneNumber: that.userInfo.phoneNumber,
+						userID: that.userInfo.userId,
+						// timeExpire:timestemp,//过期时间(时间戳)
+						chargeType: 0, //0:充值押金 1充值钱包
+						totalPrice: that.personalHomepage.deposit, //金额
+					},
+					success(res) {
+						uni.hideLoading();
+						console.log('押金充值返回支付参数成功结果', res)
+						if (res.data.status == true) {
+							let obj = {
+								appid: res.data.data.credential.wechat_app.appid,
+								noncestr: res.data.data.credential.wechat_app.noncestr,
+								package: 'Sign=WXPay', // 固定值，以微信支付文档为主
+								partnerid: res.data.data.credential.wechat_app.partnerid,
+								prepayid: res.data.data.credential.wechat_app.prepayid,
+								timestamp: res.data.data.credential.wechat_app.timestamp,
+								sign: res.data.data.credential.wechat_app.sign // 根据签名算法生成签名
+							}
+							// that.paymentData = res.data.data.credential;
+							that.payment(obj);
+						}
+					},
+					fail(res) {
+						uni.hideLoading();
+						console.log('押金充值返回支付参数失败', res)
+					}
+				})
+			},
+
+			//--------------------------调起支付--------------------------
+			payment: function(orderInfo) {
+				var that = this;
+				// #ifdef APP-PLUS
+				console.log(that.paymentData)
+				uni.requestPayment({
+					provider: 'wxpay',
+					orderInfo: orderInfo,
+					success: function(res) {
+						console.log(res)
+						if (res.errMsg == 'requestPayment:ok') { //成功
+							uni.showToast({
+								title: '支付成功'
+							})
+							that.WirteRechargeLog(1); 
+						}else if (res.errMsg == 'requestPayment:fail errors') { //错误
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none'
+							})
+							that.WirteRechargeLog(0);
+						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
+							uni.showToast({
+								title: '您取消了支付',
+								icon: 'none'
+							})
+							that.WirteRechargeLog(2);
+						}
+					},
+
+					fail: function(ee) {
+						if (res.errMsg == 'requestPayment:errors') { //错误
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none'
+								
+							})
+							that.WirteRechargeLog(0);
+						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
+							uni.showToast({
+								title: '您取消了支付',
+								icon: 'none'
+							})
+							that.WirteRechargeLog(2);
+						}
+					}
+				})
+				// #endif
+			},
+
+			//--------------------------钱包消费接口--------------------------
+			GetTransaction: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetTransaction.Url,
+					method: $DDTInterface.DDTInterface.GetTransaction.method,
+					data: {
+
+					},
+					success(res) {
+						console.log('钱包消费', res)
+						if (res.status == true) {
+							that.paymentData = res.data.credential;
+							that.payment();
+						}
+					},
+					fail(res) {
+						console.log('钱包消费', res)
+					}
+				})
+			},
+
+			GetTransaction: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetTransaction.Url,
+					method: $DDTInterface.DDTInterface.GetTransaction.method,
+					data: {
+
+					},
+					success(res) {
+						console.log('钱包消费', res)
+						if (res.status == true) {
+							that.paymentData = res.data.credential;
+							that.payment();
+						}
+					},
+					fail(res) {
+						console.log('钱包消费', res)
+					}
+				})
+			},
+
+			//------------------押金充值记录---------------------------------
+
+			WirteRechargeLog: function(state) {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.WirteRechargeLog.Url,
+					method: $DDTInterface.DDTInterface.WirteRechargeLog.method,
+					data: {
+						channel: 'wechat_app',
+						title: '押金充值记录',
+						body: "钱包充值记录测试",
+						phoneNumber: that.userInfo.phoneNumber,
+						// timeExpire
+						chargeType: 0,
+						totalPrice: that.personalHomepage.deposit,
+						userID: that.userInfo.userId,
+						state: state,
+						id: that.id,
+					},
+					success(res) {
+						console.log('押金充值记录成功', res);
+						uni.showLoading()
+						setTimeout(function(){
+							that.GetPurseDetail();
+						},3000)
+						
+					},
+					fail(res) {
+						console.log('押金充值记录失败', res)
+						uni.showLoading()
+						setTimeout(function(){
+							that.GetPurseDetail();
+						},3000)
+					}
+				})
+			},
+
+			//--------------------------钱包退押金--------------------------
+			GetRefund2: function() {
+				var that = this;
 				uni.showLoading({
 					title: '正在退押金...'
 				})
-				var that = this;
+				that.$refs.popup2.close()
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetRefund.Url,
 					method: $DDTInterface.DDTInterface.GetRefund.method,
@@ -288,9 +481,10 @@
 						console.log('钱包退押金成功', res)
 						if (res.data.status == true) {
 							uni.showToast({
-								title: res.data.msg,
-								icon: 'none'
+								title: '押金退款成功',
+								icon: 'none',
 							})
+							that.GetUserByUserID();
 							that.WriteRefundLog();
 						} else if (res.data.status == false) {
 							uni.showToast({
@@ -336,14 +530,28 @@
 						requestType: 2,
 						userID: that.userInfo.userId,
 						state: that.status,
-						id:that.id,
-						order_no:that.order_no
+						id: that.id,
+						order_no: that.order_no
 					},
 					success(res) {
-						console.log('押金退款记录成功',res);
+						console.log('押金退款记录成功', res);
+						if(res.data.status==true){
+							// that.deposit=0;
+							// that.depositStatus=0;
+							// uni.showLoading()
+							// setTimeout(function(){
+							// 	that.GetPurseDetail();
+							// },3000)
+							
+						}
 					},
 					fail(res) {
-						console.log('押金退款记录失败',res)
+						console.log('押金退款记录失败', res)
+						// uni.showLoading()
+						// setTimeout(function(){
+						// 	that.GetPurseDetail();
+						// },3000)
+						
 					}
 				})
 			},
@@ -393,13 +601,13 @@
 			},
 
 			natTo: function(e) {
-				if(e==1){
+				if (e == 1) {
 					this.checkRealName(e);
-				}else if(e==2){
+				} else if (e == 2) {
 					this.checkRealName(e);
-				}else{
+				} else {
 					uni.navigateTo({
-						url:e
+						url: e
 					})
 				}
 			},
@@ -426,22 +634,51 @@
 								url: that.$GrzxInter.Route.uploadPhoto.url,
 							})
 						} else {
-							if(e==1){
+							if (e == 1) {
 								uni.navigateTo({
-									url:'./wallet'
+									url: './wallet'
 								})
-							}else if(e==2){
+							} else if (e == 2) {
 								uni.navigateTo({
-									url:'./topUp'
+									url: './topUp'
 								})
-							}else if(e==3){
+							} else if (e == 3) {
 								// 需要在 popup 组件，指定 ref 为 popup
-								this.$refs.popup.open()
-							}else if(e==4){
+								that.$refs.popup.open()
+							} else if (e == 4) {
 								// 需要在 popup 组件，指定 ref 为 popup
-								this.$refs.popup2.open()
+								that.$refs.popup2.open()
+							} else if (DepositType == 2) {
+								uni.showToast({
+									title: '免押金用户',
+									icon: 'none'
+								})
 							}
 						}
+					}
+				})
+			},
+			
+			//--------------------读取信息-------------------------
+			GetUserByUserID:function(){  
+				var that = this;
+				console.log(that.userInfo)
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetUserByUserID.Url,
+					method: $DDTInterface.DDTInterface.GetUserByUserID.method,
+					data: {
+						userID: that.userInfo.userId,
+					},
+					success(res) {
+						console.log('呀呀呀'+JSON.stringify(res) )
+						that.depositStatus=res.data.data.DepositType;
+						console.log(that.depositStatus);
+						if(that.depositStatus){
+							that.GetPurseDetail();
+						}
+					},
+					fail(err) {
+						console.log('读取信息',err)
 					}
 				})
 			},
