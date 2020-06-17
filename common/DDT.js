@@ -101,6 +101,12 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	WriteRefundLog:{
+		Url:Url + '/api/Purse/WriteRefundLog',
+		name:'押金退款记录',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
 }
 
 	// 接口声明区
