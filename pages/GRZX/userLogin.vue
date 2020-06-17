@@ -242,7 +242,7 @@
 							})
 							if(that.urlData==1){
 								uni.switchTab({  //返回首页
-									url:'/pages/Home/Index',
+									url:'/pages/Home/zy_zhcx',
 								}) 
 							}else if(that.urlData==2){
 								uni.switchTab({  //返回订单页
@@ -415,7 +415,7 @@
 				// })
 				if(this.urlData==2){
 					uni.switchTab({  //返回首页
-						url:'/pages/Home/Index',
+						url:'/pages/Home/zy_zhcx',
 					}) 
 				}else{
 					uni.navigateBack();

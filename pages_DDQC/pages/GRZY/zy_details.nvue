@@ -7,7 +7,7 @@
 		<view style="position: fixed;bottom: 0;">
 			<view class="ct_state">
 				<text class="sa_text">行程</text>
-				<text class="sa_text2">{{drivingRecord.PayPrice}}元</text>
+				<text class="sa_text2">{{drivingRecord.PayPrice/100}}元</text>
 				<text class="sa_text3" @click="jump">查看明细></text>
 			</view>
 
@@ -414,7 +414,7 @@
 			
 			jump:function(){
 				uni.navigateTo({
-					url:'./zy_expenseDetails?HireTime=' + this.HireTime + '&PayPrice=' +this.PayPrice + '&RentType=' +this.RentType
+					url:'./zy_expenseDetails?HireTime=' + this.HireTime + '&PayPrice=' +this.PayPrice/100 + '&RentType=' +this.RentType
 				})
 			},
 
@@ -616,6 +616,7 @@
 	.st_view2 {
 		flex-direction: row;
 		justify-content: space-between;
+		align-items: center;
 		padding-left: 35upx;
 		padding-right: 35upx;
 	}
@@ -624,6 +625,8 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
+		align-items: center;
+		justify-content: center;
 		border-width: 1px;
 		border-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
@@ -631,8 +634,6 @@
 
 	.vi_text {
 		font-size: 34upx;
-		padding-top: 18upx;
-		padding-left: 84upx;
 		font-weight: 400;
 		color: rgba(101, 195, 109, 1);
 	}
@@ -641,14 +642,14 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
+		align-items: center;
+		justify-content: center;
 		background-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
 	}
 
 	.vi_text2 {
 		font-size: 34upx;
-		padding-top: 18upx;
-		padding-left: 63upx;
 		font-weight: 400;
 		color: #FFFFFF;
 	}

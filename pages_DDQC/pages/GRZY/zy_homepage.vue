@@ -161,7 +161,7 @@
 				</view>
 
 				<view style="display: flex;position: absolute;right: 0;top: 41%;padding-right: 30upx;">
-					<text class="rc_text4">{{item.PayPrice}}<text class="rc_text5">元</text></text>
+					<text class="rc_text4">{{item.PayPrice/100}}<text class="rc_text5">元</text></text>
 					<text class="jdticon icon-you"></text>
 				</view>
 			</view>
@@ -551,7 +551,7 @@
 					url: $DDTInterface.DDTInterface.GetOrderByUserID.Url,
 					method: $DDTInterface.DDTInterface.GetOrderByUserID.method,
 					data: {
-						UserID: '122',
+						UserID: that.userInfo.userId,
 					},
 					success(res) {
 						console.log('查询自行车订单', res)
