@@ -384,7 +384,15 @@
 							if(response.data.data == '新建'){
 								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
 								//开通租车业务
-								that.myShowModal('新建用户');
+								uni.showModal({
+									title:'温馨提示',
+									content:'未交押金无法用车，是否立即支付押金？',
+									success() {
+										uni.navigateTo({
+											url:'../GRZY/zy_homepage'
+										})
+									}
+								})
 							}else if(response.data.data == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data == '已租车'){
@@ -436,11 +444,7 @@
 					title:'温馨提示',
 					content:content,
 					success() {
-						if(content == '未交押金无法用车，是否立即支付押金？'){
-							console.log(content)
-						}else{
-							
-						}
+						
 					}
 				})
 			},
