@@ -507,7 +507,7 @@
 
 	//轮播图样式
 	.swi {
-		height: 340upx;
+		height: 420upx;
 		width: 100%;
 
 		.swiItem {

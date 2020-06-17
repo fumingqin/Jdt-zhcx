@@ -171,9 +171,7 @@
 		{
 			"path": "pages/Home/zy_zhcx",
 			"style": {
-				// #ifdef H5
 				"navigationStyle": "custom"
-				// #endif
 			}
 		}
 	],

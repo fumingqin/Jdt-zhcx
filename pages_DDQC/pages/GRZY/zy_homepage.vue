@@ -168,6 +168,8 @@
 				deposit: 0, //押金金额
 				depositStatus: 0, //押金状态
 				id: '',
+				status:'',
+				order_no:'',
 				personalHomepage: {
 					cost: 0.8, //价格
 					coupon: 10, //卡券数量
@@ -289,11 +291,13 @@
 								title: res.data.msg,
 								icon: 'none'
 							})
+							that.WriteRefundLog();
 						} else if (res.data.status == false) {
 							uni.showToast({
 								title: res.data.msg,
 								icon: 'none'
 							})
+							that.WriteRefundLog();
 						}
 					},
 					fail(res) {
@@ -320,7 +324,7 @@
 				})
 			},
 
-			//--------------------------查询自行车订单--------------------------
+			//--------------------------押金退款记录--------------------------
 
 			WriteRefundLog: function() {
 				var that = this;
@@ -331,12 +335,16 @@
 						userMobileNumber: that.userInfo.phoneNumber,
 						requestType: 2,
 						userID: that.userInfo.userId,
-						state:that.status
+						state: that.status,
+						id:that.id,
+						order_no:that.order_no
 					},
 					success(res) {
-						console.log('查询自行车订单', res)
-						that.drivingRecord = res.data.data;
+						console.log('押金退款记录成功',res);
 					},
+					fail(res) {
+						console.log('押金退款记录失败',res)
+					}
 				})
 			},
 
@@ -409,12 +417,12 @@
 						console.log(res)
 						if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
 							//实名认证
-							uni.redirectTo({
+							uni.navigateTo({
 								url: that.$GrzxInter.Route.realName.url,
 							})
 						} else if (res.data.data.RealNameStatus !== 1) {
 							//上传图片
-							uni.redirectTo({
+							uni.navigateTo({
 								url: that.$GrzxInter.Route.uploadPhoto.url,
 							})
 						} else {
