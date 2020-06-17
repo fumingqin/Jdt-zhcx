@@ -101,6 +101,12 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
+	WriteTransactionLog:{
+			Url:Url + '/api/Purse/WriteTransactionLog',
+			name:'钱包消费记录',
+			method:'POST',
+			header:{'content-type':'application/x-www-form-urlencoded'},
+		},
 }
 
 	// 接口声明区
