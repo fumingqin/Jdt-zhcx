@@ -425,7 +425,7 @@
 					})
 					setTimeout(function(){
 						uni.switchTab({
-							url:'/pages/Home/Index',
+							url:'/pages/Home/zy_zhcx',
 						})
 					},500);
 				}else{
@@ -492,7 +492,19 @@
 			},
 			// ---------------------------实名认证--------------------------
 			realName(){
-				this.checkRealName();
+				var that=this;
+				uni.getStorage({
+					key:'userInfo',
+					success(res){
+						that.checkRealName();
+					},
+					fail() {
+						uni.showToast({
+							title:'请您先登录',
+							icon:'none',
+						})
+					}
+				})
 			},
 			//-------------------------------------检查是否实名----------------------------------
 			checkRealName(){
@@ -527,7 +539,8 @@
 			// ---------------------------更换手机号--------------------------
 			replacePhoneNum(){
 				uni.showToast({
-					title:'暂未开通，敬请期待'
+					title:'暂未开通，敬请期待',
+					icon:'none'
 				})
 				// uni.navigateTo({
 				// 	url:this.$GrzxInter.Route.replacePhoneNum.url,
