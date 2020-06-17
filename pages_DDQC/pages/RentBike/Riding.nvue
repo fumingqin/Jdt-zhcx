@@ -6,8 +6,14 @@
 		<view style="position: fixed; bottom: 0;margin-left: 30rpx;margin-right: 30rpx;">
 			<view style="flex-direction: row;justify-content: space-between;width: 690rpx;">
 				<image src="../../static/GRZY/Position.png" style="width: 120rpx;height: 120rpx;" @click="MoveToThisLocation"></image>
-				<image src="../../static/GRZY/personal.png" style="width: 120rpx;height: 120rpx;" @click="getOrderInfo"></image>
+				<image src="../../static/GRZY/personal.png" style="width: 120rpx;height: 120rpx;" @click="GotoHome"></image>
 			</view>
+			<!-- <view><button @click="zhuce">注册</button></view>
+			<view><button @click="getPaymentInformation">支付</button></view>
+			<view><button @click="getqianbao">钱包状态</button></view>
+			<view><button @click="tuikuan">退押金</button></view>
+			<view><button @click="shoudongtuikuan">手动退押金</button></view>
+			<view><button @click="xiaofei">消费</button></view> -->
 			<view v-if="!Isreturn">
 				<view class="ridestate">
 					<text style="color:#333333;font-size: 36rpx;font-weight: 500;">骑行中</text>
@@ -81,9 +87,10 @@
 				credential: '',
 				id: '',
 				orderId: '', //订单id
+				order_no: '', //获取支付参数时返回
 				operatorId: '', //操作ID，用于还车
 				interval: '', //定时器
-				rentInfo:[],//保存租车信息
+				rentInfo: [], //保存租车信息
 			}
 		},
 		mounted() {
@@ -102,7 +109,12 @@
 			// that.getMyLocation();
 			// that.countTime();
 			//将上一个页面传过来的参数转为数组
-			that.rentInfo = JSON.parse(item.responseArr);
+			if (item.responseArr) {
+				that.rentInfo = JSON.parse();
+				if (that.rentInfo.bikeType == "有桩") {
+					that.CheckOrderStatus();
+				}
+			}
 		},
 		created() {
 			uni.setNavigationBarTitle({
@@ -110,6 +122,253 @@
 			})
 		},
 		methods: {
+			payment: function(orderInfo) { //支付
+				let that = this;
+				uni.requestPayment({
+					provider: "wxpay",
+					orderInfo: orderInfo,
+					success(res) {
+						uni.showToast({
+							title: "支付成功",
+							icon: "none"
+						})
+						that.get(1);
+					},
+					fail(res) {
+						console.log(res);
+						var msg = "requestPayment:fail canceled";
+						if (res.errMsg == msg) {
+							setTimeout(function() {
+								uni.showToast({
+									title: "支付失败，请重新支付",
+									icon: "none"
+								})
+								that.get(2)
+							}, 1000)
+						} else {
+							console.log("测试")
+							that.get(0)
+							uni.showToast({
+								title: "网络连接失败",
+								icon: "none"
+							})
+						}
+					}
+				})
+			},
+			getPaymentInformation: function() { //获取支付信息
+				let that = this
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/GetRecharge",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						channel: "wechat_app",
+						title: "押金充值",
+						body: "押金充值测试",
+						phoneNumber: 15106066029,
+						chargeType: 1,
+						totalPrice: 1,
+						userID: 122,
+					},
+					success(res) {
+						console.log(res)
+						let obj = {
+							appid: res.data.data.credential.wechat_app.appid,
+							noncestr: res.data.data.credential.wechat_app.noncestr,
+							package: 'Sign=WXPay', // 固定值，以微信支付文档为主
+							partnerid: res.data.data.credential.wechat_app.partnerid,
+							prepayid: res.data.data.credential.wechat_app.prepayid,
+							timestamp: res.data.data.credential.wechat_app.timestamp,
+							sign: res.data.data.credential.wechat_app.sign // 根据签名算法生成签名
+						}
+						console.log(obj)
+						that.payment(obj);
+						that.id = res.data.data.id;
+						that.order_no = res.data.data.order_no;
+
+					}
+				})
+			},
+			get: function(state) { //充值记录
+				let that = this;
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/WirteRechargeLog",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						channel: "wechat_app",
+						title: "押金充值",
+						body: "押金充值测试",
+						phoneNumber: 15106066029,
+						chargeType: 1,
+						totalPrice: 1,
+						userID: 122,
+						state: state,
+						id: that.id,
+						order_no: '',
+					},
+					success(res) {
+						console.log(res);
+					},
+					fail(res) {
+						console.log(res)
+					}
+
+				})
+			},
+			zhuce: function() { //注册钱包
+				let that = this;
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/GetEnrollment",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						phoneNumber: 15106066029,
+						userId: "350583199510048338",
+						userName: "黄海波",
+						uuid: 122,
+						userID: 122,
+					},
+					success(res) {
+						console.log(res);
+					},
+					fail(res) {
+						console.log(res)
+					}
+
+				})
+			},
+			getqianbao: function(state) { //钱包状态
+				let that = this;
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/GetPurseDetail",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						phoneNumber: 15106066029,
+						userID: 122,
+					},
+					success(res) {
+						console.log(res);
+					},
+					fail(res) {
+						console.log(res)
+					}
+
+				})
+			},
+			tuikuan: function(state) { //退押金
+				let that = this;
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/GetRefund",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						userMobileNumber: 15106066029,
+						requestType: 2,
+						userID: 122,
+					},
+					success(res) {
+						console.log(res);
+					},
+					fail(res) {
+						console.log(res)
+					}
+
+				})
+			},
+			shoudongtuikuan: function(state) { //手动退押金
+				let that = this;
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/GetUpdateDepositStatus",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						phoneNumber: 15106066029,
+						orderStatus: "refundDone",
+						userID: 122,
+					},
+					success(res) {
+						console.log(res);
+					},
+					fail(res) {
+						console.log(res)
+					}
+
+				})
+			},
+
+			xiaofei: function() { //消费
+				let that = this;
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/GetTransaction",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						phoneNumber: 15106066029,
+						orderId: "12552",
+						transTime: "20200615113500",
+						amount: 10,
+						transType: 1,
+						extra: '',
+						userID: 122,
+
+					},
+					success(res) {
+						that.jilu(1)
+						console.log(res);
+					},
+					fail(res) {
+						that.jilu(0)
+						console.log(res)
+					}
+
+				})
+			},
+			jilu: function(state) { //消费记录
+				let that = this;
+				uni.request({
+					url: "http://111.231.109.113:8004/api/Purse/WriteTransactionLog",
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						phoneNumber: 15106066029,
+						orderId: "122",
+						transTime: "20200615113500",
+						amount: 10,
+						transType: 1,
+						extra: '',
+						userID: 122,
+
+					},
+					success(res) {
+						console.log(res);
+					},
+					fail(res) {
+						console.log(res)
+					}
+
+				})
+			},
+
+
 			//--------------------------计时--------------------------
 			countTime: function() {
 				var that = this;
@@ -129,9 +388,9 @@
 					}
 				}, 1000);
 			},
-			//--------------------------获取订单信息、检测订单状态--------------------------
+			//--------------------------检测订单状态--------------------------
 			//自行车还车，定时器检索订单状态，直到订单结束
-			getOrderInfo: function() {
+			CheckOrderStatus: function() {
 				let that = this;
 				clearInterval(that.interval);
 				that.interval = setInterval(function() {
@@ -140,36 +399,36 @@
 						method: $DDTInterface.DDTInterface.CheckOrderStatus.method,
 						data: {
 							phoneNo: 15106066029,
-							orderId: that.orderId
+							orderId: that.orderId,
 						},
 						success(res) {
-							console.log('订单状态res',res)
-							if(res.data.status == true){
-								if(res.data.bizStatus == '还车成功') {
+							console.log('订单状态res', res)
+							if (res.data.status == true) {
+								if (res.data.bizStatus == '还车成功') {
 									uni.showToast({
-										title:'还车成功',
-										icon:'none'
+										title: '还车成功',
+										icon: 'none'
 									})
 								}
-							}else {
+							} else {
 								uni.showToast({
-									title:res.data.msg,
-									icon:'none'
+									title: res.data.msg,
+									icon: 'none'
 								})
 							}
 						},
 						fail(err) {
-							console.log('订单状态err',err)
+							console.log('订单状态err', err)
 						}
 					})
 				}, 3000)
 			},
-			GotoHome: function() {//前往个人中心
+			GotoHome: function() { //前往个人中心
 				uni.navigateTo({
 					url: "../GRZY/zy_homepage"
 				})
 			},
-			MoveToThisLocation: function() {//移动到当前定位点
+			MoveToThisLocation: function() { //移动到当前定位点
 				var maps = uni.createMapContext("map", this);
 				maps.moveToLocation()
 			},
@@ -188,48 +447,77 @@
 			//--------------------------助力车还车--------------------------
 			returnBike: function() {
 				var that = this;
-				uni.setNavigationBarTitle({
-					title: "还车"
-				})
-				uni.showToast({
-					title: "关锁中...",
-					mask: true,
-					// image: "../../RentBike/static/lock.png",
-					icon: "none",
-				})
-				uni.request({
-					url: $DDTInterface.DDTInterface.TransferHire.Url,
-					method: $DDTInterface.DDTInterface.TransferHire.method,
-					data: {
-						phoneNo:that.rentInfo.phoneNumber,//手机号
-						//经纬度可以不需要传，现在的业务没有用到这两个参数
-						lat:0.1,//纬度
-						lng:0.1,//经度
-						coordinateType:2,//坐标类型   1:百度 2:高德 3:GPS坐标
-						operationId:that.rentInfo.operationId,//操作编号
-						bikeId:that.rentInfo.bikeId,//车辆编号
-					},
+				uni.showModal({
+					content: "你确定要换车吗",
+					cancelText: "确定",
+					confirmText: "取消",
 					success(res) {
-						console.log('还车成功结果',res);
-						if(res.data.status == true){
-							if(res.data.retcode == 0) {//返回编号（0代表完成）
-								uni.showToast({
-									title:'还车成功',
-									icon:'none'
-								})
-							}
-						}else {
+						if (res.cancel) {
+							uni.setNavigationBarTitle({
+								title: "还车"
+							})
 							uni.showToast({
-								title:res.data.msg,
-								icon:'none'
+								title: "关锁中...",
+								mask: true,
+								// image: "../../RentBike/static/lock.png",
+								icon: "none",
+							})
+							uni.request({
+								url: $DDTInterface.DDTInterface.TransferHire.Url,
+								method: $DDTInterface.DDTInterface.TransferHire.method,
+								data: {
+									phoneNo: that.rentInfo.phoneNumber, //手机号
+									//经纬度可以不需要传，现在的业务没有用到这两个参数
+									lat: 0.1, //纬度
+									lng: 0.1, //经度
+									coordinateType: 2, //坐标类型   1:百度 2:高德 3:GPS坐标
+									operationId: that.rentInfo.operationId, //操作编号
+									bikeId: that.rentInfo.bikeId, //车辆编号
+								},
+								success(res) {
+									console.log('还车成功结果', res);
+									if (res.data.status == true) {
+										if (res.data.retcode == 0) { //返回编号（0代表完成）
+											uni.showToast({
+												title: '还车成功',
+												icon: 'none'
+											})
+										}
+									} else {
+										uni.showToast({
+											title: res.data.msg,
+											icon: 'none'
+										})
+									}
+								},
+								fail(err) {
+									console.log('还车失败结果', err)
+								}
 							})
 						}
-					},
-					fail(err) {
-						console.log('还车失败结果',err)
 					}
 				})
 				that.Isreturn = true;
+			},
+			//--------------------------获取行程--------------------------
+			getOrderInfo: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetOrder.Url,
+					method: $DDTInterface.DDTInterface.GetOrder.method,
+					data: {
+						phoneNo: 15106066029,
+						startIndex: 1,
+						retcount: 1,
+						userID: 122
+					},
+					success(res) {
+						console.log(res)
+					},
+					fail(err) {
+						console.log(err)
+					}
+				})
 			},
 			Lock: function() { //临时锁车
 				var that = this;

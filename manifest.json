@@ -10,7 +10,7 @@
         "usingComponents" : true,
         "nvueCompiler" : "uni-app",
         "splashscreen" : {
-            "alwaysShowBeforeRender" : false,
+            "alwaysShowBeforeRender" : true,
             "waiting" : true,
             "autoclose" : true,
             "delay" : 0
@@ -55,7 +55,13 @@
                 ]
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+                "capabilities" : {
+                    "entitlements" : {
+                        "com.apple.developer.associated-domains" : [ "applinks:zntc.145u.net" ]
+                    }
+                }
+            },
             /* SDK配置 */
             "sdkConfigs" : {
                 "maps" : {
@@ -134,7 +140,7 @@
         "setting" : {
             "es6" : false,
             "postcss" : false,
-            "minified" : false,
+            "minified" : true,
             "urlCheck" : false
         },
         "usingComponents" : true,

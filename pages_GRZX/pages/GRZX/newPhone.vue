@@ -1,8 +1,8 @@
 <template>
 	<view class="content">
 		<view class="itemClass bt">
-			<view class="phoneClass1">手机号码</view>
-			<view class="phoneClass2">{{phone}}</view>
+			<view class="phoneClass1">新的手机号码</view>
+			<input type="number" placeholder="输入新的手机号" maxlength="11" class="phoneClass2" v-model="phoneNumber" @blur="checkPhone" />
 		</view>
 		<view class="itemClass">
 			<view class="codeClass1">验证码</view>
@@ -11,8 +11,7 @@
 		<view class="itemClass">
 			<view class="codeClass3" @click="getCodeClick">{{textCode}}</view>
 		</view>
-		<view class="btnClass" @click="submitClick">验&nbsp;证</view>
-		<!-- <view class="cancellationClass" @click="cancellationClick">无法收到验证码，请点击此处</view> -->
+		<view class="btnClass" @click="submitClick">确&nbsp;定</view>
 	</view>
 </template>
 
@@ -21,7 +20,7 @@
 		data(){	
 			return{			
 				userInfo:[],
-				phone:'',
+				phoneNumber:'',
 				code:'',
 				textCode:"点击获取验证码",
 			}	
@@ -37,7 +36,6 @@
 					key:'userInfo',
 					success(res) {
 						that.userInfo=res.data;
-						that.phone=that.userInfo.phoneNumber.substring(0,3)+'****'+that.userInfo.phoneNumber.substring(7,11);
 					},
 					fail() {
 						uni.showToast({
@@ -47,60 +45,94 @@
 					}
 				})
 			},
-			//--------------------跳转至实名验证-------------------
-			cancellationClick:function(){
-				uni.navigateTo({
-					url:this.$GrzxInter.Route.verificateName.url,
-				})
+			//--------------------校验手机号-------------------
+			checkPhone:function(e){
+				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
+				if(e.detail.value==""){
+					// console.log("空的")
+				}else if(e.detail.value==this.userInfo.phoneNumber){
+					uni.showToast({
+						title:'新手机号是当前账号绑定的手机号，无法重复绑定',
+						icon:'none'
+					})
+				}else if(reg.test(e.detail.value)){
+					// console.log("正确")
+				}else{
+					uni.showToast({
+						title:'输入的手机号有误，请检查',
+						icon:'none'
+					})
+				}
 			},
 			//--------------------提交-------------------
 			submitClick:function(){
 				var that=this;
-				console.log(that.code)
-				if(that.code!=null&&that.code!=""){
+				
+				if(that.phoneNumber==""||that.phoneNumber==null){
+					uni.showToast({
+						title:'请输入新手机号',
+						icon:'none'
+					})
+				}else if(!reg.test(this.phoneNumber)||this.phoneNumber.length!=11){
+					uni.showToast({
+						title:'输入的手机号有误',
+						icon:'none',
+					})
+				}else{
 					uni.getStorage({
-						key:'Code',
+						key:'newCode',
 						success(res) {
-							console.log(res.data)
-							if(res.data==that.code){
-								that.code="";
+							if(that.code==""||that.code==null){
 								uni.showToast({
-									title:'验证成功',
-									icon:'success'
+									title:'请输入验证码',
+									icon:'none'
 								})
-								setTimeout(function(){
-									uni.navigateTo({
-										url:that.$GrzxInter.Route.newPhone.url,
-									})
-								},300);
-							}else{
+							}else if(that.phoneNumber==that.userInfo.phoneNumber){
 								uni.showToast({
-									title:'输入的验证码错误',
-									icon:'none',
+									title:'新手机号是当前账号绑定的手机号，无法重复绑定',
+									icon:'none'
 								})
 							}
+							else if(that.code==res.data.code&&that.phoneNumber==res.data.phoneNumber){
+								//验证成功,调取更换手机号的方法
+								
+								uni.switchTab({
+									url:that.$GrzxInter.Route.user.url,
+								})
+							}else{
+								uni.showToast({
+									title:'输入的验证码有误',
+									icon:'none'
+								})
+							}	
 						},
 						fail(err) {
 							uni.showToast({
 								title:'请先获取验证码',
-								icon:'none',
+								icon:'none'
 							})
 						}
-					})
-				}else if(that.code==""){
-					uni.showToast({
-						title:'请输入验证码',
-						icon:'none',
-					})
-				}else{
-					uni.showToast({
-						title:'请输入正确的验证码',
-						icon:'none',
 					})
 				}
 			},
 			//--------------------获取验证码-------------------
 			getCodeClick:function(){
+				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
+				if(this.phoneNumber==""){
+					uni.showToast({
+						title:'请先输入手机号',
+						icon:'none',
+					})
+				}else if(!reg.test(this.phoneNumber)||this.phoneNumber.length!=11){
+					uni.showToast({
+						title:'输入的手机号有误',
+						icon:'none',
+					})
+				}else if(this.phoneNumber.length==11){
+					this.getCode();
+				}
+			},
+			getCode:function(){
 				var that=this;
 				var timer=null,second=59; //倒计时的时间
 				if(that.textCode == "点击获取验证码"){
@@ -116,34 +148,38 @@
 							else{			
 								that.textCode = second+"秒后重发";
 						}},1000)
-						that.getCode();
+						that.getCodeNum();
 					}
 				}
 			},
-			getCode:function(){
+			getCodeNum:function(){
 				var that=this;
 				uni.request({
 					url:that.$GrzxInter.Interface.getLoginCode.value,
 					data:{
-						phoneNumber:that.userInfo.phoneNumber,
+						phoneNumber:that.phoneNumber,
 					},
 					method:that.$GrzxInter.Interface.getLoginCode.method,
 					success:(res)=>{
 						// console.log(res,"340");
 						console.log(res.data.data);
-						uni.setStorageSync('Code',res.data.data)
+						uni.setStorageSync('newCode',{
+							code:res.data.data,
+							phoneNumber:that.phoneNumber,
+						})
 						uni.showToast({
 							title:"验证码已发送，仅在5分钟内有效!",
 							icon:"none"
 						})
 						setTimeout(function(){
 							uni.removeStorage({
-								key:'Code',
+								key:'newCode',
 							})
 						},300000);
 					}
 				}) 
 			}
+			
 		}	
 	}
 </script>
@@ -181,7 +217,8 @@
 		color: #333333;
 		position: absolute;
 		right: 5%;
-		line-height: 100upx;
+		top:25upx;
+		text-align: right;
 	}
 	.codeClass1{
 		font-size: 32upx;
@@ -222,6 +259,6 @@
 		font-size: 30upx;
 		text-align: center;
 		margin-top: 22upx;
-		color: #7289A8;
+		color: #55aaff;
 	}
 </style>

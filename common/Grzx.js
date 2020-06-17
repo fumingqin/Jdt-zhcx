@@ -10,7 +10,11 @@
 	const Url = 'https://zntc.145u.net:9099'; //https请求
 // #endif
 
-// const Url1='http://111.231.109.113:8002';
+// #ifdef APP-PLUS
+// #endif
+const ddtUrl='http://111.231.109.113:8004' //达达通接口地址
+
+
 const Interface={
 	login:{
 		value:Url+'/api/person/login',
@@ -72,7 +76,7 @@ const Interface={
 		method:'POST',
 		pages: [],
 	},
-	 GetUserInfoByOpenId_xcx:{
+	GetUserInfoByOpenId_xcx:{
 		value:Url+'/api/person/GetUserInfoByOpenId_xcx',
 		name:'通过微信小程序的openid获取用户信息',
 		method:'POST',
@@ -125,7 +129,16 @@ const Interface={
 		name:'添加紧急联系人',
 		method:'POST',//GET-POST
 		pages:[]
+	},
+	
+	//-----------------------达达通start------------------------
+	RegistUser:{
+		value: ddtUrl + '/api/SmartBikePerson/RegistUser',
+		name:'达达通注册自行车用户',
+		method:'POST',//GET-POST
+		pages:[]
 	}
+	//-----------------------达达通end------------------------
 }
 
 const MainPackage='/pages/GRZX';   //主包
@@ -216,6 +229,14 @@ const Route={
 	replacePhoneNum:{
 		url:SubPackage+'/replacePhoneNum',
 		name:'更换手机号',
+	},
+	verificateName:{
+		url:SubPackage+'/verificateName',
+		name:'实名验证',
+	},
+	newPhone:{
+		url:SubPackage+'/newPhone',
+		name:'更换成新手机号',
 	},
 }
 

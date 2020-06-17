@@ -91,7 +91,13 @@ const DDTInterface = {
 	},
 	WirteRechargeLog:{
 		Url:Url + '/api/Purse/WirteRechargeLog',
-		name:'充值记录',
+		name:'钱包充值记录',
+		method:'POST',
+		header:{'content-type':'application/x-www-form-urlencoded'},
+	},
+	GetOrderByUserID:{
+		Url:Url + '/api/SmartBike/GetOrderByUserID',
+		name:'查询自行车订单',
 		method:'POST',
 		header:{'content-type':'application/x-www-form-urlencoded'},
 	},
