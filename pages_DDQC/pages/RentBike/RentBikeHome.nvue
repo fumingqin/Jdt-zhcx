@@ -70,6 +70,7 @@
 		},
 		onLoad() {
 			var that = this;
+			that.userInfo = uni.getStorageSync('userInfo') || '';
 			//获取系统信息
 			uni.getSystemInfo({
 				success: function(res) {
@@ -374,41 +375,41 @@
 					method:$DDTInterface.DDTInterface.GetBizStatus.method,
 					data:{
 						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
-						// loginname:that.userInfo.phoneNumber,//手机号
-						loginname:13906963039,//手机号
-						
+						loginname:that.userInfo.phoneNumber,//手机号
 					},
 					success(response) {
 						uni.hideLoading()
 						if(response.data.status == true){
-							if(response.data.data == '新建'){
+							if(response.data.data.bizStatus == '新建'){
 								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
 								//开通租车业务
 								uni.showModal({
 									title:'温馨提示',
 									content:'未交押金无法用车，是否立即支付押金？',
-									success() {
-										uni.navigateTo({
-											url:'../GRZY/zy_homepage'
-										})
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'../GRZY/zy_homepage'
+											})
+										}
 									}
 								})
-							}else if(response.data.data == '业务开通支付中'){
+							}else if(response.data.data.bizStatus == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
-							}else if(response.data.data == '已租车'){
+							}else if(response.data.data.bizStatus == '已租车'){
 								that.myShowModal('当前有行程未结束无法租车');
-							}else if(response.data.data == '租车超时支付中'){
+							}else if(response.data.data.bizStatus == '租车超时支付中'){
 								that.myShowModal('租车超时支付中，请完成支付');
-							}else if(response.data.data == '业务已注销'){
+							}else if(response.data.data.bizStatus == '业务已注销'){
 								that.myShowModal('业务已注销，无法租车');
-							}else if(response.data.data == '可用'){
+							}else if(response.data.data.bizStatus == '可用'){
 								//已交押金，开始扫码租车
 								that.scanQrcode();
 							}
 						}else {
-							
+							console.log('返回数据false',response)
 						}
-						console.log(response)
+						
 					},
 					fail(response) {
 						console.log(response)
@@ -523,7 +524,7 @@
 					url:$DDTInterface.DDTInterface.Rent.Url,
 					method:$DDTInterface.DDTInterface.Rent.method,
 					data:{
-						phone:13906963039,//that.userInfo.phoneNumber
+						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
 					},
@@ -563,7 +564,7 @@
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
 					data:{
-						phone:13906963039,//that.userInfo.phoneNumber
+						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
 					},

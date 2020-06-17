@@ -157,6 +157,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	UpdateOrder: {
+		Url: Url + '/api/Purse/UpdateOrder',
+		name: '还车时更新订单状态',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 
 // 接口声明区

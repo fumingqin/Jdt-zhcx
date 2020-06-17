@@ -204,7 +204,7 @@
 
 					fail: function(ee) {
 						uni.showToast({
-							title: '您取消了支付',
+							title: '网络异常，请检查网络后重试',
 							icon: 'none',
 							duration: 3000
 						})

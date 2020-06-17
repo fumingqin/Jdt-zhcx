@@ -509,9 +509,12 @@
 			},
 			// ---------------------------更换手机号--------------------------
 			replacePhoneNum(){
-				uni.navigateTo({
-					url:this.$GrzxInter.Route.replacePhoneNum.url,
+				uni.showToast({
+					title:'暂未开通，敬请期待'
 				})
+				// uni.navigateTo({
+				// 	url:this.$GrzxInter.Route.replacePhoneNum.url,
+				// })
 			},
 			//----------------------判断是否为base64格式-------------------
 			isBase64:function(str) {
