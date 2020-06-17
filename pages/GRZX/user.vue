@@ -475,15 +475,46 @@
 			},
 			// ---------------------------实名认证--------------------------
 			realName(){
-				uni.navigateTo({
-					url:this.$GrzxInter.Route.realName.url,
+				this.checkRealName();
+			},
+			//-------------------------------------检查是否实名----------------------------------
+			checkRealName(){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.GetUserByUserID.value,
+					data:{
+						userID:that.userId,
+					},
+					method:that.$GrzxInter.Interface.GetUserByUserID.method,
+					success(res) {
+						console.log(res)
+						if(res.data.data==""||res.data.data.UserName==""||res.data.data.UserIDNumber==""){
+							//实名认证
+							uni.navigateTo({
+								url:that.$GrzxInter.Route.realName.url,
+							})
+						}else if(res.data.data.RealNameStatus!==1){
+							//上传图片
+							uni.navigateTo({
+								url:that.$GrzxInter.Route.uploadPhoto.url,
+							})
+						}else{
+							uni.showToast({
+								title:'您已实名',
+								icon:'none',
+							})
+						}
+					}
 				})
 			},
 			// ---------------------------更换手机号--------------------------
 			replacePhoneNum(){
-				uni.navigateTo({
-					url:this.$GrzxInter.Route.replacePhoneNum.url,
+				uni.showToast({
+					title:'暂未开通，敬请期待'
 				})
+				// uni.navigateTo({
+				// 	url:this.$GrzxInter.Route.replacePhoneNum.url,
+				// })
 			},
 			//----------------------判断是否为base64格式-------------------
 			isBase64:function(str) {

@@ -133,6 +133,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	WriteRefundLog: {
+		Url: Url + '/api/Purse/WriteRefundLog',
+		name: '押金退款记录',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 	WriteTransactionLog: {
 		Url: Url + '/api/Purse/WriteTransactionLog',
 		name: '钱包消费记录',
@@ -141,17 +149,9 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
-	ChargeTimeoutOrder: {
-		Url: Url + '/api/Purse/ChargeTimeoutOrder',
-		name: '金通订单支付',
-		method: 'POST',
-		header: {
-			'content-type': 'application/x-www-form-urlencoded'
-		},
-	},
 	UpdateOrder: {
-		Url: Url + '/api/SmartBike/UpdateOrder',
-		name: '租车完成后更新订单状态',
+		Url: Url + '/api/Purse/UpdateOrder',
+		name: '还车时更新订单状态',
 		method: 'POST',
 		header: {
 			'content-type': 'application/x-www-form-urlencoded'

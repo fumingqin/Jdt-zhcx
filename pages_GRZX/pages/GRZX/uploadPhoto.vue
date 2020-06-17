@@ -30,7 +30,7 @@
 				<text class="textClass">点击上传手持身份证照</text>
 			</view>
 			<view v-if="state3==1" style="width: 100%;height: 100%;">
-				<image :src="back" style="width: 100%;height: 100%;" name="hand" mode="aspectFit"></image>
+				<image :src="hand" style="width: 100%;height: 100%;" name="hand" mode="aspectFit"></image>
 			</view>
 		</view>
 		
@@ -88,13 +88,65 @@
 			},
 			//--------------------返回-------------------
 			returnClick:function(){
-				uni.switchTab({
-					url:this.$GrzxInter.Interface.user.value,
-				})
+				// uni.switchTab({
+				// 	url:this.$GrzxInter.Route.user.value,
+				// })
+				uni.navigateBack();
 			},
 			//--------------------提交-------------------
 			submitClick:function(){
-				
+				var that=this;
+				if(that.frontImg==""){
+					uni.showToast({
+						title:'请上传证件的正面',
+						icon:'none',
+					})
+				}else if(that.backImg==""){
+					uni.showToast({
+						title:'请上传证件的背面',
+						icon:'none',
+					})
+				}else if(that.handImg==""){
+					uni.showToast({
+						title:'请上传手持身份证照',
+						icon:'none',
+					})
+				}else{
+					uni.showLoading({
+						title:'上传中...'
+					})
+					that.UpdateRealNamePhoto();
+				}
+			},
+			//--------------------自行车用户上传实名认证照片-------------------
+			UpdateRealNamePhoto:function(){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.UpdateRealNamePhoto.value,
+					data:{
+						userID:that.userInfo.userId,//用户id
+						Positive:that.frontImg,
+						Back:that.backImg,
+						Handheld:that.handImg,
+					},
+					method:that.$GrzxInter.Interface.UpdateRealNamePhoto.method,
+					success(res) {
+						console.log(res)
+						uni.showToast({
+							title:'上传成功',
+							icon:'success',
+						})
+						setTimeout(function(){
+							uni.navigateBack();
+						},500);
+					},
+					fail(){
+						uni.showToast({
+							title:'上传失败',
+							icon:'none',
+						})
+					}
+				})
 			},
 			//--------------------上传身份证正面-------------------
 			chooseFrontImg:function(){

@@ -59,7 +59,15 @@
 					</view>
 					<view v-if="state==2">
 						<view class="MP_cost">
-							<text>专线费用-余下费用</text>
+							<text>超额燃油费</text>
+							<text class="MP_userCost">¥{{orderInfo.cm_money}}</text>
+						</view>
+						<view class="MP_cost">
+							<text>司机抽成费</text>
+							<text class="MP_userCost">¥{{orderInfo.cm_money}}</text>
+						</view>
+						<view class="MP_cost">
+							<text>超额里程费</text>
 							<text class="MP_userCost">¥{{orderInfo.cm_money}}</text>
 						</view>
 					</view>
@@ -111,6 +119,11 @@
 					支付{{orderInfo.cm_money}}元
 				</view>
 			</view>
+			<view v-if="state==2">
+				<view class="MP_information3" @click="paymentSatas">
+					支付{{orderInfo.cm_money}}元
+				</view>
+			</view>
 		</view>
 
 	</view>
@@ -124,7 +137,7 @@
 				countDownDate: 300, //倒计时时间
 				returnIndex: false, //页面点击上一页
 				hiddenValues: '0', //隐藏状态值
-				state: '0',
+				state:'0',
 				channel: [{
 					name: '微信'
 				}, {
@@ -180,6 +193,8 @@
 			console.log(options)
 			this.or_number = JSON.parse(decodeURIComponent(options.or_number));
 			this.state = options.state;
+			console.log(this.state);
+			console.log(options.state);
 			console.log(this.or_number)
 			uni.showLoading({
 				title: '拉起订单中...'

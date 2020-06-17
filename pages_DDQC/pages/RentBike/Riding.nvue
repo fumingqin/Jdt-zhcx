@@ -141,12 +141,12 @@
 					}
 				}, 1000);
 			},
-			timeConcer: function(value, value1) { //时间转换
+			//获取开车时间
+			timeConcer: function(value) { //时间转换
 				var that = this;
 				var value = value.replace(" ", "T")
-				// var begindate = new Date(value + "+08:00").getTime(); 
-				// var begindate = new Date(2018, 11, 24, 10, 33, 30, 0);
-				var begindate = new Date(2020, 5, 17, 9, 51, 30, 0).getTime();
+				var begindate = new Date(value + "+08:00").getTime(); 
+				// var begindate = new Date(2020, 5, 17, 9, 51, 30, 0).getTime();
 				console.log(begindate)
 				var enddate = new Date().getTime();
 				console.log(enddate)
@@ -162,7 +162,7 @@
 				}
 			},
 			//--------------------------检测订单状态--------------------------
-			//自行车还车，定时器检索订单状态，直到订单结束
+			//自行车还车，定时器检索订单状态，直到订单结束-----每三秒检测一次
 			CheckOrderStatus: function() {
 				let that = this;
 				clearInterval(that.interval);
@@ -175,7 +175,7 @@
 							orderId: that.orderId,
 						},
 						success(res) {
-							console.log('订单状态res', res)
+							console.log('有桩还车订单状态结果', res)
 							if (res.data.status == true) {
 								if (res.data.bizStatus == '还车成功') {
 									uni.showToast({
@@ -300,10 +300,12 @@
 					success(res) {
 						console.log(res)
 						that.orderId = res.data.data[0].OrderId;
-						that.OrderNo=res.data.data[0].OrderNo;
-						if (res.data.data[0].RestoreAction.Time != '' && that.rentInfo.bikeType == "有桩") {
+						//判断是否有还车时间
+						if (that.rentInfo.bikeType == "有桩") {
+							//---开启检测订单状态
 							that.CheckOrderStatus();
 						}
+						//开始计时---显示当前骑行时间
 						that.timeConcer(res.data.data[0].HireAction.Time);
 					},
 					fail(err) {

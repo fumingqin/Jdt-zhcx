@@ -10,9 +10,9 @@
 		<view style=" width:670upx;margin-left: 40upx; margin-top:10upx;border: 0.8px solid #E2E2E2;"></view>
 		<view class="tu_view">
 			<view v-for="(item,index) in info" :key="index">
-				<view class="tu_square" :class="{current2: value===index}" @click="affirm(index,item.money)">
-					<view class="tu_money">￥{{fixed(item.money)}}</view>
-					<view class="tu_award">赠送 ￥{{fixed(item.award)}}</view>
+				<view class="tu_square" :class="{current2: value===index}" @click="affirm(index,item[0])">
+					<view class="tu_money">￥{{fixed(parseInt(item[0]))}}</view>
+					<view class="tu_award">赠送 ￥{{fixed(parseInt(item[1]))}}</view>
 				</view>
 			</view>
 		</view>
@@ -59,10 +59,7 @@
 		data() {
 			return {
 				value: 0,
-				info: {
-					money: '',
-					award: '',
-				},
+				info:[],
 				checked: 0,
 				security: '',
 				cost: 10,
@@ -78,6 +75,7 @@
 		onShow() {
 			var that = this;
 			that.getUserInfo();
+			that.getmoney();
 		},
 		methods: {
 			//--------------------------读取用户信息--------------------------
@@ -140,17 +138,17 @@
 							channel: 'wechat_app', //微信
 							title: '钱包充值',
 							body: '钱包充值',
-							phoneNumber: that.userInfo.phoneNumber,
-							userID: that.userInfo.userId,
+							phoneNumber: '13235912326',
+							userID: '1000075',
 							// timeExpire:timestemp,//过期时间(时间戳)
 							chargeType: 1, //0:充值押金 1充值钱包
-							totalPrice: 0.1, //金额
+							totalPrice: 1, //金额
 						},
 						success(res) {
 							uni.hideLoading();
 							console.log('钱包充值返回支付参数成功结果', res)
-							if (res.status == true) {
-								that.paymentData = res.data.data.credential;
+							if (res.data.status == true) {
+								that.paymentData = res.data.data.credential;				
 								that.payment();
 							}
 						},
@@ -182,6 +180,7 @@
 							uni.showToast({
 								title: '支付成功',
 							})
+							
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
@@ -200,7 +199,7 @@
 
 					fail: function(ee) {
 						uni.showToast({
-							title: '拉起支付失败，请检查网络后重试',
+							title: '网络异常，请检查网络后重试',
 							icon: 'none',
 							duration: 3000
 						})
@@ -264,7 +263,7 @@
 						body: "钱包充值记录测试",
 						phoneNumber: that.userInfo.phoneNumber,
 						chargeType: 1,
-						totalPrice: 0.1,
+						totalPrice: 1,
 						userID: that.userInfo.userId,
 						state: state,
 					},
@@ -275,6 +274,7 @@
 						console.log('钱包充值记录失败',res)
 					}
 				})
+				that.getmoney();
 			},
 			
 			//--------------------------单选框点击--------------------------
@@ -284,6 +284,39 @@
 				} else {
 					this.checked = 0;
 				}
+			},
+			//-----------------查看充值套餐及用户余额-------------------------
+			getmoney: function() {
+				var that = this;
+				uni.getStorage({
+					key:'userInfo',
+					success: (res) => {
+						uni.request({
+							url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
+							method: $DDTInterface.DDTInterface.GetPurseDetail.method,
+							data: {
+								phoneNumber:that.userInfo.phoneNumber,
+								userID:that.userInfo.userId,
+							},
+							success: (res) => {
+								console.log(res)
+								if (res.data.msg == '请求成功') {
+									that.info=[];
+									let array=res.data.data.chargeRate.split(';');
+									for(var i=0;i<array.length;i++){			
+										that.info.push(array[i].split('&'));
+									}	
+									that.cost=that.info[0][0];
+									that.balance = res.data.data.balance/100;
+								}
+							},
+							fail(res) {
+								console.log(res)
+							}
+						})
+					}
+				})
+					
 			},
 
 			fixed(e) {
@@ -298,9 +331,7 @@
 			},
 			async getlist() {
 				let array = await this.$api.zyxinfo('topupInfo');
-				this.info = array.data;
 				this.security = array.security;
-				console.log(this.info)
 			},
 
 			//打开弹窗
@@ -392,7 +423,8 @@
 		align-items: center;
 
 		.tu_notice {
-			margin-left: 266upx;
+			margin-left: 286upx;
+			margin-right: 20upx;
 			font-size: 26upx;
 			color: #4281FF;
 		}
