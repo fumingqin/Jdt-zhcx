@@ -90,7 +90,6 @@
 		},
 		methods:{
 			loadUserInfo(){
-				console.log(1)
 				uni.showLoading({
 					title:'加载中...'
 				})
@@ -114,8 +113,7 @@
 								},
 								method:theself.$GrzxInter.Interface.login.method,
 								success(res1) {
-									console.log(res1,"108")
-									// uni.setStorageSync('userInfo',res1.data.data)
+									// console.log(res1,"108")
 									// ------------1.头像-------------
 									var base64=res1.data.data.portrait;
 									theself.port=res1.data.data.portrait;
@@ -125,12 +123,12 @@
 										    theself.portrait=path;
 										  })
 										  .catch(error => {
-										    console.error(error)
+										    // console.error(error)
 										  })
 									}else{
 										theself.portrait=base64;
 									}
-									console.log(theself.portrait,"128")
+									// console.log(theself.portrait,"128")
 									// ------------2.昵称-------------
 									if(res1.data.data.nickname==null||res1.data.data.nickname==""){
 										theself.nickname="";
@@ -227,7 +225,7 @@
 					count:1,
 					//sourceType:['album'],
 					success(res) {
-						console.log(res,"res11");
+						// console.log(res,"res11");
 						var tempFilePaths = res.tempFilePaths;
 						uni.saveFile({
 						  tempFilePath: tempFilePaths[0],
@@ -241,7 +239,7 @@
 								key:'backUrl',
 								success:function(res){
 									that.backImg=res.data;
-									console.log(res.data,"res..data")
+									// console.log(res.data,"res..data")
 								}
 							})
 						  }
@@ -255,58 +253,74 @@
 				uni.showLoading({
 					title:'保存中...'
 				})
-				console.log(this.userId)
-				console.log(this.nickname)
-				// console.log(this.portrait)
-				// console.log(this.port,"port")
-				console.log(this.openId_qq)
-				console.log(this.openId_wx)
 				if(this.selector=='男'){
 					this.gender=1;
 				}
 				if(this.selector=='女'){
 					this.gender=2;
 				}
-				console.log(this.gender)
-				console.log(this.address)
-				console.log(this.nickname)
-				console.log(this.birthday)
-				console.log(this.phoneNumber)
+				var that=this;
+				if(this.nickname==""){
+					uni.showToast({
+						title:'请输入姓名',
+						icon:'none'
+					})
+				}else{
+					uni.request({
+						url:that.$GrzxInter.Interface.changeInfo.value,
+						data:{
+							userId:that.userId,
+							gender:that.gender,
+							openId_qq:that.openId_qq,
+							openId_wx:that.openId_wx,
+							openId_xcx:that.openId_xcx,
+							address:that.address,
+							nickname:that.nickname,
+							birthday:that.birthday,
+							autograph:that.autograph,
+							phoneNumber:that.phoneNumber,
+						},
+						method:that.$GrzxInter.Interface.changeInfo.method,
+						success(res) {
+							// console.log(res,"286")
+							that.changePortrait();
+						},
+						fail() {
+							uni.showToast({
+								title:'网络连接失败',
+								icon:'none'
+							})
+						}
+					})
+				}
+			},
+			// --------修改头像---------
+			changePortrait(){
 				var that=this;
 				uni.request({
-					//url:'http://111.231.109.113:8002/api/person/changeInfo',
-					url:that.$GrzxInter.Interface.changeInfo.value,
+					url:that.$GrzxInter.Interface.changeInfoPortrait.value,
 					data:{
-						//portrait:this.port,
+						portrait:that.port,
 						userId:that.userId,
-						gender:that.gender,
-						openId_qq:that.openId_qq,
-						openId_wx:that.openId_wx,
-						openId_xcx:that.openId_xcx,
-						address:that.address,
-						nickname:that.nickname,
-						birthday:that.birthday,
-						autograph:that.autograph,
-						phoneNumber:that.phoneNumber,
 					},
-					method:that.$GrzxInter.Interface.changeInfo.method,
-					success(res) {
-						console.log(res,"286")
-						uni.request({
-							url:that.$GrzxInter.Interface.changeInfoPortrait.value,
-							data:{
-								portrait:that.port,
-								userId:that.userId,
-							},
-							method:that.$GrzxInter.Interface.changeInfoPortrait.method,
-							success(res1) {
-								console.log(res1,"290")
-								uni.hideLoading();
-								uni.navigateBack();
-							}
+					method:that.$GrzxInter.Interface.changeInfoPortrait.method,
+					success(res1) {
+						// console.log(res1,"290")
+						uni.showToast({
+							title:'信息保存成功！',
+							icon:'success'
+						})
+						setTimeout(function(){
+							uni.navigateBack();
+						},500);
+					},
+					fail() {
+						uni.showToast({
+							title:'网络连接失败',
+							icon:'none'
 						})
 					}
-				})				
+				})
 			},
 			// --------获得头像---------
 			getPhoto(){
@@ -320,7 +334,7 @@
 						  tempFilePath: tempFilePaths[0],
 						  success: function (res1) {
 							 that.portrait=res1.savedFilePath;
-							 console.log(that.portrait)
+							 // console.log(that.portrait)
 							 pathToBase64(res1.savedFilePath)
 							 .then(base64 => {
 								 that.port=base64;
