@@ -159,6 +159,7 @@
 												title:"登录成功!",
 												icon:"none"
 											})
+											that.registerBike(res.data.data.userId,res.data.data.phoneNumber)  //注册自行车用户
 											if(that.urlData==1){
 												uni.switchTab({  //返回首页
 													url:'/pages/Home/Index',
@@ -190,6 +191,20 @@
 						})
 					}
 				}
+			},
+			//-------------------------------------用户注册自行车----------------------------------
+			registerBike(id,phone){
+				uni.request({
+					url:that.$GrzxInter.Interface.RegistUser.value,
+					method:that.$GrzxInter.Interface.RegistUser.method,
+					data:{
+						userID:id,
+						phone:phone,
+					},
+					success(res) {
+						console.log(res)
+					}
+				})
 			},
 			wxLogin(){		//微信授权登录
 				var theSelf=this;
@@ -320,7 +335,6 @@
 									key:'captchaCode',
 									data:{
 										code:res.data.data,
-										//code:'1234',
 										phone:self.phoneNumber,
 									}
 								})
