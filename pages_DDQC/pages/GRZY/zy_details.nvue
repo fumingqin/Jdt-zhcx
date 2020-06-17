@@ -6,7 +6,8 @@
 
 		<view style="position: fixed;bottom: 0;">
 			<view class="ct_state">
-				<text class="sa_text">行程<text class="sa_text2">{{expenseDetail.durationCost}}元</text></text>
+				<text class="sa_text">行程</text>
+				<text class="sa_text2">{{drivingRecord.PayPrice}}元</text>
 				<text class="sa_text3" @click="jump">查看明细></text>
 			</view>
 
@@ -138,8 +139,8 @@
 			return {
 				selectContent:'',
 				scale: 14,
-				longitude: "118.600608", //地图中心点经度
-				latitude: "24.889217", //地图中心点纬度
+				longitude: "", //地图中心点经度
+				latitude: "", //地图中心点纬度
 				evaluate: ['动作娴熟', '服务态度好', '热情', '技术高超好', '绅士', '服务周到', '攀谈', '风度翩翩', '成熟稳重', '笑容满面','没有绕路',],
 				badevaluate: ['动作不熟', '服务态度差', '冷漠', '技术较差', '无情', '服务不周到', '不守时', '衣衫不整', '不严肃', '愁眉苦脸','司机绕路',],
 				textareaValue:"",//意见信息
@@ -156,10 +157,16 @@
 				minute: 26,
 				travelTime:'10分',
 				expenseDetail: '',
+				drivingRecord:'',
+				HireCoord:'',//租车经纬度
+				RestoreCoord:'',//还车经纬度
+				StartLon:'',//起点经度
+				StartLat:'',//起点纬度
+				EndLon:'',//终点经度
+				EndLat:'',//终点纬度
 			}
 		},
-
-		onLoad() {
+		onLoad(param) {
 			var that = this;
 			uni.getSystemInfo({
 				//设置地图高度为可使用的高度
@@ -168,117 +175,220 @@
 					that.viewHeight = (res.windowHeight * 0.4) + 'px'
 				}
 			});
+			that.orderData();
 			that.lunBoInit();
-			that.setMarker(1, 118.600608, 24.889217, '../../static/GRZY/start.png');
-			that.setMarkers(2, 118.613688, 24.912702, '../../static/GRZY/end.png');
-			that.getDirectionDriving(that.longitude + ',' + that.latitude, '118.613688,24.912702');
+			that.setMarkers();
+			// that.setMarker(1, that.StartLon, that.StartLat, '../../static/GRZY/start.png');
+			// that.setMarkers(2, that.EndLon, that.EndLat, '../../static/GRZY/end.png');
+			// that.getDirectionDriving();
 		},
 
 		methods: {
-			//------------------------------规划路线-----------------------------
-			setMarker: function(id, lon, lat, iconPath) {
-				var width = 20;
-				var height = 20;
-				//描绘点的方法
-				var that = this;
-				var marker = new Object();
-				//画起点经纬度
-				marker = {
-					id: id,
-					latitude: lat,
-					longitude: lon,
-					iconPath: iconPath,
-					width: width,
-					height: height,
-					anchor: {
-					    x: 0.5,
-					    y: 1
-					},
+			//--------------------------订单缓存--------------------------------
+			orderData:function(){
+				try {
+				    const res = uni.getStorageSync('bicycleOrderInfo');
+				    if (res) {
+				        // console.log('订单缓存数据',res)
+				        this.drivingRecord=res;
+						var HireCoord=this.drivingRecord.HireCoord;
+						var RestoreCoord=this.drivingRecord.RestoreCoord;
+						console.log('订单缓存数据2',this.drivingRecord)
+						
+						var arr = HireCoord.split(',');
+						for(var i=0;i< arr.length;i++){
+							this.StartLon=arr[0];
+							this.StartLat=arr[1];
+							this.longitude=arr[0];
+							this.latitude=arr[1]
+						}
+						
+						console.log(this.StartLon)
+						console.log(this.StartLat)
+						
+						var arr2 = RestoreCoord.split(',');
+						for(var i=0;i< arr2.length;i++){
+							this.EndLon = arr2[0];
+							this.EndLat = arr2[1]
+						}
+						
+						console.log(this.EndLon)
+						console.log(this.EndLat)
+				    }
+				} catch (e) {
 					
+				}
+			},
+			
+			//------------------------------规划路线-----------------------------
+			
+			setMarkers: function() { //设置始末标点
+				var that = this;
+				var startmarker = { //起点
+					id: 0,
+					latitude: that.StartLat,
+					longitude: that.StartLon,
+					iconPath: '../../../static/Home/Start.png',
+					width: 30,
+					height: 30,
+					anchor: {
+						x: 0.5,
+						y: 1
+					},
 					callout: {
-					    content: '骑行时间:' + this.travelTime,
-					    color: '#fff',
-					    fontSize: 13,
-					    borderRadius: 39,
-					    borderWidth: 1,
-					    borderColor: '#000000',
-					    bgColor: '#000000',
-					    padding: '5',
-					    display: 'ALWAYS'
+						content: '骑行时间:' + this.drivingRecord.TotalTime + '分钟',
+						color: '#fff',
+						fontSize: 13,
+						borderRadius: 39,
+						borderWidth: 1,
+						borderColor: '#000000',
+						bgColor: '#000000',
+						padding: '5',
+						display: 'ALWAYS'
 					}
 				};
-				var str = JSON.stringify(that.markers) ;
-				var arr = JSON.parse(str);
-				arr.push(marker);
-				that.markers = arr;
-				console.log(this.markers);
-				//that.markers.push(marker);
-			},
-			setMarkers: function(id, lon, lat, iconPath) {
-				var width = 20;
-				var height = 20;
-				//描绘点的方法
-				var that = this;
-				var marker = new Object();
-				//画终点经纬度
-				marker = {
-					id: id,
-					latitude: lat,
-					longitude: lon,
-					iconPath: iconPath,
-					width: width,
-					height: height,
+				var endmarker = {
+					id: 1,
+					latitude: that.EndLat,
+					longitude: that.EndLon,
+					iconPath: '../../../static/Order/End.png',
+					width: 30,
+					height: 30,
 				};
-				that.markers.push(marker);
+				that.markers = [];
+				that.startmarker = [];
+				that.endmarker = [];
+				console.log(that.StartLat)
+				console.log(that.StartLon)
+				that.markers.push(startmarker);
+				that.markers.push(endmarker);
+				that.showlocation = false;
+				that.getDirectionDriving();
 			},
-			getDirectionDriving: function(startLonLat, endLonLat) {
+			
+			// setMarker: function(id, lon, lat, iconPath) {
+			// 	var width = 20;
+			// 	var height = 20;
+			// 	//描绘点的方法
+			// 	var that = this;
+			// 	var marker = new Object();
+			// 	//画起点经纬度
+			// 	marker = {
+			// 		id: id,
+			// 		latitude: lat,
+			// 		longitude: lon,
+			// 		iconPath: iconPath,
+			// 		width: width,
+			// 		height: height,
+			// 		anchor: {
+			// 		    x: 0.5,
+			// 		    y: 1
+			// 		},
+			// 		callout: {
+			// 		    content: '骑行时间:' + this.travelTime,
+			// 		    color: '#fff',
+			// 		    fontSize: 13,
+			// 		    borderRadius: 39,
+			// 		    borderWidth: 1,
+			// 		    borderColor: '#000000',
+			// 		    bgColor: '#000000',
+			// 		    padding: '5',
+			// 		    display: 'ALWAYS'
+			// 		}
+			// 	};
+			// 	console.log(lat)
+			// 	console.log(lon)
+			// 	var str = JSON.stringify(that.markers) ;
+			// 	var arr = JSON.parse(str);
+			// 	arr.push(marker);
+			// 	that.markers = arr;
+			// 	console.log(this.markers);
+			// 	//that.markers.push(marker);
+			// },
+			// setMarkers: function(id, lon, lat, iconPath) {
+			// 	var width = 20;
+			// 	var height = 20;
+			// 	//描绘点的方法
+			// 	var that = this;
+			// 	var marker = new Object();
+			// 	//画终点经纬度
+			// 	marker = {
+			// 		id: id,
+			// 		latitude: lat,
+			// 		longitude: lon,
+			// 		iconPath: iconPath,
+			// 		width: width,
+			// 		height: height,
+			// 	};
+			// 	that.markers.push(marker);
+			// },
+			getDirectionDriving: function() {
+				
 				//调用高德api取得路径规划并绘制线路 
 				var that = this;
-				uni.request({
-					url: $bcfw.InterfaceAddress[0],
-					data: {
-						startLonLat: startLonLat,
-						endLonLat: endLonLat,
-					},
-					method: "GET",
-					success: function(res) {
-						//日后会加入定时，此处需清空
-						console.log(res)
-						that.points = [];
-						that.polyline = [];
+				that.points = [];
+				that.polyline = [];
+				
+				var points = [];
+				var obj={
+					points: [{
+					        latitude: that.StartLon,
+					        longitude: that.StartLat
+					    },
+					    {
+					        latitude: that.EndLon,
+					        longitude: that.EndLat
+					    }],
+					color: "#4281FF",
+					arrowLine: true,
+					width: 5
+				};
+				that.polyline.push(obj);
+				// uni.request({
+				// 	url: $bcfw.InterfaceAddress[0],
+				// 	data: {
+				// 		startLonLat: startLonLat,
+				// 		endLonLat: endLonLat,
+				// 	},
+				// 	method: "GET",
+				// 	success: function(res) {
+				// 		//日后会加入定时，此处需清空
+				// 		console.log(res)
+				// 		that.points = [];
+				// 		that.polyline = [];
 
-						var polylineArr = [];
-						var points = [];
+				// 		var polylineArr = [];
+				// 		var points = [];
 
-						polylineArr = res.data.Polyline;
+				// 		polylineArr = res.data.Polyline;
 
-						for (var i = 0; i < polylineArr.length; i++) {
-							var arr = polylineArr[i].split(';');
-							for (var j = 0; j < arr.length; j++) {
-								points.push(arr[j]);
-							}
-						}
-						//根据文件建设对象经纬度数组
-						for (var i = 0; i < points.length; i++) {
-							var arr = points[i].split(',');
-							var obj = {
-								longitude: arr[0],
-								latitude: arr[1]
-							}
-							that.points.push(obj);
-						}
-						var obj = {
-							points: that.points,
-							color: "#4281FF",
-							arrowLine: true,
-							width: 5
-						};
-						that.polyline.push(obj);
-					},
-					fail: function(res) {
-						// console.log(res);
-					}
-				});
+				// 		for (var i = 0; i < polylineArr.length; i++) {
+				// 			var arr = polylineArr[i].split(';');
+				// 			for (var j = 0; j < arr.length; j++) {
+				// 				points.push(arr[j]);
+				// 			}
+				// 		}
+				// 		//根据文件建设对象经纬度数组
+				// 		for (var i = 0; i < points.length; i++) {
+				// 			var arr = points[i].split(',');
+				// 			var obj = {
+				// 				longitude: arr[0],
+				// 				latitude: arr[1]
+				// 			}
+				// 			that.points.push(obj);
+				// 		}
+				// 		var obj = {
+				// 			points: that.points,
+				// 			color: "#4281FF",
+				// 			arrowLine: true,
+				// 			width: 5
+				// 		};
+				// 		that.polyline.push(obj);
+				// 	},
+				// 	fail: function(res) {
+				// 		// console.log(res);
+				// 	}
+				// });
 			},
 
 			//------------------------------满意弹框事件-----------------------------------------
@@ -376,15 +486,17 @@
 	}
 
 	.sa_text {
+		z-index:1;
 		font-size: 30upx;
 		text-align: left;
 	}
 
 	.sa_text2 {
+		z-index:2;
 		color: #E74246;
 		font-size: 30upx;
-		padding-left: 20upx;
 		font-weight: 500;
+		margin-right: 335upx;
 	}
 
 	.sa_text3 {
@@ -582,7 +694,7 @@
 	}
 	
 	.dt_view{
-		height: 780rpx;
+		height: 860rpx;
 		background-color: #FFFFFF; 
 		border-top-left-radius: 20rpx; 
 		border-top-right-radius: 20rpx;
