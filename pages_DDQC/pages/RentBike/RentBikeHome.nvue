@@ -38,38 +38,12 @@
 		</button>
 
 		<image src="../../static/GRZY/personal.png" class="personal" @click="personalClick"></image>
-		<!-- 押金支付弹框 -->
-		<uni-popup ref="popup" type="bottom">
-			<view class="po_boxVlew">
-				<view class="bv_topText">
-					<text class="tt_text">押金充值</text>
-					<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
-				</view>
-				<!-- 充值金额 -->
-				<view class="bv_rechargeAmount">
-					<text class="ra_text">充值金额:</text>
-					<text class="ra_text2">&nbsp;￥0.1</text>
-				</view>
-				<!-- 支付方式 -->
-				<view class="bv_rechargeAmount2">
-					<text class="ra_text">支付方式:</text>
-					<image class="ra_img" src="../../static/GRZY/weixin.png"></image>
-					<text class="ra_text2">微信支付</text>
-				</view>
-				<view class="tjButton" @click="PayDeposit">确认支付</view>
-				<view class="vi_bottom"></view>
-			</view>
-		</uni-popup>
 	</view>
 </template>
 
 <script>
 	import $DDTInterface from '@/common/DDT.js'
-	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
 	export default {
-		components: {
-			uniPopup,
-		},
 		data() {
 			return {
 				userInfo: [], //用户信息
@@ -92,7 +66,6 @@
 				position:[],
 				system:'',
 				disabled:true,//判断扫码按钮是否可以点击
-				paymentData:[],//支付参数
 			}
 		},
 		onLoad() {
@@ -402,13 +375,13 @@
 					data:{
 						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
 						// loginname:that.userInfo.phoneNumber,//手机号
-						loginname:15394416322,//手机号13906963039
+						loginname:13906963039,//手机号13906963039
 						
 					},
 					success(response) {
 						uni.hideLoading()
 						if(response.data.status == true){
-							if(response.data.data == '新建'){
+							if(response.data.data.bizStatus == '新建'){
 								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
 								//开通租车业务
 								uni.showModal({
@@ -416,22 +389,21 @@
 									content:'未交押金无法用车，是否立即支付押金？',
 									success(res) {
 										if(res.confirm){
-											// uni.navigateTo({
-											// 	url:'../GRZY/zy_homepage'
-											// })
-											that.$refs.popup.open()
+											uni.navigateTo({
+												url:'../GRZY/zy_homepage'
+											})
 										}
 									}
 								})
-							}else if(response.data.data == '业务开通支付中'){
+							}else if(response.data.data.bizStatus == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
-							}else if(response.data.data == '已租车'){
+							}else if(response.data.data.bizStatus == '已租车'){
 								that.myShowModal('当前有行程未结束无法租车');
-							}else if(response.data.data == '租车超时支付中'){
+							}else if(response.data.data.bizStatus == '租车超时支付中'){
 								that.myShowModal('租车超时支付中，请完成支付');
-							}else if(response.data.data == '业务已注销'){
+							}else if(response.data.data.bizStatus == '业务已注销'){
 								that.myShowModal('业务已注销，无法租车');
-							}else if(response.data.data == '可用'){
+							}else if(response.data.data.bizStatus == '可用'){
 								//已交押金，开始扫码租车
 								that.scanQrcode();
 							}
@@ -626,103 +598,7 @@
 						console.log(response)
 					}
 				})
-			},
-			//-------------------------------点击交押金-------------------------------
-			PayDeposit:function(){
-				var that = this;
-				uni.showToast({
-					title: '正在获取支付...',
-					icon: 'none'
-				})
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetRecharge.Url,
-					method: $DDTInterface.DDTInterface.GetRecharge.method,
-					data: {
-						channel: 'wechat_app', //微信
-						title: '押金充值',
-						body: '押金充值',
-						phoneNumber: that.userInfo.phoneNumber,
-						userID: that.userInfo.userId,
-						// timeExpire:timestemp,//过期时间(时间戳)
-						chargeType: 0, //0:充值押金 1充值钱包
-						totalPrice: 0.1, //金额
-					},
-					success(res) {
-						console.log('押金充值返回支付参数成功结果', res)
-						if (res.status == true) {
-							that.paymentData = res.data.data.credential;
-							this.$refs.popup.close()
-							that.payment();
-						}
-					},
-					fail(res) {
-						uni.hideLoading();
-						console.log('押金充值返回支付参数失败', res)
-					}
-				})
-			},
-			//--------------------------调起支付--------------------------
-			payment: function() {
-				var that = this;
-				uni.hideLoading();
-				// #ifdef APP-PLUS
-				uni.requestPayment({
-					provider: 'wxpay',
-					orderInfo: {
-						appid: that.paymentData.wechat_app.appid,
-						timestamp: that.paymentData.wechat_app.timestamp,
-						noncestr: that.paymentData.wechat_app.noncestr,
-						package: 'Sign=WXPay',
-						sign: that.paymentData.wechat_app.sign,
-						partnerid: that.paymentData.wechat_app.partnerid,
-						prepayid: that.paymentData.wechat_app.prepayid,
-					},
-					success: function(res) {
-						console.log(res)
-						if (res.errMsg == 'requestPayment:ok') { //成功
-							uni.showToast({
-								title: '支付成功',
-							})
-							that.WirteRechargeLog(0);
-						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
-							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
-							})
-							that.WirteRechargeLog(1);
-						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
-							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
-							})
-							that.WirteRechargeLog(2);
-						}
-					},
-			
-					fail: function(ee) {
-						if (res.errMsg == 'requestPayment:fail errors') { //错误
-							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
-							})
-							that.WirteRechargeLog(1);
-						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
-							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
-							})
-							that.WirteRechargeLog(2);
-						}else{
-							uni.showToast({
-								title: '拉起支付失败，请检查网络后重试',
-								icon: 'none',
-								duration: 3000
-							})
-						}
-					}
-				})
-				// #endif
-			},
+			}
 		},
 	}
 </script>
