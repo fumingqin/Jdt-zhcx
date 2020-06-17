@@ -21,10 +21,10 @@
 						<view style="margin-top: 20rpx;">
 							<text style="color: #333;font-size: 50rpx;font-weight: 500;">{{minute}}:{{seconds}}</text>
 						</view>
-						<view style="margin-top: 30rpx;">
+						<view style="margin-top: 30rpx;" v-if="!IsStake">
 							<text style="color: #999;font-size: 28rpx;font-weight: 300;">电量充足，可骑行59公里</text>
 						</view>
-						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;">
+						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;" v-if="!IsStake">
 							<!-- <button class="bt_lock" @click="Lock">
 								<text style="color: #FFF;font-size: 40rpx;">临时锁车</text>
 							</button> -->
@@ -85,6 +85,8 @@
 				operatorId: '', //操作ID，用于还车
 				interval: '', //定时器
 				rentInfo: [], //保存租车信息
+				IsStake: true, //是否有桩
+				OrderNo:'',//行程ID
 			}
 		},
 		mounted() {
@@ -103,11 +105,13 @@
 			// that.getMyLocation();
 			// that.countTime();
 			//将上一个页面传过来的参数转为数组
+			that.getOrderInfo();
 			if (item.responseArr) {
 				that.rentInfo = JSON.parse();
 				if (that.rentInfo.bikeType == "有桩") {
 					that.getOrderInfo();
 				} else {
+					that.IsStake = false;
 					that.getOrderInfo();
 				}
 			}
@@ -178,8 +182,9 @@
 										title: '还车成功',
 										icon: 'none',
 										success() {
+											that.UpdateOrder();
 											uni.redirectTo({
-												url:'./Payment'
+												url: './Payment'
 											})
 										}
 									})
@@ -257,6 +262,7 @@
 												icon: 'none',
 												mask: true,
 												success(res) {
+													that.UpdateOrder();
 													uni.redirectTo({
 														url: './Payment'
 													})
@@ -277,7 +283,7 @@
 						}
 					}
 				})
-				that.Isreturn = true;
+				// that.Isreturn = true;
 			},
 			//--------------------------获取行程--------------------------
 			getOrderInfo: function() {
@@ -304,6 +310,22 @@
 					},
 					fail(err) {
 						console.log(err)
+					}
+				})
+			},
+			UpdateOrder: function() {
+				uni.request({
+					url: $DDTInterface.DDTInterface.UpdateOrder.Url,
+					method: $DDTInterface.DDTInterface.UpdateOrder.method,
+					data:{
+						StrokeID:that.OrderNo,
+						PhoneNo:15106066029,
+					},
+					success(res) {
+						console.log(res);
+					},
+					fail(err) {
+						console.log(err);
 					}
 				})
 			},
