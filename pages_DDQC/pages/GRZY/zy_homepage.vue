@@ -18,7 +18,7 @@
 			<view class="hp_view">
 				<view class="ve_view">
 					<!-- 金额 -->
-					<view class="ve_Text" @click="natTo('/pages_DDQC/pages/GRZY/wallet')">
+					<view class="ve_Text" @click="natTo(1)">
 						<view class="tx_text1">金额</view>
 						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
@@ -28,12 +28,12 @@
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">次</text></view>
 					</view>
 					<!-- 押金 -->
-					<view class="ve_Text" v-if="depositStatus==0" @click="open">
+					<view class="ve_Text" v-if="depositStatus==0" @click="open1">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view>
-					
+
 					<view class="ve_Text" v-if="depositStatus==1" @click="open2">
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
@@ -62,7 +62,7 @@
 				<text class="jdticon icon-you"></text>
 			</view> -->
 			<!-- 充值金额 -->
-			<view class="ve_view4" @click="natTo('/pages_DDQC/pages/GRZY/topUp')">
+			<view class="ve_view4" @click="natTo(2)">
 				<text class="vi_text2">充值金额</text>
 				<text class="jdticon icon-you"></text>
 			</view>
@@ -89,7 +89,7 @@
 					<view class="vi_bottom"></view>
 				</view>
 			</uni-popup>
-			
+
 			<!-- 押金退款弹框 -->
 			<uni-popup ref="popup2" type="bottom">
 				<view class="po_boxVlew">
@@ -143,7 +143,7 @@
 					<!-- <text class="rc_text3">{{item.time}}</text> -->
 					<!-- <text class="rc_text3">{{item.timeUse}}分钟</text> -->
 				</view>
-				
+
 				<view style="display: flex;position: absolute;right: 0;top: 41%;padding-right: 30upx;">
 					<text class="rc_text4">{{item.PayPrice}}<text class="rc_text5">元</text></text>
 					<text class="jdticon icon-you"></text>
@@ -162,16 +162,17 @@
 		},
 		data() {
 			return {
-				userInfo:[],//用户信息
+				userInfo: [], //用户信息
 				type: 0,
-				balance:0,//钱包金额
-				deposit:0,//押金金额
-				depositStatus:0,//押金状态
+				balance: 0, //钱包金额
+				deposit: 0, //押金金额
+				depositStatus: 0, //押金状态
+				id: '',
 				personalHomepage: {
 					cost: 0.8, //价格
 					coupon: 10, //卡券数量
 					deposit: 0, //押金
-					depositBalance:0,
+					depositBalance: 0,
 
 					mileage: 20, //总里程
 					emissionReduction: 0.6, //减排
@@ -179,15 +180,15 @@
 				},
 
 				drivingRecord: '', //行车记录
-				HireCoord:'',//租车经纬度
-				RestoreCoord:'',//还车经纬度
-				bicycleOrderInfo:'',
-				
+				HireCoord: '', //租车经纬度
+				RestoreCoord: '', //还车经纬度
+				bicycleOrderInfo: '',
+
 			}
 		},
 		onLoad() {
 			// this.lunBoInit();
-			
+
 		},
 		onShow() {
 			var that = this;
@@ -201,7 +202,7 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
-						console.log('用户数据',data)
+						console.log('用户数据', data)
 						that.userInfo = data.data;
 						//钱包注册
 						// that.GetEnrollment();
@@ -210,113 +211,135 @@
 						//获取自行车订单数据
 						that.GetOrderByUserID();
 					},
-					fail(data) {
-					}
+					fail(data) {}
 				})
 			},
 			//--------------------------获取钱包数据--------------------------
-			GetEnrollment:function(){
+			GetEnrollment: function() {
 				var that = this;
 				console.log(that.userInfo.phoneNumber)
 				uni.request({
-					url:'http://111.231.109.113:8004/api/Purse/GetEnrollment',
-					method:'POST',
-					data:{
-						phoneNumber:that.userInfo.phoneNumber,
-						userID:that.userInfo.userId,
-						userName:'林先生',
-						uuid:'123',
-						userId:'350322199109101514'
+					url: 'http://111.231.109.113:8004/api/Purse/GetEnrollment',
+					method: 'POST',
+					data: {
+						phoneNumber: that.userInfo.phoneNumber,
+						userID: that.userInfo.userId,
+						userName: '林先生',
+						uuid: '123',
+						userId: '350322199109101514'
 					},
 					success(res) {
-						console.log('钱包注册成功数据',res)
-						if(res.msg == '请求成功'){
+						console.log('钱包注册成功数据', res)
+						if (res.msg == '请求成功') {
 							uni.showToast({
-								title:'请求成功',
-								icon:'none'
+								title: '请求成功',
+								icon: 'none'
 							})
 						}
 					},
 					fail(res) {
-						console.log('钱包注册失败数据',res)
+						console.log('钱包注册失败数据', res)
 					}
 				})
 			},
-			GetPurseDetail:function(){
+			GetPurseDetail: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetPurseDetail.Url,
-					method:$DDTInterface.DDTInterface.GetPurseDetail.method,
-					data:{
-						phoneNumber:that.userInfo.phoneNumber,
-						userID:that.userInfo.userId,
+					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
+					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
+					data: {
+						phoneNumber: that.userInfo.phoneNumber,
+						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('获取钱包数据成功',res)
-						if(res.status == true && res.msg == '请求成功'){
+						console.log('获取钱包数据成功', res)
+						if (res.status == true && res.msg == '请求成功') {
 							that.balance = res.data.data.balance;
 							that.deposit = res.data.data.deposit;
 							that.depositStatus = res.data.data.depositStatus;
+							that.id = res.data.data.id;
+							that.order_no = res.data.data.order_no;
+							that.status = res.data.data.status;
 						}
 					},
 					fail(res) {
-						console.log('获取钱包数据失败',res)
+						console.log('获取钱包数据失败', res)
 					}
 				})
 			},
 			//--------------------------钱包退押金--------------------------
-			GetRefund:function(){
+			GetRefund: function() {
 				uni.showLoading({
-					title:'正在退押金...'
+					title: '正在退押金...'
 				})
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetRefund.Url,
-					method:$DDTInterface.DDTInterface.GetRefund.method,
-					data:{
-						userMobileNumber:that.userInfo.phoneNumber,
-						userID:that.userInfo.userId,
-						requestType:2,// 2:退款押金
+					url: $DDTInterface.DDTInterface.GetRefund.Url,
+					method: $DDTInterface.DDTInterface.GetRefund.method,
+					data: {
+						userMobileNumber: that.userInfo.phoneNumber,
+						userID: that.userInfo.userId,
+						requestType: 2, // 2:退款押金
 					},
 					success(res) {
 						uni.hideLoading();
-						console.log('钱包退押金成功',res)
-						if(res.data.status == true){
+						console.log('钱包退押金成功', res)
+						if (res.data.status == true) {
 							uni.showToast({
-								title:res.data.msg,
-								icon:'none'
+								title: res.data.msg,
+								icon: 'none'
 							})
-						}else if(res.data.status == false){
+						} else if (res.data.status == false) {
 							uni.showToast({
-								title:res.data.msg,
-								icon:'none'
+								title: res.data.msg,
+								icon: 'none'
 							})
 						}
 					},
 					fail(res) {
 						uni.hideLoading();
-						console.log('钱包退押金失败',res)
+						console.log('钱包退押金失败', res)
 					}
 				})
 			},
-			
+
 			//--------------------------查询自行车订单--------------------------
-			
-			GetOrderByUserID:function(){
-				var that=this;
+
+			GetOrderByUserID: function() {
+				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetOrderByUserID.Url,
-					method:$DDTInterface.DDTInterface.GetOrderByUserID.method,
-					data:{
-						UserID:'122',
+					url: $DDTInterface.DDTInterface.GetOrderByUserID.Url,
+					method: $DDTInterface.DDTInterface.GetOrderByUserID.method,
+					data: {
+						UserID: '122',
 					},
 					success(res) {
-						console.log('查询自行车订单',res)
-						that.drivingRecord=res.data.data;
+						console.log('查询自行车订单', res)
+						that.drivingRecord = res.data.data;
 					},
 				})
 			},
-			
+
+			//--------------------------查询自行车订单--------------------------
+
+			WriteRefundLog: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.WriteRefundLog.Url,
+					method: $DDTInterface.DDTInterface.WriteRefundLog.method,
+					data: {
+						userMobileNumber: that.userInfo.phoneNumber,
+						requestType: 2,
+						userID: that.userInfo.userId,
+						state:that.status
+					},
+					success(res) {
+						console.log('查询自行车订单', res)
+						that.drivingRecord = res.data.data;
+					},
+				})
+			},
+
 			//------------------------模拟数据----------------------------------------------
 
 			// async lunBoInit() {
@@ -326,9 +349,8 @@
 
 			//------------------------------弹框事件-----------------------------------------
 
-			open() {
-				// 需要在 popup 组件，指定 ref 为 popup
-				this.$refs.popup.open()
+			open1() {
+				this.checkRealName(3)
 			},
 			//关闭
 			close(e) {
@@ -336,11 +358,10 @@
 					this.$refs.popup.close()
 				}
 			},
-			
+
 			//退款弹框
 			open2() {
-				// 需要在 popup 组件，指定 ref 为 popup
-				this.$refs.popup2.open()
+				this.checkRealName(4);
 			},
 			//关闭
 			close2(e) {
@@ -364,9 +385,56 @@
 			},
 
 			natTo: function(e) {
-				uni.navigateTo({
-					url: e,
-					// url:
+				if(e==1){
+					this.checkRealName(e);
+				}else if(e==2){
+					this.checkRealName(e);
+				}else{
+					uni.navigateTo({
+						url:e
+					})
+				}
+			},
+
+			//-------------------------------------检查是否实名----------------------------------
+			checkRealName(e) {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetUserByUserID.Url,
+					method: $DDTInterface.DDTInterface.GetUserByUserID.method,
+					data: {
+						userID: that.userInfo.userId,
+					},
+					success(res) {
+						console.log(res)
+						if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
+							//实名认证
+							uni.redirectTo({
+								url: that.$GrzxInter.Route.realName.url,
+							})
+						} else if (res.data.data.RealNameStatus !== 1) {
+							//上传图片
+							uni.redirectTo({
+								url: that.$GrzxInter.Route.uploadPhoto.url,
+							})
+						} else {
+							if(e==1){
+								uni.navigateTo({
+									url:'./wallet'
+								})
+							}else if(e==2){
+								uni.navigateTo({
+									url:'./topUp'
+								})
+							}else if(e==3){
+								// 需要在 popup 组件，指定 ref 为 popup
+								this.$refs.popup.open()
+							}else if(e==4){
+								// 需要在 popup 组件，指定 ref 为 popup
+								this.$refs.popup2.open()
+							}
+						}
+					}
 				})
 			},
 
@@ -375,21 +443,19 @@
 					phoneNumber: '17764540647'
 				})
 			},
-			
-			Jump(){
-				this.type=1
+
+			Jump() {
+				this.type = 1
 			},
-			
-			Jump2:function(e){
-				var that=this;
-				// that.HireCoord=that.drivingRecord[e].HireCoord;
-				// that.RestoreCoord=that.drivingRecord[e].RestoreCoord;
+
+			Jump2: function(e) {
+				var that = this;
 				uni.setStorage({
 					key: 'bicycleOrderInfo',
 					data: that.drivingRecord[e],
 					success: () => {
 						uni.navigateTo({
-							url:'./zy_details'
+							url: './zy_details'
 						})
 					}
 				})
@@ -660,7 +726,7 @@
 		font-weight: 400;
 		box-shadow: 0px 0.2px 0px #aaa;
 	}
-	
+
 	//底部按钮
 	.tjButton2 {
 		padding: 24upx 0;

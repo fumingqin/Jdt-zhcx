@@ -149,6 +149,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetUserByUserID: {
+		Url: Url + '/api/SmartBikePerson/GetUserByUserID',
+		name: '自行车用户查询根据用户ID',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 
 // 接口声明区
