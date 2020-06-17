@@ -170,7 +170,11 @@
 		//------------首页----------------------
 		{
 			"path": "pages/Home/zy_zhcx",
-			"style": {}
+			"style": {
+				// #ifdef H5
+				"navigationStyle": "custom"
+				// #endif
+			}
 		}
 	],
 
@@ -847,8 +851,13 @@
 				{
 					"path": "pages/GRZX/realName", //实名认证
 					"style": {
-						"navigationBarTitleText": "实名认证",
-						"navigationBarBackgroundColor": "#FFFFFF"
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/GRZX/uploadPhoto", //上传证件照
+					"style": {
+						"navigationStyle": "custom"
 					}
 				},
 				{

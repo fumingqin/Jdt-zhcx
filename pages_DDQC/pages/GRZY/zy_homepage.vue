@@ -42,9 +42,9 @@
 			</view>
 
 			<!-- 套餐 -->
-			<view class="ve_view2" @click="natTo('/pages_DDQC/pages/GRZY/combo')">
+			<!-- <view class="ve_view2" @click="natTo('/pages_DDQC/pages/GRZY/combo')">
 				<image class="vi_image" src="../../static/GRZY/taocan.png" mode="aspectFill"></image>
-			</view>
+			</view> -->
 
 			<!-- 电话客服 -->
 			<view class="ve_view3" @click="makePhone">
@@ -132,18 +132,20 @@
 			</view>
 
 			<!-- 行车记录 -->
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2">
+			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2(index)">
 				<view>
-					<text class="rc_text">{{item.model}}</text>
+					<text v-if="item.RentType==0" class="rc_text">有桩车</text>
+					<text v-if="item.RentType==1" class="rc_text">无桩车</text>
+					<!-- <text class="rc_text">{{item.model}}</text> -->
 				</view>
 				<view style="display: flex;">
-					<text class="rc_text2">{{item.date}}</text>
-					<text class="rc_text3">{{item.time}}</text>
-					<text class="rc_text3">{{item.timeUse}}分钟</text>
+					<text class="rc_text2">{{item.HireTime}}</text>
+					<!-- <text class="rc_text3">{{item.time}}</text> -->
+					<!-- <text class="rc_text3">{{item.timeUse}}分钟</text> -->
 				</view>
-
+				
 				<view style="display: flex;position: absolute;right: 0;top: 41%;padding-right: 30upx;">
-					<text class="rc_text4">{{item.cost}}<text class="rc_text5">元</text></text>
+					<text class="rc_text4">{{item.PayPrice}}<text class="rc_text5">元</text></text>
 					<text class="jdticon icon-you"></text>
 				</view>
 			</view>
@@ -177,10 +179,14 @@
 				},
 
 				drivingRecord: '', //行车记录
+				HireCoord:'',//租车经纬度
+				RestoreCoord:'',//还车经纬度
+				bicycleOrderInfo:'',
+				
 			}
 		},
 		onLoad() {
-			this.lunBoInit();
+			// this.lunBoInit();
 			
 		},
 		onShow() {
@@ -201,6 +207,8 @@
 						// that.GetEnrollment();
 						//获取钱包数据
 						that.GetPurseDetail();
+						//获取自行车订单数据
+						that.GetOrderByUserID();
 					},
 					fail(data) {
 					}
@@ -291,12 +299,30 @@
 					}
 				})
 			},
+			
+			//--------------------------查询自行车订单--------------------------
+			
+			GetOrderByUserID:function(){
+				var that=this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetOrderByUserID.Url,
+					method:$DDTInterface.DDTInterface.GetOrderByUserID.method,
+					data:{
+						UserID:'122',
+					},
+					success(res) {
+						console.log('查询自行车订单',res)
+						that.drivingRecord=res.data.data;
+					},
+				})
+			},
+			
 			//------------------------模拟数据----------------------------------------------
 
-			async lunBoInit() {
-				let drivingRecord = await this.$api.lyfwcwd('drivingRecord');
-				this.drivingRecord = drivingRecord.data;
-			},
+			// async lunBoInit() {
+			// 	let drivingRecord = await this.$api.lyfwcwd('drivingRecord');
+			// 	this.drivingRecord = drivingRecord.data;
+			// },
 
 			//------------------------------弹框事件-----------------------------------------
 
@@ -354,9 +380,18 @@
 				this.type=1
 			},
 			
-			Jump2:function(){
-				uni.navigateTo({
-					url:'./zy_details'
+			Jump2:function(e){
+				var that=this;
+				// that.HireCoord=that.drivingRecord[e].HireCoord;
+				// that.RestoreCoord=that.drivingRecord[e].RestoreCoord;
+				uni.setStorage({
+					key: 'bicycleOrderInfo',
+					data: that.drivingRecord[e],
+					success: () => {
+						uni.navigateTo({
+							url:'./zy_details'
+						})
+					}
 				})
 			}
 		}

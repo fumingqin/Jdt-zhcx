@@ -435,7 +435,7 @@
 							},
 							header: {'content-type': 'application/json'},
 							success: function(res) {
-							// console.log(res)
+							console.log(res)
 							uni.requestPayment({
 								// provider: 'wxpay',
 								timeStamp: res.data.data.timeStamp,
