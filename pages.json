@@ -955,8 +955,7 @@
 						"navigationBarTitleText": "支付",
 						"app-plus": {
 							"titleNView": {
-								"autoBackButton":"false",
-								"homeButton":true
+								"autoBackButton":false
 							}
 						}
 					}
