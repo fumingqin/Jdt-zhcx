@@ -46,7 +46,9 @@
 					// })
 				}
 			},
-			walletPayment: function() { //钱包支付
+			//---------------------------------钱包支付---------------------------------
+			//每次调钱包接口都要调一次钱包消费接口
+			walletPayment: function() { 
 				let that = this;
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetTransaction.Url,
@@ -78,7 +80,9 @@
 					}
 				})
 			},
-			consumeRecord:function(State){//消费记录
+			//---------------------------------消费记录---------------------------------
+			//钱包消费完调用一次该接口
+			consumeRecord:function(State){
 				uni.request({
 					url: $DDTInterface.DDTInterface.WriteTransactionLog.Url,
 					method: $DDTInterface.DDTInterface.WriteTransactionLog.method,
