@@ -83,10 +83,10 @@
 			autoRefresh:function(){
 				var that = this;
 				uni.showLoading()
-				setTimeout(function(){
-					console.log('自动刷新')
-					that.QRCodeData();
-				},15000)
+				// setTimeout(function(){
+				// 	console.log('自动刷新')
+				// 	that.QRCodeData();
+				// },15000)
 			},
 			
 			QRCodeClick:function(param){
