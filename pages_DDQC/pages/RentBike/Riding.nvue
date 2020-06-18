@@ -183,16 +183,30 @@
 						success(res) {
 							console.log('有桩还车订单状态结果', res)
 							if (res.data.status == true) {
-								if (res.data.bizStatus == 2) {
+								if (res.data.data.bizStatus == 2) {//已还车
 									uni.showToast({
 										title: '还车成功',
 										icon: 'none',
-										success() {
+										success(res) {
 											that.UpdateOrder();
 											clearInterval(that.interval);
 											uni.redirectTo({
 												url: './Payment'
 											})
+										}
+									})
+								}else if (res.data.data.bizStatus == 6) {
+									//异常还车
+									uni.showModal({
+										content:'还车异常',
+										success(res) {
+											if(res.confirm){
+												that.UpdateOrder();
+												clearInterval(that.interval);
+												uni.redirectTo({
+													url: './Payment'
+												})
+											}
 										}
 									})
 								}
