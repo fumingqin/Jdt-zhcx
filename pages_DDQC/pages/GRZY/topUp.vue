@@ -274,9 +274,17 @@
 					},
 					success(res) {
 						console.log('钱包充值记录成功',res);
+						uni.showLoading()
+						setTimeout(function(){
+							that.GetPurseDetail();
+						},3000)
 					},
 					fail(res) {
 						console.log('钱包充值记录失败',res)
+						uni.showLoading()
+						setTimeout(function(){
+							that.GetPurseDetail();
+						},3000)
 					}
 				})
 				that.getmoney();

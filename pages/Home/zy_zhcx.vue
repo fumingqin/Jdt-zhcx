@@ -16,6 +16,18 @@
 						<text class="zl_caText">达达骑车</text>
 					</view>
 					
+					<!-- 公交扫码 -->
+					<view class="zl_charterService" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_QRcode')">
+						<image class="zl_csImage" src="../../static/Home/GJSM.png"></image>
+						<text class="zl_csText">公交扫码</text>
+					</view>
+					
+					<!-- 公交扫码 -->
+					<!-- <view class="zl_charterService" @click="natTo()">
+						<image class="zl_csImage" src="../../static/Home/GJSM2.png"></image>
+						<text class="zl_csText">包车服务</text>
+					</view> -->
+					
 					<!-- 车票订购 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
@@ -57,7 +69,10 @@
 						<image class="zl_csImage" src="../../static/Home/BCFW2.png"></image>
 						<text class="zl_csText">包车服务</text>
 					</view>
-					
+				</view>
+			</swiper-item>
+			<swiper-item class="swiItem">
+				<view class="zl_topClick">
 					<!-- 景区门票 -->
 					<!-- <view class="zl_tourismServices">
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
@@ -69,10 +84,6 @@
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
 						<text class="zl_teText">景区门票</text>
 					</view>
-				</view>
-			</swiper-item>
-			<swiper-item class="swiItem">
-				<view class="zl_topClick">
 					<!-- 旅游产品 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
@@ -486,7 +497,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					// url:'../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+e,
+					// url:'../../pages_DDQC/pages/GRZY/zy_QRcode'
 					url:'',
 				})
 			},
