@@ -517,7 +517,7 @@
 						icon:'none'
 					})
 					uni.switchTab({
-						url:'../../../../pages/Home/Index'
+						url:'../../../../pages/Home/zy_zhcx'
 					})
 					that.submissionState = false;
 				}

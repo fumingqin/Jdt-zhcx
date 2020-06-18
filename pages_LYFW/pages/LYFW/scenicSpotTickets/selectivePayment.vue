@@ -522,7 +522,7 @@
 							icon:'none'
 						})
 						uni.switchTab({
-							url:'../../../../pages/Home/Index'
+							url:'../../../../pages/Home/zy_zhcx'
 						})
 					}
 					
@@ -625,7 +625,7 @@
 							icon:'none'
 						})
 						uni.switchTab({
-							url:'../../../../pages/Home/Index'
+							url:'../../../../pages/Home/zy_zhcx'
 						})
 					}
 					
