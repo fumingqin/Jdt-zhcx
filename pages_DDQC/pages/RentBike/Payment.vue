@@ -213,7 +213,7 @@
 					},
 					data: {
 						phoneNo: that.userInfo.phoneNumber,
-						startIndex: 1,
+						startIndex: 0,
 						retcount: 1,
 						userID: that.userInfo.userID,
 					},
