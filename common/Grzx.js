@@ -10,7 +10,11 @@
 	const Url = 'https://zntc.145u.net:9099'; //https请求
 // #endif
 
-// const Url1='http://111.231.109.113:8002';
+// #ifdef APP-PLUS
+// #endif
+const ddtUrl='http://111.231.109.113:8004' //达达通接口地址
+
+
 const Interface={
 	login:{
 		value:Url+'/api/person/login',
@@ -72,7 +76,7 @@ const Interface={
 		method:'POST',
 		pages: [],
 	},
-	 GetUserInfoByOpenId_xcx:{
+	GetUserInfoByOpenId_xcx:{
 		value:Url+'/api/person/GetUserInfoByOpenId_xcx',
 		name:'通过微信小程序的openid获取用户信息',
 		method:'POST',
@@ -125,7 +129,40 @@ const Interface={
 		name:'添加紧急联系人',
 		method:'POST',//GET-POST
 		pages:[]
-	}
+	},
+	
+	//-----------------------达达通start------------------------
+	RegistUser:{
+		value: ddtUrl + '/api/SmartBikePerson/RegistUser',
+		name:'达达通注册自行车用户',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	GetUserByUserID:{
+		value: ddtUrl + '/api/SmartBikePerson/GetUserByUserID',
+		name:'通过用户Id获取用户是否实名',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	UpdateRealNamePhoto:{
+		value: ddtUrl + '/api/SmartBikePerson/UpdateRealNamePhoto',
+		name:'自行车用户上传实名认证照片',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	UserVerified:{
+		value: ddtUrl + '/api/SmartBikePerson/UserVerified',
+		name:'自行车用户实名认证',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	GetEnrollment:{
+		value: ddtUrl + '/api/Purse/GetEnrollment',
+		name:'钱包注册新用户',
+		method:'POST',//GET-POST
+		pages:[]
+	},
+	//-----------------------达达通end------------------------
 }
 
 const MainPackage='/pages/GRZX';   //主包
@@ -212,6 +249,10 @@ const Route={
 	realName:{
 		url:SubPackage+'/realName',
 		name:'实名认证',
+	},
+	uploadPhoto:{
+		url:SubPackage+'/uploadPhoto',
+		name:'上传照片',
 	},
 	replacePhoneNum:{
 		url:SubPackage+'/replacePhoneNum',

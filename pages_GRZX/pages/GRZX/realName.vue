@@ -1,8 +1,8 @@
 <template>
 	<view class="content">
 		<!-- 姓名 -->
-		<view class="boxClass">
-			<text class="fontClass">姓名</text>
+		<view class="boxClass mt">
+			<text class="fontClass">真实姓名</text>
 			<input class="inputClass" name="name" placeholder="与证件姓名一致" v-model="name" @blur="nameBlur" />
 		</view>
 		
@@ -13,62 +13,45 @@
 		</view>
 		
 		<!-- 有效期至 -->
-		<view class="boxClass">
+		<!-- <view class="boxClass">
 			<text class="fontClass">有效期至</text>
 			<picker class="inputClass" name="validityTerm"  mode="date" @change="dateChange" v-model="validityTerm"  :start="startDate" :end="endDate" placeholder="请选择"  >
 				{{validityTerm}}
 			</picker>
-		</view>
+		</view> -->
 		
-		<!-- 上传身份证正面 -->
-		<view class="boxClass heightClass" @click="chooseFrontImg">
-			<view v-if="state1==0" class="flexDirection">
-				<image src="../../../static/GRZX/addImg.png" class="addClass"></image>
-				<text class="textClass">点击上传证件的正面(带头像)</text>
-			</view>
-			<view v-if="state1==1" style="width: 100%;height: 100%;">
-				<image :src="front" style="width: 100%;height: 100%;" name="front" mode="aspectFit"></image>
-			</view>
-		</view>
+		<view class="textBox">温馨提醒：请确保姓名、身份证号与本人身份证真实信息一致，钱包资金管理审核将以此为审核依据。</view>
+		<view class="textBox"></view>
 		
-		<!-- 上传身份证背面 -->
-		<view class="boxClass heightClass mb" @click="chooseBackImg">
-			<view v-if="state2==0" class="flexDirection">
-				<image src="../../../static/GRZX/addImg.png" class="addClass"></image>
-				<text class="textClass">点击上传证件的背面(带国徽)</text>
-			</view>
-			<view v-if="state2==1" style="width: 100%;height: 100%;">
-				<image :src="back" style="width: 100%;height: 100%;" name="back" mode="aspectFit"></image>
-			</view>
+		<view class="topClass">
+			<image src="../../static/GRZX/btnReturn.png" class="returnClass" @click="returnClick"></image>
+			<view class="titleClass">实名认证</view>
 		</view>
-		
 		<!-- 提交按钮 -->
 		<view class="bottomClass">
-			<button type="warn" class="btnClass" @click="submitClick">提交</button>
+			<button type="warn" class="btnClass" @click="submitClick">下一步</button>
 		</view>
-		
 	</view>
 </template>
 
 <script>
-	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	export default {
 		data(){	
 			return{			
 				name:'',
 				codeNum:'',
-				validityTerm:'请选择 >',
-				frontImg:'',
-				backImg:'',
-				state1:0,
-				state2:0,
-				front:'',
-				back:'',
+				//validityTerm:'请选择 >',
 				userInfo:[],
+				menuButtonHeight: '',
+				menuButtonTop: '',
 			}	
 		},
 		onLoad (){
 			this.loadUserInfo();
+			var that=this;
+			// let menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+			// that.menuButtonHeight = menuButtonInfo.height;
+			// that.menuButtonTop = menuButtonInfo.top;
 		},
 		computed:{
 			startDate() {
@@ -94,6 +77,13 @@
 						})
 					}
 				})
+			},
+			//--------------------返回-------------------
+			returnClick:function(){
+				// uni.switchTab({
+				// 	url:this.$GrzxInter.Route.user.url,
+				// })
+				uni.navigateBack();
 			},
 			//--------------------校验姓名-------------------
 			nameBlur:function(e){
@@ -147,9 +137,90 @@
 			},
 			//--------------------提交数据-------------------
 			submitClick:function(){
-				console.log(this.name)
-				console.log(this.codeNum)
-				console.log(this.validityTerm)
+				var that=this;
+				if(that.name<2){
+					uni.showToast({
+						title:'输入的姓名不能少于2位',
+						icon:'none'
+					})
+				}else if(that.codeNum==""){
+					uni.showToast({
+						title:'请输入您的身份证号',
+						icon:'none'
+					})
+				}else if(!that.checkIDCard(that.codeNum)){
+					uni.showToast({
+						title:'输入的身份证有误，请检查',
+						icon:'none'
+					})
+				}else{
+					console.log(that.name)
+					console.log(that.codeNum)
+					uni.showLoading({
+						title:'实名中...'
+					})
+					that.bikeUserVerified(that.name,that.codeNum)
+				}
+			},
+			//--------------------自行车用户实名认证-------------------
+			bikeUserVerified:function(name,codeNum){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.UserVerified.value,
+					data:{
+						userID:that.userInfo.userId,//用户id
+						phone:that.userInfo.phoneNumber,//手机号码
+						userIDNumber:codeNum,//身份证号
+						userName:name,//姓名
+					},
+					method:that.$GrzxInter.Interface.UserVerified.method,
+					success(res) {
+						console.log(res)
+						uni.setStorageSync('RealNameInfo',res.data.data)
+						that.GetEnrollment(name,codeNum);
+					},
+					fail(){
+						// that.GetEnrollment(name,codeNum);
+						uni.showToast({
+							title:'实名失败',
+							icon:'none',
+						})
+					}
+				})
+			},
+			//--------------------钱包注册新用户-------------------
+			GetEnrollment:function(name,codeNum){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.GetEnrollment.value,
+					data:{
+						uuid:that.userInfo.userId,//用户id
+						phoneNumber:that.userInfo.phoneNumber,//手机号码
+						userId:codeNum,//身份证号
+						userName:name,//姓名
+					},
+					method:that.$GrzxInter.Interface.GetEnrollment.method,
+					success(res) {
+						console.log(res)
+						if(res.data.data.msg=='Success'){
+							uni.showToast({
+								title:'实名成功,请提交相关照片',
+								icon:'none',
+							})
+							setTimeout(function(){
+								uni.redirectTo({
+									url:that.$GrzxInter.Route.uploadPhoto.url,
+								})
+							},500);
+						}
+					},
+					fail(){
+						uni.showToast({
+							title:'实名失败',
+							icon:'none',
+						})
+					}
+				})
 			},
 			//--------------------有效期-------------------
 			dateChange : function(e){
@@ -170,66 +241,6 @@
 				month = month > 9 ? month : '0' + month;;
 				day = day > 9 ? day : '0' + day;
 				return `${year}-${month}-${day}`;
-			},
-			//--------------------上传身份证正面-------------------
-			chooseFrontImg:function(){
-				var that=this;
-				uni.chooseImage({
-					count:1,
-					//sourceType:['album'],
-					success(res) {
-						var size=1.5*1024*1000;
-						if(res.tempFiles[0].size>size){
-							uni.showToast({
-								title:'图片大小建议不要超过 1.5M',
-								icon:'none',
-							})
-						}
-						var tempFilePaths = res.tempFilePaths;
-						uni.saveFile({
-						  tempFilePath: tempFilePaths[0],
-						  success: function (res1) {
-							 that.state1=1;
-							 that.front=res1.savedFilePath;
-							 console.log(that.front)
-							 pathToBase64(res1.savedFilePath)
-							 .then(base64 => {
-								 that.frontImg=base64;
-							 })
-						  }
-						}); 
-					}
-				})	
-			},
-			//--------------------上传身份证背面-------------------
-			chooseBackImg:function(){
-				var that=this;
-				uni.chooseImage({
-					count:1,
-					//sourceType:['album'],
-					success(res) {
-						var size=1.5*1024*1000;
-						if(res.tempFiles[0].size>size){
-							uni.showToast({
-								title:'图片大小建议不要超过 1.5M',
-								icon:'none',
-							})
-						}
-						var tempFilePaths = res.tempFilePaths;
-						uni.saveFile({
-						  tempFilePath: tempFilePaths[0],
-						  success: function (res1) {
-							 that.state2=1;
-							 that.back=res1.savedFilePath;
-							 console.log(that.back)
-							 pathToBase64(res1.savedFilePath)
-							 .then(base64 => {
-								 that.backImg=base64;
-							 })
-						  }
-						}); 
-					}
-				})
 			},
 		}	
 	}
@@ -292,14 +303,14 @@
 		text-align: center;
 	}
 	//距离底部的高度
-	.mb{
-		margin-bottom: 150upx;
+	.mt{
+		margin-top: 190upx;
 	}
 	.bottomClass{
 		background-color: #F8F8F8;
 		width: 100%;
 		position: fixed;
-		bottom: 0upx;
+		bottom: 40upx;
 		height: 120upx;
 	}
 	//按钮的样式	
@@ -308,5 +319,51 @@
 		position: absolute;
 		top: 10upx;
 		left: 5%;
+	}
+	.textBox{
+		font-size: 30upx;
+		width: 84%;
+		margin-top: 35upx;
+		margin-left: 8%;
+		color: #ff0000;
+	}
+	//返回按钮
+	.returnClass{
+		width: 25upx;
+		height: 40upx;
+		position: absolute;
+		/* #ifdef H5 */
+		top: 30upx;
+		/* #endif */
+		/* #ifndef H5 */
+		top: 100upx;
+		/* #endif */
+		left: 25upx;
+	}
+	.topClass{   //顶部
+		position: fixed;
+		top: 0upx;
+		width: 100%;
+		/* #ifndef H5 */
+		height: 170upx;
+		/* #endif */
+		/* #ifdef H5 */
+		height: 100upx;
+		/* #endif */
+		border-bottom: 1upx solid #F5F5F5;
+		background-color: #FFFFFF;
+	}
+	.titleClass{
+		// margin-left: 20upx;
+		width: 100%;
+		text-align: center;
+		font-size: 38upx;
+		/*font-weight: bold; */
+		/* #ifdef H5 */
+		margin-top: 20upx;
+		/* #endif */
+		/* #ifndef H5 */
+		margin-top: 95upx;
+		/* #endif */
 	}
 </style>

@@ -125,7 +125,7 @@
 		},
 		data(){
 			return{
-				QQ:'2482549389',
+				QQ:'',
 				nickname:'',
 				portrait:'',
 				advert:'',
@@ -187,6 +187,7 @@
 								method:that.$GrzxInter.Interface.login.method,
 								success(res) {
 									// console.log(res,'res')
+									that.checkIDRealName(res.data.data.userId);
 									uni.setStorageSync('userInfo',res.data.data);
 									if(res.data.data.nickname==""||res.data.data.nickname==null){
 										that.nickname="请输入昵称";	
@@ -237,6 +238,22 @@
 					fail(){
 						that.nickname="";
 						that.portrait="";
+					}
+				})
+			},
+			//-------------------------------------根据id获取实名信息----------------------------------
+			checkIDRealName(id){
+				console.log(id,'checkRealName')
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.GetUserByUserID.value,
+					data:{
+						userID:id,
+					},
+					method:that.$GrzxInter.Interface.GetUserByUserID.method,
+					success(res) {
+						console.log(res)
+						uni.setStorageSync('RealNameInfo',res.data.data)
 					}
 				})
 			},
@@ -408,7 +425,7 @@
 					})
 					setTimeout(function(){
 						uni.switchTab({
-							url:'/pages/Home/Index',
+							url:'/pages/Home/zy_zhcx',
 						})
 					},500);
 				}else{
@@ -475,15 +492,59 @@
 			},
 			// ---------------------------实名认证--------------------------
 			realName(){
-				uni.navigateTo({
-					url:this.$GrzxInter.Route.realName.url,
+				var that=this;
+				uni.getStorage({
+					key:'userInfo',
+					success(res){
+						that.checkRealName();
+					},
+					fail() {
+						uni.showToast({
+							title:'请您先登录',
+							icon:'none',
+						})
+					}
+				})
+			},
+			//-------------------------------------检查是否实名----------------------------------
+			checkRealName(){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.GetUserByUserID.value,
+					data:{
+						userID:that.userId,
+					},
+					method:that.$GrzxInter.Interface.GetUserByUserID.method,
+					success(res) {
+						console.log(res)
+						if(res.data.data==""||res.data.data.UserName==""||res.data.data.UserIDNumber==""){
+							//实名认证
+							uni.navigateTo({
+								url:that.$GrzxInter.Route.realName.url,
+							})
+						}else if(res.data.data.RealNameStatus!==1){
+							//上传图片
+							uni.navigateTo({
+								url:that.$GrzxInter.Route.uploadPhoto.url,
+							})
+						}else{
+							uni.showToast({
+								title:'您已实名',
+								icon:'none',
+							})
+						}
+					}
 				})
 			},
 			// ---------------------------更换手机号--------------------------
 			replacePhoneNum(){
-				uni.navigateTo({
-					url:this.$GrzxInter.Route.replacePhoneNum.url,
+				uni.showToast({
+					title:'暂未开通，敬请期待',
+					icon:'none'
 				})
+				// uni.navigateTo({
+				// 	url:this.$GrzxInter.Route.replacePhoneNum.url,
+				// })
 			},
 			//----------------------判断是否为base64格式-------------------
 			isBase64:function(str) {

@@ -544,6 +544,11 @@
 
 					} else {
 						// location.href = "/Coach/GetCoach";
+						uni.showToast({
+							title: '支付失败',
+							icon: 'none',
+							duration: 3000
+						})
 					}
 				});
 				// #endif
@@ -588,12 +593,25 @@
 						}
 					},
 
-					fail: function(ee) {
-						uni.showToast({
-							title: '拉起支付失败，请检查网络后重试',
-							icon: 'none',
-							duration: 3000
-						})
+					fail: function(res) {
+						console.log(res)
+						if (res.errMsg == 'requestPayment:fail errors') { //错误
+							uni.showToast({
+								title: '支付失败，请重新支付',
+								icon: 'none'
+							})
+						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
+							uni.showToast({
+								title: '您取消了支付',
+								icon: 'none'
+							})
+						}else{
+							uni.showToast({
+								title: '支付失败',
+								icon: 'none',
+								duration: 3000
+							})
+						}	
 					}
 				})
 				// #endif
@@ -640,7 +658,7 @@
 								that.showToast("支付失败，请重新支付")
 							}, 1000)
 						}else {
-							that.showToast("支付出错")
+							that.showToast("支付失败")
 						}
 					}
 				});

@@ -171,9 +171,7 @@
 		{
 			"path": "pages/Home/zy_zhcx",
 			"style": {
-				// #ifdef H5
 				"navigationStyle": "custom"
-				// #endif
 			}
 		}
 	],
@@ -851,8 +849,13 @@
 				{
 					"path": "pages/GRZX/realName", //实名认证
 					"style": {
-						"navigationBarTitleText": "实名认证",
-						"navigationBarBackgroundColor": "#FFFFFF"
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/GRZX/uploadPhoto", //上传证件照
+					"style": {
+						"navigationStyle": "custom"
 					}
 				},
 				{
@@ -959,8 +962,7 @@
 						"navigationBarTitleText": "支付",
 						"app-plus": {
 							"titleNView": {
-								"autoBackButton":"false",
-								"homeButton":true
+								"autoBackButton":false
 							}
 						}
 					}
@@ -1018,10 +1020,11 @@
 		//#ifdef APP-PLUS
 		"fontSize": "16px",
 		//#endif
-		"list": [{
-				"pagePath": "pages/Home/Index",
-				"text": "出行"
-			},
+		"list": [
+			// {
+			// 	"pagePath": "pages/Home/Index",
+			// 	"text": "出行"
+			// },
 			// {
 			// 	"pagePath": "pages/GRZX/notice",
 			// 	"text": "通知"
