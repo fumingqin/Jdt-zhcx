@@ -562,7 +562,7 @@
 					},
 					success(response) {
 						console.log(response)
-						if(response.data.status == true){
+						if(response.data.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
 							if(response.data.BizStatus == '1004'){
 								var responseArr = {
@@ -576,16 +576,14 @@
 								uni.navigateTo({
 									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
 								})
-							}else if(response.data.BizStatus == '1003'){
-									uni.showToast({
-										title:'此桩位无车',
-										icon:'none'
-									})
+							}else if(response.data.data.BizStatus == '1003'){
+								uni.showToast({
+									title:'此桩位无车',
+									icon:'none'
+								})
 							}
 						}else if(response.data.status == false){
 							//当前扫码的是有桩车二维码
-							let tt = response.data.msg.indexOf('字符串的长度不能为零');
-							console.log('888888',tt)
 							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
 								uni.showToast({
 									title:'请扫有桩的二维码',
@@ -597,7 +595,6 @@
 									icon:'none'
 								})
 							}
-							
 						}
 					},
 					fail(response) {
