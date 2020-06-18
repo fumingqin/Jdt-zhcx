@@ -40,7 +40,7 @@
 						},
 						fail:function(){
 							uni.switchTab({
-								url: '../../../../pages/Home/Index'
+								url: '../../../../pages/Home/zy_zhcx'
 							});
 						}
 					})
@@ -67,7 +67,7 @@
 						data:1,
 						success:function(){
 							uni.switchTab({
-								url: '../../../../pages/Home/Index'
+								url: '../../../../pages/Home/zy_zhcx'
 							});
 						}
 					})
