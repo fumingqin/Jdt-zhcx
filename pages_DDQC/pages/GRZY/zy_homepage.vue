@@ -330,8 +330,9 @@
 						if (res.data.status == true && res.data.msg == '请求成功') {
 							that.walletData=res.data.data;
 							that.balance = res.data.data.balance/100;
-							that.deposit = res.data.data.deposit/100;
-							that.depositStatus = res.data.data.depositStatus;
+							if(!res.data.data.depositStatus==0){
+								that.deposit = res.data.data.deposit/100;
+							}
 							console.log("测试"+that.depositStatus); 
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
@@ -720,9 +721,9 @@
 						console.log('呀呀呀'+JSON.stringify(res) )
 						that.depositStatus=res.data.data.DepositType;
 						console.log(that.depositStatus);
-						if(that.depositStatus){
+						// if(that.depositStatus==1||that.depositStatus==2){
 							that.GetPurseDetail();
-						}
+						// }
 					},
 					fail(err) {
 						console.log('读取信息',err)
