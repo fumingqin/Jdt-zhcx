@@ -34,8 +34,8 @@
 		onLoad() {
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 			console.log(this.userInfo);
-			this.GetOrderByUserID();
-			// this.getOrderInfo();  
+			// this.GetOrderByUserID();
+			this.getOrderInfo();   
 		},
 		methods: {
 			payNow: function() { //立即支付  

@@ -520,6 +520,7 @@
 						phone:that.userInfo.phoneNumber,//13906963039
 						QRcode:param,
 						SystemType: that.system,
+						userID:that.userInfo.userId,
 					},
 					success(response) {
 						console.log('二维码信息',response)
@@ -552,6 +553,7 @@
 									icon:'none'
 								})
 							}else{
+								console.log(response)
 								uni.showToast({
 									title:response.data.msg,
 									icon:'none'
@@ -560,7 +562,7 @@
 						}
 					},
 					fail(response) {
-						console.log(response)
+						console.log(response) 
 					}
 				})
 			},
@@ -574,6 +576,7 @@
 						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
+						userID:that.userInfo.userId,
 					},
 					success(response) {
 						console.log(response)
