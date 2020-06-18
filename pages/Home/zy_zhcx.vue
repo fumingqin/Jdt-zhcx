@@ -210,7 +210,7 @@
 			</view>
 		</view>
 
-		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; margin: 16upx 0; color: #aaa;">
+		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; padding: 16upx 0; color: #aaa; background: #FFFFFF;">
 			<text v-if="current==0" :hidden="disStatus== 1">{{loadingType== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
 			<text v-if="current==0" :hidden="disStatus== 0">暂无历史数据</text>
 		</view>
