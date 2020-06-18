@@ -241,11 +241,32 @@
 				{
 					title:'不负灿烂时光,周边游更精彩',
 				}],
-				imgXXDT:[],//咨询动态
+				imgXXDT:[{
+					imageUrl:'',
+				}],//咨询动态
 				homePage: '', //轮播图
 				type: 0,
 				Announcement: '', //资讯动态
-				sixPalaceList: '',
+				sixPalaceList: [{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				}],
 				goodsList: '',
 				zy_dataIndex: 6, //列表默认数量
 				disStatus: 0,
@@ -376,7 +397,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						// console.log(res)
+						console.log('请求六宫格',res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
