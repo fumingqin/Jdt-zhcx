@@ -1025,13 +1025,13 @@
 			// 	"pagePath": "pages/Home/Index",
 			// 	"text": "出行"
 			// },
-			// {
-			// 	"pagePath": "pages/GRZX/notice",
-			// 	"text": "通知"
-			// },
 			{
 				"pagePath": "pages/Home/zy_zhcx",
 				"text": "首页"
+			},
+			{
+				"pagePath": "pages/GRZX/notice",
+				"text": "通知"
 			},
 			{
 				"pagePath": "pages/Home/serve",
