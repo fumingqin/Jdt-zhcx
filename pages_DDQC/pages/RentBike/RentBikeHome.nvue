@@ -381,6 +381,7 @@
 						uni.hideLoading()
 						console.log('返回数据false',that.userInfo.phoneNumber)
 						console.log('返回数据false',response)
+						
 						if(response.data.status == true){
 							if(response.data.data.bizStatus == '新建'){
 								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
