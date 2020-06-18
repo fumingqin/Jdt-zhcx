@@ -476,10 +476,11 @@
 						SystemType: that.system,
 					},
 					success(response) {
-						console.log(response)
+						console.log('二维码信息',response)
 						if(response.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
-							if(response.data.BizStatus == '已租车'){
+							if(response.data.data.BizStatus == '1004'){
+								
 								var responseArr = {
 									bikeType:'有桩',
 									OrderId: response.data.OrderId,//订单ID
@@ -489,14 +490,27 @@
 								}
 								//当前状态可以租车
 								uni.navigateTo({
-									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
+								})
+							}else if(response.data.data.BizStatus == '1003'){
+								uni.showToast({
+									title:'此桩位无车',
+									icon:'none'
 								})
 							}
 						}else if(response.data.status == false){
-							uni.showToast({
-								title:response.data.msg,
-								icon:'none'
-							})
+							
+							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
+								uni.showToast({
+									title:'请扫有桩的二维码',
+									icon:'none'
+								})
+							}else{
+								uni.showToast({
+									title:response.data.msg,
+									icon:'none'
+								})
+							}
 						}
 					},
 					fail(response) {
@@ -533,10 +547,20 @@
 								})
 							}
 						}else if(response.data.status == false){
-							uni.showToast({
-								title:response.data.msg,
-								icon:'none'
-							})
+							let tt = response.data.msg.indexOf('字符串的长度不能为零');
+							console.log('888888',tt)
+							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
+								uni.showToast({
+									title:'请扫有桩的二维码',
+									icon:'none'
+								})
+							}else {
+								uni.showToast({
+									title:response.data.msg,
+									icon:'none'
+								})
+							}
+							
 						}
 					},
 					fail(response) {

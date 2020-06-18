@@ -108,8 +108,9 @@
 			//将上一个页面传过来的参数转为数组
 			that.userInfo = uni.getStorageSync('userInfo') || '';
 			that.getOrderInfo();
+			console.log(item)
 			if (item.responseArr) {
-				that.rentInfo = JSON.parse();
+				that.rentInfo = JSON.parse(item.responseArr);
 				if (that.rentInfo.bikeType == "有桩") {
 					that.getOrderInfo();
 				} else {
@@ -167,7 +168,7 @@
 			//自行车还车，定时器检索订单状态，直到订单结束-----每三秒检测一次
 			CheckOrderStatus: function() {
 				let that = this;
-				clearInterval(that.interval);
+				// clearInterval(that.interval);
 				that.interval = setInterval(function() {
 					uni.request({
 						url: $DDTInterface.DDTInterface.CheckOrderStatus.Url,
@@ -179,12 +180,13 @@
 						success(res) {
 							console.log('有桩还车订单状态结果', res)
 							if (res.data.status == true) {
-								if (res.data.bizStatus == '还车成功') {
+								if (res.data.bizStatus == 2) {
 									uni.showToast({
 										title: '还车成功',
 										icon: 'none',
 										success() {
 											that.UpdateOrder();
+											clearInterval(that.interval);
 											uni.redirectTo({
 												url: './Payment'
 											})
@@ -192,6 +194,7 @@
 									})
 								}
 							} else {
+								clearInterval(that.interval);
 								uni.showToast({
 									title: res.data.msg,
 									icon: 'none'
@@ -199,10 +202,53 @@
 							}
 						},
 						fail(err) {
+							clearInterval(that.interval);
 							console.log('订单状态err', err)
 						}
 					})
 				}, 3000)
+			},
+			checkStatus:function(){
+				var that = this;
+				clearInterval(that.interval);
+				that.interval = setInterval(function() {
+					uni.request({
+						url: $DDTInterface.DDTInterface.GetOrder.Url,
+						method: $DDTInterface.DDTInterface.GetOrder.method,
+						data: {
+							phoneNo: that.userInfo.phoneNumber,
+							startIndex: 0 ,
+							retcount: 1,
+							userID: that.userInfo.userID,
+						},
+						success(res) {
+							
+							that.orderId = res.data.data[0].OrderId;
+							console.log('还车结果',res)
+							
+							if(res.data.data.hireStatus == 2){
+								uni.showToast({
+									title: '还车成功',
+									icon: 'none',
+									success() {
+										that.UpdateOrder();
+										clearInterval(that.interval);
+										uni.redirectTo({
+											url: './Payment'
+										})
+									}
+								})
+							}
+							//开始计时---显示当前骑行时间
+							that.timeConcer(res.data.data[0].HireAction.Time);
+						},
+						fail(err) {
+							clearInterval(that.interval);
+							console.log(err)
+						}
+					})
+				},3000)
+				
 			},
 			GotoHome: function() { //前往个人中心
 				uni.navigateTo({
@@ -301,10 +347,11 @@
 					},
 					success(res) {
 						that.orderId = res.data.data[0].OrderId;
+						console.log(res)
 						//判断是否有还车时间
 						if (that.rentInfo.bikeType == "有桩") {
 							//---开启检测订单状态
-							that.CheckOrderStatus();
+							that.checkStatus();
 						}
 						//开始计时---显示当前骑行时间
 						that.timeConcer(res.data.data[0].HireAction.Time);
