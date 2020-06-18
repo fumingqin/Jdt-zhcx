@@ -247,7 +247,7 @@
 						content: '骑行时间:' + this.drivingRecord.TotalTime + '分钟',
 						color: '#fff',
 						fontSize: 13,
-						borderRadius: 39,
+						borderRadius: 5,
 						borderWidth: 1,
 						borderColor: '#000000',
 						bgColor: '#000000',
