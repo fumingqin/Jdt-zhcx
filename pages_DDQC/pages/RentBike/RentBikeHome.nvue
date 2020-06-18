@@ -425,24 +425,12 @@
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据',that.userInfo.phoneNumber)
-						console.log('返回数据',response)
+						console.log('返回业户数据',that.userInfo.phoneNumber)
+						console.log('返回业户数据',response)
 						
 						if(response.data.status == true){
 							if(response.data.data.bizStatus == '新建'){
-								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
-								//开通租车业务
-								uni.showModal({
-									title:'温馨提示',
-									content:'未交押金无法用车，是否立即支付押金？',
-									success(res) {
-										if(res.confirm){
-											uni.navigateTo({
-												url:'../GRZY/zy_homepage'
-											})
-										}
-									}
-								})
+								that.myShowModal('未交押金无法用车，是否立即支付押金？','../GRZY/zy_homepage');
 							}else if(response.data.data.bizStatus == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data.bizStatus == '已租车'){
@@ -450,22 +438,12 @@
 							}else if(response.data.data.bizStatus == '租车超时支付中'){
 								that.myShowModal('租车超时支付中，请完成支付');
 							}else if(response.data.data.bizStatus == '业务已注销'){
-								uni.showModal({
-									title:'温馨提示',
-									content:'未交押金无法用车，是否立即支付押金？',
-									success(res) {
-										if(res.confirm){
-											uni.navigateTo({
-												url:'../GRZY/zy_homepage'
-											})
-										}
-									}
-								})
+								that.myShowModal('业务已注销，是否立即交付押金？','../GRZY/zy_homepage');
 							}else if(response.data.data.bizStatus == '可用'){
 								//已交押金，开始扫码租车
 								that.scanQrcode();
 							}else if(response.data.data.bizStatus == null){
-								that.myShowModal('请先登陆');
+								that.myShowModal('请先登陆','../../../pages/GRZX/userLogin');
 							}
 						}else {
 							console.log('返回数据false',response)
@@ -501,12 +479,16 @@
 				});
 			},
 			//-------------------------------便捷弹框提示-------------------------------
-			myShowModal(content){
+			myShowModal(content,Url){
 				uni.showModal({
 					title:'温馨提示',
 					content:content,
-					success() {
-						
+					success(res) {
+						if(res.confirm){
+							uni.navigateTo({
+								url:Url
+							})
+						}
 					}
 				})
 			},
