@@ -92,6 +92,9 @@
 			// that.getMyLocation();
 			that.GetBHTStationByRange(117.63370822482639,23.93265109592014);//无桩	
 			
+			//检测当前是否有订单未完成
+			that.checkCurrentStatus();
+			
 		},
 		onShow() {
 			var that=this;
@@ -163,6 +166,49 @@
 						}
 					})
 				}
+			},
+			//-------------------------------进到页面的时候检测当前是否有订单未完成-------------------------------
+			checkCurrentStatus:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
+					method:$DDTInterface.DDTInterface.GetBizStatus.method,
+					data:{
+						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
+						loginname:that.userInfo.phoneNumber,//手机号
+					},
+					success(response) {
+						uni.hideLoading()
+						console.log('返回数据',that.userInfo.phoneNumber)
+						console.log('返回数据',response)
+						
+						if(response.data.status == true){
+							if(response.data.data.bizStatus == '已租车'){
+								//当前有未完成订单,跳转到行程页面
+								uni.showModal({
+									title:'温馨提示',
+									content:'当前有未完成订单，是否前往？',
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'./Riding'
+											})
+										}
+									}
+								})
+							}else if(response.data.data.bizStatus == '租车超时支付中'){
+								//租车超时支付中，跳转到支付页面
+								that.myShowModal('租车超时支付中，请完成支付');
+							}
+						}else {
+							console.log('返回数据false',response)
+						}
+						
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
 			},
 			//-------------------------------有桩数据-------------------------------
 			GetStationByRange:function(longitude,latitude){
@@ -379,8 +425,8 @@
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据false',that.userInfo.phoneNumber)
-						console.log('返回数据false',response)
+						console.log('返回数据',that.userInfo.phoneNumber)
+						console.log('返回数据',response)
 						
 						if(response.data.status == true){
 							if(response.data.data.bizStatus == '新建'){
@@ -474,12 +520,14 @@
 						phone:that.userInfo.phoneNumber,//13906963039
 						QRcode:param,
 						SystemType: that.system,
+						userID:that.userInfo.userId,
 					},
 					success(response) {
-						console.log(response)
+						console.log('二维码信息',response)
 						if(response.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
-							if(response.data.BizStatus == '已租车'){
+							if(response.data.data.BizStatus == '1004'){
+								
 								var responseArr = {
 									bikeType:'有桩',
 									OrderId: response.data.OrderId,//订单ID
@@ -489,18 +537,32 @@
 								}
 								//当前状态可以租车
 								uni.navigateTo({
-									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
+								})
+							}else if(response.data.data.BizStatus == '1003'){
+								uni.showToast({
+									title:'此桩位无车',
+									icon:'none'
 								})
 							}
 						}else if(response.data.status == false){
-							uni.showToast({
-								title:response.data.msg,
-								icon:'none'
-							})
+							//当前扫码的是无桩车二维码
+							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
+								uni.showToast({
+									title:'请扫有桩的二维码',
+									icon:'none'
+								})
+							}else{
+								console.log(response)
+								uni.showToast({
+									title:response.data.msg,
+									icon:'none'
+								})
+							}
 						}
 					},
 					fail(response) {
-						console.log(response)
+						console.log(response) 
 					}
 				})
 			},
@@ -514,12 +576,13 @@
 						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
+						userID:that.userInfo.userId,
 					},
 					success(response) {
 						console.log(response)
 						if(response.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
-							if(response.data.BizStatus == '已租车'){
+							if(response.data.BizStatus == '1004'){
 								var responseArr = {
 									bikeType:'无桩',
 									OrderId: response.data.OrderId,//订单ID
@@ -529,14 +592,30 @@
 								}
 								//当前状态可以租车
 								uni.navigateTo({
-									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
 								})
+							}else if(response.data.BizStatus == '1003'){
+									uni.showToast({
+										title:'此桩位无车',
+										icon:'none'
+									})
 							}
 						}else if(response.data.status == false){
-							uni.showToast({
-								title:response.data.msg,
-								icon:'none'
-							})
+							//当前扫码的是有桩车二维码
+							let tt = response.data.msg.indexOf('字符串的长度不能为零');
+							console.log('888888',tt)
+							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
+								uni.showToast({
+									title:'请扫有桩的二维码',
+									icon:'none'
+								})
+							}else {
+								uni.showToast({
+									title:response.data.msg,
+									icon:'none'
+								})
+							}
+							
 						}
 					},
 					fail(response) {

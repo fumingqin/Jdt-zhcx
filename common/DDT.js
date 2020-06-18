@@ -158,7 +158,7 @@ const DDTInterface = {
 		},
 	},
 	UpdateOrder: {
-		Url: Url + '/api/Purse/UpdateOrder',
+		Url: Url + '/api/SmartBike/UpdateOrder',
 		name: '还车时更新订单状态',
 		method: 'POST',
 		header: {
