@@ -665,43 +665,42 @@
 					},
 					success(res) {
 						console.log(res)
-						if(that.userInfo!==''){
-							if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
-								//实名认证
-								uni.navigateTo({
-									url: that.$GrzxInter.Route.realName.url,
-								})
-							} else if (res.data.data.RealNameStatus !== 1) {
-								//上传图片
-								uni.navigateTo({
-									url: that.$GrzxInter.Route.uploadPhoto.url,
-								})
-							} else {
-								if (e == 1) {
-									uni.navigateTo({
-										url: './wallet'
-									})
-								} else if (e == 2) {
-									uni.navigateTo({
-										url: './topUp'
-									})
-								} else if (e == 3) {
-									// 需要在 popup 组件，指定 ref 为 popup
-									that.$refs.popup.open()
-								} else if (e == 4) {
-									// 需要在 popup 组件，指定 ref 为 popup
-									that.$refs.popup2.open()
-								} else if (DepositType == 2) {
-									uni.showToast({
-										title: '免押金用户',
-										icon: 'none'
-									})
-								}
-							}
-						}else{
+						if(that.userInfo==''){
 							uni.navigateTo({
 								url:'../../../pages/GRZX/userLogin'
 							})
+						}
+						else if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
+							//实名认证
+							uni.navigateTo({
+								url: that.$GrzxInter.Route.realName.url,
+							})
+						} else if (res.data.data.RealNameStatus !== 1) {
+							//上传图片
+							uni.navigateTo({
+								url: that.$GrzxInter.Route.uploadPhoto.url,
+							})
+						} else {
+							if (e == 1) {
+								uni.navigateTo({
+									url: './wallet'
+								})
+							} else if (e == 2) {
+								uni.navigateTo({
+									url: './topUp'
+								})
+							} else if (e == 3) {
+								// 需要在 popup 组件，指定 ref 为 popup
+								that.$refs.popup.open()
+							} else if (e == 4) {
+								// 需要在 popup 组件，指定 ref 为 popup
+								that.$refs.popup2.open()
+							} else if (DepositType == 2) {
+								uni.showToast({
+									title: '免押金用户',
+									icon: 'none'
+								})
+							}
 						}
 					}
 				})
