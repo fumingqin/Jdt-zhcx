@@ -263,11 +263,14 @@
 					width: 30,
 					height: 30,
 				};
+				
 				that.markers = [];
 				that.startmarker = [];
 				that.endmarker = [];
-				console.log(that.StartLat)
-				console.log(that.StartLon)
+				console.log('1',that.StartLat)
+				console.log('2',that.StartLon)
+				console.log('3',that.EndLat)
+				console.log('4',that.EndLon)
 				that.markers.push(startmarker);
 				that.markers.push(endmarker);
 				that.showlocation = false;
@@ -334,23 +337,23 @@
 				
 				//调用高德api取得路径规划并绘制线路 
 				var that = this;
-				that.points = [];
-				that.polyline = [];
-				
-				var points = [];
-				var obj={
-					points: [{
-					        latitude: that.StartLon,
-					        longitude: that.StartLat
-					    },
-					    {
-					        latitude: that.EndLon,
-					        longitude: that.EndLat
-					    }],
+				var obj = {
+					points:[
+						{
+							latitude: that.StartLon,
+							longitude: that.StartLat
+						},
+						{
+							latitude: that.EndLon,
+							longitude: that.EndLat
+						}
+					],
 					color: "#4281FF",
 					arrowLine: true,
 					width: 5
 				};
+				that.polyline = [];
+				that.obj=[];
 				that.polyline.push(obj);
 				// uni.request({
 				// 	url: $bcfw.InterfaceAddress[0],
