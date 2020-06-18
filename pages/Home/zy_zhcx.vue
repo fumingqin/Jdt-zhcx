@@ -279,10 +279,15 @@
 				current: 0, //标题下标
 				version:'',//版本号
 				platform:'',//系统平台
+				userInfo:'',
 			}
 		},
 		onLoad() {
 			var that = this;
+			that.userInfo = uni.getStorageSync('userInfo') || '';
+			if(that.userInfo!=''){
+				that.checkCurrentStatus();
+			}
 			// #ifdef APP-PLUS
 			//获取系统信息
 			uni.getSystemInfo({
@@ -611,7 +616,59 @@
 				})
 			}
 			//#endif
-		}
+		},
+		checkCurrentStatus:function(){//检测用户是否有未完成的订单
+			var that = this;
+			uni.request({
+				url:$DDTInterface.DDTInterface.GetBizStatus.Url,
+				method:$DDTInterface.DDTInterface.GetBizStatus.method,
+				data:{
+					//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
+					loginname:that.userInfo.phoneNumber,//手机号
+				},
+				success(response) {
+					uni.hideLoading()
+					console.log('返回数据',that.userInfo.phoneNumber)
+					console.log('返回数据',response)
+					
+					if(response.data.status == true){
+						if(response.data.data.bizStatus == '已租车'){
+							//当前有未完成订单,跳转到行程页面
+							uni.showModal({
+								title:'温馨提示',
+								content:'当前有未完成订单，是否前往？',
+								success(res) {
+									if(res.confirm){
+										uni.navigateTo({
+											url:'../../pages_DDQC/pages/RentBike/Riding'
+										})
+									}
+								}
+							})
+						}else if(response.data.data.bizStatus == '租车超时支付中'){
+							//租车超时支付中，跳转到支付页面
+							uni.showModal({
+								title:'温馨提示',
+								content:'当前有订单未支付，请立即前往支付',
+								success(res) {
+									if(res.confirm){
+										uni.navigateTo({
+											url:'../../pages_DDQC/pages/RentBike/Payment'
+										})
+									}
+								}
+							})
+						}
+					}else {
+						console.log('返回数据false',response)
+					}
+					
+				},
+				fail(response) {
+					console.log(response)
+				}
+			})
+		},
 	}
 </script>
 

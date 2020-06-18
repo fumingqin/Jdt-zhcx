@@ -22,7 +22,7 @@
 							<text style="color: #333;font-size: 50rpx;font-weight: 500;">{{minute}}:{{seconds}}</text>
 						</view>
 						<view style="margin-top: 30rpx;" v-if="!IsStake">
-							<text style="color: #999;font-size: 28rpx;font-weight: 300;">电量充足，可骑行59公里</text>
+							<!-- <text style="color: #999;font-size: 28rpx;font-weight: 300;">电量充足，可骑行59公里</text> -->
 						</view>
 						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;" v-if="!IsStake">
 							<!-- <button class="bt_lock" @click="Lock">
@@ -86,8 +86,8 @@
 				interval: '', //定时器
 				rentInfo: [], //保存租车信息
 				IsStake: true, //是否有桩
-				OrderNo:'',//行程ID
-				userInfo:'',
+				OrderNo: '', //行程ID
+				userInfo: '',
 			}
 		},
 		mounted() {
@@ -107,9 +107,10 @@
 			// that.countTime();
 			//将上一个页面传过来的参数转为数组
 			that.userInfo = uni.getStorageSync('userInfo') || '';
-			that.getOrderInfo();
+			// that.getOrderInfo();
 			console.log(item)
 			if (item.responseArr) {
+				console.log(111);
 				that.rentInfo = JSON.parse(item.responseArr);
 				if (that.rentInfo.bikeType == "有桩") {
 					that.getOrderInfo();
@@ -117,6 +118,8 @@
 					that.IsStake = false;
 					that.getOrderInfo();
 				}
+			} else {
+				that.GetOrderByUserID();
 			}
 		},
 		created() {
@@ -148,7 +151,7 @@
 			timeConcer: function(value) { //时间转换
 				var that = this;
 				var value = value.replace(" ", "T")
-				var begindate = new Date(value + "+08:00").getTime(); 
+				var begindate = new Date(value + "+08:00").getTime();
 				// var begindate = new Date(2020, 5, 17, 9, 51, 30, 0).getTime();
 				console.log(begindate)
 				var enddate = new Date().getTime();
@@ -208,7 +211,7 @@
 					})
 				}, 3000)
 			},
-			checkStatus:function(){
+			checkStatus: function() {
 				var that = this;
 				clearInterval(that.interval);
 				that.interval = setInterval(function() {
@@ -217,16 +220,14 @@
 						method: $DDTInterface.DDTInterface.GetOrder.method,
 						data: {
 							phoneNo: that.userInfo.phoneNumber,
-							startIndex: 0 ,
+							startIndex: 0,
 							retcount: 1,
 							userID: that.userInfo.userID,
 						},
 						success(res) {
-							
+							console.log('还车结果', res) 
 							that.orderId = res.data.data[0].OrderId;
-							console.log('还车结果',res)
-							
-							if(res.data.data.hireStatus == 2){
+							if (res.data.data.hireStatus == 2) {
 								uni.showToast({
 									title: '还车成功',
 									icon: 'none',
@@ -247,8 +248,8 @@
 							console.log(err)
 						}
 					})
-				},3000)
-				
+				}, 3000)
+
 			},
 			GotoHome: function() { //前往个人中心
 				uni.navigateTo({
@@ -365,9 +366,9 @@
 				uni.request({
 					url: $DDTInterface.DDTInterface.UpdateOrder.Url,
 					method: $DDTInterface.DDTInterface.UpdateOrder.method,
-					data:{
-						StrokeID:that.OrderNo,
-						PhoneNo:that.userInfo.phoneNumber,
+					data: {
+						StrokeID: that.OrderNo,
+						PhoneNo: that.userInfo.phoneNumber,
 					},
 					success(res) {
 						console.log(res);
@@ -387,7 +388,58 @@
 			},
 			comfirmReturn: function() { //确定还车
 
-			}
+			},
+			GetOrderByUserID: function() { //获取信息
+				var that = this;
+				uni.showLoading({
+					title: '加载中',
+					mask: true
+				})
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetOrderByUserID.Url,
+					method: $DDTInterface.DDTInterface.GetOrderByUserID.method,
+					data: {
+						UserID: that.userInfo.userId,
+					},
+					success(res) {
+						console.log(res);
+						uni.hideLoading();
+						if (res.data.status) {
+							if (res.data.data[0].PayState == 1) {
+								uni.showToast({
+									title: '订单已支付',
+									icon: 'none'
+								})
+								setTimeout(function() {
+									uni.redirectTo({
+										// url: '../GRZY/zy_homepage'
+									})
+								}, 1500)
+							} else {
+								var bikeType = '有桩';
+								if (res.data.data.RentType = 1) {
+									bikeType = '无桩';
+								}
+								that.rentInfo = {
+									bikeType: bikeType,
+									OrderId: res.data.data.OrderId, //订单ID
+									bikeId: res.data.data.BikeId, //车辆编号
+									operationId: res.data.data.OperationId, //操作编号
+									phoneNumber: that.userInfo.phoneNumber, //手机号
+								}
+								that.getOrderInfo();
+							}
+						}
+					},
+					fail() {
+						uni.hideLoading();
+						uni.showToast({
+							title: '网络连接失败',
+							icon: 'none'
+						})
+					}
+				})
+			},
 		}
 	}
 </script>
