@@ -379,6 +379,8 @@
 					},
 					success(response) {
 						uni.hideLoading()
+						console.log('返回数据false',that.userInfo.phoneNumber)
+						console.log('返回数据false',response)
 						if(response.data.status == true){
 							if(response.data.data.bizStatus == '新建'){
 								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
@@ -401,10 +403,22 @@
 							}else if(response.data.data.bizStatus == '租车超时支付中'){
 								that.myShowModal('租车超时支付中，请完成支付');
 							}else if(response.data.data.bizStatus == '业务已注销'){
-								that.myShowModal('业务已注销，无法租车');
+								uni.showModal({
+									title:'温馨提示',
+									content:'未交押金无法用车，是否立即支付押金？',
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'../GRZY/zy_homepage'
+											})
+										}
+									}
+								})
 							}else if(response.data.data.bizStatus == '可用'){
 								//已交押金，开始扫码租车
 								that.scanQrcode();
+							}else if(response.data.data.bizStatus == null){
+								that.myShowModal('请先登陆');
 							}
 						}else {
 							console.log('返回数据false',response)
@@ -449,74 +463,6 @@
 					}
 				})
 			},
-			//-------------------------------开通租车业务-------------------------------
-			OpenRentRequest:function(){
-				var that = this;
-				console.log(that.userInfo.phoneNumber)
-				
-				uni.request({
-					url:$DDTInterface.DDTInterface.OpenRentRequest.Url,
-					method:$DDTInterface.DDTInterface.OpenRentRequest.method,
-					data:{
-						loginname:that.userInfo.phoneNumber,
-					},
-					success(res) {
-						if(res.data.status == true && res.data.data == '可用') {
-							uni.showToast({
-								title:'开通成功'
-							})
-						}else if(res.data.status == true && res.data.data == '未知异常'){
-							uni.showToast({
-								title:'该账户已开通业务，请勿重复开通',
-								icon:'none'
-							})
-						}else{
-							uni.showToast({
-								title:res.data.data,
-								icon:'none'
-							})
-						}
-						console.log('开通租车业务成功返回数据',res)
-					},
-					fail(res) {
-						console.log('开通租车业务失败返回数据',res)
-					}
-				})
-			},
-			//-------------------------------关闭租车业务-------------------------------
-			CloseRentRequest:function(){
-				var that = this;
-				console.log(that.userInfo.phoneNumber)
-				
-				uni.request({
-					url:$DDTInterface.DDTInterface.CloseRentRequest.Url,
-					method:$DDTInterface.DDTInterface.CloseRentRequest.method,
-					data:{
-						loginname:that.userInfo.phoneNumber,
-					},
-					success(res) {
-						if(res.data.status == true && res.data.data == '业务已注销') {
-							uni.showToast({
-								title:'业务注销成功'
-							})
-						}else if(res.data.status == true && res.data.data == '未知异常'){
-							uni.showToast({
-								title:'该账户已注销，请勿重复注销',
-								icon:'none'
-							})
-						}else{
-							uni.showToast({
-								title:res.data.data,
-								icon:'none'
-							})
-						}
-						console.log('关闭租车业务成功返回数据',res)
-					},
-					fail(res) {
-						console.log('关闭租车业务失败返回数据',res)
-					}
-				})
-			},
 			//-------------------------------有桩租车请求-------------------------------
 			Rent:function(param){
 				var that = this;
@@ -524,7 +470,7 @@
 					url:$DDTInterface.DDTInterface.Rent.Url,
 					method:$DDTInterface.DDTInterface.Rent.method,
 					data:{
-						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
+						phone:that.userInfo.phoneNumber,//13906963039
 						QRcode:param,
 						SystemType: that.system,
 					},
@@ -591,7 +537,6 @@
 								icon:'none'
 							})
 						}
-						
 					},
 					fail(response) {
 						console.log(response)

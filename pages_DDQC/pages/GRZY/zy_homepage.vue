@@ -66,7 +66,23 @@
 				<text class="vi_text2">充值金额</text>
 				<text class="jdticon icon-you"></text>
 			</view>
-
+			<!-- 二维码 -->
+			<view class="ve_view4" @click="QRCodeData">
+				<text class="vi_text2">公交二维码</text>
+				<text class="jdticon icon-you"></text>
+			</view>
+			<!-- 二维码 -->
+			<uni-popup ref="popup1" type="bottom">
+				<view class="po_boxVlew" style="align-items: center;">
+					<view class="bv_topText">
+						<text class="tt_text">二维码</text>
+						<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
+					</view>
+					<view style=" width: 300rpx;margin-left: 230rpx;">
+						<canvas canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+					</view>
+				</view>
+			</uni-popup>
 			<!-- 押金支付弹框 -->
 			<uni-popup ref="popup" type="bottom">
 				<view class="po_boxVlew">
@@ -145,7 +161,7 @@
 				</view>
 
 				<view style="display: flex;position: absolute;right: 0;top: 41%;padding-right: 30upx;">
-					<text class="rc_text4">{{item.PayPrice}}<text class="rc_text5">元</text></text>
+					<text class="rc_text4">{{item.PayPrice/100}}<text class="rc_text5">元</text></text>
 					<text class="jdticon icon-you"></text>
 				</view>
 			</view>
@@ -156,6 +172,7 @@
 <script>
 	import $DDTInterface from '@/common/DDT.js'
 	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
+	import uQRCode from '@/pages_DDQC/components/GRZY/uni-qrcode/uqrcode.js';
 	export default {
 		components: {
 			uniPopup,
@@ -182,11 +199,14 @@
 				},
 
 				drivingRecord: '', //行车记录
-				HireCoord: '', //租车经纬度
-				RestoreCoord: '', //还车经纬度
-				bicycleOrderInfo: '',
+				HireCoord:'',//租车经纬度
+				RestoreCoord:'',//还车经纬度
+				bicycleOrderInfo:'',
+				
+				qrcodeText: 'uQRCode',
+				qrcodeSize: 150,
+				qrcodeSrc: '',
 				paymentData: [], //支付参数
-
 			}
 		},
 		onLoad() {
@@ -198,6 +218,7 @@
 			that.getUserInfo();
 		},
 		methods: {
+			
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -217,6 +238,48 @@
 					},
 					fail(data) {}
 				})
+			},
+			//--------------------------二维码--------------------------
+			QRCodeData:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBusCodeGen.Url,
+					method:$DDTInterface.DDTInterface.GetBusCodeGen.method,
+					data:{
+						phoneNumber:13906963039,
+						userID:that.userInfo.userId,
+					},
+					success(res) {
+						console.log('二维码',res)
+						if(res.data.status == true){
+							that.QRCodeClick(res.data.data.qr)
+						}
+					},
+					fail(res) {
+						console.log('获取钱包数据失败',res)
+					}
+				})
+			},
+			QRCodeClick:function(param){
+				var that = this;
+				uni.showLoading({
+					title: '二维码生成中',
+					mask: true
+				})
+				
+				uQRCode.make({
+					canvasId: 'qrcode',
+					text: param,
+					size: that.qrcodeSize,
+					margin: 10,
+					success: res => {
+						that.qrcodeSrc = res
+					},
+					complete: () => {
+						uni.hideLoading()
+					}
+				})
+				that.$refs.popup1.open()
 			},
 			//--------------------------获取钱包数据--------------------------
 			GetEnrollment: function() {
@@ -403,27 +466,6 @@
 				})
 			},
 
-			GetTransaction: function() {
-				var that = this;
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetTransaction.Url,
-					method: $DDTInterface.DDTInterface.GetTransaction.method,
-					data: {
-
-					},
-					success(res) {
-						console.log('钱包消费', res)
-						if (res.status == true) {
-							that.paymentData = res.data.credential;
-							that.payment();
-						}
-					},
-					fail(res) {
-						console.log('钱包消费', res)
-					}
-				})
-			},
-
 			//------------------押金充值记录---------------------------------
 
 			WirteRechargeLog: function(state) {
@@ -509,7 +551,7 @@
 					url: $DDTInterface.DDTInterface.GetOrderByUserID.Url,
 					method: $DDTInterface.DDTInterface.GetOrderByUserID.method,
 					data: {
-						UserID: '122',
+						UserID: that.userInfo.userId,
 					},
 					success(res) {
 						console.log('查询自行车订单', res)
