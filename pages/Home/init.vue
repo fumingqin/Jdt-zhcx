@@ -14,14 +14,14 @@
 		onLoad() {
 			// #ifndef APP-PLUS
 			uni.switchTab({
-				url:'Index'
+				url:'zy_zhcx'
 			});
 			// #endif
 			// #ifdef APP-PLUS
 			const value = uni.getStorageSync('launchFlag');
 			if(value){
 				uni.switchTab({
-					url:'Index'
+					url:'zy_zhcx'
 				});
 			}else{
 				uni.setStorage({

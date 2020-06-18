@@ -7,15 +7,16 @@
 		
 		<view class="ed_view">
 			<view>
-				<text class="vi_text">达达通助力车</text>
+				<text v-if="RentType==0" class="vi_text">有桩车</text>
+				<text v-if="RentType==1" class="vi_text">无桩车</text>
 				<view class="te_view">
-					<text class="te_text">{{expenseDetail.date}}</text>
-					<text class="te_text2">{{expenseDetail.time}}</text>
+					<text class="te_text">{{HireTime}}</text>
+					<!-- <text class="te_text2">{{expenseDetail.time}}</text> -->
 				</view>
 			</view>
 		</view>
 		
-		<view class="ed_view2">
+		<!-- <view class="ed_view2">
 			<view>
 				<text class="vi_text">骑行费用</text>
 			</view>
@@ -27,9 +28,9 @@
 				<text class="te_text5">时长价(30分钟)</text>
 				<text class="te_text6">{{expenseDetail.durationCost}}元</text>
 			</view>
-		</view>
+		</view> -->
 		
-		<view class="ed_view3">
+		<!-- <view class="ed_view3">
 			<view>
 				<text class="vi_text">优惠</text>
 			</view>
@@ -37,10 +38,10 @@
 				<text class="te_text3">套餐抵扣</text>
 				<text class="te_text4">{{expenseDetail.packageOffer}}元</text>
 			</view>
-		</view>
+		</view> -->
 		
 		<view class="ed_view4">
-			<text class="ed_text">支付费用:{{expenseDetail.totalCost}}元</text>
+			<text class="ed_text">支付费用:{{PayPrice}}元</text>
 		</view>
 		
 		<view class="ed_view5" @click="open">
@@ -72,10 +73,17 @@
 		data() {
 			return {
 				expenseDetail: '', //行车记录
+				HireTime:'',
+				PayPrice:'',
+				RentType:'',
 			}
 		},
-		onLoad() {
-			this.lunBoInit();
+		onLoad(param) {
+			var that=this;
+			that.lunBoInit();
+			that.HireTime = param.HireTime;
+			that.PayPrice = param.PayPrice;
+			that.RentType = param.RentType;
 		},
 		methods: {
 			//------------------------------弹框事件-----------------------------------------

@@ -1813,7 +1813,7 @@
 						icon:'none'
 					})
 					uni.switchTab({
-						url:'../../../../pages/Home/Index'
+						url:'../../../../pages/Home/zy_zhcx'
 					})
 					// #endif
 					// #ifdef MP-WEIXIN
@@ -2020,7 +2020,7 @@
 			back: function() {
 				var that = this;
 				uni.switchTab({
-					url: '/pages/Home/Index',
+					url: '/pages/Home/zy_zhcx',
 				});
 			},
 			//------------------------------------------------客运开始------------------------------------------------

@@ -7,7 +7,7 @@
 		<view style="position: fixed;bottom: 0;">
 			<view class="ct_state">
 				<text class="sa_text">行程</text>
-				<text class="sa_text2">{{drivingRecord.PayPrice}}元</text>
+				<text class="sa_text2">{{drivingRecord.PayPrice/100}}元</text>
 				<text class="sa_text3" @click="jump">查看明细></text>
 			</view>
 
@@ -164,6 +164,9 @@
 				StartLat:'',//起点纬度
 				EndLon:'',//终点经度
 				EndLat:'',//终点纬度
+				HireTime:'',
+				PayPrice:'',
+				RentType:'',
 			}
 		},
 		onLoad(param) {
@@ -191,6 +194,11 @@
 				    if (res) {
 				        // console.log('订单缓存数据',res)
 				        this.drivingRecord=res;
+						this.HireTime=res.HireTime;
+						this.PayPrice=res.PayPrice;
+						this.RentType=res.RentType;
+						// console.log(this.HireTime)
+						// console.log(this.PayPrice)
 						var HireCoord=this.drivingRecord.HireCoord;
 						var RestoreCoord=this.drivingRecord.RestoreCoord;
 						console.log('订单缓存数据2',this.drivingRecord)
@@ -255,15 +263,18 @@
 					width: 30,
 					height: 30,
 				};
+				
 				that.markers = [];
 				that.startmarker = [];
 				that.endmarker = [];
-				console.log(that.StartLat)
-				console.log(that.StartLon)
+				console.log('1',that.StartLat)
+				console.log('2',that.StartLon)
+				console.log('3',that.EndLat)
+				console.log('4',that.EndLon)
 				that.markers.push(startmarker);
 				that.markers.push(endmarker);
 				that.showlocation = false;
-				that.getDirectionDriving();
+				that.getDirectionDriving(that.drivingRecord.HireCoord,that.drivingRecord.RestoreCoord);
 			},
 			
 			// setMarker: function(id, lon, lat, iconPath) {
@@ -322,73 +333,73 @@
 			// 	};
 			// 	that.markers.push(marker);
 			// },
-			getDirectionDriving: function() {
-				
-				//调用高德api取得路径规划并绘制线路 
+			getDirectionDriving: function(startLonLat,endLonLat) {
 				var that = this;
-				that.points = [];
-				that.polyline = [];
-				
-				var points = [];
-				var obj={
-					points: [{
-					        latitude: that.StartLon,
-					        longitude: that.StartLat
-					    },
-					    {
-					        latitude: that.EndLon,
-					        longitude: that.EndLat
-					    }],
-					color: "#4281FF",
-					arrowLine: true,
-					width: 5
-				};
-				that.polyline.push(obj);
-				// uni.request({
-				// 	url: $bcfw.InterfaceAddress[0],
-				// 	data: {
-				// 		startLonLat: startLonLat,
-				// 		endLonLat: endLonLat,
-				// 	},
-				// 	method: "GET",
-				// 	success: function(res) {
-				// 		//日后会加入定时，此处需清空
-				// 		console.log(res)
-				// 		that.points = [];
-				// 		that.polyline = [];
-
-				// 		var polylineArr = [];
-				// 		var points = [];
-
-				// 		polylineArr = res.data.Polyline;
-
-				// 		for (var i = 0; i < polylineArr.length; i++) {
-				// 			var arr = polylineArr[i].split(';');
-				// 			for (var j = 0; j < arr.length; j++) {
-				// 				points.push(arr[j]);
-				// 			}
+				//调用高德api取得路径规划并绘制线路 
+				// var that = this;
+				// var obj = {
+				// 	points:[
+				// 		{
+				// 			latitude: that.StartLon,
+				// 			longitude: that.StartLat
+				// 		},
+				// 		{
+				// 			latitude: that.EndLon,
+				// 			longitude: that.EndLat
 				// 		}
-				// 		//根据文件建设对象经纬度数组
-				// 		for (var i = 0; i < points.length; i++) {
-				// 			var arr = points[i].split(',');
-				// 			var obj = {
-				// 				longitude: arr[0],
-				// 				latitude: arr[1]
-				// 			}
-				// 			that.points.push(obj);
-				// 		}
-				// 		var obj = {
-				// 			points: that.points,
-				// 			color: "#4281FF",
-				// 			arrowLine: true,
-				// 			width: 5
-				// 		};
-				// 		that.polyline.push(obj);
-				// 	},
-				// 	fail: function(res) {
-				// 		// console.log(res);
-				// 	}
-				// });
+				// 	],
+				// 	color: "#4281FF",
+				// 	arrowLine: true,
+				// 	width: 5
+				// };
+				// that.polyline = [];
+				// that.obj=[];
+				// that.polyline.push(obj);
+				uni.request({
+					url: $bcfw.InterfaceAddress[0],
+					data: {
+						startLonLat: startLonLat,
+						endLonLat: endLonLat,
+					},
+					method: "GET",
+					success: function(res) {
+						//日后会加入定时，此处需清空
+						console.log(res)
+						that.points = [];
+						that.polyline = [];
+
+						var polylineArr = [];
+						var points = [];
+
+						polylineArr = res.data.Polyline;
+
+						for (var i = 0; i < polylineArr.length; i++) {
+							var arr = polylineArr[i].split(';');
+							for (var j = 0; j < arr.length; j++) {
+								points.push(arr[j]);
+							}
+						}
+						//根据文件建设对象经纬度数组
+						for (var i = 0; i < points.length; i++) {
+							var arr = points[i].split(',');
+							var obj = {
+								longitude: arr[0],
+								latitude: arr[1]
+							}
+							that.points.push(obj);
+						}
+						var obj = {
+							points: that.points,
+							color: "#4281FF",
+							arrowLine: true,
+							width: 5
+						};
+						that.polyline.push(obj);
+					},
+					fail: function(res) {
+						// console.log(res);
+					}
+				});
 			},
 
 			//------------------------------满意弹框事件-----------------------------------------
@@ -406,7 +417,7 @@
 			
 			jump:function(){
 				uni.navigateTo({
-					url:'./zy_expenseDetails'
+					url:'./zy_expenseDetails?HireTime=' + this.HireTime + '&PayPrice=' +this.PayPrice/100 + '&RentType=' +this.RentType
 				})
 			},
 
@@ -608,6 +619,7 @@
 	.st_view2 {
 		flex-direction: row;
 		justify-content: space-between;
+		align-items: center;
 		padding-left: 35upx;
 		padding-right: 35upx;
 	}
@@ -616,6 +628,8 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
+		align-items: center;
+		justify-content: center;
 		border-width: 1px;
 		border-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
@@ -623,8 +637,6 @@
 
 	.vi_text {
 		font-size: 34upx;
-		padding-top: 18upx;
-		padding-left: 84upx;
 		font-weight: 400;
 		color: rgba(101, 195, 109, 1);
 	}
@@ -633,14 +645,14 @@
 		width: 259upx;
 		height: 85upx;
 		margin-top: 35upx;
+		align-items: center;
+		justify-content: center;
 		background-color: rgba(101, 195, 109, 1);
 		border-radius: 69upx;
 	}
 
 	.vi_text2 {
 		font-size: 34upx;
-		padding-top: 18upx;
-		padding-left: 63upx;
 		font-weight: 400;
 		color: #FFFFFF;
 	}
@@ -695,7 +707,7 @@
 	
 	.dt_view{
 		height: 860rpx;
-		background-color: #FFFFFF; 
+		background-color: #FFFFFF;
 		border-top-left-radius: 20rpx; 
 		border-top-right-radius: 20rpx;
 	}
