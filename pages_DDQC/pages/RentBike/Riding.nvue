@@ -299,21 +299,10 @@
 							uni.setNavigationBarTitle({
 								title: "还车"
 							})
-							uni.showToast({
-								title: "关锁中...",
-								mask: true,
-								// image: "../../RentBike/static/lock.png",
-								icon: "none",
+							uni.showLoading({
+								title:'正在还车...'
 							})
-							// that.rentInfo = {
-							// 	bikeType: bikeType,
-							// 	OrderId: res.data.data.OrderId, //订单ID
-							// 	bikeId: res.data.data.BikeId, //车辆编号
-							// 	operationId: res.data.data.OperationId, //操作编号
-							// 	phoneNumber: that.userInfo.phoneNumber, //手机号
-							// }
-							console.log(that.rentInfo)
-							
+							console.log('请求参数',that.rentInfo)
 							uni.request({
 								url: $DDTInterface.DDTInterface.TransferHire.Url,
 								method: $DDTInterface.DDTInterface.TransferHire.method,
@@ -326,25 +315,35 @@
 									operationId: that.rentInfo.operationId, //操作编号
 									bikeId: that.rentInfo.bikeId, //车辆编号
 								},
+								
 								success(res) {
 									console.log('还车成功结果', res);
 									if (res.data.status == true) {
 										if (res.data.data.retcode == 0) { //返回编号（0代表完成）
+											uni.hideLoading()
+											console.log('还车成功')
 											uni.showToast({
 												title: '还车成功',
 												icon: 'none',
 												mask: true,
 												success(res) {
 													that.UpdateOrder();
-													uni.redirectTo({
+													uni.navigateTo({
 														url: './Payment'
 													})
 												}
 											})
 										}
 									}else if(res.data.data.retcode == -1){
-										
+										console.log('还车失败')
+										uni.hideLoading()
+										uni.showToast({
+											title: '还车失败',
+											icon: 'none',
+											mask: true,
+										})
 									}else {
+										uni.hideLoading()
 										uni.showToast({
 											title: res.data.msg,
 											icon: 'none'
@@ -352,6 +351,7 @@
 									}
 								},
 								fail(err) {
+									uni.hideLoading()
 									console.log('还车失败结果', err)
 								}
 							})
@@ -391,6 +391,7 @@
 				})
 			},
 			UpdateOrder: function() {
+				var that = this;
 				uni.request({
 					url: $DDTInterface.DDTInterface.UpdateOrder.Url,
 					method: $DDTInterface.DDTInterface.UpdateOrder.method,
@@ -430,7 +431,7 @@
 						UserID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log(res);
+						console.log('获取订单数据成功',res);
 						uni.hideLoading();
 						if (res.data.status) {
 							if (res.data.data[0].PayState == 1) {
@@ -455,7 +456,7 @@
 									operationId: res.data.data[0].OperationId, //操作编号
 									phoneNumber: that.userInfo.phoneNumber, //手机号
 								}
-								console.log(that.rentInfo)
+								// console.log(that.rentInfo)
 								that.getOrderInfo();
 							}
 						}

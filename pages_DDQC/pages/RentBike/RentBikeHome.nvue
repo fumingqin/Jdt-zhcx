@@ -554,7 +554,9 @@
 			//-------------------------------无桩租车请求-------------------------------
 			Rent_hire:function(param){
 				var that = this;
-				console.log(that.userInfo.phoneNumber,param,that.system,that.userInfo.userId)
+				uni.showLoading({
+					title:'正在开锁...'
+				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
@@ -565,10 +567,12 @@
 						userID:that.userInfo.userId,
 					},
 					success(response) {
+						
 						console.log('无桩请求返回结果',response)
-						if(response.data.data.status == true){
+						if(response.data.status == true){
+							uni.hideLoading()
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
-							if(response.data.ReqStatus == '4000'){
+							if(response.data.data.ReqStatus == '4000'){
 								var responseArr = {
 									bikeType:'无桩',
 									OrderId: response.data.OrderId,//订单ID
@@ -582,6 +586,7 @@
 								})
 							}
 						}else if(response.data.status == false){
+							uni.hideLoading()
 							//当前扫码的是有桩车二维码
 							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
 								uni.showToast({
@@ -599,6 +604,7 @@
 						}
 					},
 					fail(response) {
+						uni.hideLoading()
 						console.log('无桩请求返回错误结果',response)
 					}
 				})
