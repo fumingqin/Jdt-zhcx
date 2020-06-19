@@ -27,12 +27,19 @@
 				qrcodeSrc: '',
 				setTime:'',
 				qr:'',
+				loadingTime:'',
 			}
 		},
 		
 		onLoad() {
 			var that = this;
 			that.autoRefresh();
+		},
+		
+		//监听页面卸载
+		onUnload() {
+			var that = this;
+			that.RefreshOff();
 		},
 		
 		onShow() {
@@ -96,12 +103,20 @@
 			autoRefresh:function(){
 				var that = this;
 				uni.showLoading()
-				// setTimeout(function(){
-				// 	console.log('自动刷新')
-				// 	that.QRCodeData();
-				// },15000)
+				that.loadingTime=setInterval(function(){
+					console.log('自动刷新')
+					that.QRCodeData();
+					// console.log(that.sign)
+				},15000)
 			},
 			
+			//---------------------------刷新关闭---------------------------
+			RefreshOff:function(){
+				var that = this;
+				clearInterval(that.loadingTime)
+			},
+			
+			//---------------------------生成二维码---------------------------
 			QRCodeClick:function(param){
 				var that = this;
 				uni.showLoading({
