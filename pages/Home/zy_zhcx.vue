@@ -296,6 +296,12 @@
 		},
 		onLoad() {
 			var that = this;
+			this.lunBoInit();
+			this.loadData();
+		},
+
+		onShow() {
+			var that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
 			if(that.userInfo!=''){
 				that.checkCurrentStatus();
@@ -315,16 +321,11 @@
 				}
 			})
 			// #endif
-			this.lunBoInit();
-			this.loadData();
-		},
-
-		onShow() {
 			// #ifdef MP-WEIXIN
-			this.getLoginState();
+			that.getLoginState();
 			//#endif
 			// #ifdef  H5
-			this.getCode();
+			that.getCode();
 			//#endif
 		},
 
@@ -495,9 +496,17 @@
 			},
 			
 			natTo2: function(e) {
-				uni.navigateTo({
-					url:e
-				})
+				var that = this;
+				if(that.userInfo!==''){
+					uni.navigateTo({
+						url:e
+					})
+				}else if(that.userInfo==''){
+					uni.navigateTo({
+						url:'../GRZX/userLogin',
+					})
+				}
+				console.log('是否拿到缓存',that.userInfo)
 			},
 			
 			//路由整合
