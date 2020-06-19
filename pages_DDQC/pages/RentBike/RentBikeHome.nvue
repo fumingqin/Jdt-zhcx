@@ -434,7 +434,7 @@
 							}else if(response.data.data.bizStatus == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data.bizStatus == '已租车'){
-								that.myShowModal('当前有行程未结束无法租车');
+								that.myShowModal('当前有未完成订单，是否前往','./Riding');
 							}else if(response.data.data.bizStatus == '租车超时支付中'){
 								that.myShowModal('租车超时支付中，请完成支付');
 							}else if(response.data.data.bizStatus == '业务已注销'){
@@ -555,13 +555,14 @@
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
 					data:{
+						bikeType:'无桩',
 						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
 						userID:that.userInfo.userId,
 					},
 					success(response) {
-						console.log(response)
+						console.log('无桩请求返回结果',response)
 						if(response.data.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
 							if(response.data.BizStatus == '1004'){
@@ -598,7 +599,7 @@
 						}
 					},
 					fail(response) {
-						console.log(response)
+						console.log('无桩请求返回错误结果',response)
 					}
 				})
 			}
