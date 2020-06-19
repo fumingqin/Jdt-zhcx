@@ -90,6 +90,11 @@
 								title: res.data.msg,
 								icon:'none'
 							})
+							setTimeout(function() {
+								uni.redirectTo({
+									url: '../GRZY/zy_homepage'
+								})
+							}, 1500)
 						}
 					},
 					fail(res) {

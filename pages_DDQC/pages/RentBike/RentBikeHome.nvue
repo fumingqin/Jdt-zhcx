@@ -425,47 +425,25 @@
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据',that.userInfo.phoneNumber)
-						console.log('返回数据',response)
+						console.log('返回业户数据',that.userInfo.phoneNumber)
+						console.log('返回业户数据',response)
 						
 						if(response.data.status == true){
 							if(response.data.data.bizStatus == '新建'){
-								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
-								//开通租车业务
-								uni.showModal({
-									title:'温馨提示',
-									content:'未交押金无法用车，是否立即支付押金？',
-									success(res) {
-										if(res.confirm){
-											uni.navigateTo({
-												url:'../GRZY/zy_homepage'
-											})
-										}
-									}
-								})
+								that.myShowModal('未交押金无法用车，是否立即支付押金？','../GRZY/zy_homepage');
 							}else if(response.data.data.bizStatus == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data.bizStatus == '已租车'){
-								that.myShowModal('当前有行程未结束无法租车');
+								that.myShowModal('当前有未完成订单，是否前往','./Riding');
 							}else if(response.data.data.bizStatus == '租车超时支付中'){
 								that.myShowModal('租车超时支付中，请完成支付');
 							}else if(response.data.data.bizStatus == '业务已注销'){
-								uni.showModal({
-									title:'温馨提示',
-									content:'未交押金无法用车，是否立即支付押金？',
-									success(res) {
-										if(res.confirm){
-											uni.navigateTo({
-												url:'../GRZY/zy_homepage'
-											})
-										}
-									}
-								})
+								that.myShowModal('业务已注销，是否立即交付押金？','../GRZY/zy_homepage');
 							}else if(response.data.data.bizStatus == '可用'){
 								//已交押金，开始扫码租车
 								that.scanQrcode();
 							}else if(response.data.data.bizStatus == null){
-								that.myShowModal('请先登陆');
+								that.myShowModal('请先登陆','../../../pages/GRZX/userLogin');
 							}
 						}else {
 							console.log('返回数据false',response)
@@ -501,12 +479,16 @@
 				});
 			},
 			//-------------------------------便捷弹框提示-------------------------------
-			myShowModal(content){
+			myShowModal(content,Url){
 				uni.showModal({
 					title:'温馨提示',
 					content:content,
-					success() {
-						
+					success(res) {
+						if(res.confirm){
+							uni.navigateTo({
+								url:Url
+							})
+						}
 					}
 				})
 			},
@@ -552,6 +534,8 @@
 									title:'请扫有桩的二维码',
 									icon:'none'
 								})
+							}else if(response.data.msg == '您有未完成或者未支付的订单'){
+								that.myShowModal('有未完成订单，是否前往支付','./Payment')
 							}else{
 								console.log(response)
 								uni.showToast({
@@ -573,14 +557,15 @@
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
 					data:{
+						bikeType:'无桩',
 						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
 						userID:that.userInfo.userId,
 					},
 					success(response) {
-						console.log(response)
-						if(response.data.status == true){
+						console.log('无桩请求返回结果',response)
+						if(response.data.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
 							if(response.data.BizStatus == '1004'){
 								var responseArr = {
@@ -594,32 +579,31 @@
 								uni.navigateTo({
 									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
 								})
-							}else if(response.data.BizStatus == '1003'){
-									uni.showToast({
-										title:'此桩位无车',
-										icon:'none'
-									})
+							}else if(response.data.data.BizStatus == '1003'){
+								uni.showToast({
+									title:'此桩位无车',
+									icon:'none'
+								})
 							}
 						}else if(response.data.status == false){
 							//当前扫码的是有桩车二维码
-							let tt = response.data.msg.indexOf('字符串的长度不能为零');
-							console.log('888888',tt)
 							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
 								uni.showToast({
 									title:'请扫有桩的二维码',
 									icon:'none'
 								})
+							}else if(response.data.msg == '您有未完成或者未支付的订单'){
+								that.myShowModal('有未完成订单，是否前往支付','./Payment')
 							}else {
 								uni.showToast({
 									title:response.data.msg,
 									icon:'none'
 								})
 							}
-							
 						}
 					},
 					fail(response) {
-						console.log(response)
+						console.log('无桩请求返回错误结果',response)
 					}
 				})
 			}
