@@ -555,6 +555,7 @@
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
 					data:{
+						bikeType:'无桩',
 						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
