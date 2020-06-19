@@ -40,7 +40,6 @@
 				phoneNumber:'',
 				captchaCode:'',
 				imgHeight:'',
-				loginType:'',
 				urlData:'',
 				background:'',
 				logo:'',
@@ -49,41 +48,25 @@
 		onLoad(options) {
 			this.loadImg();
 			this.urlData=options.urlData;
-			this.load(options.loginType);
+			this.load();
 		},
 		methods: {
 			//---------------加载图片----------------
 			loadImg(){
 				var that=this;
-				console.log(that.$GrzxInter.GetImage.url,"144")
-				uni.request({
-					url:that.$GrzxInter.GetImage.url,
-					data:{
-						model:5,
-					},
-					method:'POST',
-					success(res) {
-						var image1=res.data.data.filter(item => {
-							return item.type=='南平背景图';
-						})
-						that.background=image1[0].imageUrl;
-						var image2=res.data.data.filter(item => {
-							return item.type=='nanpinglogo';
-						})
-						that.logo=image2[0].imageUrl;
-						// console.log(that.logo,'that.logo')
-					}
-				})
+				that.$ChangeImage.GetImage("南平综合出行").then(function(data){
+					that.logo=data.logo;
+					that.background=data.background;
+				});
 			},
-			async load(e){
+			//---------------加载页面高度----------------
+			load(){
 				var that=this;
 				uni.getSystemInfo({
 				　　success: function(res) { // res - 各种参数
 						that.imgHeight=res.windowHeight;
 				       }
 				});
-				that.loginType=e;
-				// console.log(e)
 			},
 			judgeNum(val){  //只能输入数字
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
@@ -156,23 +139,9 @@
 											uni.removeStorageSync('captchaCode');
 											uni.setStorageSync('userInfo',res.data.data);
 											uni.hideLoading();
-											
 											that.registerBike(res.data.data.userId,res.data.data.phoneNumber)  //注册自行车用户
-											// if(that.urlData==1){
-											// 	uni.switchTab({  //返回首页
-											// 		url:'/pages/Home/Index',
-											// 	}) 
-											// }else if(that.urlData==2){
-											// 	uni.switchTab({  //返回订单页
-											// 		url:'/pages/order/OrderList',
-											// 	}) 
-											// }else{
-											// 	console.log("返回上一页")
-											// 	uni.navigateBack();//返回上一页
-											// }
 										}
 									})
-									
 								}else{
 									uni.showToast({
 										title:"验证码错误",
@@ -211,9 +180,6 @@
 			},
 			//-------------------------------------检查是否实名----------------------------------
 			checkRealName(id){
-				// uni.showLoading({
-				// 	title:'登录中...'
-				// })
 				console.log(id,'checkRealName')
 				var that=this;
 				uni.request({
@@ -411,15 +377,17 @@
 				}
 			},
 			returnClick(){		//返回个人中心
-				// uni.switchTab({
-				// 	url:'/pages/GRZX/user'
-				// })
-				if(this.urlData==2){
+				if(that.urlData==1){
 					uni.switchTab({  //返回首页
 						url:'/pages/Home/zy_zhcx',
 					}) 
+				}else if(that.urlData==2){
+					uni.switchTab({  //返回订单页
+						url:'/pages/order/OrderList',
+					}) 
 				}else{
-					uni.navigateBack();
+					console.log("返回上一页")
+					uni.navigateBack();//返回上一页
 				}
 			},
 			//------------判断是否为base64格式-----------

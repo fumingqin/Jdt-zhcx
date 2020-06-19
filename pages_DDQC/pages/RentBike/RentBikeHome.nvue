@@ -7,7 +7,7 @@
 		
 		<!-- 自定义导航栏 -->
 		<view class="navgator">
-			<view style="width: 40rpx;height: 35rpx;margin-left: 40rpx;" @click="NavBack">
+			<view style="width: 60rpx;height: 50rpx;margin-left: 40rpx;" @click="NavBack">
 				<image src="../../static/GRZY/back.png" style="width: 20rpx;height: 35rpx;"></image>
 			</view>
 			
@@ -76,12 +76,13 @@
 				success: function(res) {
 					// console.log('当前设备信息',res)
 					//地图高度
+					// console.log(res.system.indexOf('iOS'))
 					if(res.system.indexOf('iOS') == -1){
-						//当前不是iOS
-						that.system = 'Android'
-					}else {
 						//当前是iOS
 						that.system = 'iOS'
+					}else {
+						//当前不是iOS
+						that.system = 'Android'
 					}
 					// console.log(that.system)
 					that.mapHeight = res.windowHeight + 'px';
@@ -553,11 +554,11 @@
 			//-------------------------------无桩租车请求-------------------------------
 			Rent_hire:function(param){
 				var that = this;
+				console.log(that.userInfo.phoneNumber,param,that.system,that.userInfo.userId)
 				uni.request({
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
 					data:{
-						bikeType:'无桩',
 						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
@@ -567,7 +568,7 @@
 						console.log('无桩请求返回结果',response)
 						if(response.data.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
-							if(response.data.BizStatus == '1004'){
+							if(response.data.ReqStatus == '4000'){
 								var responseArr = {
 									bikeType:'无桩',
 									OrderId: response.data.OrderId,//订单ID
@@ -578,11 +579,6 @@
 								//当前状态可以租车
 								uni.navigateTo({
 									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
-								})
-							}else if(response.data.data.BizStatus == '1003'){
-								uni.showToast({
-									title:'此桩位无车',
-									icon:'none'
 								})
 							}
 						}else if(response.data.status == false){
@@ -627,10 +623,10 @@
 		/* height: 168rpx; */
 		background-color: #FFFFFF;
 		top: 0;
-		padding-top: 100rpx;
+		padding-top: 110rpx;
 		left: 0;
 		right: 0;
-		padding-bottom: 30rpx;
+		padding-bottom: 20rpx;
 	}
 	.Btn_click {
 		color: #65C36D;
