@@ -110,8 +110,8 @@
 			// that.getOrderInfo();
 			console.log(item)
 			if (item.responseArr) {
-				console.log(111);
 				that.rentInfo = JSON.parse(item.responseArr);
+				console.log('传递数据结果',that.rentInfo);
 				if (that.rentInfo.bikeType == "有桩") {
 					that.getOrderInfo();
 				} else {
@@ -319,6 +319,8 @@
 								success(res) {
 									console.log('还车成功结果', res);
 									if (res.data.status == true) {
+										console.log('开始还车')
+										console.log('开始还车',res.data.data.retcode)
 										if (res.data.data.retcode == 0) { //返回编号（0代表完成）
 											uni.hideLoading()
 											console.log('还车成功')
@@ -333,16 +335,16 @@
 													})
 												}
 											})
+										}else if(res.data.data.retcode == -1){
+											console.log('还车失败')
+											uni.hideLoading()
+											uni.showToast({
+												title: '还车失败',
+												icon: 'none',
+												mask: true,
+											})
 										}
-									}else if(res.data.data.retcode == -1){
-										console.log('还车失败')
-										uni.hideLoading()
-										uni.showToast({
-											title: '还车失败',
-											icon: 'none',
-											mask: true,
-										})
-									}else {
+									}else if (res.data.status == false){
 										uni.hideLoading()
 										uni.showToast({
 											title: res.data.msg,
@@ -380,8 +382,9 @@
 							that.IsStake = true;
 							//---开启检测订单状态
 							that.checkStatus();
+						}else{
+							that.IsStake = false;
 						}
-						that.IsStake = false;
 						//开始计时---显示当前骑行时间
 						that.timeConcer(res.data.data[0].HireAction.Time);
 					},
@@ -445,10 +448,13 @@
 									})
 								}, 1500)
 							} else {
-								var bikeType = '有桩';
-								if (res.data.data.RentType = 1) {
+								var bikeType = '';
+								if (res.data.data[0].RentType == 1) {
 									bikeType = '无桩';
+								}else{
+									bikeType = '有桩';
 								}
+								
 								that.rentInfo = {
 									bikeType: bikeType,
 									OrderId: res.data.data[0].OrderId, //订单ID
