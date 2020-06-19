@@ -112,15 +112,22 @@
 			if (item.responseArr) {
 				console.log(111);
 				that.rentInfo = JSON.parse(item.responseArr);
+				console.log(that.rentInfo)
 				if (that.rentInfo.bikeType == "有桩") {
-					that.getOrderInfo();
+					setTimeout(function(){
+						that.getOrderInfo();
+					},2000) 
 				} else {
 					that.IsStake = false;
-					that.getOrderInfo();
+					setTimeout(function(){
+						that.getOrderInfo();
+					},2000)
 				}
 			} else {
 				console.log('开始获取1298471861892541791284081')
+				setTimeout(function(){
 				that.GetOrderByUserID();
+				},2000)
 			}
 		},
 		created() {
@@ -242,7 +249,7 @@
 						success(res) {
 							console.log('还车结果', res) 
 							that.orderId = res.data.data[0].OrderId;
-							if (res.data.data.hireStatus == 2) {
+							if (res.data.data[0].HireStatus == 2) {
 								uni.showToast({
 									title: '还车成功',
 									icon: 'none',
@@ -368,7 +375,7 @@
 					method: $DDTInterface.DDTInterface.GetOrder.method,
 					data: {
 						phoneNo: that.userInfo.phoneNumber,
-						startIndex: 1,
+						startIndex: 0,
 						retcount: 1,
 						userID: that.userInfo.userID,
 					},
@@ -376,12 +383,14 @@
 						that.orderId = res.data.data[0].OrderId;
 						console.log(res)
 						//判断是否有还车时间
+						console.log(that.rentInfo)
 						if (that.rentInfo.bikeType == "有桩") {
 							that.IsStake = true;
 							//---开启检测订单状态
 							that.checkStatus();
+						}else{
+							that.IsStake = false;
 						}
-						that.IsStake = false;
 						//开始计时---显示当前骑行时间
 						that.timeConcer(res.data.data[0].HireAction.Time);
 					},
@@ -446,7 +455,7 @@
 								}, 1500)
 							} else {
 								var bikeType = '有桩';
-								if (res.data.data.RentType = 1) {
+								if (res.data.data[0].RentType == 1) {
 									bikeType = '无桩';
 								}
 								that.rentInfo = {

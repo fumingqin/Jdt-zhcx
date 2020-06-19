@@ -575,9 +575,9 @@
 							if(response.data.data.ReqStatus == '4000'){
 								var responseArr = {
 									bikeType:'无桩',
-									OrderId: response.data.OrderId,//订单ID
-									bikeId: response.data.bikeId,//车辆编号
-									operationId: response.data.operationId,//操作编号
+									OrderId: response.data.data.OrderId,//订单ID
+									bikeId: response.data.data.bikeId,//车辆编号
+									operationId: response.data.data.operationId,//操作编号
 									phoneNumber: that.userInfo.phoneNumber,//手机号
 								}
 								//当前状态可以租车
