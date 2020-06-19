@@ -223,7 +223,7 @@
 						userID: that.userInfo.userID,
 					},
 					success(res) {
-						if (res.data.status) {
+						if (res.data.status == true) {
 							console.log(res);
 							that.beginTime = res.data.data[0].HireAction.Time;
 							that.endTime = res.data.data[0].RestoreAction.Time;
