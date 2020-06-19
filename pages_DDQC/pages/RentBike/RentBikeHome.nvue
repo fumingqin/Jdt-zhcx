@@ -584,6 +584,9 @@
 								uni.navigateTo({
 									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
 								})
+								uni.showToast({
+									title:'租车成功',
+								})
 							}
 						}else if(response.data.status == false){
 							uni.hideLoading()
