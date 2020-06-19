@@ -8,7 +8,7 @@
 			<image src="../../static/GRZX/scan.png" class="scanClass" @click="navTo('scan')"></image>
 			<!-- #endif -->
 			<view class="userInfoClass" @click="checkLogin">
-				<image class="portraitClass" :src="portrait || '/static/GRZX/missing-face.png'"></image>
+				<image class="portraitClass" :src="port || '/static/GRZX/missing-face.png'"></image>
 				<text class="usernameClass">{{nickname || '游客'}}</text>
 				<!-- <image src="../../static/GRZX/edit.png" class="editClass"></image> -->
 			</view>
@@ -127,24 +127,15 @@
 			return{
 				QQ:'',
 				nickname:'',
-				portrait:'',
+				port:'',
 				advert:'',
 				userFeedbackHidden:true,
+				focusType:false,
 				//加载信息
+				userInfo:[],
 				contantPhone:'',
 				userId:'',
-				phoneNumber:'',
-				openId_qq:'',
-				openId_wx:'',
-				openId_xcx:'',
-				address:'',
-				birthday:'',
-				gender:'',
-				port:'',
-				focusType:false,
 			}
-		},
-		computed: {
 		},
 		onLoad(){
 			this.loadImg();
@@ -156,19 +147,9 @@
 			// ---------------------------加载图片----------------------------
 			loadImg(){
 				var that=this;
-				uni.request({
-					url:that.$GrzxInter.GetImage.url,
-					data:{
-						model:5,
-					},
-					method:'POST',
-					success(res) {
-						var image=res.data.data.filter(item => {
-							return item.type=='广告';
-						})
-						that.advert=image[0].imageUrl;
-					}
-				})
+				that.$ChangeImage.GetImage("南平综合出行").then(function(data){
+					that.advert=data.advert;
+				});
 			},
 			// ---------------------------加载数据----------------------------
 			loadData(){
@@ -189,6 +170,8 @@
 									// console.log(res,'res')
 									that.checkIDRealName(res.data.data.userId);
 									uni.setStorageSync('userInfo',res.data.data);
+									that.userInfo=res.data.data;
+									
 									if(res.data.data.nickname==""||res.data.data.nickname==null){
 										that.nickname="请输入昵称";	
 									}else{
@@ -198,25 +181,15 @@
 									if(that.isBase64(base64)){
 										base64ToPath(base64)
 										  .then(path => {
-										    that.portrait=path;
+										    that.port=path;
 										  })
 										  .catch(error => {
 										    // console.error(error)
 										  })
 									}else{
-										that.portrait=base64;
+										that.port=base64;
 									}
-									that.contantPhone=res.data.data.autograph;
 									that.userId=res.data.data.userId;
-									that.phoneNumber=res.data.data.phoneNumber;
-									that.openId_qq=res.data.data.openId_qq;
-									that.openId_wx=res.data.data.openId_wx;
-									that.openId_xcx=res.data.data.openId_xcx;
-									that.address=res.data.data.address;
-									that.birthday=res.data.data.birthday;
-									that.gender=res.data.data.gender;
-									that.port=res.data.data.portrait;
-									// console.log(that.portrait,"that.portrait")
 								}
 							})
 						}else{
@@ -237,7 +210,7 @@
 					},
 					fail(){
 						that.nickname="";
-						that.portrait="";
+						that.port="";
 					}
 				})
 			},
@@ -298,13 +271,14 @@
 			//--------------------添加紧急联系人的电话号码--------------------
 			addContact(){
 				// setTimeout(function(){
-					this.focusType=true;
+					
 				// },5000);
 				var that=this;
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
 						that.userFeedbackHidden=false;
+						that.focusType=true;
 						that.contantPhone=res.data.autograph;
 					},
 					fail() {
@@ -394,10 +368,7 @@
 					// #ifdef APP-PLUS
 					setTimeout(function(){
 						uni.navigateTo({	
-							//loginType=1,泉运登录界面
-							//loginType=2,今点通登录界面
-							//loginType=3,武夷股份登录界面
-							url:that.$GrzxInter.Route.userLogin.url +'?loginType=1&&urlData=1'
+							url:that.$GrzxInter.Route.userLogin.url,
 						}) 
 					},500);
 					// #endif
@@ -407,7 +378,6 @@
 					})
 					// #endif
 				}else{
-					// console.log(that.$GrzxInter.Route.personal.url,"8888")
 					uni.navigateTo({
 						url :that.$GrzxInter.Route.personal.url,
 					})  
