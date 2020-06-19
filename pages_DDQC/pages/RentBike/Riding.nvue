@@ -385,10 +385,10 @@
 						PhoneNo: that.userInfo.phoneNumber,
 					},
 					success(res) {
-						console.log(res);
+						console.log('更新订单信息',res);
 					},
 					fail(err) {
-						console.log(err);
+						console.log('更新订单信息',res);
 					}
 				})
 			},
