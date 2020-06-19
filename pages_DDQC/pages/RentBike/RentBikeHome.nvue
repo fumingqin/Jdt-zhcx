@@ -534,6 +534,8 @@
 									title:'请扫有桩的二维码',
 									icon:'none'
 								})
+							}else if(response.data.msg == '您有未完成或者未支付的订单'){
+								that.myShowModal('有未完成订单，是否前往支付','./Payment')
 							}else{
 								console.log(response)
 								uni.showToast({
@@ -590,6 +592,8 @@
 									title:'请扫有桩的二维码',
 									icon:'none'
 								})
+							}else if(response.data.msg == '您有未完成或者未支付的订单'){
+								that.myShowModal('有未完成订单，是否前往支付','./Payment')
 							}else {
 								uni.showToast({
 									title:response.data.msg,
