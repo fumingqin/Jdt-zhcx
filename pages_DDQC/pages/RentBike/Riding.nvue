@@ -11,7 +11,7 @@
 			<view v-if="!Isreturn">
 				<view class="ridestate">
 					<text style="color:#333333;font-size: 36rpx;font-weight: 500;">骑行中</text>
-					<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;">如遇故障，2分钟可免费还车</text>
+					<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;">如遇故障，请联系客服</text>
 				</view>
 				<view class="detail">
 					<view style="align-items: center;justify-content: center;">
@@ -367,7 +367,9 @@
 						if (that.rentInfo.bikeType == "有桩") {
 							//---开启检测订单状态
 							that.checkStatus();
+							that.IsStake = true;
 						}
+						that.IsStake = false;
 						//开始计时---显示当前骑行时间
 						that.timeConcer(res.data.data[0].HireAction.Time);
 					},
