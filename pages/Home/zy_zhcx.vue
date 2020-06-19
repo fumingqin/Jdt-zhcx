@@ -16,6 +16,18 @@
 						<text class="zl_caText">达达骑车</text>
 					</view>
 					
+					<!-- 公交扫码 -->
+					<view class="zl_charterService" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_QRcode')">
+						<image class="zl_csImage" src="../../static/Home/GJSM.png"></image>
+						<text class="zl_csText">公交扫码</text>
+					</view>
+					
+					<!-- 公交扫码 -->
+					<!-- <view class="zl_charterService" @click="natTo()">
+						<image class="zl_csImage" src="../../static/Home/GJSM2.png"></image>
+						<text class="zl_csText">包车服务</text>
+					</view> -->
+					
 					<!-- 车票订购 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
@@ -57,7 +69,10 @@
 						<image class="zl_csImage" src="../../static/Home/BCFW2.png"></image>
 						<text class="zl_csText">包车服务</text>
 					</view>
-					
+				</view>
+			</swiper-item>
+			<swiper-item class="swiItem">
+				<view class="zl_topClick">
 					<!-- 景区门票 -->
 					<!-- <view class="zl_tourismServices">
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
@@ -69,10 +84,6 @@
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
 						<text class="zl_teText">景区门票</text>
 					</view>
-				</view>
-			</swiper-item>
-			<swiper-item class="swiItem">
-				<view class="zl_topClick">
 					<!-- 旅游产品 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
@@ -210,7 +221,7 @@
 			</view>
 		</view>
 
-		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; margin: 16upx 0; color: #aaa;">
+		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; padding: 16upx 0; color: #aaa; background: #FFFFFF;">
 			<text v-if="current==0" :hidden="disStatus== 1">{{loadingType== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
 			<text v-if="current==0" :hidden="disStatus== 0">暂无历史数据</text>
 		</view>
@@ -230,6 +241,7 @@
 </template>
 
 <script>
+	import $DDTInterface from '@/common/DDT.js'
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //引用路径
 	import $Home from '@/common/Home.js' //引用路径
 	export default {
@@ -241,11 +253,32 @@
 				{
 					title:'不负灿烂时光,周边游更精彩',
 				}],
-				imgXXDT:[],//咨询动态
+				imgXXDT:[{
+					imageUrl:'',
+				}],//咨询动态
 				homePage: '', //轮播图
 				type: 0,
 				Announcement: '', //资讯动态
-				sixPalaceList: '',
+				sixPalaceList: [{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				},
+				{
+					ticketId:'',
+					ticketImage:'',
+				}],
 				goodsList: '',
 				zy_dataIndex: 6, //列表默认数量
 				disStatus: 0,
@@ -258,10 +291,15 @@
 				current: 0, //标题下标
 				version:'',//版本号
 				platform:'',//系统平台
+				userInfo:'',
 			}
 		},
 		onLoad() {
 			var that = this;
+			that.userInfo = uni.getStorageSync('userInfo') || '';
+			if(that.userInfo!=''){
+				that.checkCurrentStatus();
+			}
 			// #ifdef APP-PLUS
 			//获取系统信息
 			uni.getSystemInfo({
@@ -376,7 +414,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						// console.log(res)
+						console.log('请求六宫格',res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
@@ -465,7 +503,7 @@
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
-					// url:'../../pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsDetails?ticketId='+e,
+					// url:'../../pages_DDQC/pages/GRZY/zy_QRcode'
 					url:'',
 				})
 			},
@@ -588,9 +626,60 @@
 						})
 					}
 				})
-			}
+			},
 			//#endif
-		}
+			checkCurrentStatus:function(){//检测用户是否有未完成的订单
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
+					method:$DDTInterface.DDTInterface.GetBizStatus.method,
+					data:{
+						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
+						loginname:that.userInfo.phoneNumber,//手机号
+					},
+					success(response) {
+						uni.hideLoading()
+						console.log('返回数据',that.userInfo.phoneNumber)
+						console.log('返回数据',response)
+						
+						if(response.data.status == true){
+							if(response.data.data.bizStatus == '已租车'){
+								//当前有未完成订单,跳转到行程页面
+								uni.showModal({
+									title:'温馨提示',
+									content:'当前有未完成订单，是否前往？',
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'../../pages_DDQC/pages/RentBike/Riding'
+											})
+										}
+									}
+								})
+							}else if(response.data.data.bizStatus == '租车超时支付中'){
+								//租车超时支付中，跳转到支付页面
+								uni.showModal({
+									title:'温馨提示',
+									content:'当前有订单未支付，请立即前往支付',
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'../../pages_DDQC/pages/RentBike/Payment'
+											})
+										}
+									}
+								})
+							}
+						}else {
+							console.log('返回数据false',response)
+						}
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
+			}
+		},
 	}
 </script>
 

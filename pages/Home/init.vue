@@ -14,7 +14,7 @@
 		onLoad() {
 			// #ifndef APP-PLUS
 			uni.switchTab({
-				url:'Index'
+				url:'zy_zhcx'
 			});
 			// #endif
 			// #ifdef APP-PLUS

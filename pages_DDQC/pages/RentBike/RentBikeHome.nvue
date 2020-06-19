@@ -7,7 +7,7 @@
 		
 		<!-- 自定义导航栏 -->
 		<view class="navgator">
-			<view style="width: 40rpx;height: 35rpx;margin-left: 40rpx;" @click="NavBack">
+			<view style="width: 60rpx;height: 50rpx;margin-left: 40rpx;" @click="NavBack">
 				<image src="../../static/GRZY/back.png" style="width: 20rpx;height: 35rpx;"></image>
 			</view>
 			
@@ -76,12 +76,13 @@
 				success: function(res) {
 					// console.log('当前设备信息',res)
 					//地图高度
+					// console.log(res.system.indexOf('iOS'))
 					if(res.system.indexOf('iOS') == -1){
-						//当前不是iOS
-						that.system = 'Android'
-					}else {
 						//当前是iOS
 						that.system = 'iOS'
+					}else {
+						//当前不是iOS
+						that.system = 'Android'
 					}
 					// console.log(that.system)
 					that.mapHeight = res.windowHeight + 'px';
@@ -91,6 +92,9 @@
 			// 获取自身位置
 			// that.getMyLocation();
 			that.GetBHTStationByRange(117.63370822482639,23.93265109592014);//无桩	
+			
+			//检测当前是否有订单未完成
+			that.checkCurrentStatus();
 			
 		},
 		onShow() {
@@ -163,6 +167,49 @@
 						}
 					})
 				}
+			},
+			//-------------------------------进到页面的时候检测当前是否有订单未完成-------------------------------
+			checkCurrentStatus:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
+					method:$DDTInterface.DDTInterface.GetBizStatus.method,
+					data:{
+						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
+						loginname:that.userInfo.phoneNumber,//手机号
+					},
+					success(response) {
+						uni.hideLoading()
+						console.log('返回数据',that.userInfo.phoneNumber)
+						console.log('返回数据',response)
+						
+						if(response.data.status == true){
+							if(response.data.data.bizStatus == '已租车'){
+								//当前有未完成订单,跳转到行程页面
+								uni.showModal({
+									title:'温馨提示',
+									content:'当前有未完成订单，是否前往？',
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'./Riding'
+											})
+										}
+									}
+								})
+							}else if(response.data.data.bizStatus == '租车超时支付中'){
+								//租车超时支付中，跳转到支付页面
+								that.myShowModal('租车超时支付中，请完成支付');
+							}
+						}else {
+							console.log('返回数据false',response)
+						}
+						
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
 			},
 			//-------------------------------有桩数据-------------------------------
 			GetStationByRange:function(longitude,latitude){
@@ -379,46 +426,25 @@
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据false',that.userInfo.phoneNumber)
-						console.log('返回数据false',response)
+						console.log('返回业户数据',that.userInfo.phoneNumber)
+						console.log('返回业户数据',response)
+						
 						if(response.data.status == true){
 							if(response.data.data.bizStatus == '新建'){
-								// that.myShowModal('未交押金无法用车，是否立即支付押金？');
-								//开通租车业务
-								uni.showModal({
-									title:'温馨提示',
-									content:'未交押金无法用车，是否立即支付押金？',
-									success(res) {
-										if(res.confirm){
-											uni.navigateTo({
-												url:'../GRZY/zy_homepage'
-											})
-										}
-									}
-								})
+								that.myShowModal('未交押金无法用车，是否立即支付押金？','../GRZY/zy_homepage');
 							}else if(response.data.data.bizStatus == '业务开通支付中'){
 								that.myShowModal('业务开通支付中');
 							}else if(response.data.data.bizStatus == '已租车'){
-								that.myShowModal('当前有行程未结束无法租车');
+								that.myShowModal('当前有未完成订单，是否前往','./Riding');
 							}else if(response.data.data.bizStatus == '租车超时支付中'){
 								that.myShowModal('租车超时支付中，请完成支付');
 							}else if(response.data.data.bizStatus == '业务已注销'){
-								uni.showModal({
-									title:'温馨提示',
-									content:'未交押金无法用车，是否立即支付押金？',
-									success(res) {
-										if(res.confirm){
-											uni.navigateTo({
-												url:'../GRZY/zy_homepage'
-											})
-										}
-									}
-								})
+								that.myShowModal('业务已注销，是否立即交付押金？','../GRZY/zy_homepage');
 							}else if(response.data.data.bizStatus == '可用'){
 								//已交押金，开始扫码租车
 								that.scanQrcode();
 							}else if(response.data.data.bizStatus == null){
-								that.myShowModal('请先登陆');
+								that.myShowModal('请先登陆','../../../pages/GRZX/userLogin');
 							}
 						}else {
 							console.log('返回数据false',response)
@@ -454,12 +480,16 @@
 				});
 			},
 			//-------------------------------便捷弹框提示-------------------------------
-			myShowModal(content){
+			myShowModal(content,Url){
 				uni.showModal({
 					title:'温馨提示',
 					content:content,
-					success() {
-						
+					success(res) {
+						if(res.confirm){
+							uni.navigateTo({
+								url:Url
+							})
+						}
 					}
 				})
 			},
@@ -473,12 +503,14 @@
 						phone:that.userInfo.phoneNumber,//13906963039
 						QRcode:param,
 						SystemType: that.system,
+						userID:that.userInfo.userId,
 					},
 					success(response) {
-						console.log(response)
+						console.log('二维码信息',response)
 						if(response.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
-							if(response.data.BizStatus == '已租车'){
+							if(response.data.data.BizStatus == '1004'){
+								
 								var responseArr = {
 									bikeType:'有桩',
 									OrderId: response.data.OrderId,//订单ID
@@ -488,24 +520,41 @@
 								}
 								//当前状态可以租车
 								uni.navigateTo({
-									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
+								})
+							}else if(response.data.data.BizStatus == '1003'){
+								uni.showToast({
+									title:'此桩位无车',
+									icon:'none'
 								})
 							}
 						}else if(response.data.status == false){
-							uni.showToast({
-								title:response.data.msg,
-								icon:'none'
-							})
+							//当前扫码的是无桩车二维码
+							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
+								uni.showToast({
+									title:'请扫有桩的二维码',
+									icon:'none'
+								})
+							}else if(response.data.msg == '您有未完成或者未支付的订单'){
+								that.myShowModal('有未完成订单，是否前往支付','./Payment')
+							}else{
+								console.log(response)
+								uni.showToast({
+									title:response.data.msg,
+									icon:'none'
+								})
+							}
 						}
 					},
 					fail(response) {
-						console.log(response)
+						console.log(response) 
 					}
 				})
 			},
 			//-------------------------------无桩租车请求-------------------------------
 			Rent_hire:function(param){
 				var that = this;
+				console.log(that.userInfo.phoneNumber,param,that.system,that.userInfo.userId)
 				uni.request({
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
 					method:$DDTInterface.DDTInterface.Rent_hire.method,
@@ -513,12 +562,13 @@
 						phone:that.userInfo.phoneNumber,//that.userInfo.phoneNumber
 						QRcode:param,
 						SystemType: that.system,
+						userID:that.userInfo.userId,
 					},
 					success(response) {
-						console.log(response)
-						if(response.data.status == true){
+						console.log('无桩请求返回结果',response)
+						if(response.data.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
-							if(response.data.BizStatus == '已租车'){
+							if(response.data.ReqStatus == '4000'){
 								var responseArr = {
 									bikeType:'无桩',
 									OrderId: response.data.OrderId,//订单ID
@@ -528,18 +578,28 @@
 								}
 								//当前状态可以租车
 								uni.navigateTo({
-									url:'./Riding?responseArr=' + JSON.stringify(responseArr)
+									url:'./Riding?&responseArr=' + JSON.stringify(responseArr)
 								})
 							}
 						}else if(response.data.status == false){
-							uni.showToast({
-								title:response.data.msg,
-								icon:'none'
-							})
+							//当前扫码的是有桩车二维码
+							if(response.data.msg.indexOf('字符串的长度不能为零') == 0){
+								uni.showToast({
+									title:'请扫有桩的二维码',
+									icon:'none'
+								})
+							}else if(response.data.msg == '您有未完成或者未支付的订单'){
+								that.myShowModal('有未完成订单，是否前往支付','./Payment')
+							}else {
+								uni.showToast({
+									title:response.data.msg,
+									icon:'none'
+								})
+							}
 						}
 					},
 					fail(response) {
-						console.log(response)
+						console.log('无桩请求返回错误结果',response)
 					}
 				})
 			}
@@ -563,10 +623,10 @@
 		/* height: 168rpx; */
 		background-color: #FFFFFF;
 		top: 0;
-		padding-top: 100rpx;
+		padding-top: 110rpx;
 		left: 0;
 		right: 0;
-		padding-bottom: 30rpx;
+		padding-bottom: 20rpx;
 	}
 	.Btn_click {
 		color: #65C36D;

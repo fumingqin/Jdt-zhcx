@@ -247,7 +247,7 @@
 						content: '骑行时间:' + this.drivingRecord.TotalTime + '分钟',
 						color: '#fff',
 						fontSize: 13,
-						borderRadius: 39,
+						borderRadius: 5,
 						borderWidth: 1,
 						borderColor: '#000000',
 						bgColor: '#000000',
@@ -263,15 +263,18 @@
 					width: 30,
 					height: 30,
 				};
+				
 				that.markers = [];
 				that.startmarker = [];
 				that.endmarker = [];
-				console.log(that.StartLat)
-				console.log(that.StartLon)
+				console.log('1',that.StartLat)
+				console.log('2',that.StartLon)
+				console.log('3',that.EndLat)
+				console.log('4',that.EndLon)
 				that.markers.push(startmarker);
 				that.markers.push(endmarker);
 				that.showlocation = false;
-				that.getDirectionDriving();
+				that.getDirectionDriving(that.drivingRecord.HireCoord,that.drivingRecord.RestoreCoord);
 			},
 			
 			// setMarker: function(id, lon, lat, iconPath) {
@@ -330,73 +333,73 @@
 			// 	};
 			// 	that.markers.push(marker);
 			// },
-			getDirectionDriving: function() {
-				
-				//调用高德api取得路径规划并绘制线路 
+			getDirectionDriving: function(startLonLat,endLonLat) {
 				var that = this;
-				that.points = [];
-				that.polyline = [];
-				
-				var points = [];
-				var obj={
-					points: [{
-					        latitude: that.StartLon,
-					        longitude: that.StartLat
-					    },
-					    {
-					        latitude: that.EndLon,
-					        longitude: that.EndLat
-					    }],
-					color: "#4281FF",
-					arrowLine: true,
-					width: 5
-				};
-				that.polyline.push(obj);
-				// uni.request({
-				// 	url: $bcfw.InterfaceAddress[0],
-				// 	data: {
-				// 		startLonLat: startLonLat,
-				// 		endLonLat: endLonLat,
-				// 	},
-				// 	method: "GET",
-				// 	success: function(res) {
-				// 		//日后会加入定时，此处需清空
-				// 		console.log(res)
-				// 		that.points = [];
-				// 		that.polyline = [];
-
-				// 		var polylineArr = [];
-				// 		var points = [];
-
-				// 		polylineArr = res.data.Polyline;
-
-				// 		for (var i = 0; i < polylineArr.length; i++) {
-				// 			var arr = polylineArr[i].split(';');
-				// 			for (var j = 0; j < arr.length; j++) {
-				// 				points.push(arr[j]);
-				// 			}
+				//调用高德api取得路径规划并绘制线路 
+				// var that = this;
+				// var obj = {
+				// 	points:[
+				// 		{
+				// 			latitude: that.StartLon,
+				// 			longitude: that.StartLat
+				// 		},
+				// 		{
+				// 			latitude: that.EndLon,
+				// 			longitude: that.EndLat
 				// 		}
-				// 		//根据文件建设对象经纬度数组
-				// 		for (var i = 0; i < points.length; i++) {
-				// 			var arr = points[i].split(',');
-				// 			var obj = {
-				// 				longitude: arr[0],
-				// 				latitude: arr[1]
-				// 			}
-				// 			that.points.push(obj);
-				// 		}
-				// 		var obj = {
-				// 			points: that.points,
-				// 			color: "#4281FF",
-				// 			arrowLine: true,
-				// 			width: 5
-				// 		};
-				// 		that.polyline.push(obj);
-				// 	},
-				// 	fail: function(res) {
-				// 		// console.log(res);
-				// 	}
-				// });
+				// 	],
+				// 	color: "#4281FF",
+				// 	arrowLine: true,
+				// 	width: 5
+				// };
+				// that.polyline = [];
+				// that.obj=[];
+				// that.polyline.push(obj);
+				uni.request({
+					url: $bcfw.InterfaceAddress[0],
+					data: {
+						startLonLat: startLonLat,
+						endLonLat: endLonLat,
+					},
+					method: "GET",
+					success: function(res) {
+						//日后会加入定时，此处需清空
+						console.log(res)
+						that.points = [];
+						that.polyline = [];
+
+						var polylineArr = [];
+						var points = [];
+
+						polylineArr = res.data.Polyline;
+
+						for (var i = 0; i < polylineArr.length; i++) {
+							var arr = polylineArr[i].split(';');
+							for (var j = 0; j < arr.length; j++) {
+								points.push(arr[j]);
+							}
+						}
+						//根据文件建设对象经纬度数组
+						for (var i = 0; i < points.length; i++) {
+							var arr = points[i].split(',');
+							var obj = {
+								longitude: arr[0],
+								latitude: arr[1]
+							}
+							that.points.push(obj);
+						}
+						var obj = {
+							points: that.points,
+							color: "#4281FF",
+							arrowLine: true,
+							width: 5
+						};
+						that.polyline.push(obj);
+					},
+					fail: function(res) {
+						// console.log(res);
+					}
+				});
 			},
 
 			//------------------------------满意弹框事件-----------------------------------------

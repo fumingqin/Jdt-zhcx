@@ -45,14 +45,14 @@
 		},
 		onBackPress:function(){
 			uni.switchTab({
-				url:'Index'
+				url:'zy_zhcx'
 			})
 		},
 		methods: {
 			//跳转路由
 			natTo: function() {
 				uni.switchTab({
-					url: 'Index'
+					url: 'zy_zhcx'
 				})
 			}
 		}

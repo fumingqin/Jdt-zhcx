@@ -174,7 +174,7 @@
 				"navigationStyle": "custom"
 			}
 		}
-	],
+    ],
 
 	"subPackages": [
 		//---------------------------------------------第一个包：传统客运------------------------------------------
@@ -966,6 +966,10 @@
 							}
 						}
 					}
+				},
+				{
+				    "path" : "pages/GRZY/zy_QRcode",
+				    "style" : {}
 				}
 			]
 		},
@@ -1025,13 +1029,13 @@
 			// 	"pagePath": "pages/Home/Index",
 			// 	"text": "出行"
 			// },
-			// {
-			// 	"pagePath": "pages/GRZX/notice",
-			// 	"text": "通知"
-			// },
 			{
 				"pagePath": "pages/Home/zy_zhcx",
 				"text": "首页"
+			},
+			{
+				"pagePath": "pages/GRZX/notice",
+				"text": "通知"
 			},
 			{
 				"pagePath": "pages/Home/serve",

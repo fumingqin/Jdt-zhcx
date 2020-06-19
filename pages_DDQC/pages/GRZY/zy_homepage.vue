@@ -146,9 +146,28 @@
 					</view>
 				</view>
 			</view>
-
-			<!-- 行车记录 -->
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2(index)">
+			
+			<!-- 行车记录待付款 -->
+			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" v-if="item.PayState==0" @click="Jump3('../RentBike/Payment')">
+				<view>
+					<text v-if="item.RentType==0" class="rc_text">有桩车</text>
+					<text v-if="item.RentType==1" class="rc_text">无桩车</text>
+					<!-- <text class="rc_text">{{item.model}}</text> -->
+				</view>
+				<view style="display: flex;">
+					<text class="rc_text2">{{item.HireTime}}</text>
+					<!-- <text class="rc_text3">{{item.time}}</text> -->
+					<!-- <text class="rc_text3">{{item.timeUse}}分钟</text> -->
+				</view>
+			
+				<view style="display: flex;position: absolute;right: 0;top: 41%;padding-right: 30upx;">
+					<text class="rc_text4">{{item.PayPrice/100}}<text class="rc_text5">元</text></text>
+					<text class="jdticon icon-you"></text>
+				</view>
+			</view>
+			
+			<!-- 行车记录已付款 -->
+			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" v-if="item.PayState==1" @click="Jump2(index)">
 				<view>
 					<text v-if="item.RentType==0" class="rc_text">有桩车</text>
 					<text v-if="item.RentType==1" class="rc_text">无桩车</text>
@@ -330,8 +349,9 @@
 						if (res.data.status == true && res.data.msg == '请求成功') {
 							that.walletData=res.data.data;
 							that.balance = res.data.data.balance/100;
-							that.deposit = res.data.data.deposit/100;
-							that.depositStatus = res.data.data.depositStatus;
+							if(!res.data.data.depositStatus==0){
+								that.deposit = res.data.data.deposit/100;
+							}
 							console.log("测试"+that.depositStatus); 
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
@@ -665,7 +685,12 @@
 					},
 					success(res) {
 						console.log(res)
-						if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
+						if(that.userInfo==''){
+							uni.navigateTo({
+								url:'../../../pages/GRZX/userLogin'
+							})
+						}
+						else if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
 							//实名认证
 							uni.navigateTo({
 								url: that.$GrzxInter.Route.realName.url,
@@ -715,9 +740,9 @@
 						console.log('呀呀呀'+JSON.stringify(res) )
 						that.depositStatus=res.data.data.DepositType;
 						console.log(that.depositStatus);
-						if(that.depositStatus){
+						// if(that.depositStatus==1||that.depositStatus==2){
 							that.GetPurseDetail();
-						}
+						// }
 					},
 					fail(err) {
 						console.log('读取信息',err)
@@ -745,6 +770,12 @@
 							url: './zy_details'
 						})
 					}
+				})
+			},
+			
+			Jump3(e) {
+				uni.navigateTo({
+					url:e,
 				})
 			}
 		}

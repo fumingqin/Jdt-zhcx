@@ -34,8 +34,8 @@
 		onLoad() {
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 			console.log(this.userInfo);
-			this.GetOrderByUserID();
-			// this.getOrderInfo();  
+			// this.GetOrderByUserID();
+			this.getOrderInfo();   
 		},
 		methods: {
 			payNow: function() { //立即支付  
@@ -74,7 +74,7 @@
 					success(res) {
 						uni.hideLoading();
 						if (res.data.msg == '请求成功 ') {
-							that.consumeRecord(1)
+							// that.consumeRecord(1)
 							uni.showToast({
 								title: '支付成功'
 							})
@@ -85,16 +85,21 @@
 							}, 1500)
 						} else if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
 							.msg == '钱包余额不足') {
-							that.consumeRecord(0)
+							// that.consumeRecord(0)
 							uni.showToast({
 								title: res.data.msg,
 								icon:'none'
 							})
+							setTimeout(function() {
+								uni.redirectTo({
+									url: '../GRZY/zy_homepage'
+								})
+							}, 1500)
 						}
 					},
 					fail(res) {
 						uni.hideLoading();
-						that.consumeRecord(0)
+						// that.consumeRecord(0)
 						uni.showToast({
 							title: "网络连接失败",
 							icon:'none'
@@ -213,7 +218,7 @@
 					},
 					data: {
 						phoneNo: that.userInfo.phoneNumber,
-						startIndex: 1,
+						startIndex: 0,
 						retcount: 1,
 						userID: that.userInfo.userID,
 					},
