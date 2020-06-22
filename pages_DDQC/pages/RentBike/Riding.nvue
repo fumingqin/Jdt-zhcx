@@ -324,12 +324,13 @@
 								success(res) {
 									console.log('还车成功结果', res);
 									if (res.data.status == true) {
-										console.log('开始还车')
 										console.log('开始还车',res.data.data.retcode)
 										if (res.data.data.retcode == 0) { //返回编号（0代表完成）
-											uni.hideLoading()
-											that.isReturn();
-											
+											//做五秒延迟，
+											setTimeout(function(){
+												uni.hideLoading()
+												that.isReturn();
+											},3000)
 										}else if(res.data.data.retcode == -1){
 											console.log('还车失败')
 											uni.hideLoading()
@@ -379,7 +380,17 @@
 									title:'还车异常，请重新还车',
 									icon:'none'
 								})
-							}else {
+							}else if(res.data.data[0].HireStatus == 1){
+								uni.showToast({
+									title: '还车失败',
+									icon: 'none',
+								})
+							}else if(res.data.data[0].HireStatus == 6){
+								uni.showToast({
+									title: '还车失败',
+									icon: 'none',
+								})
+							}else if(res.data.data[0].HireStatus == 2){
 								uni.showToast({
 									title: '还车成功',
 									icon: 'none',

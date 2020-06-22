@@ -77,7 +77,7 @@
 					// console.log('当前设备信息',res)
 					//地图高度
 					// console.log(res.system.indexOf('iOS'))
-					if(res.system.indexOf('iOS') == -1){
+					if(res.system.indexOf('iOS') == 0){
 						//当前是iOS
 						that.system = 'iOS'
 					}else {
@@ -175,14 +175,11 @@
 					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
 					method:$DDTInterface.DDTInterface.GetBizStatus.method,
 					data:{
-						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
 						loginname:that.userInfo.phoneNumber,//手机号
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据',that.userInfo.phoneNumber)
 						console.log('返回数据',response)
-						
 						if(response.data.status == true){
 							if(response.data.data.bizStatus == '已租车'){
 								//当前有未完成订单,跳转到行程页面
@@ -204,7 +201,6 @@
 						}else {
 							console.log('返回数据false',response)
 						}
-						
 					},
 					fail(response) {
 						console.log(response)
@@ -235,7 +231,6 @@
 							//请求数据成功之后先清空之前的数据
 							that.markers = [];
 							for (var i = 0; i < res.data.data.length; i++) {
-								// let markerIconPath = '';
 								if(res.data.data[i].status == 7){//正常
 									that.bicycleIconPath = '../../static/RentBike/bicycle.png'
 								}else if(res.data.data[i].status == 9){//离线
@@ -257,7 +252,7 @@
 									height : that.iconHeight,
 									callout : {
 										content: content, //文本res.data.data[i].name
-										color: '#FC4646', //文字颜色
+										color: '#21ff06', //文字颜色
 										fontSize: 12, //文本大小
 										borderRadius: 4, //边框圆角
 										bgColor: '#FFFFFF', //背景颜色
@@ -329,7 +324,7 @@
 									height : that.iconHeight,
 									callout : {
 										content: res.data.data[i].name, //文本res.data.data[i].name
-										color: '#FC4646', //文字颜色
+										color: '#21ff06', //文字颜色
 										fontSize: 12, //文本大小
 										borderRadius: 4, //边框圆角
 										bgColor: '#FFFFFF', //背景颜色
@@ -426,7 +421,6 @@
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回业户数据',that.userInfo.phoneNumber)
 						console.log('返回业户数据',response)
 						
 						if(response.data.status == true){
@@ -437,7 +431,7 @@
 							}else if(response.data.data.bizStatus == '已租车'){
 								that.myShowModal('当前有未完成订单，是否前往','./Riding');
 							}else if(response.data.data.bizStatus == '租车超时支付中'){
-								that.myShowModal('租车超时支付中，请完成支付');
+								that.myShowModal('租车超时支付中，请完成支付','./Payment');
 							}else if(response.data.data.bizStatus == '业务已注销'){
 								that.myShowModal('业务已注销，是否立即交付押金？','../GRZY/zy_homepage');
 							}else if(response.data.data.bizStatus == '可用'){
@@ -513,9 +507,9 @@
 								
 								var responseArr = {
 									bikeType:'有桩',
-									OrderId: response.data.OrderId,//订单ID
-									bikeId: response.data.bikeId,//车辆编号
-									operationId: response.data.operationId,//操作编号
+									OrderId: response.data.data.OrderId,//订单ID
+									bikeId: response.data.data.bikeId,//车辆编号
+									operationId: response.data.data.operationId,//操作编号
 									phoneNumber: that.userInfo.phoneNumber,//手机号
 								}
 								//当前状态可以租车
@@ -524,7 +518,7 @@
 								})
 							}else if(response.data.data.BizStatus == '1003'){
 								uni.showToast({
-									title:'此桩位无车',
+									title:'请扫码正确二维码',
 									icon:'none'
 								})
 							}
@@ -586,6 +580,26 @@
 								})
 								uni.showToast({
 									title:'租车成功',
+								})
+							}else if(response.data.data.ReqStatus == '6010'){
+								uni.showToast({
+									title:'电量过低，无法租车',
+									icon:'none'
+								})
+							}else if(response.data.data.ReqStatus == '4008'){
+								uni.showToast({
+									title:'设备异常',
+									icon:'none'
+								})
+							}else if(response.data.data.ReqStatus == '4001'){
+								uni.showToast({
+									title:'锁开，不可租',
+									icon:'none'
+								})
+							}else{
+								uni.showToast({
+									title:'未知错误',
+									icon:'none'
 								})
 							}
 						}else if(response.data.status == false){
