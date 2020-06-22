@@ -212,50 +212,6 @@
 				})
 				// #endif
 			},
-			//--------------------------钱包消费接口--------------------------
-			GetTransaction: function() {
-				var that = this;
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetTransaction.Url,
-					method: $DDTInterface.DDTInterface.GetTransaction.method,
-					data: {
-						
-					},
-					success(res) {
-						console.log('钱包消费', res)
-						if (res.status == true) {
-							that.paymentData = res.data.credential;
-							that.payment();
-						}
-					},
-					fail(res) {
-						console.log('钱包消费', res)
-					}
-				})
-			},
-			
-			GetTransaction: function() {
-				var that = this;
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetTransaction.Url,
-					method: $DDTInterface.DDTInterface.GetTransaction.method,
-					data: {
-						
-					},
-					success(res) {
-						console.log('钱包消费', res)
-						if (res.status == true) {
-							that.paymentData = res.data.credential;
-							that.payment();
-						}
-					},
-					fail(res) {
-						console.log('钱包消费', res)
-					}
-				})
-			},
-			
-
 			//--------------------------钱包充值记录--------------------------
 			WirteRechargeLog: function(state) {
 				var that = this;
