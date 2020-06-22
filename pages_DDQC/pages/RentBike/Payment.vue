@@ -5,11 +5,21 @@
 				<text style="font-size: 60rpx;font-weight: bold;">￥{{money}}元</text>
 			</view>
 			<view style="padding-top: 20rpx;">
-				<text style="font-size: 32rpx;">骑行时间:{{Time}}</text>
+				<text style="font-size: 32rpx;">租车点：{{HireStationName}}</text>
 			</view>
-			<view style="padding-top: 40rpx;display: flex;justify-content: center;">
-				<button style="background:linear-gradient(270deg,rgba(83,175,59,1),rgba(40,204,40,1));width: 670rpx;" @click="payNow">
+			<view style="padding-top: 20rpx;">
+				<text style="font-size: 32rpx;">还车点：{{RestoreStationName}}</text>
+			</view>
+			<view style="padding-top: 20rpx;">
+				<text style="font-size: 32rpx;">骑行时间：{{Time}}</text>
+			</view>
+			<view style="padding-top: 40rpx;display: flex;justify-content: space-between;">
+				<button style="background:linear-gradient(270deg,rgba(83,175,59,1),rgba(40,204,40,1));width: 320rpx;border-radius: 60px; "
+				 @click="payNow">
 					<text style="color: #FFF;">{{buttonName}}</text>
+				</button>
+				<button style="background:#BCBCBC;width: 320rpx;border-radius: 60px;" @click="NotPay">
+					<text style="color: #FFF;">暂不支付</text>
 				</button>
 			</view>
 		</view>
@@ -29,13 +39,21 @@
 				buttonName: '立即支付',
 				payTime: '',
 				userInfo: '',
+				HireStationName: '',
+				RestoreStationName: '',
 			}
 		},
 		onLoad() {
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 			console.log(this.userInfo);
-			// this.GetOrderByUserID();
-			this.getOrderInfo();   
+			this.GetOrderByUserID();
+			// this.getOrderInfo();   
+		},
+		onBackPress() {//禁用手机返回键
+			return true;
+		},
+		onNavigationBarButtonTap() {
+			this.GetOrderByUserID();
 		},
 		methods: {
 			payNow: function() { //立即支付  
@@ -46,6 +64,11 @@
 						url: "../GRZY/zy_homepage"
 					})
 				}
+			},
+			NotPay: function() {//暂不支付
+				uni.redirectTo({
+					url: "../GRZY/zy_homepage"
+				})
 			},
 			//---------------------------------钱包支付---------------------------------
 			//每次调钱包接口都要调一次钱包消费接口
@@ -88,7 +111,7 @@
 							// that.consumeRecord(0)
 							uni.showToast({
 								title: res.data.msg,
-								icon:'none'
+								icon: 'none'
 							})
 							setTimeout(function() {
 								uni.redirectTo({
@@ -102,7 +125,7 @@
 						// that.consumeRecord(0)
 						uni.showToast({
 							title: "网络连接失败",
-							icon:'none'
+							icon: 'none'
 						})
 					}
 				})
@@ -180,20 +203,22 @@
 						console.log(res);
 						uni.hideLoading();
 						if (res.data.status) {
-							if (res.data.data[0].PayState == 1) {
+							if (res.data.data[0].PayState == 0) {
 								uni.showToast({
 									title: '订单已支付',
 									icon: 'none'
 								})
 								setTimeout(function() {
 									uni.redirectTo({
-										url: '../GRZY/zy_homepage'
+										// url: '../GRZY/zy_homepage'
 									})
 								}, 1500)
 							} else {
 								that.beginTime = res.data.data[0].HireTime;
 								that.endTime = res.data.data[0].RestoreTime;
 								that.money = (res.data.data[0].Money) / 100;
+								that.HireStationName = res.data.data[0].HireStationName
+								that.RestoreStationName = res.data.data[0].RestoreStationName;
 								if (that.money == 0) {
 									that.buttonName = '立即完成';
 								}
@@ -308,5 +333,11 @@
 </script>
 
 <style>
+	uni-button:after {
+		border: unset
+	}
 
+	button::after {
+		border: none;
+	}
 </style>
