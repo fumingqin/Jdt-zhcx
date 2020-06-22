@@ -88,6 +88,7 @@
 				IsStake: true, //是否有桩
 				OrderNo: '', //行程ID
 				userInfo: '',
+				g_wakelock:null,
 			}
 		},
 		mounted() {
@@ -135,6 +136,16 @@
 			})
 		},
 		methods: {
+			wakeLock: function() {
+				//Android  
+				console.log(66);
+				var main = plus.android.runtimeMainActivity();
+				var Context = plus.android.importClass("android.content.Context");
+				var PowerManager = plus.android.importClass("android.os.PowerManager");
+				var pm = main.getSystemService(Context.POWER_SERVICE);
+				this.g_wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ANY_NAME");
+				this.g_wakelock.acquire();
+			},
 			//--------------------------计时--------------------------
 			countTime: function() {
 				var that = this;
@@ -254,6 +265,7 @@
 									icon: 'none',
 									success() {
 										that.UpdateOrder();
+										clearInterval(that.timeInterval);
 										clearInterval(that.interval);
 										uni.redirectTo({
 											url: './Payment'
@@ -262,7 +274,7 @@
 								})
 							}
 							//开始计时---显示当前骑行时间
-							that.timeConcer(res.data.data[0].HireAction.Time);
+							// that.timeConcer(res.data.data[0].HireAction.Time);
 						},
 						fail(err) {
 							clearInterval(that.interval);
