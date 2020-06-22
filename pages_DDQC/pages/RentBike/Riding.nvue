@@ -321,7 +321,6 @@
 									operationId: that.rentInfo.operationId, //操作编号
 									bikeId: that.rentInfo.bikeId, //车辆编号
 								},
-								
 								success(res) {
 									console.log('还车成功结果', res);
 									if (res.data.status == true) {
@@ -329,18 +328,8 @@
 										console.log('开始还车',res.data.data.retcode)
 										if (res.data.data.retcode == 0) { //返回编号（0代表完成）
 											uni.hideLoading()
-											console.log('还车成功')
-											uni.showToast({
-												title: '还车成功',
-												icon: 'none',
-												mask: true,
-												success(res) {
-													that.UpdateOrder();
-													uni.navigateTo({
-														url: './Payment'
-													})
-												}
-											})
+											that.isReturn();
+											
 										}else if(res.data.data.retcode == -1){
 											console.log('还车失败')
 											uni.hideLoading()
@@ -367,6 +356,48 @@
 					}
 				})
 				// that.Isreturn = true;
+			},
+			//--------------------------还车时获取当前行程，判断是否可以还车--------------------------
+			isReturn: function() { //查询最后一条行程信息
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetOrder.Url,
+					method: $DDTInterface.DDTInterface.GetOrder.method,
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						phoneNo: that.userInfo.phoneNumber,
+						startIndex: 0,
+						retcount: 1,
+						userID: that.userInfo.userID,
+					},
+					success(res) {
+						if (res.data.status == true) {
+							if(res.data.data[0].HireStatus == null){
+								uni.showToast({
+									title:'还车异常，请重新还车',
+									icon:'none'
+								})
+							}else {
+								uni.showToast({
+									title: '还车成功',
+									icon: 'none',
+									success(res) {
+										that.UpdateOrder();
+										uni.navigateTo({
+											url: './Payment'
+										})
+									}
+								})
+							}
+						}
+						console.log(res)
+					},
+					fail(err) {
+						console.log(err);
+					}
+				})
 			},
 			//--------------------------获取行程--------------------------
 			getOrderInfo: function() {
