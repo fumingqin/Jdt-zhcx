@@ -354,7 +354,7 @@
 					success(res) {
 						uni.hideLoading();
 						console.log('押金充值返回支付参数成功结果', res)
-						if (res.data.status == true) {
+						if (res.data.status == true && res.data.data.credential.wechat_app) {
 							let obj = {
 								appid: res.data.data.credential.wechat_app.appid,
 								noncestr: res.data.data.credential.wechat_app.noncestr,
@@ -366,6 +366,11 @@
 							}
 							// that.paymentData = res.data.data.credential;
 							that.payment(obj);
+						}else{
+							uni.showToast({
+								title:'拉起支付失败',
+								icon:'none'
+							})
 						}
 					},
 					fail(res) {
@@ -410,7 +415,6 @@
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
-
 							})
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
@@ -425,30 +429,7 @@
 				// #endif
 			},
 
-			//--------------------------钱包消费接口--------------------------
-			GetTransaction: function() {
-				var that = this;
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetTransaction.Url,
-					method: $DDTInterface.DDTInterface.GetTransaction.method,
-					data: {
-
-					},
-					success(res) {
-						console.log('钱包消费', res)
-						if (res.status == true) {
-							that.paymentData = res.data.credential;
-							that.payment();
-						}
-					},
-					fail(res) {
-						console.log('钱包消费', res)
-					}
-				})
-			},
-
 			//------------------押金充值记录---------------------------------
-
 			WirteRechargeLog: function(state) {
 				var that = this;
 				uni.request({
@@ -469,10 +450,16 @@
 					success(res) {
 						console.log('押金充值记录成功', res);
 						uni.showLoading()
-						setTimeout(function() {
-							that.GetPurseDetail();
-						}, 3000)
-
+						if(res.data.status == true){
+							setTimeout(function() {
+								that.GetPurseDetail();
+							}, 3000)
+						}else{
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}
 					},
 					fail(res) {
 						console.log('押金充值记录失败', res)
@@ -509,7 +496,7 @@
 							})
 							that.GetUserByUserID();
 							// that.WriteRefundLog();
-						} else if (res.data.status == false) {
+						} else {
 							uni.showToast({
 								title: res.data.msg,
 								icon: 'none'
@@ -578,13 +565,6 @@
 					}
 				})
 			},
-
-			//------------------------模拟数据----------------------------------------------
-
-			// async lunBoInit() {
-			// 	let drivingRecord = await this.$api.lyfwcwd('drivingRecord');
-			// 	this.drivingRecord = drivingRecord.data;
-			// },
 
 			//------------------------------弹框事件-----------------------------------------
 
