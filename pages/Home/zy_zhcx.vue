@@ -34,10 +34,10 @@
 						<text class="zl_toText">车票订购</text>
 					</view> -->
 					
-					<!-- 车票订购 -->
+					<!-- 达达钱包 -->
 					<view class="zl_ticketOrdering" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_homepage')">
 						<image class="zl_toImage" src="../../static/Home/QB.png"></image>
-						<text class="zl_toText">车票订购</text>
+						<text class="zl_toText">达达钱包</text>
 					</view>
 					
 					<!-- 车票订购 -->

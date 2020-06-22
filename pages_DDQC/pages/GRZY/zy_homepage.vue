@@ -501,20 +501,20 @@
 					},
 					success(res) {
 						uni.hideLoading();
-						console.log('钱包退押金成功', res)
+						console.log('钱包退押金成功', res) 
 						if (res.data.status == true) {
 							uni.showToast({
 								title: '押金退款成功',
 								icon: 'none',
 							})
 							that.GetUserByUserID();
-							that.WriteRefundLog();
+							// that.WriteRefundLog();
 						} else if (res.data.status == false) {
 							uni.showToast({
 								title: res.data.msg,
 								icon: 'none'
 							})
-							that.WriteRefundLog();
+							// that.WriteRefundLog();
 						}
 					},
 					fail(res) {
