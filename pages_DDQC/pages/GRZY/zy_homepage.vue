@@ -67,12 +67,12 @@
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 二维码 -->
-			<view class="ve_view4" @click="QRCodeData">
+			<!-- <view class="ve_view4" @click="QRCodeData">
 				<text class="vi_text2">公交二维码</text>
 				<text class="jdticon icon-you"></text>
-			</view>
+			</view> -->
 			<!-- 二维码 -->
-			<uni-popup ref="popup1" type="bottom">
+			<!-- <uni-popup ref="popup1" type="bottom">
 				<view class="po_boxVlew" style="align-items: center;">
 					<view class="bv_topText">
 						<text class="tt_text">二维码</text>
@@ -82,7 +82,7 @@
 						<canvas canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
 					</view>
 				</view>
-			</uni-popup>
+			</uni-popup> -->
 			<!-- 押金支付弹框 -->
 			<uni-popup ref="popup" type="bottom">
 				<view class="po_boxVlew">
