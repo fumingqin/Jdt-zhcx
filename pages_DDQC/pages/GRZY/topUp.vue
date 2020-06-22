@@ -17,10 +17,10 @@
 				</view>
 			</view>
 		</view>
-		<view class="tu_check">
+		<view class="tu_check" style="margin-right: 40rpx;justify-content: space-between;align-items: center;">
 			<checkbox-group @change="checkChange">
 				<label style="font-size: 30rpx;font-weight: 300;">
-					<checkbox value="cb" :checked="checked == 1 ? true: false" />同意资金存管协议
+					<checkbox value="cb" :checked="checked == 1 ? true: false"/>同意资金存管协议
 				</label>
 			</checkbox-group>
 			<view class="tu_notice" @click="open()">说明></view>
@@ -212,6 +212,7 @@
 				})
 				// #endif
 			},
+			
 			//--------------------------钱包充值记录--------------------------
 			WirteRechargeLog: function(state) {
 				var that = this;
@@ -394,8 +395,6 @@
 		align-items: center;
 
 		.tu_notice {
-			margin-left: 286upx;
-			margin-right: 20upx;
 			font-size: 26upx;
 			color: #4281FF;
 		}
