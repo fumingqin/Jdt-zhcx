@@ -34,6 +34,18 @@
 						<text class="zl_toText">车票订购</text>
 					</view> -->
 					
+					<!-- 达达钱包 -->
+					<view class="zl_ticketOrdering" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_homepage')">
+						<image class="zl_toImage" src="../../static/Home/QB.png"></image>
+						<text class="zl_toText">达达钱包</text>
+					</view>
+					
+					<!-- 车票订购 -->
+					<!-- <view class="zl_ticketOrdering">
+						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
+						<text class="zl_toText">车票订购</text>
+					</view> -->
+					
 					<!-- 车票订购 -->
 					<view class="zl_ticketOrdering" @click="natTo()">
 						<image class="zl_toImage" src="../../static/Home/CPDG2.png"></image>
@@ -58,6 +70,11 @@
 						<text class="zl_tsText">公交查询</text>
 					</view>
 					
+					
+				</view>
+			</swiper-item>
+			<swiper-item class="swiItem">
+				<view class="zl_topClick">
 					<!-- 包车服务 -->
 					<!-- <view class="zl_charterService">
 						<image class="zl_csImage" src="../../static/Home/BCFW.png"></image>
@@ -69,10 +86,6 @@
 						<image class="zl_csImage" src="../../static/Home/BCFW2.png"></image>
 						<text class="zl_csText">包车服务</text>
 					</view>
-				</view>
-			</swiper-item>
-			<swiper-item class="swiItem">
-				<view class="zl_topClick">
 					<!-- 景区门票 -->
 					<!-- <view class="zl_tourismServices">
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
@@ -127,10 +140,10 @@
 					</view> -->
 					
 					<!-- 跟团游 -->
-					<view class="zl_ticketOrdering" @click="natTo()">
+					<!-- <view class="zl_ticketOrdering" @click="natTo()">
 						<image class="zl_toImage" src="../../static/Home/GTY2.png"></image>
 						<text class="zl_toText">跟团游</text>
-					</view>
+					</view> -->
 					
 					<!-- 村村通 -->
 					<!-- <view class="zl_ticketOrdering">
@@ -206,7 +219,7 @@
 		</view>
 
 		<!-- 新闻资讯 -->
-		<view class="titNp">新闻资讯</view>
+		<!-- <view class="titNp">新闻资讯</view>
 		<view class="guess-section">
 			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="informationTo(item.aid)">
 				<view class="image-wrapper">
@@ -219,12 +232,12 @@
 					<text class="price-zan">阅读{{item.viewsCount+1080}}</text>
 				</view>
 			</view>
-		</view>
+		</view> -->
 
-		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; padding: 16upx 0; color: #aaa; background: #FFFFFF;">
+		<!-- <view style="width: 100%; float: left; text-align: center; font-size: 24upx; padding: 16upx 0; color: #aaa; background: #FFFFFF;">
 			<text v-if="current==0" :hidden="disStatus== 1">{{loadingType== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
 			<text v-if="current==0" :hidden="disStatus== 0">暂无历史数据</text>
-		</view>
+		</view> -->
 
 		<!-- tab按钮 -->
 		<!-- <view class="zc_TabBackground">
@@ -296,6 +309,12 @@
 		},
 		onLoad() {
 			var that = this;
+			this.lunBoInit();
+			this.loadData();
+		},
+
+		onShow() {
+			var that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
 			if(that.userInfo!=''){
 				that.checkCurrentStatus();
@@ -315,27 +334,22 @@
 				}
 			})
 			// #endif
-			this.lunBoInit();
-			this.loadData();
-		},
-
-		onShow() {
 			// #ifdef MP-WEIXIN
-			this.getLoginState();
+			that.getLoginState();
 			//#endif
 			// #ifdef  H5
-			this.getCode();
+			that.getCode();
 			//#endif
 		},
 
 		//页面触底
-		onReachBottom() {
-			uni.showLoading({
-				title: '加载更多中...',
-				icon: 'loading'
-			})
-			this.getMore();
-		},
+		// onReachBottom() {
+		// 	uni.showLoading({
+		// 		title: '加载更多中...',
+		// 		icon: 'loading'
+		// 	})
+		// 	this.getMore();
+		// },
 		
 		methods: {
 			//----------------------自动更新-------------------------------
@@ -495,9 +509,17 @@
 			},
 			
 			natTo2: function(e) {
-				uni.navigateTo({
-					url:e
-				})
+				var that = this;
+				if(that.userInfo!==''){
+					uni.navigateTo({
+						url:e,
+					})
+				}else if(that.userInfo==''){
+					uni.navigateTo({
+						url:'../GRZX/userLogin',
+					})
+				}
+				console.log('是否拿到缓存',that.userInfo)
 			},
 			
 			//路由整合

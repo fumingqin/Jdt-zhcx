@@ -57,20 +57,21 @@
 					success: function(data) {
 						console.log('用户数据', data)
 						that.userInfo = data.data;
-						if(that.userInfo){
-							that.QRCodeData();
-						}else{
-							uni.showToast({
-								title:"请先登陆",
-								mask:true,
-								icon:"none"
-							})
-							setTimeout(function(){
-								uni.navigateTo({
-									url:"../../../pages/GRZX/userLogin"
-								})
-							})
-						}
+						that.QRCodeData();
+						// if(that.userInfo!==''){
+						// 	that.QRCodeData();
+						// }else if(that.userInfo==''){
+						// 	uni.showToast({
+						// 		title:"请先登陆",
+						// 		mask:true,
+						// 		icon:"none"
+						// 	})
+						// 	setTimeout(function(){
+						// 		uni.navigateTo({
+						// 			url:"../../../pages/GRZX/userLogin"
+						// 		})
+						// 	})
+						// }
 					},
 					fail(data) {}
 				})

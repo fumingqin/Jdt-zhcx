@@ -969,10 +969,16 @@
 						"navigationBarTitleText": "支付",
 						"app-plus": {
 							"titleNView": {
-								"autoBackButton":false
+								"autoBackButton":false,
+								"buttons": [{
+									"text": "刷新",
+									"type": "transparent",
+									"fontSize": "16px",
+									"width": "77px"
+								}]
 							}
 						}
-					}
+					} 
 				},
 				{
 				    "path" : "pages/GRZY/zy_QRcode",

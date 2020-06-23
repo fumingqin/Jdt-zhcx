@@ -88,6 +88,7 @@
 				IsStake: true, //是否有桩
 				OrderNo: '', //行程ID
 				userInfo: '',
+				g_wakelock:null,
 			}
 		},
 		mounted() {
@@ -110,17 +111,23 @@
 			// that.getOrderInfo();
 			console.log(item)
 			if (item.responseArr) {
-				console.log(111);
 				that.rentInfo = JSON.parse(item.responseArr);
+				console.log('传递数据结果',that.rentInfo);
 				if (that.rentInfo.bikeType == "有桩") {
-					that.getOrderInfo();
+					setTimeout(function(){
+						that.getOrderInfo();
+					},2000) 
 				} else {
 					that.IsStake = false;
-					that.getOrderInfo();
+					setTimeout(function(){
+						that.getOrderInfo();
+					},2000)
 				}
 			} else {
 				console.log('开始获取1298471861892541791284081')
+				setTimeout(function(){
 				that.GetOrderByUserID();
+				},2000)
 			}
 		},
 		created() {
@@ -129,6 +136,16 @@
 			})
 		},
 		methods: {
+			wakeLock: function() {
+				//Android  
+				console.log(66);
+				var main = plus.android.runtimeMainActivity();
+				var Context = plus.android.importClass("android.content.Context");
+				var PowerManager = plus.android.importClass("android.os.PowerManager");
+				var pm = main.getSystemService(Context.POWER_SERVICE);
+				this.g_wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ANY_NAME");
+				this.g_wakelock.acquire();
+			},
 			//--------------------------计时--------------------------
 			countTime: function() {
 				var that = this;
@@ -242,12 +259,13 @@
 						success(res) {
 							console.log('还车结果', res) 
 							that.orderId = res.data.data[0].OrderId;
-							if (res.data.data.hireStatus == 2) {
+							if (res.data.data[0].HireStatus == 2) {
 								uni.showToast({
 									title: '还车成功',
 									icon: 'none',
 									success() {
 										that.UpdateOrder();
+										clearInterval(that.timeInterval);
 										clearInterval(that.interval);
 										uni.redirectTo({
 											url: './Payment'
@@ -256,7 +274,7 @@
 								})
 							}
 							//开始计时---显示当前骑行时间
-							that.timeConcer(res.data.data[0].HireAction.Time);
+							// that.timeConcer(res.data.data[0].HireAction.Time);
 						},
 						fail(err) {
 							clearInterval(that.interval);
@@ -299,21 +317,10 @@
 							uni.setNavigationBarTitle({
 								title: "还车"
 							})
-							uni.showToast({
-								title: "关锁中...",
-								mask: true,
-								// image: "../../RentBike/static/lock.png",
-								icon: "none",
+							uni.showLoading({
+								title:'正在还车...'
 							})
-							// that.rentInfo = {
-							// 	bikeType: bikeType,
-							// 	OrderId: res.data.data.OrderId, //订单ID
-							// 	bikeId: res.data.data.BikeId, //车辆编号
-							// 	operationId: res.data.data.OperationId, //操作编号
-							// 	phoneNumber: that.userInfo.phoneNumber, //手机号
-							// }
-							console.log(that.rentInfo)
-							
+							console.log('请求参数',that.rentInfo)
 							uni.request({
 								url: $DDTInterface.DDTInterface.TransferHire.Url,
 								method: $DDTInterface.DDTInterface.TransferHire.method,
@@ -329,22 +336,24 @@
 								success(res) {
 									console.log('还车成功结果', res);
 									if (res.data.status == true) {
+										console.log('开始还车',res.data.data.retcode)
 										if (res.data.data.retcode == 0) { //返回编号（0代表完成）
+											//做五秒延迟，
+											setTimeout(function(){
+												uni.hideLoading()
+												that.isReturn();
+											},3000)
+										}else if(res.data.data.retcode == -1){
+											console.log('还车失败')
+											uni.hideLoading()
 											uni.showToast({
-												title: '还车成功',
+												title: '还车失败',
 												icon: 'none',
 												mask: true,
-												success(res) {
-													that.UpdateOrder();
-													uni.redirectTo({
-														url: './Payment'
-													})
-												}
 											})
 										}
-									}else if(res.data.data.retcode == -1){
-										
-									}else {
+									}else if (res.data.status == false){
+										uni.hideLoading()
 										uni.showToast({
 											title: res.data.msg,
 											icon: 'none'
@@ -352,6 +361,7 @@
 									}
 								},
 								fail(err) {
+									uni.hideLoading()
 									console.log('还车失败结果', err)
 								}
 							})
@@ -359,6 +369,58 @@
 					}
 				})
 				// that.Isreturn = true;
+			},
+			//--------------------------还车时获取当前行程，判断是否可以还车--------------------------
+			isReturn: function() { //查询最后一条行程信息
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetOrder.Url,
+					method: $DDTInterface.DDTInterface.GetOrder.method,
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						phoneNo: that.userInfo.phoneNumber,
+						startIndex: 0,
+						retcount: 1,
+						userID: that.userInfo.userID,
+					},
+					success(res) {
+						if (res.data.status == true) {
+							if(res.data.data[0].HireStatus == null){
+								uni.showToast({
+									title:'还车异常，请重新还车',
+									icon:'none'
+								})
+							}else if(res.data.data[0].HireStatus == 1){
+								uni.showToast({
+									title: '还车失败',
+									icon: 'none',
+								})
+							}else if(res.data.data[0].HireStatus == 6){
+								uni.showToast({
+									title: '还车失败',
+									icon: 'none',
+								})
+							}else if(res.data.data[0].HireStatus == 2){
+								uni.showToast({
+									title: '还车成功',
+									icon: 'none',
+									success(res) {
+										that.UpdateOrder();
+										uni.navigateTo({
+											url: './Payment'
+										})
+									}
+								})
+							}
+						}
+						console.log(res)
+					},
+					fail(err) {
+						console.log(err);
+					}
+				})
 			},
 			//--------------------------获取行程--------------------------
 			getOrderInfo: function() {
@@ -368,7 +430,7 @@
 					method: $DDTInterface.DDTInterface.GetOrder.method,
 					data: {
 						phoneNo: that.userInfo.phoneNumber,
-						startIndex: 1,
+						startIndex: 0,
 						retcount: 1,
 						userID: that.userInfo.userID,
 					},
@@ -376,12 +438,14 @@
 						that.orderId = res.data.data[0].OrderId;
 						console.log(res)
 						//判断是否有还车时间
+						console.log(that.rentInfo)
 						if (that.rentInfo.bikeType == "有桩") {
 							that.IsStake = true;
 							//---开启检测订单状态
 							that.checkStatus();
+						}else{
+							that.IsStake = false;
 						}
-						that.IsStake = false;
 						//开始计时---显示当前骑行时间
 						that.timeConcer(res.data.data[0].HireAction.Time);
 					},
@@ -391,6 +455,7 @@
 				})
 			},
 			UpdateOrder: function() {
+				var that = this;
 				uni.request({
 					url: $DDTInterface.DDTInterface.UpdateOrder.Url,
 					method: $DDTInterface.DDTInterface.UpdateOrder.method,
@@ -430,7 +495,7 @@
 						UserID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log(res);
+						console.log('获取订单数据成功',res);
 						uni.hideLoading();
 						if (res.data.status) {
 							if (res.data.data[0].PayState == 1) {
@@ -440,14 +505,17 @@
 								})
 								setTimeout(function() {
 									uni.redirectTo({
-										// url: '../GRZY/zy_homepage'
+										url: '../GRZY/zy_homepage'
 									})
 								}, 1500)
 							} else {
 								var bikeType = '有桩';
-								if (res.data.data.RentType = 1) {
+								if (res.data.data[0].RentType == 1) {
 									bikeType = '无桩';
+								}else{
+									bikeType = '有桩';
 								}
+								
 								that.rentInfo = {
 									bikeType: bikeType,
 									OrderId: res.data.data[0].OrderId, //订单ID
@@ -455,7 +523,7 @@
 									operationId: res.data.data[0].OperationId, //操作编号
 									phoneNumber: that.userInfo.phoneNumber, //手机号
 								}
-								console.log(that.rentInfo)
+								// console.log(that.rentInfo)
 								that.getOrderInfo();
 							}
 						}

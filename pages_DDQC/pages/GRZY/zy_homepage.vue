@@ -67,12 +67,12 @@
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 二维码 -->
-			<view class="ve_view4" @click="QRCodeData">
+			<!-- <view class="ve_view4" @click="QRCodeData">
 				<text class="vi_text2">公交二维码</text>
 				<text class="jdticon icon-you"></text>
-			</view>
+			</view> -->
 			<!-- 二维码 -->
-			<uni-popup ref="popup1" type="bottom">
+			<!-- <uni-popup ref="popup1" type="bottom">
 				<view class="po_boxVlew" style="align-items: center;">
 					<view class="bv_topText">
 						<text class="tt_text">二维码</text>
@@ -82,7 +82,7 @@
 						<canvas canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
 					</view>
 				</view>
-			</uni-popup>
+			</uni-popup> -->
 			<!-- 押金支付弹框 -->
 			<uni-popup ref="popup" type="bottom">
 				<view class="po_boxVlew">
@@ -146,43 +146,33 @@
 					</view>
 				</view>
 			</view>
-			
-			<!-- 行车记录待付款 -->
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" v-if="item.PayState==0" @click="Jump3('../RentBike/Payment')">
-				<view>
-					<text v-if="item.RentType==0" class="rc_text">有桩车</text>
-					<text v-if="item.RentType==1" class="rc_text">无桩车</text>
-					<!-- <text class="rc_text">{{item.model}}</text> -->
-				</view>
-				<view style="display: flex;">
-					<text class="rc_text2">{{item.HireTime}}</text>
-					<!-- <text class="rc_text3">{{item.time}}</text> -->
-					<!-- <text class="rc_text3">{{item.timeUse}}分钟</text> -->
-				</view>
-			
-				<view style="display: flex;position: absolute;right: 0;top: 41%;padding-right: 30upx;">
-					<text class="rc_text4">{{item.PayPrice/100}}<text class="rc_text5">元</text></text>
-					<text class="jdticon icon-you"></text>
-				</view>
-			</view>
-			
-			<!-- 行车记录已付款 -->
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" v-if="item.PayState==1" @click="Jump2(index)">
-				<view>
-					<text v-if="item.RentType==0" class="rc_text">有桩车</text>
-					<text v-if="item.RentType==1" class="rc_text">无桩车</text>
-					<!-- <text class="rc_text">{{item.model}}</text> -->
-				</view>
-				<view style="display: flex;">
-					<text class="rc_text2">{{item.HireTime}}</text>
-					<!-- <text class="rc_text3">{{item.time}}</text> -->
-					<!-- <text class="rc_text3">{{item.timeUse}}分钟</text> -->
+			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2(index)">
+				<view style="display: flex;justify-content: space-between; align-items: center;">
+					<view>
+						<view>
+							<text v-if="item.RentType==0" class="rc_text">有桩车</text>
+							<text v-if="item.RentType==1" class="rc_text">无桩车</text>
+							<!-- <text class="rc_text">{{item.model}}</text> -->
+						</view>
+						<view style="display: flex;">
+							<text class="rc_text2">{{item.HireTime}}</text>
+							<!-- <text class="rc_text3">{{item.time}}</text> -->
+							<!-- <text class="rc_text3">{{item.timeUse}}分钟</text> -->
+						</view>
+					</view>
+					<view style="display: flex;flex-direction: column;align-items: flex-end;">
+						<view>
+							<text style="font-size: 30rpx;" v-if="item.HireStatus==1">进行中</text>
+							<text style="font-size: 30rpx;" v-if="item.HireStatus==2&&item.PayState==0">待支付</text>
+							<text style="font-size: 30rpx;" v-if="item.HireStatus==2&&item.PayState==1">已完成</text>
+						</view>
+						<view>
+							<text class="rc_text4">{{item.PayPrice/100}}<text class="rc_text5">元</text></text>
+							<text class="jdticon icon-you"></text>
+						</view>
+					</view>
 				</view>
 
-				<view style="display: flex;position: absolute;right: 0;top: 41%;padding-right: 30upx;">
-					<text class="rc_text4">{{item.PayPrice/100}}<text class="rc_text5">元</text></text>
-					<text class="jdticon icon-you"></text>
-				</view>
 			</view>
 		</view>
 	</view>
@@ -218,10 +208,10 @@
 				},
 
 				drivingRecord: '', //行车记录
-				HireCoord:'',//租车经纬度
-				RestoreCoord:'',//还车经纬度
-				bicycleOrderInfo:'',
-				
+				HireCoord: '', //租车经纬度
+				RestoreCoord: '', //还车经纬度
+				bicycleOrderInfo: '',
+
 				qrcodeText: 'uQRCode',
 				qrcodeSize: 150,
 				qrcodeSrc: '',
@@ -237,7 +227,7 @@
 			that.getUserInfo();
 		},
 		methods: {
-			
+
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -247,8 +237,6 @@
 					success: function(data) {
 						console.log('用户数据', data)
 						that.userInfo = data.data;
-						//钱包注册
-						// that.GetEnrollment();
 						//获取钱包数据
 						that.GetUserByUserID();
 						// that.GetPurseDetail();
@@ -259,33 +247,33 @@
 				})
 			},
 			//--------------------------二维码--------------------------
-			QRCodeData:function(){
+			QRCodeData: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetBusCodeGen.Url,
-					method:$DDTInterface.DDTInterface.GetBusCodeGen.method,
-					data:{
-						phoneNumber:13906963039,
-						userID:that.userInfo.userId,
+					url: $DDTInterface.DDTInterface.GetBusCodeGen.Url,
+					method: $DDTInterface.DDTInterface.GetBusCodeGen.method,
+					data: {
+						phoneNumber: 13906963039,
+						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('二维码',res)
-						if(res.data.status == true){
+						console.log('二维码', res)
+						if (res.data.status == true) {
 							that.QRCodeClick(res.data.data.qr)
 						}
 					},
 					fail(res) {
-						console.log('获取钱包数据失败',res)
+						console.log('获取钱包数据失败', res)
 					}
 				})
 			},
-			QRCodeClick:function(param){
+			QRCodeClick: function(param) {
 				var that = this;
 				uni.showLoading({
 					title: '二维码生成中',
 					mask: true
 				})
-				
+
 				uQRCode.make({
 					canvasId: 'qrcode',
 					text: param,
@@ -301,38 +289,11 @@
 				that.$refs.popup1.open()
 			},
 			//--------------------------获取钱包数据--------------------------
-			GetEnrollment: function() {
-				var that = this;
-				console.log(that.userInfo.phoneNumber)
-				uni.request({
-					url: 'http://111.231.109.113:8004/api/Purse/GetEnrollment',
-					method: 'POST',
-					data: {
-						phoneNumber: that.userInfo.phoneNumber,
-						userID: that.userInfo.userId,
-						userName: that.userInfo.nickname,
-						uuid: that.userInfo.userId,
-						userId: '350322199109101514'
-					},
-					success(res) {
-						console.log('钱包注册成功数据', res)
-						if (res.msg == '请求成功') {
-							uni.showToast({
-								title: '请求成功',
-								icon: 'none'
-							})
-						}
-					},
-					fail(res) {
-						console.log('钱包注册失败数据', res)
-					}
-				})
-			},
 			GetPurseDetail: function() {
 				var that = this;
 				uni.showLoading({
-					title:'加载中...',
-					
+					title: '加载中...',
+
 				})
 				console.log(that.userInfo.phoneNumber);
 				console.log(that.userInfo.userId);
@@ -347,12 +308,12 @@
 						uni.hideLoading()
 						console.log('获取钱包数据成功', res)
 						if (res.data.status == true && res.data.msg == '请求成功') {
-							that.walletData=res.data.data;
-							that.balance = res.data.data.balance/100;
-							if(!res.data.data.depositStatus==0){
-								that.deposit = res.data.data.deposit/100;
+							that.walletData = res.data.data;
+							that.balance = res.data.data.balance / 100;
+							if (!res.data.data.depositStatus == 0) {
+								that.deposit = res.data.data.deposit / 100;
 							}
-							console.log("测试"+that.depositStatus); 
+							console.log("测试" + that.depositStatus);
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
 							that.status = res.data.data.status;
@@ -393,7 +354,7 @@
 					success(res) {
 						uni.hideLoading();
 						console.log('押金充值返回支付参数成功结果', res)
-						if (res.data.status == true) {
+						if (res.data.status == true && res.data.data.credential.wechat_app) {
 							let obj = {
 								appid: res.data.data.credential.wechat_app.appid,
 								noncestr: res.data.data.credential.wechat_app.noncestr,
@@ -405,6 +366,11 @@
 							}
 							// that.paymentData = res.data.data.credential;
 							that.payment(obj);
+						}else{
+							uni.showToast({
+								title:'拉起支付失败',
+								icon:'none'
+							})
 						}
 					},
 					fail(res) {
@@ -428,8 +394,8 @@
 							uni.showToast({
 								title: '支付成功'
 							})
-							that.WirteRechargeLog(1); 
-						}else if (res.errMsg == 'requestPayment:fail errors') { //错误
+							that.WirteRechargeLog(1);
+						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
@@ -449,7 +415,6 @@
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
-								
 							})
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
@@ -464,30 +429,7 @@
 				// #endif
 			},
 
-			//--------------------------钱包消费接口--------------------------
-			GetTransaction: function() {
-				var that = this;
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetTransaction.Url,
-					method: $DDTInterface.DDTInterface.GetTransaction.method,
-					data: {
-
-					},
-					success(res) {
-						console.log('钱包消费', res)
-						if (res.status == true) {
-							that.paymentData = res.data.credential;
-							that.payment();
-						}
-					},
-					fail(res) {
-						console.log('钱包消费', res)
-					}
-				})
-			},
-
 			//------------------押金充值记录---------------------------------
-
 			WirteRechargeLog: function(state) {
 				var that = this;
 				uni.request({
@@ -508,17 +450,23 @@
 					success(res) {
 						console.log('押金充值记录成功', res);
 						uni.showLoading()
-						setTimeout(function(){
-							that.GetPurseDetail();
-						},3000)
-						
+						if(res.data.status == true){
+							setTimeout(function() {
+								that.GetPurseDetail();
+							}, 3000)
+						}else{
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}
 					},
 					fail(res) {
 						console.log('押金充值记录失败', res)
 						uni.showLoading()
-						setTimeout(function(){
+						setTimeout(function() {
 							that.GetPurseDetail();
-						},3000)
+						}, 3000)
 					}
 				})
 			},
@@ -540,20 +488,20 @@
 					},
 					success(res) {
 						uni.hideLoading();
-						console.log('钱包退押金成功', res)
+						console.log('钱包退押金成功', res) 
 						if (res.data.status == true) {
 							uni.showToast({
 								title: '押金退款成功',
 								icon: 'none',
 							})
 							that.GetUserByUserID();
-							that.WriteRefundLog();
-						} else if (res.data.status == false) {
+							// that.WriteRefundLog();
+						} else {
 							uni.showToast({
 								title: res.data.msg,
 								icon: 'none'
 							})
-							that.WriteRefundLog();
+							// that.WriteRefundLog();
 						}
 					},
 					fail(res) {
@@ -597,14 +545,14 @@
 					},
 					success(res) {
 						console.log('押金退款记录成功', res);
-						if(res.data.status==true){
+						if (res.data.status == true) {
 							// that.deposit=0;
 							// that.depositStatus=0;
 							// uni.showLoading()
 							// setTimeout(function(){
 							// 	that.GetPurseDetail();
 							// },3000)
-							
+
 						}
 					},
 					fail(res) {
@@ -613,17 +561,10 @@
 						// setTimeout(function(){
 						// 	that.GetPurseDetail();
 						// },3000)
-						
+
 					}
 				})
 			},
-
-			//------------------------模拟数据----------------------------------------------
-
-			// async lunBoInit() {
-			// 	let drivingRecord = await this.$api.lyfwcwd('drivingRecord');
-			// 	this.drivingRecord = drivingRecord.data;
-			// },
 
 			//------------------------------弹框事件-----------------------------------------
 
@@ -685,12 +626,11 @@
 					},
 					success(res) {
 						console.log(res)
-						if(that.userInfo==''){
+						if (that.userInfo == '') {
 							uni.navigateTo({
-								url:'../../../pages/GRZX/userLogin'
+								url: '../../../pages/GRZX/userLogin'
 							})
-						}
-						else if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
+						} else if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
 							//实名认证
 							uni.navigateTo({
 								url: that.$GrzxInter.Route.realName.url,
@@ -725,9 +665,9 @@
 					}
 				})
 			},
-			
+
 			//--------------------读取信息-------------------------
-			GetUserByUserID:function(){  
+			GetUserByUserID: function() {
 				var that = this;
 				console.log(that.userInfo)
 				uni.request({
@@ -737,15 +677,15 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('呀呀呀'+JSON.stringify(res) )
-						that.depositStatus=res.data.data.DepositType;
+						console.log('呀呀呀' + JSON.stringify(res))
+						that.depositStatus = res.data.data.DepositType;
 						console.log(that.depositStatus);
 						// if(that.depositStatus==1||that.depositStatus==2){
-							that.GetPurseDetail();
+						that.GetPurseDetail();
 						// }
 					},
 					fail(err) {
-						console.log('读取信息',err)
+						console.log('读取信息', err)
 					}
 				})
 			},
@@ -762,20 +702,30 @@
 
 			Jump2: function(e) {
 				var that = this;
-				uni.setStorage({
-					key: 'bicycleOrderInfo',
-					data: that.drivingRecord[e],
-					success: () => {
-						uni.navigateTo({
-							url: './zy_details'
-						})
-					}
-				})
+				if(that.drivingRecord[e].PayState==1&&that.drivingRecord[e].HireStatus==2){
+					uni.setStorage({
+						key: 'bicycleOrderInfo',
+						data: that.drivingRecord[e],
+						success: () => {
+							uni.navigateTo({
+								url: './zy_details'
+							})
+						}
+					})
+				}else if(that.drivingRecord[e].PayState==0&&that.drivingRecord[e].HireStatus==2){
+					uni.navigateTo({
+						url:"../RentBike/Payment"
+					})
+				}else if(that.drivingRecord[e].HireStatus==1){
+					uni.navigateTo({
+						url:'../RentBike/Riding'
+					})
+				}
 			},
-			
+
 			Jump3(e) {
 				uni.navigateTo({
-					url:e,
+					url: e,
 				})
 			}
 		}
