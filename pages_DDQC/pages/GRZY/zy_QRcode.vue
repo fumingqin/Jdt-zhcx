@@ -5,11 +5,18 @@
 		</view>
 		<view class="qc_bottom">
 			<view style=" width: 400rpx;margin: 0 auto;padding-top: 55rpx;">
-				<canvas canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+				<canvas v-if="index==0 || commuterCardObject=='请选择' || commuterCardObject=='普通会员'" canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
 			</view>
 			<view class="bt_view">
 				<text class="vi_text">乘车码自动</text>
 				<text class="vi_text2" @click="manuRefresh">刷新</text>
+			</view>
+			
+			<view class="complaintDX">
+				<text class="tsdxText">点击切换通勤卡类别:</text>
+				<picker @change="godetail" :value="index" :range="commuterCard.txt">
+					<text class="tsnrText">{{commuterCard.txt[index]}}<text class="jdticon icon-you"></text></text>
+				</picker>
 			</view>
 		</view>
 	</view>
@@ -21,6 +28,7 @@
 	export default {
 		data() {
 			return {
+				index:0,
 				userInfo: [], //用户信息
 				qrcodeText: 'uQRCode',
 				qrcodeSize: 200,
@@ -28,18 +36,24 @@
 				setTime:'',
 				qr:'',
 				loadingTime:'',
+				commuterCard : {//详细信息
+					txt:'',
+				},
+				commuterCardObject:'',
 			}
 		},
 		
 		onLoad() {
 			var that = this;
 			that.autoRefresh();
+			that.lunBoInit();
 		},
 		
 		//监听页面卸载
 		onUnload() {
 			var that = this;
 			that.RefreshOff();
+			
 		},
 		
 		onShow() {
@@ -48,6 +62,33 @@
 		},
 		
 		methods: {
+			//----------------------读取静态页面json.js-------------------------------
+			
+			async lunBoInit() {
+				let commuterCard = await this.$api.lyfwcwd('commuterCard');
+				this.commuterCard = commuterCard.data;
+			},
+			
+			//----------------------内容点击--------------------------------------
+			godetail:function(e){
+				uni.showLoading();
+				if(this.commuterCard.txt[e.detail.value]=='请选择'){
+					uni.showToast({
+						title:'请选择通勤卡',
+						icon:'none'
+					})
+				}else if(this.commuterCard.txt[e.detail.value]!=='请选择'){
+					this.index = e.detail.value;
+					this.commuterCardObject = this.commuterCard.txt[e.detail.value];
+					console.log('对象',this.commuterCardObject)
+					if(this.index!==0){
+						this.QRCodeData();
+						clearInterval(this.loadingTime);
+						this.autoRefresh();
+					}
+				}
+			},
+			
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -191,6 +232,7 @@
 		.bt_view{
 			padding-top: 20upx;
 			text-align: center;
+			padding-bottom: 20upx;
 			
 			.vi_text{
 				color: #666666;
@@ -200,6 +242,40 @@
 			.vi_text2{
 				color: #1ea2ff;
 				font-size: 28upx;
+			}
+		}
+	}
+	
+	// 投诉对象样式
+	.complaintDX {
+		display: flex;
+		position: relative;
+		background-color: #ffffff;
+		// padding-bottom: 32upx;
+		margin-bottom: 20upx;
+		padding-top: 20upx;
+		margin-left: 30upx;
+		margin-right: 30upx;
+		text-align: center;
+		border-top: 1px #F5F5F5 dotted;
+	
+		.tsdxText {
+			font-weight: bold;
+			font-size: 32upx;
+		}
+	
+		.tsnrText {
+			display: flex;
+			position: absolute;
+			font-size: 32upx;
+			right: 0;
+			color: #333333;
+			padding-bottom: 32upx;
+			padding-left: 20upx;
+			// padding-right: 30upx;
+			
+			.jdticon {
+				position: relative;
 			}
 		}
 	}

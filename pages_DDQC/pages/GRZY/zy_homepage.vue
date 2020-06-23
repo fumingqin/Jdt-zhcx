@@ -28,15 +28,20 @@
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">次</text></view>
 					</view>
 					<!-- 押金 -->
-					<view class="ve_Text" v-if="depositStatus==0" @click="open1">
+					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户'" @click="open1">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">0<text class="tx_text3">元</text></view>
 					</view>
 
-					<view class="ve_Text" v-if="depositStatus==1" @click="open2">
+					<view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
+					</view>
+					
+					<view class="ve_Text" v-if="commuterCardObject=='公务员' || commuterCardObject=='团购人员(公司)'">
+						<view class="tx_text1">押金</view>
+						<view style="font-size: 32upx;font-weight: bold;color: #78482a;margin-top: 23upx;font-family: Source Han Sans SC;padding-top: 20upx;">免押金</view>
 					</view>
 				</view>
 			</view>
@@ -216,6 +221,7 @@
 				qrcodeSize: 150,
 				qrcodeSrc: '',
 				paymentData: [], //支付参数
+				commuterCardObject:'普通用户',
 			}
 		},
 		onLoad() {

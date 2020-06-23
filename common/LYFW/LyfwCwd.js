@@ -483,6 +483,18 @@ const selectBank = {
 	msg: '提示'
 }
 
+const commuterCard = {
+	status: 1, //1成功,0失败提示返回值
+	data: {
+		txt:[
+			'请选择',
+			'普通会员',
+			'公务员',
+		],
+	},
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	userInfo,
@@ -505,4 +517,5 @@ export default {
 	expenseDetail,
 	homePage,
 	selectBank,
+	commuterCard,
 }
