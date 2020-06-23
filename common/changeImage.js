@@ -14,18 +14,20 @@ async function GetImage(systemName) {
 	var model=-1;
 	if(systemName=="南平综合出行"){
 		model=5;
+	}else if(systemName=="漳州达达通"){
+		model=11;
 	}
 	
 	if(model==-1){
 		console.log('项目名暂未添加图片')
 	}else{
-		var res = await request(model)
+		var res = await request(model,systemName)
 		return res;
 	}
 }
 
 //request请求
-function request (model) {
+function request (model,systemName) {
   return new Promise(function (resolve, reject) {
     uni.request({
     	url:Url+'/api/zhcx/GetImage',
@@ -35,7 +37,7 @@ function request (model) {
     	method:'POST',
     	success(res){
     		console.log(res,"res")
-    		if(model==5){ //南平综合出行
+    		if(systemName=="南平综合出行"){ //南平综合出行
     			var image1=res.data.data.filter(item => {
     				return item.type=='南平背景图';
     			})
@@ -52,6 +54,19 @@ function request (model) {
     			}
 				resolve(imageList)
     		}
+			else if(systemName=="漳州达达通"){//漳州达达通
+				var image1=res.data.data.filter(item => {
+					return item.type=='背景图';
+				})
+				var image2=res.data.data.filter(item => {
+					return item.type=='Logo';
+				})
+				var imageList={
+					background:image1[0].imageUrl, //背景图
+					logo:image2[0].imageUrl,  //logo
+				}
+				resolve(imageList)
+			}
     	},
     	fail(err){
     		console.log(err,"err")
@@ -63,7 +78,6 @@ function request (model) {
 
 //弹窗提示
 function showToast(title,icon){
-	console.log(icon,'icon')
 	var sign=icon==undefined?'none':icon;
 	uni.showToast({
 		title:title,

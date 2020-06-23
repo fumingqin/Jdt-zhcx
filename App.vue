@@ -1,9 +1,6 @@
 <script>
 	import homeJS from 'common/Home.js';
 	import utils from '@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js'
-	import {
-		mapMutations
-	} from 'vuex';
 	export default {
 		
 		globalData: {
@@ -61,7 +58,7 @@
 		},
 		
 		methods: {
-			...mapMutations(['login'])
+
 		},
 		onLaunch: function() {		
 			// #ifdef APP-PLUS

@@ -266,6 +266,10 @@ const Route={
 		url:SubPackage+'/newPhone',
 		name:'更换成新手机号',
 	},
+	privacyService:{
+		url:SubPackage+'/privacyService',
+		name:'服务协议和隐私政策',
+	},
 }
 
 const GetImage={

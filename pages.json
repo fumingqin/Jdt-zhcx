@@ -878,6 +878,13 @@
 						"navigationBarTitleText": "手机号码",
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
+				},
+				{
+					"path": "pages/GRZX/privacyService", //软件许可及服务协议
+					"style": {
+						"navigationBarTitleText": "软件许可及服务协议",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
 				}
 			]
 		},
