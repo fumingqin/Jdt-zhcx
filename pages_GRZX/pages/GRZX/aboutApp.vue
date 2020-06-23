@@ -17,16 +17,34 @@
 			<!-- #endif -->
 		</view>
 		<view class="boxClass2">
-			<!-- <text class="agreementClass" @click="agreementClick">{{agreement}}</text>
-			<text class="privacyClass" @click="privacyClick">{{privacy}}</text> -->
+			<text class="agreementClass" @click="agreementClick">{{agreement}}</text>
+			<text class="privacyClass" @click="privacyClick">{{privacy}}</text>
 			<text class="copyrightClass">{{copyright1}}</text>
 			<text class="copyrightClass">{{copyright2}}</text>
 			<text class="copyrightClass">{{copyright3}}</text>
 		</view>
+		
+		<uni-popup ref="centerPopup" type="center">
+			<view class="centerClass">
+				<view class="pTitleClass">服务协议和隐私政策</view>
+				<view class="pTextClass">
+					<text>请你务必审慎阅读，充分理解“软件许可及服务协议”和“隐私政策”各条款。</br>你可阅读</text>
+					<text style="color: #2F9BFE;" @click="agreementClick">《软件许可及服务协议》</text>
+					<text>和</text>
+					<text style="color: #2F9BFE;" @click="privacyClick">《隐私政策》</text>
+					<text>了解详细信息。如你同意，请点击“同意”开始接受我们的服务。</text>
+				</view>
+				<view class="btnBox">
+					<view class="btnClass1" @click="closePopup('centerPopup')">暂不使用</view>
+					<view class="btnClass2" @click="confirm">同意</view>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
+	import uniPopup from "@/components/HOME/uni-popup/uni-popup.vue";
 	export default{
 		data(){
 			return{
@@ -35,7 +53,7 @@
 				functionIntroduction:'功能介绍',
 				checkVersion:'检查新版本',
 				agreement:'《软件许可及服务协议》',
-				privacy:'《隐私保护指引》',
+				privacy:'《隐私政策》',
 				copyright1:'途游信息科技 版权所有',
 				copyright2:'Copyright©2020 Journey',
 				copyright3:'All Rights Reserved',
@@ -48,7 +66,9 @@
 			// #ifdef APP-PLUS
 			this.version=plus.runtime.version;
 			//#endif
+			this.loadService();
 		},
+		components: { uniPopup },  //注册为子组件
 		methods:{
 			loadImg(){
 				var that=this;
@@ -66,6 +86,38 @@
 						// console.log(that.logo,'that.logo')
 					}
 				})
+			},
+			//-----------加载是否服务------------
+			loadService:function(){
+				var that=this;
+				uni.getStorage({
+					key:'acceptService',
+					success(res) {
+						console.log(res)
+						if(res.data){
+							that.openPopup('centerPopup');
+						}
+					},
+					fail(err) {
+						that.openPopup('centerPopup');
+					}
+				})
+			},
+			//-----------开启弹窗------------
+			openPopup: function(value) {
+				this.$nextTick(function() {
+					this.$refs[value].open();
+				});
+			},
+			//-----------关闭弹窗------------
+			closePopup: function(value) {
+				this.$nextTick(function() {
+					this.$refs[value].close();
+				});
+			},
+			confirm:function(){
+				uni.setStorageSync('acceptService',true);
+				this.closePopup('centerPopup');
 			},
 			functionClick(){
 				uni.showToast({
@@ -94,7 +146,8 @@
 										// #endif
 										// #ifndef APP-PLUS
 										uni.showToast({
-											title:'暂无法下载新版本'
+											title:'暂无法下载新版本',
+											icon:'none'
 										})
 										// #endif
 							    	}
@@ -110,15 +163,13 @@
 				})
 			},
 			agreementClick(){
-				uni.showToast({
-					icon:'none',
-					title:'软件许可及服务协议'
+				uni.navigateTo({
+					url:this.$GrzxInter.Route.privacyService.url+'?title=软件许可及服务协议',
 				})
 			},
 			privacyClick(){
-				uni.showToast({
-					icon:'none',
-					title:'隐私保护指引'
+				uni.navigateTo({
+					url:this.$GrzxInter.Route.privacyService.url+'?title=隐私政策',
 				})
 			},
 		}
@@ -196,6 +247,7 @@
 		width: 335upx;
 		height: 30upx;
 		line-height: 30upx;
+		margin-bottom: 15upx;
 	}
 	.privacyClass{
 		color: #96a0b4;
@@ -204,10 +256,12 @@
 		width: 335upx;
 		height: 30upx;
 		line-height: 30upx;
+		margin-bottom: 10upx;
 	} 
 	.copyrightClass{
 		color: #bababa;
 		font-size: 26upx;
+		margin-bottom: 5upx;
 	}
 	.imgClass1{
 		width: 45upx;
@@ -229,4 +283,48 @@
 		top:116upx;
 		right: 6%;
 	}
+	//弹框start
+	.centerClass{  //弹框的样式
+		width: 82%;
+		margin-left: 9%;
+		// height: 550upx;
+		background-color: #FFFFFF;
+		border-radius: 20upx;
+	}
+	.pTitleClass{
+		padding-top: 15upx;
+		text-align: center;
+		font-size: 38upx;
+		color: #333333;
+		padding: 40upx 0 20upx 0;
+	}
+	.pTextClass{
+		width: 80%;
+		margin-left: 10%;
+		font-size: 34upx;
+	}
+	.btnBox{
+		width: 100%;
+		border-top: 1upx solid #EAEAEA;
+		// height: 80upx;
+		margin-top: 80upx;
+		display: flex;
+		flex-direction: row; //column纵向，row横向
+	}
+	.btnClass1{
+		color: #333333;
+		text-align: center;
+		width: 50%;
+		font-size: 38upx;
+		padding: 25upx 0;
+		border-right: 1upx solid #EAEAEA;
+	}
+	.btnClass2{
+		color: #2F9BFE;
+		text-align: center;
+		width: 50%;
+		font-size: 38upx;
+		padding: 25upx 0;
+	}
+	//弹框end
 </style>

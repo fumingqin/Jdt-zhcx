@@ -878,6 +878,13 @@
 						"navigationBarTitleText": "手机号码",
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
+				},
+				{
+					"path": "pages/GRZX/privacyService", //软件许可及服务协议
+					"style": {
+						"navigationBarTitleText": "软件许可及服务协议",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
 				}
 			]
 		},
@@ -962,10 +969,16 @@
 						"navigationBarTitleText": "支付",
 						"app-plus": {
 							"titleNView": {
-								"autoBackButton":false
+								"autoBackButton":false,
+								"buttons": [{
+									"text": "刷新",
+									"type": "transparent",
+									"fontSize": "16px",
+									"width": "77px"
+								}]
 							}
 						}
-					}
+					} 
 				},
 				{
 				    "path" : "pages/GRZY/zy_QRcode",

@@ -54,7 +54,7 @@
 			//---------------加载图片----------------
 			loadImg(){
 				var that=this;
-				that.$ChangeImage.GetImage("南平综合出行").then(function(data){
+				that.$ChangeImage.GetImage("漳州达达通").then(function(data){
 					that.logo=data.logo;
 					that.background=data.background;
 				});
@@ -571,8 +571,8 @@
 		height: 64upx;
 	}
 	.style1{	//获取验证码
-		border:1px solid #FF971E;
-		color: #FF971E;
+		border:1px solid #65C36D;//南平综合出行：#FF971E
+		color: #65C36D;
 	}	
 	.style2{
 		border:1px solid #1D2087;
@@ -592,6 +592,7 @@
 		width: 90%;
 		padding: 25upx 0;
 		border-radius: 20upx;
-		background:linear-gradient(54deg,rgba(255,128,8,1) 0%,rgba(255,200,55,1) 100%);
+		// background:linear-gradient(54deg,rgba(255,128,8,1) 0%,rgba(255,200,55,1) 100%);  //南平综合出行
+		background:linear-gradient(54deg,rgba(53,199,98,1) 0%,rgba(6,161,54,1) 100%);  //漳州达达通
 	}
 </style>
