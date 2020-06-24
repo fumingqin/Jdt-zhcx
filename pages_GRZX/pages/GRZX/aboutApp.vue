@@ -24,6 +24,7 @@
 			<text class="copyrightClass">{{copyright3}}</text>
 		</view>
 		
+		<!-- 服务协议和隐私政策 -->
 		<uni-popup ref="centerPopup" type="center">
 			<view class="centerClass">
 				<view class="pTitleClass">服务协议和隐私政策</view>
@@ -66,7 +67,7 @@
 			// #ifdef APP-PLUS
 			this.version=plus.runtime.version;
 			//#endif
-			this.loadService();
+			// this.loadService();
 		},
 		components: { uniPopup },  //注册为子组件
 		methods:{
