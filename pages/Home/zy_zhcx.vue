@@ -527,7 +527,9 @@
 					title:'正在开发中，尽情期待..',
 					icon:'none'
 				})
-				
+				// uni.navigateTo({
+				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex'
+				// })
 			},
 			
 			natTo2: function(e) {
