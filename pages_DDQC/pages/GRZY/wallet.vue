@@ -4,7 +4,10 @@
 		<view class="wl_balance">账户余额</view>
 		<view class="wl_money">{{balance.toFixed(2)}}元</view>
 		<view class="wl_btn">
-			<view class="wl_text" @click="topUp()">充值</view>
+			<view class="wl_text" @click="topUp()">充值</view>	
+		</view>
+		<view style="margin-top:30upx;">
+			<view class="wl_text2" @click="topUpRecord()">充值记录></view>
 		</view>
 	</view>
 </template>
@@ -26,6 +29,11 @@
 			topUp() {
 				uni.navigateTo({
 					url: './topUp'
+				})
+			},
+			topUpRecord() {
+				uni.navigateTo({
+					url: './zy_topUpRecord'
 				})
 			},
 			getmoney: function() {
@@ -108,7 +116,9 @@
 
 		.wl_text {
 			padding-top: 30upx;
-
 		}
+	}
+	.wl_text2{
+		color:#4281FF;
 	}
 </style>
