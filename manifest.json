@@ -130,7 +130,48 @@
                 }
             }
         },
-        "compilerVersion" : 3
+        "compilerVersion" : 3,
+        "nativePlugins" : {
+            "JY-JPush" : {
+                "android_channel" : "android",
+                "ios_appkey" : "db1d5d0c73cdc748ede733bb",
+                "android_appkey" : "db1d5d0c73cdc748ede733bb",
+                "ios_channel" : "ios",
+                "__plugin_info__" : {
+                    "name" : "JYJPush极光推送插件 - 支持iOS/Android - [试用版，仅用于自定义调试基座]",
+                    "description" : "极光推送Uni版本",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=741",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : true,
+                    "bought" : 0,
+                    "pid" : "741",
+                    "parameters" : {
+                        "android_channel" : {
+                            "des" : "极光推送的渠道名称",
+                            "key" : "JPUSH_CHANNEL",
+                            "value" : ""
+                        },
+                        "ios_appkey" : {
+                            "des" : "极光推送的APPKEY",
+                            "key" : "JPUSH_APPKEY",
+                            "value" : ""
+                        },
+                        "android_appkey" : {
+                            "des" : "极光推送的APPKEY",
+                            "key" : "JPUSH_APPKEY",
+                            "value" : ""
+                        },
+                        "ios_channel" : {
+                            "des" : "极光推送的渠道名称",
+                            "key" : "JPUSH_CHANNEL",
+                            "value" : ""
+                        }
+                    }
+                }
+            }
+        }
     },
     /* 快应用特有相关 */
     "quickapp" : {},
