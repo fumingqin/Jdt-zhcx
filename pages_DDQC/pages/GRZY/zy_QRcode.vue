@@ -11,7 +11,7 @@
 				<text class="vi_text">乘车码自动</text>
 				<text class="vi_text2" @click="manuRefresh">刷新</text>
 			</view>
-			
+
 			<view class="complaintDX">
 				<text class="tsdxText">点击切换通勤卡类别:</text>
 				<picker @change="godetail" :value="index" :range="commuterCard.txt">
@@ -28,67 +28,68 @@
 	export default {
 		data() {
 			return {
-				index:0,
+				index: 0,
 				userInfo: [], //用户信息
 				qrcodeText: 'uQRCode',
 				qrcodeSize: 200,
 				qrcodeSrc: '',
-				setTime:'',
-				qr:'',
-				loadingTime:'',
-				commuterCard : {//详细信息
-					txt:'',
+				setTime: '',
+				qr: '',
+				loadingTime: '',
+				commuterCard: { //详细信息
+					txt: '',
 				},
-				commuterCardObject:'',
+				commuterCardObject: '',
+				depositStatus: [],
 			}
 		},
-		
+
 		onLoad() {
 			var that = this;
 			that.autoRefresh();
 			that.lunBoInit();
 		},
-		
+
 		//监听页面卸载
 		onUnload() {
 			var that = this;
 			that.RefreshOff();
-			
+
 		},
-		
+
 		onShow() {
 			var that = this;
 			that.getUserInfo();
 		},
-		
+
 		methods: {
 			//----------------------读取静态页面json.js-------------------------------
-			
+
 			async lunBoInit() {
 				let commuterCard = await this.$api.lyfwcwd('commuterCard');
 				this.commuterCard = commuterCard.data;
 			},
-			
+
 			//----------------------内容点击--------------------------------------
-			godetail:function(e){
+			godetail: function(e) {
 				uni.showLoading();
-				if(this.commuterCard.txt[e.detail.value]=='请选择'){
-					uni.showToast({
-						title:'请选择通勤卡',
-						icon:'none'
-					})
-				}else if(this.commuterCard.txt[e.detail.value]!=='请选择'){
+				if (this.commuterCard.txt[e.detail.value] == '普通用户') {
 					this.index = e.detail.value;
 					this.commuterCardObject = this.commuterCard.txt[e.detail.value];
-					console.log('对象',this.commuterCardObject)
-					if(this.index!==0){
+					console.log('对象', this.commuterCardObject)
+					if (this.index == 0) {
 						this.QRCodeData();
 						clearInterval(this.loadingTime);
 						this.autoRefresh();
 					}
+				} else if (this.commuterCard.txt[e.detail.value] == '公务员' && this.depositStatus.UserType == '普通用户') {
+					uni.showToast({
+						title: '您目前不是公务员，请另外选择',
+						icon: 'none'
+					})
 				}
 			},
-			
+
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -96,9 +97,11 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
-						console.log('用户数据', data)
+						// console.log('用户数据', data)
 						that.userInfo = data.data;
 						that.QRCodeData();
+						that.GetUserByUserID();
+						console.log('用户数据', that.userInfo)
 						// if(that.userInfo!==''){
 						// 	that.QRCodeData();
 						// }else if(that.userInfo==''){
@@ -117,55 +120,55 @@
 					fail(data) {}
 				})
 			},
-			
-			QRCodeData:function(){
+
+			QRCodeData: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetBusCodeGen.Url,
-					method:$DDTInterface.DDTInterface.GetBusCodeGen.method,
-					data:{
-						phoneNumber:13906963039,
-						userID:that.userInfo.userId,
+					url: $DDTInterface.DDTInterface.GetBusCodeGen.Url,
+					method: $DDTInterface.DDTInterface.GetBusCodeGen.method,
+					data: {
+						phoneNumber: 13906963039,
+						userID: that.userInfo.userId,
 					},
 					success(res) {
 						// uni.hideLoading()
-						console.log('二维码',res)
-						if(res.data.status == true){
-							that.qr=res.data.data.qr;
+						console.log('二维码', res)
+						if (res.data.status == true) {
+							that.qr = res.data.data.qr;
 							that.QRCodeClick(res.data.data.qr);
 						}
 					},
 					fail(res) {
-						console.log('获取二维码失败',res)
+						console.log('获取二维码失败', res)
 					}
 				})
 			},
-			
+
 			//---------------------------自动刷新---------------------------
-			autoRefresh:function(){
+			autoRefresh: function() {
 				var that = this;
 				uni.showLoading()
-				that.loadingTime=setInterval(function(){
+				that.loadingTime = setInterval(function() {
 					console.log('自动刷新')
 					that.QRCodeData();
 					// console.log(that.sign)
-				},15000)
+				}, 15000)
 			},
-			
+
 			//---------------------------刷新关闭---------------------------
-			RefreshOff:function(){
+			RefreshOff: function() {
 				var that = this;
 				clearInterval(that.loadingTime)
 			},
-			
+
 			//---------------------------生成二维码---------------------------
-			QRCodeClick:function(param){
+			QRCodeClick: function(param) {
 				var that = this;
 				uni.showLoading({
 					title: '二维码生成中',
 					mask: true
 				})
-				
+
 				uQRCode.make({
 					canvasId: 'qrcode',
 					text: param,
@@ -182,13 +185,36 @@
 					}
 				})
 			},
-			
+
 			//--------------------点击刷新-----------------------
 			manuRefresh: function() {
-			   let that = this
-			   console.log('手动刷新')
-			   clearInterval(that.qr)
-			   that.QRCodeData()
+				let that = this
+				console.log('手动刷新')
+				clearInterval(that.qr)
+				that.QRCodeData()
+			},
+
+			//--------------------读取信息-------------------------
+			GetUserByUserID: function() {
+				var that = this;
+				console.log(that.userInfo)
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetUserByUserID.Url,
+					method: $DDTInterface.DDTInterface.GetUserByUserID.method,
+					data: {
+						userID: that.userInfo.userId,
+					},
+					success(res) {
+						console.log('呀呀呀' + JSON.stringify(res))
+						that.depositStatus = res.data.data;
+						console.log(that.depositStatus);
+						// if(that.depositStatus==1||that.depositStatus==2){
+						// }
+					},
+					fail(err) {
+						console.log('读取信息', err)
+					}
+				})
 			},
 		}
 	}
@@ -197,11 +223,11 @@
 <style lang="scss">
 	//默认背景颜色
 	page {
-		background: -webkit-linear-gradient(top,#9cffbb,#35c762);
+		background: -webkit-linear-gradient(top, #9cffbb, #35c762);
 	}
-	
-	.qc_top{
-		background:#35c762;
+
+	.qc_top {
+		background: #35c762;
 		border-top-left-radius: 15upx;
 		border-top-right-radius: 15upx;
 		width: 684upx;
@@ -212,15 +238,15 @@
 		padding: 19upx 0;
 		box-shadow: 0px 6px 20px 0px rgba(53, 199, 98, 0.53);
 		// margin: 0 auto;
-		
-		.to_text{
+
+		.to_text {
 			font-size: 36upx;
 			color: #FFFFFF;
 			// margin: 0 auto;
 		}
 	}
-	
-	.qc_bottom{
+
+	.qc_bottom {
 		width: 684upx;
 		height: 626upx;
 		background-color: #FFFFFF;
@@ -228,24 +254,24 @@
 		box-shadow: 0px 6px 20px 0px rgba(53, 199, 98, 0.53);
 		border-bottom-left-radius: 15upx;
 		border-bottom-right-radius: 15upx;
-		
-		.bt_view{
+
+		.bt_view {
 			padding-top: 20upx;
 			text-align: center;
 			padding-bottom: 20upx;
-			
-			.vi_text{
+
+			.vi_text {
 				color: #666666;
 				font-size: 28upx;
 			}
-			
-			.vi_text2{
+
+			.vi_text2 {
 				color: #1ea2ff;
 				font-size: 28upx;
 			}
 		}
 	}
-	
+
 	// 投诉对象样式
 	.complaintDX {
 		display: flex;
@@ -258,12 +284,12 @@
 		margin-right: 30upx;
 		text-align: center;
 		border-top: 1px #F5F5F5 dotted;
-	
+
 		.tsdxText {
 			font-weight: bold;
 			font-size: 32upx;
 		}
-	
+
 		.tsnrText {
 			display: flex;
 			position: absolute;
@@ -273,7 +299,7 @@
 			padding-bottom: 32upx;
 			padding-left: 20upx;
 			// padding-right: 30upx;
-			
+
 			.jdticon {
 				position: relative;
 			}

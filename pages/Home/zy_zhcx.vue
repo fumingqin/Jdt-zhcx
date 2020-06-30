@@ -1021,7 +1021,7 @@
 	//咨询动态
 	.notice {
 		background: #fff;
-		margin-top: 20upx;
+		margin-top: 16upx;
 
 		.zl_content {
 			display: flex;
@@ -1099,7 +1099,7 @@
 	// 旅游推荐
 	.zl_recommend {
 		background: #fff;
-		margin-top: 20upx;
+		margin-top: 16upx;
 		padding: 0 31upx;
 
 		.zl_reContent {

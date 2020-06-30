@@ -2,13 +2,13 @@
 	<view>
 		<form @submit="formSubmit">
 			<view class="cc_content" v-if="or_entrance==0">
-				<text class="ct_text1">投诉类别</text>
-				<text class="ct_text2">{{or_class}}</text>
 				<text class="ct_text1">投诉对象</text>
+				<text class="ct_text2">{{or_class}}</text>
+				<text class="ct_text1">投诉人</text>
 				<text class="ct_text2">{{or_name}}</text>
 			</view>
 			<view class="complaintDX" v-if="or_entrance==1">
-				<text class="tsdxText">投诉类别</text>
+				<text class="tsdxText">投诉对象</text>
 				<picker @change="godetail" :value="index" :range="complaintList3.txt">
 					<text class="tsnrText">{{complaintList3.txt[index]}}<text class="jdticon icon-xia"></text></text>
 				</picker>
@@ -144,7 +144,7 @@
 				console.log(e)
 				if(this.complaintList3.txt[e.detail.value]=='请选择'){
 					uni.showToast({
-						title:'请选择模块',
+						title:'请选择对象',
 						icon:'none'
 					})
 				}else if(this.complaintList3.txt[e.detail.value]!=='请选择'){
@@ -162,7 +162,7 @@
 				if(this.or_entrance==1){
 					if(that.detailInfo.complaintObject==''){
 						uni.showToast({
-							title:'请选择模块',
+							title:'请选择对象',
 							icon: 'none',
 						})
 					}else if(that.remnant==0){
