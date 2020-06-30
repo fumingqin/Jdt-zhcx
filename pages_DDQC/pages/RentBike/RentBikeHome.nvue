@@ -74,17 +74,16 @@
 			//获取系统信息
 			uni.getSystemInfo({
 				success: function(res) {
-					// console.log('当前设备信息',res)
-					//地图高度
+					
 					// console.log(res.system.indexOf('iOS'))
 					if(res.system.indexOf('iOS') == 0){
-						//当前是iOS
+						//当前是iOS系统
 						that.system = 'iOS'
 					}else {
-						//当前不是iOS
+						//当前是Android系统
 						that.system = 'Android'
 					}
-					// console.log(that.system)
+					//地图高度
 					that.mapHeight = res.windowHeight + 'px';
 					that.Height=res.windowHeight/2 -4+ 'px';
 				}

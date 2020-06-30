@@ -173,6 +173,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetRecordByUserID: {
+		Url: Url + '/api/Purse/GetRecordByUserID',
+		name: '消费记录查询',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 
 // 接口声明区

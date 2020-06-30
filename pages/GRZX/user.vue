@@ -118,11 +118,7 @@
 
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
-	import listCell from '@/components/GRZX/mix-list-cell.vue';
 	export default{
-		components: {
-			listCell
-		},
 		data(){
 			return{
 				QQ:'',
@@ -216,7 +212,7 @@
 			},
 			//-------------------------------------根据id获取实名信息----------------------------------
 			checkIDRealName(id){
-				console.log(id,'checkRealName')
+				// console.log(id,'checkRealName')
 				var that=this;
 				uni.request({
 					url:that.$GrzxInter.Interface.GetUserByUserID.value,
@@ -631,7 +627,8 @@
 	.typeBox{  //普通用户
 		width: 126upx;
 		height: 42upx;
-		background-color: #C25E4E;
+		// background-color: #C25E4E;
+		background-color: #2A954B;
 		position: absolute;
 		top: 245upx;
 		left: 23%;
