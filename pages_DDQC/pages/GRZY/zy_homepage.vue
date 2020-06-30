@@ -24,8 +24,8 @@
 					</view>
 					<!-- 卡券 -->
 					<view class="ve_Text" @click="Jump">
-						<view class="tx_text1">骑行数</view>
-						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">次</text></view>
+						<view class="tx_text1">卡数</view>
+						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
 					</view>
 					<!-- 押金 -->
 					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户'" @click="open1">
@@ -45,12 +45,18 @@
 					</view>
 				</view>
 			</view>
-
-			<!-- 套餐 -->
-			<!-- <view class="ve_view2" @click="natTo('/pages_DDQC/pages/GRZY/combo')">
-				<image class="vi_image" src="../../static/GRZY/taocan.png" mode="aspectFill"></image>
+			
+			<!-- 套餐 @click="natTo('/pages_DDQC/pages/GRZY/combo')" -->
+			<!-- <view class="ve_view2" v-if="commuterCardObject=='公务员'">
+				<image class="vi_image2" src="../../static/GRZY/touxiang.png"></image>
+				<text class="ve_text">通勤卡</text>
+				<text class="ve_text2">余额</text>
+				<text class="ve_text3">￥{{commuterCardCost}}元</text>
+				<text class="ve_text4">公交车扫码、达达骑行</text>
+				<text class="ve_text5">开通说明</text>
+				<image class="vi_image" src="../../static/GRZY/tongqingka.png" mode="aspectFit"></image>
 			</view> -->
-
+			
 			<!-- 电话客服 -->
 			<view class="ve_view3" @click="makePhone">
 				<text class="vi_text">电话客服</text>
@@ -203,7 +209,7 @@
 				order_no: '',
 				personalHomepage: {
 					cost: 0.8, //价格
-					coupon: 10, //卡券数量
+					coupon: 1, //卡券数量
 					deposit: 2, //押金
 					depositBalance: 0,
 
@@ -221,7 +227,8 @@
 				qrcodeSize: 150,
 				qrcodeSrc: '',
 				paymentData: [], //支付参数
-				commuterCardObject:'普通用户',
+				commuterCardObject:'公务员',
+				commuterCardCost:199,
 			}
 		},
 		onLoad() {
@@ -703,7 +710,10 @@
 			},
 
 			Jump() {
-				this.type = 1
+				// this.type = 1
+				uni.navigateTo({
+					url:'zy_commuterCard',
+				})
 			},
 
 			Jump2: function(e) {
@@ -853,13 +863,66 @@
 
 	//套餐
 	.ve_view2 {
+		position: relative;
 		width: 694upx;
-		height: 246upx;
+		height: 270upx;
 		border-radius: 10px;
 		margin-left: 29upx;
 		margin-right: 29upx;
-		margin-top: 20upx;
-
+		margin-top: 8upx;
+		
+		.vi_image2{
+			position: absolute;
+			width: 94upx;
+			height: 94upx;
+			padding-top: 50upx;
+			padding-left: 40upx;
+		}
+		
+		.ve_text{
+			position: absolute;
+			font-size:41upx;
+			font-weight: 550;
+			color: #FFFFFF;
+			padding-left: 157upx;
+			padding-top: 40upx;
+		}
+		
+		.ve_text2{
+			position: absolute;
+			font-size:32upx;
+			color: #FFFFFF;
+			padding-top: 104upx;
+			padding-left: 157upx;
+		}
+		
+		.ve_text3{
+			position: absolute;
+			font-size:32upx;
+			color: #FFFFFF;
+			padding-top: 104upx;
+			padding-left: 246upx;
+		}
+		
+		.ve_text4{
+			position: absolute;
+			color: #005107;
+			font-size: 28upx;
+			bottom: 0;
+			padding-left: 40upx;
+			padding-bottom: 30upx;
+		}
+		
+		.ve_text5{
+			position: absolute;
+			color: #005107;
+			font-size: 28upx;
+			bottom: 0;
+			right: 0;
+			padding-right: 40upx;
+			padding-bottom: 30upx;
+		}
+		
 		.vi_image {
 			width: 694upx;
 			height: 284upx;
@@ -877,7 +940,7 @@
 		border-radius: 10px;
 		margin-left: 29upx;
 		margin-right: 29upx;
-		margin-top: 48upx;
+		margin-top: 36upx;
 		padding: 33upx;
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 		background-color: #FFFFFF;
