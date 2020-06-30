@@ -377,6 +377,7 @@
 				}
 			},
 			returnClick(){		//返回个人中心
+				var that=this;
 				if(that.urlData==1){
 					uni.switchTab({  //返回首页
 						url:'/pages/Home/zy_zhcx',
