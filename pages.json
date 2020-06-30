@@ -987,6 +987,12 @@
 				,{
 				    "path" : "pages/GRZY/zy_commuterCard",
 				    "style" : {}
+				},
+				{
+					"path": "pages/GRZY/zy_topUpRecord",
+					"style": {
+						"navigationBarTitleText": "充值记录"
+					}
 				}
 			]
 		},
