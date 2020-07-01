@@ -165,6 +165,10 @@
 			//--------------------自行车用户实名认证-------------------
 			bikeUserVerified:function(name,codeNum){
 				var that=this;
+				console.log(that.userInfo.userId)
+				console.log(that.userInfo.phoneNumber)
+				console.log(codeNum)
+				console.log(name)
 				uni.request({
 					url:that.$GrzxInter.Interface.UserVerified.value,
 					data:{

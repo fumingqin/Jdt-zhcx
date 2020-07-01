@@ -341,6 +341,12 @@
 		left: 4%;
 		top:30upx;
 		font-weight: bold;
+		width: 18%;
+		font-weight: bold;
+		display: block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 	.sexClass{
 		position: absolute;
