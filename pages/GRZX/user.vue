@@ -118,11 +118,7 @@
 
 <script>
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
-	import listCell from '@/components/GRZX/mix-list-cell.vue';
 	export default{
-		components: {
-			listCell
-		},
 		data(){
 			return{
 				QQ:'',
@@ -216,7 +212,7 @@
 			},
 			//-------------------------------------根据id获取实名信息----------------------------------
 			checkIDRealName(id){
-				console.log(id,'checkRealName')
+				// console.log(id,'checkRealName')
 				var that=this;
 				uni.request({
 					url:that.$GrzxInter.Interface.GetUserByUserID.value,
@@ -270,10 +266,8 @@
 			},
 			//--------------------添加紧急联系人的电话号码--------------------
 			addContact(){
-				// setTimeout(function(){
-					
-				// },5000);
 				var that=this;
+				that.contantPhone="";
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
@@ -291,7 +285,7 @@
 			},
 			submit(){
 				var that=this;
-				console.log(that.phoneNumber)
+				console.log(that.contantPhone,"contantPhone")
 				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
 				if(that.contantPhone==""){
 					uni.showToast({
@@ -526,14 +520,14 @@
 			    }
 			},
 			//----------------------判断是否为数字-----------------------
-			judgeNum(val){
+			judgeNum:function(val){
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-				    if(regPos.test(val) || regNeg.test(val)) {
-				        return true;
-				    } else {
-				        return false;
-				    }
+				var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+				if(regPos.test(val) || regNeg.test(val)) {
+					return true;
+				} else {
+					return false;
+				}
 			},
 		}
 		
@@ -631,7 +625,8 @@
 	.typeBox{  //普通用户
 		width: 126upx;
 		height: 42upx;
-		background-color: #C25E4E;
+		// background-color: #C25E4E;
+		background-color: #2A954B;
 		position: absolute;
 		top: 245upx;
 		left: 23%;

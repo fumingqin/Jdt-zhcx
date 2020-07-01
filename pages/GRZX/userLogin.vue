@@ -224,7 +224,7 @@
 				})
 			},
 			wxLogin(){		//微信授权登录
-				var theSelf=this;
+				var thethat=this;
 				uni.login({
 					provider:'weixin',
 					success:function(loginRes){
@@ -267,7 +267,7 @@
 				
 			},
 			qqLogin(){		//QQ授权登录
-				var theSelf=this;
+				var thethat=this;
 				uni.getProvider({
 				    service: 'oauth',
 				    success: function (res) {
@@ -299,7 +299,7 @@
 											})
 											
 											if(list!=null||list!=""){
-												theSelf.login(list);						
+												thethat.login(list);						
 											}
 											uni.showToast({
 												title: '授权成功',
@@ -307,7 +307,7 @@
 											});
 											uni.switchTab({
 												//url:'/pages/GRZX/user',
-												url:theSelf.$GrzxInter.Route.user.url,
+												url:thethat.$GrzxInter.Route.user.url,
 											})
 											
 										}
@@ -319,32 +319,30 @@
 				})
 			},
 			getCodeClick(e){	//获取验证码
-				var self=this;
+				var that=this;
 				const {phoneNumber, captchaCode} = this;		
-				if(self.judgeNum(self.phoneNumber)){
+				if(that.judgeNum(that.phoneNumber)){
 					var timer=null,second=59; //倒计时的时间
-					if(self.textCode == "获取验证码"){
-					  self.textCode = second+"秒后重发";
-					  if(self.textCode == "59秒后重发"){
+					if(that.textCode == "获取验证码"){
+					  that.textCode = second+"秒后重发";
+					  if(that.textCode == "59秒后重发"){
 						  timer=setInterval(function(){
 						  second--;
 						  if(second<=0){	
-						  	self.textCode = "获取验证码";
+						  	that.textCode = "获取验证码";
 						  	clearInterval(timer);
 						  	second=59;	
 						  }
 						  else{			
-						  	self.textCode = second+"秒后重发";
+						  	that.textCode = second+"秒后重发";
 						  }},1000)
-						  console.log(self.phoneNumber)
+						  console.log(that.phoneNumber)
 						 uni.request({
-							// url:'http://218.67.107.93:9210/api/app/getLoginCode?phoneNumber='+self.phoneNumber,
-							//url:'http://111.231.109.113:8002/api/person/getLoginCode',
-							url:self.$GrzxInter.Interface.getLoginCode.value,
+							url:that.$GrzxInter.Interface.getLoginCode.value,
 						    data:{
-								phoneNumber:self.phoneNumber,
+								phoneNumber:that.phoneNumber,
 							},
-							method:self.$GrzxInter.Interface.getLoginCode.method,
+							method:that.$GrzxInter.Interface.getLoginCode.method,
 							success:(res)=>{
 								console.log(res,"340");
 						 		console.log(res.data.data);
@@ -352,7 +350,7 @@
 									key:'captchaCode',
 									data:{
 										code:res.data.data,
-										phone:self.phoneNumber,
+										phone:that.phoneNumber,
 									}
 								})
 								uni.showToast({
@@ -377,6 +375,7 @@
 				}
 			},
 			returnClick(){		//返回个人中心
+				var that=this;
 				if(that.urlData==1){
 					uni.switchTab({  //返回首页
 						url:'/pages/Home/zy_zhcx',

@@ -510,7 +510,12 @@
 		position: absolute;
 		left: 4%;
 		top:30upx;
+		width: 18%;
 		font-weight: bold;
+		display: block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 	.sexClass{
 		position: absolute;
@@ -614,6 +619,10 @@
 		left: 5.56%;
 		top:30upx;
 		font-weight: bold;
+		display: block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 	.fontStyle1{
 		position: absolute;

@@ -721,7 +721,7 @@
 							uni.hideLoading()
 							uni.showToast({
 								// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
-								title: '请求支付失败，请检查网络后重试',
+								title: '请求支付参数失败，请联系客服',
 								icon: 'none',
 								duration: 3000
 							})
@@ -811,7 +811,7 @@
 							uni.hideLoading()
 							uni.showToast({
 								// title: '支付失败，请查看订单是否已取消，如若无问题请联系客服',
-								title: '请求支付参数失败，请检查网络后重试',
+								title: '请求支付参数失败，请联系客服',
 								icon: 'none',
 								duration: 3000
 							})
