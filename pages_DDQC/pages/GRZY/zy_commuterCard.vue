@@ -48,6 +48,7 @@
 			height: 94upx;
 			padding-top: 50upx;
 			padding-left: 40upx;
+			z-index: 500;
 		}
 		
 		.ve_text{
@@ -57,6 +58,7 @@
 			color: #FFFFFF;
 			padding-left: 157upx;
 			padding-top: 40upx;
+			z-index: 500;
 		}
 		
 		.ve_text2{
@@ -65,6 +67,7 @@
 			color: #FFFFFF;
 			padding-top: 104upx;
 			padding-left: 157upx;
+			z-index: 500;
 		}
 		
 		.ve_text3{
@@ -73,6 +76,7 @@
 			color: #FFFFFF;
 			padding-top: 104upx;
 			padding-left: 246upx;
+			z-index: 500;
 		}
 		
 		.ve_text4{
@@ -82,6 +86,7 @@
 			bottom: 0;
 			padding-left: 40upx;
 			padding-bottom: 30upx;
+			z-index: 500;
 		}
 		
 		.ve_text5{
@@ -92,6 +97,7 @@
 			right: 0;
 			padding-right: 40upx;
 			padding-bottom: 30upx;
+			z-index: 500;
 		}
 		
 		.vi_image {

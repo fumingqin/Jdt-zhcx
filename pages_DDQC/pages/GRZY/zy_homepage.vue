@@ -20,6 +20,7 @@
 					<!-- 金额 -->
 					<view class="ve_Text" @click="natTo(1)">
 						<view class="tx_text1">金额</view>
+						
 						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
@@ -326,7 +327,6 @@
 								that.deposit = res.data.data.deposit / 100;
 							}
 							// that.depositStatus = res.data.data.depositStatus;
-							console.log("测试" + that.depositStatus);
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
 							that.status = res.data.data.status;
@@ -647,11 +647,11 @@
 							uni.navigateTo({
 								url: that.$GrzxInter.Route.realName.url,
 							})
-						} else if (res.data.data.RealNameStatus !== 1) {
-							//上传图片
-							uni.navigateTo({
-								url: that.$GrzxInter.Route.uploadPhoto.url,
-							})
+						// } else if (res.data.data.RealNameStatus !== 1) {
+						// 	//上传图片
+						// 	uni.navigateTo({
+						// 		url: that.$GrzxInter.Route.uploadPhoto.url,
+						// 	})
 						} else {
 							if (e == 1) {
 								uni.navigateTo({
