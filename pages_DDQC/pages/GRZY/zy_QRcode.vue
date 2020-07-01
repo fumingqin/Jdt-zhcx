@@ -124,7 +124,7 @@
 					url:$DDTInterface.DDTInterface.GetBusCodeGen.Url,
 					method:$DDTInterface.DDTInterface.GetBusCodeGen.method,
 					data:{
-						phoneNumber:13906963039,
+						phoneNumber:that.userInfo.phoneNumber,
 						userID:that.userInfo.userId,
 					},
 					success(res) {
