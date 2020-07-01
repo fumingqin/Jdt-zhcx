@@ -30,7 +30,7 @@
 					</view>
 					<!-- 押金 -->
 					<!-- 未交押金 -->
-					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户' && deposit==''" @click="open1">
+					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户'" @click="open1">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">0<text class="tx_text3">元</text></view>
@@ -325,6 +325,9 @@
 							that.balance = res.data.data.balance / 100;
 							if (res.data.data.depositStatus != 0) {
 								that.deposit = res.data.data.deposit / 100;
+								if(that.deposit==''){
+									that.deposit = 0
+								}
 							}
 							// that.depositStatus = res.data.data.depositStatus;
 							that.id = res.data.data.id;
