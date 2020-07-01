@@ -4,7 +4,7 @@
 			<view class="box1">
 				<view class="itemClass">
 					<view class="fontStyle">姓名	</view>
-					<input placeholder="与证件姓名一致" class="inputClass"  name="userName" v-model="user.userName" @blur="nameClick"/> 
+					<input placeholder="与证件姓名一致" class="inputClass" maxlength="6"  name="userName" v-model="user.userName" @blur="nameClick"/> 
 				</view>
 				<view class="itemClass borderTop">
 					<view class="fontStyle">性别</view>
@@ -183,7 +183,6 @@
 				address:'',
 				userId:'', //账号id
 				code:0,
-				// success:0,
 			}
 		},
 		onLoad (options){	
@@ -194,9 +193,13 @@
 				this.loadData(type);
 			}
 		},
+		onUnload() {  //页面关闭时执行
+			//------------------清除editPassenger缓存----------------
+			uni.removeStorageSync('editPassenger');
+		},
 		methods:{
 			//------------------加载账号id----------------
-			loadUnid(){
+			loadUnid:function(){
 				var the=this;
 				uni.getStorage({
 					key:'userInfo',
@@ -230,7 +233,7 @@
 				})
 			},
 			//------------------加载乘车人信息----------------
-			loadData(type){
+			loadData:function(type){
 				uni.showLoading({
 					title:'加载中...'
 				})
@@ -307,11 +310,10 @@
 				this.user.userSex = e;
 			},
 			//------------------上传乘车人信息----------------
-			formSubmit(e){
+			formSubmit:function(e){
 				var data1=e.target.value;
 				var that=this;
 				data1.passengerId=that.user.passengerId;
-				// console.log(data)
 				if(data1.userDefault==null||data1.userDefault==""){
 					data1.userDefault=false;
 				}else{
@@ -324,7 +326,6 @@
 				}else{
 					data1.userType=that.ticketType;
 				}
-				
 				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
 				if(data1.userName==""||data1.userName==null){
 					uni.showToast({
@@ -387,113 +388,127 @@
 					uni.showLoading({
 						title:'保存中...'
 					})
-					uni.request({
-						// url:'http://111.231.109.113:8002/api/person/userInfoList',
-						url:that.$GrzxInter.Interface.userInfoList.value,
-						data:{
-							userId:that.userId,
-						},
-						method:that.$GrzxInter.Interface.userInfoList.method,
-						success(listRes) {
-							//判断是否有本人
-							if(data1.userDefault&&listRes.data.data!=null&&listRes.data.data!=""){
-								var defaultList=listRes.data.data.filter(item => {
-									return item.userDefault == true;
-								})
-								if(defaultList.length>0){
-									uni.request({
-										//url:'http://111.231.109.113:8002/api/person/changeUserInfo',
-										url:that.$GrzxInter.Interface.changeUserInfo.value,
-										data:{
-											userId:that.userId, //账号id
-											passengerId:defaultList[0].passengerId, //乘车人id
-											userType:defaultList[0].userType,   //用户类别 成人/儿童 
-											userName:defaultList[0].userName,   //用户姓名   
-											userSex:defaultList[0].userSex,   //用户性别   
-										  	userCodeNum:defaultList[0].userCodeNum,   //用户身份证   
-										  	userPhoneNum:defaultList[0].userPhoneNum,   //用户手机号   
-										  	userDefault:'false',   //用户是否本人 true/false 
-										  	userEmergencyContact:'false',   //是否设置为紧急联系人 true/false
-										},
-										method:that.$GrzxInter.Interface.changeUserInfo.method,
-										success(resd) {
-											console.log(resd,"315")
-										}
-									})
-								}	
-							}
-							uni.request({
-								// url:'http://111.231.109.113:8002/api/person/changeUserInfo',
-								url:that.$GrzxInter.Interface.changeUserInfo.value,
-								data:{
-									userId:that.userId, //账号id
-									passengerId:data1.passengerId, //乘车人id   
-									userType:data1.userType,   //用户类别 成人/儿童 
-									userName:data1.userName,   //用户姓名   
-									userSex:data1.userSex,   //用户性别   
-								  	userCodeNum:data1.userCodeNum,   //用户身份证   
-								  	userPhoneNum:data1.userPhoneNum,   //用户手机号   
-								  	userDefault:data1.userDefault,   //用户是否本人 true/false 
-								  	userEmergencyContact:'false',   //是否设置为紧急联系人 true/false
-									userfrontImg:data1.fImg,  	//证件正面
-									userbackImg:data1.bImg,		//证件主页
-									userauditState:data1.userauditState,   //审核状态
-								},
-								method:that.$GrzxInter.Interface.changeUserInfo.method,
-								success(res) {
-									console.log(res,"370")
-									if(res.data.msg!=""&&res.data.msg!=null){
-										uni.showToast({
-											icon:'none',
-											title:res.data.msg
-										})
-									}else{
-										uni.showToast({
-											icon:'success',
-											title:'完成'
-										})
-										if(that.type=="add"){
-											uni.getStorage({
-												key:'passengerList',
-												success(list){
-													console.log(list,"378")
-													var passList=[];
-													for(var i=0;i<list.data.length;i++){
-														passList.push(list.data[i]);
-													}
-													if(res.data.data.userSex==0){
-														res.data.data.userSex="男";
-													}else{
-														res.data.data.userSex="女";
-													}
-													var list1={
-														passengerId:res.data.data.passengerId, //乘车人id
-														userType:res.data.data.userType,   //用户类别 成人/儿童 
-														userName:res.data.data.userName,   //用户姓名   
-														userSex:res.data.data.userSex,   //用户性别   
-													  	userCodeNum:res.data.data.userCodeNum,   //用户身份证   
-													  	userPhoneNum:res.data.data.userPhoneNum,   //用户手机号   
-													  	userDefault:res.data.data.userDefault,   //用户是否本人 true/false 
-													  	userEmergencyContact:res.data.data.userEmergencyContact, //是否设置为紧急联系人 true/false
-														hiddenIndex:1,  //1代表选中
-													}
-													passList.push(list1);
-													uni.setStorage({
-														key:'passengerList',
-														data:passList
-													})
-												}
-											})
-										}
-										setTimeout(function(){
-											uni.navigateBack();
-										},500);	
-									}
-								},
-							})
-						}
-					})
+					that.checkSelf(data1); //检查列表中是否存在本人
 				}
+			},
+			// ------------------检查是否有本人----------------
+			checkSelf:function(data1){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.userInfoList.value,
+					data:{
+						userId:that.userId,
+					},
+					method:that.$GrzxInter.Interface.userInfoList.method,
+					success(listRes) {
+						//判断是否有本人
+						if(data1.userDefault&&listRes.data.data!=null&&listRes.data.data!=""){
+							var defaultList=listRes.data.data.filter(item => {
+								return item.userDefault == true;
+							})
+							if(defaultList.length>0){
+								uni.request({
+									url:that.$GrzxInter.Interface.changeUserInfo.value,
+									data:{
+										userId:that.userId, //1.账号id
+										passengerId:defaultList[0].passengerId, //2.乘车人id
+										userType:defaultList[0].userType,   //3.用户类别 成人/儿童 
+										userName:defaultList[0].userName,   //4.用户姓名   
+										userSex:defaultList[0].userSex,   //5.用户性别   
+									  	userCodeNum:defaultList[0].userCodeNum,   //6.用户身份证   
+									  	userPhoneNum:defaultList[0].userPhoneNum,   //7.用户手机号   
+									  	userDefault:'false',   //8.用户是否本人 true/false 
+									  	userEmergencyContact:'false',   //9.是否设置为紧急联系人 true/false
+										userfrontImg:defaultList[0].fImg,  	//10.证件正面
+										userbackImg:defaultList[0].bImg,	//11.证件主页
+										userauditState:defaultList[0].userauditState,   //12.审核状态
+									},
+									method:that.$GrzxInter.Interface.changeUserInfo.method,
+									success(resd) {
+										console.log(resd,"315")
+										that.keepPassenger(data1); //保存用户信息
+									}
+								})
+							}else{
+								that.keepPassenger(data1); //保存用户信息
+							}	
+						}else{
+							that.keepPassenger(data1); //保存用户信息
+						}
+					}
+				})
+			},
+			// ------------------保存用户信息----------------
+			keepPassenger:function(data1){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.changeUserInfo.value,
+					data:{
+						userId:that.userId, //1.账号id
+						passengerId:data1.passengerId, //2.乘车人id   
+						userType:data1.userType,   //3.用户类别 成人/儿童 
+						userName:data1.userName,   //4.用户姓名   
+						userSex:data1.userSex,   //5.用户性别   
+					  	userCodeNum:data1.userCodeNum,   //6.用户身份证   
+					  	userPhoneNum:data1.userPhoneNum,   //7.用户手机号   
+					  	userDefault:data1.userDefault,   //8.用户是否本人 true/false 
+					  	userEmergencyContact:'false',   //9.是否设置为紧急联系人 true/false
+						userfrontImg:data1.fImg,  	//10.证件正面
+						userbackImg:data1.bImg,		//11.证件主页
+						userauditState:data1.userauditState,   //12.审核状态
+					},
+					method:that.$GrzxInter.Interface.changeUserInfo.method,
+					success(res) {
+						console.log(res,"370")
+						if(res.data.msg!=""&&res.data.msg!=null){
+							uni.showToast({
+								icon:'none',
+								title:res.data.msg
+							})
+						}else{
+							uni.showToast({
+								icon:'success',
+								title:'完成'
+							})
+							if(that.type=="add"){
+								uni.getStorage({
+									key:'passengerList',
+									success(list){
+										console.log(list,"378")
+										var passList=[];
+										for(var i=0;i<list.data.length;i++){
+											passList.push(list.data[i]);
+										}
+										if(res.data.data.userSex==0){
+											res.data.data.userSex="男";
+										}else{
+											res.data.data.userSex="女";
+										}
+										var list1={
+											passengerId:res.data.data.passengerId, //乘车人id
+											userType:res.data.data.userType,   //用户类别 成人/儿童 
+											userName:res.data.data.userName,   //用户姓名   
+											userSex:res.data.data.userSex,   //用户性别   
+										  	userCodeNum:res.data.data.userCodeNum,   //用户身份证   
+										  	userPhoneNum:res.data.data.userPhoneNum,   //用户手机号   
+										  	userDefault:res.data.data.userDefault,   //用户是否本人 true/false 
+										  	userEmergencyContact:res.data.data.userEmergencyContact, //是否设置为紧急联系人 true/false
+											hiddenIndex:1,  //1代表选中
+										}
+										passList.push(list1);
+										uni.setStorage({
+											key:'passengerList',
+											data:passList
+										})
+									}
+								})
+							}
+							setTimeout(function(){
+								uni.navigateBack();
+							},500);	
+						}
+					},
+				})
 			},
 			// ------------------绑定日期----------------
 			bindDateChange:function(e){
@@ -557,7 +572,7 @@
 				}
 			},
 			//------------------返回按钮----------------
-			returnClick(){
+			returnClick:function(){
 				uni.navigateBack();
 			},
 			//------------------校验手机号----------------
@@ -681,7 +696,7 @@
 				return true;
 			},
 			//------------------校验姓名----------------
-			nameClick(e){
+			nameClick:function(e){
 				if(e.detail.value==""){
 					console.log("空的")
 				}else if(e.detail.value.length>=2){
@@ -854,19 +869,6 @@
 		position: absolute;
 		right: 9%;
 	}
-	//checkBox样式
-	/* #ifdef APP-PLUS*/
-	// uni-checkbox-group{ 
-	// 	width:50% !important; 
-	// }
-	// uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked{
-	// 	//background: #ff0000;
-	// 	border-color:#ff0000;
-	// }
-	// uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before{
-	// 	border-color:#ff0000 ;
-	// }
-	/* #endif */
 	.borderTop{  
 		border-top: 1upx solid #F5F5F5;
 	}
