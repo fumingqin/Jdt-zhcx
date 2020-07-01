@@ -188,6 +188,7 @@
 			this.lyfwData();
 		},
 		onShow() {
+			this.selectedValue = 0;
 			this.getUserInfo();
 			this.userData();
 			this.getCoupons();
@@ -418,7 +419,7 @@
 					})
 				} else {
 					uni.showToast({
-						title: '请同意购买须知',
+						title: '请同意游客须知',
 						icon: 'none'
 					})
 				}
