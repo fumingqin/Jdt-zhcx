@@ -20,7 +20,6 @@
 				<text style="color: #FFFFFF;">开锁中</text>
 			</view>
 		</view>
-
 		<!-- <image src="../../static/GRZY/personal.png" class="personal" @click="personalClick"></image> -->
 	</view>
 </template>
@@ -54,7 +53,7 @@
 			that.addJYJPushReceiveOpenNotificationListener();
 			that.addJYJPushReceiveNotificationListener();
 			that.getMyLocation();
-			that.getJYJPushAlias();
+			// that.getJYJPushAlias();
 		},
 		onReady() {
 			var that = this;
@@ -86,14 +85,20 @@
 			setJYJPushAlias: function() {
 				var that = this;
 				jyJPush.setJYJPushAlias({
-					userAlias: 'testAlias',
+					userAlias: 'testAliasiOS',
 					// userAlias: that.userInfo.phoneNumber,
 				}, result => {
 					//  设置成功或者失败，都会通过这个result回调返回数据；数据格式保持极光返回的安卓/iOS数据一致
 					//  注：若没有返回任何数据，考虑是否初始化完成
 					console.log(result);
+					jyJPush.getRegistrationID(
+					//  返回的数据会有registrationID，errorCode
+					result => {
+						console.log(result)
+					});
 				});
 			},
+			
 			addJYJPushReceiveOpenNotificationListener: function() { //监听通知被点击事件
 				jyJPush.addJYJPushReceiveOpenNotificationListener(result => {
 					//  监听成功后，若点击推送消息，会触发result；数据格式保持极光返回的安卓/iOS数据一致

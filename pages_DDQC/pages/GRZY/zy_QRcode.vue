@@ -124,11 +124,11 @@
 			QRCodeData: function() {
 				var that = this;
 				uni.request({
-					url: $DDTInterface.DDTInterface.GetBusCodeGen.Url,
-					method: $DDTInterface.DDTInterface.GetBusCodeGen.method,
-					data: {
-						phoneNumber: 13906963039,
-						userID: that.userInfo.userId,
+					url:$DDTInterface.DDTInterface.GetBusCodeGen.Url,
+					method:$DDTInterface.DDTInterface.GetBusCodeGen.method,
+					data:{
+						phoneNumber:that.userInfo.phoneNumber,
+						userID:that.userInfo.userId,
 					},
 					success(res) {
 						// uni.hideLoading()
