@@ -131,11 +131,6 @@
 						title: '正在获取支付...',
 						icon: 'none'
 					})
-					let now = new Date();
-					console.log(now)
-					let timeExpire = '02:00';
-					let Time = new Date(timeExpire).getTime();
-					console.log(Time)
 					uni.request({
 						url: $DDTInterface.DDTInterface.GetRecharge.Url,
 						method: $DDTInterface.DDTInterface.GetRecharge.method,
@@ -147,14 +142,19 @@
 							userID: that.userInfo.userId,
 							// timeExpire:timestemp,//过期时间(时间戳)
 							chargeType: 1, //0:充值押金 1充值钱包
-							totalPrice: 1, //金额
+							totalPrice: 10, //金额
 						},
 						success(res) {
 							uni.hideLoading();
 							console.log('钱包充值返回支付参数成功结果', res)
 							if (res.data.status == true) {
-								that.paymentData = res.data.data.credential;				
+								that.paymentData = res.data.data;				
 								that.payment();
+							}else {
+								uni.showToast({
+									title: res.data.msg,
+									icon: 'none'
+								})
 							}
 						},
 						fail(res) {
@@ -171,22 +171,23 @@
 				uni.requestPayment({
 					provider: 'wxpay',
 					orderInfo: {
-						appid: that.paymentData.wechat_app.appid,
-						timestamp: that.paymentData.wechat_app.timestamp,
-						noncestr: that.paymentData.wechat_app.noncestr,
+						appid: that.paymentData.appid,
+						timestamp: that.paymentData.timestamp,
+						noncestr: that.paymentData.noncestr,
 						package: 'Sign=WXPay',
-						sign: that.paymentData.wechat_app.sign,
-						partnerid: that.paymentData.wechat_app.partnerid,
-						prepayid: that.paymentData.wechat_app.prepayid,
+						sign: that.paymentData.sign,
+						partnerid: that.paymentData.partnerid,
+						prepayid: that.paymentData.prepayid,
 					},
 					success: function(res) {
 						console.log(res)
 						if (res.errMsg == 'requestPayment:ok') { //成功
 							uni.showToast({
 								title: '支付成功',
+								complete() {
+									that.WirteRechargeLog(1);
+								}
 							})
-							
-							that.WirteRechargeLog(1);
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
