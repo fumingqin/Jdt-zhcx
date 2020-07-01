@@ -16,10 +16,14 @@
 				<text class="sa_text4">请对本次骑行进行评价！</text>
 				<view></view>
 				<view class="st_view">
+					<!-- 评价 -->
+					<view></view>
+					<text class="vi_evaluate" @click="open">>去评价</text>
+					<view></view>
 					<!-- 满意 -->
-					<image class="vi_img" src="../../static/GRZY/manyi.png" @click="open"></image>
+					<!-- <image class="vi_img" src="../../static/GRZY/manyi.png" @click="open"></image> -->
 					<!-- 不满意 -->
-					<image class="vi_img2" src="../../static/GRZY/bumanyi.png" @click="open"></image>
+					<!-- <image class="vi_img2" src="../../static/GRZY/bumanyi.png" @click="open"></image> -->
 				</view>
 			</view>
 
@@ -84,7 +88,7 @@
 							color:#999999; 
 							padding: 10rpx;"
 							 name="textareaValue" />
-							</view>
+						</view>
 					<!-- 提交按钮 -->
 					<view>
 						<button form-type="submit" style="width:648rpx;
@@ -141,8 +145,8 @@
 				scale: 14,
 				longitude: "", //地图中心点经度
 				latitude: "", //地图中心点纬度
-				evaluate: ['动作娴熟', '服务态度好', '热情', '技术高超好', '绅士', '服务周到', '攀谈', '风度翩翩', '成熟稳重', '笑容满面','没有绕路',],
-				badevaluate: ['动作不熟', '服务态度差', '冷漠', '技术较差', '无情', '服务不周到', '不守时', '衣衫不整', '不严肃', '愁眉苦脸','司机绕路',],
+				evaluate: ['单车外观好', '骑行舒适', '座椅舒适', '单车开锁快', '车辆上手快', '骑行外观不好', '骑行不舒适', '座椅不舒适', '开锁坏了',],
+				badevaluate: ['单车外观好', '骑行舒适', '座椅舒适', '单车开锁快', '车辆上手快', '骑行外观不好', '骑行不舒适', '座椅不舒适', '开锁坏了',],
 				textareaValue:"",//意见信息
 				show:true,//满意或不满意状态  true为满意  false为不满意
 				rSelect:[],//高评星选择
@@ -594,7 +598,12 @@
 		padding-left: 83upx;
 		padding-right: 82upx;
 	}
-
+	
+	.vi_evaluate{
+		font-size: 35upx;
+		color: rgba(101, 195, 109, 1);
+	}
+	
 	.vi_img {
 		width: 180upx;
 		height: 72upx;

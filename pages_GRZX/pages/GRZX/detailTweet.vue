@@ -68,7 +68,7 @@
 								that.information.createdTime = detailTweet[0].reportTime;
 								that.information.count = detailTweet[0].viewsCount;
 								// that.imageText=detailTweet[0].newsContent;
-								that.imageText = detailTweet[0].newsContent.replace(/\<img/g, '<img style="max-width:1%;height:auto;margin: 10px 0px;" ');
+								that.imageText = detailTweet[0].newsContent.replace(/\<img/g, '<img style="max-width:100%;height:auto;display:inline-block;margin:10rpx auto;"" ');
 								uni.getStorage({
 									key:'userInfo',
 									success:(res) =>{
