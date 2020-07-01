@@ -266,10 +266,8 @@
 			},
 			//--------------------添加紧急联系人的电话号码--------------------
 			addContact(){
-				// setTimeout(function(){
-					
-				// },5000);
 				var that=this;
+				that.contantPhone="";
 				uni.getStorage({
 					key:'userInfo',
 					success(res){
@@ -287,7 +285,7 @@
 			},
 			submit(){
 				var that=this;
-				console.log(that.phoneNumber)
+				console.log(that.contantPhone,"contantPhone")
 				var reg=(/^1(3|4|5|6|7|8|9)\d{9}$/);
 				if(that.contantPhone==""){
 					uni.showToast({
@@ -522,14 +520,14 @@
 			    }
 			},
 			//----------------------判断是否为数字-----------------------
-			judgeNum(val){
+			judgeNum:function(val){
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-				    if(regPos.test(val) || regNeg.test(val)) {
-				        return true;
-				    } else {
-				        return false;
-				    }
+				var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+				if(regPos.test(val) || regNeg.test(val)) {
+					return true;
+				} else {
+					return false;
+				}
 			},
 		}
 		

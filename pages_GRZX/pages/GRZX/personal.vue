@@ -12,7 +12,7 @@
 			<!-- #endif -->
 			<view class="Cr_slk1">
 				<text class="bz">姓&nbsp;名：</text>
-				<input class="slk"  name="nickname"  placeholder="请输入" v-model="nickname" adjust-position="" />
+				<input class="slk" maxlength="20"  name="nickname"  placeholder="请输入" v-model="nickname" adjust-position="" />
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">性&nbsp;别：</text>
@@ -93,11 +93,11 @@
 				uni.showLoading({
 					title:'加载中...'
 				})
-				var theself=this;
+				var that=this;
 				uni.getStorage({
 					key:'backUrl',
 					success:function(res1){
-						theself.backImg=res1.data;
+						that.backImg=res1.data;
 					}
 				})
 				uni.getStorage({
@@ -107,68 +107,68 @@
 						if(phone!=""&&phone!=null&&res.data!=""){
 							uni.request({
 								//url:'http://111.231.109.113:8002/api/person/login',
-								url:theself.$GrzxInter.Interface.login.value,
+								url:that.$GrzxInter.Interface.login.value,
 								data:{
 									phoneNumber:res.data.phoneNumber,
 								},
-								method:theself.$GrzxInter.Interface.login.method,
+								method:that.$GrzxInter.Interface.login.method,
 								success(res1) {
 									// console.log(res1,"108")
 									// ------------1.头像-------------
 									var base64=res1.data.data.portrait;
-									theself.port=res1.data.data.portrait;
-									if(theself.isBase64(base64)){
+									that.port=res1.data.data.portrait;
+									if(that.isBase64(base64)){
 										base64ToPath(base64)
 										  .then(path => {
-										    theself.portrait=path;
+										    that.portrait=path;
 										  })
 										  .catch(error => {
 										    // console.error(error)
 										  })
 									}else{
-										theself.portrait=base64;
+										that.portrait=base64;
 									}
-									// console.log(theself.portrait,"128")
+									// console.log(that.portrait,"128")
 									// ------------2.昵称-------------
 									if(res1.data.data.nickname==null||res1.data.data.nickname==""){
-										theself.nickname="";
+										that.nickname="";
 									}else{
-										theself.nickname =res1.data.data.nickname;
+										that.nickname =res1.data.data.nickname;
 									}
 									// ------------3.性别-------------
 									if(res1.data.data.gender==null||res1.data.data.gender==""){
-										theself.selector="请选择";
+										that.selector="请选择";
 									}else{
-										theself.selector=theself.genderSex[res1.data.data.gender];
+										that.selector=that.genderSex[res1.data.data.gender];
 									}
 									// ------------4.生日-------------
 									if(res1.data.data.birthday==null||res1.data.data.birthday==""){
-										theself.birthday="请选择";
+										that.birthday="请选择";
 									}else{
-										theself.birthday =res1.data.data.birthday.substring(0,10);
+										that.birthday =res1.data.data.birthday.substring(0,10);
 									}
 									// ------------5.地址-------------
 									if(res1.data.data.address==null||res1.data.data.address==""){
-										theself.address="";
+										that.address="";
 									}else{
-										theself.address =res1.data.data.address;
+										that.address =res1.data.data.address;
 									}
 									// ------------6.签名-------------
 									if(res1.data.data.autograph==null||res1.data.data.autograph==""){
-										theself.autograph="";
+										that.autograph="";
 									}else{
-										theself.autograph =res1.data.data.autograph;
+										that.autograph =res1.data.data.autograph;
 									}
 									// ------------7.用户Id-------------
-									theself.userId=res1.data.data.userId;
+									that.userId=res1.data.data.userId;
 									// ------------8.openId_qq-------------
-									theself.openId_qq=res1.data.data.openId_qq;
+									that.openId_qq=res1.data.data.openId_qq;
 									// ------------9.openId_wx-------------
-									theself.openId_wx=res1.data.data.openId_wx;
+									that.openId_wx=res1.data.data.openId_wx;
 									// ------------10.openId_wx-------------
-									theself.openId_xcx=res1.data.data.openId_xcx;
+									that.openId_xcx=res1.data.data.openId_xcx;
 									// ------------11.手机号-------------
-									theself.phoneNumber=res1.data.data.phoneNumber;
+									that.phoneNumber=res1.data.data.phoneNumber;
 									uni.hideLoading();
 								}
 							})
@@ -205,7 +205,7 @@
 				if (type === 'start') {
 					year = year - 60;
 				} else if (type === 'end') {
-					year = year + 2;
+					year = year + 0;
 				}
 				month = month > 9 ? month : '0' + month;;
 				day = day > 9 ? day : '0' + day;
@@ -263,6 +263,16 @@
 				if(this.nickname==""){
 					uni.showToast({
 						title:'请输入姓名',
+						icon:'none'
+					})
+				}else if(this.selector=='请选择'){
+					uni.showToast({
+						title:'请选择性别',
+						icon:'none'
+					})
+				}else if(this.address==''){
+					uni.showToast({
+						title:'请选择地址',
 						icon:'none'
 					})
 				}else{

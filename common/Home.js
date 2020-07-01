@@ -25,7 +25,7 @@ const Interface = {
 	},
 		
 	UpDateVersion:{
-		Url: Url + '/api/Business/GetInsuranceCheckState',
+		url: Url + '/api/Business/GetInsuranceCheckState',
 		name:'自动更新接口',
 		method:'POST',//GET-POST
 	}

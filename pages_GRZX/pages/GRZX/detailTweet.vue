@@ -37,6 +37,10 @@
 		onLoad() {
 			this.getArticleInfo(); 
 		},
+		onUnload() { //页面关闭时执行
+			//------------------清除detailTweet缓存----------------
+			uni.removeStorageSync('detailTweet');
+		},
 		methods: {
 			getArticleInfo :function(){
 				// 请求资讯
