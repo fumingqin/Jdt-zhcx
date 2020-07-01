@@ -7,7 +7,7 @@
 			</swiper-item>
 		</swiper>
 
-		<swiper class="zl_swi" :indicator-dots="true" indicator-active-color="#70c778" indicator-color="#f6f6f6">
+		<swiper class="zl_swi" :indicator-dots="true" circular indicator-active-color="#70c778" indicator-color="#f6f6f6">
 			<swiper-item class="swiItem">
 				<view class="zl_topClick">
 					<!-- 达达骑车 -->
@@ -160,18 +160,18 @@
 			<view class="zl_content">
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
-					<swiper class="swi2 swiper-container" circular autoplay>
+					<swiper class="swi2 swiper-container" vertical circular autoplay display-multiple-items="2">
 						<swiper-item v-for="(item,index) in consultingService" :key="index">
 							<scroll-view scroll-y>
 								<view class="zl_noText">{{item.title}}</view>
 							</scroll-view>
 						</swiper-item>
 					</swiper>
-					<view class="zl_label">
+					<!-- <view class="zl_label">
 						<view class="la_label" v-for="(item,index) in Announcement.LabelContent" :key="index" v-if="index<2">
 							<text class="la_background" style="background-color: #e8f6e9;border-radius:20px;" @click="Jump">{{item.lc_text}}</text>
 						</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
 		</view>
@@ -180,7 +180,8 @@
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
-					<text class="zl_reTitle">旅游推荐</text>
+					<text class="zl_reTitle">骑行风采</text>
+					<!-- 下面这是要注释的 -->
 					<!-- <text class="zl_reMore">更多></text> -->
 				</view>
 			</view>
@@ -188,31 +189,41 @@
 				<view class="zl_contentImage1">
 					<!-- 泉州小西埕 -->
 					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
-						<image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text>
+						<!-- <image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
+						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text> -->
+						<image class="ct_image1" src="http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg" mode="aspectFill"></image>
+						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">巾帼文明线</text>
 					</view>
 					<!-- 稻田摸鱼 -->
 					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
-						<image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text>
+						<!-- <image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
+						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text> -->
+						<image class="ct_image2" src="http://zntc.145u.net/UpLoadImages/DDT/公共自行车.jpg" mode="aspectFill"></image>
+						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">公共自行车</text>
 					</view>
 				</view>
 
 				<view class="zl_contentImage2">
 					<!-- 泉州钟楼 -->
 					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
-						<image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text>
+						<!-- <image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
+						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text> -->
+						<image class="ct_image3" src="http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg" mode="aspectFill"></image>
+						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">古雷助力车</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
 					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
-						<image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text>
+						<!-- <image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
+						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text> -->
+						<image class="ct_image4" src="http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg" mode="aspectFill"></image>
+						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">客运南站</text>
 					</view>
 					<!-- 七彩官畲 -->
 					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
-						<image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text>
+						<!-- <image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
+						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text> -->
+						<image class="ct_image5" src="http://zntc.145u.net/UpLoadImages/DDT/双层公交.jpg" mode="aspectFill"></image>
+						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">双层公交</text>
 					</view>
 				</view>
 			</view>
@@ -284,6 +295,12 @@
 				},
 				{
 					title:'不负灿烂时光,周边游更精彩',
+				},
+				{
+					title:'老年卡要还代了,这事你该关注',
+				},
+				{
+					title:'漳州点资公交卡入驻集团',
 				}],
 				imgXXDT:[{
 					imageUrl:'',
@@ -1023,7 +1040,7 @@
 	//咨询动态
 	.notice {
 		background: #fff;
-		margin-top: 20upx;
+		margin-top: 16upx;
 
 		.zl_content {
 			display: flex;
@@ -1038,15 +1055,18 @@
 			.zl_noContent {
 				
 				.swi2{
-					width: 450upx;
-					height: 40upx;
+					width: 473upx;
+					height: 129upx;
 					margin-top: 35upx;
-					margin-left: 55upx;
+					margin-left: 26upx;
 					
 					.zl_noText {
-						display: flex;
+						// display: block;
 						font-size: 26upx;
 						color: #333333;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
 					}
 				}
 
@@ -1101,7 +1121,7 @@
 	// 旅游推荐
 	.zl_recommend {
 		background: #fff;
-		margin-top: 20upx;
+		margin-top: 16upx;
 		padding: 0 31upx;
 
 		.zl_reContent {

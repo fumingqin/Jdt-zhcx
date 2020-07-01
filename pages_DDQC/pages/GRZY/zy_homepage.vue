@@ -20,6 +20,7 @@
 					<!-- 金额 -->
 					<view class="ve_Text" @click="natTo(1)">
 						<view class="tx_text1">金额</view>
+						
 						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
@@ -28,18 +29,19 @@
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
 					</view>
 					<!-- 押金 -->
+					<!-- 未交押金 -->
 					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户'" @click="open1">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">0<text class="tx_text3">元</text></view>
 					</view>
-
+					<!-- 已交押金 -->
 					<view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view>
 					
-					<view class="ve_Text" v-if="commuterCardObject=='公务员' || commuterCardObject=='团购人员(公司)'">
+					<view class="ve_Text" v-if="commuterCardObject=='公务员用户' || commuterCardObject=='团体用户'">
 						<view class="tx_text1">押金</view>
 						<view style="font-size: 32upx;font-weight: bold;color: #78482a;margin-top: 23upx;font-family: Source Han Sans SC;padding-top: 20upx;">免押金</view>
 					</view>
@@ -227,7 +229,7 @@
 				qrcodeSize: 150,
 				qrcodeSrc: '',
 				paymentData: [], //支付参数
-				commuterCardObject:'公务员',
+				commuterCardObject:'',//判断当前用户是普通用户还是免押金用户
 				commuterCardCost:199,
 			}
 		},
@@ -237,6 +239,7 @@
 		},
 		onShow() {
 			var that = this;
+			//读取用户信息
 			that.getUserInfo();
 		},
 		methods: {
@@ -250,9 +253,8 @@
 					success: function(data) {
 						console.log('用户数据', data)
 						that.userInfo = data.data;
-						//获取钱包数据
+						//获取用户详情数据
 						that.GetUserByUserID();
-						// that.GetPurseDetail();
 						//获取自行车订单数据
 						that.GetOrderByUserID();
 					},
@@ -270,7 +272,6 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('二维码', res)
 						if (res.data.status == true) {
 							that.QRCodeClick(res.data.data.qr)
 						}
@@ -286,7 +287,7 @@
 					title: '二维码生成中',
 					mask: true
 				})
-
+				//生成二维码
 				uQRCode.make({
 					canvasId: 'qrcode',
 					text: param,
@@ -306,7 +307,6 @@
 				var that = this;
 				uni.showLoading({
 					title: '加载中...',
-
 				})
 				console.log(that.userInfo.phoneNumber);
 				console.log(that.userInfo.userId);
@@ -323,10 +323,10 @@
 						if (res.data.status == true && res.data.msg == '请求成功') {
 							that.walletData = res.data.data;
 							that.balance = res.data.data.balance / 100;
-							if (!res.data.data.depositStatus == 0) {
+							if (res.data.data.depositStatus != 0) {
 								that.deposit = res.data.data.deposit / 100;
 							}
-							console.log("测试" + that.depositStatus);
+							// that.depositStatus = res.data.data.depositStatus;
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
 							that.status = res.data.data.status;
@@ -367,17 +367,16 @@
 					success(res) {
 						uni.hideLoading();
 						console.log('押金充值返回支付参数成功结果', res)
-						if (res.data.status == true && res.data.data.credential.wechat_app) {
+						if (res.data.status == true && res.data.data) {
 							let obj = {
-								appid: res.data.data.credential.wechat_app.appid,
-								noncestr: res.data.data.credential.wechat_app.noncestr,
+								appid: res.data.data.appid,
+								noncestr: res.data.data.noncestr,
 								package: 'Sign=WXPay', // 固定值，以微信支付文档为主
-								partnerid: res.data.data.credential.wechat_app.partnerid,
-								prepayid: res.data.data.credential.wechat_app.prepayid,
-								timestamp: res.data.data.credential.wechat_app.timestamp,
-								sign: res.data.data.credential.wechat_app.sign // 根据签名算法生成签名
+								partnerid: res.data.data.partnerid,
+								prepayid: res.data.data.prepayid,
+								timestamp: res.data.data.timestamp,
+								sign: res.data.data.sign // 根据签名算法生成签名
 							}
-							// that.paymentData = res.data.data.credential;
 							that.payment(obj);
 						}else{
 							uni.showToast({
@@ -501,7 +500,7 @@
 					},
 					success(res) {
 						uni.hideLoading();
-						console.log('钱包退押金成功', res) 
+						console.log('钱包退押金', res) 
 						if (res.data.status == true) {
 							uni.showToast({
 								title: '押金退款成功',
@@ -648,11 +647,11 @@
 							uni.navigateTo({
 								url: that.$GrzxInter.Route.realName.url,
 							})
-						} else if (res.data.data.RealNameStatus !== 1) {
-							//上传图片
-							uni.navigateTo({
-								url: that.$GrzxInter.Route.uploadPhoto.url,
-							})
+						// } else if (res.data.data.RealNameStatus !== 1) {
+						// 	//上传图片
+						// 	uni.navigateTo({
+						// 		url: that.$GrzxInter.Route.uploadPhoto.url,
+						// 	})
 						} else {
 							if (e == 1) {
 								uni.navigateTo({
@@ -691,11 +690,12 @@
 					},
 					success(res) {
 						console.log('呀呀呀' + JSON.stringify(res))
+						//获取押金状态
 						that.depositStatus = res.data.data.DepositType;
-						console.log(that.depositStatus);
-						// if(that.depositStatus==1||that.depositStatus==2){
+						//获取当前是普通用户还是免押金用户
+						that.commuterCardObject = res.data.data.UserType;
+						//获取钱包详情
 						that.GetPurseDetail();
-						// }
 					},
 					fail(err) {
 						console.log('读取信息', err)
