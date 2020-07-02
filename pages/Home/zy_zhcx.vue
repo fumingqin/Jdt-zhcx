@@ -159,12 +159,12 @@
 		<view class="notice">
 			<view class="zl_content">
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
-				<view class="zl_noContent" @click="newsClick">
+				<view class="zl_noContent">
 					<swiper class="swi2 swiper-container" vertical circular autoplay display-multiple-items="2">
-						<swiper-item v-for="(item,index) in consultingService" :key="index">
-							<scroll-view scroll-y>
-								<view class="zl_noText">{{item.title}}</view>
-							</scroll-view>
+						<swiper-item v-for="(item,index) in consultingService" :key="index" >
+							<!-- <scroll-view scroll-y> -->
+								<view class="zl_noText" @click="newsClick(item)">{{item.Title}}</view>
+							<!-- </scroll-view> -->
 						</swiper-item>
 					</swiper>
 					<!-- <view class="zl_label">
@@ -290,19 +290,7 @@
 	export default {
 		data() {
 			return {
-				consultingService: [{
-						title: '不负灿烂时光,周边游更精彩,美伦美焕',
-					},
-					{
-						title: '不负灿烂时光,周边游更精彩',
-					},
-					{
-						title: '老年卡要还代了,这事你该关注',
-					},
-					{
-						title: '漳州点资公交卡入驻集团',
-					}
-				],
+				consultingService: [],//新闻资讯
 				imgXXDT: [{
 					imageUrl: '',
 				}], //咨询动态
@@ -352,6 +340,9 @@
 			//#ifdef APP-PLUS
 			this.loadService();
 			//#endif
+			
+			//获取新闻数据
+			that.GetNews();
 		},
 
 		onShow() {
@@ -412,7 +403,25 @@
 					}
 				})
 			},
-			newsClick:function(){
+			//--------------------------新闻资讯--------------------------
+			GetNews:function(){
+				var that = this;
+				uni.request({
+					url:'http://111.231.109.113:8004/api/SmartBikePerson/GetNews',
+					method:'POST',
+					data:{},
+					success(res) {
+						console.log('请求新闻资讯成功',res)
+						if(res.data.status == true){
+							that.consultingService = res.data.data;
+						}
+					},
+					fail(res) {
+						console.log('请求新闻资讯失败',res)
+					}
+				})
+			},
+			newsClick:function(item){
 				console.log('123456');
 				uni.navigateTo({
 					url:'../../pages_DDQC/pages/GRZY/newsDetail'
