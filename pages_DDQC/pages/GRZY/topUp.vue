@@ -68,6 +68,7 @@
 				chargeRate: '',
 				userInfo: [], //用户信息
 				paymentData: [], //支付参数
+				prepayid:'',//钱包充值需要的预支付交易会话id
 			}
 		},
 		onLoad() {
@@ -93,7 +94,7 @@
 					fail(data) {}
 				})
 			},
-			//--------------------------钱包充值--------------------------
+			//--------------------------获取钱包数据--------------------------
 			GetPurseDetail: function() {
 				var that = this;
 				console.log(that.userInfo.phoneNumber)
@@ -119,6 +120,7 @@
 					}
 				})
 			},
+			//--------------------------钱包充值--------------------------
 			GetRecharge: function() {
 				var that = this;
 				if (that.checked == 0) {
@@ -148,7 +150,9 @@
 							uni.hideLoading();
 							console.log('钱包充值返回支付参数成功结果', res)
 							if (res.data.status == true) {
-								that.paymentData = res.data.data;				
+								that.paymentData = res.data.data;
+								//钱包充值记录需要传入预支付交易会话id
+								that.prepayid = res.data.data.prepayid;
 								that.payment();
 							}else {
 								uni.showToast({
@@ -229,6 +233,7 @@
 						totalPrice: 1,
 						userID: that.userInfo.userId,
 						state: state,
+						id: that.prepayid,//预支付交易会话id
 					},
 					success(res) {
 						console.log('钱包充值记录成功',res);

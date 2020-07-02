@@ -30,7 +30,7 @@
 					</view>
 					<!-- 押金 -->
 					<!-- 未交押金 -->
-					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户'" @click="open1">
+					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户' && deposit==''" @click="open1">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">0<text class="tx_text3">元</text></view>
@@ -79,23 +79,7 @@
 				<text class="vi_text2">充值金额</text>
 				<text class="jdticon icon-you"></text>
 			</view>
-			<!-- 二维码 -->
-			<!-- <view class="ve_view4" @click="QRCodeData">
-				<text class="vi_text2">公交二维码</text>
-				<text class="jdticon icon-you"></text>
-			</view> -->
-			<!-- 二维码 -->
-			<!-- <uni-popup ref="popup1" type="bottom">
-				<view class="po_boxVlew" style="align-items: center;">
-					<view class="bv_topText">
-						<text class="tt_text">二维码</text>
-						<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
-					</view>
-					<view style=" width: 300rpx;margin-left: 230rpx;">
-						<canvas canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
-					</view>
-				</view>
-			</uni-popup> -->
+			
 			<!-- 押金支付弹框 -->
 			<uni-popup ref="popup" type="bottom">
 				<view class="po_boxVlew">
@@ -231,6 +215,7 @@
 				paymentData: [], //支付参数
 				commuterCardObject:'',//判断当前用户是普通用户还是免押金用户
 				commuterCardCost:199,
+				prepayid:'',//钱包跟押金充值需要传的预支付交易会话id
 			}
 		},
 		onLoad() {
@@ -261,47 +246,7 @@
 					fail(data) {}
 				})
 			},
-			//--------------------------二维码--------------------------
-			QRCodeData: function() {
-				var that = this;
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetBusCodeGen.Url,
-					method: $DDTInterface.DDTInterface.GetBusCodeGen.method,
-					data: {
-						phoneNumber: 13906963039,
-						userID: that.userInfo.userId,
-					},
-					success(res) {
-						if (res.data.status == true) {
-							that.QRCodeClick(res.data.data.qr)
-						}
-					},
-					fail(res) {
-						console.log('获取钱包数据失败', res)
-					}
-				})
-			},
-			QRCodeClick: function(param) {
-				var that = this;
-				uni.showLoading({
-					title: '二维码生成中',
-					mask: true
-				})
-				//生成二维码
-				uQRCode.make({
-					canvasId: 'qrcode',
-					text: param,
-					size: that.qrcodeSize,
-					margin: 10,
-					success: res => {
-						that.qrcodeSrc = res
-					},
-					complete: () => {
-						uni.hideLoading()
-					}
-				})
-				that.$refs.popup1.open()
-			},
+			
 			//--------------------------获取钱包数据--------------------------
 			GetPurseDetail: function() {
 				var that = this;
@@ -325,9 +270,6 @@
 							that.balance = res.data.data.balance / 100;
 							if (res.data.data.depositStatus != 0) {
 								that.deposit = res.data.data.deposit / 100;
-								if(that.deposit==''){
-									that.deposit = 0
-								}
 							}
 							// that.depositStatus = res.data.data.depositStatus;
 							that.id = res.data.data.id;
@@ -380,7 +322,8 @@
 								timestamp: res.data.data.timestamp,
 								sign: res.data.data.sign // 根据签名算法生成签名
 							}
-							that.payment(obj);
+							that.prepayid = res.data.data.prepayid;
+							that.RefundPayment(obj);
 						}else{
 							uni.showToast({
 								title:'拉起支付失败',
@@ -395,8 +338,8 @@
 				})
 			},
 
-			//--------------------------调起支付--------------------------
-			payment: function(orderInfo) {
+			//--------------------------调起押金充值支付--------------------------
+			RefundPayment: function(orderInfo) {
 				var that = this;
 				// #ifdef APP-PLUS
 				console.log(that.paymentData)
@@ -409,18 +352,21 @@
 							uni.showToast({
 								title: '支付成功'
 							})
+							//支付成功，写入充值记录
 							that.WirteRechargeLog(1);
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							uni.showToast({
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
+							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
 							})
+							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
 						}
 					},
@@ -431,12 +377,14 @@
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
+							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
 							})
+							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
 						}
 					}
@@ -460,7 +408,7 @@
 						totalPrice: that.personalHomepage.deposit,
 						userID: that.userInfo.userId,
 						state: state,
-						id: that.id,
+						id: that.prepayid,//预支付交易会话id
 					},
 					success(res) {
 						console.log('押金充值记录成功', res);
