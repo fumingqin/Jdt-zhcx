@@ -325,6 +325,9 @@
 							that.balance = res.data.data.balance / 100;
 							if (res.data.data.depositStatus != 0) {
 								that.deposit = res.data.data.deposit / 100;
+								if(that.deposit==''){
+									that.deposit = 0
+								}
 							}
 							// that.depositStatus = res.data.data.depositStatus;
 							that.id = res.data.data.id;

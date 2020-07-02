@@ -46,7 +46,38 @@
 			}
 			}
 		},
+		onShow() {
+			this.getLogin();
+		},
 		methods: {
+			getLogin:function(){
+					var that=this;
+					uni.getStorage({
+						key: 'userInfo',
+						fail() {
+							uni.showToast({
+								icon: 'none',
+								title: '未登录无法进行反馈,请先登录'
+							})
+							//#ifdef APP-PLUS
+							setTimeout(function() {
+								uni.navigateTo({
+									//loginType=1,泉运登录界面
+									//loginType=2,今点通登录界面
+									//loginType=3,武夷股份登录界面
+									url: '../../../pages/GRZX/userLogin?loginType=1'
+								})
+							}, 500);
+							// #endif
+							//#ifdef MP-WEIXIN
+							uni.navigateTo({
+								url:'/pages/Home/wxAuthorize',
+							})
+							// #endif
+						},
+					})
+				
+			},
 			//字数
 			descInput: function(e) {
 			// console.log(e)
@@ -92,7 +123,16 @@
 										setTimeout(function(){
 											uni.navigateBack();
 										},500);
-									}else{
+									}else if(res.data.msg=='提交失败2分钟内请勿重复发表'){
+										uni.hideLoading()
+										uni.showToast({
+											icon:'none',
+											title:'2分钟内请勿重复发表'
+										})
+										setTimeout(function(){
+											uni.navigateBack();
+										},800);
+										}else{
 										uni.hideLoading()
 										uni.showToast({
 											title:'反馈失败'
