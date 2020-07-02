@@ -268,9 +268,9 @@
 						if (res.data.status == true && res.data.msg == '请求成功') {
 							that.walletData = res.data.data;
 							that.balance = res.data.data.balance / 100;
-							if (res.data.data.depositStatus != 0) {
-								that.deposit = res.data.data.deposit / 100;
-							}
+							// if (res.data.data.depositStatus != 0) {
+							// 	that.deposit = res.data.data.deposit / 100;
+							// }
 							// that.depositStatus = res.data.data.depositStatus;
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
@@ -357,23 +357,32 @@
 					success: function(res) {
 						console.log(res)
 						if (res.errMsg == 'requestPayment:ok') { //成功
-							uni.showToast({
-								title: '支付成功'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '支付成功'
+								})
+							}, 1000)
 							//支付成功，写入充值记录
 							that.WirteRechargeLog(1);
+							//充值检测
+							that.rechargeCheck();
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
-							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '支付失败，请重新支付',
+									icon: 'none'
+								})
+							}, 1000)
+							
 							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
-							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '您取消了支付',
+									icon: 'none'
+								})
+							}, 1000)
 							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
 						}
@@ -381,17 +390,21 @@
 
 					fail: function(ee) {
 						if (res.errMsg == 'requestPayment:errors') { //错误
-							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '支付失败，请重新支付',
+									icon: 'none'
+								})
+							}, 1000)
 							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
-							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '您取消了支付',
+									icon: 'none'
+								})
+							}, 1000)
 							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
 						}
@@ -399,7 +412,27 @@
 				})
 				// #endif
 			},
-
+			//--------------------------充值检测--------------------------
+			rechargeCheck:function(prepayId){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.rechargeCheck.Url,
+					method:'POST',
+					data:{
+						prepayId:prepayId,
+						phoneNumber:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						console.log('充值检测成功',res)
+						if(res.data.status == true){
+							
+						}
+					},
+					fail(res) {
+						console.log('充值检测失败',res)
+					}
+				})
+			},
 			//------------------押金充值记录---------------------------------
 			WirteRechargeLog: function(state) {
 				var that = this;
@@ -422,9 +455,8 @@
 						console.log('押金充值记录成功', res);
 						uni.showLoading()
 						if(res.data.status == true){
-							setTimeout(function() {
-								that.GetPurseDetail();
-							}, 3000)
+							that.GetUserByUserID();
+							
 						}else{
 							uni.showToast({
 								title:res.data.msg,
@@ -436,7 +468,7 @@
 						console.log('押金充值记录失败', res)
 						uni.showLoading()
 						setTimeout(function() {
-							that.GetPurseDetail();
+							that.GetUserByUserID();
 						}, 3000)
 					}
 				})
@@ -461,17 +493,22 @@
 						uni.hideLoading();
 						console.log('钱包退押金', res) 
 						if (res.data.status == true) {
-							uni.showToast({
-								title: '押金退款成功',
-								icon: 'none',
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '押金退款成功',
+									icon: 'none',
+								})
+							}, 1000)
 							that.GetUserByUserID();
 							// that.WriteRefundLog();
 						} else {
-							uni.showToast({
-								title: res.data.msg,
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: res.data.msg,
+									icon: 'none'
+								})
+							}, 1000)
+							
 							// that.WriteRefundLog();
 						}
 					},
@@ -481,9 +518,7 @@
 					}
 				})
 			},
-
 			//--------------------------查询自行车订单--------------------------
-
 			GetOrderByUserID: function() {
 				var that = this;
 				uni.request({
@@ -500,7 +535,6 @@
 			},
 
 			//--------------------------押金退款记录--------------------------
-
 			WriteRefundLog: function() {
 				var that = this;
 				uni.request({
@@ -653,11 +687,12 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('呀呀呀' + JSON.stringify(res))
+						console.log('读取信息成功',res)
 						//获取押金状态
 						that.depositStatus = res.data.data.DepositType;
 						//获取当前是普通用户还是免押金用户
 						that.commuterCardObject = res.data.data.UserType;
+						that.deposit = res.data.data.Deposit;
 						//获取钱包详情
 						that.GetPurseDetail();
 					},
