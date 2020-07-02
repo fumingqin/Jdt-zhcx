@@ -96,6 +96,8 @@
 			//检测当前是否有订单未完成
 			that.checkCurrentStatus();
 			
+			that.GetNews();
+			
 		},
 		onShow() {
 			var that=this;
@@ -118,6 +120,25 @@
 			that.mapContext = uni.createMapContext("map", this);
 		},
 		methods: {
+			
+			
+			//--------------------------新闻资讯--------------------------
+			GetNews:function(){
+				uni.request({
+					url:'http://111.231.109.113:8004/api/SmartBikePerson/GetNews',
+					method:'POST',
+					data:{
+						
+					},
+					success(res) {
+						console.log('请求新闻资讯成功',res)
+					},
+					fail(res) {
+						console.log('请求新闻资讯失败',res)
+					}
+				})
+			},
+			
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
