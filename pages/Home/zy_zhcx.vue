@@ -159,7 +159,7 @@
 		<view class="notice">
 			<view class="zl_content">
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
-				<view class="zl_noContent">
+				<view class="zl_noContent" @click="newsClick">
 					<swiper class="swi2 swiper-container" vertical circular autoplay display-multiple-items="2">
 						<swiper-item v-for="(item,index) in consultingService" :key="index">
 							<scroll-view scroll-y>
@@ -412,7 +412,12 @@
 					}
 				})
 			},
-
+			newsClick:function(){
+				console.log('123456');
+				uni.navigateTo({
+					url:'../../pages_DDQC/pages/GRZY/newsDetail'
+				})
+			},
 			//----------------------接口数据-------------------------------
 			loadData: function() {
 				//请求新闻资讯

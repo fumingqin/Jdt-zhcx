@@ -994,7 +994,13 @@
 						"navigationBarTitleText": "充值记录"
 					}
 				}
-			]
+			    ,{
+                    "path" : "pages/GRZY/newsDetail",
+                    "style" : {
+						"navigationBarTitleText": "新闻详情"
+					}
+                }
+            ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{

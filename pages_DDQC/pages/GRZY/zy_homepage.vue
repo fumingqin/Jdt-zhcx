@@ -30,16 +30,16 @@
 					</view>
 					<!-- 押金 -->
 					<!-- 未交押金 -->
-					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户' && deposit==''" @click="open1">
-						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
-						<view class="tx_text1">押金</view>
-						<view class="tx_text2">0<text class="tx_text3">元</text></view>
-					</view>
-					<!-- 已交押金 -->
-					<view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
+					<view class="ve_Text" @click="open1">
+						<image class="tx_img" src="../../static/GRZY/chongzhi.png" v-if="depositStatus==0 && commuterCardObject=='普通用户'"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view>
+					<!-- 已交押金 -->
+					<!-- <view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
+						<view class="tx_text1">押金</view>
+						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
+					</view> -->
 					
 					<view class="ve_Text" v-if="commuterCardObject=='公务员用户' || commuterCardObject=='团体用户'">
 						<view class="tx_text1">押金</view>
@@ -188,7 +188,7 @@
 				userInfo: [], //用户信息
 				type: 0,
 				balance: 0, //钱包金额
-				deposit: '', //押金金额
+				deposit: 0, //押金金额
 				depositStatus: '', //押金状态
 				id: '',
 				status: '',
@@ -275,6 +275,14 @@
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
 							that.status = res.data.data.status;
+						}else {
+							uni.showToast({
+								title:'网络错误，请重新加载',
+								icon:'none'
+							})
+							//如果返回的数据是空的，就默认设置押金为0
+							that.deposit = 0;
+							that.commuterCardObject = '普通用户';
 						}
 						console.log('获取押金状态', that.walletData)
 					},
@@ -532,7 +540,12 @@
 			//------------------------------弹框事件-----------------------------------------
 
 			open1() {
-				this.checkRealName(3)
+				var that = this;
+				if(that.depositStatus == 0 && that.commuterCardObject == '普通用户'){
+					that.checkRealName(3)
+				}else if(that.depositStatus == 1 && that.commuterCardObject == '普通用户'){
+					that.checkRealName(4);
+				}
 			},
 			//关闭
 			close(e) {
@@ -542,9 +555,9 @@
 			},
 
 			//退款弹框
-			open2() {
-				this.checkRealName(4);
-			},
+			// open2() {
+			// 	this.checkRealName(4);
+			// },
 			//关闭
 			close2(e) {
 				if (e == 1) {
