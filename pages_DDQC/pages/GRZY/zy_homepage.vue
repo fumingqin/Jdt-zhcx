@@ -220,7 +220,7 @@
 		},
 		onLoad() {
 			// this.lunBoInit();
-
+			
 		},
 		onShow() {
 			var that = this;
@@ -228,7 +228,7 @@
 			that.getUserInfo();
 		},
 		methods: {
-
+			
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
