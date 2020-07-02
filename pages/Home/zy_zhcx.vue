@@ -407,11 +407,11 @@
 			GetNews:function(){
 				var that = this;
 				uni.request({
-					url:'http://111.231.109.113:8004/api/SmartBikePerson/GetNews',
+					url:$DDTInterface.DDTInterface.GetNews.Url,
 					method:'POST',
 					data:{},
 					success(res) {
-						console.log('请求新闻资讯成功',res)
+						// console.log('请求新闻资讯成功',res)
 						if(res.data.status == true){
 							that.consultingService = res.data.data;
 						}

@@ -197,6 +197,22 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetNews: {
+		Url: Url + '/api/SmartBikePerson/GetNews',
+		name: '新闻资讯',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
+	rechargeCheck: {
+		Url: Url + '/api/SmartBikePerson/rechargeCheck',
+		name: '充值检测',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 // 接口声明区
 export default {
