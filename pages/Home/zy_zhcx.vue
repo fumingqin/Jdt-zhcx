@@ -154,16 +154,15 @@
 			</swiper-item>
 		</swiper>
 		</swiper>
-
 		<!-- 咨询动态 -->
 		<view class="notice">
 			<view class="zl_content">
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
-					<swiper class="swi2 swiper-container" vertical circular autoplay display-multiple-items="2">
-						<swiper-item v-for="(item,index) in consultingService" :key="index" >
+					<swiper class="swi2" vertical circular autoplay display-multiple-items="2" disable-touch="true"> 
+						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index" >
 							<!-- <scroll-view scroll-y> -->
-								<view class="zl_noText" @click="newsClick(item)">{{item.Title}}</view>
+								<view class="zl_noText" @click="newsClick(item)" >{{item.Title}}</view>
 							<!-- </scroll-view> -->
 						</swiper-item>
 					</swiper>
@@ -422,9 +421,8 @@
 				})
 			},
 			newsClick:function(item){
-				console.log('123456');
 				uni.navigateTo({
-					url:'../../pages_DDQC/pages/GRZY/newsDetail'
+					url:'../../pages_DDQC/pages/GRZY/newsDetail?id='+item.AID
 				})
 			},
 			//----------------------接口数据-------------------------------

@@ -197,6 +197,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetNewsByAID: {
+		Url: Url + '/api/SmartBikePerson/GetNewsByAID',
+		name: '根据ID获取新闻资讯',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 // 接口声明区
 export default {
