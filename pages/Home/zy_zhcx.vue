@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 轮播图-->
-		<swiper class="swi" circular autoplay>
+		<swiper class="swi" circular autoplay  style="background-color: #65C36D;">
 			<swiper-item class="swiItem" v-for="(item,index) in homePage" :key="index">
 				<image :src="item.ImageURL" mode="aspectFill" />
 			</swiper-item>
@@ -499,7 +499,6 @@
 					data: {},
 					success(res) {
 						that.homePage=res.data.data;
-						console.log(that.homePage[0].ImageURL);
 					},
 					fail(err) {
 						console.log(err)

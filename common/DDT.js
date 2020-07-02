@@ -189,8 +189,15 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	BikeLog: {
+		Url: Url + '/api/SmartBikePerson/BikeLog',
+		name: '用户登录记录',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
-
 // 接口声明区
 export default {
 	DDTInterface
