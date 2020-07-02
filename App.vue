@@ -1,4 +1,5 @@
 <script>
+	const jyJPush = uni.requireNativePlugin('JY-JPush');
 	import homeJS from 'common/Home.js';
 	import utils from '@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js'
 	export default {
@@ -58,26 +59,68 @@
 		},
 		
 		methods: {
-
+				setJYJPushAlias: function(phoneNumber) {
+					var that = this;
+					jyJPush.deleteJYJPushAlias({
+					//  可以不用传值进去，但是需要配置这项数据
+					}, result=> {
+						jyJPush.setJYJPushAlias({
+							userAlias: phoneNumber,
+						}, result => {
+							//  设置成功或者失败，都会通过这个result回调返回数据；数据格式保持极光返回的安卓/iOS数据一致
+							//  注：若没有返回任何数据，考虑是否初始化完成
+							console.log(result);
+							jyJPush.getRegistrationID(
+							//  返回的数据会有registrationID，errorCode
+							result => {
+								console.log(result)
+							});
+						});
+					});
+				},
+				addJYJPushReceiveOpenNotificationListener: function() { //监听通知被点击事件
+					jyJPush.addJYJPushReceiveOpenNotificationListener(result => {
+						//  监听成功后，若点击推送消息，会触发result；数据格式保持极光返回的安卓/iOS数据一致
+						plus.runtime.setBadgeNumber(0);
+						jyJPush.resetJYJPushBadge(result => {
+							console.log(JSON.stringify(result));
+						});
+						console.log(result);
+					});
+				},
+				addJYJPushReceiveNotificationListener: function() {
+					jyJPush.addJYJPushReceiveNotificationListener(result => {
+						//  监听成功后，若收到推送，会在result返回对应的数据；数据格式保持极光返回的安卓/iOS数据一致
+						console.log(result);
+					});
+				},
+				
 		},
-		onLaunch: function() {		
-			// #ifdef APP-PLUS
-			// 获取客户端的CID
-			const clientInfo = plus.push.getClientInfo();
-			// console.log(clientInfo);
-			// 获取推送消息
-			const _handlePush = function(message){
-					uni.switchTab({
-						url:'/pages/order/OrderList'
-				})
-			}
-			//事件处理
-			plus.push.addEventListener('click',_handlePush); //点击推送消息时 
-			// plus.push.addEventListener('receive',_handlePush); //从推送服务器获得消息时
-			// #endif
+		onLaunch: function() {	
+			// // #ifdef APP-PLUS
+			// // 获取客户端的CID
+			// const clientInfo = plus.push.getClientInfo();
+			// // console.log(clientInfo);
+			// // 获取推送消息
+			// const _handlePush = function(message){
+			// 		uni.switchTab({
+			// 			url:'/pages/order/OrderList'
+			// 	})
+			// }
+			// //事件处理
+			// plus.push.addEventListener('click',_handlePush); //点击推送消息时 
+			// // plus.push.addEventListener('receive',_handlePush); //从推送服务器获得消息时
+			// // #endif
 		},
 		onShow: function() {
-			
+			var that=this;
+			let userInfo = uni.getStorageSync('userInfo') || '';
+			if(userInfo == ''){
+				return ;
+			}
+			that.setJYJPushAlias(userInfo.phoneNumber);
+			that.addJYJPushReceiveOpenNotificationListener();
+			that.addJYJPushReceiveNotificationListener();
 			console.log('App Show')	
 		},
 		onHide: function() {

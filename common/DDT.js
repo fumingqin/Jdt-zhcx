@@ -181,6 +181,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetRotationChart: {
+		Url: Url + '/api/SmartBikePerson/GetRotationChart',
+		name: '首页轮播图',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 
 // 接口声明区
