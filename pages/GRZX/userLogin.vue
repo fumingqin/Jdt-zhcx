@@ -33,6 +33,7 @@
 
 <script>
 	const jyJPush = uni.requireNativePlugin('JY-JPush');
+	import $DDTInterface from '@/common/DDT.js'
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	export default {
 		data() {
@@ -144,7 +145,8 @@
 											console.log(res)
 											uni.removeStorageSync('captchaCode');
 											uni.setStorageSync('userInfo', res.data.data);
-											that.setJYJPushAlias(res.data.data.phoneNumber)
+											that.setJYJPushAlias(res.data.data.phoneNumber);
+											that.LoginLog(res.data.data.userId,res.data.data.phoneNumber);
 											uni.hideLoading();
 											that.registerBike(res.data.data.userId, res.data.data.phoneNumber) //注册自行车用户
 										}
@@ -471,6 +473,49 @@
 						});
 					});
 				});
+			},
+			// ----------------------------登录时写日志--------------------------------
+			LoginLog: function(UserID, Phone) {
+				var that = this;
+				uni.getLocation({
+					type: 'gcj02',
+					geocode: true,
+					success(res) {
+						console.log(res)
+						uni.getSystemInfo({
+							success(res1) {
+								var country = res.address.country ? res.address.country : '';
+								var province = res.address.province ? res.address.province : '';
+								var city = res.address.city ? res.address.city : '';
+								var district = res.address.district ? res.address.district : '';
+								var street = res.address.street ? res.address.street : '';
+								var streetNum = res.address.streetNum ? res.address.streetNum : '';
+								var poiName = res.address.poiName ? res.address.poiName : '';
+								var Address = country + province + city + district + street + streetNum + poiName;
+								uni.request({
+									url: $DDTInterface.DDTInterface.BikeLog.Url,
+									method: $DDTInterface.DDTInterface.BikeLog.method,
+									data: {
+										UserID: UserID,
+										LogType: '登陆',
+										PhoneNumber: Phone,
+										Mac: '',
+										PhoneBrand: res1.brand,
+										Address: Address,
+										PhoneModel: res1.model,
+										SystemType: res1.platform,
+										SystemVersion: res1.system,
+									},
+									success(res) {
+									},
+									fail(err) {
+										console.log(err)
+									}
+								})
+							}
+						})
+					}
+				})
 			},
 		}
 	}
