@@ -573,7 +573,7 @@
 						url: '../GRZX/userLogin',
 					})
 				}
-				console.log('是否拿到缓存', that.userInfo)
+				// console.log('是否拿到缓存', that.userInfo)
 			},
 
 			//路由整合

@@ -31,9 +31,10 @@
 					<!-- 押金 -->
 					<!-- 未交押金 -->
 					<view class="ve_Text" @click="open1">
-						<image class="tx_img" src="../../static/GRZY/chongzhi.png" v-if="depositStatus==0 && commuterCardObject=='普通用户'"></image>
+						<image class="tx_img" src="../../static/GRZY/chongzhi.png" v-if="depositStatus==0"></image>
 						<view class="tx_text1">押金</view>
-						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2" v-if="depositStatus==0||depositStatus==1">{{deposit}}<text class="tx_text3">元</text></view>
+						<view class="noRefund" v-if="depositStatus==2">免押金</view>
 					</view>
 					<!-- 已交押金 -->
 					<!-- <view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
@@ -41,10 +42,10 @@
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
 					</view> -->
 					
-					<view class="ve_Text" v-if="commuterCardObject=='公务员用户' || commuterCardObject=='团体用户'">
+					<!-- <view class="ve_Text" v-if="depositStatus==2">
 						<view class="tx_text1">押金</view>
 						<view style="font-size: 32upx;font-weight: bold;color: #78482a;margin-top: 23upx;font-family: Source Han Sans SC;padding-top: 20upx;">免押金</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			
@@ -195,7 +196,7 @@
 				order_no: '',
 				personalHomepage: {
 					cost: 0.8, //价格
-					coupon: 1, //卡券数量
+					coupon: 0, //卡券数量
 					deposit: 2, //押金
 					depositBalance: 0,
 
@@ -216,6 +217,7 @@
 				commuterCardObject:'',//判断当前用户是普通用户还是免押金用户
 				commuterCardCost:199,
 				prepayid:'',//钱包跟押金充值需要传的预支付交易会话id
+				isCommuteCard:false,//是否有通勤卡
 			}
 		},
 		onLoad() {
@@ -502,12 +504,26 @@
 							that.GetUserByUserID();
 							// that.WriteRefundLog();
 						} else {
-							setTimeout(function() {
-								uni.showToast({
-									title: res.data.msg,
-									icon: 'none'
+							if(res.data.msg == '退款失败超过一年的订单无法原路退回请走人工退款'){
+								uni.showModal({
+									title:'温馨提示',
+									content:res.data.msg,
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'./zy_information?refundType=' + '第一次人工退款'
+											})
+										}
+									}
 								})
-							}, 1000)
+							}else{
+								setTimeout(function() {
+									uni.showToast({
+										title: res.data.msg,
+										icon: 'none'
+									})
+								}, 1000)
+							}
 							
 							// that.WriteRefundLog();
 						}
@@ -575,9 +591,9 @@
 
 			open1() {
 				var that = this;
-				if(that.depositStatus == 0 && that.commuterCardObject == '普通用户'){
+				if(that.depositStatus == 0){
 					that.checkRealName(3)
-				}else if(that.depositStatus == 1 && that.commuterCardObject == '普通用户'){
+				}else if(that.depositStatus == 1){
 					that.checkRealName(4);
 				}
 			},
@@ -692,7 +708,16 @@
 						that.depositStatus = res.data.data.DepositType;
 						//获取当前是普通用户还是免押金用户
 						that.commuterCardObject = res.data.data.UserType;
-						that.deposit = res.data.data.Deposit;
+						that.deposit = res.data.data.Deposit / 100;
+						//判断是否有通勤卡
+						that.isCommuteCard = res.data.data.CommuteCard;
+						//用户类型--普通用户，公务员，集团用户
+						if(res.data.data.CommuteCard == false) {
+							that.coupon = 0;
+						}else {
+							that.coupon = 1;
+						}
+						that.commuterCardObject = res.data.data.UserType;
 						//获取钱包详情
 						that.GetPurseDetail();
 					},
@@ -709,10 +734,18 @@
 			},
 
 			Jump() {
-				// this.type = 1
-				uni.navigateTo({
-					url:'zy_commuterCard',
-				})
+				var that = this;
+				if(that.isCommuteCard == true){
+					uni.navigateTo({
+						url:'zy_commuterCard',
+					})
+				}else {
+					uni.showToast({
+						title:'暂无可用卡',
+						icon:'none'
+					})
+				}
+				
 			},
 
 			Jump2: function(e) {
@@ -929,7 +962,14 @@
 			margin: 0 auto;
 		}
 	}
-
+	.noRefund{
+		font-size: 32upx;
+		font-weight: bold;
+		color: #78482a;
+		margin-top: 23upx;
+		font-family: Source Han Sans SC;
+		padding-top: 20upx;
+	}
 	//套餐
 	.ve_view3 {
 		display: flex;
