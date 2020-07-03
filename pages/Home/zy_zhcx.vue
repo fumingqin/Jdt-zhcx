@@ -428,37 +428,37 @@
 			//----------------------接口数据-------------------------------
 			loadData: function() {
 				//请求新闻资讯
-				uni.request({
-					url: $lyfw.Interface.currency_zhly.value,
-					method: $lyfw.Interface.currency_zhly.method,
-					success: (e) => {
-						console.log(e)
-						if (e.data.msg == '获取成功') {
-							if (e.data.data.length == 0) {
-								this.disStatus = 1;
-							} else {
-								this.goodsList = e.data.data;
-								this.disStatus = 0;
-							}
-						} else {
-							uni.hideLoading()
-							uni.stopPullDownRefresh()
-							this.goodsList = '';
-							uni.showToast({
-								title: '获取失败',
-								icon: 'none'
-							})
-						}
-					},
-					fail: function() {
-						uni.hideLoading()
-						uni.stopPullDownRefresh()
-						uni.showToast({
-							title: '网络异常，请检查网络后尝试',
-							icon: 'none'
-						})
-					}
-				})
+				// uni.request({
+				// 	url: $lyfw.Interface.currency_zhly.value,
+				// 	method: $lyfw.Interface.currency_zhly.method,
+				// 	success: (e) => {
+				// 		console.log(e)
+				// 		if (e.data.msg == '获取成功') {
+				// 			if (e.data.data.length == 0) {
+				// 				this.disStatus = 1;
+				// 			} else {
+				// 				this.goodsList = e.data.data;
+				// 				this.disStatus = 0;
+				// 			}
+				// 		} else {
+				// 			uni.hideLoading()
+				// 			uni.stopPullDownRefresh()
+				// 			this.goodsList = '';
+				// 			uni.showToast({
+				// 				title: '获取失败',
+				// 				icon: 'none'
+				// 			})
+				// 		}
+				// 	},
+				// 	fail: function() {
+				// 		uni.hideLoading()
+				// 		uni.stopPullDownRefresh()
+				// 		uni.showToast({
+				// 			title: '网络异常，请检查网络后尝试',
+				// 			icon: 'none'
+				// 		})
+				// 	}
+				// })
 
 				//请求六宫格数据
 				uni.request({

@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view style="font-size:40rpx;margin: 30rpx 0;font-weight: bold;width: 700rpx;text-align: center;">{{Title}}</view>
-		<view style="width: 700rpx;" v-html="contentHTML"></view>
+		<view style="width: 700rpx;font-size: 32rpx;" v-html="contentHTML"></view>
 	</view>
 </template>
 
@@ -28,6 +28,9 @@
 						AID:ID
 					},
 					success(res) {
+						uni.setNavigationBarTitle({
+							title: res.data.data[0].Type
+						})
 						that.Title=res.data.data[0].Title;
 						that.contentHTML=res.data.data[0].Body;
 					}
