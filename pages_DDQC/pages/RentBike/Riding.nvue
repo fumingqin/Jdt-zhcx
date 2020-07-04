@@ -11,7 +11,8 @@
 			<view v-if="!Isreturn">
 				<view class="ridestate">
 					<text style="color:#333333;font-size: 36rpx;font-weight: 500;">骑行中</text>
-					<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;">如遇故障，2分钟可免费还车</text>
+					<text style="color:#333;font-size: 30rpx;font-weight: 300;">如遇故障，请联系客服</text>
+					<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;">0596-2100000</text>
 				</view>
 				<view class="detail">
 					<view style="align-items: center;justify-content: center;">
@@ -104,8 +105,7 @@
 		onLoad(item) {
 			var that = this;
 			// 获取自身位置
-			// that.getMyLocation();
-			// that.countTime();
+			that.getMyLocation();
 			//将上一个页面传过来的参数转为数组
 			that.userInfo = uni.getStorageSync('userInfo') || '';
 			// that.getOrderInfo();
@@ -274,7 +274,7 @@
 								})
 							}
 							//开始计时---显示当前骑行时间
-							// that.timeConcer(res.data.data[0].HireAction.Time);
+							that.timeConcer(res.data.data[0].HireAction.Time);
 						},
 						fail(err) {
 							clearInterval(that.interval);
@@ -408,9 +408,6 @@
 									icon: 'none',
 									success(res) {
 										that.UpdateOrder();
-										uni.navigateTo({
-											url: './Payment'
-										})
 									}
 								})
 							}
@@ -465,6 +462,9 @@
 					},
 					success(res) {
 						console.log('更新订单信息',res);
+						uni.navigateTo({
+							url: './Payment'
+						})
 					},
 					fail(err) {
 						console.log('更新订单信息',res);
