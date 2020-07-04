@@ -11,8 +11,10 @@
 			<view v-if="!Isreturn">
 				<view class="ridestate">
 					<text style="color:#333333;font-size: 36rpx;font-weight: 500;">骑行中</text>
-					<text style="color:#333;font-size: 30rpx;font-weight: 300;">如遇故障，请联系客服</text>
-					<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;">0596-2100000</text>
+					<view style="flex-direction: row;"> 
+						<text style="color:#333;font-size: 30rpx;font-weight: 300;">如遇故障，请联系</text>
+						<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;" @click="makePhone">客服</text>
+					</view>
 				</view>
 				<view class="detail">
 					<view style="align-items: center;justify-content: center;">
@@ -136,6 +138,11 @@
 			})
 		},
 		methods: {
+			makePhone: function() {
+				uni.makePhoneCall({
+					phoneNumber: '05962100000'
+				})
+			},
 			wakeLock: function() {
 				//Android  
 				console.log(66);

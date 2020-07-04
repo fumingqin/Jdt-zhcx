@@ -18,7 +18,7 @@
 				<view class="st_view">
 					<!-- 评价 -->
 					<view></view>
-					<text class="vi_evaluate" @click="open">>去评价</text>
+					<text class="vi_evaluate" @click="open">去评价</text>
 					<view></view>
 					<!-- 满意 -->
 					<!-- <image class="vi_img" src="../../static/GRZY/manyi.png" @click="open"></image> -->

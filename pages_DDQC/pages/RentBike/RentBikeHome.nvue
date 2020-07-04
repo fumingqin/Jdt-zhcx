@@ -463,6 +463,15 @@
 					onlyFromCamera: true,
 					success: function(res) {
 						console.log('扫描结果',res)
+						var index=res.result.indexOf("http://q.diiing.cn");
+						//根据二维码的内容判断是有桩还是无桩
+						// if(index!=-1){
+						// 	that.isClick == '有桩'
+						// 	that.Rent_hire(res.result);
+						// }else{
+						// 	that.isClick == '无桩'
+						// 	that.Rent(res.result);
+						// }
 						//先判断当前扫码是有桩还是无桩
 						if(that.isClick == '有桩'){
 							//有桩

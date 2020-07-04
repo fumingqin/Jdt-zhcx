@@ -204,15 +204,15 @@
 						uni.hideLoading();
 						if (res.data.status) {
 							if (res.data.data[0].PayState == 1) {
-								uni.showToast({
-									title: '订单已支付',
-									icon: 'none'
-								})
-								setTimeout(function() {
-									uni.redirectTo({
-										url: '../GRZY/zy_homepage'
-									})
-								}, 1500)
+								// uni.showToast({
+								// 	title: '订单已支付',
+								// 	icon: 'none'
+								// })
+								// setTimeout(function() {
+								// 	uni.redirectTo({
+								// 		url: '../GRZY/zy_homepage'
+								// 	})
+								// }, 1500)
 							} else {
 								that.beginTime = res.data.data[0].HireTime;
 								that.endTime = res.data.data[0].RestoreTime;
