@@ -371,7 +371,7 @@
 					success: (res) => {
 						console.log(res, "340");
 						console.log(res.data.data);
-						if(!res.data.status){ //发送验证码次数上限
+						if(res.data.status==false){ //发送验证码次数上限
 							that.state = true;
 							that.textCode = "获取验证码";
 							clearInterval(timer);

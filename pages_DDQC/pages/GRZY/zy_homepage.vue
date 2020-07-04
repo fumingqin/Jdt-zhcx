@@ -60,6 +60,12 @@
 				<image class="vi_image" src="../../static/GRZY/tongqingka.png" mode="aspectFit"></image>
 			</view> -->
 			
+			<!-- 退押金失败记录 -->
+			<view class="ve_view3" @click="refundClick">
+				<text class="vi_text">退押金记录</text>
+				<text class="jdticon icon-you"></text>
+			</view>
+			
 			<!-- 电话客服 -->
 			<view class="ve_view3" @click="makePhone">
 				<text class="vi_text">电话客服</text>
@@ -713,8 +719,10 @@
 						that.isCommuteCard = res.data.data.CommuteCard;
 						//用户类型--普通用户，公务员，集团用户
 						if(res.data.data.CommuteCard == false) {
+							//修改卡数量为0
 							that.coupon = 0;
 						}else {
+							//修改卡数量为1
 							that.coupon = 1;
 						}
 						that.commuterCardObject = res.data.data.UserType;
@@ -726,13 +734,19 @@
 					}
 				})
 			},
-
+			//--------------------------------点击退押金记录--------------------------------
+			refundClick:function(){
+				uni.navigateTo({
+					url:'./refundRecord'
+				})
+			},
+			//--------------------------------客服电话--------------------------------
 			makePhone: function() {
 				uni.makePhoneCall({
 					phoneNumber: '17764540647'
 				})
 			},
-
+			//--------------------------------点击卡跳转--------------------------------
 			Jump() {
 				var that = this;
 				if(that.isCommuteCard == true){
@@ -747,7 +761,7 @@
 				}
 				
 			},
-
+			//--------------------------------点击骑行记录跳转--------------------------------
 			Jump2: function(e) {
 				var that = this;
 				if(that.drivingRecord[e].PayState==1&&that.drivingRecord[e].HireStatus==2){

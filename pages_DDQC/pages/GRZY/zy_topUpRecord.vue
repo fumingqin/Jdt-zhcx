@@ -2,13 +2,16 @@
 	<view>
 		<view v-for="(item,index) in info" :key="index">
 			<view style="display: flex; justify-content: space-between; align-items: center;margin-top: 40rpx;">
-				<view style="padding-top: -20rpx;"><image class="image" src="../../static/GRZY/qianbao.png"></image></view>
-				<view class="textContent">
-					<view class="text">{{item.ChargeType}}</view>
-					<view class="text">{{fixed(item.CreateTime)}}</view>
+				<view style="display: flex;">
+					<image class="image" src="../../static/GRZY/qianbao.png"></image>
+					<view class="textContent">
+						<view class="text">{{item.ChargeType}}</view>
+						<view class="text">{{fixed(item.CreateTime)}}</view>
+					</view>
 				</view>
+				
 				<view style="margin-right: 30rpx;">
-					<view class="money">￥{{item.Price}}元</view>
+					<view class="money">￥{{item.Price / 100}}元</view>
 				</view>
 			</view>
 		</view>
@@ -42,13 +45,13 @@
 							success: (res) => {
 								console.log(res)
 								if (res.data.msg == '完成') {
-									that.info=[];
-									let array=res.data.data;
-									for(var i=0;i<array.length;i++){			
-										if(array[i].Type=='充值'&& array[i].State=='充值成功'){
-											that.info.push(array[i])
-										}		
-									}
+									that.info=res.data.data;
+									// let array=res.data.data;
+									// for(var i=0;i<array.length;i++){			
+									// 	if(array[i].Type=='充值'&& array[i].State=='充值成功'){
+									// 		that.info.push(array[i])
+									// 	}		
+									// }
 									console.log(that.info)
 								}
 							},
@@ -89,6 +92,7 @@ page {
 		color: #F35A46;
 	}
 	.textContent{
+		margin-left: 20rpx;
 	}
 	.text{
 		font-size: 30upx;

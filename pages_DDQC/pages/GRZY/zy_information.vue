@@ -85,13 +85,18 @@
 				detailInfo: {
 					bankObject: '', //银行
 				},
-				currentRefundType:'',//判断当前是第几次退款
+				currentRefundType:'',//判断当前退款的状态（第一次退款还是退款失败再提交退款）
+				ReManualRefundInfo:[],//退款失败信息
 			}
 		},
 		onLoad(res) {
 			_self = this;
 			this.routeInit();
 			_self.currentRefundType = res.refundType;
+			if(res.item){
+				_self.ReManualRefundInfo = JSON.parse(res.item)
+				console.log(_self.ReManualRefundInfo)
+			}
 		},
 		methods: {
 			//-----------------读取静态数据json.js-------------------------------
@@ -100,7 +105,7 @@
 				this.selectBank = selectBank.data;
 				let expenseDetail = await this.$api.lyfwcwd('expenseDetail');
 				this.expenseDetail = expenseDetail.data;
-				console.log(this.selectBank)
+				// console.log(this.selectBank)
 			},
 
 			//------------------------------弹框事件-----------------------------------------
@@ -168,14 +173,13 @@
 								uni.hideLoading();
 								console.log(res)
 								if(res.data.status == true){
-									uni.showToast({
-										title:res.data.msg,
-										complete() {
-											uni.navigateBack()
-										}
-									})
 									setTimeout(function(){
-										
+										uni.showToast({
+											title:res.data.msg,
+											complete() {
+												uni.navigateBack()
+											}
+										})
 									},1000)
 								}else {
 									setTimeout(function(){
@@ -195,6 +199,8 @@
 			},
 			//--------------------------------人工退押金失败，重新提交退押金信息--------------------------------
 			ReManualRefund:function(){
+				console.log('重新提交',_self.ReManualRefundInfo.AID)
+				console.log('重新提交',_self.ReManualRefundInfo.Reason)
 				uni.showLoading({
 					title:'正在提交申请...'
 				})
@@ -206,18 +212,30 @@
 							url:$DDTInterface.DDTInterface.ReManualRefund.Url,
 							method:$DDTInterface.DDTInterface.ReManualRefund.method,
 							data:{
-								AID:'',//主键
+								AID:_self.ReManualRefundInfo.AID,//主键
 								Name:_self.nameText,//姓名
 								Tel:_self.phoneNumber,//联系电话
 								RegistPhone:data.data.phoneNumber,//注册手机号
 								Bank:_self.bankName,//开户行
 								BankAccounts:_self.bankNumber,//银行账户
 								UserID:data.data.userId,//用户id
-								LogJson:'',//退款失败的json字符串
+								LogJson:JSON.stringify(_self.ReManualRefundInfo.Reason),//退款失败的json字符串
 							},
 							success(res) {
 								uni.hideLoading();
 								console.log(res)
+								if(res.data.status == true){
+									uni.showToast({
+										title:res.data.msg,
+										complete() {
+											uni.navigateBack()
+										}
+									})
+								}else {
+									setTimeout(function(){
+										_self.myToast(res.data.msg)
+									},1000)
+								}
 							},
 							fail(res) {
 								uni.hideLoading();
@@ -242,7 +260,6 @@
 				}else if(_self.selectedValue == 0){
 					_self.myToast('请同意服务协议')
 				}else {
-					_self.ManualRefund();
 					if(_self.currentRefundType == '第一次人工退款'){
 						//如果当前是第一次人工退款的话，调ManualRefund这个接口
 						_self.ManualRefund();
