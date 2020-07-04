@@ -70,7 +70,7 @@
             "sdkConfigs" : {
                 "maps" : {
                     "amap" : {
-                        "appkey_ios" : "be539cdd91984d7e7169d61bfe8479ae",
+                        "appkey_ios" : "d9d78a68d8906b436b396955ddba8225",
                         "appkey_android" : "110fc7a797606b7210335815a3676eaf"
                     }
                 },
