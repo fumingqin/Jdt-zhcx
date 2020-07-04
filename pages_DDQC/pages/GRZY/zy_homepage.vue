@@ -72,7 +72,7 @@
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 我要投诉 -->
-			<view class="ve_view4" @click="natTo('/pages_GRZX/pages/GRZX/gz_complaintList')">
+			<view class="ve_view4" v-if="false" @click="natTo('/pages_GRZX/pages/GRZX/gz_complaintList')">
 				<text class="vi_text2">我要投诉</text>
 				<text class="jdticon icon-you"></text>
 			</view>
@@ -743,7 +743,7 @@
 			//--------------------------------客服电话--------------------------------
 			makePhone: function() {
 				uni.makePhoneCall({
-					phoneNumber: '17764540647'
+					phoneNumber: '05962100000'
 				})
 			},
 			//--------------------------------点击卡跳转--------------------------------

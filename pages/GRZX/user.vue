@@ -169,7 +169,8 @@
 									that.userInfo=res.data.data;
 									
 									if(res.data.data.nickname==""||res.data.data.nickname==null){
-										that.nickname="请输入昵称";	
+										// that.nickname="请输入昵称";
+										that.nickname = res.data.data.phoneNumber;
 									}else{
 										that.nickname=res.data.data.nickname;	
 									}
