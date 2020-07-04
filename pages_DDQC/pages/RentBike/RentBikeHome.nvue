@@ -66,6 +66,9 @@
 				position:[],
 				system:'',
 				disabled:true,//判断扫码按钮是否可以点击
+				currentLatitude:'',//有桩开启定位时显示的位置--纬度
+				currentLongitude:'',//有桩开启定位时显示的位置--经度
+				isLocation:false,//判断当前是否开启定位--默认是不开启
 			}
 		},
 		onLoad() {
@@ -90,8 +93,10 @@
 				}
 			});
 			// 获取自身位置
-			// that.getMyLocation();
-			that.GetBHTStationByRange(117.63370822482639,23.93265109592014);//无桩	
+			that.getMyLocation();
+			
+			//无桩：默认设置定位在古雷
+			that.GetBHTStationByRange(117.63370822482639,23.93265109592014);
 			
 			//检测当前是否有订单未完成
 			that.checkCurrentStatus();
@@ -142,10 +147,30 @@
 					//是否解析地址信息，默认false
 					geocode: true,
 					success: function(res) {
-						// console.log(res)
+						console.log('获取自身定位成功',res)
+						//若当前位置在古雷---默认显示无桩数据
+						if(res.address.district.indexOf('古雷') == 0){
+							that.isClick = '无桩';
+						}else{
+							//当前位置不在古雷--就显示有桩数据
+							that.isClick = '有桩';
+							that.GetStationByRange(res.longitude,res.latitude);
+						}
 						//如果地图中心位置坐标为空，将当前位置坐标设置为地图中心坐标
-						that.centerLongitude = res.longitude;
-						that.centerLatitude = res.latitude;
+						// that.centerLongitude = res.longitude;
+						// that.centerLatitude = res.latitude;
+						that.isLocation = true;
+						that.currentLongitude = res.longitude;
+						that.currentLatitude = res.latitude;
+					},
+					fail(res) {
+						console.log('获取自身定位失败',res)
+						that.isLocation = false;
+						uni.showModal({
+							title:'温馨提示',
+							content:'获取位置失败，请打开定位',
+							showCancel:false
+						})
 					}
 				});
 			},
@@ -156,9 +181,8 @@
 					that.mapContext = uni.createMapContext('map')
 					that.mapContext.getCenterLocation({
 						success: res => {
-							console.log(res.longitude+','+res.latitude)
+							// console.log(res.longitude+','+res.latitude)
 							if(that.isClick == '有桩'){
-								
 								//当地图移动的时候，改变坐标显示周围的车辆位置信息
 								that.GetStationByRange(res.longitude,res.latitude)
 							}else if(that.isClick == '无桩'){
@@ -366,10 +390,16 @@
 				setTimeout(function(){
 					that.scale=18
 					that.isClick = res;
-					if(res == '有桩'){ 
+					if(res == '有桩'){
+						//若当前开启了定位---显示自身的位置
+						if(that.isLocation == true){
+							that.GetStationByRange(that.currentLongitude,that.currentLatitude);
+						}else{
+							//若当前未开启定位---将位置显示到市政府的位置
+							that.GetStationByRange(117.647128,24.513074);//有桩
+						}
 						//当前选中的是单车，加载单车的数据,经纬度传当前位置
 						// that.GetStationByRange(that.centerLongitude,that.centerLatitude);
-						that.GetStationByRange(117.6536981221,24.517346);//有桩
 					}else if(res == '无桩') {
 						//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
 						// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
