@@ -80,7 +80,7 @@
 					// console.log('当前设备信息',res)
 					//地图高度
 					// console.log(res.system.indexOf('iOS'))
-					if(res.system.indexOf('iOS') == 0){
+					if(res.platform == 'ios'){
 						//当前是iOS系统
 						that.system = 'iOS'
 					}else {

@@ -354,13 +354,16 @@
 			//获取系统信息
 			uni.getSystemInfo({
 				success(res) {
+					console.log('获取系统信息',res)
 					//获取系统平台 iOS Android
 					that.platform = res.platform;
 					// 获取本地应用资源版本号  
 					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
 						that.version = inf.version; //获取当前版本号
-						//检测升级
-						that.updateAPP();
+						setTimeout(function(){
+							//检测升级
+							that.updateAPP();
+						},1500)
 					});
 				}
 			})
@@ -388,17 +391,55 @@
 			//----------------------自动更新-------------------------------
 			updateAPP: function() {
 				var that = this;
+				let systemType = 0;
+				if(that.platform == 'ios'){
+					systemType = 1;
+				}else {
+					systemType = 0;
+				}
 				uni.request({
-					url: $Home.Interface.UpDateVersion.url,
-					method: $Home.Interface.UpDateVersion.method,
+					url: $DDTInterface.DDTInterface.GetAppVersion.Url,
+					method: $DDTInterface.DDTInterface.GetAppVersion.method,
 					data: {
-						systemType: that.platform
+						systemType:systemType
 					},
 					success(res) {
-						console.log(res)
+						console.log('获取版本信息成功',res)
+						if(res.data.status == true){
+							if(that.platform == 'ios'){
+								if(that.version != res.data.data.VersionID){
+									uni.showModal({
+										title:'温馨提示',
+										content:'发现新版本，是否前往更新',
+										complete(res) {
+											if(res.confirm){
+												
+												// let appleId=1466344848 //应用的appId
+												// plus.runtime.launchApplication({
+												// 	action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
+												// }, function(e) {
+												// 	console.log('Open system default browser failed: ' + e.message);
+												// });
+												let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
+												plus.runtime.openURL(url, function(res) {
+													console.log(res);
+												});
+											}
+										}
+									})
+								}
+							}else{
+								
+							}
+						}else{
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}
 					},
 					fail(res) {
-						console.log(res)
+						console.log('获取版本信息失败',res)
 					}
 				})
 			},

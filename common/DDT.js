@@ -151,6 +151,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetAppVersion: {
+		Url: Url + '/api/SmartBikePerson/GetAppVersion',
+		name: '自动更新接口',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 	//-----------------------------------------钱包接口------------------------------------------------
 	GetPurseDetail: {
 		Url: Url + '/api/Purse/GetPurseDetail',
