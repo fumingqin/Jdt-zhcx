@@ -286,6 +286,7 @@
 										bgColor: '#FFFFFF', //背景颜色
 										display: 'BYCLICK', //'BYCLICK':点击显示; 'ALWAYS':常显
 										padding:5, 
+										textAlign:'center',
 									},
 								}
 								var json = JSON.stringify(that.markers);
@@ -407,7 +408,7 @@
 					}else if(res == '无桩') {
 						//当前选中的是助力车，加载助力车的数据,经纬度传当前位置
 						// that.GetBHTStationByRange(that.centerLongitude,that.centerLatitude);
-						that.GetBHTStationByRange(117.6536981221,24.517346);
+						that.GetBHTStationByRange(117.633708,23.932651);
 					}
 				},10)
 			},
