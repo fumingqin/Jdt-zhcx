@@ -22,6 +22,15 @@
 					<text style="color: #FFF;">暂不支付</text>
 				</button>
 			</view>
+			<view style="position: fixed;bottom:100rpx;left: 0;right: 0;">
+				<view style="text-align: center;">
+					<view>
+						<text style="color: #333;font-size: 30rpx;">对费用有疑问？请联系</text>
+						<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;" @click="makePhone">客服</text>
+					</view>
+					<text style="color: #007AFF;font-size: 30rpx;">0596-210000</text>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -56,6 +65,11 @@
 			this.GetOrderByUserID();
 		},
 		methods: {
+			makePhone: function() {
+				uni.makePhoneCall({
+					phoneNumber: '05962100000'
+				})
+			},
 			payNow: function() { //立即支付  
 				if (this.money > 0) {
 					this.walletPayment();
