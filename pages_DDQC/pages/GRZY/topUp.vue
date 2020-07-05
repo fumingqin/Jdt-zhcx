@@ -190,6 +190,7 @@
 								title: '支付成功',
 								complete() {
 									that.WirteRechargeLog(1);
+									that.rechargeCheck(that.paymentData.prepayid);
 								}
 							})
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
@@ -252,7 +253,27 @@
 				})
 				that.getmoney();
 			},
-			
+			//--------------------------充值检测--------------------------
+			rechargeCheck:function(prepayId){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.rechargeCheck.Url,
+					method:'POST',
+					data:{
+						prepayId:prepayId,
+						phoneNumber:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						console.log('充值检测成功',res)
+						if(res.data.status == true){
+							
+						}
+					},
+					fail(res) {
+						console.log('充值检测失败',res)
+					}
+				})
+			},
 			//--------------------------单选框点击--------------------------
 			checkChange: function() {
 				if (this.checked == 0) {

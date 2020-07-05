@@ -161,7 +161,7 @@ const DDTInterface = {
 		},
 	},
 	rechargeCheck: {
-		Url: Url + '/api/SmartBikePerson/rechargeCheck',
+		Url: Url + '/api/Purse/rechargeCheck',
 		name: '充值检测',
 		method: 'POST',
 		header: {

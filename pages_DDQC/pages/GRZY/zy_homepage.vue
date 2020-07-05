@@ -373,7 +373,7 @@
 							//支付成功，写入充值记录
 							that.WirteRechargeLog(1);
 							//充值检测
-							that.rechargeCheck();
+							that.rechargeCheck(that.prepayid);
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
 							setTimeout(function() {
 								uni.showToast({
