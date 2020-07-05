@@ -126,7 +126,6 @@
 					},2000)
 				}
 			} else {
-				console.log('开始获取1298471861892541791284081')
 				setTimeout(function(){
 				that.GetOrderByUserID();
 				},2000)
