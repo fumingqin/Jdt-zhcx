@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 轮播图-->
-		<swiper class="swi" circular autoplay  style="background-color: #65C36D;">
+		<swiper class="swi" circular autoplay style="background-color: #65C36D;">
 			<swiper-item class="swiItem" v-for="(item,index) in homePage" :key="index">
 				<image :src="item.ImageURL" mode="aspectFill" />
 			</swiper-item>
@@ -159,10 +159,10 @@
 			<view class="zl_content">
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
-					<swiper class="swi2" vertical circular autoplay display-multiple-items="2" disable-touch="true"> 
-						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index" >
+					<swiper class="swi2" vertical circular autoplay display-multiple-items="2" disable-touch="true">
+						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index">
 							<!-- <scroll-view scroll-y> -->
-								<view class="zl_noText" @click="newsClick(item)" >{{item.Title}}</view>
+							<view class="zl_noText" @click="newsClick(item)">{{item.Title}}</view>
 							<!-- </scroll-view> -->
 						</swiper-item>
 					</swiper>
@@ -289,11 +289,13 @@
 	export default {
 		data() {
 			return {
-				consultingService: [],//新闻资讯
+				consultingService: [], //新闻资讯
 				imgXXDT: [{
 					imageUrl: '',
 				}], //咨询动态
-				homePage: [{ImageURL:''}], //轮播图
+				homePage: [{
+					ImageURL: ''
+				}], //轮播图
 				type: 0,
 				Announcement: '', //资讯动态
 				sixPalaceList: [{
@@ -334,12 +336,30 @@
 		},
 		onLoad() {
 			var that = this;
+			// #ifdef APP-PLUS
+			//获取系统信息
+			uni.getSystemInfo({
+				success(res) {
+					console.log('获取系统信息', res)
+					//获取系统平台 iOS Android
+					that.platform = res.platform;
+					// 获取本地应用资源版本号  
+					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+						that.version = inf.version; //获取当前版本号
+						setTimeout(function() {
+							//检测升级
+							that.updateAPP();
+						}, 1500)
+					});
+				}
+			})
+			// #endif
 			this.GetRotationChart();
 			this.loadData();
 			//#ifdef APP-PLUS
 			this.loadService();
 			//#endif
-			
+
 			//获取新闻数据
 			that.GetNews();
 		},
@@ -350,24 +370,6 @@
 			if (that.userInfo != '') {
 				that.checkCurrentStatus();
 			}
-			// #ifdef APP-PLUS
-			//获取系统信息
-			uni.getSystemInfo({
-				success(res) {
-					console.log('获取系统信息',res)
-					//获取系统平台 iOS Android
-					that.platform = res.platform;
-					// 获取本地应用资源版本号  
-					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
-						that.version = inf.version; //获取当前版本号
-						setTimeout(function(){
-							//检测升级
-							that.updateAPP();
-						},1500)
-					});
-				}
-			})
-			// #endif
 			// #ifdef MP-WEIXIN
 			that.getLoginState();
 			//#endif
@@ -392,28 +394,28 @@
 			updateAPP: function() {
 				var that = this;
 				let systemType = 0;
-				if(that.platform == 'ios'){
+				if (that.platform == 'ios') {
 					systemType = 1;
-				}else {
+				} else {
 					systemType = 0;
 				}
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetAppVersion.Url,
 					method: $DDTInterface.DDTInterface.GetAppVersion.method,
 					data: {
-						systemType:systemType
+						systemType: systemType
 					},
 					success(res) {
-						console.log('获取版本信息成功',res)
-						if(res.data.status == true){
-							if(that.platform == 'ios'){
-								if(that.version != res.data.data.VersionID){
+						console.log('获取版本信息成功', res)
+						if (res.data.status == true) {
+							if (that.platform == 'ios') {
+								if (that.version != res.data.data.VersionID) {
 									uni.showModal({
-										title:'温馨提示',
-										content:'发现新版本，是否前往更新',
+										title: '温馨提示',
+										content: '发现新版本，是否前往更新',
 										complete(res) {
-											if(res.confirm){
-												
+											if (res.confirm) {
+
 												// let appleId=1466344848 //应用的appId
 												// plus.runtime.launchApplication({
 												// 	action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
@@ -428,42 +430,42 @@
 										}
 									})
 								}
-							}else{
-								
+							} else {
+
 							}
-						}else{
-							uni.showToast({
-								title:res.data.msg,
-								icon:'none'
-							})
+						} else {
+							// uni.showToast({
+							// 	title:res.data.msg,
+							// 	icon:'none'
+							// })
 						}
 					},
 					fail(res) {
-						console.log('获取版本信息失败',res)
+						console.log('获取版本信息失败', res)
 					}
 				})
 			},
 			//--------------------------新闻资讯--------------------------
-			GetNews:function(){
+			GetNews: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetNews.Url,
-					method:'POST',
-					data:{},
+					url: $DDTInterface.DDTInterface.GetNews.Url,
+					method: 'POST',
+					data: {},
 					success(res) {
 						// console.log('请求新闻资讯成功',res)
-						if(res.data.status == true){
+						if (res.data.status == true) {
 							that.consultingService = res.data.data;
 						}
 					},
 					fail(res) {
-						console.log('请求新闻资讯失败',res)
+						console.log('请求新闻资讯失败', res)
 					}
 				})
 			},
-			newsClick:function(item){
+			newsClick: function(item) {
 				uni.navigateTo({
-					url:'../../pages_DDQC/pages/GRZY/newsDetail?id='+item.AID
+					url: '../../pages_DDQC/pages/GRZY/newsDetail?id=' + item.AID
 				})
 			},
 			//----------------------接口数据-------------------------------
@@ -540,13 +542,13 @@
 			},
 			//----------------------获取轮播图------------------------------
 			GetRotationChart: function() {
-				var that=this;
+				var that = this;
 				uni.request({
-					url: $DDTInterface.DDTInterface.GetRotationChart.Url, 
+					url: $DDTInterface.DDTInterface.GetRotationChart.Url,
 					method: $DDTInterface.DDTInterface.GetRotationChart.method,
 					data: {},
 					success(res) {
-						that.homePage=res.data.data;
+						that.homePage = res.data.data;
 					},
 					fail(err) {
 						console.log(err)
