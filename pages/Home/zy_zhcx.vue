@@ -412,7 +412,7 @@
 								if (that.version != res.data.data.VersionID) {
 									uni.showModal({
 										title: '温馨提示',
-										content: '发现新版本，是否前往更新',
+										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
 										complete(res) {
 											if (res.confirm) {
 
