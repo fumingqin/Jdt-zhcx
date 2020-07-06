@@ -11,15 +11,15 @@
 			<swiper-item class="swiItem">
 				<view class="zl_topClick">
 					<!-- 达达骑车 -->
-					<view class="zl_carAppointment" @click="natTo2('../../pages_DDQC/pages/RentBike/RentBikeHome')">
-						<image class="zl_caImage" src="../../static/Home/DDQC.png"></image>
-						<text class="zl_caText">达达骑车</text>
+					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/RentBike/RentBikeHome')">
+						<image class="itemImage" src="../../static/Home/DDQC.png"></image>
+						<text class="itemText">达达骑车</text>
 					</view>
 
 					<!-- 公交扫码 -->
-					<view class="zl_charterService" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_QRcode')">
-						<image class="zl_csImage" src="../../static/Home/GJSM.png"></image>
-						<text class="zl_csText">公交扫码</text>
+					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_QRcode')">
+						<image class="itemImage" src="../../static/Home/GJSM.png"></image>
+						<text class="itemText">公交扫码</text>
 					</view>
 
 					<!-- 公交扫码 -->
@@ -35,9 +35,9 @@
 					</view> -->
 
 					<!-- 达达钱包 -->
-					<view class="zl_ticketOrdering" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_homepage')">
-						<image class="zl_toImage" src="../../static/Home/QB.png"></image>
-						<text class="zl_toText">达达钱包</text>
+					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_homepage')">
+						<image class="itemImage" src="../../static/Home/QB.png"></image>
+						<text class="itemText">达达钱包</text>
 					</view>
 
 					<!-- 车票订购 -->
@@ -47,9 +47,9 @@
 					</view> -->
 
 					<!-- 车票订购 -->
-					<view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/CPDG2.png"></image>
-						<text class="zl_toText">车票订购</text>
+					<view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/CPDG2.png"></image>
+						<text class="itemText">车票订购</text>
 					</view>
 
 					<!-- 新区专线 -->
@@ -65,9 +65,9 @@
 					</view> -->
 
 					<!-- 公交查询 -->
-					<view class="zl_transit" @click="natTo()">
-						<image class="zl_tsImage" src="../../static/Home/GJCX2.png"></image>
-						<text class="zl_tsText">公交查询</text>
+					<view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/GJCX2.png"></image>
+						<text class="itemText">公交查询</text>
 					</view>
 
 
@@ -82,9 +82,9 @@
 					</view> -->
 
 					<!-- 包车服务 -->
-					<view class="zl_charterService" @click="natTo()">
-						<image class="zl_csImage" src="../../static/Home/BCFW2.png"></image>
-						<text class="zl_csText">包车服务</text>
+					<view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/BCFW2.png"></image>
+						<text class="itemText">包车服务</text>
 					</view>
 					<!-- 景区门票 -->
 					<!-- <view class="zl_tourismServices">
@@ -93,9 +93,9 @@
 					</view> -->
 
 					<!-- 景区门票 -->
-					<view class="zl_tourismServices" @click="natTo()">
-						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
-						<text class="zl_teText">景区门票</text>
+					<view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
+						<text class="itemText">景区门票</text>
 					</view>
 					<!-- 旅游产品 -->
 					<!-- <view class="zl_ticketOrdering">
@@ -104,9 +104,9 @@
 					</view> -->
 
 					<!-- 旅游产品 -->
-					<view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/LYCP2.png"></image>
-						<text class="zl_toText">旅游产品</text>
+					<view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/LYCP2.png"></image>
+						<text class="itemText">旅游产品</text>
 					</view>
 
 					<!-- 预约检测 -->
@@ -116,9 +116,9 @@
 					</view> -->
 
 					<!-- 预约检测 -->
-					<view class="zl_carAppointment" @click="natTo()">
-						<image class="zl_caImage" src="../../static/Home/YYJC2.png"></image>
-						<text class="zl_caText">预约检测</text>
+					<view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/YYJC2.png"></image>
+						<text class="itemText">预约检测</text>
 					</view>
 
 					<!-- 自由行 -->
@@ -128,9 +128,9 @@
 					</view> -->
 
 					<!-- 自由行 -->
-					<view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/ZYX2.png"></image>
-						<text class="zl_toText">自由行</text>
+					<view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/ZYX2.png"></image>
+						<text class="itemText">自由行</text>
 					</view>
 
 					<!-- 跟团游 -->
@@ -179,7 +179,7 @@
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
-					<text class="zl_reTitle">骑行风采</text>
+					<text class="zl_reTitle">长运风采</text>
 					<!-- 下面这是要注释的 -->
 					<!-- <text class="zl_reMore">更多></text> -->
 				</view>
@@ -957,7 +957,26 @@
 			}
 		}
 	}
-
+	// 车票订购
+	.itemContent {
+		width: 20%;
+		height: 178upx;
+		text-align: center;
+		align-items: center;
+	}
+	.itemImage {
+		width: 80rpx;
+		height: 80rpx;
+		margin-top: 50upx;
+	}
+	.itemText {
+		margin-top: 10rpx;
+		font-size: 27rpx;
+		font-family: Source Han Sans SC;
+		font-weight: 400;
+		color: #333333;
+		display: block;
+	}
 	.zl_swi {
 		height: 230upx;
 		width: 100%;

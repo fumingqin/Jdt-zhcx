@@ -289,8 +289,8 @@
 								icon:'none'
 							})
 							//如果返回的数据是空的，就默认设置押金为0
-							that.deposit = 0;
-							that.commuterCardObject = '普通用户';
+							// that.deposit = 0;
+							// that.commuterCardObject = '普通用户';
 						}
 						console.log('获取押金状态', that.walletData)
 					},
