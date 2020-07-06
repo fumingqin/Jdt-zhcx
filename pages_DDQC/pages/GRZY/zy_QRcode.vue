@@ -12,12 +12,12 @@
 				<text class="vi_text2" @click="manuRefresh">刷新</text>
 			</view>
 
-			<view class="complaintDX">
+			<!-- <view class="complaintDX">
 				<text class="tsdxText">点击切换通勤卡类别:</text>
 				<picker @change="godetail" :value="index" :range="commuterCard.txt">
 					<text class="tsnrText">{{commuterCard.txt[index]}}<text class="jdticon icon-you"></text></text>
 				</picker>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -46,7 +46,7 @@
 
 		onLoad() {
 			var that = this;
-			that.autoRefresh();
+			// that.autoRefresh();
 			that.lunBoInit();
 		},
 
@@ -80,7 +80,7 @@
 					if (this.index == 0) {
 						this.QRCodeData();
 						clearInterval(this.loadingTime);
-						this.autoRefresh();
+						// this.autoRefresh();
 					}
 				} else if (this.commuterCard.txt[e.detail.value] == '公务员' && this.depositStatus.UserType == '普通用户') {
 					uni.showToast({
@@ -145,15 +145,15 @@
 			},
 
 			//---------------------------自动刷新---------------------------
-			autoRefresh: function() {
-				var that = this;
-				uni.showLoading()
-				that.loadingTime = setInterval(function() {
-					console.log('自动刷新')
-					that.QRCodeData();
-					// console.log(that.sign)
-				}, 15000)
-			},
+			// autoRefresh: function() {
+			// 	var that = this;
+			// 	uni.showLoading()
+			// 	that.loadingTime = setInterval(function() {
+			// 		console.log('自动刷新')
+			// 		that.QRCodeData();
+			// 		// console.log(that.sign)
+			// 	}, 15000)
+			// },
 
 			//---------------------------刷新关闭---------------------------
 			RefreshOff: function() {
@@ -230,6 +230,7 @@
 		background: #35c762;
 		border-top-left-radius: 15upx;
 		border-top-right-radius: 15upx;
+		border: 15upx;
 		width: 684upx;
 		height: 100%;
 		margin-top: 182upx;
@@ -240,6 +241,7 @@
 		// margin: 0 auto;
 
 		.to_text {
+			// border: 15upx;
 			font-size: 36upx;
 			color: #FFFFFF;
 			// margin: 0 auto;

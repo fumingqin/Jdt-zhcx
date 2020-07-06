@@ -15,62 +15,62 @@
 						<image class="zl_caImage" src="../../static/Home/DDQC.png"></image>
 						<text class="zl_caText">达达骑车</text>
 					</view>
-					
+
 					<!-- 公交扫码 -->
 					<view class="zl_charterService" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_QRcode')">
 						<image class="zl_csImage" src="../../static/Home/GJSM.png"></image>
 						<text class="zl_csText">公交扫码</text>
 					</view>
-					
+
 					<!-- 公交扫码 -->
 					<!-- <view class="zl_charterService" @click="natTo()">
 						<image class="zl_csImage" src="../../static/Home/GJSM2.png"></image>
 						<text class="zl_csText">包车服务</text>
 					</view> -->
-					
+
 					<!-- 车票订购 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
 						<text class="zl_toText">车票订购</text>
 					</view> -->
-					
+
 					<!-- 达达钱包 -->
 					<view class="zl_ticketOrdering" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_homepage')">
 						<image class="zl_toImage" src="../../static/Home/QB.png"></image>
 						<text class="zl_toText">达达钱包</text>
 					</view>
-					
+
 					<!-- 车票订购 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
 						<text class="zl_toText">车票订购</text>
 					</view> -->
-					
+
 					<!-- 车票订购 -->
 					<view class="zl_ticketOrdering" @click="natTo()">
 						<image class="zl_toImage" src="../../static/Home/CPDG2.png"></image>
 						<text class="zl_toText">车票订购</text>
 					</view>
-					
+
 					<!-- 新区专线 -->
 					<!-- <view class="zl_carAppointment">
 						<image class="zl_caImage" src="../../static/Home/XQZX.png"></image>
 						<text class="zl_caText">新区专线</text>
 					</view> -->
-					
-					<!-- 公交查询 --> 
+
+					<!-- 公交查询 -->
 					<!-- <view class="zl_transit">
 						<image class="zl_tsImage" src="../../static/Home/GJCX.png"></image>
 						<text class="zl_tsText">公交查询</text>
 					</view> -->
-					
-					<!-- 公交查询 --> 
+
+					<!-- 公交查询 -->
 					<view class="zl_transit" @click="natTo()">
 						<image class="zl_tsImage" src="../../static/Home/GJCX2.png"></image>
 						<text class="zl_tsText">公交查询</text>
 					</view>
-					
-					
+
+
 				</view>
 			</swiper-item>
 			<swiper-item class="swiItem">
@@ -80,7 +80,7 @@
 						<image class="zl_csImage" src="../../static/Home/BCFW.png"></image>
 						<text class="zl_csText">包车服务</text>
 					</view> -->
-					
+
 					<!-- 包车服务 -->
 					<view class="zl_charterService" @click="natTo()">
 						<image class="zl_csImage" src="../../static/Home/BCFW2.png"></image>
@@ -91,7 +91,7 @@
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
 						<text class="zl_teText">景区门票</text>
 					</view> -->
-					
+
 					<!-- 景区门票 -->
 					<view class="zl_tourismServices" @click="natTo()">
 						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
@@ -102,49 +102,49 @@
 						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
 						<text class="zl_toText">旅游产品</text>
 					</view> -->
-					
+
 					<!-- 旅游产品 -->
 					<view class="zl_ticketOrdering" @click="natTo()">
 						<image class="zl_toImage" src="../../static/Home/LYCP2.png"></image>
 						<text class="zl_toText">旅游产品</text>
 					</view>
-					
+
 					<!-- 预约检测 -->
 					<!-- <view class="zl_carAppointment">
 						<image class="zl_caImage" src="../../static/Home/YYJC.png"></image>
 						<text class="zl_caText">预约检测</text>
 					</view> -->
-					
+
 					<!-- 预约检测 -->
 					<view class="zl_carAppointment" @click="natTo()">
 						<image class="zl_caImage" src="../../static/Home/YYJC2.png"></image>
 						<text class="zl_caText">预约检测</text>
 					</view>
-					
+
 					<!-- 自由行 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/ZYX.png"></image>
 						<text class="zl_toText">自由行</text>
 					</view> -->
-					
+
 					<!-- 自由行 -->
 					<view class="zl_ticketOrdering" @click="natTo()">
 						<image class="zl_toImage" src="../../static/Home/ZYX2.png"></image>
 						<text class="zl_toText">自由行</text>
 					</view>
-					
+
 					<!-- 跟团游 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/GTY.png"></image>
 						<text class="zl_toText">跟团游</text>
 					</view> -->
-					
+
 					<!-- 跟团游 -->
 					<!-- <view class="zl_ticketOrdering" @click="natTo()">
 						<image class="zl_toImage" src="../../static/Home/GTY2.png"></image>
 						<text class="zl_toText">跟团游</text>
 					</view> -->
-					
+
 					<!-- 村村通 -->
 					<!-- <view class="zl_ticketOrdering">
 						<image class="zl_toImage" src="../../static/Home/CCT.png"></image>
@@ -187,43 +187,43 @@
 			</view>
 			<view class="zl_reContent2">
 				<view class="zl_contentImage1">
-					<!-- 泉州小西埕 -->
-					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
+					<!-- 泉州小西埕 @click="godetail(sixPalaceList[0].ticketId)" -->
+					<view class="ct_content1" @click="godetail">
 						<!-- <image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text> -->
-						<image class="ct_image1" src="http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg" mode="aspectFill"></image>
-						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">巾帼文明线</text>
+						<image class="ct_image1" :src="picList[0].img" mode="aspectFill"></image>
+						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[0].txt}}</text>
 					</view>
 					<!-- 稻田摸鱼 -->
-					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
+					<view class="ct_content2" @click="godetail">
 						<!-- <image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text> -->
-						<image class="ct_image2" src="http://zntc.145u.net/UpLoadImages/DDT/公共自行车.jpg" mode="aspectFill"></image>
-						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">公共自行车</text>
+						<image class="ct_image2" :src="picList[1].img" mode="aspectFill"></image>
+						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[1].txt}}</text>
 					</view>
 				</view>
 
 				<view class="zl_contentImage2">
 					<!-- 泉州钟楼 -->
-					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
+					<view class="ct_content3" @click="godetail">
 						<!-- <image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text> -->
-						<image class="ct_image3" src="http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg" mode="aspectFill"></image>
-						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">古雷助力车</text>
+						<image class="ct_image3" :src="picList[2].img" mode="aspectFill"></image>
+						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[2].txt}}</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
-					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
+					<view class="ct_content4" @click="godetail">
 						<!-- <image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text> -->
-						<image class="ct_image4" src="http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg" mode="aspectFill"></image>
-						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">客运南站</text>
+						<image class="ct_image4" :src="picList[3].img" mode="aspectFill"></image>
+						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[3].txt}}</text>
 					</view>
 					<!-- 七彩官畲 -->
-					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
+					<view class="ct_content5" @click="godetail">
 						<!-- <image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text> -->
-						<image class="ct_image5" src="http://zntc.145u.net/UpLoadImages/DDT/双层公交.jpg" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">双层公交</text>
+						<image class="ct_image5" :src="picList[4].img" mode="aspectFill"></image>
+						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[4].txt}}</text>
 					</view>
 				</view>
 			</view>
@@ -261,7 +261,7 @@
 				</view>
 			</view>
 		</view> -->
-		
+
 		<!-- 服务协议和隐私政策 -->
 		<uni-popup ref="centerPopup" type="center">
 			<view class="centerClass">
@@ -290,44 +290,46 @@
 	export default {
 		data() {
 			return {
-				consultingService:[{
-					title:'不负灿烂时光,周边游更精彩,美伦美焕',
-				},
-				{
-					title:'不负灿烂时光,周边游更精彩',
-				},
-				{
-					title:'老年卡要还代了,这事你该关注',
-				},
-				{
-					title:'漳州点资公交卡入驻集团',
-				}],
-				imgXXDT:[{
-					imageUrl:'',
-				}],//咨询动态
+				consultingService: [{
+						title: '不负灿烂时光,周边游更精彩,美伦美焕',
+					},
+					{
+						title: '不负灿烂时光,周边游更精彩',
+					},
+					{
+						title: '老年卡要还代了,这事你该关注',
+					},
+					{
+						title: '漳州点资公交卡入驻集团',
+					}
+				],
+				imgXXDT: [{
+					imageUrl: '',
+				}], //咨询动态
 				homePage: '', //轮播图
 				type: 0,
 				Announcement: '', //资讯动态
 				sixPalaceList: [{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				}],
+						ticketId: '',
+						ticketImage: '',
+					},
+					{
+						ticketId: '',
+						ticketImage: '',
+					},
+					{
+						ticketId: '',
+						ticketImage: '',
+					},
+					{
+						ticketId: '',
+						ticketImage: '',
+					},
+					{
+						ticketId: '',
+						ticketImage: '',
+					}
+				],
 				goodsList: '',
 				zy_dataIndex: 6, //列表默认数量
 				disStatus: 0,
@@ -338,9 +340,29 @@
 				},
 				loadingType: 0, //加载更多状态
 				current: 0, //标题下标
-				version:'',//版本号
-				platform:'',//系统平台
-				userInfo:'',
+				version: '', //版本号
+				platform: '', //系统平台
+				userInfo: '',
+				picList: [{
+					img: '',
+					txt: '',
+				},
+				{
+					img: '',
+					txt: '',
+				},
+				{
+					img: '',
+					txt: '',
+				},
+				{
+					img: '',
+					txt: '',
+				},
+				{
+					img: '',
+					txt: '',
+				}],
 			}
 		},
 		onLoad() {
@@ -355,7 +377,7 @@
 		onShow() {
 			var that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
-			if(that.userInfo!=''){
+			if (that.userInfo != '') {
 				that.checkCurrentStatus();
 			}
 			// #ifdef APP-PLUS
@@ -365,8 +387,8 @@
 					//获取系统平台 iOS Android
 					that.platform = res.platform;
 					// 获取本地应用资源版本号  
-					plus.runtime.getProperty(plus.runtime.appid,function(inf){
-					    that.version = inf.version;  //获取当前版本号
+					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+						that.version = inf.version; //获取当前版本号
 						//检测升级
 						that.updateAPP();
 					});
@@ -389,16 +411,18 @@
 		// 	})
 		// 	this.getMore();
 		// },
-		components: { uniPopup },  //注册为子组件
+		components: {
+			uniPopup
+		}, //注册为子组件
 		methods: {
 			//----------------------自动更新-------------------------------
-			updateAPP:function(){
+			updateAPP: function() {
 				var that = this;
 				uni.request({
-					url:$Home.Interface.UpDateVersion.url,
-					method:$Home.Interface.UpDateVersion.method,
-					data:{
-						systemType:that.platform
+					url: $Home.Interface.UpDateVersion.url,
+					method: $Home.Interface.UpDateVersion.method,
+					data: {
+						systemType: that.platform
 					},
 					success(res) {
 						console.log(res)
@@ -412,11 +436,11 @@
 			//----------------------读取静态页面json.js-------------------------------
 
 			async lunBoInit() {
-				// let homePage = await this.$api.lyfwcwd('homePage');
-				// this.homePage = homePage.data;
+				let ridingStyle = await this.$api.lyfwcwd('ridingStyle');
+				this.picList = ridingStyle.data;
 				let Announcement = await this.$api.lyfwcwd('Announcement');
 				this.Announcement = Announcement.data;
-				// console.log(this.homePage)
+				console.log(this.picList)
 			},
 
 			//----------------------接口数据-------------------------------
@@ -467,7 +491,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log('请求六宫格',res)
+						console.log('请求六宫格', res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
@@ -490,7 +514,7 @@
 						this.imgXXDT = res.data.data.filter(item => {
 							return item.type == 'dongtai';
 						})
-						
+
 						// console.log(this.imgXXDT)
 					}
 				})
@@ -535,40 +559,44 @@
 
 			Jump() {
 				uni.navigateTo({
-					url:'../../pages_DDQC/pages/GRZY/zy_newsScreening'
+					url: '../../pages_DDQC/pages/GRZY/zy_newsScreening'
 				})
 			},
-			
+
 			natTo: function(url) {
 				uni.showToast({
-					title:'正在开发中，尽情期待..',
-					icon:'none'
+					title: '正在开发中，尽情期待..',
+					icon: 'none'
 				})
 				// uni.navigateTo({
 				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex'
 				// })
 			},
-			
+
 			natTo2: function(e) {
 				var that = this;
-				if(that.userInfo!==''){
+				if (that.userInfo !== '') {
 					uni.navigateTo({
-						url:e,
+						url: e,
 					})
-				}else if(that.userInfo==''){
+				} else if (that.userInfo == '') {
 					uni.navigateTo({
-						url:'../GRZX/userLogin',
+						url: '../GRZX/userLogin',
 					})
 				}
-				console.log('是否拿到缓存',that.userInfo)
+				console.log('是否拿到缓存', that.userInfo)
 			},
-			
+
 			//路由整合
-			godetail: function(e) {
+			godetail: function() {
+				uni.setStorageSync('imgPiclist', this.picList);
 				uni.navigateTo({
-					// url:'../../pages_DDQC/pages/GRZY/zy_QRcode'
-					url:'',
+					url: '../../pages_LYFW/pages/LYFW/currency/imglist3',
 				})
+				// uni.navigateTo({
+				// 	// url:'../../pages_DDQC/pages/GRZY/zy_QRcode'
+				// 	url: '',
+				// })
 			},
 
 			// #ifdef  H5
@@ -691,50 +719,50 @@
 				})
 			},
 			//#endif
-			checkCurrentStatus:function(){//检测用户是否有未完成的订单
+			checkCurrentStatus: function() { //检测用户是否有未完成的订单
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
-					method:$DDTInterface.DDTInterface.GetBizStatus.method,
-					data:{
+					url: $DDTInterface.DDTInterface.GetBizStatus.Url,
+					method: $DDTInterface.DDTInterface.GetBizStatus.method,
+					data: {
 						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
-						loginname:that.userInfo.phoneNumber,//手机号
+						loginname: that.userInfo.phoneNumber, //手机号
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据',that.userInfo.phoneNumber)
-						console.log('返回数据',response)
-						
-						if(response.data.status == true){
-							if(response.data.data.bizStatus == '已租车'){
+						console.log('返回数据', that.userInfo.phoneNumber)
+						console.log('返回数据', response)
+
+						if (response.data.status == true) {
+							if (response.data.data.bizStatus == '已租车') {
 								//当前有未完成订单,跳转到行程页面
 								uni.showModal({
-									title:'温馨提示',
-									content:'当前有未完成订单，是否前往？',
+									title: '温馨提示',
+									content: '当前有未完成订单，是否前往？',
 									success(res) {
-										if(res.confirm){
+										if (res.confirm) {
 											uni.navigateTo({
-												url:'../../pages_DDQC/pages/RentBike/Riding'
+												url: '../../pages_DDQC/pages/RentBike/Riding'
 											})
 										}
 									}
 								})
-							}else if(response.data.data.bizStatus == '租车超时支付中'){
+							} else if (response.data.data.bizStatus == '租车超时支付中') {
 								//租车超时支付中，跳转到支付页面
 								uni.showModal({
-									title:'温馨提示',
-									content:'当前有订单未支付，请立即前往支付',
+									title: '温馨提示',
+									content: '当前有订单未支付，请立即前往支付',
 									success(res) {
-										if(res.confirm){
+										if (res.confirm) {
 											uni.navigateTo({
-												url:'../../pages_DDQC/pages/RentBike/Payment'
+												url: '../../pages_DDQC/pages/RentBike/Payment'
 											})
 										}
 									}
 								})
 							}
-						}else {
-							console.log('返回数据false',response)
+						} else {
+							console.log('返回数据false', response)
 						}
 					},
 					fail(response) {
@@ -743,13 +771,13 @@
 				})
 			},
 			//-------------弹窗开始--------------------
-			loadService:function(){ //加载是否服务
-				var that=this;
+			loadService: function() { //加载是否服务
+				var that = this;
 				uni.getStorage({
-					key:'acceptService',
+					key: 'acceptService',
 					success(res) {
 						console.log(res)
-						if(!res.data){
+						if (!res.data) {
 							that.openPopup('centerPopup');
 						}
 					},
@@ -770,18 +798,18 @@
 					this.$refs[value].close();
 				});
 			},
-			confirm:function(){
-				uni.setStorageSync('acceptService',true);
+			confirm: function() {
+				uni.setStorageSync('acceptService', true);
 				this.closePopup('centerPopup');
 			},
-			agreementClick(){
+			agreementClick() {
 				uni.navigateTo({
-					url:this.$GrzxInter.Route.privacyService.url+'?title=软件许可及服务协议',
+					url: this.$GrzxInter.Route.privacyService.url + '?title=软件许可及服务协议',
 				})
 			},
-			privacyClick(){
+			privacyClick() {
 				uni.navigateTo({
-					url:this.$GrzxInter.Route.privacyService.url+'?title=隐私政策',
+					url: this.$GrzxInter.Route.privacyService.url + '?title=隐私政策',
 				})
 			},
 			//-------------弹窗结束--------------------
@@ -794,9 +822,9 @@
 	page {
 		background-color: #f6f6f6;
 	}
-	
-	.swiper-container{
-	    pointer-events: none;
+
+	.swiper-container {
+		pointer-events: none;
 	}
 
 	//轮播图样式
@@ -1053,13 +1081,13 @@
 			}
 
 			.zl_noContent {
-				
-				.swi2{
+
+				.swi2 {
 					width: 473upx;
 					height: 129upx;
 					margin-top: 35upx;
 					margin-left: 26upx;
-					
+
 					.zl_noText {
 						// display: block;
 						font-size: 26upx;
@@ -1156,7 +1184,7 @@
 					display: flex;
 					position: relative;
 					margin-right: 10upx;
-					
+
 
 					.ct_image1 {
 						width: 454upx;
@@ -1366,28 +1394,32 @@
 		background: #fff;
 
 	}
-	
+
 	//弹框start
-	.centerClass{  //弹框的样式
+	.centerClass {
+		//弹框的样式
 		width: 82%;
 		margin-left: 9%;
 		// height: 550upx;
 		background-color: #FFFFFF;
 		border-radius: 20upx;
 	}
-	.pTitleClass{
+
+	.pTitleClass {
 		padding-top: 15upx;
 		text-align: center;
 		font-size: 38upx;
 		color: #333333;
 		padding: 40upx 0 20upx 0;
 	}
-	.pTextClass{
+
+	.pTextClass {
 		width: 80%;
 		margin-left: 10%;
 		font-size: 34upx;
 	}
-	.btnBox{
+
+	.btnBox {
 		width: 100%;
 		border-top: 1upx solid #EAEAEA;
 		// height: 80upx;
@@ -1395,7 +1427,8 @@
 		display: flex;
 		flex-direction: row; //column纵向，row横向
 	}
-	.btnClass1{
+
+	.btnClass1 {
 		color: #333333;
 		text-align: center;
 		width: 50%;
@@ -1403,12 +1436,14 @@
 		padding: 25upx 0;
 		border-right: 1upx solid #EAEAEA;
 	}
-	.btnClass2{
+
+	.btnClass2 {
 		color: #2F9BFE;
 		text-align: center;
 		width: 50%;
 		font-size: 38upx;
 		padding: 25upx 0;
 	}
+
 	//弹框end
 </style>
