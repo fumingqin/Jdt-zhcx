@@ -47,7 +47,7 @@
 			<view class="lineClass"></view>
 			
 			<!-- 第一排 -->
-			<view class="boxClass">
+			<!-- <view class="boxClass">
 				<view class="itemClass" @click="infoClick">
 					<image src="../../static/GRZX/ServiceIcon/tb_XXGL.png" class="XXGLicon"></image>
 					<text class="fontStyle">信息管理</text>
@@ -64,7 +64,7 @@
 					<image src="../../static/GRZX/ServiceIcon/tb_JJLXR.png" class="JJLXRicon"></image>
 					<text class="fontStyle">紧急联系人</text>
 				</view>
-			</view>
+			</view> -->
 			<!-- 第二排 -->
 			<view class="boxClass">
 				<view class="itemClass" @click="realName">
@@ -169,7 +169,8 @@
 									that.userInfo=res.data.data;
 									
 									if(res.data.data.nickname==""||res.data.data.nickname==null){
-										that.nickname="请输入昵称";	
+										// that.nickname="请输入昵称";
+										that.nickname = res.data.data.phoneNumber;
 									}else{
 										that.nickname=res.data.data.nickname;	
 									}

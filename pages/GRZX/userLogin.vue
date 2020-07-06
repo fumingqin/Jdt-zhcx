@@ -12,13 +12,13 @@
 				<image src="../../static/GRZX/yanzhengma.png" class="iconClass2"></image>
 				<input type="number" placeholder="输入验证码" maxlength="4" class="inputClass" data-key="captchaCode" @input="inputChange2" />
 			</view>
-			
+
 			<!-- 按钮颜色和发送验证码的样式 -->
 			<view class="getCode style1" @click="getCodeClick" id="Code">{{textCode}}</view>
 			<text class="fontStyle" @click="loginClick">确定</text>
 			<!-- <text class="fontStyle" @click="checkRealName('1000067')">确定</text> -->
 		</view>
-		
+
 		<!-- logo -->
 		<image :src="logo" class="logoClass"></image>
 
@@ -32,525 +32,648 @@
 </template>
 
 <script>
+	const jyJPush = uni.requireNativePlugin('JY-JPush');
+	import $DDTInterface from '@/common/DDT.js'
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	export default {
 		data() {
 			return {
-				textCode:"获取验证码",
-				phoneNumber:'',
-				captchaCode:'',
-				imgHeight:'',
-				urlData:'',
-				background:'',
-				logo:'',
+				textCode: "获取验证码",
+				phoneNumber: '',
+				captchaCode: '',
+				imgHeight: '',
+				urlData: '',
+				background: '',
+				logo: '',
+				
+				state:true,	//是否允许点击
 			}
 		},
 		onLoad(options) {
 			this.loadImg();
-			this.urlData=options.urlData;
+			this.urlData = options.urlData;
 			this.load();
 		},
 		methods: {
 			//---------------加载图片----------------
-			loadImg(){
-				var that=this;
-				that.$ChangeImage.GetImage("漳州达达通").then(function(data){
-					that.logo=data.logo;
-					that.background=data.background;
+			loadImg: function() {
+				var that = this;
+				that.$ChangeImage.GetImage("漳州达达通").then(function(data) {
+					that.logo = data.logo;
+					that.background = data.background;
 				});
 			},
 			//---------------加载页面高度----------------
-			load(){
-				var that=this;
+			load: function() {
+				var that = this;
 				uni.getSystemInfo({
-				　　success: function(res) { // res - 各种参数
-						that.imgHeight=res.windowHeight;
-				       }
+					success: function(res) { // res - 各种参数
+						that.imgHeight = res.windowHeight;
+					}
 				});
 			},
-			judgeNum(val){  //只能输入数字
+			judgeNum: function(val) { //只能输入数字
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-				    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-				    if(regPos.test(val) || regNeg.test(val)) {
-				        return true;
-				    } else {
-				        return false;
-				    }
+				var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+				if (regPos.test(val) || regNeg.test(val)) {
+					return true;
+				} else {
+					return false;
+				}
 			},
-			inputChange1(e){
-				var num=e.detail.value;
-				if(this.judgeNum(num)){
-					
-				}else{
+			inputChange1: function(e) {
+				var num = e.detail.value;
+				if (this.judgeNum(num)) {
+
+				} else {
 					uni.showToast({
-						title : '请输入正确的手机号码',
-						icon : 'none',
+						title: '请输入正确的手机号码',
+						icon: 'none',
 					})
 				}
 				const key = e.currentTarget.dataset.key;
 				this[key] = e.detail.value;
 			},
-			inputChange2(e){
-				var num=e.detail.value;
-				if(this.judgeNum(num)){
-					
-				}else{
+			inputChange2: function(e) {
+				var num = e.detail.value;
+				if (this.judgeNum(num)) {
+
+				} else {
 					uni.showToast({
-						title : '请输入正确的验证码',
-						icon : 'none',
+						title: '请输入正确的验证码',
+						icon: 'none',
 					})
 				}
 				const key = e.currentTarget.dataset.key;
 				this[key] = e.detail.value;
 			},
-			loginClick(){	 //登录按钮
+			loginClick: function() { //登录按钮
 				uni.showLoading({
-					title:'登录中...'
+					title: '登录中...'
 				})
-				var that=this;
-				const {phoneNumber, captchaCode} = this;		
-				var phone=this.phoneNumber;
-				var captcha=this.captchaCode;
-				if(phone==null||phone==""){
+				var that = this;
+				const {
+					phoneNumber,
+					captchaCode
+				} = this;
+				var phone = this.phoneNumber;
+				var captcha = this.captchaCode;
+				if (phone == null || phone == "") {
 					uni.showToast({
-						title:"请输入手机号码",
-						icon:"none"
+						title: "请输入手机号码",
+						icon: "none"
 					})
-				}else{
-					if(captcha==null||captcha==""){
+				} else {
+					if (captcha == null || captcha == "") {
 						uni.showToast({
-							title:"请输入验证码",
-							icon:"none"
+							title: "请输入验证码",
+							icon: "none"
 						})
-					}else{
+					} else {
 						uni.getStorage({
-							key:'captchaCode',
+							key: 'captchaCode',
 							success(res) {
-								if(captcha==res.data.code&&phone==res.data.phone){
+								if (captcha == res.data.code && phone == res.data.phone) {
 									uni.request({
 										// url:'http://111.231.109.113:8002/api/person/login',
-										url:that.$GrzxInter.Interface.login.value,
-										data:{
-											phoneNumber:phone,
+										url: that.$GrzxInter.Interface.login.value,
+										data: {
+											phoneNumber: phone,
 										},
-										method:that.$GrzxInter.Interface.login.method,
+										method: that.$GrzxInter.Interface.login.method,
 										success(res) {
 											console.log(res)
 											uni.removeStorageSync('captchaCode');
-											uni.setStorageSync('userInfo',res.data.data);
+											uni.setStorageSync('userInfo', res.data.data);
+											that.setJYJPushAlias(res.data.data.phoneNumber);
+											that.LoginLog(res.data.data.userId,res.data.data.phoneNumber);
 											uni.hideLoading();
-											that.registerBike(res.data.data.userId,res.data.data.phoneNumber)  //注册自行车用户
+											that.registerBike(res.data.data.userId, res.data.data.phoneNumber) //注册自行车用户
 										}
 									})
-								}else{
+								} else {
 									uni.showToast({
-										title:"验证码错误",
-										icon:"none"
+										title: "验证码错误",
+										icon: "none"
 									})
 								}
 							},
-							fail(){
+							fail() {
 								uni.showToast({
-									title:"验证码已过期，请重新获取",
-									icon:"none"
-								})	
+									title: "验证码已过期，请重新获取",
+									icon: "none"
+								})
 							}
 						})
 					}
 				}
 			},
 			//-------------------------------------用户注册自行车----------------------------------
-			registerBike(id,phone){
-				var that=this;
+			registerBike: function(id, phone) {
+				var that = this;
+				console.log(id);
 				uni.request({
-					url:that.$GrzxInter.Interface.RegistUser.value,
-					method:that.$GrzxInter.Interface.RegistUser.method,
-					data:{
-						userID:id,
-						phone:phone,
+					url: that.$GrzxInter.Interface.RegistUser.value,
+					method: that.$GrzxInter.Interface.RegistUser.method,
+					data: {
+						userID: id,
+						phone: phone,
 					},
 					success(res) {
-						// console.log(res)
+						console.log(res)
 						that.checkRealName(res.data.data.UserID);
 					},
 					fail() {
-						
+
 					}
 				})
 			},
 			//-------------------------------------检查是否实名----------------------------------
-			checkRealName(id){
-				console.log(id,'checkRealName')
-				var that=this;
+			checkRealName: function(id) {
+				console.log(id, 'checkRealName')
+				var that = this;
 				uni.request({
-					url:that.$GrzxInter.Interface.GetUserByUserID.value,
-					data:{
-						userID:id,
+					url: that.$GrzxInter.Interface.GetUserByUserID.value,
+					data: {
+						userID: id,
 					},
-					method:that.$GrzxInter.Interface.GetUserByUserID.method,
+					method: that.$GrzxInter.Interface.GetUserByUserID.method,
 					success(res) {
 						console.log(res)
 						uni.hideLoading();
-						if(res.data.data==""||res.data.data.UserName==""||res.data.data.UserIDNumber==""){
+						if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
 							//实名认证
 							uni.redirectTo({
-								url:that.$GrzxInter.Route.realName.url,
+								url: that.$GrzxInter.Route.realName.url,
 							})
-						}else if(res.data.data.RealNameStatus!==1){
+						} else if (res.data.data.RealNameStatus !== 1) {
 							//上传图片
 							uni.redirectTo({
-								url:that.$GrzxInter.Route.uploadPhoto.url,
+								url: that.$GrzxInter.Route.uploadPhoto.url,
 							})
-						}else{
-							uni.setStorageSync('RealNameInfo',res.data.data)
+						} else {
+							uni.setStorageSync('RealNameInfo', res.data.data)
 							uni.showToast({
-								title:"登录成功!",
-								icon:"none"
+								title: "登录成功!",
+								icon: "none"
 							})
-							if(that.urlData==1){
-								uni.switchTab({  //返回首页
-									url:'/pages/Home/zy_zhcx',
-								}) 
-							}else if(that.urlData==2){
-								uni.switchTab({  //返回订单页
-									url:'/pages/order/OrderList',
-								}) 
-							}else{
+							if (that.urlData == 1) {
+								uni.switchTab({ //返回首页
+									url: '/pages/Home/zy_zhcx',
+								})
+							} else if (that.urlData == 2) {
+								uni.switchTab({ //返回订单页
+									url: '/pages/order/OrderList',
+								})
+							} else {
 								console.log("返回上一页")
-								uni.navigateBack();//返回上一页
+								uni.navigateBack(); //返回上一页
 							}
 						}
 					}
 				})
 			},
-			wxLogin(){		//微信授权登录
-				var thethat=this;
+			//-------------------------------------微信授权登录----------------------------------
+			wxLogin: function() {
+				var thethat = this;
 				uni.login({
-					provider:'weixin',
-					success:function(loginRes){
-						uni.getUserInfo({	
+					provider: 'weixin',
+					success: function(loginRes) {
+						uni.getUserInfo({
 							provider: 'weixin',
-							success:function(res){			
-								res.userInfo.phoneNumber="";
+							success: function(res) {
+								res.userInfo.phoneNumber = "";
 								uni.setStorage({
-									key:"userInfo",
-									data:res.userInfo
+									key: "userInfo",
+									data: res.userInfo
 								});
 								uni.showToast({
 									title: '授权成功',
-									icon:"none"
+									icon: "none"
 								});
 								//绑定手机号
 								uni.getStorage({
-									key:'userInfo',
-									success:function(res1){
-										if(res1.data.phoneNumber==""||res1.data.phoneNumber==null){
+									key: 'userInfo',
+									success: function(res1) {
+										if (res1.data.phoneNumber == "" || res1.data.phoneNumber == null) {
 											uni.showToast({
-												title : '请绑定手机号',
-												icon : 'none',
+												title: '请绑定手机号',
+												icon: 'none',
 											})
-											setTimeout(function(){
-												uni.navigateTo({	
-													url  : '/pages/GRZX/wxLogin'
-												}) 
-											},500);
+											setTimeout(function() {
+												uni.navigateTo({
+													url: '/pages/GRZX/wxLogin'
+												})
+											}, 500);
 										}
 									}
 								})
 							},
-							fail:function(){
-								
+							fail: function() {
+
 							}
 						})
 					}
 				})
-				
+
 			},
-			qqLogin(){		//QQ授权登录
-				var thethat=this;
+			//-------------------------------------QQ授权登录----------------------------------
+			qqLogin: function() {
+				var thethat = this;
 				uni.getProvider({
-				    service: 'oauth',
-				    success: function (res) {
-				        if (~res.provider.indexOf('qq')) {
-				            uni.login({
-				                provider: 'qq',
-				                success: function (loginRes) {
-				                    uni.getUserInfo({
-				                    	provider: 'qq',
+					service: 'oauth',
+					success: function(res) {
+						if (~res.provider.indexOf('qq')) {
+							uni.login({
+								provider: 'qq',
+								success: function(loginRes) {
+									uni.getUserInfo({
+										provider: 'qq',
 										success(logRes) {
-											console.log(logRes,"logRes")
+											console.log(logRes, "logRes")
 											var sex;
-											if(logRes.userInfo.gender=="男"){
-												sex=1;
+											if (logRes.userInfo.gender == "男") {
+												sex = 1;
 											}
-											if(logRes.userInfo.gender=="女"){
-												sex=2;
+											if (logRes.userInfo.gender == "女") {
+												sex = 2;
 											}
-											var list={
-												nickName:logRes.userInfo.nickname,
-												openId:logRes.userInfo.openid,
-												avatarUrl:logRes.userInfo.figureurl_qq_2,
-												gender:sex,
+											var list = {
+												nickName: logRes.userInfo.nickname,
+												openId: logRes.userInfo.openid,
+												avatarUrl: logRes.userInfo.figureurl_qq_2,
+												gender: sex,
 											}
-											console.log(list,"list")
+											console.log(list, "list")
 											uni.setStorage({
-												key:'userInfo',
-												data:list
+												key: 'userInfo',
+												data: list
 											})
-											
-											if(list!=null||list!=""){
-												thethat.login(list);						
+
+											if (list != null || list != "") {
+												thethat.login(list);
 											}
 											uni.showToast({
 												title: '授权成功',
-												icon:"none"
+												icon: "none"
 											});
 											uni.switchTab({
 												//url:'/pages/GRZX/user',
-												url:thethat.$GrzxInter.Route.user.url,
+												url: thethat.$GrzxInter.Route.user.url,
 											})
-											
+
 										}
-				                    })
-				                }
-				            });
-				        }
-				    }
+									})
+								}
+							});
+						}
+					}
 				})
 			},
-			getCodeClick(e){	//获取验证码
-				var that=this;
-				const {phoneNumber, captchaCode} = this;		
-				if(that.judgeNum(that.phoneNumber)){
-					var timer=null,second=59; //倒计时的时间
-					if(that.textCode == "获取验证码"){
-					  that.textCode = second+"秒后重发";
-					  if(that.textCode == "59秒后重发"){
-						  timer=setInterval(function(){
-						  second--;
-						  if(second<=0){	
-						  	that.textCode = "获取验证码";
-						  	clearInterval(timer);
-						  	second=59;	
-						  }
-						  else{			
-						  	that.textCode = second+"秒后重发";
-						  }},1000)
-						  console.log(that.phoneNumber)
-						 uni.request({
-							url:that.$GrzxInter.Interface.getLoginCode.value,
-						    data:{
-								phoneNumber:that.phoneNumber,
-							},
-							method:that.$GrzxInter.Interface.getLoginCode.method,
-							success:(res)=>{
-								console.log(res,"340");
-						 		console.log(res.data.data);
-								uni.setStorage({
-									key:'captchaCode',
-									data:{
-										code:res.data.data,
-										phone:that.phoneNumber,
-									}
-								})
-								uni.showToast({
-									title:"验证码已发送，仅在5分钟内有效!",
-									icon:"none"
-								})
-								setTimeout(function(){
-									uni.removeStorage({
-										key:'captchaCode',
-									})
-								},300000);
-						    }
-						 }) 
-					  }
-							
+			//-------------------------------------获取验证码----------------------------------
+			getCodeClick: function(e) {
+				var that = this;
+				const {phoneNumber,captchaCode} = this;
+				if (that.judgeNum(that.phoneNumber)) {
+					var timer = null, //定时器
+					second = 59; //倒计时的时间
+					if (that.textCode == "获取验证码"&&that.state) {
+						that.state = false;
+						that.getCode(timer,second,that.phoneNumber);
 					}
-				}else{
+				} else {
 					uni.showToast({
-						title : '请输入正确的手机号码',
-						icon : 'none',
+						title: '请输入正确的手机号码',
+						icon: 'none',
 					})
 				}
 			},
-			returnClick(){		//返回个人中心
+			//-------------------------------------获取验证码的请求----------------------------
+			getCode: function(timer,second,phoneNumber) {
 				var that=this;
-				if(that.urlData==1){
-					uni.switchTab({  //返回首页
-						url:'/pages/Home/zy_zhcx',
-					}) 
-				}else if(that.urlData==2){
-					uni.switchTab({  //返回订单页
-						url:'/pages/order/OrderList',
-					}) 
-				}else{
+				timer = setInterval(function() {
+					second--;
+					if (second <= 0) {
+						that.textCode = "获取验证码";
+						clearInterval(timer);
+						second = 59;
+						that.state = true;
+					} else {
+						that.textCode = second + "秒后重发";
+					}
+				}, 1000)
+				uni.request({
+					url: that.$GrzxInter.Interface.getLoginCode.value,
+					data: {
+						phoneNumber: phoneNumber,
+					},
+					method: that.$GrzxInter.Interface.getLoginCode.method,
+					success: (res) => {
+						console.log(res, "340");
+						console.log(res.data.data);
+						if(res.data.status==false){ //发送验证码次数上限
+							that.state = true;
+							that.textCode = "获取验证码";
+							clearInterval(timer);
+							uni.showToast({
+								title: "今日验证码发送次数已上限!",
+								icon: "none"
+							})
+						}else{ //成功发送验证码
+							uni.setStorage({
+								key: 'captchaCode',
+								data: {
+									code: res.data.data,
+									phone: phoneNumber,
+								}
+							})
+							uni.showToast({
+								title: "验证码已发送，仅在5分钟内有效!",
+								icon: "none"
+							})
+							setTimeout(function() {
+								uni.removeStorage({
+									key: 'captchaCode',
+								})
+							}, 300000);
+						}
+					}
+				})
+			},
+			//-------------------------------------返回按钮------------------------------------
+			returnClick: function() {
+				var that = this;
+				if (that.urlData == 1) {
+					uni.switchTab({ //返回首页
+						url: '/pages/Home/zy_zhcx',
+					})
+				} else if (that.urlData == 2) {
+					uni.switchTab({ //返回订单页
+						url: '/pages/order/OrderList',
+					})
+				} else {
 					console.log("返回上一页")
-					uni.navigateBack();//返回上一页
+					uni.navigateBack(); //返回上一页
 				}
 			},
-			//------------判断是否为base64格式-----------
-			isBase64:function(str) {
-			    if (str ==='' || str.trim() ===''){ return false; }
-			    try {
-			        return btoa(atob(str)) == str;
-			    } catch (err) {
-			        return false;
-			    }
+			//-----------------------------------判断是否为base64格式----------------------------
+			isBase64: function(str) {
+				if (str === '' || str.trim() === '') {
+					return false;
+				}
+				try {
+					return btoa(atob(str)) == str;
+				} catch (err) {
+					return false;
+				}
 			},
-			//------------获得7日后的日期-----------
-			getSpecialTime() {
-				var date=new Date();
-				var currentDate=JSON.stringify(date).substring(1,11);
-				var arry  = currentDate.split("-");
-				var year = parseInt(arry[0],10);
-				var month = parseInt(arry[1],10);
-				var day = parseInt(arry[2],10); 
+			//-----------------------------------获得7日后的日期----------------------------
+			getSpecialTime: function() {
+				var date = new Date();
+				var currentDate = JSON.stringify(date).substring(1, 11);
+				var arry = currentDate.split("-");
+				var year = parseInt(arry[0], 10);
+				var month = parseInt(arry[1], 10);
+				var day = parseInt(arry[2], 10);
 				//月份的方法：getMonth()从 Date 对象返回月份 (0 ~ 11)。
-				var structDate = new Date(year , month - 1, day);
-				var num  = parseInt(7,10);
+				var structDate = new Date(year, month - 1, day);
+				var num = parseInt(7, 10); //7天
 				//setDate增减天数
-				structDate.setDate(structDate.getDate()+num); 
-				 //如果月份长度少于2，则前加 0 补位   
-				 if((structDate.getMonth() + 1).toString().length == 1) {  
-					month = 0 + "" + (structDate.getMonth() + 1).toString();  
-				 } else {    
-					 month = (structDate.getMonth() + 1).toString();  
-				 }   
-				 //如果天数长度少于2，则前加 0 补位   
-				 if (structDate.getDate().toString().length == 1) {   
-					day = 0 + "" + structDate.getDate().toString();   
-				 } else {    
-					 day = structDate.getDate().toString();   
-				 }    
-				 var newDate = structDate.getFullYear() + "-" + month + "-" + day;   
-			}
+				structDate.setDate(structDate.getDate() + num);
+				//如果月份长度少于2，则前加 0 补位   
+				if ((structDate.getMonth() + 1).toString().length == 1) {
+					month = 0 + "" + (structDate.getMonth() + 1).toString();
+				} else {
+					month = (structDate.getMonth() + 1).toString();
+				}
+				//如果天数长度少于2，则前加 0 补位   
+				if (structDate.getDate().toString().length == 1) {
+					day = 0 + "" + structDate.getDate().toString();
+				} else {
+					day = structDate.getDate().toString();
+				}
+				var newDate = structDate.getFullYear() + "-" + month + "-" + day;
+			},
+			//---------------------推送时使用----------------------------
+			setJYJPushAlias: function(phoneNumber) {
+				var that = this;
+				jyJPush.deleteJYJPushAlias({
+				//  可以不用传值进去，但是需要配置这项数据
+				}, result=> {
+					jyJPush.setJYJPushAlias({
+						userAlias: phoneNumber,
+					}, result => {
+						//  设置成功或者失败，都会通过这个result回调返回数据；数据格式保持极光返回的安卓/iOS数据一致
+						//  注：若没有返回任何数据，考虑是否初始化完成
+						console.log(result);
+						jyJPush.getRegistrationID(
+						//  返回的数据会有registrationID，errorCode
+						result => {
+							console.log(result)
+						});
+					});
+				});
+			},
+			// ----------------------------登录时写日志--------------------------------
+			LoginLog: function(UserID, Phone) {
+				var that = this;
+				uni.getLocation({
+					type: 'gcj02',
+					geocode: true,
+					success(res) {
+						console.log(res)
+						uni.getSystemInfo({
+							success(res1) {
+								var country = res.address.country ? res.address.country : '';
+								var province = res.address.province ? res.address.province : '';
+								var city = res.address.city ? res.address.city : '';
+								var district = res.address.district ? res.address.district : '';
+								var street = res.address.street ? res.address.street : '';
+								var streetNum = res.address.streetNum ? res.address.streetNum : '';
+								var poiName = res.address.poiName ? res.address.poiName : '';
+								var Address = country + province + city + district + street + streetNum + poiName;
+								uni.request({
+									url: $DDTInterface.DDTInterface.BikeLog.Url,
+									method: $DDTInterface.DDTInterface.BikeLog.method,
+									data: {
+										UserID: UserID,
+										LogType: '登陆',
+										PhoneNumber: Phone,
+										Mac: '',
+										PhoneBrand: res1.brand,
+										Address: Address,
+										PhoneModel: res1.model,
+										SystemType: res1.platform,
+										SystemVersion: res1.system,
+									},
+									success(res) {
+									},
+									fail(err) {
+										console.log(err)
+									}
+								})
+							}
+						})
+					}
+				})
+			},
 		}
 	}
 </script>
 
 <style lang="scss">
 	//该界面的全局样式
-	page{
+	page {
 		margin: 0;
 		padding: 0;
 	}
+
 	.content {
 		width: 100%;
 		position: relative;
 	}
-	.backClass{  //背景图
+
+	.backClass {
+		//背景图
 		position: absolute;
-		bottom:0px; 
+		bottom: 0px;
 		width: 100%;
 		height: 100%;
 	}
-	.returnClass{  //返回按钮
+
+	.returnClass {
+		//返回按钮
 		width: 2.53%;
 		height: 35upx;
 		top: 80upx;
 		left: 4.13%;
 		position: absolute;
 	}
-	.logoClass{		//logo的样式
+
+	.logoClass {
+		//logo的样式
 		width: 32.4%;
 		height: 233upx;
 		top: 200upx;
 		left: 33.87%;
 		position: absolute;
 	}
-	.iconClass1{   //手机图标
+
+	.iconClass1 {
+		//手机图标
 		width: 26upx;
 		height: 36upx;
 		top: 58upx;
-		left:2%;
+		left: 2%;
 		position: absolute;
 	}
-	.iconClass2{	//验证码图标
+
+	.iconClass2 {
+		//验证码图标
 		width: 31upx;
 		height: 38upx;
 		top: 56upx;
 		left: 2%;
 		position: absolute;
 	}
-	.inputContent{  //登录区域的样式
+
+	.inputContent {
+		//登录区域的样式
 		width: 90.4%;
 		//height: 874upx;
 		height: 700upx;
 		position: absolute;
-		top:324upx;
+		top: 324upx;
 		left: 4.8%;
 		background-color: white;
 		border-radius: 20upx;
 	}
-	.inputItem{		//输入区域的样式
+
+	.inputItem {
+		//输入区域的样式
 		width: 87.6%;
 		height: 140upx;
 		border-bottom: 1upx solid #EAEAEA;
 	}
-	.phoneNum{
+
+	.phoneNum {
 		position: absolute;
-		top:130upx;
+		top: 130upx;
 		left: 6.19%;
 	}
-	.Captcha{
+
+	.Captcha {
 		position: absolute;
-		top:272upx;
+		top: 272upx;
 		left: 6.19%;
 	}
-	.inputClass{	//输入框的位置
+
+	.inputClass {
+		//输入框的位置
 		position: absolute;
 		left: 12%;
-		top:51upx;
+		top: 51upx;
 		font-size: 32upx;
 		height: 50upx;
 		line-height: 50upx;
 		color: #999999;
 	}
-	.btnLogin{ //按钮
+
+	.btnLogin {
+		//按钮
 		position: absolute;
-		top:421upx;
+		top: 421upx;
 		width: 100%;
 		height: 180upx;
 	}
-	.wxClass{  //微信
+
+	.wxClass {
+		//微信
 		position: absolute;
 		left: 33%;
-		top:1015upx;
+		top: 1015upx;
 		width: 67upx;
-		height: 54upx;	
+		height: 54upx;
 	}
-	.wxClass1{  //微信1
+
+	.wxClass1 {
+		//微信1
 		position: absolute;
 		left: 44%;
-		top:1015upx;
+		top: 1015upx;
 		width: 67upx;
-		height: 54upx;	
+		height: 54upx;
 	}
-	.qqClass{  //QQ
+
+	.qqClass {
+		//QQ
 		position: absolute;
 		left: 60%;
-		top:1015upx;
+		top: 1015upx;
 		width: 47upx;
 		height: 50upx;
 	}
-	.loginMode{ //第三方登录
+
+	.loginMode {
+		//第三方登录
 		position: absolute;
-		top:900upx;
+		top: 900upx;
 		width: 100%;
 		text-align: center;
 		font-size: 30upx;
 		color: #999999;
 	}
-	.leftLine{
+
+	.leftLine {
 		border-top: 1upx solid #EAEAEA;
 		height: 1upx;
 		width: 22.48%;
 		position: absolute;
-		top:920upx;
+		top: 920upx;
 		left: 12.73%;
 	}
-	.rightLine{
+
+	.rightLine {
 		border-top: 1upx solid #EAEAEA;
 		height: 1upx;
 		width: 22.48%;
@@ -558,30 +681,38 @@
 		top: 920upx;
 		left: 64.78%;
 	}
-	.getCode{  //获取验证码
+
+	.getCode {
+		//获取验证码
 		position: absolute;
-		top:308upx;
+		top: 308upx;
 		left: 64%;
-		width:30%;
+		width: 30%;
 		font-size: 28upx;
 		border-radius: 12upx;
 		text-align: center;
 		line-height: 64upx;
 		height: 64upx;
 	}
-	.style1{	//获取验证码
-		border:1px solid #65C36D;//南平综合出行：#FF971E
+
+	.style1 {
+		//获取验证码
+		border: 1px solid #65C36D; //南平综合出行：#FF971E
 		color: #65C36D;
-	}	
-	.style2{
-		border:1px solid #1D2087;
+	}
+
+	.style2 {
+		border: 1px solid #1D2087;
 		color: #1D2087;
-	}	
-	.style3{
-		border:1px solid #FF971E;
+	}
+
+	.style3 {
+		border: 1px solid #FF971E;
 		color: #FF971E;
-	}	
-	.fontStyle{		//确定字体样式
+	}
+
+	.fontStyle {
+		//确定字体样式
 		position: absolute;
 		top: 480upx;
 		left: 5%;
@@ -592,6 +723,6 @@
 		padding: 25upx 0;
 		border-radius: 20upx;
 		// background:linear-gradient(54deg,rgba(255,128,8,1) 0%,rgba(255,200,55,1) 100%);  //南平综合出行
-		background:linear-gradient(54deg,rgba(53,199,98,1) 0%,rgba(6,161,54,1) 100%);  //漳州达达通
+		background: linear-gradient(54deg, rgba(53, 199, 98, 1) 0%, rgba(6, 161, 54, 1) 100%); //漳州达达通
 	}
 </style>

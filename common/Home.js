@@ -23,12 +23,6 @@ const Interface = {
 		method:'POST',//GET-POST
 		pages:[]
 	},
-		
-	UpDateVersion:{
-		url: Url + '/api/Business/GetInsuranceCheckState',
-		name:'自动更新接口',
-		method:'POST',//GET-POST
-	}
 }
 
 const dateFormat = {

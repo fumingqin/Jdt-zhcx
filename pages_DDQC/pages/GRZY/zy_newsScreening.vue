@@ -1,28 +1,67 @@
 <template>
 	<view>
-		<view class="ns_view"  v-for="(item, index) in goodsList" :key="index">
-			<image class="ns_img" :src="item.imageUrl" mode="aspectFill"></image>
-			<view>
-				<text class="ns_title">{{item.title}}</text>
-				<text class="ns_time">{{item.reportTime.substr(0,9)}}</text>
+		<view style="display: flex;background-color: #FFF;height: 120rpx;font-size: 32rpx;align-items: center;justify-content: space-between;">
+			<view class="Tab" @click="Click(0)">
+				<view style="margin-bottom: 20rpx;" :class="tabNum==0?'TabClick':''">新闻资讯</view>
+				<view class="borderline" v-if="tabNum==0"></view>
+			</view>
+			<view class="Tab" @click="Click(1)">
+				<view style="margin-bottom: 20rpx;" :class="tabNum==1?'TabClick':''">失物招领</view>
+				<view class="borderline" v-if="tabNum==1"></view>
+			</view>
+			<view class="Tab" @click="Click(2)">
+				<view style="margin-bottom: 20rpx;" :class="tabNum==2?'TabClick':''">问卷调查</view>
+				<view class="borderline" v-if="tabNum==2"></view>
+			</view>
+			<view class="Tab" @click="Click(3)">
+				<view style="margin-bottom: 20rpx;" :class="tabNum==3?'TabClick':''">通知公告</view>
+				<view class="borderline" v-if="tabNum==3"></view>
 			</view>
 		</view>
-		
-		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; margin: 16upx 0; color: #aaa;">
+		<view style="margin: 20rpx;">
+			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='新闻资讯'&&tabNum==0">
+				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+					<text>{{item.Title}}</text>
+				</view>
+				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+			</view>
+			
+			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='失物招领'&&tabNum==1">
+				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+					<text>{{item.Title}}</text>
+				</view>
+				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+			</view>
+			
+			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='问卷调查'&&tabNum==2">
+				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+					<text>{{item.Title}}</text>
+				</view>
+				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+			</view>
+			
+			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='通知公告'&&tabNum==3">
+				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+					<text>{{item.Title}}</text>
+				</view>
+				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+			</view>
+		</view>
+		<!-- 		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; margin: 16upx 0; color: #aaa;">
 			<text v-if="current==0" :hidden="disStatus== 1">{{loadingType== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
 			<text v-if="current==0" :hidden="disStatus== 0">暂无历史数据</text>
-		</view>
+		</view> -->
 	</view>
 </template>
 
 <script>
-	import $lyfw from '@/common/LYFW/LyfwFmq.js' //引用路径
+	import $DDTInterface from '@/common/DDT.js'
 	export default {
 		data() {
 			return {
-				goodsList:'',
+				goodsList: '',
 				zy_dataIndex: 6, //列表默认数量
-				disStatus:0,
+				disStatus: 0,
 				loadingText: {
 					down: '上拉加载更多',
 					refresh: '正在加载...',
@@ -30,123 +69,108 @@
 				},
 				loadingType: 0, //加载更多状态
 				current: 0, //标题下标
+				tabNum: 0,
+				Title: '',
+				NewsArray: [],
 			}
 		},
-		
 		onLoad() {
-			this.loadData();
+			this.GetNews();
 		},
-		
 		//页面触底
 		onReachBottom() {
-			uni.showLoading({
-				title: '加载更多中...',
-				icon: 'loading'
-			})
-			this.getMore();
+			// uni.showLoading({
+			// 	title: '加载更多中...',
+			// 	icon: 'loading'
+			// })
+			// this.getMore();
 		},
-		
+
 		methods: {
-			loadData: function() {
+			changeTime: function(e) {
+				var date = e.substr(0, 16).replace('T',' ');
+				return date;
+			},
+			GetNews: function() {
+				var that = this;
 				//请求新闻资讯
+				uni.showLoading({
+					title: '加载中...',
+					icon: 'loading'
+				})
 				uni.request({
-					url:$lyfw.Interface.currency_zhly.value,
-					method:$lyfw.Interface.currency_zhly.method,
-					success: (e) => {
-						console.log(e)
-						if(e.data.msg=='获取成功'){
-							if(e.data.data.length==0){
-								this.disStatus = 1;
-							}else{
-								this.goodsList = e.data.data;
-								this.disStatus = 0;
-							}
-						}else{
-							uni.hideLoading()
-							uni.stopPullDownRefresh()
-							this.goodsList = '';
-							uni.showToast({
-								title: '获取失败',
-								icon: 'none'
-							})
-						}
+					url: $DDTInterface.DDTInterface.GetNews.Url,
+					method: $DDTInterface.DDTInterface.GetNews.method,
+					success: function(res) {
+						uni.hideLoading();
+						that.NewsArray = res.data.data;
 					},
-					fail: function() {
+					fail: function(err) {
 						uni.hideLoading()
-						uni.stopPullDownRefresh()
 						uni.showToast({
 							title: '网络异常，请检查网络后尝试',
 							icon: 'none'
 						})
 					}
 				})
-				
-				uni.stopPullDownRefresh();
 			},
-			
 			//---------------------页面触底加载信息-----------------------------
-			
-			getMore(){
+			getMore() {
 				this.loadingType = 1;
-				if(this.current == 0){
+				if (this.current == 0) {
 					if (this.zy_dataIndex < this.goodsList.length) {
 						var a = this.zy_dataIndex + 6;
 						this.zy_dataIndex = a;
 						this.loadingType = 0;
 						uni.hideLoading()
-					}else if (this.zy_dataIndex >= this.goodsList.length) {
+					} else if (this.zy_dataIndex >= this.goodsList.length) {
 						this.loadingType = 2;
 						uni.hideLoading()
 					}
 				}
 			},
-			
 			//---------------------资讯详情页-----------------------------------
-			
-			informationTo: function(e) {
+			NewsDetail: function(item) {
 				uni.navigateTo({
-					url:'../../../pages/Home/InformationDetails?aid=' + e
+					url: './newsDetail?id=' + item.AID
 				})
 			},
+			Click: function(e) {
+				this.tabNum = e;
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
-	.ns_view{
-		display: flex;
-		margin-top: 38upx;
-		margin-left: 32upx;
-		margin-right: 32upx;
-		padding-bottom: 42upx;
-		border-bottom: 1px #F5F5F5 dotted;
+	page {
+		background-color: #F5F9FC;
 	}
-	
-	.ns_img{
-		width:210upx;
-		height:144upx;
-		border-radius:12upx;
-	}
-	
-	.ns_title {
-		padding-left: 16upx;
-		font-size: 30upx;
+
+	.Tab {
 		color: #333;
-		font-weight: bold;
-		line-height: 46upx;
-		display: block;
-		// text-overflow: ellipsis;
-		// white-space: nowrap;
-		// overflow: hidden;
-		width: 464upx;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 25%;
 	}
-	
-	.ns_time{
-		display: block;
-		padding-left: 16upx;
-		padding-top: 20upx;
-		bottom: 0;
-		font-size:26upx;
-		color: #999999;
+
+	.borderline {
+		border-bottom: 1px solid #65C36D;
+		width: 75rpx;
+		color: #65C36D;
+	}
+
+	.TabClick {
+		color: #65C36D;
+	}
+
+	.item {
+		margin: 20rpx;
+		border: 4rpx solid #65C36D;
+		background-color: #FFF;
+		border-left-width: 20rpx;
+		border-radius: 10rpx;
+		padding: 15rpx 20rpx 20rpx 10rpx;
 	}
 </style>

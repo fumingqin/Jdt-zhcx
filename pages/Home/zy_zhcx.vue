@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<!-- 轮播图-->
-		<swiper class="swi" circular autoplay>
+		<swiper class="swi" circular autoplay style="background-color: #65C36D;">
 			<swiper-item class="swiItem" v-for="(item,index) in homePage" :key="index">
-				<image :src="item.imageUrl" mode="aspectFill" />
+				<image :src="item.ImageURL" mode="aspectFill" />
 			</swiper-item>
 		</swiper>
 
@@ -154,17 +154,16 @@
 			</swiper-item>
 		</swiper>
 		</swiper>
-
 		<!-- 咨询动态 -->
 		<view class="notice">
 			<view class="zl_content">
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
-					<swiper class="swi2 swiper-container" vertical circular autoplay display-multiple-items="2">
-						<swiper-item v-for="(item,index) in consultingService" :key="index">
-							<scroll-view scroll-y>
-								<view class="zl_noText">{{item.title}}</view>
-							</scroll-view>
+					<swiper class="swi2" vertical circular autoplay display-multiple-items="2" disable-touch="true">
+						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index">
+							<!-- <scroll-view scroll-y> -->
+							<view class="zl_noText" @click="newsClick(item)">{{item.Title}}</view>
+							<!-- </scroll-view> -->
 						</swiper-item>
 					</swiper>
 					<!-- <view class="zl_label">
@@ -187,43 +186,43 @@
 			</view>
 			<view class="zl_reContent2">
 				<view class="zl_contentImage1">
-					<!-- 泉州小西埕 @click="godetail(sixPalaceList[0].ticketId)" -->
-					<view class="ct_content1" @click="godetail">
+					<!-- 泉州小西埕 -->
+					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
 						<!-- <image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text> -->
-						<image class="ct_image1" :src="picList[0].img" mode="aspectFill"></image>
-						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[0].txt}}</text>
+						<image class="ct_image1" src="http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg" mode="aspectFill"></image>
+						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">巾帼文明线</text>
 					</view>
 					<!-- 稻田摸鱼 -->
-					<view class="ct_content2" @click="godetail">
+					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
 						<!-- <image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text> -->
-						<image class="ct_image2" :src="picList[1].img" mode="aspectFill"></image>
-						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[1].txt}}</text>
+						<image class="ct_image2" src="http://zntc.145u.net/UpLoadImages/DDT/公共自行车.jpg" mode="aspectFill"></image>
+						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">公共自行车</text>
 					</view>
 				</view>
 
 				<view class="zl_contentImage2">
 					<!-- 泉州钟楼 -->
-					<view class="ct_content3" @click="godetail">
+					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
 						<!-- <image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text> -->
-						<image class="ct_image3" :src="picList[2].img" mode="aspectFill"></image>
-						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[2].txt}}</text>
+						<image class="ct_image3" src="http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg" mode="aspectFill"></image>
+						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">古雷助力车</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
-					<view class="ct_content4" @click="godetail">
+					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
 						<!-- <image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text> -->
-						<image class="ct_image4" :src="picList[3].img" mode="aspectFill"></image>
-						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[3].txt}}</text>
+						<image class="ct_image4" src="http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg" mode="aspectFill"></image>
+						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">客运南站</text>
 					</view>
 					<!-- 七彩官畲 -->
-					<view class="ct_content5" @click="godetail">
+					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
 						<!-- <image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text> -->
-						<image class="ct_image5" :src="picList[4].img" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{picList[4].txt}}</text>
+						<image class="ct_image5" src="http://zntc.145u.net/UpLoadImages/DDT/双层公交.jpg" mode="aspectFill"></image>
+						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">双层公交</text>
 					</view>
 				</view>
 			</view>
@@ -290,23 +289,13 @@
 	export default {
 		data() {
 			return {
-				consultingService: [{
-						title: '不负灿烂时光,周边游更精彩,美伦美焕',
-					},
-					{
-						title: '不负灿烂时光,周边游更精彩',
-					},
-					{
-						title: '老年卡要还代了,这事你该关注',
-					},
-					{
-						title: '漳州点资公交卡入驻集团',
-					}
-				],
+				consultingService: [], //新闻资讯
 				imgXXDT: [{
 					imageUrl: '',
 				}], //咨询动态
-				homePage: '', //轮播图
+				homePage: [{
+					ImageURL: ''
+				}], //轮播图
 				type: 0,
 				Announcement: '', //资讯动态
 				sixPalaceList: [{
@@ -343,35 +332,36 @@
 				version: '', //版本号
 				platform: '', //系统平台
 				userInfo: '',
-				picList: [{
-					img: '',
-					txt: '',
-				},
-				{
-					img: '',
-					txt: '',
-				},
-				{
-					img: '',
-					txt: '',
-				},
-				{
-					img: '',
-					txt: '',
-				},
-				{
-					img: '',
-					txt: '',
-				}],
 			}
 		},
 		onLoad() {
 			var that = this;
-			this.lunBoInit();
+			// #ifdef APP-PLUS
+			//获取系统信息
+			uni.getSystemInfo({
+				success(res) {
+					console.log('获取系统信息', res)
+					//获取系统平台 iOS Android
+					that.platform = res.platform;
+					// 获取本地应用资源版本号  
+					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+						that.version = inf.version; //获取当前版本号
+						setTimeout(function() {
+							//检测升级
+							that.updateAPP();
+						}, 1500)
+					});
+				}
+			})
+			// #endif
+			this.GetRotationChart();
 			this.loadData();
 			//#ifdef APP-PLUS
 			this.loadService();
 			//#endif
+
+			//获取新闻数据
+			that.GetNews();
 		},
 
 		onShow() {
@@ -380,21 +370,6 @@
 			if (that.userInfo != '') {
 				that.checkCurrentStatus();
 			}
-			// #ifdef APP-PLUS
-			//获取系统信息
-			uni.getSystemInfo({
-				success(res) {
-					//获取系统平台 iOS Android
-					that.platform = res.platform;
-					// 获取本地应用资源版本号  
-					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
-						that.version = inf.version; //获取当前版本号
-						//检测升级
-						that.updateAPP();
-					});
-				}
-			})
-			// #endif
 			// #ifdef MP-WEIXIN
 			that.getLoginState();
 			//#endif
@@ -418,66 +393,115 @@
 			//----------------------自动更新-------------------------------
 			updateAPP: function() {
 				var that = this;
+				let systemType = 0;
+				if (that.platform == 'ios') {
+					systemType = 1;
+				} else {
+					systemType = 0;
+				}
 				uni.request({
-					url: $Home.Interface.UpDateVersion.url,
-					method: $Home.Interface.UpDateVersion.method,
+					url: $DDTInterface.DDTInterface.GetAppVersion.Url,
+					method: $DDTInterface.DDTInterface.GetAppVersion.method,
 					data: {
-						systemType: that.platform
+						systemType: systemType
 					},
 					success(res) {
-						console.log(res)
-					},
-					fail(res) {
-						console.log(res)
-					}
-				})
-			},
+						console.log('获取版本信息成功', res)
+						if (res.data.status == true) {
+							if (that.platform == 'ios') {
+								if (that.version != res.data.data.VersionID) {
+									uni.showModal({
+										title: '温馨提示',
+										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
+										complete(res) {
+											if (res.confirm) {
 
-			//----------------------读取静态页面json.js-------------------------------
-
-			async lunBoInit() {
-				let ridingStyle = await this.$api.lyfwcwd('ridingStyle');
-				this.picList = ridingStyle.data;
-				let Announcement = await this.$api.lyfwcwd('Announcement');
-				this.Announcement = Announcement.data;
-				console.log(this.picList)
-			},
-
-			//----------------------接口数据-------------------------------
-
-			loadData: function() {
-				//请求新闻资讯
-				uni.request({
-					url: $lyfw.Interface.currency_zhly.value,
-					method: $lyfw.Interface.currency_zhly.method,
-					success: (e) => {
-						console.log(e)
-						if (e.data.msg == '获取成功') {
-							if (e.data.data.length == 0) {
-								this.disStatus = 1;
+												// let appleId=1466344848 //应用的appId
+												// plus.runtime.launchApplication({
+												// 	action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
+												// }, function(e) {
+												// 	console.log('Open system default browser failed: ' + e.message);
+												// });
+												let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
+												plus.runtime.openURL(url, function(res) {
+													console.log(res);
+												});
+											}
+										}
+									})
+								}
 							} else {
-								this.goodsList = e.data.data;
-								this.disStatus = 0;
+
 							}
 						} else {
-							uni.hideLoading()
-							uni.stopPullDownRefresh()
-							this.goodsList = '';
-							uni.showToast({
-								title: '获取失败',
-								icon: 'none'
-							})
+							// uni.showToast({
+							// 	title:res.data.msg,
+							// 	icon:'none'
+							// })
 						}
 					},
-					fail: function() {
-						uni.hideLoading()
-						uni.stopPullDownRefresh()
-						uni.showToast({
-							title: '网络异常，请检查网络后尝试',
-							icon: 'none'
-						})
+					fail(res) {
+						console.log('获取版本信息失败', res)
 					}
 				})
+			},
+			//--------------------------新闻资讯--------------------------
+			GetNews: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetNews.Url,
+					method: 'POST',
+					data: {},
+					success(res) {
+						// console.log('请求新闻资讯成功',res)
+						if (res.data.status == true) {
+							that.consultingService = res.data.data;
+						}
+					},
+					fail(res) {
+						console.log('请求新闻资讯失败', res)
+					}
+				})
+			},
+			newsClick: function(item) {
+				uni.navigateTo({
+					url: '../../pages_DDQC/pages/GRZY/newsDetail?id=' + item.AID
+				})
+			},
+			//----------------------接口数据-------------------------------
+			loadData: function() {
+				//请求新闻资讯
+				// uni.request({
+				// 	url: $lyfw.Interface.currency_zhly.value,
+				// 	method: $lyfw.Interface.currency_zhly.method,
+				// 	success: (e) => {
+				// 		console.log(e)
+				// 		if (e.data.msg == '获取成功') {
+				// 			if (e.data.data.length == 0) {
+				// 				this.disStatus = 1;
+				// 			} else {
+				// 				this.goodsList = e.data.data;
+				// 				this.disStatus = 0;
+				// 			}
+				// 		} else {
+				// 			uni.hideLoading()
+				// 			uni.stopPullDownRefresh()
+				// 			this.goodsList = '';
+				// 			uni.showToast({
+				// 				title: '获取失败',
+				// 				icon: 'none'
+				// 			})
+				// 		}
+				// 	},
+				// 	fail: function() {
+				// 		uni.hideLoading()
+				// 		uni.stopPullDownRefresh()
+				// 		uni.showToast({
+				// 			title: '网络异常，请检查网络后尝试',
+				// 			icon: 'none'
+				// 		})
+				// 	}
+				// })
 
 				//请求六宫格数据
 				uni.request({
@@ -491,7 +515,6 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log('请求六宫格', res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
@@ -508,9 +531,6 @@
 					},
 					success: (res) => {
 						console.log(res)
-						this.homePage = res.data.data.filter(item => {
-							return item.type == 'banner2' || item.type == 'banner1';
-						})
 						this.imgXXDT = res.data.data.filter(item => {
 							return item.type == 'dongtai';
 						})
@@ -518,11 +538,23 @@
 						// console.log(this.imgXXDT)
 					}
 				})
-
 				uni.stopPullDownRefresh();
 			},
-
-
+			//----------------------获取轮播图------------------------------
+			GetRotationChart: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetRotationChart.Url,
+					method: $DDTInterface.DDTInterface.GetRotationChart.method,
+					data: {},
+					success(res) {
+						that.homePage = res.data.data;
+					},
+					fail(err) {
+						console.log(err)
+					}
+				})
+			},
 			//---------------------页面触底加载信息-----------------------------
 
 			getMore() {
@@ -584,19 +616,15 @@
 						url: '../GRZX/userLogin',
 					})
 				}
-				console.log('是否拿到缓存', that.userInfo)
+				// console.log('是否拿到缓存', that.userInfo)
 			},
 
 			//路由整合
-			godetail: function() {
-				uni.setStorageSync('imgPiclist', this.picList);
+			godetail: function(e) {
 				uni.navigateTo({
-					url: '../../pages_LYFW/pages/LYFW/currency/imglist3',
+					// url:'../../pages_DDQC/pages/GRZY/zy_QRcode'
+					url: '',
 				})
-				// uni.navigateTo({
-				// 	// url:'../../pages_DDQC/pages/GRZY/zy_QRcode'
-				// 	url: '',
-				// })
 			},
 
 			// #ifdef  H5
@@ -730,9 +758,6 @@
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据', that.userInfo.phoneNumber)
-						console.log('返回数据', response)
-
 						if (response.data.status == true) {
 							if (response.data.data.bizStatus == '已租车') {
 								//当前有未完成订单,跳转到行程页面

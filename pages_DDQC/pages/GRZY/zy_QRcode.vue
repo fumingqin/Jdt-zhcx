@@ -41,20 +41,25 @@
 				},
 				commuterCardObject: '',
 				depositStatus: [],
+				phoneInfo:[],
+				Address:'',
 			}
 		},
 
 		onLoad() {
 			var that = this;
+			
+			that.getMyLocation();
+			
 			// that.autoRefresh();
 			that.lunBoInit();
+			
 		},
 
 		//监听页面卸载
 		onUnload() {
 			var that = this;
 			that.RefreshOff();
-
 		},
 
 		onShow() {
@@ -69,14 +74,32 @@
 				let commuterCard = await this.$api.lyfwcwd('commuterCard');
 				this.commuterCard = commuterCard.data;
 			},
-
+			getMyLocation:function(){
+				var that = this;
+				console.log('124356')
+				uni.getLocation({
+					type: 'gcj02',
+					geocode: true,
+					success(res) {
+						console.log('地址信息',res)
+						var country = res.address.country ? res.address.country : '';
+						var province = res.address.province ? res.address.province : '';
+						var city = res.address.city ? res.address.city : '';
+						var district = res.address.district ? res.address.district : '';
+						var street = res.address.street ? res.address.street : '';
+						var streetNum = res.address.streetNum ? res.address.streetNum : '';
+						var poiName = res.address.poiName ? res.address.poiName : '';
+						that.Address = country + province + city + district + street + streetNum + poiName;
+					}
+				})
+			},
 			//----------------------内容点击--------------------------------------
 			godetail: function(e) {
 				uni.showLoading();
 				if (this.commuterCard.txt[e.detail.value] == '普通用户') {
 					this.index = e.detail.value;
 					this.commuterCardObject = this.commuterCard.txt[e.detail.value];
-					console.log('对象', this.commuterCardObject)
+					// console.log('对象', this.commuterCardObject)
 					if (this.index == 0) {
 						this.QRCodeData();
 						clearInterval(this.loadingTime);
@@ -101,7 +124,16 @@
 						that.userInfo = data.data;
 						that.QRCodeData();
 						that.GetUserByUserID();
-						console.log('用户数据', that.userInfo)
+						
+						//获取系统信息
+						uni.getSystemInfo({
+							success: function(res) {
+								console.log('当前设备信息',res)
+								that.phoneInfo = res;
+								that.BikeLog();
+							}
+						});
+						// console.log('用户数据', that.userInfo)
 						// if(that.userInfo!==''){
 						// 	that.QRCodeData();
 						// }else if(that.userInfo==''){
@@ -132,7 +164,7 @@
 					},
 					success(res) {
 						// uni.hideLoading()
-						console.log('二维码', res)
+						// console.log('二维码', res)
 						if (res.data.status == true) {
 							that.qr = res.data.data.qr;
 							that.QRCodeClick(res.data.data.qr);
@@ -149,7 +181,7 @@
 			// 	var that = this;
 			// 	uni.showLoading()
 			// 	that.loadingTime = setInterval(function() {
-			// 		console.log('自动刷新')
+			// 		// console.log('自动刷新')
 			// 		that.QRCodeData();
 			// 		// console.log(that.sign)
 			// 	}, 15000)
@@ -189,7 +221,7 @@
 			//--------------------点击刷新-----------------------
 			manuRefresh: function() {
 				let that = this
-				console.log('手动刷新')
+				// console.log('手动刷新')
 				clearInterval(that.qr)
 				that.QRCodeData()
 			},
@@ -197,7 +229,7 @@
 			//--------------------读取信息-------------------------
 			GetUserByUserID: function() {
 				var that = this;
-				console.log(that.userInfo)
+				// console.log(that.userInfo)
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetUserByUserID.Url,
 					method: $DDTInterface.DDTInterface.GetUserByUserID.method,
@@ -205,9 +237,9 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('呀呀呀' + JSON.stringify(res))
+						// console.log('呀呀呀' + JSON.stringify(res))
 						that.depositStatus = res.data.data;
-						console.log(that.depositStatus);
+						// console.log(that.depositStatus);
 						// if(that.depositStatus==1||that.depositStatus==2){
 						// }
 					},
@@ -216,6 +248,32 @@
 					}
 				})
 			},
+			BikeLog:function(){
+				var that = this;
+				console.log('开始记录')
+				
+				uni.request({
+					url: $DDTInterface.DDTInterface.BikeLog.Url,
+					method: $DDTInterface.DDTInterface.BikeLog.method,
+					data: {
+						UserID: that.userInfo.userId,
+						LogType: '二维码',
+						PhoneNumber: that.userInfo.phoneNumber,
+						Mac: '',
+						PhoneBrand: that.phoneInfo.brand,
+						Address: that.Address,
+						PhoneModel: that.phoneInfo.model,
+						SystemType: that.phoneInfo.platform,
+						SystemVersion: that.phoneInfo.system,
+					},
+					success(res) {
+						console.log('日志记录成功',res)
+					},
+					fail(err) {
+						console.log('日志记录失败',err)
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -230,7 +288,6 @@
 		background: #35c762;
 		border-top-left-radius: 15upx;
 		border-top-right-radius: 15upx;
-		border: 15upx;
 		width: 684upx;
 		height: 100%;
 		margin-top: 182upx;
@@ -241,7 +298,6 @@
 		// margin: 0 auto;
 
 		.to_text {
-			// border: 15upx;
 			font-size: 36upx;
 			color: #FFFFFF;
 			// margin: 0 auto;

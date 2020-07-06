@@ -22,6 +22,15 @@
 					<text style="color: #FFF;">暂不支付</text>
 				</button>
 			</view>
+			<view style="position: fixed;bottom:100rpx;left: 0;right: 0;">
+				<view style="text-align: center;">
+					<view>
+						<text style="color: #333;font-size: 30rpx;">对费用有疑问？请联系</text>
+						<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;" @click="makePhone">客服</text>
+					</view>
+					<text style="color: #007AFF;font-size: 30rpx;">0596-210000</text>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -49,13 +58,18 @@
 			this.GetOrderByUserID();
 			// this.getOrderInfo();   
 		},
-		onBackPress() {//禁用手机返回键
+		onBackPress() { //禁用手机返回键
 			return true;
 		},
 		onNavigationBarButtonTap() {
 			this.GetOrderByUserID();
 		},
 		methods: {
+			makePhone: function() {
+				uni.makePhoneCall({
+					phoneNumber: '05962100000'
+				})
+			},
 			payNow: function() { //立即支付  
 				if (this.money > 0) {
 					this.walletPayment();
@@ -65,7 +79,7 @@
 					})
 				}
 			},
-			NotPay: function() {//暂不支付
+			NotPay: function() { //暂不支付
 				uni.redirectTo({
 					url: "../GRZY/zy_homepage"
 				})
@@ -193,27 +207,27 @@
 					title: '加载中',
 					mask: true
 				})
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetOrderByUserID.Url,
-					method: $DDTInterface.DDTInterface.GetOrderByUserID.method,
-					data: {
-						UserID: that.userInfo.userId,
-					},
-					success(res) {
-						console.log(res);
-						uni.hideLoading();
-						if (res.data.status) {
-							if (res.data.data[0].PayState == 1) {
-								uni.showToast({
-									title: '订单已支付',
-									icon: 'none'
-								})
-								setTimeout(function() {
-									uni.redirectTo({
-										url: '../GRZY/zy_homepage'
-									})
-								}, 1500)
-							} else {
+				setTimeout(function() {
+					uni.request({
+						url: $DDTInterface.DDTInterface.GetOrderByUserID.Url,
+						method: $DDTInterface.DDTInterface.GetOrderByUserID.method,
+						data: {
+							UserID: that.userInfo.userId,
+						},
+						success(res) {
+							console.log(res);
+							if (res.data.status) {
+								// if (res.data.data[0].PayState == 1) {
+								// uni.showToast({
+								// 	title: '订单已支付',
+								// 	icon: 'none'
+								// })
+								// setTimeout(function() {
+								// 	uni.redirectTo({
+								// 		url: '../GRZY/zy_homepage'
+								// 	})
+								// }, 1500)
+								// } else {
 								that.beginTime = res.data.data[0].HireTime;
 								that.endTime = res.data.data[0].RestoreTime;
 								that.money = (res.data.data[0].Money) / 100;
@@ -224,14 +238,15 @@
 								}
 								that.orderId = res.data.data[0].OrderId;
 								that.timeConcer(that.beginTime, that.endTime);
+								uni.hideLoading();
+								// }
 							}
+						},
+						fail() {
+							uni.hideLoading();
 						}
-					},
-					fail() {
-						uni.hideLoading();
-					}
-
-				})
+					})
+				}, 1500)
 			},
 			getOrderInfo: function() { //查询最后一条行程信息
 				var that = this;

@@ -68,6 +68,7 @@
 				chargeRate: '',
 				userInfo: [], //用户信息
 				paymentData: [], //支付参数
+				prepayid:'',//钱包充值需要的预支付交易会话id
 			}
 		},
 		onLoad() {
@@ -93,7 +94,7 @@
 					fail(data) {}
 				})
 			},
-			//--------------------------钱包充值--------------------------
+			//--------------------------获取钱包数据--------------------------
 			GetPurseDetail: function() {
 				var that = this;
 				console.log(that.userInfo.phoneNumber)
@@ -119,6 +120,7 @@
 					}
 				})
 			},
+			//--------------------------钱包充值--------------------------
 			GetRecharge: function() {
 				var that = this;
 				if (that.checked == 0) {
@@ -148,7 +150,9 @@
 							uni.hideLoading();
 							console.log('钱包充值返回支付参数成功结果', res)
 							if (res.data.status == true) {
-								that.paymentData = res.data.data;				
+								that.paymentData = res.data.data;
+								//钱包充值记录需要传入预支付交易会话id
+								that.prepayid = res.data.data.prepayid;
 								that.payment();
 							}else {
 								uni.showToast({
@@ -186,6 +190,7 @@
 								title: '支付成功',
 								complete() {
 									that.WirteRechargeLog(1);
+									that.rechargeCheck(that.paymentData.prepayid);
 								}
 							})
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
@@ -229,6 +234,7 @@
 						totalPrice: 1,
 						userID: that.userInfo.userId,
 						state: state,
+						id: that.prepayid,//预支付交易会话id
 					},
 					success(res) {
 						console.log('钱包充值记录成功',res);
@@ -247,7 +253,27 @@
 				})
 				that.getmoney();
 			},
-			
+			//--------------------------充值检测--------------------------
+			rechargeCheck:function(prepayId){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.rechargeCheck.Url,
+					method:'POST',
+					data:{
+						prepayId:prepayId,
+						phoneNumber:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						console.log('充值检测成功',res)
+						if(res.data.status == true){
+							
+						}
+					},
+					fail(res) {
+						console.log('充值检测失败',res)
+					}
+				})
+			},
 			//--------------------------单选框点击--------------------------
 			checkChange: function() {
 				if (this.checked == 0) {

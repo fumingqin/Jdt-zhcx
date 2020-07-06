@@ -975,7 +975,11 @@
 				},
 				{
 					"path": "pages/GRZY/zy_newsScreening",
-					"style": {}
+					"style": {
+						"navigationBarTitleText": "资讯列表",
+						"navigationBarTextStyle":"White",
+						"navigationBarBackgroundColor":"#65C36D"
+					}
 				}, {
 					"path": "pages/RentBike/Payment",
 					"style": {
@@ -1007,7 +1011,19 @@
 						"navigationBarTitleText": "充值记录"
 					}
 				}
-			]
+			    ,{
+                    "path" : "pages/GRZY/newsDetail",
+                    "style" : {
+						"navigationBarTitleText": "新闻详情",
+						"navigationBarTextStyle":"White",
+						"navigationBarBackgroundColor":"#65C36D"
+					}
+                }
+                ,{
+                    "path" : "pages/GRZY/refundRecord",
+                    "style" : {}
+                }
+            ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{
@@ -1077,10 +1093,10 @@
 				"pagePath": "pages/Home/serve",
 				"text": "服务"
 			},
-			{
-				"pagePath": "pages/order/OrderList",
-				"text": "订单"
-			},
+			// {
+			// 	"pagePath": "pages/order/OrderList",
+			// 	"text": "订单"
+			// },
 
 			{
 				"pagePath": "pages/GRZX/user",
