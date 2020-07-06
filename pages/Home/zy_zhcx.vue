@@ -292,6 +292,8 @@
 
 			//获取新闻数据
 			that.GetNews();
+			//获取客服热线
+			that.ConsumerHotline();
 		},
 
 		onShow() {
@@ -379,6 +381,24 @@
 					},
 					fail(res) {
 						console.log('获取版本信息失败', res)
+					}
+				})
+			},
+			//--------------------------获取客服热线--------------------------
+			ConsumerHotline:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.ConsumerHotline.Url,
+					method:$DDTInterface.DDTInterface.ConsumerHotline.method,
+					data:{},
+					success(res) {
+						console.log('返回客服热线数据成功',res)
+						if(res.data.status == true){
+							uni.setStorageSync('ConsumerHotline', res.data.data)
+						}
+					},
+					fail(res) {
+						console.log('返回客服热线数据失败',res)
 					}
 				})
 			},

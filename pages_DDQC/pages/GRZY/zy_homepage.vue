@@ -97,7 +97,7 @@
 					<!-- 充值金额 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">充值金额:</text>
-						<text class="ra_text2">&nbsp;￥{{personalHomepage.deposit}}</text>
+						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
 					</view>
 					<!-- 支付方式 -->
 					<view class="bv_rechargeAmount2">
@@ -120,7 +120,7 @@
 					<!-- 退押金 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">退款金额:</text>
-						<text class="ra_text2">&nbsp;￥{{deposit}}</text>
+						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
 					</view>
 					<view class="tjButton2" @click="GetRefund2">确认退款</view>
 					<view class="vi_bottom"></view>
@@ -224,11 +224,23 @@
 				commuterCardCost:199,
 				prepayid:'',//钱包跟押金充值需要传的预支付交易会话id
 				isCommuteCard:false,//是否有通勤卡
+				ConsumerPhoneNumber:'',//客服热线
+				depositNumber:'',//押金金额
 			}
 		},
 		onLoad() {
 			// this.lunBoInit();
 			
+			var that = this;
+			//获取客服热线
+			uni.getStorage({
+				key:'ConsumerHotline',
+				success(res) {
+					that.ConsumerPhoneNumber = res.data.Phone1
+				}
+			})
+			//获取押金金额
+			that.getDepositData();
 		},
 		onShow() {
 			var that = this;
@@ -297,6 +309,25 @@
 					fail(res) {
 						uni.hideLoading()
 						console.log('获取钱包数据失败', res)
+					}
+				})
+			},
+			//--------------------------获取押金金额--------------------------
+			getDepositData:function(){
+				console.log('押金金额')
+				var that = this;
+				//获取押金金额
+				uni.request({
+					url:$DDTInterface.DDTInterface.Deposit.Url,
+					method:$DDTInterface.DDTInterface.Deposit.method,
+					success(res) {
+						console.log('获取押金金额成功',res)
+						if(res.data.status == true){
+							that.depositNumber = res.data.data.price / 100
+						}
+					},
+					fail(res) {
+						console.log('获取押金金额失败',res)
 					}
 				})
 			},
@@ -596,9 +627,13 @@
 
 			open1() {
 				var that = this;
+				//如果当前押金状态是未交押金---充值押金
 				if(that.depositStatus == 0){
+					//检查是否实名
 					that.checkRealName(3)
 				}else if(that.depositStatus == 1){
+					//当前状态是已交押金---退押金
+					//检查是否实名
 					that.checkRealName(4);
 				}
 			},
@@ -680,10 +715,10 @@
 								uni.navigateTo({
 									url: './topUp'
 								})
-							} else if (e == 3) {
+							} else if (e == 3) {//交押金
 								// 需要在 popup 组件，指定 ref 为 popup
 								that.$refs.popup.open()
-							} else if (e == 4) {
+							} else if (e == 4) {//退押金
 								// 需要在 popup 组件，指定 ref 为 popup
 								that.$refs.popup2.open()
 							} else if (DepositType == 2) {
@@ -741,8 +776,9 @@
 			},
 			//--------------------------------客服电话--------------------------------
 			makePhone: function() {
+				var that = this;
 				uni.makePhoneCall({
-					phoneNumber: '05962100000'
+					phoneNumber: that.ConsumerPhoneNumber
 				})
 			},
 			//--------------------------------点击卡跳转--------------------------------
