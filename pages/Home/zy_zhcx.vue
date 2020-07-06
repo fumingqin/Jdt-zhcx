@@ -59,16 +59,16 @@
 					</view> -->
 
 					<!-- 公交查询 -->
-					<!-- <view class="zl_transit">
-						<image class="zl_tsImage" src="../../static/Home/GJCX.png"></image>
-						<text class="zl_tsText">公交查询</text>
-					</view> -->
-
-					<!-- 公交查询 -->
-					<view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/GJCX2.png"></image>
+					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/Bus/BusSeach')">
+						<image class="itemImage" src="../../static/Home/GJCX.png"></image>
 						<text class="itemText">公交查询</text>
 					</view>
+
+					<!-- 公交查询 -->
+					<!-- <view class="itemContent" @click="natTo()">
+						<image class="itemImage" src="../../static/Home/GJCX2.png"></image>
+						<text class="itemText">公交查询</text>
+					</view> -->
 
 
 				</view>
