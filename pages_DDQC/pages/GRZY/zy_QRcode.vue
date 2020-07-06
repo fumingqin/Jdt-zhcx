@@ -12,12 +12,12 @@
 				<text class="vi_text2" @click="manuRefresh">刷新</text>
 			</view>
 
-			<view class="complaintDX">
+			<!-- <view class="complaintDX">
 				<text class="tsdxText">点击切换通勤卡类别:</text>
 				<picker @change="godetail" :value="index" :range="commuterCard.txt">
 					<text class="tsnrText">{{commuterCard.txt[index]}}<text class="jdticon icon-you"></text></text>
 				</picker>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -51,7 +51,7 @@
 			
 			that.getMyLocation();
 			
-			that.autoRefresh();
+			// that.autoRefresh();
 			that.lunBoInit();
 			
 		},
@@ -75,6 +75,7 @@
 				this.commuterCard = commuterCard.data;
 			},
 			getMyLocation:function(){
+				var that = this;
 				console.log('124356')
 				uni.getLocation({
 					type: 'gcj02',
@@ -102,7 +103,7 @@
 					if (this.index == 0) {
 						this.QRCodeData();
 						clearInterval(this.loadingTime);
-						this.autoRefresh();
+						// this.autoRefresh();
 					}
 				} else if (this.commuterCard.txt[e.detail.value] == '公务员' && this.depositStatus.UserType == '普通用户') {
 					uni.showToast({
@@ -176,15 +177,15 @@
 			},
 
 			//---------------------------自动刷新---------------------------
-			autoRefresh: function() {
-				var that = this;
-				uni.showLoading()
-				that.loadingTime = setInterval(function() {
-					// console.log('自动刷新')
-					that.QRCodeData();
-					// console.log(that.sign)
-				}, 15000)
-			},
+			// autoRefresh: function() {
+			// 	var that = this;
+			// 	uni.showLoading()
+			// 	that.loadingTime = setInterval(function() {
+			// 		// console.log('自动刷新')
+			// 		that.QRCodeData();
+			// 		// console.log(that.sign)
+			// 	}, 15000)
+			// },
 
 			//---------------------------刷新关闭---------------------------
 			RefreshOff: function() {

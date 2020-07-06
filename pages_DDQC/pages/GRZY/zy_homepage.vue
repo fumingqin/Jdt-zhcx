@@ -18,19 +18,19 @@
 			<view class="hp_view">
 				<view class="ve_view">
 					<!-- 金额 -->
-					<view class="ve_Text" @click="natTo(1)">
+					<view class="ve_Text" hover-class="ve_hover" @click="natTo(1)">
 						<view class="tx_text1">金额</view>
 						
 						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
-					<view class="ve_Text" @click="Jump">
+					<view class="ve_Text" hover-class="ve_hover2" @click="Jump">
 						<view class="tx_text1">卡数</view>
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
 					</view>
 					<!-- 押金 -->
 					<!-- 未交押金 -->
-					<view class="ve_Text" @click="open1">
+					<view class="ve_Text" hover-class="ve_hover3" @click="open1">
 						<image class="tx_img" src="../../static/GRZY/chongzhi.png" v-if="depositStatus==0"></image>
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2" v-if="depositStatus==0||depositStatus==1">{{deposit}}<text class="tx_text3">元</text></view>
@@ -871,7 +871,7 @@
 			top: 0;
 
 			.ve_Text {
-				width: 33%;
+				width: 34%;
 				height: 246upx;
 				text-align: center;
 				font-family: Source Han Sans SC;
@@ -1155,7 +1155,7 @@
 			top: 0;
 
 			.ve_Text {
-				width: 33%;
+				width: 34%;
 				height: 246upx;
 				text-align: center;
 				font-family: Source Han Sans SC;
@@ -1232,5 +1232,24 @@
 			padding-left: 4upx;
 			padding-top: 9upx;
 		}
+	}
+	
+	.ve_hover{
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		opacity: 0.9;
+		background: #b99478;
+	}
+	
+	.ve_hover2{
+		opacity: 0.9;
+		background: #b99478;
+	}
+	
+	.ve_hover3{
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		opacity: 0.9;
+		background: #b99478;
 	}
 </style>
