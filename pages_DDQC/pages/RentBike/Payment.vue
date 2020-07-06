@@ -28,7 +28,7 @@
 						<text style="color: #333;font-size: 30rpx;">对费用有疑问？请联系</text>
 						<text style="color:#F35A46;font-size: 30rpx;font-weight: 300;" @click="makePhone">客服</text>
 					</view>
-					<text style="color: #007AFF;font-size: 30rpx;">0596-210000</text>
+					<text style="color: #007AFF;font-size: 30rpx;">{{phoneNumber}}</text>
 				</view>
 			</view>
 		</view>
@@ -50,13 +50,25 @@
 				userInfo: '',
 				HireStationName: '',
 				RestoreStationName: '',
+				phoneNumber:'',//客服热线
 			}
 		},
 		onLoad() {
 			this.userInfo = uni.getStorageSync('userInfo') || '';
 			console.log(this.userInfo);
 			this.GetOrderByUserID();
-			// this.getOrderInfo();   
+			// this.getOrderInfo();
+			
+		},
+		onShow() {
+			var that = this;
+			//获取客服热线
+			uni.getStorage({
+				key:'ConsumerHotline',
+				success(res) {
+					that.phoneNumber = res.data.Phone1
+				}
+			})
 		},
 		onBackPress() { //禁用手机返回键
 			return true;
@@ -67,7 +79,7 @@
 		methods: {
 			makePhone: function() {
 				uni.makePhoneCall({
-					phoneNumber: '05962100000'
+					phoneNumber: that.phoneNumber
 				})
 			},
 			payNow: function() { //立即支付  

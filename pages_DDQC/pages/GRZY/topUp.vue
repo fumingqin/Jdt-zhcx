@@ -231,7 +231,7 @@
 						body: "钱包充值记录测试",
 						phoneNumber: that.userInfo.phoneNumber,
 						chargeType: 1,
-						totalPrice: 1,
+						totalPrice: that.cost,
 						userID: that.userInfo.userId,
 						state: state,
 						id: that.prepayid,//预支付交易会话id

@@ -159,6 +159,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	ConsumerHotline: {
+		Url: Url + '/api/SmartBikePerson/ConsumerHotline',
+		name: '客服热线',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 	//-----------------------------------------钱包接口------------------------------------------------
 	GetPurseDetail: {
 		Url: Url + '/api/Purse/GetPurseDetail',
@@ -251,6 +259,14 @@ const DDTInterface = {
 	GetManualRefundByUserID: {
 		Url: Url + '/api/Purse/GetManualRefundByUserID',
 		name: '获取用户最近一次，提交人工退押金记录',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
+	Deposit: {
+		Url: Url + '/api/Purse/Deposit',
+		name: '获取需要充值的押金',
 		method: 'POST',
 		header: {
 			'content-type': 'application/x-www-form-urlencoded'

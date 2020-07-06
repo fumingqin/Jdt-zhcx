@@ -92,6 +92,7 @@
 				OrderNo: '', //行程ID
 				userInfo: '',
 				g_wakelock:null,
+				phoneNumber:'',//客服热线
 			}
 		},
 		mounted() {
@@ -130,6 +131,13 @@
 				that.GetOrderByUserID();
 				},2000)
 			}
+			//获取客服热线
+			uni.getStorage({
+				key:'ConsumerHotline',
+				success(res) {
+					that.phoneNumber = res.data.Phone1
+				}
+			})
 		},
 		created() {
 			uni.setNavigationBarTitle({
@@ -138,8 +146,9 @@
 		},
 		methods: {
 			makePhone: function() {
+				var that = this;
 				uni.makePhoneCall({
-					phoneNumber: '05962100000'
+					phoneNumber: that.phoneNumber
 				})
 			},
 			wakeLock: function() {
