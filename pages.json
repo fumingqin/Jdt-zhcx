@@ -1023,6 +1023,14 @@
                     "path" : "pages/GRZY/refundRecord",
                     "style" : {}
                 }
+                ,{
+                    "path" : "pages/Bus/BusSeach",
+                   "style" : {
+                   	"navigationBarTitleText": " 公交查询",
+                   	"navigationBarTextStyle":"White",
+                   	"navigationBarBackgroundColor":"#65C36D",
+                   }
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
