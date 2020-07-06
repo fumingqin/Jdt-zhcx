@@ -8,148 +8,14 @@
 		</swiper>
 
 		<swiper class="zl_swi" :indicator-dots="true" circular indicator-active-color="#70c778" indicator-color="#f6f6f6">
-			<swiper-item class="swiItem">
-				<view class="zl_topClick">
-					<!-- 达达骑车 -->
-					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/RentBike/RentBikeHome')">
-						<image class="itemImage" src="../../static/Home/DDQC.png"></image>
-						<text class="itemText">达达骑车</text>
+			<swiper-item class="swiItem" style="display: flex;align-items: center;" v-for="(item,index) in swiperItem" :key="index">
+				<!-- 	<swiper-item class="swiItem" style="display: flex;align-items: center;">
+				<view style="display: flex;justify-content: space-around;align-items: center;"> -->
+				<view style="display: flex;width: 25%;justify-content: center;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
+					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
+						<image style="width: 75rpx;height: 75rpx;" mode="aspectFill" :src="ArrItem.ImageURL"></image>
+						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
-
-					<!-- 公交扫码 -->
-					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_QRcode')">
-						<image class="itemImage" src="../../static/Home/GJSM.png"></image>
-						<text class="itemText">公交扫码</text>
-					</view>
-
-					<!-- 公交扫码 -->
-					<!-- <view class="zl_charterService" @click="natTo()">
-						<image class="zl_csImage" src="../../static/Home/GJSM2.png"></image>
-						<text class="zl_csText">包车服务</text>
-					</view> -->
-
-					<!-- 车票订购 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
-						<text class="zl_toText">车票订购</text>
-					</view> -->
-
-					<!-- 达达钱包 -->
-					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_homepage')">
-						<image class="itemImage" src="../../static/Home/QB.png"></image>
-						<text class="itemText">达达钱包</text>
-					</view>
-
-					<!-- 车票订购 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
-						<text class="zl_toText">车票订购</text>
-					</view> -->
-
-					<!-- 车票订购 -->
-					<view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/CPDG2.png"></image>
-						<text class="itemText">车票订购</text>
-					</view>
-
-					<!-- 新区专线 -->
-					<!-- <view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../static/Home/XQZX.png"></image>
-						<text class="zl_caText">新区专线</text>
-					</view> -->
-
-					<!-- 公交查询 -->
-					<view class="itemContent" @click="natTo2('../../pages_DDQC/pages/Bus/BusSeach')">
-						<image class="itemImage" src="../../static/Home/GJCX.png"></image>
-						<text class="itemText">公交查询</text>
-					</view>
-
-					<!-- 公交查询 -->
-					<!-- <view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/GJCX2.png"></image>
-						<text class="itemText">公交查询</text>
-					</view> -->
-
-
-				</view>
-			</swiper-item>
-			<swiper-item class="swiItem">
-				<view class="zl_topClick">
-					<!-- 包车服务 -->
-					<!-- <view class="zl_charterService">
-						<image class="zl_csImage" src="../../static/Home/BCFW.png"></image>
-						<text class="zl_csText">包车服务</text>
-					</view> -->
-
-					<!-- 包车服务 -->
-					<view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/BCFW2.png"></image>
-						<text class="itemText">包车服务</text>
-					</view>
-					<!-- 景区门票 -->
-					<!-- <view class="zl_tourismServices">
-						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
-						<text class="zl_teText">景区门票</text>
-					</view> -->
-
-					<!-- 景区门票 -->
-					<view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
-						<text class="itemText">景区门票</text>
-					</view>
-					<!-- 旅游产品 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
-						<text class="zl_toText">旅游产品</text>
-					</view> -->
-
-					<!-- 旅游产品 -->
-					<view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/LYCP2.png"></image>
-						<text class="itemText">旅游产品</text>
-					</view>
-
-					<!-- 预约检测 -->
-					<!-- <view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../static/Home/YYJC.png"></image>
-						<text class="zl_caText">预约检测</text>
-					</view> -->
-
-					<!-- 预约检测 -->
-					<view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/YYJC2.png"></image>
-						<text class="itemText">预约检测</text>
-					</view>
-
-					<!-- 自由行 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/ZYX.png"></image>
-						<text class="zl_toText">自由行</text>
-					</view> -->
-
-					<!-- 自由行 -->
-					<view class="itemContent" @click="natTo()">
-						<image class="itemImage" src="../../static/Home/ZYX2.png"></image>
-						<text class="itemText">自由行</text>
-					</view>
-
-					<!-- 跟团游 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/GTY.png"></image>
-						<text class="zl_toText">跟团游</text>
-					</view> -->
-
-					<!-- 跟团游 -->
-					<!-- <view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/GTY2.png"></image>
-						<text class="zl_toText">跟团游</text>
-					</view> -->
-
-					<!-- 村村通 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/CCT.png"></image>
-						<text class="zl_toText">村村通</text>
-					</view> -->
 				</view>
 			</swiper-item>
 		</swiper>
@@ -160,7 +26,7 @@
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
 					<swiper class="swi2" vertical circular autoplay display-multiple-items="2" disable-touch="true">
-						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index">
+						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index" v-if="item.Type!='计费规则'">
 							<!-- <scroll-view scroll-y> -->
 							<view class="zl_noText" @click="newsClick(item)">{{item.Title}}</view>
 							<!-- </scroll-view> -->
@@ -260,7 +126,17 @@
 				</view>
 			</view>
 		</view> -->
-
+		<view class="zl_recommend">
+			<view>
+				<view class="zl_reContent">
+					<text class="zl_reTitle">应用合作</text>
+				</view>
+				<view style="padding: 40rpx 0;display: flex;justify-content: center;">
+					<text style="font-size: 30rpx;">客服热线：</text>
+					<text style="font-size: 30rpx;color: #65C36D;">0596-2100000</text>
+				</view>
+			</view>
+		</view>
 		<!-- 服务协议和隐私政策 -->
 		<uni-popup ref="centerPopup" type="center">
 			<view class="centerClass">
@@ -299,26 +175,9 @@
 				type: 0,
 				Announcement: '', //资讯动态
 				sixPalaceList: [{
-						ticketId: '',
-						ticketImage: '',
-					},
-					{
-						ticketId: '',
-						ticketImage: '',
-					},
-					{
-						ticketId: '',
-						ticketImage: '',
-					},
-					{
-						ticketId: '',
-						ticketImage: '',
-					},
-					{
-						ticketId: '',
-						ticketImage: '',
-					}
-				],
+					ticketId: '',
+					ticketImage: '',
+				}, ],
 				goodsList: '',
 				zy_dataIndex: 6, //列表默认数量
 				disStatus: 0,
@@ -332,6 +191,77 @@
 				version: '', //版本号
 				platform: '', //系统平台
 				userInfo: '',
+				swiperItem: [ //菜单栏
+					{
+						ItemArr: [{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/RentBike/RentBikeHome",
+								ImageURL: "../../static/Home/DDQC.png",
+								ItemTitle: "达达骑车"
+							},
+							{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/GRZY/zy_QRcode",
+								ImageURL: "../../static/Home/GJSM.png",
+								ItemTitle: "公交扫码"
+							},
+							{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/GRZY/zy_homepage",
+								ImageURL: "../../static/Home/QB.png",
+								ItemTitle: "达达钱包"
+							},
+							{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/Bus/BusSeach",
+								ImageURL: "../../static/Home/GJCX.png",
+								ItemTitle: "公交查询"
+							},
+						]
+					},
+					{
+						ItemArr: [{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/CPDG2.png",
+								ItemTitle: "车票订购"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/BCFW2.png",
+								ItemTitle: "包车服务"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/serve/jqgoupiao2.png",
+								ItemTitle: "景区门票"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/LYCP2.png",
+								ItemTitle: "旅游产品"
+							},
+						]
+					},
+					{
+						ItemArr: [{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/YYJC2.png",
+								ItemTitle: "预约检测"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/ZYX2.png",
+								ItemTitle: "自由行"
+							}
+						]
+					}
+				]
 			}
 		},
 		onLoad() {
@@ -390,6 +320,13 @@
 			uniPopup
 		}, //注册为子组件
 		methods: {
+			TitleJump: function(e, Url) {
+				if (e) {
+					this.natTo2(Url);
+				} else {
+					this.natTo();
+				}
+			},
 			//----------------------自动更新-------------------------------
 			updateAPP: function() {
 				var that = this;
@@ -453,7 +390,7 @@
 					method: 'POST',
 					data: {},
 					success(res) {
-						// console.log('请求新闻资讯成功',res)
+						console.log('请求新闻资讯成功', res)
 						if (res.data.status == true) {
 							that.consultingService = res.data.data;
 						}
@@ -606,6 +543,7 @@
 			},
 
 			natTo2: function(e) {
+				console.log(e)
 				var that = this;
 				if (that.userInfo !== '') {
 					uni.navigateTo({
@@ -957,6 +895,7 @@
 			}
 		}
 	}
+
 	// 车票订购
 	.itemContent {
 		width: 20%;
@@ -964,11 +903,13 @@
 		text-align: center;
 		align-items: center;
 	}
+
 	.itemImage {
 		width: 80rpx;
 		height: 80rpx;
 		margin-top: 50upx;
 	}
+
 	.itemText {
 		margin-top: 10rpx;
 		font-size: 27rpx;
@@ -977,6 +918,7 @@
 		color: #333333;
 		display: block;
 	}
+
 	.zl_swi {
 		height: 230upx;
 		width: 100%;
