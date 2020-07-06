@@ -152,7 +152,7 @@
 					success: function(res) {
 						console.log('获取自身定位成功',res)
 						//若当前位置在古雷---默认显示无桩数据
-						if(res.address.district.indexOf('古雷') == 0){
+						if(res.address.district.indexOf('漳浦县') == 0){
 							that.isClick = '无桩';
 						}else{
 							//当前位置不在古雷--就显示有桩数据
