@@ -60,6 +60,7 @@
 		},
 
 		methods: {
+			// #ifdef APP-PLUS
 			setJYJPushAlias: function(phoneNumber) {
 				var that = this;
 				jyJPush.deleteJYJPushAlias({
@@ -141,7 +142,7 @@
 
 
 			},
-
+			// #endif
 		},
 		onLaunch: function() {
 			// // #ifdef APP-PLUS
@@ -163,7 +164,9 @@
 			if (userInfo == '') {
 				return;
 			}
+			// #ifdef APP-PLUS
 			that.LoginLog(userInfo.userId,userInfo.phoneNumber);
+			// #endif
 		},
 		onShow: function() {
 			var that = this;

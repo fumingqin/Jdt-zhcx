@@ -7,11 +7,11 @@
 			</swiper-item>
 		</swiper>
 
-		<swiper class="zl_swi" :indicator-dots="true" circular indicator-active-color="#70c778" indicator-color="#f6f6f6">
+		<swiper class="zl_swi" circular @change="swiperChange">
 			<swiper-item class="swiItem" style="display: flex;align-items: center;" v-for="(item,index) in swiperItem" :key="index">
 				<!-- 	<swiper-item class="swiItem" style="display: flex;align-items: center;">
 				<view style="display: flex;justify-content: space-around;align-items: center;"> -->
-				<view style="display: flex;width: 25%;justify-content: center;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
+				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
 						<image style="width: 75rpx;height: 75rpx;" mode="aspectFill" :src="ArrItem.ImageURL"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
@@ -19,6 +19,13 @@
 				</view>
 			</swiper-item>
 		</swiper>
+
+		<!-- 自定义swiper指示器 -->
+		<view class="dots">
+			<block v-for="(item,index) in swiperItem.length" :key="item">
+				<view class="dot" :class="index==swiperCurrent ? ' active' : ''"></view>
+			</block>
+		</view>
 		</swiper>
 		<!-- 咨询动态 -->
 		<view class="notice">
@@ -165,6 +172,7 @@
 	export default {
 		data() {
 			return {
+				swiperCurrent: 0,
 				consultingService: [], //新闻资讯
 				imgXXDT: [{
 					imageUrl: '',
@@ -322,6 +330,13 @@
 			uniPopup
 		}, //注册为子组件
 		methods: {
+			//--------------轮播图切换修改背景色----------------------------------
+			swiperChange: function(e) {
+				console.log(e)
+				const index = e.detail.current;
+				this.swiperCurrent = index;
+			},
+
 			TitleJump: function(e, Url) {
 				if (e) {
 					this.natTo2(Url);
@@ -385,20 +400,20 @@
 				})
 			},
 			//--------------------------获取客服热线--------------------------
-			ConsumerHotline:function(){
+			ConsumerHotline: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.ConsumerHotline.Url,
-					method:$DDTInterface.DDTInterface.ConsumerHotline.method,
-					data:{},
+					url: $DDTInterface.DDTInterface.ConsumerHotline.Url,
+					method: $DDTInterface.DDTInterface.ConsumerHotline.method,
+					data: {},
 					success(res) {
-						console.log('返回客服热线数据成功',res)
-						if(res.data.status == true){
+						console.log('返回客服热线数据成功', res)
+						if (res.data.status == true) {
 							uni.setStorageSync('ConsumerHotline', res.data.data)
 						}
 					},
 					fail(res) {
-						console.log('返回客服热线数据失败',res)
+						console.log('返回客服热线数据失败', res)
 					}
 				})
 			},
@@ -850,12 +865,12 @@
 	}
 
 	// 选中指示点的样式
-	.zl_swi .wx-swiper-dot.wx-swiper-dot-active {
-		width: 40upx;
-		height: 15upx;
-		border-radius: 15upx;
-		// opacity: 0.75;
-	}
+	// .zl_swi .wx-swiper-dot.wx-swiper-dot-active {
+	// 	width: 40upx;
+	// 	height: 15upx;
+	// 	border-radius: 15upx;
+	// 	// opacity: 0.75;
+	// }
 
 	.zc_TabBackground {
 		background-color: #FFFFFF;
@@ -940,7 +955,7 @@
 	}
 
 	.zl_swi {
-		height: 230upx;
+		height: 200upx;
 		width: 100%;
 
 		.swiItem {
@@ -1074,7 +1089,7 @@
 	//咨询动态
 	.notice {
 		background: #fff;
-		margin-top: 16upx;
+		margin-top: 9upx;
 
 		.zl_content {
 			display: flex;
@@ -1452,4 +1467,33 @@
 	}
 
 	//弹框end
+	
+	//指示点
+	.dots {
+		position: relative;
+		background-color: #FFFFFF;
+		bottom: 25rpx;
+		left: 50%;
+		// 这里一定要注意兼容不然很可能踩坑          
+		transform: translate(-50%, 0);
+		-webkit-transform: translate(-50%, 0);
+		z-index: 99;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+
+		.dot {
+			width: 24rpx;
+			height: 8rpx;
+			transition: all .6s;
+			background: #f6f6f6;
+			margin-right: 10rpx;
+		}
+
+		.active {
+			width: 24rpx;
+			height: 8rpx;
+			background: #65C36D;
+		}
+	}
 </style>
