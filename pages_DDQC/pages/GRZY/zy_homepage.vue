@@ -50,7 +50,7 @@
 			</view>
 			
 			<!-- 套餐 @click="natTo('/pages_DDQC/pages/GRZY/combo')" -->
-			<view class="ve_view2" v-if="commuterCardObject=='公务员用户'">
+			<view class="ve_view2" v-if="commuterCardObject=='公务员用户' || depositStatus==2">
 				<image class="vi_image2" src="../../static/GRZY/touxiang.png"></image>
 				<text class="ve_text">通勤卡</text>
 				<text class="ve_text2">余额</text>
