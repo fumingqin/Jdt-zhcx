@@ -211,7 +211,7 @@
 								IsUse: true,
 								clickURL: "../../pages_DDQC/pages/GRZY/zy_QRcode",
 								ImageURL: "../../static/Home/GJSM.png",
-								ItemTitle: "公交扫码"
+								ItemTitle: "公交刷码"
 							},
 							{
 								IsUse: true,

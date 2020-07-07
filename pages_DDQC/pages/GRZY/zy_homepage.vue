@@ -24,10 +24,10 @@
 						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
-					<view class="ve_Text" hover-class="ve_hover2" @click="Jump">
+					<!-- <view class="ve_Text" hover-class="ve_hover2"  @click="Jump">
 						<view class="tx_text1">卡数</view>
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
-					</view>
+					</view> -->
 					<!-- 押金 -->
 					<!-- 未交押金 -->
 					<view class="ve_Text" hover-class="ve_hover3" @click="open1">
@@ -50,15 +50,15 @@
 			</view>
 			
 			<!-- 套餐 @click="natTo('/pages_DDQC/pages/GRZY/combo')" -->
-			<!-- <view class="ve_view2" v-if="commuterCardObject=='公务员'">
+			<view class="ve_view2" v-if="commuterCardObject=='公务员用户'">
 				<image class="vi_image2" src="../../static/GRZY/touxiang.png"></image>
 				<text class="ve_text">通勤卡</text>
 				<text class="ve_text2">余额</text>
 				<text class="ve_text3">￥{{commuterCardCost}}元</text>
 				<text class="ve_text4">公交车扫码、达达骑行</text>
-				<text class="ve_text5">开通说明</text>
+				<text class="ve_text5" @click="openExplain">开通说明</text>
 				<image class="vi_image" src="../../static/GRZY/tongqingka.png" mode="aspectFit"></image>
-			</view> -->
+			</view>
 			
 			<!-- 退押金失败记录 -->
 			<view class="ve_view3" @click="refundClick">
@@ -221,7 +221,7 @@
 				qrcodeSrc: '',
 				paymentData: [], //支付参数
 				commuterCardObject:'',//判断当前用户是普通用户还是免押金用户
-				commuterCardCost:199,
+				commuterCardCost:0,//通勤卡金额
 				prepayid:'',//钱包跟押金充值需要传的预支付交易会话id
 				isCommuteCard:false,//是否有通勤卡
 				ConsumerPhoneNumber:'',//客服热线
@@ -288,6 +288,7 @@
 						if (res.data.status == true && res.data.msg == '请求成功') {
 							that.walletData = res.data.data;
 							that.balance = res.data.data.balance / 100;
+							that.commuterCardCost = res.data.data.tqkBalance / 100;
 							// if (res.data.data.depositStatus != 0) {
 							// 	that.deposit = res.data.data.deposit / 100;
 							// }
@@ -654,7 +655,13 @@
 					this.$refs.popup2.close()
 				}
 			},
-
+			openExplain:function(){
+				uni.showModal({
+					content:'通勤钱包开通步骤:' + '\n\n' + '1、公务员用户在线下一卡通网点申请注销实体-卡里的通勤钱包' + '\n' + '2、线.上通勤钱包在两个工作日左右自动开通',
+					showCancel:false,
+					confirmText:'知道了'
+				})
+			},
 			//-----------------tab事件---------------------------------------
 			tabClick(e) {
 				if (e == 0) {
@@ -778,7 +785,7 @@
 			makePhone: function() {
 				var that = this;
 				uni.makePhoneCall({
-					phoneNumber: that.ConsumerPhoneNumber
+					phoneNumber: that.ConsumerPhoneNumber,
 				})
 			},
 			//--------------------------------点击卡跳转--------------------------------
@@ -898,9 +905,12 @@
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 
 		.ve_view {
-			position: absolute;
+			// position: absolute;
 			display: flex;
-			width: 694upx;
+			justify-content: space-between;
+			// width: 694upx;
+			margin-left: 100rpx;
+			margin-right: 100rpx;
 			height: 246upx;
 			left: 0;
 			top: 0;
@@ -950,7 +960,7 @@
 		border-radius: 10px;
 		margin-left: 29upx;
 		margin-right: 29upx;
-		margin-top: 8upx;
+		margin-top: 20upx;
 		
 		.vi_image2{
 			position: absolute;
@@ -958,6 +968,7 @@
 			height: 94upx;
 			padding-top: 50upx;
 			padding-left: 40upx;
+			z-index: 500;
 		}
 		
 		.ve_text{
@@ -967,6 +978,7 @@
 			color: #FFFFFF;
 			padding-left: 157upx;
 			padding-top: 40upx;
+			z-index: 500;
 		}
 		
 		.ve_text2{
@@ -975,6 +987,7 @@
 			color: #FFFFFF;
 			padding-top: 104upx;
 			padding-left: 157upx;
+			z-index: 500;
 		}
 		
 		.ve_text3{
@@ -983,6 +996,7 @@
 			color: #FFFFFF;
 			padding-top: 104upx;
 			padding-left: 246upx;
+			z-index: 500;
 		}
 		
 		.ve_text4{
@@ -992,6 +1006,7 @@
 			bottom: 0;
 			padding-left: 40upx;
 			padding-bottom: 30upx;
+			z-index: 500;
 		}
 		
 		.ve_text5{
@@ -1002,6 +1017,7 @@
 			right: 0;
 			padding-right: 40upx;
 			padding-bottom: 30upx;
+			z-index: 500;
 		}
 		
 		.vi_image {

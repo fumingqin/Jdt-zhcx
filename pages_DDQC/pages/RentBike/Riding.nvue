@@ -457,11 +457,11 @@
 						console.log(that.rentInfo)
 						if (that.rentInfo.bikeType == "有桩") {
 							that.IsStake = true;
-							//---开启检测订单状态
-							that.checkStatus();
 						} else {
 							that.IsStake = false;
 						}
+						//---开启检测订单状态
+						that.checkStatus();
 						//开始计时---显示当前骑行时间
 						that.timeConcer(res.data.data[0].HireAction.Time);
 					},
@@ -522,11 +522,11 @@
 									title: '订单已支付',
 									icon: 'none'
 								})
-								// setTimeout(function() {
-								// 	uni.redirectTo({
-								// 		url: '../GRZY/zy_homepage'
-								// 	})
-								// }, 1500)
+								setTimeout(function() {
+									uni.redirectTo({
+										url: '../GRZY/zy_homepage'
+									})
+								}, 1500)
 							} else {
 								var bikeType = '有桩';
 								if (res.data.data[0].RentType == 1) {
