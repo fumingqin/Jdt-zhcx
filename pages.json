@@ -1031,6 +1031,14 @@
                    	"navigationBarBackgroundColor":"#65C36D"
                    }
                 }
+                ,{
+                    "path" : "pages/RentBike/BillingRule",
+                    "style" : {
+						"navigationBarTitleText": "计费规则",
+						"navigationBarTextStyle":"White",
+						"navigationBarBackgroundColor":"#65C36D"
+					}
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
