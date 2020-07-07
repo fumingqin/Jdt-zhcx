@@ -68,7 +68,7 @@
 				success(res) {
 					that.phoneNumber = res.data.Phone1
 				}
-			})
+			}) 
 		},
 		onBackPress() { //禁用手机返回键
 			return true;
@@ -79,7 +79,7 @@
 		methods: {
 			makePhone: function() {
 				uni.makePhoneCall({
-					phoneNumber: that.phoneNumber
+					phoneNumber: this.phoneNumber
 				})
 			},
 			payNow: function() { //立即支付  
@@ -228,6 +228,7 @@
 						},
 						success(res) {
 							console.log(res);
+							uni.hideLoading();
 							if (res.data.status) {
 								// if (res.data.data[0].PayState == 1) {
 								// uni.showToast({
@@ -250,7 +251,6 @@
 								}
 								that.orderId = res.data.data[0].OrderId;
 								that.timeConcer(that.beginTime, that.endTime);
-								uni.hideLoading();
 								// }
 							}
 						},
@@ -283,6 +283,8 @@
 							if (that.money == 0) {
 								that.buttonName = '立即完成';
 							}
+							that.HireStationName = res.data.data[0].HireAction.StationName
+							that.RestoreStationName = res.data.data[0].RestoreAction.StationName;
 							that.orderId = res.data.data[0].OrderId;
 							that.timeConcer(that.beginTime, that.endTime);
 						}
