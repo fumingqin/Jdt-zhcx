@@ -12,7 +12,7 @@
 			<!-- #endif -->
 			<view class="Cr_slk1">
 				<text class="bz">姓&nbsp;名：</text>
-				<input class="slk" maxlength="20"  name="nickname"  placeholder="请输入" v-model="nickname" adjust-position="" />
+				<input class="slk" maxlength="10"  name="nickname"  placeholder="请输入" v-model="nickname" adjust-position="" />
 			</view>
 			<view class="Cr_slk2">
 				<text class="bz">性&nbsp;别：</text>
@@ -113,7 +113,7 @@
 								},
 								method:that.$GrzxInter.Interface.login.method,
 								success(res1) {
-									// console.log(res1,"108")
+									console.log(res1,"108")
 									// ------------1.头像-------------
 									var base64=res1.data.data.portrait;
 									that.port=res1.data.data.portrait;
@@ -253,29 +253,30 @@
 				uni.showLoading({
 					title:'保存中...'
 				})
-				if(this.selector=='男'){
-					this.gender=1;
-				}
-				if(this.selector=='女'){
-					this.gender=2;
-				}
 				var that=this;
-				if(this.nickname==""){
+				if(that.selector=='男'){
+					that.gender=1;
+				}
+				if(that.selector=='女'){
+					that.gender=2;
+				}
+				if(that.nickname==""){
 					uni.showToast({
 						title:'请输入姓名',
 						icon:'none'
 					})
-				}else if(this.selector=='请选择'){
+				}else if(that.selector=='请选择'){
 					uni.showToast({
 						title:'请选择性别',
 						icon:'none'
 					})
-				}else if(this.address==''){
+				}else if(that.address==''){
 					uni.showToast({
 						title:'请选择地址',
 						icon:'none'
 					})
 				}else{
+					console.log(that.gender)
 					uni.request({
 						url:that.$GrzxInter.Interface.changeInfo.value,
 						data:{
