@@ -161,6 +161,7 @@
 						//若当前位置在古雷---默认显示无桩数据
 						if(res.address.district.indexOf('漳浦县') == 0){
 							that.isClick = '无桩';
+							that.GetBHTStationByRange(117.633708,23.932651);
 						}else{
 							//当前位置不在古雷--就显示有桩数据
 							that.isClick = '有桩';
@@ -170,8 +171,8 @@
 						// that.centerLongitude = res.longitude;
 						// that.centerLatitude = res.latitude;
 						that.isLocation = true;
-						that.currentLongitude = res.longitude;
-						that.currentLatitude = res.latitude;
+						that.currentLongitude = res.longitude;//有桩开启定位时显示的位置--纬度
+						that.currentLatitude = res.latitude;//有桩开启定位时显示的位置--经度
 					},
 					fail(res) {
 						console.log('获取自身定位失败',res)
@@ -277,7 +278,7 @@
 								//坐标里面包含经纬度，需要将经纬度分离取出来
 								var gps = res.data.data[i].gps.split(',');
 								//冒泡显示文本 ---  可租数量，可还数量，可用时长
-								var content =res.data.data[i].name+'\n\n'+ '可租数量：' + res.data.data[i].rentCount + ' ' + '可还数量：' + res.data.data[i].restoreCount;
+								var content =res.data.data[i].name+'\n'+ '可用：' + res.data.data[i].rentCount + '  ' + '可还：' + res.data.data[i].restoreCount;
 								marker = { 
 									id : res.data.data[i].id,
 									latitude : gps[1],

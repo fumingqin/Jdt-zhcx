@@ -238,7 +238,7 @@
 					},
 					{
 						ItemArr: [{
-								IsUse: false,
+								IsUse: true,
 								clickURL: "",
 								ImageURL: "../../static/Home/CPDG2.png",
 								ItemTitle: "车票订购"

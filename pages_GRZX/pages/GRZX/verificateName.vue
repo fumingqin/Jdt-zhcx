@@ -17,12 +17,31 @@
 		data(){	
 			return{			
 				userInfo:[],
+				RealNameInfo:[],
 				name:'',
 				idCode:'',
+				
+				type:'',
 			}	
 		},
-		onLoad (){
+		onLoad (options){
 			this.loadUserInfo();
+			this.type = options.type;
+			console.log(this.type)
+		},
+		onBackPress(e) {
+			// #ifdef APP-PLUS
+			if(this.type!=""){
+				uni.showToast({
+					title:'退出后需要重新登录',
+					icon:'none',
+				})
+				uni.removeStorageSync('userInfo');
+				uni.removeStorageSync('RealNameInfo');
+				uni.navigateBack();
+				return true;
+			}
+			//#endif
 		},
 		methods:{
 			//--------------------加载用户信息-------------------
@@ -32,13 +51,29 @@
 					key:'userInfo',
 					success(res) {
 						that.userInfo=res.data;
-						that.phone=that.userInfo.phoneNumber.substring(0,3)+'****'+that.userInfo.phoneNumber.substring(7,11);
+						that.loadRealNameInfo();
 					},
 					fail() {
 						uni.showToast({
 							title:'请先登录',
 							icon:'none'
 						})
+					}
+				})
+				// RealNameInfo
+			},
+			loadRealNameInfo:function(){
+				var that=this;
+				uni.getStorage({
+					key:'RealNameInfo',
+					success(res) {
+						that.RealNameInfo=res.data;
+					},
+					fail() {
+						// uni.showToast({
+						// 	title:'',
+						// 	icon:'none'
+						// })
 					}
 				})
 			},
@@ -117,6 +152,19 @@
 					})
 				}else{
 					//验证成功
+					if(that.name!=that.RealNameInfo.UserName){
+						uni.showToast({
+							title:'输入的姓名与实名的姓名不一致，请检查',
+							icon:'none'
+						})
+					}else if(that.idCode!=that.RealNameInfo.UserIDNumber){
+						uni.showToast({
+							title:'输入的身份证号与实名的身份证号不一致，请检查',
+							icon:'none'
+						})
+					}else{
+						uni.navigateBack();
+					}
 				}
 			},
 		}	
