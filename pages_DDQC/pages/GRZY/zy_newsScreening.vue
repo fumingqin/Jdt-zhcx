@@ -20,31 +20,31 @@
 		</view>
 		<view style="margin: 20rpx;">
 			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='新闻资讯'&&tabNum==0">
-				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+				<view style="font-size: 32rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
 					<text>{{item.Title}}</text>
 				</view>
-				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+				<view style="font-size: 24rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
 			</view>
 			
 			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='失物招领'&&tabNum==1">
-				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+				<view style="font-size: 32rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
 					<text>{{item.Title}}</text>
 				</view>
-				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+				<view style="font-size: 24rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
 			</view>
 			
 			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='问卷调查'&&tabNum==2">
-				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+				<view style="font-size: 32rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
 					<text>{{item.Title}}</text>
 				</view>
-				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+				<view style="font-size: 24rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
 			</view>
 			
 			<view class="item" v-for="(item,index) in NewsArray" :key="index" @click="NewsDetail(item)" v-if="item.Type=='通知公告'&&tabNum==3">
-				<view style="font-size: 34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+				<view style="font-size: 32rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
 					<text>{{item.Title}}</text>
 				</view>
-				<view style="font-size: 28rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
+				<view style="font-size: 24rpx; color: #AAA;padding-top: 15rpx;">{{changeTime(item.CreateTime)}}</view>
 			</view>
 		</view>
 		<!-- 		<view style="width: 100%; float: left; text-align: center; font-size: 24upx; margin: 16upx 0; color: #aaa;">
