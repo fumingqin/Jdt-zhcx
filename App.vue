@@ -1,5 +1,7 @@
 <script>
+	// #ifdef APP-PLUS
 	const jyJPush = uni.requireNativePlugin('JY-JPush');
+	// #endif
 	import $DDTInterface from '@/common/DDT.js'
 	import homeJS from 'common/Home.js';
 	import utils from '@/pages_CTKY/components/CTKY/shoyu-date/utils.filter.js'
@@ -136,11 +138,9 @@
 						})
 					}
 				})
-				
+
+
 			},
-			
-			
-			
 
 		},
 		onLaunch: function() {
@@ -164,7 +164,6 @@
 				return;
 			}
 			that.LoginLog(userInfo.userId,userInfo.phoneNumber);
-			
 		},
 		onShow: function() {
 			var that = this;
@@ -172,11 +171,11 @@
 			if (userInfo == '') {
 				return;
 			}
+			// #ifdef APP-PLUS
 			that.setJYJPushAlias(userInfo.phoneNumber);
 			that.addJYJPushReceiveOpenNotificationListener();
 			that.addJYJPushReceiveNotificationListener();
-			
-			console.log('App Show')
+			// #endif
 		},
 		onHide: function() {
 			console.log('App Hide')

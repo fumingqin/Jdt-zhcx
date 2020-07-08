@@ -15,21 +15,21 @@
 					<image class="sv_print" src="../../static/Home/serve/cpdinggou.png"></image>
 					<text class="sv_text">车票订购</text>
 				</view> -->
-				
+				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/Bus/BusSeach')">
+					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" ></image>
+					<text class="sv_text">公交查询</text>
+				</view>
 					<view class="sv_view3" @click="natTo3()">
 						<image class="sv_print" src="../../static/Home/serve/hcpdinggou.png"></image>
 						<text class="sv_text">车票订购</text>
 					</view>
 
-<!-- 				<view class="sv_view3" @click="natTo('/pages_GJCX/pages/GJCX/busH5')">
-					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png" ></image>
-					<text class="sv_text">公交查询</text>
-				</view> -->
 				
-				<view class="sv_view3" @click="natTo3()">
+				
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hgjchaxun.png" ></image>
 					<text class="sv_text">公交查询</text>
-				</view>
+				</view> -->
 
 <!-- 				<view class="sv_view3" @click="natTo('/pages_BCFW/pages/BCFW/bf_chartered')">
 					<image class="sv_print" src="../../static/Home/serve/bcfuwu.png"></image>

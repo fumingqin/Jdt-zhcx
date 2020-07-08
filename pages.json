@@ -984,6 +984,8 @@
 					"path": "pages/RentBike/Payment",
 					"style": {
 						"navigationBarTitleText": "支付",
+						"navigationBarTextStyle":"White",
+						"navigationBarBackgroundColor":"#65C36D",
 						"app-plus": {
 							"titleNView": {
 								"autoBackButton":false,
@@ -1030,6 +1032,14 @@
                    	"navigationBarTextStyle":"White",
                    	"navigationBarBackgroundColor":"#65C36D"
                    }
+                }
+                ,{
+                    "path" : "pages/RentBike/BillingRule",
+                    "style" : {
+						"navigationBarTitleText": "计费规则",
+						"navigationBarTextStyle":"White",
+						"navigationBarBackgroundColor":"#65C36D"
+					}
                 }
             ]
 		},

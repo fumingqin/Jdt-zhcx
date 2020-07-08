@@ -9,11 +9,11 @@
 			<!-- #endif -->
 			<view class="userInfoClass" @click="checkLogin">
 				<image class="portraitClass" :src="port || '/static/GRZX/missing-face.png'"></image>
-				<text class="usernameClass">{{nickname || '游客'}}</text>
+				<text class="usernameClass">{{nickname}}</text>
 				<!-- <image src="../../static/GRZX/edit.png" class="editClass"></image> -->
 			</view>
 			
-			<view class="typeBox">
+			<view class="typeBox" v-if="nickname != '游客'">
 				<image src="../../static/GRZX/huangguan.png" class="imgTubiao"></image>
 				<text class="fontClass">{{RealNameStatus}}</text>
 			</view>
@@ -173,7 +173,7 @@
 								},
 								method:that.$GrzxInter.Interface.login.method,
 								success(res) {
-									// console.log(res,'res')
+									console.log(res,'res')
 									that.checkIDRealName(res.data.data.userId);
 									uni.setStorageSync('userInfo',res.data.data);
 									that.userInfo=res.data.data;
@@ -216,7 +216,7 @@
 						}
 					},
 					fail(){
-						that.nickname="";
+						that.nickname="游客";
 						that.port="";
 					}
 				})
@@ -233,16 +233,24 @@
 					method:that.$GrzxInter.Interface.GetUserByUserID.method,
 					success(res) {
 						// console.log('获取实名信息成功',res)
-						if(res.data.data.RealNameStatus == 0){
-							that.RealNameStatus = '未实名';
-						}else if (res.data.data.RealNameStatus == 1){
-							that.RealNameStatus = '已实名';
-						}else if (res.data.data.RealNameStatus == 2){
-							that.RealNameStatus = '认证中';
+						if(res.data.status == true){
+							if(res.data.data.RealNameStatus == 0){
+								that.RealNameStatus = '未实名';
+							}else if (res.data.data.RealNameStatus == 1){
+								that.RealNameStatus = '已实名';
+							}else if (res.data.data.RealNameStatus == 2){
+								that.RealNameStatus = '未通过';
+							}else if (res.data.data.RealNameStatus == 3){
+								that.RealNameStatus = '认证中';
+							}else if (res.data.data.RealNameStatus == 4){
+								that.RealNameStatus = '资料待完善';
+							}
 						}else{
-							that.RealNameStatus = '认证中';
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
 						}
-						 
 						uni.setStorageSync('RealNameInfo',res.data.data)
 					}
 				})
@@ -543,6 +551,11 @@
 			        return false;
 			    }
 			},
+			// login:function(){
+			// 	uni.navigateTo({
+			// 		url:this.$GrzxInter.Route.verificateName.url+'?type=login',
+			// 	})
+			// },
 			//----------------------判断是否为数字-----------------------
 			judgeNum:function(val){
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数

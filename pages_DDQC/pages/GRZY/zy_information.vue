@@ -466,7 +466,7 @@
 
 	.if_text2 {
 		padding: 30upx;
-		font-size: 24upx;
+		font-size: 28upx;
 		color: #E3424B;
 	}
 </style>

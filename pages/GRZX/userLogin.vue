@@ -32,7 +32,9 @@
 </template>
 
 <script>
+	// #ifdef APP-PLUS
 	const jyJPush = uni.requireNativePlugin('JY-JPush');
+	// #endif
 	import $DDTInterface from '@/common/DDT.js'
 	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	export default {
@@ -145,7 +147,9 @@
 											console.log(res)
 											uni.removeStorageSync('captchaCode');
 											uni.setStorageSync('userInfo', res.data.data);
+											// #ifdef APP-PLUS
 											that.setJYJPushAlias(res.data.data.phoneNumber);
+											// #endif
 											that.LoginLog(res.data.data.userId,res.data.data.phoneNumber);
 											uni.hideLoading();
 											that.registerBike(res.data.data.userId, res.data.data.phoneNumber) //注册自行车用户
