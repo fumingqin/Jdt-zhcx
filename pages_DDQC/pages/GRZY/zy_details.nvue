@@ -18,7 +18,7 @@
 				<view class="st_view">
 					<!-- 评价 -->
 					<view></view>
-					<text class="vi_evaluate" @click="open">>去评价</text>
+					<text class="vi_evaluate" @click="open">去评价</text>
 					<view></view>
 					<!-- 满意 -->
 					<!-- <image class="vi_img" src="../../static/GRZY/manyi.png" @click="open"></image> -->
@@ -51,7 +51,7 @@
 							<uni-rate size="28" margin="20" :value="num" @change="onchange" />
 						</view>
 						<!-- 评价框 -->
-						<view v-if="show" style="flex-direction: row; 
+						<view v-if="num>3" style="flex-direction: row; 
 						flex-wrap: wrap; 
 						justify-content: flex-start; 
 						margin-left: 40rpx; 
@@ -62,7 +62,7 @@
 								<text :class="[rSelect.indexOf(item)>-1?'color':'unColor']">{{item}}</text>
 							</view>
 						</view>
-						<view v-if="!show" style="flex-direction: row; 
+						<view v-if="num<=3" style="flex-direction: row; 
 						flex-wrap: wrap; 
 						justify-content: flex-start; 
 						margin-left: 40rpx; 
@@ -145,8 +145,8 @@
 				scale: 14,
 				longitude: "", //地图中心点经度
 				latitude: "", //地图中心点纬度
-				evaluate: ['单车外观好', '骑行舒适', '座椅舒适', '单车开锁快', '车辆上手快', '骑行外观不好', '骑行不舒适', '座椅不舒适', '开锁坏了',],
-				badevaluate: ['单车外观好', '骑行舒适', '座椅舒适', '单车开锁快', '车辆上手快', '骑行外观不好', '骑行不舒适', '座椅不舒适', '开锁坏了',],
+				evaluate: ['单车外观好', '骑行舒适', '座椅舒适', '单车开锁快', '车辆上手快',],
+				badevaluate: ['外观不好', '骑行不舒适', '座椅不舒适', '开锁坏了',],
 				textareaValue:"",//意见信息
 				show:true,//满意或不满意状态  true为满意  false为不满意
 				rSelect:[],//高评星选择

@@ -32,10 +32,11 @@
 </template>
 
 <script>
-	import {
-		pathToBase64,
-		base64ToPath
-	} from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
+	// #ifdef APP-PLUS
+	const jyJPush = uni.requireNativePlugin('JY-JPush');
+	// #endif
+	import $DDTInterface from '@/common/DDT.js'
+	import { pathToBase64, base64ToPath } from '@/components/GRZX/js_sdk/gsq-image-tools/image-tools/index.js';
 	export default {
 		data() {
 			return {
@@ -146,6 +147,10 @@
 											console.log(res)
 											uni.removeStorageSync('captchaCode');
 											uni.setStorageSync('userInfo', res.data.data);
+											// #ifdef APP-PLUS
+											that.setJYJPushAlias(res.data.data.phoneNumber);
+											// #endif
+											that.LoginLog(res.data.data.userId,res.data.data.phoneNumber);
 											uni.hideLoading();
 											that.registerBike(res.data.data.userId, res.data.data.phoneNumber) //注册自行车用户
 										}
@@ -170,6 +175,7 @@
 			//-------------------------------------用户注册自行车----------------------------------
 			registerBike: function(id, phone) {
 				var that = this;
+				console.log(id);
 				uni.request({
 					url: that.$GrzxInter.Interface.RegistUser.value,
 					method: that.$GrzxInter.Interface.RegistUser.method,
@@ -178,7 +184,7 @@
 						phone: phone,
 					},
 					success(res) {
-						// console.log(res)
+						console.log(res)
 						that.checkRealName(res.data.data.UserID);
 					},
 					fail() {
@@ -369,7 +375,7 @@
 					success: (res) => {
 						console.log(res, "340");
 						console.log(res.data.data);
-						if(!res.data.status){ //发送验证码次数上限
+						if(res.data.status==false){ //发送验证码次数上限
 							that.state = true;
 							that.textCode = "获取验证码";
 							clearInterval(timer);
@@ -451,7 +457,70 @@
 					day = structDate.getDate().toString();
 				}
 				var newDate = structDate.getFullYear() + "-" + month + "-" + day;
-			}
+			},
+			//---------------------推送时使用----------------------------
+			setJYJPushAlias: function(phoneNumber) {
+				var that = this;
+				jyJPush.deleteJYJPushAlias({
+				//  可以不用传值进去，但是需要配置这项数据
+				}, result=> {
+					jyJPush.setJYJPushAlias({
+						userAlias: phoneNumber,
+					}, result => {
+						//  设置成功或者失败，都会通过这个result回调返回数据；数据格式保持极光返回的安卓/iOS数据一致
+						//  注：若没有返回任何数据，考虑是否初始化完成
+						console.log(result);
+						jyJPush.getRegistrationID(
+						//  返回的数据会有registrationID，errorCode
+						result => {
+							console.log(result)
+						});
+					});
+				});
+			},
+			// ----------------------------登录时写日志--------------------------------
+			LoginLog: function(UserID, Phone) {
+				var that = this;
+				uni.getLocation({
+					type: 'gcj02',
+					geocode: true,
+					success(res) {
+						console.log(res)
+						uni.getSystemInfo({
+							success(res1) {
+								var country = res.address.country ? res.address.country : '';
+								var province = res.address.province ? res.address.province : '';
+								var city = res.address.city ? res.address.city : '';
+								var district = res.address.district ? res.address.district : '';
+								var street = res.address.street ? res.address.street : '';
+								var streetNum = res.address.streetNum ? res.address.streetNum : '';
+								var poiName = res.address.poiName ? res.address.poiName : '';
+								var Address = country + province + city + district + street + streetNum + poiName;
+								uni.request({
+									url: $DDTInterface.DDTInterface.BikeLog.Url,
+									method: $DDTInterface.DDTInterface.BikeLog.method,
+									data: {
+										UserID: UserID,
+										LogType: '登陆',
+										PhoneNumber: Phone,
+										Mac: '',
+										PhoneBrand: res1.brand,
+										Address: Address,
+										PhoneModel: res1.model,
+										SystemType: res1.platform,
+										SystemVersion: res1.system,
+									},
+									success(res) {
+									},
+									fail(err) {
+										console.log(err)
+									}
+								})
+							}
+						})
+					}
+				})
+			},
 		}
 	}
 </script>

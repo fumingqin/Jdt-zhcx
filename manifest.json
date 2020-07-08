@@ -2,7 +2,7 @@
     "name" : "漳州达达通",
     "appid" : "__UNI__7BBF03F",
     "description" : "",
-    "versionName" : "1.0.0",
+    "versionName" : "1.0.1",
     "versionCode" : "100",
     "transformPx" : false,
     /* 5+App特有相关 */
@@ -59,13 +59,18 @@
                     "entitlements" : {
                         "com.apple.developer.associated-domains" : [ "applinks:zntc.145u.net" ]
                     }
+                },
+                "privacyDescription" : {
+                    "NSLocationAlwaysUsageDescription" : "你的位置信息将用于APP获取位置",
+                    "NSLocationWhenInUseUsageDescription" : "你的位置信息将用于APP获取位置",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "你的位置信息将用于APP获取位置"
                 }
             },
             /* SDK配置 */
             "sdkConfigs" : {
                 "maps" : {
                     "amap" : {
-                        "appkey_ios" : "be539cdd91984d7e7169d61bfe8479ae",
+                        "appkey_ios" : "d9d78a68d8906b436b396955ddba8225",
                         "appkey_android" : "110fc7a797606b7210335815a3676eaf"
                     }
                 },

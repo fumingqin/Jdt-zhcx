@@ -495,6 +495,31 @@ const commuterCard = {
 	msg: '提示'
 }
 
+const ridingStyle = {
+	status: 1, //1成功,0失败提示返回值
+	data: [{
+		img:'http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg',
+		txt:'巾帼文明线',
+	},
+	{
+		img:'http://zntc.145u.net/UpLoadImages/DDT/公共自行车.jpg',
+		txt:'公共自行车',
+	},
+	{
+		img:'http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg',
+		txt:'古雷助力车',
+	},
+	{
+		img:'http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg',
+		txt:'客运南站',
+	},
+	{
+		img:'http://zntc.145u.net/UpLoadImages/DDT/双层公交.jpg',
+		txt:'双层公交',
+	}],
+	msg: '提示'
+}
+
 // 接口声明区
 export default {
 	userInfo,
@@ -518,4 +543,5 @@ export default {
 	homePage,
 	selectBank,
 	commuterCard,
+	ridingStyle,
 }

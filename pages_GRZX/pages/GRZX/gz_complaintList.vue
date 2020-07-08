@@ -214,13 +214,13 @@
 						url:'../../../../pages/Home/wxAuthorize'
 					})
 					// #endif
-					// #ifdef APP-NVUE
+					// #ifdef APP-PLUS
 					uni.showToast({
 						title: '未登录账号，即将跳转登录！',
 						icon:'none'
 					})
 					uni.navigateTo({
-						url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
+						url:'../../../pages/GRZX/userLogin',
 					})
 					// #endif
 				}

@@ -9,13 +9,13 @@
 			<!-- #endif -->
 			<view class="userInfoClass" @click="checkLogin">
 				<image class="portraitClass" :src="port || '/static/GRZX/missing-face.png'"></image>
-				<text class="usernameClass">{{nickname || '游客'}}</text>
+				<text class="usernameClass">{{nickname}}</text>
 				<!-- <image src="../../static/GRZX/edit.png" class="editClass"></image> -->
 			</view>
 			
-			<view class="typeBox">
+			<view class="typeBox" v-if="nickname != '游客'">
 				<image src="../../static/GRZX/huangguan.png" class="imgTubiao"></image>
-				<text class="fontClass">普通用户</text>
+				<text class="fontClass">{{RealNameStatus}}</text>
 			</view>
 			
 			<view class="grzyClass" @click="checkLogin">
@@ -47,7 +47,7 @@
 			<view class="lineClass"></view>
 			
 			<!-- 第一排 -->
-			<view class="boxClass">
+			<!-- <view class="boxClass">
 				<view class="itemClass" @click="infoClick">
 					<image src="../../static/GRZX/ServiceIcon/tb_XXGL.png" class="XXGLicon"></image>
 					<text class="fontStyle">信息管理</text>
@@ -64,7 +64,7 @@
 					<image src="../../static/GRZX/ServiceIcon/tb_JJLXR.png" class="JJLXRicon"></image>
 					<text class="fontStyle">紧急联系人</text>
 				</view>
-			</view>
+			</view> -->
 			<!-- 第二排 -->
 			<view class="boxClass">
 				<view class="itemClass" @click="realName">
@@ -131,13 +131,23 @@
 				userInfo:[],
 				contantPhone:'',
 				userId:'',
+				phoneNumber:'',//客服电话
+				RealNameStatus:'',//是否实名--已实名、未实名、认证中
 			}
 		},
 		onLoad(){
 			this.loadImg();
 		},
 		onShow(){
+			var that = this;
 			this.loadData();
+			//读取客服热线
+			uni.getStorage({
+				key:'ConsumerHotline',
+				success(res) {
+					that.phoneNumber = res.data.Phone1
+				}
+			})
 		},
 		methods:{
 			// ---------------------------加载图片----------------------------
@@ -169,7 +179,8 @@
 									that.userInfo=res.data.data;
 									
 									if(res.data.data.nickname==""||res.data.data.nickname==null){
-										that.nickname="请输入昵称";	
+										// that.nickname="请输入昵称";
+										that.nickname = res.data.data.phoneNumber;
 									}else{
 										that.nickname=res.data.data.nickname;	
 									}
@@ -205,7 +216,7 @@
 						}
 					},
 					fail(){
-						that.nickname="";
+						that.nickname="游客";
 						that.port="";
 					}
 				})
@@ -221,7 +232,25 @@
 					},
 					method:that.$GrzxInter.Interface.GetUserByUserID.method,
 					success(res) {
-						console.log(res)
+						// console.log('获取实名信息成功',res)
+						if(res.data.status == true){
+							if(res.data.data.RealNameStatus == 0){
+								that.RealNameStatus = '未实名';
+							}else if (res.data.data.RealNameStatus == 1){
+								that.RealNameStatus = '已实名';
+							}else if (res.data.data.RealNameStatus == 2){
+								that.RealNameStatus = '未通过';
+							}else if (res.data.data.RealNameStatus == 3){
+								that.RealNameStatus = '认证中';
+							}else if (res.data.data.RealNameStatus == 4){
+								that.RealNameStatus = '资料待完善';
+							}
+						}else{
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}
 						uni.setStorageSync('RealNameInfo',res.data.data)
 					}
 				})
@@ -424,19 +453,22 @@
 			// ---------------------------电话客服--------------------------
 			phoneClick(){
 				var that=this;
-				uni.request({
-					url:that.$GrzxInter.Interface.SearchCustomerService.value,
-					data:{
-						region:'泉州',
-					},
-					method:that.$GrzxInter.Interface.SearchCustomerService.method,
-					success(res){
-						console.log(res)
-						uni.makePhoneCall({
-						    phoneNumber: res.data.data.phone, //仅为示例
-						});
-					}
-				})
+				uni.makePhoneCall({
+				    phoneNumber: that.phoneNumber, //仅为示例
+				});
+				// uni.request({
+				// 	url:that.$GrzxInter.Interface.SearchCustomerService.value,
+				// 	data:{
+				// 		region:'泉州',
+				// 	},
+				// 	method:that.$GrzxInter.Interface.SearchCustomerService.method,
+				// 	success(res){
+				// 		console.log(res)
+				// 		uni.makePhoneCall({
+				// 		    phoneNumber: res.data.data.phone, //仅为示例
+				// 		});
+				// 	}
+				// })
 			},
 			// ---------------------------QQ客服--------------------------
 			QQClick(){
@@ -628,7 +660,7 @@
 		/* #endif */
 	}
 	.typeBox{  //普通用户
-		width: 126upx;
+		width: 110upx;
 		height: 42upx;
 		// background-color: #C25E4E;
 		background-color: #2A954B;

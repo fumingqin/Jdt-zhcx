@@ -18,46 +18,53 @@
 			<view class="hp_view">
 				<view class="ve_view">
 					<!-- 金额 -->
-					<view class="ve_Text" @click="natTo(1)">
+					<view class="ve_Text" hover-class="ve_hover" @click="natTo(1)">
 						<view class="tx_text1">金额</view>
 						
 						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
 					<!-- 卡券 -->
-					<view class="ve_Text" @click="Jump">
+					<!-- <view class="ve_Text" hover-class="ve_hover2"  @click="Jump">
 						<view class="tx_text1">卡数</view>
 						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
-					</view>
+					</view> -->
 					<!-- 押金 -->
 					<!-- 未交押金 -->
-					<view class="ve_Text" v-if="depositStatus==0 && commuterCardObject=='普通用户'" @click="open1">
-						<image class="tx_img" src="../../static/GRZY/chongzhi.png"></image>
+					<view class="ve_Text" hover-class="ve_hover3" @click="open1">
+						<image class="tx_img" src="../../static/GRZY/chongzhi.png" v-if="depositStatus==0"></image>
 						<view class="tx_text1">押金</view>
-						<view class="tx_text2">0<text class="tx_text3">元</text></view>
+						<view class="tx_text2" v-if="depositStatus==0||depositStatus==1">{{deposit}}<text class="tx_text3">元</text></view>
+						<view class="noRefund" v-if="depositStatus==2">免押金</view>
 					</view>
 					<!-- 已交押金 -->
-					<view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
+					<!-- <view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
 						<view class="tx_text1">押金</view>
 						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
-					</view>
+					</view> -->
 					
-					<view class="ve_Text" v-if="commuterCardObject=='公务员用户' || commuterCardObject=='团体用户'">
+					<!-- <view class="ve_Text" v-if="depositStatus==2">
 						<view class="tx_text1">押金</view>
 						<view style="font-size: 32upx;font-weight: bold;color: #78482a;margin-top: 23upx;font-family: Source Han Sans SC;padding-top: 20upx;">免押金</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			
 			<!-- 套餐 @click="natTo('/pages_DDQC/pages/GRZY/combo')" -->
-			<!-- <view class="ve_view2" v-if="commuterCardObject=='公务员'">
+			<view class="ve_view2" v-if="commuterCardObject=='公务员用户' || depositStatus==2">
 				<image class="vi_image2" src="../../static/GRZY/touxiang.png"></image>
 				<text class="ve_text">通勤卡</text>
 				<text class="ve_text2">余额</text>
 				<text class="ve_text3">￥{{commuterCardCost}}元</text>
 				<text class="ve_text4">公交车扫码、达达骑行</text>
-				<text class="ve_text5">开通说明</text>
+				<text class="ve_text5" @click="openExplain">开通说明</text>
 				<image class="vi_image" src="../../static/GRZY/tongqingka.png" mode="aspectFit"></image>
-			</view> -->
+			</view>
+			
+			<!-- 退押金失败记录 -->
+			<view class="ve_view3" @click="refundClick">
+				<text class="vi_text">退押金记录</text>
+				<text class="jdticon icon-you"></text>
+			</view>
 			
 			<!-- 电话客服 -->
 			<view class="ve_view3" @click="makePhone">
@@ -65,7 +72,7 @@
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 我要投诉 -->
-			<view class="ve_view4" @click="natTo('/pages_GRZX/pages/GRZX/gz_complaintList')">
+			<view class="ve_view4" v-if="false" @click="natTo('/pages_GRZX/pages/GRZX/gz_complaintList')">
 				<text class="vi_text2">我要投诉</text>
 				<text class="jdticon icon-you"></text>
 			</view>
@@ -79,23 +86,7 @@
 				<text class="vi_text2">充值金额</text>
 				<text class="jdticon icon-you"></text>
 			</view>
-			<!-- 二维码 -->
-			<!-- <view class="ve_view4" @click="QRCodeData">
-				<text class="vi_text2">公交二维码</text>
-				<text class="jdticon icon-you"></text>
-			</view> -->
-			<!-- 二维码 -->
-			<!-- <uni-popup ref="popup1" type="bottom">
-				<view class="po_boxVlew" style="align-items: center;">
-					<view class="bv_topText">
-						<text class="tt_text">二维码</text>
-						<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
-					</view>
-					<view style=" width: 300rpx;margin-left: 230rpx;">
-						<canvas canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
-					</view>
-				</view>
-			</uni-popup> -->
+			
 			<!-- 押金支付弹框 -->
 			<uni-popup ref="popup" type="bottom">
 				<view class="po_boxVlew">
@@ -106,7 +97,7 @@
 					<!-- 充值金额 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">充值金额:</text>
-						<text class="ra_text2">&nbsp;￥{{personalHomepage.deposit}}</text>
+						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
 					</view>
 					<!-- 支付方式 -->
 					<view class="bv_rechargeAmount2">
@@ -129,7 +120,7 @@
 					<!-- 退押金 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">退款金额:</text>
-						<text class="ra_text2">&nbsp;￥{{deposit}}</text>
+						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
 					</view>
 					<view class="tjButton2" @click="GetRefund2">确认退款</view>
 					<view class="vi_bottom"></view>
@@ -204,14 +195,14 @@
 				userInfo: [], //用户信息
 				type: 0,
 				balance: 0, //钱包金额
-				deposit: '', //押金金额
+				deposit: 0, //押金金额
 				depositStatus: '', //押金状态
 				id: '',
 				status: '',
 				order_no: '',
 				personalHomepage: {
 					cost: 0.8, //价格
-					coupon: 1, //卡券数量
+					coupon: 0, //卡券数量
 					deposit: 2, //押金
 					depositBalance: 0,
 
@@ -230,12 +221,26 @@
 				qrcodeSrc: '',
 				paymentData: [], //支付参数
 				commuterCardObject:'',//判断当前用户是普通用户还是免押金用户
-				commuterCardCost:199,
+				commuterCardCost:0,//通勤卡金额
+				prepayid:'',//钱包跟押金充值需要传的预支付交易会话id
+				isCommuteCard:false,//是否有通勤卡
+				ConsumerPhoneNumber:'',//客服热线
+				depositNumber:'',//押金金额
 			}
 		},
 		onLoad() {
 			// this.lunBoInit();
-
+			
+			var that = this;
+			//获取客服热线
+			uni.getStorage({
+				key:'ConsumerHotline',
+				success(res) {
+					that.ConsumerPhoneNumber = res.data.Phone1
+				}
+			})
+			//获取押金金额
+			that.getDepositData();
 		},
 		onShow() {
 			var that = this;
@@ -243,7 +248,7 @@
 			that.getUserInfo();
 		},
 		methods: {
-
+			
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -261,47 +266,7 @@
 					fail(data) {}
 				})
 			},
-			//--------------------------二维码--------------------------
-			QRCodeData: function() {
-				var that = this;
-				uni.request({
-					url: $DDTInterface.DDTInterface.GetBusCodeGen.Url,
-					method: $DDTInterface.DDTInterface.GetBusCodeGen.method,
-					data: {
-						phoneNumber: 13906963039,
-						userID: that.userInfo.userId,
-					},
-					success(res) {
-						if (res.data.status == true) {
-							that.QRCodeClick(res.data.data.qr)
-						}
-					},
-					fail(res) {
-						console.log('获取钱包数据失败', res)
-					}
-				})
-			},
-			QRCodeClick: function(param) {
-				var that = this;
-				uni.showLoading({
-					title: '二维码生成中',
-					mask: true
-				})
-				//生成二维码
-				uQRCode.make({
-					canvasId: 'qrcode',
-					text: param,
-					size: that.qrcodeSize,
-					margin: 10,
-					success: res => {
-						that.qrcodeSrc = res
-					},
-					complete: () => {
-						uni.hideLoading()
-					}
-				})
-				that.$refs.popup1.open()
-			},
+			
 			//--------------------------获取钱包数据--------------------------
 			GetPurseDetail: function() {
 				var that = this;
@@ -323,16 +288,22 @@
 						if (res.data.status == true && res.data.msg == '请求成功') {
 							that.walletData = res.data.data;
 							that.balance = res.data.data.balance / 100;
-							if (res.data.data.depositStatus != 0) {
-								that.deposit = res.data.data.deposit / 100;
-								if(that.deposit==''){
-									that.deposit = 0
-								}
-							}
+							that.commuterCardCost = res.data.data.tqkBalance / 100;
+							// if (res.data.data.depositStatus != 0) {
+							// 	that.deposit = res.data.data.deposit / 100;
+							// }
 							// that.depositStatus = res.data.data.depositStatus;
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
 							that.status = res.data.data.status;
+						}else {
+							uni.showToast({
+								title:'网络错误，请重新加载',
+								icon:'none'
+							})
+							//如果返回的数据是空的，就默认设置押金为0
+							// that.deposit = 0;
+							// that.commuterCardObject = '普通用户';
 						}
 						console.log('获取押金状态', that.walletData)
 					},
@@ -342,7 +313,25 @@
 					}
 				})
 			},
-
+			//--------------------------获取押金金额--------------------------
+			getDepositData:function(){
+				console.log('押金金额')
+				var that = this;
+				//获取押金金额
+				uni.request({
+					url:$DDTInterface.DDTInterface.Deposit.Url,
+					method:$DDTInterface.DDTInterface.Deposit.method,
+					success(res) {
+						console.log('获取押金金额成功',res)
+						if(res.data.status == true){
+							that.depositNumber = res.data.data.price / 100
+						}
+					},
+					fail(res) {
+						console.log('获取押金金额失败',res)
+					}
+				})
+			},
 			//--------------------------押金充值--------------------------
 			GetRefund: function() {
 				uni.showLoading({
@@ -380,7 +369,8 @@
 								timestamp: res.data.data.timestamp,
 								sign: res.data.data.sign // 根据签名算法生成签名
 							}
-							that.payment(obj);
+							that.prepayid = res.data.data.prepayid;
+							that.RefundPayment(obj);
 						}else{
 							uni.showToast({
 								title:'拉起支付失败',
@@ -395,8 +385,8 @@
 				})
 			},
 
-			//--------------------------调起支付--------------------------
-			payment: function(orderInfo) {
+			//--------------------------调起押金充值支付--------------------------
+			RefundPayment: function(orderInfo) {
 				var that = this;
 				// #ifdef APP-PLUS
 				console.log(that.paymentData)
@@ -406,44 +396,82 @@
 					success: function(res) {
 						console.log(res)
 						if (res.errMsg == 'requestPayment:ok') { //成功
-							uni.showToast({
-								title: '支付成功'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '支付成功'
+								})
+							}, 1000)
+							//支付成功，写入充值记录
 							that.WirteRechargeLog(1);
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 						} else if (res.errMsg == 'requestPayment:fail errors') { //错误
-							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '支付失败，请重新支付',
+									icon: 'none'
+								})
+							}, 1000)
+							
+							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
-							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '您取消了支付',
+									icon: 'none'
+								})
+							}, 1000)
+							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
 						}
 					},
 
 					fail: function(ee) {
 						if (res.errMsg == 'requestPayment:errors') { //错误
-							uni.showToast({
-								title: '支付失败，请重新支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '支付失败，请重新支付',
+									icon: 'none'
+								})
+							}, 1000)
+							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
-							uni.showToast({
-								title: '您取消了支付',
-								icon: 'none'
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '您取消了支付',
+									icon: 'none'
+								})
+							}, 1000)
+							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
 						}
 					}
 				})
 				// #endif
 			},
-
+			//--------------------------充值检测--------------------------
+			rechargeCheck:function(prepayId){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.rechargeCheck.Url,
+					method:'POST',
+					data:{
+						prepayId:prepayId,
+						phoneNumber:that.userInfo.phoneNumber,
+					},
+					success(res) {
+						console.log('充值检测成功',res)
+						if(res.data.status == true){
+							
+						}
+					},
+					fail(res) {
+						console.log('充值检测失败',res)
+					}
+				})
+			},
 			//------------------押金充值记录---------------------------------
 			WirteRechargeLog: function(state) {
 				var that = this;
@@ -460,15 +488,14 @@
 						totalPrice: that.personalHomepage.deposit,
 						userID: that.userInfo.userId,
 						state: state,
-						id: that.id,
+						id: that.prepayid,//预支付交易会话id
 					},
 					success(res) {
 						console.log('押金充值记录成功', res);
 						uni.showLoading()
 						if(res.data.status == true){
-							setTimeout(function() {
-								that.GetPurseDetail();
-							}, 3000)
+							that.GetUserByUserID();
+							
 						}else{
 							uni.showToast({
 								title:res.data.msg,
@@ -480,7 +507,7 @@
 						console.log('押金充值记录失败', res)
 						uni.showLoading()
 						setTimeout(function() {
-							that.GetPurseDetail();
+							that.GetUserByUserID();
 						}, 3000)
 					}
 				})
@@ -505,17 +532,36 @@
 						uni.hideLoading();
 						console.log('钱包退押金', res) 
 						if (res.data.status == true) {
-							uni.showToast({
-								title: '押金退款成功',
-								icon: 'none',
-							})
+							setTimeout(function() {
+								uni.showToast({
+									title: '押金退款成功',
+									icon: 'none',
+								})
+							}, 1000)
 							that.GetUserByUserID();
 							// that.WriteRefundLog();
 						} else {
-							uni.showToast({
-								title: res.data.msg,
-								icon: 'none'
-							})
+							if(res.data.msg == '退款失败超过一年的订单无法原路退回请走人工退款'){
+								uni.showModal({
+									title:'温馨提示',
+									content:res.data.msg,
+									success(res) {
+										if(res.confirm){
+											uni.navigateTo({
+												url:'./zy_information?refundType=' + '第一次人工退款'
+											})
+										}
+									}
+								})
+							}else{
+								setTimeout(function() {
+									uni.showToast({
+										title: res.data.msg,
+										icon: 'none'
+									})
+								}, 1000)
+							}
+							
 							// that.WriteRefundLog();
 						}
 					},
@@ -525,9 +571,7 @@
 					}
 				})
 			},
-
 			//--------------------------查询自行车订单--------------------------
-
 			GetOrderByUserID: function() {
 				var that = this;
 				uni.request({
@@ -544,7 +588,6 @@
 			},
 
 			//--------------------------押金退款记录--------------------------
-
 			WriteRefundLog: function() {
 				var that = this;
 				uni.request({
@@ -584,7 +627,16 @@
 			//------------------------------弹框事件-----------------------------------------
 
 			open1() {
-				this.checkRealName(3)
+				var that = this;
+				//如果当前押金状态是未交押金---充值押金
+				if(that.depositStatus == 0){
+					//检查是否实名
+					that.checkRealName(3)
+				}else if(that.depositStatus == 1){
+					//当前状态是已交押金---退押金
+					//检查是否实名
+					that.checkRealName(4);
+				}
 			},
 			//关闭
 			close(e) {
@@ -594,16 +646,22 @@
 			},
 
 			//退款弹框
-			open2() {
-				this.checkRealName(4);
-			},
+			// open2() {
+			// 	this.checkRealName(4);
+			// },
 			//关闭
 			close2(e) {
 				if (e == 1) {
 					this.$refs.popup2.close()
 				}
 			},
-
+			openExplain:function(){
+				uni.showModal({
+					content:'通勤钱包开通步骤:' + '\n\n' + '1、公务员用户在线下一卡通网点申请注销实体-卡里的通勤钱包' + '\n' + '2、线.上通勤钱包在两个工作日左右自动开通',
+					showCancel:false,
+					confirmText:'知道了'
+				})
+			},
 			//-----------------tab事件---------------------------------------
 			tabClick(e) {
 				if (e == 0) {
@@ -664,10 +722,10 @@
 								uni.navigateTo({
 									url: './topUp'
 								})
-							} else if (e == 3) {
+							} else if (e == 3) {//交押金
 								// 需要在 popup 组件，指定 ref 为 popup
 								that.$refs.popup.open()
-							} else if (e == 4) {
+							} else if (e == 4) {//退押金
 								// 需要在 popup 组件，指定 ref 为 popup
 								that.$refs.popup2.open()
 							} else if (DepositType == 2) {
@@ -692,10 +750,22 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('呀呀呀' + JSON.stringify(res))
+						console.log('读取信息成功',res)
 						//获取押金状态
 						that.depositStatus = res.data.data.DepositType;
 						//获取当前是普通用户还是免押金用户
+						that.commuterCardObject = res.data.data.UserType;
+						that.deposit = res.data.data.Deposit / 100;
+						//判断是否有通勤卡
+						that.isCommuteCard = res.data.data.CommuteCard;
+						//用户类型--普通用户，公务员，集团用户
+						if(res.data.data.CommuteCard == false) {
+							//修改卡数量为0
+							that.coupon = 0;
+						}else {
+							//修改卡数量为1
+							that.coupon = 1;
+						}
 						that.commuterCardObject = res.data.data.UserType;
 						//获取钱包详情
 						that.GetPurseDetail();
@@ -705,20 +775,35 @@
 					}
 				})
 			},
-
-			makePhone: function() {
-				uni.makePhoneCall({
-					phoneNumber: '17764540647'
-				})
-			},
-
-			Jump() {
-				// this.type = 1
+			//--------------------------------点击退押金记录--------------------------------
+			refundClick:function(){
 				uni.navigateTo({
-					url:'zy_commuterCard',
+					url:'./refundRecord'
 				})
 			},
-
+			//--------------------------------客服电话--------------------------------
+			makePhone: function() {
+				var that = this;
+				uni.makePhoneCall({
+					phoneNumber: that.ConsumerPhoneNumber,
+				})
+			},
+			//--------------------------------点击卡跳转--------------------------------
+			Jump() {
+				var that = this;
+				if(that.isCommuteCard == true){
+					uni.navigateTo({
+						url:'zy_commuterCard',
+					})
+				}else {
+					uni.showToast({
+						title:'暂无可用卡',
+						icon:'none'
+					})
+				}
+				
+			},
+			//--------------------------------点击骑行记录跳转--------------------------------
 			Jump2: function(e) {
 				var that = this;
 				if(that.drivingRecord[e].PayState==1&&that.drivingRecord[e].HireStatus==2){
@@ -820,15 +905,18 @@
 		box-shadow: 0px 6px 20px 0px rgba(231, 231, 231, 0.53);
 
 		.ve_view {
-			position: absolute;
+			// position: absolute;
 			display: flex;
-			width: 694upx;
+			justify-content: space-between;
+			// width: 694upx;
+			margin-left: 100rpx;
+			margin-right: 100rpx;
 			height: 246upx;
 			left: 0;
 			top: 0;
 
 			.ve_Text {
-				width: 33%;
+				width: 34%;
 				height: 246upx;
 				text-align: center;
 				font-family: Source Han Sans SC;
@@ -872,7 +960,7 @@
 		border-radius: 10px;
 		margin-left: 29upx;
 		margin-right: 29upx;
-		margin-top: 8upx;
+		margin-top: 20upx;
 		
 		.vi_image2{
 			position: absolute;
@@ -880,6 +968,7 @@
 			height: 94upx;
 			padding-top: 50upx;
 			padding-left: 40upx;
+			z-index: 500;
 		}
 		
 		.ve_text{
@@ -889,6 +978,7 @@
 			color: #FFFFFF;
 			padding-left: 157upx;
 			padding-top: 40upx;
+			z-index: 500;
 		}
 		
 		.ve_text2{
@@ -897,6 +987,7 @@
 			color: #FFFFFF;
 			padding-top: 104upx;
 			padding-left: 157upx;
+			z-index: 500;
 		}
 		
 		.ve_text3{
@@ -905,6 +996,7 @@
 			color: #FFFFFF;
 			padding-top: 104upx;
 			padding-left: 246upx;
+			z-index: 500;
 		}
 		
 		.ve_text4{
@@ -914,6 +1006,7 @@
 			bottom: 0;
 			padding-left: 40upx;
 			padding-bottom: 30upx;
+			z-index: 500;
 		}
 		
 		.ve_text5{
@@ -924,6 +1017,7 @@
 			right: 0;
 			padding-right: 40upx;
 			padding-bottom: 30upx;
+			z-index: 500;
 		}
 		
 		.vi_image {
@@ -933,7 +1027,14 @@
 			margin: 0 auto;
 		}
 	}
-
+	.noRefund{
+		font-size: 32upx;
+		font-weight: bold;
+		color: #78482a;
+		margin-top: 23upx;
+		font-family: Source Han Sans SC;
+		padding-top: 20upx;
+	}
 	//套餐
 	.ve_view3 {
 		display: flex;
@@ -1105,7 +1206,7 @@
 			top: 0;
 
 			.ve_Text {
-				width: 33%;
+				width: 34%;
 				height: 246upx;
 				text-align: center;
 				font-family: Source Han Sans SC;
@@ -1182,5 +1283,24 @@
 			padding-left: 4upx;
 			padding-top: 9upx;
 		}
+	}
+	
+	.ve_hover{
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		opacity: 0.9;
+		background: #b99478;
+	}
+	
+	.ve_hover2{
+		opacity: 0.9;
+		background: #b99478;
+	}
+	
+	.ve_hover3{
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		opacity: 0.9;
+		background: #b99478;
 	}
 </style>

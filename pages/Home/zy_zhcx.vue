@@ -1,170 +1,35 @@
 <template>
 	<view>
 		<!-- 轮播图-->
-		<swiper class="swi" circular autoplay>
+		<swiper class="swi" circular autoplay style="background-color: #65C36D;">
 			<swiper-item class="swiItem" v-for="(item,index) in homePage" :key="index">
-				<image :src="item.imageUrl" mode="aspectFill" />
+				<image :src="item.ImageURL" mode="aspectFill" />
 			</swiper-item>
 		</swiper>
 
 		<swiper class="zl_swi" :indicator-dots="true" circular indicator-active-color="#70c778" indicator-color="#f6f6f6">
-			<swiper-item class="swiItem">
-				<view class="zl_topClick">
-					<!-- 达达骑车 -->
-					<view class="zl_carAppointment" @click="natTo2('../../pages_DDQC/pages/RentBike/RentBikeHome')">
-						<image class="zl_caImage" src="../../static/Home/DDQC.png"></image>
-						<text class="zl_caText">达达骑车</text>
+			<swiper-item class="swiItem" style="display: flex;align-items: center;" v-for="(item,index) in swiperItem" :key="index">
+				<!-- 	<swiper-item class="swiItem" style="display: flex;align-items: center;">
+				<view style="display: flex;justify-content: space-around;align-items: center;"> -->
+				<view style="display: flex;width: 25%;justify-content: center;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
+					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
+						<image style="width: 75rpx;height: 75rpx;" mode="aspectFill" :src="ArrItem.ImageURL"></image>
+						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
-					
-					<!-- 公交扫码 -->
-					<view class="zl_charterService" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_QRcode')">
-						<image class="zl_csImage" src="../../static/Home/GJSM.png"></image>
-						<text class="zl_csText">公交扫码</text>
-					</view>
-					
-					<!-- 公交扫码 -->
-					<!-- <view class="zl_charterService" @click="natTo()">
-						<image class="zl_csImage" src="../../static/Home/GJSM2.png"></image>
-						<text class="zl_csText">包车服务</text>
-					</view> -->
-					
-					<!-- 车票订购 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
-						<text class="zl_toText">车票订购</text>
-					</view> -->
-					
-					<!-- 达达钱包 -->
-					<view class="zl_ticketOrdering" @click="natTo2('../../pages_DDQC/pages/GRZY/zy_homepage')">
-						<image class="zl_toImage" src="../../static/Home/QB.png"></image>
-						<text class="zl_toText">达达钱包</text>
-					</view>
-					
-					<!-- 车票订购 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/CPDG.png"></image>
-						<text class="zl_toText">车票订购</text>
-					</view> -->
-					
-					<!-- 车票订购 -->
-					<view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/CPDG2.png"></image>
-						<text class="zl_toText">车票订购</text>
-					</view>
-					
-					<!-- 新区专线 -->
-					<!-- <view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../static/Home/XQZX.png"></image>
-						<text class="zl_caText">新区专线</text>
-					</view> -->
-					
-					<!-- 公交查询 --> 
-					<!-- <view class="zl_transit">
-						<image class="zl_tsImage" src="../../static/Home/GJCX.png"></image>
-						<text class="zl_tsText">公交查询</text>
-					</view> -->
-					
-					<!-- 公交查询 --> 
-					<view class="zl_transit" @click="natTo()">
-						<image class="zl_tsImage" src="../../static/Home/GJCX2.png"></image>
-						<text class="zl_tsText">公交查询</text>
-					</view>
-					
-					
-				</view>
-			</swiper-item>
-			<swiper-item class="swiItem">
-				<view class="zl_topClick">
-					<!-- 包车服务 -->
-					<!-- <view class="zl_charterService">
-						<image class="zl_csImage" src="../../static/Home/BCFW.png"></image>
-						<text class="zl_csText">包车服务</text>
-					</view> -->
-					
-					<!-- 包车服务 -->
-					<view class="zl_charterService" @click="natTo()">
-						<image class="zl_csImage" src="../../static/Home/BCFW2.png"></image>
-						<text class="zl_csText">包车服务</text>
-					</view>
-					<!-- 景区门票 -->
-					<!-- <view class="zl_tourismServices">
-						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao.png"></image>
-						<text class="zl_teText">景区门票</text>
-					</view> -->
-					
-					<!-- 景区门票 -->
-					<view class="zl_tourismServices" @click="natTo()">
-						<image class="zl_teImage" src="../../static/Home/serve/jqgoupiao2.png"></image>
-						<text class="zl_teText">景区门票</text>
-					</view>
-					<!-- 旅游产品 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/LYCP.png"></image>
-						<text class="zl_toText">旅游产品</text>
-					</view> -->
-					
-					<!-- 旅游产品 -->
-					<view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/LYCP2.png"></image>
-						<text class="zl_toText">旅游产品</text>
-					</view>
-					
-					<!-- 预约检测 -->
-					<!-- <view class="zl_carAppointment">
-						<image class="zl_caImage" src="../../static/Home/YYJC.png"></image>
-						<text class="zl_caText">预约检测</text>
-					</view> -->
-					
-					<!-- 预约检测 -->
-					<view class="zl_carAppointment" @click="natTo()">
-						<image class="zl_caImage" src="../../static/Home/YYJC2.png"></image>
-						<text class="zl_caText">预约检测</text>
-					</view>
-					
-					<!-- 自由行 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/ZYX.png"></image>
-						<text class="zl_toText">自由行</text>
-					</view> -->
-					
-					<!-- 自由行 -->
-					<view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/ZYX2.png"></image>
-						<text class="zl_toText">自由行</text>
-					</view>
-					
-					<!-- 跟团游 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/GTY.png"></image>
-						<text class="zl_toText">跟团游</text>
-					</view> -->
-					
-					<!-- 跟团游 -->
-					<!-- <view class="zl_ticketOrdering" @click="natTo()">
-						<image class="zl_toImage" src="../../static/Home/GTY2.png"></image>
-						<text class="zl_toText">跟团游</text>
-					</view> -->
-					
-					<!-- 村村通 -->
-					<!-- <view class="zl_ticketOrdering">
-						<image class="zl_toImage" src="../../static/Home/CCT.png"></image>
-						<text class="zl_toText">村村通</text>
-					</view> -->
 				</view>
 			</swiper-item>
 		</swiper>
 		</swiper>
-
 		<!-- 咨询动态 -->
 		<view class="notice">
 			<view class="zl_content">
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
-					<swiper class="swi2 swiper-container" vertical circular autoplay display-multiple-items="2">
-						<swiper-item v-for="(item,index) in consultingService" :key="index">
-							<scroll-view scroll-y>
-								<view class="zl_noText">{{item.title}}</view>
-							</scroll-view>
+					<swiper class="swi2" vertical circular autoplay display-multiple-items="2" disable-touch="true">
+						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index" v-if="item.Type!='计费规则'">
+							<!-- <scroll-view scroll-y> -->
+							<view class="zl_noText" @click="newsClick(item)">{{item.Title}}</view>
+							<!-- </scroll-view> -->
 						</swiper-item>
 					</swiper>
 					<!-- <view class="zl_label">
@@ -180,7 +45,7 @@
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
-					<text class="zl_reTitle">骑行风采</text>
+					<text class="zl_reTitle">长运风采</text>
 					<!-- 下面这是要注释的 -->
 					<!-- <text class="zl_reMore">更多></text> -->
 				</view>
@@ -261,7 +126,17 @@
 				</view>
 			</view>
 		</view> -->
-		
+		<view class="zl_recommend">
+			<view>
+				<view class="zl_reContent">
+					<text class="zl_reTitle">应用合作</text>
+				</view>
+				<view style="padding: 40rpx 0;display: flex;justify-content: center;">
+					<text style="font-size: 30rpx;">客服热线：</text>
+					<text style="font-size: 30rpx;color: #65C36D;">0596-2100000</text>
+				</view>
+			</view>
+		</view>
 		<!-- 服务协议和隐私政策 -->
 		<uni-popup ref="centerPopup" type="center">
 			<view class="centerClass">
@@ -290,44 +165,19 @@
 	export default {
 		data() {
 			return {
-				consultingService:[{
-					title:'不负灿烂时光,周边游更精彩,美伦美焕',
-				},
-				{
-					title:'不负灿烂时光,周边游更精彩',
-				},
-				{
-					title:'老年卡要还代了,这事你该关注',
-				},
-				{
-					title:'漳州点资公交卡入驻集团',
-				}],
-				imgXXDT:[{
-					imageUrl:'',
-				}],//咨询动态
-				homePage: '', //轮播图
+				consultingService: [], //新闻资讯
+				imgXXDT: [{
+					imageUrl: '',
+				}], //咨询动态
+				homePage: [{
+					ImageURL: ''
+				}], //轮播图
 				type: 0,
 				Announcement: '', //资讯动态
 				sixPalaceList: [{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				},
-				{
-					ticketId:'',
-					ticketImage:'',
-				}],
+					ticketId: '',
+					ticketImage: '',
+				}, ],
 				goodsList: '',
 				zy_dataIndex: 6, //列表默认数量
 				disStatus: 0,
@@ -338,41 +188,120 @@
 				},
 				loadingType: 0, //加载更多状态
 				current: 0, //标题下标
-				version:'',//版本号
-				platform:'',//系统平台
-				userInfo:'',
+				version: '', //版本号
+				platform: '', //系统平台
+				userInfo: '',
+				swiperItem: [ //菜单栏
+					{
+						ItemArr: [{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/RentBike/RentBikeHome",
+								ImageURL: "../../static/Home/DDQC.png",
+								ItemTitle: "达达骑车"
+							},
+							{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/GRZY/zy_QRcode",
+								ImageURL: "../../static/Home/GJSM.png",
+								ItemTitle: "公交刷码"
+							},
+							{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/GRZY/zy_homepage",
+								ImageURL: "../../static/Home/QB.png",
+								ItemTitle: "达达钱包"
+							},
+							{
+								IsUse: true,
+								clickURL: "../../pages_DDQC/pages/Bus/BusSeach",
+								ImageURL: "../../static/Home/GJCX.png",
+								ItemTitle: "公交查询"
+							},
+						]
+					},
+					{
+						ItemArr: [{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/CPDG2.png",
+								ItemTitle: "车票订购"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/BCFW2.png",
+								ItemTitle: "包车服务"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/serve/jqgoupiao2.png",
+								ItemTitle: "景区门票"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/LYCP2.png",
+								ItemTitle: "旅游产品"
+							},
+						]
+					},
+					{
+						ItemArr: [{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/YYJC2.png",
+								ItemTitle: "预约检测"
+							},
+							{
+								IsUse: false,
+								clickURL: "",
+								ImageURL: "../../static/Home/ZYX2.png",
+								ItemTitle: "自由行"
+							}
+						]
+					}
+				]
 			}
 		},
 		onLoad() {
 			var that = this;
-			this.lunBoInit();
+			// #ifdef APP-PLUS
+			//获取系统信息
+			uni.getSystemInfo({
+				success(res) {
+					console.log('获取系统信息', res)
+					//获取系统平台 iOS Android
+					that.platform = res.platform;
+					// 获取本地应用资源版本号  
+					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+						that.version = inf.version; //获取当前版本号
+						setTimeout(function() {
+							//检测升级
+							that.updateAPP();
+						}, 1500)
+					});
+				}
+			})
+			// #endif
+			this.GetRotationChart();
 			this.loadData();
 			//#ifdef APP-PLUS
 			this.loadService();
 			//#endif
+
+			//获取新闻数据
+			that.GetNews();
+			//获取客服热线
+			that.ConsumerHotline();
 		},
 
 		onShow() {
 			var that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
-			if(that.userInfo!=''){
+			if (that.userInfo != '') {
 				that.checkCurrentStatus();
 			}
-			// #ifdef APP-PLUS
-			//获取系统信息
-			uni.getSystemInfo({
-				success(res) {
-					//获取系统平台 iOS Android
-					that.platform = res.platform;
-					// 获取本地应用资源版本号  
-					plus.runtime.getProperty(plus.runtime.appid,function(inf){
-					    that.version = inf.version;  //获取当前版本号
-						//检测升级
-						that.updateAPP();
-					});
-				}
-			})
-			// #endif
 			// #ifdef MP-WEIXIN
 			that.getLoginState();
 			//#endif
@@ -389,71 +318,147 @@
 		// 	})
 		// 	this.getMore();
 		// },
-		components: { uniPopup },  //注册为子组件
+		components: {
+			uniPopup
+		}, //注册为子组件
 		methods: {
+			TitleJump: function(e, Url) {
+				if (e) {
+					this.natTo2(Url);
+				} else {
+					this.natTo();
+				}
+			},
 			//----------------------自动更新-------------------------------
-			updateAPP:function(){
+			updateAPP: function() {
 				var that = this;
+				let systemType = 0;
+				if (that.platform == 'ios') {
+					systemType = 1;
+				} else {
+					systemType = 0;
+				}
 				uni.request({
-					url:$Home.Interface.UpDateVersion.url,
-					method:$Home.Interface.UpDateVersion.method,
-					data:{
-						systemType:that.platform
+					url: $DDTInterface.DDTInterface.GetAppVersion.Url,
+					method: $DDTInterface.DDTInterface.GetAppVersion.method,
+					data: {
+						systemType: systemType
 					},
 					success(res) {
-						console.log(res)
-					},
-					fail(res) {
-						console.log(res)
-					}
-				})
-			},
+						console.log('获取版本信息成功', res)
+						if (res.data.status == true) {
+							if (that.platform == 'ios') {
+								if (that.version != res.data.data.VersionID) {
+									uni.showModal({
+										title: '温馨提示',
+										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
+										complete(res) {
+											if (res.confirm) {
 
-			//----------------------读取静态页面json.js-------------------------------
-
-			async lunBoInit() {
-				// let homePage = await this.$api.lyfwcwd('homePage');
-				// this.homePage = homePage.data;
-				let Announcement = await this.$api.lyfwcwd('Announcement');
-				this.Announcement = Announcement.data;
-				// console.log(this.homePage)
-			},
-
-			//----------------------接口数据-------------------------------
-
-			loadData: function() {
-				//请求新闻资讯
-				uni.request({
-					url: $lyfw.Interface.currency_zhly.value,
-					method: $lyfw.Interface.currency_zhly.method,
-					success: (e) => {
-						console.log(e)
-						if (e.data.msg == '获取成功') {
-							if (e.data.data.length == 0) {
-								this.disStatus = 1;
+												// let appleId=1466344848 //应用的appId
+												// plus.runtime.launchApplication({
+												// 	action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
+												// }, function(e) {
+												// 	console.log('Open system default browser failed: ' + e.message);
+												// });
+												let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
+												plus.runtime.openURL(url, function(res) {
+													console.log(res);
+												});
+											}
+										}
+									})
+								}
 							} else {
-								this.goodsList = e.data.data;
-								this.disStatus = 0;
+
 							}
 						} else {
-							uni.hideLoading()
-							uni.stopPullDownRefresh()
-							this.goodsList = '';
-							uni.showToast({
-								title: '获取失败',
-								icon: 'none'
-							})
+							// uni.showToast({
+							// 	title:res.data.msg,
+							// 	icon:'none'
+							// })
 						}
 					},
-					fail: function() {
-						uni.hideLoading()
-						uni.stopPullDownRefresh()
-						uni.showToast({
-							title: '网络异常，请检查网络后尝试',
-							icon: 'none'
-						})
+					fail(res) {
+						console.log('获取版本信息失败', res)
 					}
 				})
+			},
+			//--------------------------获取客服热线--------------------------
+			ConsumerHotline:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.ConsumerHotline.Url,
+					method:$DDTInterface.DDTInterface.ConsumerHotline.method,
+					data:{},
+					success(res) {
+						console.log('返回客服热线数据成功',res)
+						if(res.data.status == true){
+							uni.setStorageSync('ConsumerHotline', res.data.data)
+						}
+					},
+					fail(res) {
+						console.log('返回客服热线数据失败',res)
+					}
+				})
+			},
+			//--------------------------新闻资讯--------------------------
+			GetNews: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetNews.Url,
+					method: 'POST',
+					data: {},
+					success(res) {
+						console.log('请求新闻资讯成功', res)
+						if (res.data.status == true) {
+							that.consultingService = res.data.data;
+						}
+					},
+					fail(res) {
+						console.log('请求新闻资讯失败', res)
+					}
+				})
+			},
+			newsClick: function(item) {
+				uni.navigateTo({
+					url: '../../pages_DDQC/pages/GRZY/newsDetail?id=' + item.AID
+				})
+			},
+			//----------------------接口数据-------------------------------
+			loadData: function() {
+				//请求新闻资讯
+				// uni.request({
+				// 	url: $lyfw.Interface.currency_zhly.value,
+				// 	method: $lyfw.Interface.currency_zhly.method,
+				// 	success: (e) => {
+				// 		console.log(e)
+				// 		if (e.data.msg == '获取成功') {
+				// 			if (e.data.data.length == 0) {
+				// 				this.disStatus = 1;
+				// 			} else {
+				// 				this.goodsList = e.data.data;
+				// 				this.disStatus = 0;
+				// 			}
+				// 		} else {
+				// 			uni.hideLoading()
+				// 			uni.stopPullDownRefresh()
+				// 			this.goodsList = '';
+				// 			uni.showToast({
+				// 				title: '获取失败',
+				// 				icon: 'none'
+				// 			})
+				// 		}
+				// 	},
+				// 	fail: function() {
+				// 		uni.hideLoading()
+				// 		uni.stopPullDownRefresh()
+				// 		uni.showToast({
+				// 			title: '网络异常，请检查网络后尝试',
+				// 			icon: 'none'
+				// 		})
+				// 	}
+				// })
 
 				//请求六宫格数据
 				uni.request({
@@ -467,7 +472,6 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log('请求六宫格',res)
 						this.sixPalaceList = res.data.data;
 					}
 				})
@@ -484,21 +488,30 @@
 					},
 					success: (res) => {
 						console.log(res)
-						this.homePage = res.data.data.filter(item => {
-							return item.type == 'banner2' || item.type == 'banner1';
-						})
 						this.imgXXDT = res.data.data.filter(item => {
 							return item.type == 'dongtai';
 						})
-						
+
 						// console.log(this.imgXXDT)
 					}
 				})
-
 				uni.stopPullDownRefresh();
 			},
-
-
+			//----------------------获取轮播图------------------------------
+			GetRotationChart: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetRotationChart.Url,
+					method: $DDTInterface.DDTInterface.GetRotationChart.method,
+					data: {},
+					success(res) {
+						that.homePage = res.data.data;
+					},
+					fail(err) {
+						console.log(err)
+					}
+				})
+			},
 			//---------------------页面触底加载信息-----------------------------
 
 			getMore() {
@@ -535,39 +548,40 @@
 
 			Jump() {
 				uni.navigateTo({
-					url:'../../pages_DDQC/pages/GRZY/zy_newsScreening'
+					url: '../../pages_DDQC/pages/GRZY/zy_newsScreening'
 				})
 			},
-			
+
 			natTo: function(url) {
 				uni.showToast({
-					title:'正在开发中，尽情期待..',
-					icon:'none'
+					title: '正在开发中，尽情期待..',
+					icon: 'none'
 				})
 				// uni.navigateTo({
 				// 	url:'../../pages_CTKY/pages/CTKY/TraditionSpecial/Home/ctkyIndex'
 				// })
 			},
-			
+
 			natTo2: function(e) {
+				console.log(e)
 				var that = this;
-				if(that.userInfo!==''){
+				if (that.userInfo !== '') {
 					uni.navigateTo({
-						url:e,
+						url: e,
 					})
-				}else if(that.userInfo==''){
+				} else if (that.userInfo == '') {
 					uni.navigateTo({
-						url:'../GRZX/userLogin',
+						url: '../GRZX/userLogin',
 					})
 				}
-				console.log('是否拿到缓存',that.userInfo)
+				// console.log('是否拿到缓存', that.userInfo)
 			},
-			
+
 			//路由整合
 			godetail: function(e) {
 				uni.navigateTo({
 					// url:'../../pages_DDQC/pages/GRZY/zy_QRcode'
-					url:'',
+					url: '',
 				})
 			},
 
@@ -691,50 +705,47 @@
 				})
 			},
 			//#endif
-			checkCurrentStatus:function(){//检测用户是否有未完成的订单
+			checkCurrentStatus: function() { //检测用户是否有未完成的订单
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetBizStatus.Url,
-					method:$DDTInterface.DDTInterface.GetBizStatus.method,
-					data:{
+					url: $DDTInterface.DDTInterface.GetBizStatus.Url,
+					method: $DDTInterface.DDTInterface.GetBizStatus.method,
+					data: {
 						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
-						loginname:that.userInfo.phoneNumber,//手机号
+						loginname: that.userInfo.phoneNumber, //手机号
 					},
 					success(response) {
 						uni.hideLoading()
-						console.log('返回数据',that.userInfo.phoneNumber)
-						console.log('返回数据',response)
-						
-						if(response.data.status == true){
-							if(response.data.data.bizStatus == '已租车'){
+						if (response.data.status == true) {
+							if (response.data.data.bizStatus == '已租车') {
 								//当前有未完成订单,跳转到行程页面
 								uni.showModal({
-									title:'温馨提示',
-									content:'当前有未完成订单，是否前往？',
+									title: '温馨提示',
+									content: '当前有未完成订单，是否前往？',
 									success(res) {
-										if(res.confirm){
+										if (res.confirm) {
 											uni.navigateTo({
-												url:'../../pages_DDQC/pages/RentBike/Riding'
+												url: '../../pages_DDQC/pages/RentBike/Riding'
 											})
 										}
 									}
 								})
-							}else if(response.data.data.bizStatus == '租车超时支付中'){
+							} else if (response.data.data.bizStatus == '租车超时支付中') {
 								//租车超时支付中，跳转到支付页面
 								uni.showModal({
-									title:'温馨提示',
-									content:'当前有订单未支付，请立即前往支付',
+									title: '温馨提示',
+									content: '当前有订单未支付，请立即前往支付',
 									success(res) {
-										if(res.confirm){
+										if (res.confirm) {
 											uni.navigateTo({
-												url:'../../pages_DDQC/pages/RentBike/Payment'
+												url: '../../pages_DDQC/pages/RentBike/Payment'
 											})
 										}
 									}
 								})
 							}
-						}else {
-							console.log('返回数据false',response)
+						} else {
+							console.log('返回数据false', response)
 						}
 					},
 					fail(response) {
@@ -743,13 +754,13 @@
 				})
 			},
 			//-------------弹窗开始--------------------
-			loadService:function(){ //加载是否服务
-				var that=this;
+			loadService: function() { //加载是否服务
+				var that = this;
 				uni.getStorage({
-					key:'acceptService',
+					key: 'acceptService',
 					success(res) {
 						console.log(res)
-						if(!res.data){
+						if (!res.data) {
 							that.openPopup('centerPopup');
 						}
 					},
@@ -770,18 +781,18 @@
 					this.$refs[value].close();
 				});
 			},
-			confirm:function(){
-				uni.setStorageSync('acceptService',true);
+			confirm: function() {
+				uni.setStorageSync('acceptService', true);
 				this.closePopup('centerPopup');
 			},
-			agreementClick(){
+			agreementClick() {
 				uni.navigateTo({
-					url:this.$GrzxInter.Route.privacyService.url+'?title=软件许可及服务协议',
+					url: this.$GrzxInter.Route.privacyService.url + '?title=软件许可及服务协议',
 				})
 			},
-			privacyClick(){
+			privacyClick() {
 				uni.navigateTo({
-					url:this.$GrzxInter.Route.privacyService.url+'?title=隐私政策',
+					url: this.$GrzxInter.Route.privacyService.url + '?title=隐私政策',
 				})
 			},
 			//-------------弹窗结束--------------------
@@ -794,9 +805,9 @@
 	page {
 		background-color: #f6f6f6;
 	}
-	
-	.swiper-container{
-	    pointer-events: none;
+
+	.swiper-container {
+		pointer-events: none;
 	}
 
 	//轮播图样式
@@ -903,6 +914,29 @@
 				}
 			}
 		}
+	}
+
+	// 车票订购
+	.itemContent {
+		width: 20%;
+		height: 178upx;
+		text-align: center;
+		align-items: center;
+	}
+
+	.itemImage {
+		width: 80rpx;
+		height: 80rpx;
+		margin-top: 50upx;
+	}
+
+	.itemText {
+		margin-top: 10rpx;
+		font-size: 27rpx;
+		font-family: Source Han Sans SC;
+		font-weight: 400;
+		color: #333333;
+		display: block;
 	}
 
 	.zl_swi {
@@ -1053,13 +1087,13 @@
 			}
 
 			.zl_noContent {
-				
-				.swi2{
+
+				.swi2 {
 					width: 473upx;
 					height: 129upx;
 					margin-top: 35upx;
 					margin-left: 26upx;
-					
+
 					.zl_noText {
 						// display: block;
 						font-size: 26upx;
@@ -1156,7 +1190,7 @@
 					display: flex;
 					position: relative;
 					margin-right: 10upx;
-					
+
 
 					.ct_image1 {
 						width: 454upx;
@@ -1366,28 +1400,32 @@
 		background: #fff;
 
 	}
-	
+
 	//弹框start
-	.centerClass{  //弹框的样式
+	.centerClass {
+		//弹框的样式
 		width: 82%;
 		margin-left: 9%;
 		// height: 550upx;
 		background-color: #FFFFFF;
 		border-radius: 20upx;
 	}
-	.pTitleClass{
+
+	.pTitleClass {
 		padding-top: 15upx;
 		text-align: center;
 		font-size: 38upx;
 		color: #333333;
 		padding: 40upx 0 20upx 0;
 	}
-	.pTextClass{
+
+	.pTextClass {
 		width: 80%;
 		margin-left: 10%;
 		font-size: 34upx;
 	}
-	.btnBox{
+
+	.btnBox {
 		width: 100%;
 		border-top: 1upx solid #EAEAEA;
 		// height: 80upx;
@@ -1395,7 +1433,8 @@
 		display: flex;
 		flex-direction: row; //column纵向，row横向
 	}
-	.btnClass1{
+
+	.btnClass1 {
 		color: #333333;
 		text-align: center;
 		width: 50%;
@@ -1403,12 +1442,14 @@
 		padding: 25upx 0;
 		border-right: 1upx solid #EAEAEA;
 	}
-	.btnClass2{
+
+	.btnClass2 {
 		color: #2F9BFE;
 		text-align: center;
 		width: 50%;
 		font-size: 38upx;
 		padding: 25upx 0;
 	}
+
 	//弹框end
 </style>

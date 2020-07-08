@@ -8,24 +8,31 @@
 		<!-- 持卡人 -->
 		<view class="if_cardholder">
 			<text class="ch_text">持卡人</text>
-			<input name="nickName" class="ch_cardholder" placeholder-style="#AAAAAA" placeholder="请输入持卡人姓名" maxlength="19" />
+			<input name="nickName" class="ch_cardholder" type="text" placeholder-style="#AAAAAA" placeholder="请输入持卡人姓名" v-model="nameText" maxlength="19" @input="onInput('姓名')" />
 		</view>
 
 		<!-- 输入银行卡号 -->
 		<view class="if_cardNumber">
 			<text class="cn_text">卡号</text>
-			<input class="cn_card" placeholder="请输入卡号" placeholder-style="#AAAAAA" type="number" maxlength="23" v-model="textNumber" @input="onInput(textNumber)" ></input>
+			<input class="cn_card" placeholder="请输入卡号" placeholder-style="#AAAAAA" type="number" maxlength="23" v-model="bankNumber" @input="onInput('卡号')" ></input>
 		</view>
 
 		<!-- 选择银行 -->
 		<view class="if_selectBank">
-			<text class="sb_text">银行</text>
-			<input name="nickNumber" style="font-size:32upx;padding-left: 60upx;" placeholder-style="#AAAAAA" type="number" placeholder="请输入银行"/>
+			<text class="sb_text">开户银行</text>
+			<input name="nickNumber" style="font-size:32upx;padding-left: 60upx;" placeholder-style="#AAAAAA" type="text" v-model="bankName" placeholder="请输入银行" @input="onInput('银行')" />
 			<!-- <picker @change="godetail" :value="index" :range="selectBank" range-key="txt">
 				<text v-if="selectBank[index].txt=='请选择'" class="tsnrText">{{selectBank[index].txt}}<text class="jdticon icon-xia"></text></text>
 				<text v-if="selectBank[index].txt!=='请选择'" class="tsnrText2">{{selectBank[index].txt}}<text class="jdticon icon-xia"></text></text>
 			</picker> -->
 		</view>
+		
+		<!-- 联系电话 -->
+		<view class="if_cardNumber">
+			<text class="cn_text">联系电话</text>
+			<input class="cn_card" placeholder="请输入联系电话" placeholder-style="#AAAAAA" type="number" maxlength="11" v-model="phoneNumber" @input="onInput('电话')" ></input>
+		</view>
+		
 		<view class="if_text2">
 			<text>注意：开户行需详细到相关支行信息，如：中国建设银行南靖支行、中国银行南靖山城支行</text>
 		</view>
@@ -52,12 +59,14 @@
 		</view>
 
 		<view class="if_btn">
-			<view class="bt_text">提交</view>
+			<view class="bt_text" @click="submit">提交</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	var _self;
+	import $DDTInterface from '@/common/DDT.js'
 	import uniPopup from '@/pages_DDQC/components/GRZY/uni-popup/uni-popup.vue';
 	export default {
 		components: {
@@ -65,7 +74,10 @@
 		},
 		data() {
 			return {
-				textNumber:'',
+				nameText:'',//姓名
+				bankNumber:'',//卡号
+				bankName:'',//银行
+				phoneNumber:'',//电话
 				expenseDetail: '',
 				selectedValue: 0,
 				index: 0,
@@ -73,10 +85,18 @@
 				detailInfo: {
 					bankObject: '', //银行
 				},
+				currentRefundType:'',//判断当前退款的状态（第一次退款还是退款失败再提交退款）
+				ReManualRefundInfo:[],//退款失败信息
 			}
 		},
-		onLoad() {
+		onLoad(res) {
+			_self = this;
 			this.routeInit();
+			_self.currentRefundType = res.refundType;
+			if(res.item){
+				_self.ReManualRefundInfo = JSON.parse(res.item)
+				console.log(_self.ReManualRefundInfo)
+			}
 		},
 		methods: {
 			//-----------------读取静态数据json.js-------------------------------
@@ -85,7 +105,7 @@
 				this.selectBank = selectBank.data;
 				let expenseDetail = await this.$api.lyfwcwd('expenseDetail');
 				this.expenseDetail = expenseDetail.data;
-				console.log(this.selectBank)
+				// console.log(this.selectBank)
 			},
 
 			//------------------------------弹框事件-----------------------------------------
@@ -116,10 +136,148 @@
 					this.selectedValue = 0;
 				}
 			},
-			
-			onInput:function(e){
-				this.textNumber = e.replace(/\D+/g, '').replace(/(\d{4})/g, '$1 ').replace(/ $/, '')
+			//输入姓名
+			onInput:function(text){
+				if(text == '姓名'){
+					// console.log(_self.nameText)
+				}else if(text == '卡号'){
+					// console.log(_self.bankNumber)
+				}else if(text == '银行'){
+					// console.log(_self.bankName)
+				}else if(text == '电话'){
+					// console.log(_self.phoneNumber)
+				}
 			},
+			//------------------------------押金充值超一年，提交人工退押金，后台审核--------------------------------
+			ManualRefund:function(){
+				uni.showLoading({
+					title:'正在提交申请...'
+				})
+				//读取用户ID
+				uni.getStorage({
+					key: 'userInfo',
+					success: function(data) {
+						console.log('用户数据',data)
+						uni.request({
+							url:$DDTInterface.DDTInterface.ManualRefund.Url,
+							method:$DDTInterface.DDTInterface.ManualRefund.method,
+							data:{
+								Name:_self.nameText,//姓名
+								Tel:_self.phoneNumber,//联系电话
+								RegistPhone:data.data.phoneNumber,//注册手机号
+								Bank:_self.bankName,//开户行
+								BankAccounts:_self.bankNumber,//银行账户
+								UserID:data.data.userId,//用户id
+							},
+							success(res) {
+								uni.hideLoading();
+								console.log(res)
+								if(res.data.status == true){
+									setTimeout(function(){
+										uni.showToast({
+											title:res.data.msg,
+											complete() {
+												uni.navigateBack()
+											}
+										})
+									},1000)
+								}else {
+									setTimeout(function(){
+										_self.myToast(res.data.msg)
+									},1000)
+								}
+							},
+							fail(res) {
+								uni.hideLoading()
+								console.log(res)
+							}
+						})
+					},
+					fail(data) {
+					}
+				})
+			},
+			//--------------------------------人工退押金失败，重新提交退押金信息--------------------------------
+			ReManualRefund:function(){
+				console.log('重新提交',_self.ReManualRefundInfo.AID)
+				console.log('重新提交',_self.ReManualRefundInfo.Reason)
+				uni.showLoading({
+					title:'正在提交申请...'
+				})
+				//读取用户ID
+				uni.getStorage({
+					key: 'userInfo',
+					success: function(data) {
+						uni.request({
+							url:$DDTInterface.DDTInterface.ReManualRefund.Url,
+							method:$DDTInterface.DDTInterface.ReManualRefund.method,
+							data:{
+								AID:_self.ReManualRefundInfo.AID,//主键
+								Name:_self.nameText,//姓名
+								Tel:_self.phoneNumber,//联系电话
+								RegistPhone:data.data.phoneNumber,//注册手机号
+								Bank:_self.bankName,//开户行
+								BankAccounts:_self.bankNumber,//银行账户
+								UserID:data.data.userId,//用户id
+								LogJson:JSON.stringify(_self.ReManualRefundInfo.Reason),//退款失败的json字符串
+							},
+							success(res) {
+								uni.hideLoading();
+								console.log(res)
+								if(res.data.status == true){
+									uni.showToast({
+										title:res.data.msg,
+										complete() {
+											uni.navigateBack()
+										}
+									})
+								}else {
+									setTimeout(function(){
+										_self.myToast(res.data.msg)
+									},1000)
+								}
+							},
+							fail(res) {
+								uni.hideLoading();
+								console.log(res)
+							}
+						})
+					},
+					fail(data) {
+					}
+				})
+			},
+			//----------------------提交人工审核--------------------------------------
+			submit:function(){
+				if(_self.nameText == ''){
+					_self.myToast('姓名不能为空')
+				}else if(_self.bankNumber == ''){
+					_self.myToast('卡号不能为空')
+				}else if(_self.bankName == ''){
+					_self.myToast('银行不能为空')
+				}else if(_self.phoneNumber == ''){
+					_self.myToast('手机号不能为空')
+				}else if(_self.selectedValue == 0){
+					_self.myToast('请同意服务协议')
+				}else {
+					if(_self.currentRefundType == '第一次人工退款'){
+						//如果当前是第一次人工退款的话，调ManualRefund这个接口
+						_self.ManualRefund();
+					}else if(_self.currentRefundType == '退款失败重新提交'){
+						//如果当前是退款失败重新提交，请在这里调方法
+						_self.ReManualRefund();
+					}
+				}
+			},
+			myToast:function(title){
+				uni.showToast({
+					title:title,
+					icon:'none'
+				})
+			}
+			// bankNumberInput:function(e){
+			// 	this.textNumber = e.replace(/\D+/g, '').replace(/(\d{4})/g, '$1 ').replace(/ $/, '')
+			// },
 			
 			// yhkchange: function(e) {
 			// 	var yhkd = e.detail.value;
@@ -308,7 +466,7 @@
 
 	.if_text2 {
 		padding: 30upx;
-		font-size: 24upx;
+		font-size: 28upx;
 		color: #E3424B;
 	}
 </style>
