@@ -238,7 +238,7 @@
 					},
 					{
 						ItemArr: [{
-								IsUse: true,
+								IsUse: false,
 								clickURL: "",
 								ImageURL: "../../static/Home/CPDG2.png",
 								ItemTitle: "车票订购"
@@ -966,6 +966,7 @@
 	.zl_swi {
 		height: 200upx;
 		width: 100%;
+		padding-bottom: 4upx;
 
 		.swiItem {
 			width: 100%;
@@ -1481,7 +1482,7 @@
 	.dots {
 		position: relative;
 		background-color: #FFFFFF;
-		bottom: 25rpx;
+		bottom: 28rpx;
 		left: 50%;
 		// 这里一定要注意兼容不然很可能踩坑          
 		transform: translate(-50%, 0);
@@ -1492,16 +1493,16 @@
 		justify-content: center;
 
 		.dot {
-			width: 24rpx;
-			height: 8rpx;
+			width: 20rpx;
+			height: 6rpx;
 			transition: all .6s;
 			background: #f6f6f6;
 			margin-right: 10rpx;
 		}
 
 		.active {
-			width: 24rpx;
-			height: 8rpx;
+			width: 20rpx;
+			height: 6rpx;
 			background: #65C36D;
 		}
 	}
