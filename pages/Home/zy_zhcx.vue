@@ -239,8 +239,8 @@
 					{
 						ItemArr: [{
 								IsUse: true,
-								clickURL: "",
-								ImageURL: "../../static/Home/CPDG2.png",
+								clickURL: "../../pages_DDQC/pages/Bus/TicketPurchase",
+								ImageURL: "../../static/Home/CPDG.png",
 								ItemTitle: "车票订购"
 							},
 							{
@@ -342,12 +342,14 @@
 		methods: {
 			//--------------轮播图切换修改背景色----------------------------------
 			swiperChange: function(e) {
-				console.log(e)
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 			},
 
 			TitleJump: function(e, Url) {
+				if(Url=="../../pages_DDQC/pages/Bus/TicketPurchase"){
+					Url="../../pages_DDQC/pages/Bus/TicketPurchase?id="+this.userInfo.userId;
+				}
 				if (e) {
 					this.natTo2(Url);
 				} else {
@@ -370,7 +372,6 @@
 						systemType: systemType
 					},
 					success(res) {
-						console.log('获取版本信息成功', res)
 						if (res.data.status == true) {
 							if (that.platform == 'ios') {
 								if (that.version != res.data.data.VersionID) {
@@ -417,7 +418,6 @@
 					method: $DDTInterface.DDTInterface.ConsumerHotline.method,
 					data: {},
 					success(res) {
-						console.log('返回客服热线数据成功', res)
 						if (res.data.status == true) {
 							uni.setStorageSync('ConsumerHotline', res.data.data)
 						}
@@ -435,7 +435,7 @@
 					method: 'POST',
 					data: {},
 					success(res) {
-						console.log('请求新闻资讯成功', res)
+						// console.log('请求新闻资讯成功', res)
 						if (res.data.status == true) {
 							that.consultingService = res.data.data;
 						}
@@ -588,7 +588,6 @@
 			},
 
 			natTo2: function(e) {
-				console.log(e)
 				var that = this;
 				if (that.userInfo !== '') {
 					uni.navigateTo({
@@ -784,7 +783,6 @@
 				uni.getStorage({
 					key: 'acceptService',
 					success(res) {
-						console.log(res)
 						if (!res.data) {
 							that.openPopup('centerPopup');
 						}
@@ -843,7 +841,6 @@
 					},
 					method:that.$GrzxInter.Interface.GetUserLastLoginTime.method,
 					success(res) {
-						console.log(res)
 						var time=that.getSpecifiedTime(90,res.data.data.lastLogintime);
 						if(that.checkDate(time)=="已过期"){
 							uni.navigateTo({
@@ -890,13 +887,13 @@
 			//--------------检查日期-------------
 			checkDate:function(date1){
 				var date2=this.getSpecifiedTime(0,0); 
-				console.log(date1,"登录过期时间")
-				console.log(date2,"当前时间")
+				// console.log(date1,"登录过期时间")
+				// console.log(date2,"当前时间")
 				var arry1  = date1.split("-");
 				var arry2  = date2.split("-");
 				var time1=parseInt(arry1[0]+arry1[1]+arry1[2],10);
 				var time2=parseInt(arry2[0]+arry2[1]+arry2[2],10);
-				console.log(time1-time2)
+				// console.log(time1-time2)
 				if(time1>=time2){
 					return "未过期";
 				}else{

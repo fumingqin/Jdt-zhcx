@@ -102,10 +102,8 @@
 					type: 'gcj02',
 					geocode: true,
 					success(res) {
-						console.log(res)
 						uni.getSystemInfo({
 							success(res1) {
-								console.log(res1);
 								var country = res.address.country ? res.address.country : '';
 								var province = res.address.province ? res.address.province : '';
 								var city = res.address.city ? res.address.city : '';
@@ -129,7 +127,7 @@
 										SystemVersion: res1.system,
 									},
 									success(res) {
-										console.log(res)
+										// console.log(res)
 									},
 									fail(err) {
 										console.log(err)
