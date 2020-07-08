@@ -476,7 +476,7 @@
 			clickSork: function() {
 				var sc = this.scenicList;
 				this.scenicList = [];
-				//筛选，测试数据直接前端筛选了
+				//筛选，数据直接前端筛选了
 				if (this.screenIndex == 0) {
 					sc.sort((a, b) => a.ticketId - b.ticketId)
 					this.cateId = '';

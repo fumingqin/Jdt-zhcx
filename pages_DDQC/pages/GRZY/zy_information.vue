@@ -27,14 +27,14 @@
 			</picker> -->
 		</view>
 		
+		<view class="if_text2">
+			<text>注意：开户行需详细到相关支行信息，如：中国建设银行南靖支行、中国银行南靖山城支行</text>
+		</view>
+		
 		<!-- 联系电话 -->
 		<view class="if_cardNumber">
 			<text class="cn_text">联系电话</text>
 			<input class="cn_card" placeholder="请输入联系电话" placeholder-style="#AAAAAA" type="number" maxlength="11" v-model="phoneNumber" @input="onInput('电话')" ></input>
-		</view>
-		
-		<view class="if_text2">
-			<text>注意：开户行需详细到相关支行信息，如：中国建设银行南靖支行、中国银行南靖山城支行</text>
 		</view>
 
 		<!-- 须知 -->
@@ -255,6 +255,13 @@
 					_self.myToast('卡号不能为空')
 				}else if(_self.bankName == ''){
 					_self.myToast('银行不能为空')
+				}else if(_self.bankName.indexOf('支行') == -1){
+					// _self.myToast('银行应具体到支行')
+					uni.showModal({
+						title:'温馨提示',
+						content:'请具体到支行,填写错误将导致无法到账',
+						showCancel:false
+					})
 				}else if(_self.phoneNumber == ''){
 					_self.myToast('手机号不能为空')
 				}else if(_self.selectedValue == 0){

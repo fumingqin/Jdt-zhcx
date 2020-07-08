@@ -7,12 +7,13 @@
 	const Url = 'http://zntc.145u.net'; //http请求
 // #endif
 // #ifndef H5
-	const Url = 'https://zntc.145u.net:9099'; //https请求
+	const Url = 'http://36.250.234.10:60039';
 // #endif
 
 // #ifdef APP-PLUS
 // #endif
-const ddtUrl='http://111.231.109.113:8004' //达达通接口地址
+// const ddtUrl='http://111.231.109.113:8004' //达达通接口地址
+const ddtUrl='http://36.250.234.10:60040' //达达通接口地址
 
 
 const Interface={

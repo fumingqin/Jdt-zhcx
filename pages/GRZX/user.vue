@@ -436,7 +436,7 @@
 				// 	url:'/pages/GRZX/collection'
 				// }) 
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'暂未开放，敬请期待...',
 					icon:'none'
 				})
 			},
@@ -446,7 +446,7 @@
 				// 	url:'/pages/GRZX/history'
 				// }) 
 				uni.showToast({
-					title:'正在测试中，敬请期待...',
+					title:'暂未开放，敬请期待...',
 					icon:'none'
 				})
 			},

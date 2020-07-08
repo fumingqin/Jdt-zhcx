@@ -228,7 +228,7 @@
 					data: {
 						channel: "wechat_app",
 						title: "钱包充值记录",
-						body: "钱包充值记录测试",
+						body: "钱包充值记录",
 						phoneNumber: that.userInfo.phoneNumber,
 						chargeType: 1,
 						totalPrice: that.cost,
