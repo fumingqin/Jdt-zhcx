@@ -136,9 +136,11 @@
 						})
 					}
 				})
-
-
+				
 			},
+			
+			
+			
 
 		},
 		onLaunch: function() {
@@ -162,6 +164,7 @@
 				return;
 			}
 			that.LoginLog(userInfo.userId,userInfo.phoneNumber);
+			
 		},
 		onShow: function() {
 			var that = this;
@@ -172,6 +175,7 @@
 			that.setJYJPushAlias(userInfo.phoneNumber);
 			that.addJYJPushReceiveOpenNotificationListener();
 			that.addJYJPushReceiveNotificationListener();
+			
 			console.log('App Show')
 		},
 		onHide: function() {
