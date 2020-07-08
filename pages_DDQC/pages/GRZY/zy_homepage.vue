@@ -347,8 +347,8 @@
 				})
 				var that = this;
 				that.$refs.popup.close()
-				const now = new Date();
-				const next = new Date(now.getTime() + 31536000000);
+				// const now = new Date();
+				// const next = new Date(now.getTime() + 31536000000);
 				// console.log(now.toDateString());
 				// console.log(next.toDateString());
 				uni.request({
@@ -362,7 +362,7 @@
 						userID: that.userInfo.userId,
 						// timeExpire:timestemp,//过期时间(时间戳)
 						chargeType: 0, //0:充值押金 1充值钱包
-						totalPrice: that.personalHomepage.deposit, //金额
+						totalPrice: that.depositNumber, //金额
 					},
 					success(res) {
 						uni.hideLoading();
@@ -387,6 +387,9 @@
 						}
 					},
 					fail(res) {
+						uni.showModal({
+							content:res,
+						})
 						uni.hideLoading();
 						console.log('押金充值返回支付参数失败', res)
 					}
@@ -396,6 +399,7 @@
 			//--------------------------调起押金充值支付--------------------------
 			RefundPayment: function(orderInfo) {
 				var that = this;
+				console.log(orderInfo)
 				// #ifdef APP-PLUS
 				console.log(that.paymentData)
 				uni.requestPayment({

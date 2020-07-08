@@ -381,16 +381,16 @@
 										complete(res) {
 											if (res.confirm) {
 
-												// let appleId=1466344848 //应用的appId
-												// plus.runtime.launchApplication({
-												// 	action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
-												// }, function(e) {
-												// 	console.log('Open system default browser failed: ' + e.message);
-												// });
-												let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
-												plus.runtime.openURL(url, function(res) {
-													console.log(res);
+												let appleId=1466344848 //应用的appId
+												plus.runtime.launchApplication({
+													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
+												}, function(e) {
+													console.log('Open system default browser failed: ' + e.message);
 												});
+												// let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
+												// plus.runtime.openURL(url, function(res) {
+												// 	console.log(res);
+												// });
 											}
 										}
 									})
