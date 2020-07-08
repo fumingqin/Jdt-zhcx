@@ -1041,6 +1041,14 @@
 						"navigationBarBackgroundColor":"#65C36D"
 					}
                 }
+                ,{
+                    "path" : "pages/Bus/TicketPurchase",
+                    "style" : {
+						"navigationBarTitleText": "车票订购",
+						"navigationBarTextStyle":"White",
+						"navigationBarBackgroundColor":"#65C36D"
+					}
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------

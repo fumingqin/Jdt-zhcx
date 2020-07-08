@@ -150,7 +150,17 @@
 					</view>
 				</view>
 			</view>
-			<view class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2(index)">
+			
+			<view class="pd_image" v-if="drivingRecord==''">
+				<view>
+					<image class="im_image" src="../../static/GRZY/dingdan.png"></image>
+				</view>
+				<view>
+					<text class="im_text">暂无数据</text>
+				</view>
+			</view>
+			
+			<view v-if="drivingRecord!==''" class="ve_record" v-for="(item,index) in drivingRecord" :key="index" @click="Jump2(index)">
 				<view style="display: flex;justify-content: space-between; align-items: center;">
 					<view>
 						<view>
@@ -907,14 +917,14 @@
 			display: flex;
 			justify-content: space-between;
 			// width: 694upx;
-			margin-left: 100rpx;
-			margin-right: 100rpx;
+			// margin-left: 100rpx;
+			// margin-right: 100rpx;
 			height: 246upx;
 			left: 0;
 			top: 0;
 
 			.ve_Text {
-				width: 34%;
+				width: 50%;
 				height: 246upx;
 				text-align: center;
 				font-family: Source Han Sans SC;
@@ -1284,6 +1294,7 @@
 	}
 	
 	.ve_hover{
+		transition: all .3s;//过度
 		border-top-left-radius: 10px;
 		border-bottom-left-radius: 10px;
 		opacity: 0.9;
@@ -1291,14 +1302,34 @@
 	}
 	
 	.ve_hover2{
+		transition: all .3s;//过度
 		opacity: 0.9;
 		background: #b99478;
 	}
 	
 	.ve_hover3{
+		transition: all .3s;//过度
 		border-top-right-radius: 10px;
 		border-bottom-right-radius: 10px;
 		opacity: 0.9;
 		background: #b99478;
+	}
+	
+	// 暂无数据
+	.pd_image {
+		text-align: center;
+		line-height: 50%;
+		padding-top: 250upx;
+	
+		.im_image {
+			width: 273upx;
+			height: 296upx;
+		}
+	
+		.im_text {
+			font-size: 30upx;
+			color: #999999;
+			line-height: 106upx;
+		}
 	}
 </style>

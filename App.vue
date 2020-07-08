@@ -60,6 +60,7 @@
 		},
 
 		methods: {
+			// #ifdef APP-PLUS
 			setJYJPushAlias: function(phoneNumber) {
 				var that = this;
 				jyJPush.deleteJYJPushAlias({
@@ -101,10 +102,8 @@
 					type: 'gcj02',
 					geocode: true,
 					success(res) {
-						console.log(res)
 						uni.getSystemInfo({
 							success(res1) {
-								console.log(res1);
 								var country = res.address.country ? res.address.country : '';
 								var province = res.address.province ? res.address.province : '';
 								var city = res.address.city ? res.address.city : '';
@@ -128,7 +127,7 @@
 										SystemVersion: res1.system,
 									},
 									success(res) {
-										console.log(res)
+										// console.log(res)
 									},
 									fail(err) {
 										console.log(err)
@@ -141,7 +140,7 @@
 
 
 			},
-
+			// #endif
 		},
 		onLaunch: function() {
 			// // #ifdef APP-PLUS
@@ -163,7 +162,9 @@
 			if (userInfo == '') {
 				return;
 			}
+			// #ifdef APP-PLUS
 			that.LoginLog(userInfo.userId,userInfo.phoneNumber);
+			// #endif
 		},
 		onShow: function() {
 			var that = this;
