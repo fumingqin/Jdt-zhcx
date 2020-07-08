@@ -130,6 +130,12 @@ const Interface={
 		method:'POST',//GET-POST
 		pages:[]
 	},
+	GetUserLastLoginTime:{
+		value: Url + '/api/person/GetUserLastLoginTime',
+		name:'获取用户最后登录时间',
+		method:'POST',//GET-POST
+		pages:[]
+	},
 	
 	//-----------------------达达通start------------------------
 	RegistUser:{

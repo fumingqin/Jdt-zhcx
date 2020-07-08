@@ -7,18 +7,34 @@
 			</swiper-item>
 		</swiper>
 
-		<swiper class="zl_swi" :indicator-dots="true" circular indicator-active-color="#70c778" indicator-color="#f6f6f6">
+		<swiper class="zl_swi" circular @change="swiperChange">
 			<swiper-item class="swiItem" style="display: flex;align-items: center;" v-for="(item,index) in swiperItem" :key="index">
 				<!-- 	<swiper-item class="swiItem" style="display: flex;align-items: center;">
 				<view style="display: flex;justify-content: space-around;align-items: center;"> -->
-				<view style="display: flex;width: 25%;justify-content: center;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
+				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
-						<image style="width: 75rpx;height: 75rpx;" mode="aspectFill" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='达达骑车'" style="width: 90upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='公交刷码'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='达达钱包'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='公交查询'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='车票订购'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='包车服务'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='景区门票'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='旅游产品'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='预约检测'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='自由行'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
 				</view>
 			</swiper-item>
 		</swiper>
+
+		<!-- 自定义swiper指示器 -->
+		<view class="dots">
+			<block v-for="(item,index) in swiperItem.length" :key="item">
+				<view class="dot" :class="index==swiperCurrent ? ' active' : ''"></view>
+			</block>
+		</view>
 		</swiper>
 		<!-- 咨询动态 -->
 		<view class="notice">
@@ -165,6 +181,7 @@
 	export default {
 		data() {
 			return {
+				swiperCurrent: 0,
 				consultingService: [], //新闻资讯
 				imgXXDT: [{
 					imageUrl: '',
@@ -221,7 +238,7 @@
 					},
 					{
 						ItemArr: [{
-								IsUse: false,
+								IsUse: true,
 								clickURL: "",
 								ImageURL: "../../static/Home/CPDG2.png",
 								ItemTitle: "车票订购"
@@ -288,6 +305,7 @@
 			this.loadData();
 			//#ifdef APP-PLUS
 			this.loadService();
+			this.checkLogin();//登录是否过期
 			//#endif
 
 			//获取新闻数据
@@ -322,6 +340,13 @@
 			uniPopup
 		}, //注册为子组件
 		methods: {
+			//--------------轮播图切换修改背景色----------------------------------
+			swiperChange: function(e) {
+				console.log(e)
+				const index = e.detail.current;
+				this.swiperCurrent = index;
+			},
+
 			TitleJump: function(e, Url) {
 				if (e) {
 					this.natTo2(Url);
@@ -385,20 +410,20 @@
 				})
 			},
 			//--------------------------获取客服热线--------------------------
-			ConsumerHotline:function(){
+			ConsumerHotline: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.ConsumerHotline.Url,
-					method:$DDTInterface.DDTInterface.ConsumerHotline.method,
-					data:{},
+					url: $DDTInterface.DDTInterface.ConsumerHotline.Url,
+					method: $DDTInterface.DDTInterface.ConsumerHotline.method,
+					data: {},
 					success(res) {
-						console.log('返回客服热线数据成功',res)
-						if(res.data.status == true){
+						console.log('返回客服热线数据成功', res)
+						if (res.data.status == true) {
 							uni.setStorageSync('ConsumerHotline', res.data.data)
 						}
 					},
 					fail(res) {
-						console.log('返回客服热线数据失败',res)
+						console.log('返回客服热线数据失败', res)
 					}
 				})
 			},
@@ -796,6 +821,89 @@
 				})
 			},
 			//-------------弹窗结束--------------------
+			
+			//-------------登录过期开始--------------------
+			checkLogin(){
+				var that=this;
+				uni.getStorage({
+					key:'userInfo',
+					success: (res) => {
+						if(res.data.phoneNumber!=""){
+							that.GetUserLastLoginTime(res.data.phoneNumber);
+						}
+					}
+				})				
+			},
+			GetUserLastLoginTime(e){
+				var that=this;
+				uni.request({
+					url:that.$GrzxInter.Interface.GetUserLastLoginTime.value,
+					data:{
+						phoneNumber:e,
+					},
+					method:that.$GrzxInter.Interface.GetUserLastLoginTime.method,
+					success(res) {
+						console.log(res)
+						var time=that.getSpecifiedTime(90,res.data.data.lastLogintime);
+						if(that.checkDate(time)=="已过期"){
+							uni.navigateTo({
+								url:that.$GrzxInter.Route.verificateName.url+'?type=login',
+							})
+						}
+					}
+				})
+			},
+			//--------------获取指定的时间-------------
+			getSpecifiedTime:function(e,date){
+				var num  = parseInt(e,10); //90天过期
+				if(date==0){
+					var date=new Date();
+					var currentDate=JSON.stringify(date).substring(1,11);
+					var arry  = currentDate.split("-");
+					
+				}else{
+					var currentDate=JSON.stringify(date).substring(1,9);
+					var arry  = currentDate.split("/");
+				}
+				var year = parseInt(arry[0],10);
+				var month = parseInt(arry[1],10);
+				var day = parseInt(arry[2],10); 
+				//月份的方法：getMonth()从 Date 对象返回月份 (0 ~ 11)。
+				var structDate = new Date(year , month - 1, day);
+				//setDate增减天数
+				structDate.setDate(structDate.getDate()+num); 
+				 //如果月份长度少于2，则前加 0 补位   
+				 if((structDate.getMonth() + 1).toString().length == 1) {  
+					month = 0 + "" + (structDate.getMonth() + 1).toString();  
+				 } else {    
+					 month = (structDate.getMonth() + 1).toString();  
+				 }   
+				 //如果天数长度少于2，则前加 0 补位   
+				 if (structDate.getDate().toString().length == 1) {   
+					day = 0 + "" + structDate.getDate().toString();   
+				 } else {    
+					 day = structDate.getDate().toString();   
+				 }    
+				 var newDate = structDate.getFullYear() + "-" + month + "-" + day;
+				 return newDate;
+			},
+			//--------------检查日期-------------
+			checkDate:function(date1){
+				var date2=this.getSpecifiedTime(0,0); 
+				console.log(date1,"登录过期时间")
+				console.log(date2,"当前时间")
+				var arry1  = date1.split("-");
+				var arry2  = date2.split("-");
+				var time1=parseInt(arry1[0]+arry1[1]+arry1[2],10);
+				var time2=parseInt(arry2[0]+arry2[1]+arry2[2],10);
+				console.log(time1-time2)
+				if(time1>=time2){
+					return "未过期";
+				}else{
+					return "已过期";
+				}
+			},
+			//-------------登录过期结束--------------------
 		},
 	}
 </script>
@@ -850,12 +958,12 @@
 	}
 
 	// 选中指示点的样式
-	.zl_swi .wx-swiper-dot.wx-swiper-dot-active {
-		width: 40upx;
-		height: 15upx;
-		border-radius: 15upx;
-		// opacity: 0.75;
-	}
+	// .zl_swi .wx-swiper-dot.wx-swiper-dot-active {
+	// 	width: 40upx;
+	// 	height: 15upx;
+	// 	border-radius: 15upx;
+	// 	// opacity: 0.75;
+	// }
 
 	.zc_TabBackground {
 		background-color: #FFFFFF;
@@ -940,7 +1048,7 @@
 	}
 
 	.zl_swi {
-		height: 230upx;
+		height: 200upx;
 		width: 100%;
 
 		.swiItem {
@@ -1074,7 +1182,7 @@
 	//咨询动态
 	.notice {
 		background: #fff;
-		margin-top: 16upx;
+		margin-top: 9upx;
 
 		.zl_content {
 			display: flex;
@@ -1452,4 +1560,33 @@
 	}
 
 	//弹框end
+	
+	//指示点
+	.dots {
+		position: relative;
+		background-color: #FFFFFF;
+		bottom: 25rpx;
+		left: 50%;
+		// 这里一定要注意兼容不然很可能踩坑          
+		transform: translate(-50%, 0);
+		-webkit-transform: translate(-50%, 0);
+		z-index: 99;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+
+		.dot {
+			width: 24rpx;
+			height: 8rpx;
+			transition: all .6s;
+			background: #f6f6f6;
+			margin-right: 10rpx;
+		}
+
+		.active {
+			width: 24rpx;
+			height: 8rpx;
+			background: #65C36D;
+		}
+	}
 </style>

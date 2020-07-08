@@ -1829,7 +1829,7 @@
 						title: '未登录账号，即将跳转登录！'
 					})
 					uni.navigateTo({
-						url:'../../../../pages/GRZX/userLogin?loginType=1&&urlData=2'
+						url:'../../../../pages/GRZX/userLogin?urlData=1'
 					})
 					// #endif
 				}
@@ -3211,7 +3211,7 @@
 							icon: 'none',
 							success: function() {
 								uni.redirectTo({
-									url: '../GRZX/userLogin?loginType=1&&urlData=2'
+									url: '../GRZX/userLogin?urlData=1'
 								})
 							}
 						})
