@@ -285,6 +285,7 @@
 				})
 				console.log(that.userInfo.phoneNumber);
 				console.log(that.userInfo.userId);
+				console.log('123445436241341')
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
 					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
@@ -308,18 +309,15 @@
 							that.status = res.data.data.status;
 						}else {
 							uni.showToast({
-								title:'网络错误，请重新加载',
+								title:'获取钱包数据失败',
 								icon:'none'
 							})
-							//如果返回的数据是空的，就默认设置押金为0
-							// that.deposit = 0;
-							// that.commuterCardObject = '普通用户';
 						}
 						console.log('获取押金状态', that.walletData)
 					},
 					fail(res) {
 						uni.hideLoading()
-						console.log('获取钱包数据失败', res)
+						console.log('获取钱包数据失败123', res)
 					}
 				})
 			},
@@ -491,7 +489,7 @@
 					data: {
 						channel: 'wechat_app',
 						title: '押金充值记录',
-						body: "钱包充值记录测试",
+						body: "钱包充值记录",
 						phoneNumber: that.userInfo.phoneNumber,
 						// timeExpire
 						chargeType: 0,

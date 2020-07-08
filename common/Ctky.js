@@ -10,7 +10,6 @@
 	const Url = 'http://zntc.145u.net';
 // #endif
 // #ifndef H5
-	// const Url = 'https://zntc.145u.net:9099';
 	const Url = 'http://36.250.234.10:60039'; //https请求
 // #endif
 

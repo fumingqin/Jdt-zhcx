@@ -735,7 +735,6 @@
 					url: $DDTInterface.DDTInterface.GetBizStatus.Url,
 					method: $DDTInterface.DDTInterface.GetBizStatus.method,
 					data: {
-						//当前测试使用的手机号为免押金的手机号，后面改为用户手机号
 						loginname: that.userInfo.phoneNumber, //手机号
 					},
 					success(response) {
