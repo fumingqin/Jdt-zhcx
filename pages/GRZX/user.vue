@@ -163,7 +163,7 @@
 								},
 								method:that.$GrzxInter.Interface.login.method,
 								success(res) {
-									// console.log(res,'res')
+									console.log(res,'res')
 									that.checkIDRealName(res.data.data.userId);
 									uni.setStorageSync('userInfo',res.data.data);
 									that.userInfo=res.data.data;
@@ -519,6 +519,11 @@
 			        return false;
 			    }
 			},
+			// login:function(){
+			// 	uni.navigateTo({
+			// 		url:this.$GrzxInter.Route.verificateName.url+'?type=login',
+			// 	})
+			// },
 			//----------------------判断是否为数字-----------------------
 			judgeNum:function(val){
 				var regPos = /^\d+(\.\d+)?$/; //非负浮点数
