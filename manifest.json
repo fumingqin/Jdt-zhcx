@@ -137,28 +137,23 @@
         "nativePlugins" : {
             "JY-JPush" : {
                 "android_channel" : "android",
-                "ios_appkey" : "db1d5d0c73cdc748ede733bb",
                 "android_appkey" : "db1d5d0c73cdc748ede733bb",
-                "ios_channel" : "AppStore",
+                "ios_channel" : "db1d5d0c73cdc748ede733bb",
+                "ios_appkey" : "AppStore",
                 "__plugin_info__" : {
-                    "name" : "JYJPush极光推送插件 - 支持iOS/Android - [试用版，仅用于自定义调试基座]",
+                    "name" : "【限时5折】JYJPush极光推送插件 - 极光官方推荐",
                     "description" : "极光推送Uni版本",
                     "platforms" : "Android,iOS",
                     "url" : "https://ext.dcloud.net.cn/plugin?id=741",
-                    "android_package_name" : "",
-                    "ios_bundle_id" : "",
+                    "android_package_name" : "app.ty.qzzhcx",
+                    "ios_bundle_id" : "app.jdt.zhcx",
                     "isCloud" : true,
-                    "bought" : 0,
+                    "bought" : 1,
                     "pid" : "741",
                     "parameters" : {
                         "android_channel" : {
                             "des" : "极光推送的渠道名称",
                             "key" : "JPUSH_CHANNEL",
-                            "value" : ""
-                        },
-                        "ios_appkey" : {
-                            "des" : "极光推送的APPKEY",
-                            "key" : "JPUSH_APPKEY",
                             "value" : ""
                         },
                         "android_appkey" : {
@@ -169,6 +164,11 @@
                         "ios_channel" : {
                             "des" : "极光推送的渠道名称",
                             "key" : "JPUSH_CHANNEL",
+                            "value" : ""
+                        },
+                        "ios_appkey" : {
+                            "des" : "极光推送的APPKEY",
+                            "key" : "JPUSH_APPKEY",
                             "value" : ""
                         }
                     }
