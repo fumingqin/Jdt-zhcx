@@ -13,16 +13,16 @@
 				<view style="display: flex;justify-content: space-around;align-items: center;"> -->
 				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
-						<image v-if="ArrItem.ItemTitle =='达达骑车'" style="width: 90upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='公交刷码'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='达达钱包'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='公交查询'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='车票订购'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='包车服务'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='景区门票'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='旅游产品'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='预约检测'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
-						<image v-if="ArrItem.ItemTitle =='自由行'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"></image>
+						<image v-if="ArrItem.ItemTitle =='达达骑车'" style="width: 90upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='公交刷码'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='达达钱包'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='公交查询'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='车票订购'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='包车服务'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='景区门票'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='旅游产品'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='预约检测'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='自由行'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
 				</view>
@@ -381,16 +381,16 @@
 										complete(res) {
 											if (res.confirm) {
 
-												// let appleId=1466344848 //应用的appId
-												// plus.runtime.launchApplication({
-												// 	action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
-												// }, function(e) {
-												// 	console.log('Open system default browser failed: ' + e.message);
-												// });
-												let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
-												plus.runtime.openURL(url, function(res) {
-													console.log(res);
+												let appleId=1466344848 //应用的appId
+												plus.runtime.launchApplication({
+													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
+												}, function(e) {
+													console.log('Open system default browser failed: ' + e.message);
 												});
+												// let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
+												// plus.runtime.openURL(url, function(res) {
+												// 	console.log(res);
+												// });
 											}
 										}
 									})

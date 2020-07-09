@@ -45,7 +45,7 @@
 			</view>
 		</view>
 
-		<image :src="advert" class="advertClass"></image>
+		<image :src="advert" class="advertClass" lazy-load="true"></image>
 
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>

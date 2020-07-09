@@ -17,11 +17,10 @@
         },
         /* 模块配置 */
         "modules" : {
+            "Maps" : {},
             "OAuth" : {},
-            "Payment" : {},
             "Share" : {},
-            "Fingerprint" : {},
-            "Maps" : {}
+            "Payment" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -47,7 +46,6 @@
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
-                    "<uses-permission android:name=\"android.permission.USE_FINGERPRINT\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
@@ -81,8 +79,7 @@
                     "weixin" : {
                         "appid" : "wxb6e7a1abe313216a",
                         "UniversalLinks" : "https://zntc.145u.net/ulink/"
-                    },
-                    "appleiap" : {}
+                    }
                 },
                 "oauth" : {
                     "qq" : {
@@ -139,10 +136,10 @@
         "compilerVersion" : 3,
         "nativePlugins" : {
             "JY-JPush" : {
-                "android_channel" : "android",
+                "ios_appkey" : "d8c424cd74d359ee9ce609d7",
+                "ios_channel" : "AppStore",
                 "android_appkey" : "db1d5d0c73cdc748ede733bb",
-                "ios_channel" : "db1d5d0c73cdc748ede733bb",
-                "ios_appkey" : "AppStore",
+                "android_channel" : "android",
                 "__plugin_info__" : {
                     "name" : "【限时5折】JYJPush极光推送插件 - 极光官方推荐",
                     "description" : "极光推送Uni版本",
@@ -154,12 +151,7 @@
                     "bought" : 1,
                     "pid" : "741",
                     "parameters" : {
-                        "android_channel" : {
-                            "des" : "极光推送的渠道名称",
-                            "key" : "JPUSH_CHANNEL",
-                            "value" : ""
-                        },
-                        "android_appkey" : {
+                        "ios_appkey" : {
                             "des" : "极光推送的APPKEY",
                             "key" : "JPUSH_APPKEY",
                             "value" : ""
@@ -169,9 +161,14 @@
                             "key" : "JPUSH_CHANNEL",
                             "value" : ""
                         },
-                        "ios_appkey" : {
+                        "android_appkey" : {
                             "des" : "极光推送的APPKEY",
                             "key" : "JPUSH_APPKEY",
+                            "value" : ""
+                        },
+                        "android_channel" : {
+                            "des" : "极光推送的渠道名称",
+                            "key" : "JPUSH_CHANNEL",
                             "value" : ""
                         }
                     }

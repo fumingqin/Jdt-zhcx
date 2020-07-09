@@ -287,7 +287,7 @@
 <style lang="scss">
 	//默认背景颜色
 	page {
-		background: -webkit-linear-gradient(top, #9cffbb, #35c762);
+		background: -webkit-linear-gradient(to top, #9cffbb, #35c762);
 	}
 
 	.qc_top {

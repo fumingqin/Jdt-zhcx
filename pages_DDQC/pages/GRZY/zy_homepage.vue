@@ -98,7 +98,7 @@
 					<!-- 充值金额 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">充值金额:</text>
-						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
+						<text class="ra_text2">&nbsp;￥{{depositNumber / 100}}</text>
 					</view>
 					<!-- 支付方式 -->
 					<view class="bv_rechargeAmount2">
@@ -121,7 +121,7 @@
 					<!-- 退押金 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">退款金额:</text>
-						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
+						<text class="ra_text2">&nbsp;￥{{deposit}}</text>
 					</view>
 					<view class="tjButton2" @click="GetRefund2">确认退款</view>
 					<view class="vi_bottom"></view>
@@ -348,7 +348,7 @@
 					success(res) {
 						console.log('获取押金金额成功',res)
 						if(res.data.status == true){
-							that.depositNumber = res.data.data.price / 100
+							that.depositNumber = res.data.data.price
 						}
 					},
 					fail(res) {
@@ -363,8 +363,8 @@
 				})
 				var that = this;
 				that.$refs.popup.close()
-				const now = new Date();
-				const next = new Date(now.getTime() + 31536000000);
+				// const now = new Date();
+				// const next = new Date(now.getTime() + 31536000000);
 				// console.log(now.toDateString());
 				// console.log(next.toDateString());
 				uni.request({
@@ -378,7 +378,7 @@
 						userID: that.userInfo.userId,
 						// timeExpire:timestemp,//过期时间(时间戳)
 						chargeType: 0, //0:充值押金 1充值钱包
-						totalPrice: that.personalHomepage.deposit, //金额
+						totalPrice: that.depositNumber, //金额
 					},
 					success(res) {
 						uni.hideLoading();
@@ -403,6 +403,9 @@
 						}
 					},
 					fail(res) {
+						uni.showModal({
+							content:res,
+						})
 						uni.hideLoading();
 						console.log('押金充值返回支付参数失败', res)
 					}
@@ -412,6 +415,7 @@
 			//--------------------------调起押金充值支付--------------------------
 			RefundPayment: function(orderInfo) {
 				var that = this;
+				console.log(orderInfo)
 				// #ifdef APP-PLUS
 				console.log(that.paymentData)
 				uni.requestPayment({
@@ -436,7 +440,8 @@
 									icon: 'none'
 								})
 							}, 1000)
-							
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
@@ -446,12 +451,15 @@
 									icon: 'none'
 								})
 							}, 1000)
+							
 							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 						}
 					},
 
-					fail: function(ee) {
+					fail: function(res) {
 						if (res.errMsg == 'requestPayment:errors') { //错误
 							setTimeout(function() {
 								uni.showToast({
@@ -461,6 +469,8 @@
 							}, 1000)
 							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
 							setTimeout(function() {
 								uni.showToast({
@@ -470,6 +480,8 @@
 							}, 1000)
 							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 						}
 					}
 				})
@@ -480,7 +492,7 @@
 				var that = this;
 				uni.request({
 					url:$DDTInterface.DDTInterface.rechargeCheck.Url,
-					method:'POST',
+					method:$DDTInterface.DDTInterface.rechargeCheck.method,
 					data:{
 						prepayId:prepayId,
 						phoneNumber:that.userInfo.phoneNumber,
@@ -509,7 +521,7 @@
 						phoneNumber: that.userInfo.phoneNumber,
 						// timeExpire
 						chargeType: 0,
-						totalPrice: that.personalHomepage.deposit,
+						totalPrice: that.depositNumber,
 						userID: that.userInfo.userId,
 						state: state,
 						id: that.prepayid,//预支付交易会话id
@@ -919,7 +931,7 @@
 	//顶部信息
 	.hp_view {
 		position: relative;
-		background: linear-gradient(left, #ebd1b0, #c59a7a);
+		background: linear-gradient(to left, #ebd1b0, #c59a7a);
 		width: 694upx;
 		height: 246upx;
 		margin-left: 29upx;

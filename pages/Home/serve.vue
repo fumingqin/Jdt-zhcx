@@ -1,7 +1,7 @@
 <template>
 	<view class="se_view">
 		<view class="sv_view">
-			<image class="sv_image" :src="imageIndex[0].imageUrl"></image>
+			<image class="sv_image" :src="imageIndex[0].imageUrl" lazy-load="true"></image>
 		</view>
 
 		<view class="sv_view2">
