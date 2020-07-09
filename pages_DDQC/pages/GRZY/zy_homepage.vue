@@ -915,7 +915,7 @@
 	//顶部信息
 	.hp_view {
 		position: relative;
-		background: linear-gradient(left, #ebd1b0, #c59a7a);
+		background: linear-gradient(to left, #ebd1b0, #c59a7a);
 		width: 694upx;
 		height: 246upx;
 		margin-left: 29upx;
