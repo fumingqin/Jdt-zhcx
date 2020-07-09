@@ -592,7 +592,7 @@
 							}else{
 								setTimeout(function() {
 									uni.showToast({
-										title: res.data.msg,
+										title: '未知错误',
 										icon: 'none'
 									})
 								}, 1000)

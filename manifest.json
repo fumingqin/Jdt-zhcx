@@ -63,8 +63,11 @@
                 "privacyDescription" : {
                     "NSLocationAlwaysUsageDescription" : "你的位置信息将用于APP获取位置",
                     "NSLocationWhenInUseUsageDescription" : "你的位置信息将用于APP获取位置",
-                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "你的位置信息将用于APP获取位置"
-                }
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "你的位置信息将用于APP获取位置",
+                    "NSCameraUsageDescription" : "需要您同意才能使用摄像头租车",
+                    "NSPhotoLibraryUsageDescription" : "需要您同意才可以访问相册"
+                },
+                "idfa" : false
             },
             /* SDK配置 */
             "sdkConfigs" : {
