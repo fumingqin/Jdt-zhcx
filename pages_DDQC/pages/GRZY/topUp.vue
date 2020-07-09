@@ -199,14 +199,12 @@
 								title: '支付失败，请重新支付',
 								icon: 'none'
 							})
-							that.rechargeCheck(that.paymentData.prepayid);
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
 							uni.showToast({
 								title: '您取消了支付',
 								icon: 'none'
 							})
-							that.rechargeCheck(that.paymentData.prepayid);
 							that.WirteRechargeLog(2);
 						}
 					},
@@ -219,7 +217,6 @@
 									icon: 'none'
 								})
 							}, 1000)
-							that.rechargeCheck(that.paymentData.prepayid);
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
 							setTimeout(function() {
@@ -228,7 +225,6 @@
 									icon: 'none'
 								})
 							}, 1000)
-							that.rechargeCheck(that.paymentData.prepayid);
 							that.WirteRechargeLog(2);
 						}
 					}
