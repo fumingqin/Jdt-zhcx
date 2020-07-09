@@ -424,7 +424,8 @@
 									icon: 'none'
 								})
 							}, 1000)
-							
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
 						} else if (res.errMsg == 'requestPayment:fail canceled') { //用户取消
@@ -434,8 +435,11 @@
 									icon: 'none'
 								})
 							}, 1000)
+							
 							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 						}
 					},
 
@@ -449,6 +453,8 @@
 							}, 1000)
 							//支付失败，写入充值记录
 							that.WirteRechargeLog(0);
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
 							setTimeout(function() {
 								uni.showToast({
@@ -458,6 +464,8 @@
 							}, 1000)
 							//取消支付，写入充值记录
 							that.WirteRechargeLog(2);
+							//充值检测
+							that.rechargeCheck(that.prepayid);
 						}
 					}
 				})
@@ -468,7 +476,7 @@
 				var that = this;
 				uni.request({
 					url:$DDTInterface.DDTInterface.rechargeCheck.Url,
-					method:'POST',
+					method:$DDTInterface.DDTInterface.rechargeCheck.method,
 					data:{
 						prepayId:prepayId,
 						phoneNumber:that.userInfo.phoneNumber,
