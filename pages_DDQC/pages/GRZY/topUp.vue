@@ -63,7 +63,7 @@
 				info:[],
 				checked: 0,
 				security: '',
-				cost: 10,
+				cost: '',
 				balance: 0,
 				chargeRate: '',
 				userInfo: [], //用户信息
@@ -76,6 +76,7 @@
 		},
 		onShow() {
 			var that = this;
+			that.value = 0;
 			that.getUserInfo();
 			that.getmoney();
 		},
@@ -144,7 +145,7 @@
 							userID: that.userInfo.userId,
 							// timeExpire:timestemp,//过期时间(时间戳)
 							chargeType: 1, //0:充值押金 1充值钱包
-							totalPrice: 10, //金额
+							totalPrice: that.cost * 100, //金额
 						},
 						success(res) {
 							uni.hideLoading();
@@ -208,12 +209,24 @@
 						}
 					},
 
-					fail: function(ee) {
-						uni.showToast({
-							title: '网络异常，请检查网络后重试',
-							icon: 'none',
-							duration: 3000
-						})
+					fail: function(res) {
+						if (res.errMsg == 'requestPayment:errors') { //错误
+							setTimeout(function() {
+								uni.showToast({
+									title: '支付失败，请重新支付',
+									icon: 'none'
+								})
+							}, 1000)
+							that.WirteRechargeLog(0);
+						} else if (res.errMsg == 'requestPayment:fail') { //用户取消
+							setTimeout(function() {
+								uni.showToast({
+									title: '您取消了支付',
+									icon: 'none'
+								})
+							}, 1000)
+							that.WirteRechargeLog(2);
+						}
 					}
 				})
 				// #endif

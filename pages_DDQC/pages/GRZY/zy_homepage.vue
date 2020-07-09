@@ -97,7 +97,7 @@
 					<!-- 充值金额 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">充值金额:</text>
-						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
+						<text class="ra_text2">&nbsp;￥{{depositNumber / 100}}</text>
 					</view>
 					<!-- 支付方式 -->
 					<view class="bv_rechargeAmount2">
@@ -120,7 +120,7 @@
 					<!-- 退押金 -->
 					<view class="bv_rechargeAmount">
 						<text class="ra_text">退款金额:</text>
-						<text class="ra_text2">&nbsp;￥{{depositNumber}}</text>
+						<text class="ra_text2">&nbsp;￥{{deposit}}</text>
 					</view>
 					<view class="tjButton2" @click="GetRefund2">确认退款</view>
 					<view class="vi_bottom"></view>
@@ -332,7 +332,7 @@
 					success(res) {
 						console.log('获取押金金额成功',res)
 						if(res.data.status == true){
-							that.depositNumber = res.data.data.price / 100
+							that.depositNumber = res.data.data.price
 						}
 					},
 					fail(res) {
@@ -439,7 +439,7 @@
 						}
 					},
 
-					fail: function(ee) {
+					fail: function(res) {
 						if (res.errMsg == 'requestPayment:errors') { //错误
 							setTimeout(function() {
 								uni.showToast({
@@ -497,7 +497,7 @@
 						phoneNumber: that.userInfo.phoneNumber,
 						// timeExpire
 						chargeType: 0,
-						totalPrice: that.personalHomepage.deposit,
+						totalPrice: that.depositNumber,
 						userID: that.userInfo.userId,
 						state: state,
 						id: that.prepayid,//预支付交易会话id
