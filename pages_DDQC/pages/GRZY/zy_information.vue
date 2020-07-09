@@ -8,50 +8,47 @@
 		<!-- 持卡人 -->
 		<view class="if_cardholder">
 			<text class="ch_text">持卡人</text>
-			<input name="nickName" class="ch_cardholder" type="text" placeholder-style="#AAAAAA" placeholder="请输入持卡人姓名" v-model="nameText" maxlength="19" @input="onInput('姓名')" />
+			<input name="nickName" class="ch_cardholder" type="text" placeholder-style="#AAAAAA" placeholder="请输入持卡人姓名" v-model="nameText"
+			 maxlength="19" @input="onInput('姓名')" />
 		</view>
 
 		<!-- 输入银行卡号 -->
 		<view class="if_cardNumber">
 			<text class="cn_text">卡号</text>
-			<input class="cn_card" placeholder="请输入卡号" placeholder-style="#AAAAAA" type="number" maxlength="23" v-model="bankNumber" @input="onInput('卡号')" ></input>
+			<input class="cn_card" placeholder="请输入卡号" placeholder-style="#AAAAAA" type="number" maxlength="23" v-model="bankNumber"
+			 @input="onInput('卡号')"></input>
 		</view>
 
 		<!-- 选择银行 -->
 		<view class="if_selectBank">
 			<text class="sb_text">开户银行</text>
-			<input name="nickNumber" style="font-size:32upx;padding-left: 60upx;" placeholder-style="#AAAAAA" type="text" v-model="bankName" placeholder="请输入银行" @input="onInput('银行')" />
-			<!-- <picker @change="godetail" :value="index" :range="selectBank" range-key="txt">
-				<text v-if="selectBank[index].txt=='请选择'" class="tsnrText">{{selectBank[index].txt}}<text class="jdticon icon-xia"></text></text>
-				<text v-if="selectBank[index].txt!=='请选择'" class="tsnrText2">{{selectBank[index].txt}}<text class="jdticon icon-xia"></text></text>
-			</picker> -->
+			<input name="nickNumber" style="font-size:32upx;padding-left: 60upx;" placeholder-style="#AAAAAA" type="text"
+			 v-model="bankName" placeholder="请输入银行" @input="onInput('银行')" />
 		</view>
-		
+
 		<view class="if_text2">
 			<text>注意：开户行需详细到相关支行信息，如：中国建设银行南靖支行、中国银行南靖山城支行</text>
 		</view>
-		
+
 		<!-- 联系电话 -->
 		<view class="if_cardNumber">
 			<text class="cn_text">联系电话</text>
-			<input class="cn_card" placeholder="请输入联系电话" placeholder-style="#AAAAAA" type="number" maxlength="11" v-model="phoneNumber" @input="onInput('电话')" ></input>
+			<input class="cn_card" placeholder="请输入联系电话" placeholder-style="#AAAAAA" type="number" maxlength="11" v-model="phoneNumber"
+			 @input="onInput('电话')"></input>
 		</view>
 
 		<!-- 须知 -->
 		<view class="if_notice">
 			<radio class="nt_radio" value="1" :color="'#70c778'" :checked="selectedValue===1 ? true : false" @click="Selection"></radio>
 			<text class="nt_text">我已阅读并同意</text>
-			<text class="nt_text2" @click="open">《信用卡还款服务协议》</text>
-
-			<!-- 押金支付弹框 -->
+			<text class="nt_text2" @click="open">《{{expenseDetail.Title}}》</text>
 			<uni-popup ref="popup" type="bottom">
 				<view class="po_boxVlew">
 					<view class="bv_topText">
-						<text class="tt_text">押金充值</text>
 						<text class="tt_icon jdticon icon-fork " @click="close(1)"></text>
 					</view>
 					<view class="tt_view">
-						<rich-text class="tt_tear" :nodes="expenseDetail.way"></rich-text>
+						<view style="margin: 0 20rpx;" v-html="expenseDetail.Body"></view>
 					</view>
 					<view class="vi_bottom"></view>
 				</view>
@@ -74,10 +71,10 @@
 		},
 		data() {
 			return {
-				nameText:'',//姓名
-				bankNumber:'',//卡号
-				bankName:'',//银行
-				phoneNumber:'',//电话
+				nameText: '', //姓名
+				bankNumber: '', //卡号
+				bankName: '', //银行
+				phoneNumber: '', //电话
 				expenseDetail: '',
 				selectedValue: 0,
 				index: 0,
@@ -85,31 +82,42 @@
 				detailInfo: {
 					bankObject: '', //银行
 				},
-				currentRefundType:'',//判断当前退款的状态（第一次退款还是退款失败再提交退款）
-				ReManualRefundInfo:[],//退款失败信息
+				currentRefundType: '', //判断当前退款的状态（第一次退款还是退款失败再提交退款）
+				ReManualRefundInfo: [], //退款失败信息
 			}
 		},
 		onLoad(res) {
 			_self = this;
-			this.routeInit();
-			_self.currentRefundType = res.refundType;
-			if(res.item){
+			_self.currentRefundType = "第一次人工退款"; //res.refundType;
+			if (res.item) {
 				_self.ReManualRefundInfo = JSON.parse(res.item)
-				console.log(_self.ReManualRefundInfo)
 			}
+			this.GetNews();
 		},
 		methods: {
-			//-----------------读取静态数据json.js-------------------------------
-			async routeInit() {
-				let selectBank = await this.$api.lyfwcwd('selectBank');
-				this.selectBank = selectBank.data;
-				let expenseDetail = await this.$api.lyfwcwd('expenseDetail');
-				this.expenseDetail = expenseDetail.data;
-				// console.log(this.selectBank)
+			GetNews: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetNews.Url,
+					method: 'POST',
+					data: {},
+					success(res) {
+						console.log(res);
+						if (res.data.status == true) {
+							for (var i = 0; i < res.data.data.length; i++) {
+								if (res.data.data[i].Type == "退押金协议") {
+									that.expenseDetail = res.data.data[i];
+									return;
+								}
+							}
+						}
+					},
+					fail(res) {
+						console.log('请求新闻资讯失败', res)
+					}
+				})
 			},
-
 			//------------------------------弹框事件-----------------------------------------
-
 			open() {
 				// 需要在 popup 组件，指定 ref 为 popup
 				this.$refs.popup.open()
@@ -120,14 +128,6 @@
 					this.$refs.popup.close()
 				}
 			},
-
-			//----------------------投诉对象内容点击--------------------------------------
-			godetail: function(e) {
-				console.log(e)
-				this.index = e.detail.value;
-				this.detailInfo.bankObject = this.selectBank[e.detail.value];
-			},
-
 			//------------------------------同意-点击事件--------------------------------
 			Selection: function() {
 				if (this.selectedValue == 0) {
@@ -137,54 +137,54 @@
 				}
 			},
 			//输入姓名
-			onInput:function(text){
-				if(text == '姓名'){
+			onInput: function(text) {
+				if (text == '姓名') {
 					// console.log(_self.nameText)
-				}else if(text == '卡号'){
+				} else if (text == '卡号') {
 					// console.log(_self.bankNumber)
-				}else if(text == '银行'){
+				} else if (text == '银行') {
 					// console.log(_self.bankName)
-				}else if(text == '电话'){
+				} else if (text == '电话') {
 					// console.log(_self.phoneNumber)
 				}
 			},
 			//------------------------------押金充值超一年，提交人工退押金，后台审核--------------------------------
-			ManualRefund:function(){
+			ManualRefund: function() {
 				uni.showLoading({
-					title:'正在提交申请...'
+					title: '正在提交申请...'
 				})
 				//读取用户ID
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
-						console.log('用户数据',data)
+						console.log('用户数据', data)
 						uni.request({
-							url:$DDTInterface.DDTInterface.ManualRefund.Url,
-							method:$DDTInterface.DDTInterface.ManualRefund.method,
-							data:{
-								Name:_self.nameText,//姓名
-								Tel:_self.phoneNumber,//联系电话
-								RegistPhone:data.data.phoneNumber,//注册手机号
-								Bank:_self.bankName,//开户行
-								BankAccounts:_self.bankNumber,//银行账户
-								UserID:data.data.userId,//用户id
+							url: $DDTInterface.DDTInterface.ManualRefund.Url,
+							method: $DDTInterface.DDTInterface.ManualRefund.method,
+							data: {
+								Name: _self.nameText, //姓名
+								Tel: _self.phoneNumber, //联系电话
+								RegistPhone: data.data.phoneNumber, //注册手机号
+								Bank: _self.bankName, //开户行
+								BankAccounts: _self.bankNumber, //银行账户
+								UserID: data.data.userId, //用户id
 							},
 							success(res) {
 								uni.hideLoading();
 								console.log(res)
-								if(res.data.status == true){
-									setTimeout(function(){
+								if (res.data.status == true) {
+									setTimeout(function() {
 										uni.showToast({
-											title:res.data.msg,
+											title: res.data.msg,
 											complete() {
 												uni.navigateBack()
 											}
 										})
-									},1000)
-								}else {
-									setTimeout(function(){
+									}, 1000)
+								} else {
+									setTimeout(function() {
 										_self.myToast(res.data.msg)
-									},1000)
+									}, 1000)
 								}
 							},
 							fail(res) {
@@ -193,48 +193,47 @@
 							}
 						})
 					},
-					fail(data) {
-					}
+					fail(data) {}
 				})
 			},
 			//--------------------------------人工退押金失败，重新提交退押金信息--------------------------------
-			ReManualRefund:function(){
-				console.log('重新提交',_self.ReManualRefundInfo.AID)
-				console.log('重新提交',_self.ReManualRefundInfo.Reason)
+			ReManualRefund: function() {
+				console.log('重新提交', _self.ReManualRefundInfo.AID)
+				console.log('重新提交', _self.ReManualRefundInfo.Reason)
 				uni.showLoading({
-					title:'正在提交申请...'
+					title: '正在提交申请...'
 				})
 				//读取用户ID
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
 						uni.request({
-							url:$DDTInterface.DDTInterface.ReManualRefund.Url,
-							method:$DDTInterface.DDTInterface.ReManualRefund.method,
-							data:{
-								AID:_self.ReManualRefundInfo.AID,//主键
-								Name:_self.nameText,//姓名
-								Tel:_self.phoneNumber,//联系电话
-								RegistPhone:data.data.phoneNumber,//注册手机号
-								Bank:_self.bankName,//开户行
-								BankAccounts:_self.bankNumber,//银行账户
-								UserID:data.data.userId,//用户id
-								LogJson:JSON.stringify(_self.ReManualRefundInfo.Reason),//退款失败的json字符串
+							url: $DDTInterface.DDTInterface.ReManualRefund.Url,
+							method: $DDTInterface.DDTInterface.ReManualRefund.method,
+							data: {
+								AID: _self.ReManualRefundInfo.AID, //主键
+								Name: _self.nameText, //姓名
+								Tel: _self.phoneNumber, //联系电话
+								RegistPhone: data.data.phoneNumber, //注册手机号
+								Bank: _self.bankName, //开户行
+								BankAccounts: _self.bankNumber, //银行账户
+								UserID: data.data.userId, //用户id
+								LogJson: JSON.stringify(_self.ReManualRefundInfo.Reason), //退款失败的json字符串
 							},
 							success(res) {
 								uni.hideLoading();
 								console.log(res)
-								if(res.data.status == true){
+								if (res.data.status == true) {
 									uni.showToast({
-										title:res.data.msg,
+										title: res.data.msg,
 										complete() {
 											uni.navigateBack()
 										}
 									})
-								}else {
-									setTimeout(function(){
+								} else {
+									setTimeout(function() {
 										_self.myToast(res.data.msg)
-									},1000)
+									}, 1000)
 								}
 							},
 							fail(res) {
@@ -243,49 +242,52 @@
 							}
 						})
 					},
-					fail(data) {
-					}
+					fail(data) {}
 				})
 			},
 			//----------------------提交人工审核--------------------------------------
-			submit:function(){
-				if(_self.nameText == ''){
+			submit: function() {
+				var reg = (/^1(3|4|5|6|7|8|9)\d{9}$/);
+				if (_self.nameText == '') {
 					_self.myToast('姓名不能为空')
-				}else if(_self.bankNumber == ''){
+				}  else if (_self.bankNumber == '') {
 					_self.myToast('卡号不能为空')
-				}else if(_self.bankName == ''){
+				} else if (_self.bankName == '') {
 					_self.myToast('银行不能为空')
-				}else if(_self.bankName.indexOf('支行') == -1){
-					// _self.myToast('银行应具体到支行')
+				} else if (_self.bankName.indexOf('支行') == -1) {
+					// _self.myToast('银行应具体到支行') 
 					uni.showModal({
-						title:'温馨提示',
-						content:'请具体到支行,填写错误将导致无法到账',
-						showCancel:false
+						title: '温馨提示',
+						content: '请具体到支行,填写错误将导致无法到账',
+						showCancel: false
 					})
-				}else if(_self.phoneNumber == ''){
+				} else if (_self.phoneNumber == '') {
 					_self.myToast('手机号不能为空')
-				}else if(_self.selectedValue == 0){
+				} else if (!reg.test(_self.phoneNumber)) {
+					console.log(reg.test(_self.phoneNumber))
+					_self.myToast('输入的手机号有误，请检查')
+				}else if (_self.selectedValue == 0) {
 					_self.myToast('请同意服务协议')
-				}else {
-					if(_self.currentRefundType == '第一次人工退款'){
+				} else {
+					if (_self.currentRefundType == '第一次人工退款') {
 						//如果当前是第一次人工退款的话，调ManualRefund这个接口
 						_self.ManualRefund();
-					}else if(_self.currentRefundType == '退款失败重新提交'){
+					} else if (_self.currentRefundType == '退款失败重新提交') {
 						//如果当前是退款失败重新提交，请在这里调方法
 						_self.ReManualRefund();
 					}
 				}
 			},
-			myToast:function(title){
+			myToast: function(title) {
 				uni.showToast({
-					title:title,
-					icon:'none'
+					title: title,
+					icon: 'none'
 				})
 			}
 			// bankNumberInput:function(e){
 			// 	this.textNumber = e.replace(/\D+/g, '').replace(/(\d{4})/g, '$1 ').replace(/ $/, '')
 			// },
-			
+
 			// yhkchange: function(e) {
 			// 	var yhkd = e.detail.value;
 			// 	var len = yhkd.length

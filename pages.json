@@ -174,7 +174,7 @@
 				"navigationStyle": "custom"
 			}
 		}
-    ],
+	],
 
 	"subPackages": [
 		//---------------------------------------------第一个包：传统客运------------------------------------------
@@ -500,7 +500,7 @@
 				},
 				{
 					"path": "pages/LYFW/currency/imgPreview3",
-				
+
 					"style": {
 						"navigationBarTitleText": "查看图片"
 					}
@@ -908,7 +908,27 @@
 				//----------------------------------个人主页--------------------------------------------
 				{
 					"path": "pages/GRZY/zy_homepage",
-					"style": {}
+					"style": {
+						"navigationStyle": "custom",  
+						"app-plus": {
+							"titleNView": {
+								"autoBackButton": "false",
+								"buttons": [{
+									"text": "骑行页",
+									"type": "transparent",
+									"fontSize": "16px",
+									"float":"left",
+									"width": "77px"
+								}, {
+									"text": "首页",
+									"type": "transparent",
+									"float":"right",
+									"fontSize": "16px",
+									"width": "77px"
+								}]
+							}
+						}
+					}
 				},
 				{
 					"path": "pages/GRZY/zy_expenseDetails",
@@ -977,18 +997,18 @@
 					"path": "pages/GRZY/zy_newsScreening",
 					"style": {
 						"navigationBarTitleText": "资讯列表",
-						"navigationBarTextStyle":"White",
-						"navigationBarBackgroundColor":"#65C36D"
+						"navigationBarTextStyle": "White",
+						"navigationBarBackgroundColor": "#65C36D"
 					}
 				}, {
 					"path": "pages/RentBike/Payment",
 					"style": {
 						"navigationBarTitleText": "支付",
-						"navigationBarTextStyle":"White",
-						"navigationBarBackgroundColor":"#65C36D",
+						"navigationBarTextStyle": "White",
+						"navigationBarBackgroundColor": "#65C36D",
 						"app-plus": {
 							"titleNView": {
-								"autoBackButton":false,
+								"autoBackButton": "false",
 								"buttons": [{
 									"text": "刷新",
 									"type": "transparent",
@@ -997,59 +1017,53 @@
 								}]
 							}
 						}
-					} 
+					}
 				},
 				{
-				    "path" : "pages/GRZY/zy_QRcode",
-				    "style" : {}
-				}
-				,{
-				    "path" : "pages/GRZY/zy_commuterCard",
-				    "style" : {}
+					"path": "pages/GRZY/zy_QRcode",
+					"style": {}
+				}, {
+					"path": "pages/GRZY/zy_commuterCard",
+					"style": {}
 				},
 				{
 					"path": "pages/GRZY/zy_topUpRecord",
 					"style": {
 						"navigationBarTitleText": "充值记录"
 					}
-				}
-			    ,{
-                    "path" : "pages/GRZY/newsDetail",
-                    "style" : {
+				}, {
+					"path": "pages/GRZY/newsDetail",
+					"style": {
 						"navigationBarTitleText": "新闻详情",
-						"navigationBarTextStyle":"White",
-						"navigationBarBackgroundColor":"#65C36D"
+						"navigationBarTextStyle": "White",
+						"navigationBarBackgroundColor": "#65C36D"
 					}
-                }
-                ,{
-                    "path" : "pages/GRZY/refundRecord",
-                    "style" : {}
-                }
-                ,{
-                    "path" : "pages/Bus/BusSeach",
-                   "style" : {
-                   	"navigationBarTitleText": " 公交查询",
-                   	"navigationBarTextStyle":"White",
-                   	"navigationBarBackgroundColor":"#65C36D"
-                   }
-                }
-                ,{
-                    "path" : "pages/RentBike/BillingRule",
-                    "style" : {
+				}, {
+					"path": "pages/GRZY/refundRecord",
+					"style": {}
+				}, {
+					"path": "pages/Bus/BusSeach",
+					"style": {
+						"navigationBarTitleText": " 公交查询",
+						"navigationBarTextStyle": "White",
+						"navigationBarBackgroundColor": "#65C36D"
+					}
+				}, {
+					"path": "pages/RentBike/BillingRule",
+					"style": {
 						"navigationBarTitleText": "计费规则",
-						"navigationBarTextStyle":"White",
-						"navigationBarBackgroundColor":"#65C36D"
+						"navigationBarTextStyle": "White",
+						"navigationBarBackgroundColor": "#65C36D"
 					}
-                }
-                ,{
-                    "path" : "pages/Bus/TicketPurchase",
-                    "style" : {
+				}, {
+					"path": "pages/Bus/TicketPurchase",
+					"style": {
 						"navigationBarTitleText": "车票订购",
-						"navigationBarTextStyle":"White",
-						"navigationBarBackgroundColor":"#65C36D"
+						"navigationBarTextStyle": "White",
+						"navigationBarBackgroundColor": "#65C36D"
 					}
-                }
-            ]
+				}
+			]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{

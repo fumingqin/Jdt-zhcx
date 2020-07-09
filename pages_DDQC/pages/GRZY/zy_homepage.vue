@@ -60,6 +60,12 @@
 				<image class="vi_image" src="../../static/GRZY/tongqingka.png" mode="aspectFit"></image>
 			</view>
 			
+			
+			<!-- 充值金额 -->
+			<view class="ve_view4" @click="natTo(2)">
+				<text class="vi_text2">充值金额</text>
+				<text class="jdticon icon-you"></text>
+			</view>
 			<!-- 退押金失败记录 -->
 			<view class="ve_view3" @click="refundClick">
 				<text class="vi_text">退押金记录</text>
@@ -72,20 +78,15 @@
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 我要投诉 -->
-			<view class="ve_view4" v-if="false" @click="natTo('/pages_GRZX/pages/GRZX/gz_complaintList')">
+		<!-- 	<view class="ve_view4" v-if="false" @click="natTo('/pages_GRZX/pages/GRZX/gz_complaintList')">
 				<text class="vi_text2">我要投诉</text>
 				<text class="jdticon icon-you"></text>
-			</view>
+			</view> -->
 			<!-- 我的反馈 -->
 			<!-- <view class="ve_view4">
 				<text class="vi_text2">我的反馈</text>
 				<text class="jdticon icon-you"></text>
 			</view> -->
-			<!-- 充值金额 -->
-			<view class="ve_view4" @click="natTo(2)">
-				<text class="vi_text2">充值金额</text>
-				<text class="jdticon icon-you"></text>
-			</view>
 			
 			<!-- 押金支付弹框 -->
 			<uni-popup ref="popup" type="bottom">
@@ -237,6 +238,21 @@
 				ConsumerPhoneNumber:'',//客服热线
 				depositNumber:'',//押金金额
 			}
+		},
+		onBackPress() { //禁用手机返回键
+			return true;
+		},
+		onNavigationBarButtonTap(e) {
+			if(e.index==0){
+				uni.redirectTo({
+					url:'../RentBike/RentBikeHome'
+				})
+			}else if(e.index==1){
+				uni.switchTab({
+					url:"../../../pages/Home/zy_zhcx"
+				})
+			}
+			console.log(e)
 		},
 		onLoad() {
 			// this.lunBoInit();

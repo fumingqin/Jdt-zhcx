@@ -4,14 +4,18 @@
 			<text class="to_text">公交二维码</text>
 		</view>
 		<view class="qc_bottom">
-			<view style=" width: 400rpx;margin: 0 auto;padding-top: 55rpx;">
+			<view style=" width: 400rpx;margin: 0 auto;padding-top: 55rpx;" @click="manuRefresh">
 				<canvas v-if="index==0 || commuterCardObject=='请选择' || commuterCardObject=='普通会员'" canvas-id="qrcode" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
 			</view>
 			<view class="bt_view">
-				<text class="vi_text">乘车码自动</text>
-				<text class="vi_text2" @click="manuRefresh">刷新</text>
+				<uni-icons type="loop" size="24" @click="manuRefresh"></uni-icons>
+				<text class="vi_text">点我</text>
+				<text class="vi_text2" @click="manuRefresh">刷新</text> 
+				<text class="vi_text">二维码</text>
 			</view>
-
+			<view style="text-align: center;">
+				<text style="color: #666666;font-size: 32upx;">或直接点击二维码图片进行刷新</text> 
+			</view>
 			<!-- <view class="complaintDX">
 				<text class="tsdxText">点击切换通勤卡类别:</text>
 				<picker @change="godetail" :value="index" :range="commuterCard.txt">
@@ -25,7 +29,11 @@
 <script>
 	import $DDTInterface from '@/common/DDT.js'
 	import uQRCode from '@/pages_DDQC/components/GRZY/uni-qrcode/uqrcode.js';
+	import uniIcons from "@/components/Order/uni-icons/uni-icons.vue";
 	export default {
+		components: {
+			uniIcons
+		},
 		data() {
 			return {
 				index: 0,
@@ -41,19 +49,19 @@
 				},
 				commuterCardObject: '',
 				depositStatus: [],
-				phoneInfo:[],
-				Address:'',
+				phoneInfo: [],
+				Address: '',
 			}
 		},
 
 		onLoad() {
 			var that = this;
-			
+
 			that.getMyLocation();
-			
+
 			// that.autoRefresh();
-			that.lunBoInit();
-			
+			// that.lunBoInit();
+
 		},
 
 		//监听页面卸载
@@ -74,14 +82,13 @@
 				let commuterCard = await this.$api.lyfwcwd('commuterCard');
 				this.commuterCard = commuterCard.data;
 			},
-			getMyLocation:function(){
+			getMyLocation: function() {
 				var that = this;
 				console.log('124356')
 				uni.getLocation({
 					type: 'gcj02',
 					geocode: true,
 					success(res) {
-						console.log('地址信息',res)
 						var country = res.address.country ? res.address.country : '';
 						var province = res.address.province ? res.address.province : '';
 						var city = res.address.city ? res.address.city : '';
@@ -124,11 +131,11 @@
 						that.userInfo = data.data;
 						that.QRCodeData();
 						that.GetUserByUserID();
-						
+
 						//获取系统信息
 						uni.getSystemInfo({
 							success: function(res) {
-								console.log('当前设备信息',res)
+								console.log('当前设备信息', res)
 								that.phoneInfo = res;
 								that.BikeLog();
 							}
@@ -156,11 +163,11 @@
 			QRCodeData: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetBusCodeGen.Url,
-					method:$DDTInterface.DDTInterface.GetBusCodeGen.method,
-					data:{
-						phoneNumber:that.userInfo.phoneNumber,
-						userID:that.userInfo.userId,
+					url: $DDTInterface.DDTInterface.GetBusCodeGen.Url,
+					method: $DDTInterface.DDTInterface.GetBusCodeGen.method,
+					data: {
+						phoneNumber: that.userInfo.phoneNumber,
+						userID: that.userInfo.userId,
 					},
 					success(res) {
 						// uni.hideLoading()
@@ -200,7 +207,6 @@
 					title: '二维码生成中',
 					mask: true
 				})
-
 				uQRCode.make({
 					canvasId: 'qrcode',
 					text: param,
@@ -212,7 +218,7 @@
 						// 	that.qrcodeSrc = res
 						// },10000)
 					},
-					complete: () => {
+					complete: (res) => {
 						uni.hideLoading()
 					}
 				})
@@ -248,10 +254,10 @@
 					}
 				})
 			},
-			BikeLog:function(){
+			BikeLog: function() {
 				var that = this;
 				console.log('开始记录')
-				
+
 				uni.request({
 					url: $DDTInterface.DDTInterface.BikeLog.Url,
 					method: $DDTInterface.DDTInterface.BikeLog.method,
@@ -267,10 +273,10 @@
 						SystemVersion: that.phoneInfo.system,
 					},
 					success(res) {
-						console.log('日志记录成功',res)
+						// console.log('日志记录成功',res)
 					},
 					fail(err) {
-						console.log('日志记录失败',err)
+						// console.log('日志记录失败',err)
 					}
 				})
 			}
@@ -317,15 +323,17 @@
 			padding-top: 20upx;
 			text-align: center;
 			padding-bottom: 20upx;
-
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			.vi_text {
 				color: #666666;
-				font-size: 28upx;
+				font-size: 32upx;
 			}
 
 			.vi_text2 {
 				color: #1ea2ff;
-				font-size: 28upx;
+				font-size: 32upx;
 			}
 		}
 	}

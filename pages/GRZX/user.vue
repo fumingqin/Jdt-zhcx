@@ -14,7 +14,7 @@
 					<view style="display: flex;align-items: center;" v-if="nickname != '游客'">
 					<!-- <view style="height: 42upx;background-color: #2A954B;display: flex;justify-content:center;align-items: center;" v-if="nickname != '游客'"> -->
 						<image src="../../static/GRZX/huangguan.png" style="width: 20upx;height: 20upx;background-color: #2A954B;padding: 12upx;border-top-left-radius: 8upx;border-bottom-left-radius: 8upx;"></image>
-						<text style="font-size: 20upx;color: #FFFFFF;line-height: 42upx;background-color: #2A954B;padding-right:10upx ;border-top-right-radius: 8upx;border-bottom-right-radius: 8upx;">未实名</text>
+						<text style="font-size: 20upx;color: #FFFFFF;line-height: 42upx;background-color: #2A954B;padding-right:10upx ;border-top-right-radius: 8upx;border-bottom-right-radius: 8upx;">{{RealNameStatus}}</text>
 						<!-- <image src="../../static/GRZX/huangguan.png" class="imgTubiao"></image>
 						<text class="fontClass">{{RealNameStatus}}</text> -->
 					</view>
