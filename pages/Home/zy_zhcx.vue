@@ -417,7 +417,7 @@
 										complete(res) {
 											if (res.confirm) {
 
-												let appleId = 1466344848 //应用的appId
+												let appleId=1522869291 //应用的appId
 												plus.runtime.launchApplication({
 													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
 												}, function(e) {

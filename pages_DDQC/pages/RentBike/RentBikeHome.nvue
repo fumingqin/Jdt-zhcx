@@ -63,7 +63,7 @@
 				mapContext: '',
 				isClick: '无桩', //是否点击
 				markerIconPath:'../../static/GRZY/power.png',
-				bicycleIconPath:'../../static/RentBike/bicycle.png',
+				bicycleIconPath:'../../static/RentBike/bicycleGreen.png',
 				//标识宽高
 				iconWidth:40,
 				iconHeight:40,
@@ -268,7 +268,7 @@
 							that.markers = [];
 							for (var i = 0; i < res.data.data.length; i++) {
 								if(res.data.data[i].status == 7){//正常
-									that.bicycleIconPath = '../../static/RentBike/bicycle.png'
+									that.bicycleIconPath = '../../static/RentBike/bicycleGreen.png'
 								}else if(res.data.data[i].status == 9){//离线
 									that.bicycleIconPath = '../../static/RentBike/bicycleOutline.png'
 								}
