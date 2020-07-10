@@ -374,13 +374,12 @@
 					success(res) {
 						if (res.data.status == true) {
 							if (that.platform == 'ios') {
-								if (that.version != res.data.data.VersionID) {
+								if (that.version < res.data.data.VersionID) {
 									uni.showModal({
 										title: '温馨提示',
 										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
 										complete(res) {
 											if (res.confirm) {
-
 												let appleId=1522869291 //应用的appId
 												plus.runtime.launchApplication({
 													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
