@@ -493,7 +493,7 @@
 			},
 			newsClick: function(item) {
 				uni.navigateTo({
-					url: '../../pages_DDQC/pages/GRZY/newsDetail?id=' + item.AID
+					url: '../../pages_DDQC/pages/GRZY/newsDetail?id=' + item.AID + '&mold=' + item.Mold
 				})
 			},
 			//----------------------接口数据-------------------------------

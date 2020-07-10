@@ -131,9 +131,16 @@
 			},
 			//---------------------资讯详情页-----------------------------------
 			NewsDetail: function(item) {
-				uni.navigateTo({
-					url: './newsDetail?id=' + item.AID
-				})
+				console.log(item)
+				if(item.Mold == '外链'){
+					uni.navigateTo({
+						url: './newsDetail?id=' + item.AID + '&mold=' + item.Mold
+					})
+				}else {
+					uni.navigateTo({
+						url: './newsDetail?id=' + item.AID + '&mold=' + item.Mold
+					})
+				}
 			},
 			Click: function(e) {
 				this.tabNum = e;
