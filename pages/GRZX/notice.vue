@@ -5,7 +5,7 @@
 			<view class="boxClass1" @click="selete(item)">
 				<view class="titleClass generalStyle">{{item.title}}</view>
 				<view class="imgClass generalStyle">
-					<image :src="item.imageUrl" style="width: 100%;" mode="widthFix" role="img"></image>
+					<image :src="item.imageUrl" style="width: 100%;" mode="widthFix" role="img" lazy-load="true"></image>
 				</view>
 				<view class="textClass generalStyle">{{item.newsContent}}</view>
 				<view class="detailClass generalStyle">

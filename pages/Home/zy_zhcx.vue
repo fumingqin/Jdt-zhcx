@@ -3,7 +3,7 @@
 		<!-- 轮播图-->
 		<swiper class="swi" circular autoplay style="background-color: #65C36D;">
 			<swiper-item class="swiItem" v-for="(item,index) in homePage" :key="index">
-				<image :src="item.ImageURL" mode="aspectFill" />
+				<image :src="item.ImageURL" lazy-load="true" mode="aspectFill" />
 			</swiper-item>
 		</swiper>
 
@@ -86,14 +86,14 @@
 					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
 						<!-- <image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text> -->
-						<image class="ct_image1" src="http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg" mode="aspectFill"></image>
+						<image class="ct_image1" src="http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">巾帼文明线</text>
 					</view>
 					<!-- 稻田摸鱼 -->
 					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
 						<!-- <image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text> -->
-						<image class="ct_image2" src="http://zntc.145u.net/UpLoadImages/DDT/公共自行车.jpg" mode="aspectFill"></image>
+						<image class="ct_image2" src="http://zntc.145u.net/UpLoadImages/DDT/公共自行车.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">公共自行车</text>
 					</view>
 				</view>
@@ -103,21 +103,21 @@
 					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
 						<!-- <image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text> -->
-						<image class="ct_image3" src="http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg" mode="aspectFill"></image>
+						<image class="ct_image3" src="http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">古雷助力车</text>
 					</view>
 					<!-- 泉州洛阳桥 -->
 					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
 						<!-- <image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text> -->
-						<image class="ct_image4" src="http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg" mode="aspectFill"></image>
+						<image class="ct_image4" src="http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">客运南站</text>
 					</view>
 					<!-- 七彩官畲 -->
 					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
 						<!-- <image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text> -->
-						<image class="ct_image5" src="http://zntc.145u.net/UpLoadImages/DDT/双层公交.jpg" mode="aspectFill"></image>
+						<image class="ct_image5" src="http://zntc.145u.net/UpLoadImages/DDT/双层公交.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">双层公交</text>
 					</view>
 				</view>
@@ -422,16 +422,25 @@
 												}, function(e) {
 													console.log('Open system default browser failed: ' + e.message);
 												});
-												// let url = 'https://www.pgyer.com/OnVm?sign=&auSign=&code=';
-												// plus.runtime.openURL(url, function(res) {
-												// 	console.log(res);
-												// });
 											}
 										}
 									})
 								}
 							} else {
-
+								if (that.version < res.data.data.VersionID) {
+									uni.showModal({
+										title: '温馨提示',
+										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
+										complete(res) {
+											if (res.confirm) {
+												let url = res.data.data.UpdateUrl;
+												plus.runtime.openURL(url, function(res) {
+													console.log(res);
+												});
+											}
+										}
+									})
+								}
 							}
 						} else {
 							// uni.showToast({
