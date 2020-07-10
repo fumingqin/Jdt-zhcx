@@ -11,18 +11,29 @@
 			<swiper-item class="swiItem" style="display: flex;align-items: center;" v-for="(item,index) in swiperItem" :key="index">
 				<!-- 	<swiper-item class="swiItem" style="display: flex;align-items: center;">
 				<view style="display: flex;justify-content: space-around;align-items: center;"> -->
-				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr" :key="index1">
+				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr"
+				 :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
-						<image v-if="ArrItem.ItemTitle =='达达骑车'" style="width: 90upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='公交刷码'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='达达钱包'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='公交查询'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='车票订购'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='包车服务'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='景区门票'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='旅游产品'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='预约检测'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='自由行'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='达达骑车'" style="width: 90upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='公交刷码'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='达达钱包'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='公交查询'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='车票订购'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='包车服务'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='景区门票'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='旅游产品'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='预约检测'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
+						<image v-if="ArrItem.ItemTitle =='自由行'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
 				</view>
@@ -61,7 +72,10 @@
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
-					<text class="zl_reTitle">长运风采</text>
+					<view style="display: flex;align-items: center;">
+						<text style="width: 10rpx;background-color: #65C36D;height: 40rpx;margin-right: 10rpx;"></text>
+						<text class="zl_reTitle">长运风采</text>
+					</view>
 					<!-- 下面这是要注释的 -->
 					<!-- <text class="zl_reMore">更多></text> -->
 				</view>
@@ -145,11 +159,32 @@
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
-					<text class="zl_reTitle">应用合作</text>
+					<view style="display: flex;align-items: center;padding-bottom: 20rpx;">
+						<text style="width: 10rpx;background-color: #65C36D;height: 40rpx;margin-right: 10rpx;"></text>
+						<text class="zl_reTitle">应用合作</text>
+					</view>
 				</view>
-				<view style="padding: 40rpx 0;display: flex;justify-content: center;">
-					<text style="font-size: 30rpx;">客服热线：</text>
-					<text style="font-size: 30rpx;color: #65C36D;">0596-2100000</text>
+			</view>
+		</view>
+		<view class="zl_recommend">
+			<view>
+				<view class="zl_reContent">
+					<view style="display: flex;align-items: center;">
+						<text style="width: 10rpx;background-color: #65C36D;height: 40rpx;margin-right: 10rpx;"></text>
+						<text class="zl_reTitle">服务热线</text>
+					</view>
+				</view>
+				<view style="padding: 40rpx 0;display: flex;justify-content: center;align-items: center;">
+					<view style="display: flex;flex-direction: column;">
+						<view>
+							<text style="font-size: 30rpx;">长 运 总 机  ：</text>   
+							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text> 
+						</view>
+						<view>
+							<text style="font-size: 30rpx;">达达通客服：</text> 
+							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text> 
+						</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -203,6 +238,7 @@
 					refresh: '正在加载...',
 					nomore: '没有更多了',
 				},
+				PhoneArr: [],
 				loadingType: 0, //加载更多状态
 				current: 0, //标题下标
 				version: '', //版本号
@@ -305,7 +341,7 @@
 			this.loadData();
 			//#ifdef APP-PLUS
 			this.loadService();
-			this.checkLogin();//登录是否过期
+			this.checkLogin(); //登录是否过期
 			//#endif
 
 			//获取新闻数据
@@ -347,8 +383,8 @@
 			},
 
 			TitleJump: function(e, Url) {
-				if(Url=="../../pages_DDQC/pages/Bus/TicketPurchase"){
-					Url="../../pages_DDQC/pages/Bus/TicketPurchase?id="+this.userInfo.userId;
+				if (Url == "../../pages_DDQC/pages/Bus/TicketPurchase") {
+					Url = "../../pages_DDQC/pages/Bus/TicketPurchase?id=" + this.userInfo.userId;
 				}
 				if (e) {
 					this.natTo2(Url);
@@ -381,7 +417,7 @@
 										complete(res) {
 											if (res.confirm) {
 
-												let appleId=1466344848 //应用的appId
+												let appleId = 1466344848 //应用的appId
 												plus.runtime.launchApplication({
 													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
 												}, function(e) {
@@ -418,8 +454,10 @@
 					method: $DDTInterface.DDTInterface.ConsumerHotline.method,
 					data: {},
 					success(res) {
+						console.log(res)
 						if (res.data.status == true) {
 							uni.setStorageSync('ConsumerHotline', res.data.data)
+							that.PhoneArr = res.data.data;
 						}
 					},
 					fail(res) {
@@ -818,84 +856,84 @@
 				})
 			},
 			//-------------弹窗结束--------------------
-			
+
 			//-------------登录过期开始--------------------
-			checkLogin(){
-				var that=this;
+			checkLogin() {
+				var that = this;
 				uni.getStorage({
-					key:'userInfo',
+					key: 'userInfo',
 					success: (res) => {
-						if(res.data.phoneNumber!=""){
+						if (res.data.phoneNumber != "") {
 							that.GetUserLastLoginTime(res.data.phoneNumber);
 						}
 					}
-				})				
+				})
 			},
-			GetUserLastLoginTime(e){
-				var that=this;
+			GetUserLastLoginTime(e) {
+				var that = this;
 				uni.request({
-					url:that.$GrzxInter.Interface.GetUserLastLoginTime.value,
-					data:{
-						phoneNumber:e,
+					url: that.$GrzxInter.Interface.GetUserLastLoginTime.value,
+					data: {
+						phoneNumber: e,
 					},
-					method:that.$GrzxInter.Interface.GetUserLastLoginTime.method,
+					method: that.$GrzxInter.Interface.GetUserLastLoginTime.method,
 					success(res) {
-						var time=that.getSpecifiedTime(90,res.data.data.lastLogintime);
-						if(that.checkDate(time)=="已过期"){
+						var time = that.getSpecifiedTime(90, res.data.data.lastLogintime);
+						if (that.checkDate(time) == "已过期") {
 							uni.navigateTo({
-								url:that.$GrzxInter.Route.verificateName.url+'?type=login',
+								url: that.$GrzxInter.Route.verificateName.url + '?type=login',
 							})
 						}
 					}
 				})
 			},
 			//--------------获取指定的时间-------------
-			getSpecifiedTime:function(e,date){
-				var num  = parseInt(e,10); //90天过期
-				if(date==0){
-					var date=new Date();
-					var currentDate=JSON.stringify(date).substring(1,11);
-					var arry  = currentDate.split("-");
-					
-				}else{
-					var currentDate=JSON.stringify(date).substring(1,9);
-					var arry  = currentDate.split("/");
+			getSpecifiedTime: function(e, date) {
+				var num = parseInt(e, 10); //90天过期
+				if (date == 0) {
+					var date = new Date();
+					var currentDate = JSON.stringify(date).substring(1, 11);
+					var arry = currentDate.split("-");
+
+				} else {
+					var currentDate = JSON.stringify(date).substring(1, 9);
+					var arry = currentDate.split("/");
 				}
-				var year = parseInt(arry[0],10);
-				var month = parseInt(arry[1],10);
-				var day = parseInt(arry[2],10); 
+				var year = parseInt(arry[0], 10);
+				var month = parseInt(arry[1], 10);
+				var day = parseInt(arry[2], 10);
 				//月份的方法：getMonth()从 Date 对象返回月份 (0 ~ 11)。
-				var structDate = new Date(year , month - 1, day);
+				var structDate = new Date(year, month - 1, day);
 				//setDate增减天数
-				structDate.setDate(structDate.getDate()+num); 
-				 //如果月份长度少于2，则前加 0 补位   
-				 if((structDate.getMonth() + 1).toString().length == 1) {  
-					month = 0 + "" + (structDate.getMonth() + 1).toString();  
-				 } else {    
-					 month = (structDate.getMonth() + 1).toString();  
-				 }   
-				 //如果天数长度少于2，则前加 0 补位   
-				 if (structDate.getDate().toString().length == 1) {   
-					day = 0 + "" + structDate.getDate().toString();   
-				 } else {    
-					 day = structDate.getDate().toString();   
-				 }    
-				 var newDate = structDate.getFullYear() + "-" + month + "-" + day;
-				 return newDate;
+				structDate.setDate(structDate.getDate() + num);
+				//如果月份长度少于2，则前加 0 补位   
+				if ((structDate.getMonth() + 1).toString().length == 1) {
+					month = 0 + "" + (structDate.getMonth() + 1).toString();
+				} else {
+					month = (structDate.getMonth() + 1).toString();
+				}
+				//如果天数长度少于2，则前加 0 补位   
+				if (structDate.getDate().toString().length == 1) {
+					day = 0 + "" + structDate.getDate().toString();
+				} else {
+					day = structDate.getDate().toString();
+				}
+				var newDate = structDate.getFullYear() + "-" + month + "-" + day;
+				return newDate;
 			},
 			//--------------检查日期-------------
-			checkDate:function(date1){
-				var date2=this.getSpecifiedTime(0,0); 
+			checkDate: function(date1) {
+				var date2 = this.getSpecifiedTime(0, 0);
 				// console.log(date1,"登录过期时间")
 				// console.log(date2,"当前时间")
-				var arry1  = date1.split("-");
-				var arry2  = date2.split("-");
-				var time1=parseInt(arry1[0]+arry1[1]+arry1[2],10);
-				var time2=parseInt(arry2[0]+arry2[1]+arry2[2],10);
+				var arry1 = date1.split("-");
+				var arry2 = date2.split("-");
+				var time1 = parseInt(arry1[0] + arry1[1] + arry1[2], 10);
+				var time2 = parseInt(arry2[0] + arry2[1] + arry2[2], 10);
 				// console.log(time1-time2)
-				if(time1>=time2){
+				if (time1 >= time2) {
 					return "未过期";
-				}else{
+				} else {
 					return "已过期";
 				}
 			},
@@ -1266,7 +1304,7 @@
 		.zl_reContent {
 			position: relative;
 			padding-top: 40upx;
-
+			
 			.zl_reTitle {
 				font-size: 32upx;
 				color: #333333;
@@ -1557,7 +1595,7 @@
 	}
 
 	//弹框end
-	
+
 	//指示点
 	.dots {
 		position: relative;
