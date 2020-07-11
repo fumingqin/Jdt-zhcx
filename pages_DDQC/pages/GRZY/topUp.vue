@@ -145,7 +145,7 @@
 							userID: that.userInfo.userId,
 							// timeExpire:timestemp,//过期时间(时间戳)
 							chargeType: 1, //0:充值押金 1充值钱包
-							totalPrice: that.cost * 100, //金额
+							totalPrice: that.cost, //金额
 						},
 						success(res) {
 							uni.hideLoading();
@@ -317,7 +317,7 @@
 									for(var i=0;i<array.length;i++){			
 										that.info.push(array[i].split('&'));
 									}	
-									that.cost=that.info[0][0];
+									that.cost=that.info[0][0] * 100;
 									that.balance = res.data.data.balance/100;
 								}
 							},

@@ -12,6 +12,7 @@
 				
 				<view style="margin-right: 30rpx;">
 					<view class="money">￥{{item.Price / 100}}元</view>
+					<view class="type">{{item.state}}</view>
 				</view>
 			</view>
 		</view>
@@ -25,6 +26,7 @@
 			return {
 				userId:'',
 				info:[],
+				type:'',//消费类型
 			}
 		},
 		onShow() {
@@ -90,6 +92,11 @@ page {
 		font-weight: 400;
 		
 		color: #F35A46;
+	}
+	.type{
+		font-size: 32upx;
+		font-weight: 400;
+		color: #999999;
 	}
 	.textContent{
 		margin-left: 20rpx;

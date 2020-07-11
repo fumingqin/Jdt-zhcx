@@ -154,7 +154,7 @@
 			uni.getStorage({
 				key: 'ConsumerHotline',
 				success(res) {
-					that.phoneNumber = res.data.Phone1
+					that.phoneNumber = res.data.Phone2
 				}
 			})
 		},

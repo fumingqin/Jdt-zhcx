@@ -177,11 +177,11 @@
 				<view style="padding: 40rpx 0;display: flex;justify-content: center;align-items: center;">
 					<view style="display: flex;flex-direction: column;">
 						<view>
-							<text style="font-size: 30rpx;">长 运 总 机  ：</text>   
+							<text style="font-size: 30rpx;">长 运 总 机:</text>   
 							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text> 
 						</view>
 						<view>
-							<text style="font-size: 30rpx;">达达通客服：</text> 
+							<text style="font-size: 30rpx;">达达通客服:</text> 
 							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text> 
 						</view>
 					</view>
