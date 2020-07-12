@@ -11,7 +11,8 @@
 			<image :src="information.src" mode="widthFix"></image>
 		</view> -->
 		<view class="content">
-			<rich-text :nodes="imageText" style="width: 100%;"></rich-text>
+			<!-- <rich-text :nodes="imageText" style="width: 100%;"></rich-text> -->
+			<view style="width: 700rpx;font-size: 32rpx;" v-html="imageText"></view>
 		</view>
 		<view class="count">
 		   <text>游览量：{{information.count}}</text>
@@ -32,6 +33,7 @@
 				},
 				aid : '',
 				imageText : '', //图文
+				
 			}
 		},
 		onLoad() {
@@ -71,8 +73,8 @@
 								that.information.author=detailTweet[0].author;
 								that.information.createdTime = detailTweet[0].reportTime;
 								that.information.count = detailTweet[0].viewsCount;
-								// that.imageText=detailTweet[0].newsContent;
-								that.imageText = detailTweet[0].newsContent.replace(/\<img/g, '<img style="max-width:100%;height:auto;display:inline-block;margin:10rpx auto;"" ');
+								that.imageText=detailTweet[0].newsContent;
+								// that.imageText = detailTweet[0].newsContent.replace(/\<img/g, '<img style="max-width:100%;height:auto;display:inline-block;margin:10rpx auto;"" ');
 								uni.getStorage({
 									key:'userInfo',
 									success:(res) =>{
