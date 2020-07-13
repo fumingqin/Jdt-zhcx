@@ -29,7 +29,7 @@
 				<image src="../../static/GRZX/btnRight_Home.png" class="rightClass"></image>
 			</view>
 
-			<view class="myBox">
+			<!-- <view class="myBox">
 				<view class="collection" @click="orderClick(3)">
 					<image src="../../static/GRZX/tubiao_pay1.png" class="imgStyle1" mode="aspectFill"></image>
 					<text class="myFont">待支付</text>
@@ -42,11 +42,11 @@
 					<image src="../../static/GRZX/tubiao_pay3.png" class="imgStyle3" mode="aspectFill"></image>
 					<text class="myFont">已完成</text>
 				</view>
-			</view>
+			</view> -->
 		</view>
 
-		<image :src="advert" class="advertClass" lazy-load="true"></image>
-
+		<!-- <image :src="advert" class="advertClass" lazy-load="true"></image> -->
+		<image :src="imageIndex[0].imageUrl" class="advertClass" lazy-load="true"></image>
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
 			<!-- 分割线 -->
@@ -77,10 +77,10 @@
 					<image src="../../static/GRZX/ServiceIcon/tb_SMRZ.png" class="SMRZicon"></image>
 					<text class="fontStyle">实名认证</text>
 				</view>
-				<view class="itemClass" @click="replacePhoneNum">
+				<!-- <view class="itemClass" @click="replacePhoneNum">
 					<image src="../../static/GRZX/ServiceIcon/tb_GHSJH.png" class="GHSJHicon"></image>
 					<text class="fontStyle">更换手机号</text>
-				</view>
+				</view> -->
 				<view class="itemClass" @click="phoneClick">
 					<image src="../../static/GRZX/ServiceIcon/tb_DHKF.png" class="DHKFicon"></image>
 					<text class="fontStyle">电话客服</text>
@@ -93,17 +93,17 @@
 			<!-- 第三排 -->
 			<view class="boxClass mb">
 				<!-- #ifdef MP-WEIXIN -->
-				<view class="itemClass" style="position: relative;">
+				<!-- <view class="itemClass" style="position: relative;">
 					<image src="../../static/GRZX/ServiceIcon/tb_ZXKF.png" class="ZXKFicon"></image>
 					<button open-type="contact" class="contactClass"></button>
 					<text class="fontStyle">在线客服</text>
-				</view>
+				</view> -->
 				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
-				<view class="itemClass" @click="QQClick">
+				<!-- <view class="itemClass" @click="QQClick">
 					<image src="../../static/GRZX/ServiceIcon/tb_QQKF.png" class="QQKFicon"></image>
 					<text class="fontStyle">QQ客服</text>
-				</view>
+				</view> -->
 				<!-- #endif -->
 			</view>
 		</view>
@@ -123,6 +123,7 @@
 </template>
 
 <script>
+	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
 	import {
 		pathToBase64,
 		base64ToPath
@@ -130,6 +131,9 @@
 	export default {
 		data() {
 			return {
+				imageIndex: [{
+					imageUrl: '',
+				}],
 				QQ: '',
 				nickname: '',
 				port: '',
@@ -146,6 +150,19 @@
 		},
 		onLoad() {
 			this.loadImg();
+			uni.request({
+				url: $lyfw.Interface.qg_GetImage.value,
+				method: $lyfw.Interface.qg_GetImage.method,
+				data: {
+					model: 6,
+					type: '服务banner'
+				},
+				success: (res) => {
+					console.log(res)
+					this.imageIndex = res.data.data
+			
+				},
+			})
 		},
 		onShow() {
 			var that = this;
@@ -154,7 +171,7 @@
 			uni.getStorage({
 				key: 'ConsumerHotline',
 				success(res) {
-					that.phoneNumber = res.data.Phone1
+					that.phoneNumber = res.data.Phone2
 				}
 			})
 		},
@@ -591,13 +608,13 @@
 
 	.backImg {
 		width: 100%;
-		height: 490upx;
+		// height: 490upx;
 	}
 
 	.imgClass {
 		//背景图片
 		width: 100%;
-		height: 490upx;
+		height: 300upx;
 	}
 
 	.setClass {

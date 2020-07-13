@@ -24,16 +24,16 @@
 						 lazy-load="true"></image>
 						<image v-if="ArrItem.ItemTitle =='车票订购'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
 						 lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='包车服务'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
-						 lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='景区门票'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
-						 lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='旅游产品'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
-						 lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='预约检测'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
-						 lazy-load="true"></image>
-						<image v-if="ArrItem.ItemTitle =='自由行'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
-						 lazy-load="true"></image>
+						<!-- <image v-if="ArrItem.ItemTitle =='包车服务'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image> -->
+						<!-- <image v-if="ArrItem.ItemTitle =='景区门票'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image> -->
+						<!-- <image v-if="ArrItem.ItemTitle =='旅游产品'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image> -->
+						<!-- <image v-if="ArrItem.ItemTitle =='预约检测'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image> -->
+						<!-- <image v-if="ArrItem.ItemTitle =='自由行'" style="width: 68upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image> -->
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
 				</view>
@@ -177,11 +177,11 @@
 				<view style="padding: 40rpx 0;display: flex;justify-content: center;align-items: center;">
 					<view style="display: flex;flex-direction: column;">
 						<view>
-							<text style="font-size: 30rpx;">长 运 总 机  ：</text>   
+							<text style="font-size: 30rpx;">长 运 总 机:</text>   
 							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text> 
 						</view>
 						<view>
-							<text style="font-size: 30rpx;">达达通客服：</text> 
+							<text style="font-size: 30rpx;">达达通客服:</text> 
 							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text> 
 						</view>
 					</view>
@@ -279,41 +279,41 @@
 								ImageURL: "../../static/Home/CPDG.png",
 								ItemTitle: "车票订购"
 							},
-							{
-								IsUse: false,
-								clickURL: "",
-								ImageURL: "../../static/Home/BCFW2.png",
-								ItemTitle: "包车服务"
-							},
-							{
-								IsUse: false,
-								clickURL: "",
-								ImageURL: "../../static/Home/serve/jqgoupiao2.png",
-								ItemTitle: "景区门票"
-							},
-							{
-								IsUse: false,
-								clickURL: "",
-								ImageURL: "../../static/Home/LYCP2.png",
-								ItemTitle: "旅游产品"
-							},
+							// {
+							// 	IsUse: false,
+							// 	clickURL: "",
+							// 	ImageURL: "../../static/Home/BCFW2.png",
+							// 	ItemTitle: "包车服务"
+							// },
+							// {
+							// 	IsUse: false,
+							// 	clickURL: "",
+							// 	ImageURL: "../../static/Home/serve/jqgoupiao2.png",
+							// 	ItemTitle: "景区门票"
+							// },
+							// {
+							// 	IsUse: false,
+							// 	clickURL: "",
+							// 	ImageURL: "../../static/Home/LYCP2.png",
+							// 	ItemTitle: "旅游产品"
+							// },
 						]
 					},
-					{
-						ItemArr: [{
-								IsUse: false,
-								clickURL: "",
-								ImageURL: "../../static/Home/YYJC2.png",
-								ItemTitle: "预约检测"
-							},
-							{
-								IsUse: false,
-								clickURL: "",
-								ImageURL: "../../static/Home/ZYX2.png",
-								ItemTitle: "自由行"
-							}
-						]
-					}
+					// {
+					// 	ItemArr: [{
+					// 			IsUse: false,
+					// 			clickURL: "",
+					// 			ImageURL: "../../static/Home/YYJC2.png",
+					// 			ItemTitle: "预约检测"
+					// 		},
+					// 		{
+					// 			IsUse: false,
+					// 			clickURL: "",
+					// 			ImageURL: "../../static/Home/ZYX2.png",
+					// 			ItemTitle: "自由行"
+					// 		}
+					// 	]
+					// }
 				]
 			}
 		},

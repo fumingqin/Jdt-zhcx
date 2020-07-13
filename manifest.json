@@ -3,7 +3,7 @@
     "appid" : "__UNI__7BBF03F",
     "description" : "",
     "versionName" : "1.0.0",
-    "versionCode" : "100",
+    "versionCode" : 1002,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -20,7 +20,8 @@
             "Maps" : {},
             "OAuth" : {},
             "Share" : {},
-            "Payment" : {}
+            "Payment" : {},
+            "Speech" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -61,11 +62,11 @@
                     }
                 },
                 "privacyDescription" : {
-                    "NSLocationAlwaysUsageDescription" : "你的位置信息将用于APP获取位置",
-                    "NSLocationWhenInUseUsageDescription" : "你的位置信息将用于APP获取位置",
-                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "你的位置信息将用于APP获取位置",
-                    "NSCameraUsageDescription" : "需要您同意才能使用摄像头租车",
-                    "NSPhotoLibraryUsageDescription" : "需要您同意才可以访问相册"
+                    "NSLocationAlwaysUsageDescription" : "APP需要您的同意，才能始终允许访问位置信息，显示定位与车辆位置信息需要用到",
+                    "NSLocationWhenInUseUsageDescription" : "APP需要您的同意，才能在使用期间访问位置，显示定位与车辆位置信息需要用到",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "APP需要您的同意，才能访问位置，显示定位与车辆位置信息需要用到",
+                    "NSCameraUsageDescription" : "需要您同意才能使用摄像头进行租车",
+                    "NSPhotoLibraryUsageDescription" : "需要您同意才可以访问相册，设置头像"
                 },
                 "idfa" : false
             },
@@ -94,6 +95,9 @@
                         "appid" : "wxb6e7a1abe313216a",
                         "UniversalLinks" : "https://zntc.145u.net/ulink/"
                     }
+                },
+                "speech" : {
+                    "ifly" : {}
                 }
             },
             "icons" : {

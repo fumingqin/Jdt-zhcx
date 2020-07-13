@@ -36,10 +36,10 @@
 					<text class="sv_text">包车服务</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hbcfuwu.png"></image>
 					<text class="sv_text">包车服务</text>
-				</view>
+				</view> -->
 
 				<!-- 				<view class="sv_view3" @click="natTo('../../pages_CCT/pages/CCT/villageBus')">
 					<image class="sv_print" src="../../static/Home/serve/cuncuntong.png"></image>
@@ -66,20 +66,20 @@
 					<text class="sv_text">检测预约</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hjcyuyue.png"></image>
 					<text class="sv_text">检测预约</text>
-				</view>
+				</view> -->
 
 				<!-- 				<view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/wlyueche.png" ></image>
 					<text class="sv_text">网络约车</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hwlyueche.png"></image>
 					<text class="sv_text">网络约车</text>
-				</view>
+				</view> -->
 
 
 
@@ -88,50 +88,50 @@
 					<text class="sv_text">公务租车</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hgwzhuche.png"></image>
 					<text class="sv_text">公务租车</text>
-				</view>
+				</view> -->
 
 				<!-- 				<view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/xjkuaidi.png"></image>
 					<text class="sv_text">小件快递</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hxjkuaidi.png"></image>
 					<text class="sv_text">小件快递</text>
-				</view>
+				</view> -->
 
 				<!-- 				<view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/tianqi.png"></image>
 					<text class="sv_text">天气</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/htianqi.png"></image>
 					<text class="sv_text">天气</text>
-				</view>
+				</view> -->
 
 				<!-- 				<view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hangban.png"></image>
 					<text class="sv_text">航班</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hhangban.png"></image>
 					<text class="sv_text">航班</text>
-				</view>
+				</view> -->
 
 				<!-- 				<view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/huoche.png"></image>
 					<text class="sv_text">火车</text>
 				</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print" src="../../static/Home/serve/hhuoche.png"></image>
 					<text class="sv_text">火车</text>
-				</view>
+				</view> -->
 
 				<!-- 				<view class="sv_view3" @click="natTo('/pages_CTKY/pages/CTKY/SpecialBus/Home/specialBusHome')">
 					<image class="sv_print" src="../../static/Home/serve/dzbashi.png"></image> 
@@ -146,7 +146,7 @@
 			</view>
 		</view>
 
-		<view class="sv_view2">
+		<view class="sv_view2" v-if="false">
 			<view class="sv_title">旅游</view>
 			<view style="display: flex; flex-wrap: wrap;">
 
@@ -155,40 +155,40 @@
 				<text class="sv_text">自由行</text>
 			</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print3" src="../../static/Home/serve/hziyouxing.png" style="width: 47upx;"></image>
 					<text class="sv_text">自由行</text>
-				</view>
+				</view> -->
 
 				<!-- 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/groupTour/groupTourList')">
 				<image class="sv_print3" src="../../static/Home/serve/gentuanyou.png" style="width: 57upx;"></image>
 				<text class="sv_text">跟团游</text>
 			</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print3" src="../../static/Home/serve/hgentuanyou.png" style="width: 57upx;"></image>
 					<text class="sv_text">跟团游</text>
-				</view>
+				</view> -->
 
 				<!-- 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/scenicSpotTickets/ticketsList')">
 				<image class="sv_print3" src="../../static/Home/serve/jqgoupiao.png" style="width:52upx;"></image>
 				<text class="sv_text">景区购票</text>
 			</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print3" src="../../static/Home/serve/hjqgoupiao.png" style="width:52upx;"></image>
 					<text class="sv_text">景区购票</text>
-				</view>
+				</view> -->
 
 				<!-- 			<view class="sv_view3" @click="natTo('/pages_LYFW/pages/LYFW/tourismProducts/tp_ticketsList')" >
 				<image class="sv_print3" src="../../static/Home/serve/lvyouchanping.png" style="width: 62upx;"></image>
 				<text class="sv_text">旅游产品</text>
 			</view> -->
 
-				<view class="sv_view3" @click="natTo3()">
+				<!-- <view class="sv_view3" @click="natTo3()">
 					<image class="sv_print3" src="../../static/Home/serve/hlyshanpin.png" style="width: 62upx;"></image>
 					<text class="sv_text">旅游产品</text>
-				</view>
+				</view> -->
 			</view>
 		</view>
 
