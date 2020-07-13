@@ -82,15 +82,15 @@
 				}
 			}
 		},
-		{
-			"path": "pages/GRZX/notice", //推文通知
-			"style": {
-				// #ifdef H5
-				"navigationStyle": "custom",
-				// #endif
-				"navigationBarTitleText": "通知"
-			}
-		},
+		// {
+		// 	"path": "pages/GRZX/notice", //推文通知
+		// 	"style": {
+		// 		// #ifdef H5
+		// 		"navigationStyle": "custom",
+		// 		// #endif
+		// 		"navigationBarTitleText": "通知"
+		// 	}
+		// },
 		//----------------------------订单列表----------------------------
 		{
 			"path": "pages/order/OrderList",
@@ -1125,10 +1125,10 @@
 				"pagePath": "pages/Home/zy_zhcx",
 				"text": "首页"
 			},
-			{
-				"pagePath": "pages/GRZX/notice",
-				"text": "通知"
-			},
+			// {
+			// 	"pagePath": "pages/GRZX/notice",
+			// 	"text": "通知"
+			// },
 			{
 				"pagePath": "pages/Home/serve",
 				"text": "服务"
