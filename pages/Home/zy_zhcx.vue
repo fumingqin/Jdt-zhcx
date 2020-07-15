@@ -340,7 +340,7 @@
 			this.GetRotationChart();
 			this.loadData();
 			//#ifdef APP-PLUS
-			this.loadService();
+			// this.loadService();
 			this.checkLogin(); //登录是否过期
 			//#endif
 
