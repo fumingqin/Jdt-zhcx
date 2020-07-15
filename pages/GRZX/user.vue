@@ -4,7 +4,7 @@
 			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
 			<!-- #ifdef APP-PLUS -->
 			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('set')"></image>
-			<image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('myNews')"></image>
+			<!-- <image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('myNews')"></image> -->
 			<image src="../../static/GRZX/scan.png" class="scanClass" @click="navTo('scan')"></image>
 			<!-- #endif -->
 			<view class="userInfoClass" @click="checkLogin">

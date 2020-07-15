@@ -319,6 +319,7 @@
 		},
 		onLoad() {
 			var that = this;
+			plus.runtime.setBadgeNumber();
 			// #ifdef APP-PLUS
 			//获取系统信息
 			uni.getSystemInfo({
