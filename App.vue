@@ -83,7 +83,7 @@
 			addJYJPushReceiveOpenNotificationListener: function() { //监听通知被点击事件
 				jyJPush.addJYJPushReceiveOpenNotificationListener(result => {
 					//  监听成功后，若点击推送消息，会触发result；数据格式保持极光返回的安卓/iOS数据一致
-					plus.runtime.setBadgeNumber(0);
+					plus.runtime.setBadgeNumber();
 					jyJPush.resetJYJPushBadge(result => {
 						console.log(JSON.stringify(result));
 					});
