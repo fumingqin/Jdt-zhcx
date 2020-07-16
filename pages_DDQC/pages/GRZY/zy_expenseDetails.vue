@@ -44,9 +44,9 @@
 			<text class="ed_text">支付费用:{{PayPrice}}元</text>
 		</view>
 		
-		<view class="ed_view5" @click="open">
+		<!-- <view class="ed_view5" @click="open">
 			<text class="ed_text2">计价规则></text>
-		</view>
+		</view> -->
 		
 		<!-- 押金支付弹框 -->
 		<uni-popup ref="popup" type="bottom">

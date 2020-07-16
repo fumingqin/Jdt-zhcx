@@ -20,10 +20,10 @@
 		<view class="tu_check" style="margin-right: 40rpx;justify-content: space-between;align-items: center;">
 			<checkbox-group @change="checkChange">
 				<label style="font-size: 30rpx;font-weight: 300;">
-					<checkbox value="cb" :checked="checked == 1 ? true: false"/>同意资金存管协议
+					<checkbox value="cb" :checked="checked == 1 ? true: false"/>同意充值协议
 				</label>
 			</checkbox-group>
-			<view class="tu_notice" @click="open()">说明></view>
+			<view class="tu_notice" @click="goAggrement('充值协议')">说明></view>
 		</view>
 		<uni-popup ref="popup2" type="bottom">
 			<view class="boxVlew">
@@ -352,6 +352,11 @@
 			},
 			close() {
 				this.$refs.popup2.close()
+			},
+			goAggrement:function(type){
+				uni.navigateTo({
+					url:"../../../pages_DDQC/pages/GRZY/agreement?type="+type
+				})
 			},
 		}
 	}
