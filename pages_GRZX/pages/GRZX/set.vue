@@ -9,7 +9,18 @@
 			<text class="cell-tit">视频自动播放</text>
 			<switch :checked="statu.check2"  color="#fa436a" @change="playChange" />
 		</view> -->
-		
+		<view class="list-cell m-t b-b" @click="goAggrement('用户协议')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">隐私政策</text>
+			<text class="cell-more jdticon icon-you"></text>
+		</view>
+		<view class="list-cell m-t b-b" @click="goAggrement('充值协议')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">充值协议</text>
+			<text class="cell-more jdticon icon-you"></text>
+		</view>
+		<view class="list-cell m-t b-b" @click="goAggrement('公共自行车服务说明')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">公共自行车服务说明</text>
+			<text class="cell-more jdticon icon-you"></text>
+		</view>
 		<view class="list-cell m-t b-b" @click="clearStorage" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
 			<text style="font-size: 28upx;">{{currentSize}}</text>
@@ -50,6 +61,11 @@
 			this.load();
 		},
 		methods:{
+			goAggrement:function(type){
+				uni.navigateTo({
+					url:"../../../pages_DDQC/pages/GRZY/agreement?type="+type
+				})
+			},
 			navTo(url){
 				uni.navigateTo({
 					url:url

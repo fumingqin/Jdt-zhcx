@@ -53,7 +53,7 @@
 				<image class="zl_noImage" :src="imgXXDT[0].imageUrl" mode="aspectFill" @click="Jump"></image>
 				<view class="zl_noContent">
 					<swiper class="swi2" vertical circular autoplay display-multiple-items="2" disable-touch="true">
-						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index" v-if="item.Type!='计费规则'">
+						<swiper-item v-for="(item,index) in consultingService" :key="index" :item-id="index" v-if="item.Type=='新闻资讯'||item.Type=='失物招领'||item.Type=='通知公告'||item.Type=='问卷调查'">
 							<!-- <scroll-view scroll-y> -->
 							<view class="zl_noText" @click="newsClick(item)">{{item.Title}}</view>
 							<!-- </scroll-view> -->
@@ -342,7 +342,7 @@
 			this.GetRotationChart();
 			this.loadData();
 			//#ifdef APP-PLUS
-			this.loadService();
+			// this.loadService();
 			this.checkLogin(); //登录是否过期
 			//#endif
 
