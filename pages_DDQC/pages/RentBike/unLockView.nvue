@@ -49,9 +49,9 @@
 				}
 			});
 			// 获取自身位置
-			that.setJYJPushAlias();
-			that.addJYJPushReceiveOpenNotificationListener();
-			that.addJYJPushReceiveNotificationListener();
+			// that.setJYJPushAlias();
+			// that.addJYJPushReceiveOpenNotificationListener();
+			// that.addJYJPushReceiveNotificationListener();
 			that.getMyLocation();
 			// that.getJYJPushAlias();
 		},

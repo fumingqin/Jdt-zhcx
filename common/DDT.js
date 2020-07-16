@@ -272,6 +272,12 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	getImage:{
+		Url: 'http://36.250.234.10:60039/api/zhcx/getImage',
+		name:'获取图片',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
 }
 // 接口声明区
 export default {
