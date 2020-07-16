@@ -319,43 +319,31 @@
 		},
 		onLoad() {
 			var that = this;
-			//清除应用右上角数字，暂时放在这里清除
-			plus.runtime.setBadgeNumber(0);
-			// #ifdef APP-PLUS
-			//获取系统信息
-			uni.getSystemInfo({
-				success(res) {
-					console.log('获取系统信息', res)
-					//获取系统平台 iOS Android
-					that.platform = res.platform;
-					// 获取本地应用资源版本号  
-					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
-						that.version = inf.version; //获取当前版本号
-						setTimeout(function() {
-							//检测升级
-							that.updateAPP();
-						}, 1500)
-					});
-				}
-			})
-			// #endif
-			this.GetRotationChart();
-			this.loadData();
+			//获取轮播图
+			that.GetRotationChart();
+			//加载资讯图片数据
+			that.loadData();
 			//#ifdef APP-PLUS
 			// this.loadService();
-			this.checkLogin(); //登录是否过期
+			//获取设备系统信息
+			that.getEquipmentInfo();
+			//登录是否过期
+			that.checkLogin();
 			//#endif
 
 			//获取新闻数据
 			that.GetNews();
 			//获取客服热线
 			that.ConsumerHotline();
+			//清除应用右上角数字，暂时放在这里清除
+			plus.runtime.setBadgeNumber(0);
 		},
 
 		onShow() {
 			var that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
 			if (that.userInfo != '') {
+				//检测当前是否有未完成订单
 				that.checkCurrentStatus();
 			}
 			// #ifdef MP-WEIXIN
@@ -378,6 +366,27 @@
 			uniPopup
 		}, //注册为子组件
 		methods: {
+			//--------------获取设备系统信息----------------------------------
+			getEquipmentInfo:function(){
+				var that = this;
+				//获取系统信息
+				uni.getSystemInfo({
+					success(res) {
+						console.log('获取系统信息', res)
+						//获取系统平台 iOS Android
+						that.platform = res.platform;
+						// 获取本地应用资源版本号  
+						plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+							that.version = inf.version; //获取当前版本号
+							setTimeout(function() {
+								//检测升级
+								that.updateAPP();
+							}, 1500)
+						});
+					}
+				})
+			},
+			// #endif
 			//--------------轮播图切换修改背景色----------------------------------
 			swiperChange: function(e) {
 				const index = e.detail.current;
@@ -500,54 +509,22 @@
 			},
 			//----------------------接口数据-------------------------------
 			loadData: function() {
-				//请求新闻资讯
-				// uni.request({
-				// 	url: $lyfw.Interface.currency_zhly.value,
-				// 	method: $lyfw.Interface.currency_zhly.method,
-				// 	success: (e) => {
-				// 		console.log(e)
-				// 		if (e.data.msg == '获取成功') {
-				// 			if (e.data.data.length == 0) {
-				// 				this.disStatus = 1;
-				// 			} else {
-				// 				this.goodsList = e.data.data;
-				// 				this.disStatus = 0;
-				// 			}
-				// 		} else {
-				// 			uni.hideLoading()
-				// 			uni.stopPullDownRefresh()
-				// 			this.goodsList = '';
-				// 			uni.showToast({
-				// 				title: '获取失败',
-				// 				icon: 'none'
-				// 			})
-				// 		}
-				// 	},
-				// 	fail: function() {
-				// 		uni.hideLoading()
-				// 		uni.stopPullDownRefresh()
-				// 		uni.showToast({
-				// 			title: '网络异常，请检查网络后尝试',
-				// 			icon: 'none'
-				// 		})
-				// 	}
-				// })
 
 				//请求六宫格数据
-				uni.request({
-					url: $lyfw.Interface.spt_GetticketSearchByrequestArea.value,
-					method: $lyfw.Interface.spt_GetticketSearchByrequestArea.method,
-					data: {
-						// requestArea : this.regionWeixin,
-						requestArea: '泉州市'
-					},
-					header: {
-						'content-type': 'application/json'
-					},
-					success: (res) => {
-						this.sixPalaceList = res.data.data;
-					}
-				})
+				// uni.request({
+				// 	url: $lyfw.Interface.spt_GetticketSearchByrequestArea.value,
+				// 	method: $lyfw.Interface.spt_GetticketSearchByrequestArea.method,
+				// 	data: {
+				// 		// requestArea : this.regionWeixin,
+				// 		requestArea: '泉州市'
+				// 	},
+				// 	header: {
+				// 		'content-type': 'application/json'
+				// 	},
+				// 	success: (res) => {
+				// 		this.sixPalaceList = res.data.data;
+				// 	}
+				// })
 
 				//请求图片
 				uni.request({
