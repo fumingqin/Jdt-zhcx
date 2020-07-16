@@ -46,7 +46,7 @@
 		</view>
 
 		<!-- <image :src="advert" class="advertClass" lazy-load="true"></image> -->
-		<image :src="imageIndex[0].imageUrl" class="advertClass" lazy-load="true"></image>
+		<image style="border-radius: 10rpx;" :src="imageIndex[0].imageUrl" class="advertClass" lazy-load="true"></image>
 		<view class="serviceBox">
 			<text class="moreClass">更多服务</text>
 			<!-- 分割线 -->
@@ -124,6 +124,7 @@
 
 <script>
 	import $lyfw from '@/common/LYFW/LyfwFmq.js' //旅游服务
+	import $DDTInterface from '@/common/DDT.js'
 	import {
 		pathToBase64,
 		base64ToPath
@@ -151,11 +152,10 @@
 		onLoad() {
 			this.loadImg();
 			uni.request({
-				url: $lyfw.Interface.qg_GetImage.value,
-				method: $lyfw.Interface.qg_GetImage.method,
+				url: $DDTInterface.DDTInterface.getImage.Url,
+				method: $DDTInterface.DDTInterface.getImage.method,
 				data: {
-					model: 6,
-					type: '服务banner'
+					model: 12,
 				},
 				success: (res) => {
 					console.log(res)

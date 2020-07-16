@@ -319,7 +319,8 @@
 		},
 		onLoad() {
 			var that = this;
-			plus.runtime.setBadgeNumber();
+			//清除应用右上角数字，暂时放在这里清除
+			plus.runtime.setBadgeNumber(0);
 			// #ifdef APP-PLUS
 			//获取系统信息
 			uni.getSystemInfo({

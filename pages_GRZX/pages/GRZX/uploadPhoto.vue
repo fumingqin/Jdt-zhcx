@@ -154,6 +154,7 @@
 				uni.chooseImage({
 					count:1,
 					//sourceType:['album'],
+					sizeType:['compressed'],
 					success(res) {
 						var size=1.5*1024*1000;
 						if(res.tempFiles[0].size>size){
@@ -184,6 +185,7 @@
 				uni.chooseImage({
 					count:1,
 					//sourceType:['album'],
+					sizeType:['compressed'],
 					success(res) {
 						var size=1.5*1024*1000;
 						if(res.tempFiles[0].size>size){
@@ -214,6 +216,7 @@
 				uni.chooseImage({
 					count:1,
 					//sourceType:['album'],
+					sizeType:['compressed'],
 					success(res) {
 						var size=1.5*1024*1000;
 						if(res.tempFiles[0].size>size){
