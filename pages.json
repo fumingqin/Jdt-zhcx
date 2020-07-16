@@ -1063,7 +1063,15 @@
 						"navigationBarBackgroundColor": "#65C36D"
 					}
 				}
-			]
+			    ,{ 
+                    "path" : "pages/GRZY/agreement",
+                    "style": {
+                    	"navigationBarTitleText": "内容详情",
+                    	"navigationBarTextStyle": "White",
+                    	"navigationBarBackgroundColor": "#65C36D"
+                    }
+                }
+            ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{
