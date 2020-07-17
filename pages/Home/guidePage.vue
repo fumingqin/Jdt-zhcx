@@ -18,7 +18,12 @@
 		data() {
 			return {
 				imageHeight: '', //手机屏幕高度
-				imageIndex: '',
+				imageIndex: [
+					{imageUrl:'../../../pages_DDQC/staic/RentBike/page1.png'},
+					{imageUrl:'../../../pages_DDQC/staic/RentBike/page2.png'},
+					{imageUrl:'../../../pages_DDQC/staic/RentBike/page3.png'}
+				],
+				
 			}
 		},
 		onLoad: function() {
@@ -31,7 +36,7 @@
 				},
 				success:(res) => { 
 					// console.log(res)
-					this.imageIndex = res.data.data
+					// this.imageIndex = res.data.data
 					
 				},
 			})

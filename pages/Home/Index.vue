@@ -41,7 +41,7 @@
 				</view> -->
 				<view class="tabItem" @click="godetail('../../pages_DDQC/pages/RentBike/RentBikeHome')">
 					<image class="tabItem-image2" src="../../static/Home/DDQC.png" mode="aspectFill"></image>
-					<view class="tabItem-font"><text >达达骑车</text></view>
+					<view class="tabItem-font"><text >扫码租车</text></view>
 				</view>
 			</view>
 		</view>

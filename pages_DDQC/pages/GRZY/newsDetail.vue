@@ -31,6 +31,9 @@
 		methods: {
 			getNewsDetail: function(ID) {
 				var that=this;
+				uni.showLoading({
+					title:'加载中...'
+				})
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetNewsByAID.Url,
 					method: $DDTInterface.DDTInterface.GetNewsByAID.method,
@@ -39,12 +42,16 @@
 					},
 					success(res) {
 						console.log(res)
+						uni.hideLoading();
 						uni.setNavigationBarTitle({
 							title: res.data.data[0].Type
 						})
 						that.Title=res.data.data[0].Title;
 						that.contentHTML=res.data.data[0].Body;
 						that.Url=res.data.data[0].Url;
+					},
+					fail() {
+						uni.hideLoading();
 					}
 				})
 			}

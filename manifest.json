@@ -2,8 +2,8 @@
     "name" : "漳州达达通",
     "appid" : "__UNI__7BBF03F",
     "description" : "",
-    "versionName" : "1.0.0",
-    "versionCode" : 1006,
+    "versionName" : "1.0.1",
+    "versionCode" : 1007,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -143,7 +143,7 @@
         "compilerVersion" : 3,
         "nativePlugins" : {
             "JY-JPush" : {
-                "ios_appkey" : "d8c424cd74d359ee9ce609d7",
+                "ios_appkey" : "db1d5d0c73cdc748ede733bb",
                 "ios_channel" : "AppStore",
                 "android_appkey" : "db1d5d0c73cdc748ede733bb",
                 "android_channel" : "android",

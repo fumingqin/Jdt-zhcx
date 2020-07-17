@@ -63,8 +63,8 @@
 				info:[],
 				checked: 0,
 				security: '',
-				cost: '',
-				balance: 0,
+				cost: '',//充值金额
+				balance: 0,//当前余额
 				chargeRate: '',
 				userInfo: [], //用户信息
 				paymentData: [], //支付参数
@@ -88,7 +88,7 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
-						console.log('用户数据', data)
+						// console.log('用户数据', data)
 						that.userInfo = data.data;
 						that.GetPurseDetail();
 					},
@@ -98,8 +98,6 @@
 			//--------------------------获取钱包数据--------------------------
 			GetPurseDetail: function() {
 				var that = this;
-				console.log(that.userInfo.phoneNumber)
-				console.log(that.userInfo.userId)
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
 					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
@@ -109,9 +107,11 @@
 					},
 					success(res) {
 						uni.hideLoading()
-						console.log('获取钱包数据成功', res)
+						// console.log('获取钱包数据成功', res)
 						if (res.status == true && res.msg == '请求成功') {
+							//当前钱包余额
 							that.balance = res.data.data.balance;
+							//赠送金额
 							that.chargeRate = res.data.data.chargeRate;
 						}
 					},
@@ -149,7 +149,7 @@
 						},
 						success(res) {
 							uni.hideLoading();
-							console.log('钱包充值返回支付参数成功结果', res)
+							// console.log('钱包充值返回支付参数成功结果', res)
 							if (res.data.status == true) {
 								that.paymentData = res.data.data;
 								//钱包充值记录需要传入预支付交易会话id
@@ -185,7 +185,7 @@
 						prepayid: that.paymentData.prepayid,
 					},
 					success: function(res) {
-						console.log(res)
+						// console.log(res)
 						if (res.errMsg == 'requestPayment:ok') { //成功
 							uni.showToast({
 								title: '支付成功',
@@ -244,20 +244,20 @@
 						body: "钱包充值记录",
 						phoneNumber: that.userInfo.phoneNumber,
 						chargeType: 1,
-						totalPrice: that.cost,
+						totalPrice: that.cost,//这里传原来的金额，以'元'为单位，后台修改为'分'2020-07-17
 						userID: that.userInfo.userId,
 						state: state,
 						id: that.prepayid,//预支付交易会话id
 					},
 					success(res) {
-						console.log('钱包充值记录成功',res);
+						// console.log('钱包充值记录成功',res);
 						uni.showLoading()
 						setTimeout(function(){
 							that.GetPurseDetail();
 						},3000)
 					},
 					fail(res) {
-						console.log('钱包充值记录失败',res)
+						// console.log('钱包充值记录失败',res)
 						uni.showLoading()
 						setTimeout(function(){
 							that.GetPurseDetail();
@@ -277,7 +277,7 @@
 						phoneNumber:that.userInfo.phoneNumber,
 					},
 					success(res) {
-						console.log('充值检测成功',res)
+						// console.log('充值检测成功',res)
 						if(res.data.status == true){
 							
 						}
@@ -310,14 +310,16 @@
 							},
 							success: (res) => {
 								uni.hideLoading()
-								console.log(res)
+								// console.log('查看充值套餐及用户余额',res)
 								if (res.data.msg == '请求成功') {
 									that.info=[];
 									let array=res.data.data.chargeRate.split(';');
-									for(var i=0;i<array.length;i++){			
+									for(var i=0;i<array.length;i++){		
 										that.info.push(array[i].split('&'));
 									}	
+									//充值金额
 									that.cost=that.info[0][0];
+									//当前余额
 									that.balance = res.data.data.balance/100;
 								}
 							},

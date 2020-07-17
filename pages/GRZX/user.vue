@@ -531,6 +531,9 @@
 			//-------------------------------------检查是否实名----------------------------------
 			checkRealName() {
 				var that = this;
+				uni.showLoading({
+					title:'正在检测验证信息...'
+				})
 				uni.request({
 					url: that.$GrzxInter.Interface.GetUserByUserID.value,
 					data: {
@@ -539,6 +542,7 @@
 					method: that.$GrzxInter.Interface.GetUserByUserID.method,
 					success(res) {
 						console.log(res)
+						uni.hideLoading()
 						if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
 							//实名认证
 							uni.navigateTo({
@@ -555,6 +559,9 @@
 								icon: 'none',
 							})
 						}
+					},
+					fail() {
+						uni.hideLoading()
 					}
 				})
 			},

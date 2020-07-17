@@ -26,6 +26,9 @@
 		},
 		methods: {
 			getNews: function(type) {
+				uni.showLoading({
+					title:'加载中...'
+				})
 				var that=this;
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetNews.Url,
@@ -33,11 +36,15 @@
 					data:{
 					},
 					success(res) {
+						uni.hideLoading()
 						for(var i=0;i<res.data.data.length;i++){
 							if(res.data.data[i].Type==type){
 								that.contentHTML=res.data.data[i].Body;
 							}
 						}
+					},
+					fail() {
+						uni.hideLoading()
 					}
 				})
 			}
