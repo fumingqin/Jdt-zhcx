@@ -41,6 +41,7 @@
 		<!-- 提交按钮 -->
 		<view class="bottomClass">
 			<button type="warn" class="btnClass" @click="submitClick">提交</button>
+			<button class="btnRightClass" @click="returnClick">暂不上传</button>
 		</view>
 		
 	</view>
@@ -312,17 +313,26 @@
 		background-color: #F8F8F8;
 		width: 100%;
 		position: fixed;
+		display: flex;
 		bottom: 0upx;
 		height: 120upx;
 	}
 	//按钮的样式	
 	.btnClass{
-		width: 90%;
+		width: 40%;
 		position: absolute;
 		top: 10upx;
 		left: 5%;
 	}
-	
+	.btnRightClass{
+		width: 40%;
+		position: absolute;
+		top: 10upx;
+		right: 5%;
+		margin-left: 10rpx;
+		background-color: #007AFF;
+		color: #FFFFFF;
+	}
 	//返回按钮
 	.returnClass{
 		width: 25upx;
