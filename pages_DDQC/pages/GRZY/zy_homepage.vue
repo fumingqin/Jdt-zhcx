@@ -55,7 +55,7 @@
 				<text class="ve_text">通勤卡</text>
 				<text class="ve_text2">余额</text>
 				<text class="ve_text3">￥{{commuterCardCost}}元</text>
-				<text class="ve_text4">公交车扫码、达达骑行</text>
+				<!-- <text class="ve_text4">公交车扫码、达达骑行</text> -->
 				<text class="ve_text5" @click="openExplain">开通说明</text>
 				<image class="vi_image" src="../../static/GRZY/tongqingka.png" mode="aspectFit"></image>
 			</view>
@@ -994,7 +994,7 @@
 			position: absolute;
 			width: 94upx;
 			height: 94upx;
-			padding-top: 50upx;
+			padding-top: 80upx;//原来50
 			padding-left: 40upx;
 			z-index: 500;
 		}
@@ -1005,7 +1005,7 @@
 			font-weight: 550;
 			color: #FFFFFF;
 			padding-left: 157upx;
-			padding-top: 40upx;
+			padding-top: 70upx;//原来40
 			z-index: 500;
 		}
 		
@@ -1013,7 +1013,7 @@
 			position: absolute;
 			font-size:32upx;
 			color: #FFFFFF;
-			padding-top: 104upx;
+			padding-top: 134upx;//原来104
 			padding-left: 157upx;
 			z-index: 500;
 		}
@@ -1022,7 +1022,7 @@
 			position: absolute;
 			font-size:32upx;
 			color: #FFFFFF;
-			padding-top: 104upx;
+			padding-top: 134upx;//原来104
 			padding-left: 246upx;
 			z-index: 500;
 		}

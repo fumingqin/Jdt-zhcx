@@ -19,27 +19,13 @@
 			return {
 				imageHeight: '', //手机屏幕高度
 				imageIndex: [
-					{imageUrl:'../../../pages_DDQC/staic/RentBike/page1.png'},
-					{imageUrl:'../../../pages_DDQC/staic/RentBike/page2.png'},
-					{imageUrl:'../../../pages_DDQC/staic/RentBike/page3.png'}
+					{imageUrl:'../../static/guide/page1.png'},
+					{imageUrl:'../../static/guide/page2.png'},
+					{imageUrl:'../../static/guide/page3.png'}
 				],
-				
 			}
 		},
 		onLoad: function() {
-			uni.request({
-				url:$lyfw.Interface.qg_GetImage.value,
-				method:$lyfw.Interface.qg_GetImage.method,
-				data:{ 
-					model : 6,
-					type:'引导页'
-				},
-				success:(res) => { 
-					// console.log(res)
-					// this.imageIndex = res.data.data
-					
-				},
-			})
 			// uni.getSystemInfo({//获取手机屏幕高度信息，让swiper的高度和手机屏幕一样高
 			uni.getSystemInfo({
 				success: (res) => {

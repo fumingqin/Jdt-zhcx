@@ -12,7 +12,7 @@
 				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr"
 				 :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
-						<image style="width: 90upx;height: 68upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						<image style="width: 110upx;height: 90upx;" mode="aspectFit" :src="ArrItem.ImageURL"
 						 lazy-load="true"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
@@ -62,14 +62,14 @@
 			</view>
 			<view class="zl_reContent2">
 				<view class="zl_contentImage1">
-					<!-- 泉州小西埕 -->
+					<!-- 1 -->
 					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
 						<!-- <image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text> -->
 						<image class="ct_image1" src="http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">巾帼文明线</text>
 					</view>
-					<!-- 稻田摸鱼 -->
+					<!-- 2 -->
 					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
 						<!-- <image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text> -->
@@ -79,26 +79,26 @@
 				</view>
 
 				<view class="zl_contentImage2">
-					<!-- 泉州钟楼 -->
+					<!-- 3 -->
 					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
 						<!-- <image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text> -->
 						<image class="ct_image3" src="http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">古雷助力车</text>
 					</view>
-					<!-- 泉州洛阳桥 -->
+					<!-- 4 -->
 					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
 						<!-- <image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text> -->
 						<image class="ct_image4" src="http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg" lazy-load="true" mode="aspectFill"></image>
 						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">客运南站</text>
 					</view>
-					<!-- 七彩官畲 -->
+					<!-- 5 -->
 					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
 						<!-- <image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
 						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text> -->
-						<image class="ct_image5" src="http://zntc.145u.net/UpLoadImages/DDT/双层公交.jpg" lazy-load="true" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">双层公交</text>
+						<image class="ct_image5" src="../../static/Home/freeBus.jpeg" lazy-load="true" mode="aspectFill"></image>
+						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">免费公交</text>
 					</view>
 				</view>
 			</view>
@@ -230,7 +230,7 @@
 								IsUse: true,
 								clickURL: "../../pages_DDQC/pages/RentBike/RentBikeHome",
 								ImageURL: "../../static/Home/DDQC.png",
-								ItemTitle: "达达骑车"
+								ItemTitle: "扫码租车"
 							},
 							{
 								IsUse: true,
@@ -242,7 +242,7 @@
 								IsUse: true,
 								clickURL: "../../pages_DDQC/pages/GRZY/zy_homepage",
 								ImageURL: "../../static/Home/QB.png",
-								ItemTitle: "达达钱包"
+								ItemTitle: "钱包"
 							},
 							{
 								IsUse: true,
@@ -1041,7 +1041,7 @@
 
 	.itemText {
 		margin-top: 10rpx;
-		font-size: 27rpx;
+		font-size: 30rpx;
 		font-family: Source Han Sans SC;
 		font-weight: 400;
 		color: #333333;
