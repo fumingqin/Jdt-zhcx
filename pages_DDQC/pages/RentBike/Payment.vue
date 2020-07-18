@@ -133,7 +133,7 @@
 								})
 							}, 1500)
 						} else if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
-							.msg == '钱包余额不足') {
+							.msg == '余额不足' || res.data.msg == '该订单已支付过，无需重复支付' || res.data.msg == '没有该用户的钱包信息') {
 							// that.consumeRecord(0)
 							uni.showToast({
 								title: res.data.msg,
@@ -144,6 +144,8 @@
 									url: '../GRZY/zy_homepage'
 								})
 							}, 1500)
+						}else {
+							console.log(res.data.msg)
 						}
 					},
 					fail(res) {
