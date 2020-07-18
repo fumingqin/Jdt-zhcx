@@ -133,27 +133,30 @@
 									url: '../GRZY/zy_homepage'
 								})
 							}, 1500)
-						}else if(res.data.status == false){
-							if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
-								.msg == '余额不足' || res.data.msg == '该订单已支付过，无需重复支付' || res.data.msg == '没有该用户的钱包信息') {
-								// that.consumeRecord(0)
-								uni.showToast({
-									title: res.data.msg,
-									icon: 'none'
-								})
-								setTimeout(function() {
-									uni.redirectTo({
-										url: '../GRZY/zy_homepage'
-									})
-								}, 1500)
-							}else {
-								console.log(res.data.msg)
-							}
+						} else if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
+							.msg == '余额不足' || res.data.msg == '该订单已支付过，无需重复支付' || res.data.msg == '没有该用户的钱包信息') {
+							uni.showModal({
+								title: res.data.msg,
+								success(res) {
+									if (res.confirm) {
+										setTimeout(function() {
+											uni.redirectTo({
+												url: '../GRZY/zy_homepage'
+											})
+										}, 1500)
+									}
+								}
+							})
+						} else {
+							uni.showModal({
+								title: "支付失败",
+								success(res) {
+								}
+							})
 						}
 					},
 					fail(res) {
 						uni.hideLoading();
-						// that.consumeRecord(0)
 						uni.showToast({
 							title: "网络连接失败",
 							icon: 'none'
