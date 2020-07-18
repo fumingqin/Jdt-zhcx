@@ -12,8 +12,7 @@
 				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr"
 				 :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
-						<image style="width: 110upx;height: 90upx;" mode="aspectFit" :src="ArrItem.ImageURL"
-						 lazy-load="true"></image>
+						<image style="width: 110upx;height: 90upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
 				</view>
@@ -64,14 +63,14 @@
 			<view class="pictureView">
 				<!-- 提示：想要让文字放在图片里面可以设置外层相对定位，内层文字绝对定位 -->
 				<block v-for="(item,index) in imageData" :key="index">
-					<view class="picClass" :class="{'firstPic':index == 0}" style="position: relative;"  @click="pictureClick(item)">
-						<image :src="item.ShowImageURL" mode="widthFix" lazy-load="true"></image>
+					<view style="position: relative;display: flex;flex-direction: row;" @click="pictureClick(item)">
+						<image :src="item.ShowImageURL" class="picClass" :class="{'firstPic':index == 0}" mode="aspectFill" lazy-load="true"></image>
 						<text class="picText">{{item.Title}}</text>
 					</view>
 				</block>
 			</view>
 		</view>
-		
+
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
@@ -93,12 +92,12 @@
 				<view style="padding: 40rpx 0;display: flex;justify-content: center;align-items: center;">
 					<view style="display: flex;flex-direction: column;">
 						<view>
-							<text style="font-size: 30rpx;">长 运 总 机:</text>   
-							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text> 
+							<text style="font-size: 30rpx;">长 运 总 机:</text>
+							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text>
 						</view>
 						<view>
-							<text style="font-size: 30rpx;">达达通客服:</text> 
-							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text> 
+							<text style="font-size: 30rpx;">达达通客服:</text>
+							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text>
 						</view>
 					</view>
 				</view>
@@ -240,7 +239,7 @@
 			that.GetRotationChart();
 			//加载资讯图片数据
 			that.loadData();
-			
+
 			//#ifdef APP-PLUS
 			// this.loadService();
 			//获取设备系统信息
@@ -287,7 +286,7 @@
 		}, //注册为子组件
 		methods: {
 			//--------------获取设备系统信息----------------------------------
-			getEquipmentInfo:function(){
+			getEquipmentInfo: function() {
 				var that = this;
 				//获取系统信息
 				uni.getSystemInfo({
@@ -346,7 +345,7 @@
 										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
 										complete(res) {
 											if (res.confirm) {
-												let appleId=1522869291 //应用的appId
+												let appleId = 1522869291 //应用的appId
 												plus.runtime.launchApplication({
 													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
 												}, function(e) {
@@ -427,27 +426,27 @@
 				})
 			},
 			//--------------------------长运风采图片数据--------------------------
-			getImageData:function(){
+			getImageData: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetHomeStyle.Url,
-					method:$DDTInterface.DDTInterface.GetHomeStyle.method,
-					data:{},
+					url: $DDTInterface.DDTInterface.GetHomeStyle.Url,
+					method: $DDTInterface.DDTInterface.GetHomeStyle.method,
+					data: {},
 					success(res) {
-						console.log('获取图片数据成功',res)
-						if(res.data.status == true){
+						console.log('获取图片数据成功', res)
+						if (res.data.status == true) {
 							that.imageData = res.data.data;
-						}else{
+						} else {
 							that.imageData = [];
-							console.log(res.data.msg)  
+							console.log(res.data.msg)
 						}
 					},
 					fail(res) {
-						console.log('获取图片数据失败',res)
+						console.log('获取图片数据失败', res)
 					}
 				})
 			},
-			pictureClick:function(item){
+			pictureClick: function(item) {
 				uni.navigateTo({
 					url: '../../pages_DDQC/pages/GRZY/HomepictureDetail?id=' + item.AID + '&mold=' + item.Mold
 				})
@@ -989,7 +988,7 @@
 			}
 		}
 	}
-	
+
 	.itemContent {
 		width: 20%;
 		height: 178upx;
@@ -1002,31 +1001,35 @@
 		height: 80rpx;
 		margin-top: 50upx;
 	}
+
 	//---------------------------------长运风采开始---------------------------------
 	//放置图片的view
-	.pictureView{
+	.pictureView {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		padding-bottom: 10rpx;
 	}
+
 	//照片样式
-	.picClass{
-		width: 30%;
+	.picClass {
+		width: 210upx;
 		height: 207upx;
 		overflow: hidden;
-	    border-radius: 15upx;
+		border-radius: 15upx;
 		margin-top: 10upx;
 		margin-right: 20upx;
 	}
+
 	//第一张照片
-	.firstPic{
-		width: 63%;
+	.firstPic {
+		width: 430upx;
 		height: 207upx;
 		overflow: hidden;
 		border-radius: 15upx;
 	}
+
 	.picText {
 		font-size: 22upx;
 		bottom: 0;
@@ -1035,11 +1038,12 @@
 		bottom: 10rpx;
 		left: 10rpx;
 		position: absolute;
-		
-		background:rgba(0,0,0,1);
-		opacity:0.7;
-		border-radius:4px;
+
+		background: rgba(0, 0, 0, 1);
+		opacity: 0.7;
+		border-radius: 4px;
 	}
+
 	//---------------------------------长运风采结束---------------------------------
 	.itemText {
 		margin-top: 10rpx;
@@ -1269,11 +1273,11 @@
 		background: #fff;
 		margin-top: 16upx;
 		padding: 0 31upx;
-
+		padding-bottom: 20rpx;
 		.zl_reContent {
 			position: relative;
 			padding-top: 40upx;
-			
+
 			.zl_reTitle {
 				font-size: 32upx;
 				color: #333333;
