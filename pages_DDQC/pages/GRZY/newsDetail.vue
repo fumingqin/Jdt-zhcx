@@ -32,7 +32,7 @@
 			getNewsDetail: function(ID) {
 				var that=this;
 				uni.showLoading({
-					title:'加载中...'
+					title:'加载中...',
 				})
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetNewsByAID.Url,

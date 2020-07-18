@@ -167,6 +167,19 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	GetHomeStyle: {
+		Url: Url + '/api/SmartBikePerson/GetHomeStyle',
+		name: '首页长运风采图片',
+		method: 'POST',
+	},
+	GetHomeStyleByAID: {
+		Url: Url + '/api/SmartBikePerson/GetHomeStyleByAID',
+		name: '根据ID获取长运风采文章',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 	//-----------------------------------------钱包接口------------------------------------------------
 	GetPurseDetail: {
 		Url: Url + '/api/Purse/GetPurseDetail',

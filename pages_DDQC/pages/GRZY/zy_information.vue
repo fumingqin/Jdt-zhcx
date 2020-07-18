@@ -151,7 +151,8 @@
 			//------------------------------押金充值超一年，提交人工退押金，后台审核--------------------------------
 			ManualRefund: function() {
 				uni.showLoading({
-					title: '正在提交申请...'
+					title: '正在提交申请...',
+					mask: true
 				})
 				//读取用户ID
 				uni.getStorage({
@@ -201,7 +202,8 @@
 				console.log('重新提交', _self.ReManualRefundInfo.AID)
 				console.log('重新提交', _self.ReManualRefundInfo.Reason)
 				uni.showLoading({
-					title: '正在提交申请...'
+					title: '正在提交申请...',
+					mask: true
 				})
 				//读取用户ID
 				uni.getStorage({

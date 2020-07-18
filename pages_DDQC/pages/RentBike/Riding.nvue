@@ -340,7 +340,8 @@
 								title: "还车"
 							})
 							uni.showLoading({
-								title: '正在还车...'
+								title: '正在还车...',
+								mask:true
 							})
 							console.log('请求参数', that.rentInfo)
 							uni.request({

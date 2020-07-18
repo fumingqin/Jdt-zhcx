@@ -545,7 +545,8 @@
 			Rent:function(param){
 				var that = this;
 				uni.showLoading({
-					title:'正在开锁...'
+					title:'正在开锁...',
+					mask: true
 				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.Rent.Url,
@@ -607,7 +608,8 @@
 			Rent_hire:function(param){
 				var that = this;
 				uni.showLoading({
-					title:'正在开锁...'
+					title:'正在开锁...',
+					mask: true
 				})
 				uni.request({
 					url:$DDTInterface.DDTInterface.Rent_hire.Url,
@@ -619,7 +621,7 @@
 						userID:that.userInfo.userId,
 					},
 					success(response) {
-						uni.hideLoading()
+						uni.hideLoading() 
 						console.log('无桩请求返回结果',response)
 						if(response.data.status == true){
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断

@@ -48,7 +48,7 @@
 			</view>
 		</view>
 
-		<!-- 旅游推荐 -->
+		<!-- 长运风采 -->
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
@@ -60,82 +60,18 @@
 					<!-- <text class="zl_reMore">更多></text> -->
 				</view>
 			</view>
-			<view class="zl_reContent2">
-				<view class="zl_contentImage1">
-					<!-- 1 -->
-					<view class="ct_content1" @click="godetail(sixPalaceList[0].ticketId)">
-						<!-- <image class="ct_image1" :src="sixPalaceList[0].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">{{sixPalaceList[0].ticketTitle}}</text> -->
-						<image class="ct_image1" src="http://zntc.145u.net/UpLoadImages/DDT/巾帼文明线.jpg" lazy-load="true" mode="aspectFill"></image>
-						<text class="ct_text1" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">巾帼文明线</text>
+			<!-- 图片 -->
+			<view class="pictureView">
+				<!-- 提示：想要让文字放在图片里面可以设置外层相对定位，内层文字绝对定位 -->
+				<block v-for="(item,index) in imageData" :key="index">
+					<view class="picClass" :class="{'firstPic':index == 0}" style="position: relative;"  @click="pictureClick(item)">
+						<image :src="item.ShowImageURL" mode="widthFix" lazy-load="true"></image>
+						<text class="picText">{{item.Title}}</text>
 					</view>
-					<!-- 2 -->
-					<view class="ct_content2" @click="godetail(sixPalaceList[1].ticketId)">
-						<!-- <image class="ct_image2" :src="sixPalaceList[1].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[1].ticketTitle}}</text> -->
-						<image class="ct_image2" src="http://zntc.145u.net/UpLoadImages/DDT/公共自行车.jpg" lazy-load="true" mode="aspectFill"></image>
-						<text class="ct_text2" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">公共自行车</text>
-					</view>
-				</view>
-
-				<view class="zl_contentImage2">
-					<!-- 3 -->
-					<view class="ct_content3" @click="godetail(sixPalaceList[2].ticketId)">
-						<!-- <image class="ct_image3" :src="sixPalaceList[2].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[2].ticketTitle}}</text> -->
-						<image class="ct_image3" src="http://zntc.145u.net/UpLoadImages/DDT/古雷助力车01.jpg" lazy-load="true" mode="aspectFill"></image>
-						<text class="ct_text3" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">古雷助力车</text>
-					</view>
-					<!-- 4 -->
-					<view class="ct_content4" @click="godetail(sixPalaceList[3].ticketId)">
-						<!-- <image class="ct_image4" :src="sixPalaceList[3].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[3].ticketTitle}}</text> -->
-						<image class="ct_image4" src="http://zntc.145u.net/UpLoadImages/DDT/南站实拍图.jpg" lazy-load="true" mode="aspectFill"></image>
-						<text class="ct_text4" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">客运南站</text>
-					</view>
-					<!-- 5 -->
-					<view class="ct_content5" @click="godetail(sixPalaceList[4].ticketId)">
-						<!-- <image class="ct_image5" :src="sixPalaceList[4].ticketImage[0]" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;width: 124upx;">{{sixPalaceList[4].ticketTitle}}</text> -->
-						<image class="ct_image5" src="../../static/Home/freeBus.jpeg" lazy-load="true" mode="aspectFill"></image>
-						<text class="ct_text5" style="background:rgba(0,0,0,1);opacity:0.7;border-radius:4px;margin-left: 10upx;margin-bottom: 21upx;">免费公交</text>
-					</view>
-				</view>
+				</block>
 			</view>
 		</view>
-
-		<!-- 新闻资讯 -->
-		<!-- <view class="titNp">新闻资讯</view>
-		<view class="guess-section">
-			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="informationTo(item.aid)">
-				<view class="image-wrapper">
-					<image :src="item.imageUrl" mode="aspectFill"></image>
-				</view>
-				<view class="title clamp">{{item.title}}</view>
-				<view>
-					<image class="Portrait" src="../../static/GRZX/missing-face.png" mode="aspectFill"></image>
-					<text class="price">{{item.reportTime}}</text>
-					<text class="price-zan">阅读{{item.viewsCount+1080}}</text>
-				</view>
-			</view>
-		</view> -->
-
-		<!-- <view style="width: 100%; float: left; text-align: center; font-size: 24upx; padding: 16upx 0; color: #aaa; background: #FFFFFF;">
-			<text v-if="current==0" :hidden="disStatus== 1">{{loadingType== 0 ? loadingText.down : (loadingType === 1 ? loadingText.refresh : loadingText.nomore)}}</text>
-			<text v-if="current==0" :hidden="disStatus== 0">暂无历史数据</text>
-		</view> -->
-
-		<!-- tab按钮 -->
-		<!-- <view class="zc_TabBackground">
-			<view class="tb_tab">
-				<view class="tb_button">
-					<view class="tb_button2" :class="{current:type===0}" @click="tabClick(0)"></view>
-				</view>
-				<view class="tb_button3">
-					<view class="tb_button4" :class="{current:type===1}" @click="tabClick(1)"></view>
-				</view>
-			</view>
-		</view> -->
+		
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
@@ -169,7 +105,7 @@
 			</view>
 		</view>
 		<!-- 服务协议和隐私政策 -->
-		<uni-popup ref="centerPopup" type="center">
+		<!-- <uni-popup ref="centerPopup" type="center">
 			<view class="centerClass">
 				<view class="pTitleClass">服务协议和隐私政策</view>
 				<view class="pTextClass">
@@ -184,7 +120,7 @@
 					<view class="btnClass2" @click="confirm">同意</view>
 				</view>
 			</view>
-		</uni-popup>
+		</uni-popup> -->
 	</view>
 </template>
 
@@ -196,6 +132,7 @@
 	export default {
 		data() {
 			return {
+				imageData: [],
 				swiperCurrent: 0,
 				consultingService: [], //新闻资讯
 				imgXXDT: [{
@@ -314,6 +251,8 @@
 
 			//获取新闻数据
 			that.GetNews();
+			//获取照片数据
+			that.getImageData();
 			//获取客服热线
 			that.ConsumerHotline();
 			//清除应用右上角数字，暂时放在这里清除
@@ -485,6 +424,32 @@
 			newsClick: function(item) {
 				uni.navigateTo({
 					url: '../../pages_DDQC/pages/GRZY/newsDetail?id=' + item.AID + '&mold=' + item.Mold
+				})
+			},
+			//--------------------------长运风采图片数据--------------------------
+			getImageData:function(){
+				var that = this;
+				uni.request({
+					url:$DDTInterface.DDTInterface.GetHomeStyle.Url,
+					method:$DDTInterface.DDTInterface.GetHomeStyle.method,
+					data:{},
+					success(res) {
+						console.log('获取图片数据成功',res)
+						if(res.data.status == true){
+							that.imageData = res.data.data;
+						}else{
+							that.imageData = [];
+							console.log(res.data.msg)  
+						}
+					},
+					fail(res) {
+						console.log('获取图片数据失败',res)
+					}
+				})
+			},
+			pictureClick:function(item){
+				uni.navigateTo({
+					url: '../../pages_DDQC/pages/GRZY/HomepictureDetail?id=' + item.AID + '&mold=' + item.Mold
 				})
 			},
 			//----------------------接口数据-------------------------------
@@ -803,25 +768,25 @@
 				});
 			},
 			//-----------关闭弹窗------------
-			closePopup: function(value) {
-				this.$nextTick(function() {
-					this.$refs[value].close();
-				});
-			},
-			confirm: function() {
-				uni.setStorageSync('acceptService', true);
-				this.closePopup('centerPopup');
-			},
-			agreementClick() {
-				uni.navigateTo({
-					url: this.$GrzxInter.Route.privacyService.url + '?title=软件许可及服务协议',
-				})
-			},
-			privacyClick() {
-				uni.navigateTo({
-					url: this.$GrzxInter.Route.privacyService.url + '?title=隐私政策',
-				})
-			},
+			// closePopup: function(value) {
+			// 	this.$nextTick(function() {
+			// 		this.$refs[value].close();
+			// 	});
+			// },
+			// confirm: function() {
+			// 	uni.setStorageSync('acceptService', true);
+			// 	this.closePopup('centerPopup');
+			// },
+			// agreementClick() {
+			// 	uni.navigateTo({
+			// 		url: this.$GrzxInter.Route.privacyService.url + '?title=软件许可及服务协议',
+			// 	})
+			// },
+			// privacyClick() {
+			// 	uni.navigateTo({
+			// 		url: this.$GrzxInter.Route.privacyService.url + '?title=隐私政策',
+			// 	})
+			// },
 			//-------------弹窗结束--------------------
 
 			//-------------登录过期开始--------------------
@@ -1024,8 +989,7 @@
 			}
 		}
 	}
-
-	// 车票订购
+	
 	.itemContent {
 		width: 20%;
 		height: 178upx;
@@ -1038,7 +1002,45 @@
 		height: 80rpx;
 		margin-top: 50upx;
 	}
-
+	//---------------------------------长运风采开始---------------------------------
+	//放置图片的view
+	.pictureView{
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		padding-bottom: 10rpx;
+	}
+	//照片样式
+	.picClass{
+		width: 30%;
+		height: 207upx;
+		overflow: hidden;
+	    border-radius: 15upx;
+		margin-top: 10upx;
+		margin-right: 20upx;
+	}
+	//第一张照片
+	.firstPic{
+		width: 63%;
+		height: 207upx;
+		overflow: hidden;
+		border-radius: 15upx;
+	}
+	.picText {
+		font-size: 22upx;
+		bottom: 0;
+		padding: 8upx 15upx;
+		color: #fff;
+		bottom: 10rpx;
+		left: 10rpx;
+		position: absolute;
+		
+		background:rgba(0,0,0,1);
+		opacity:0.7;
+		border-radius:4px;
+	}
+	//---------------------------------长运风采结束---------------------------------
 	.itemText {
 		margin-top: 10rpx;
 		font-size: 30rpx;
@@ -1285,146 +1287,6 @@
 				right: 0;
 				font-size: 24upx;
 				color: #5E5E60;
-			}
-		}
-
-		.zl_reContent2 {
-			padding-top: 42upx;
-			padding-bottom: 40upx;
-
-			.zl_contentImage1 {
-				display: flex;
-
-				// 泉州小西埕
-				.ct_content1 {
-					display: flex;
-					position: relative;
-					margin-right: 10upx;
-
-
-					.ct_image1 {
-						width: 454upx;
-						height: 207upx;
-						overflow: hidden;
-						border-radius: 15upx;
-
-					}
-
-					.ct_text1 {
-						position: absolute;
-						font-size: 22upx;
-						bottom: 0;
-						padding: 11upx 15upx;
-						color: #fff;
-					}
-				}
-
-				// 稻田摸鱼
-				.ct_content2 {
-					display: flex;
-					position: relative;
-
-					.ct_image2 {
-						width: 222upx;
-						height: 207upx;
-						overflow: hidden;
-						border-radius: 15upx;
-
-					}
-
-					.ct_text2 {
-						position: absolute;
-						font-size: 22upx;
-						bottom: 0;
-						padding: 11upx 15upx;
-						color: #fff;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						overflow: hidden;
-					}
-				}
-			}
-
-			.zl_contentImage2 {
-				display: flex;
-				margin-top: 20upx;
-
-				// 泉州钟楼
-				.ct_content3 {
-					display: flex;
-					position: relative;
-
-					.ct_image3 {
-						width: 222upx;
-						height: 207upx;
-						overflow: hidden;
-						border-radius: 15upx;
-
-					}
-
-					.ct_text3 {
-						position: absolute;
-						font-size: 22upx;
-						bottom: 0;
-						padding: 11upx 15upx;
-						color: #fff;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						overflow: hidden;
-					}
-				}
-
-				// 泉州洛阳桥
-				.ct_content4 {
-					display: flex;
-					position: relative;
-					margin-left: 10upx;
-
-					.ct_image4 {
-						width: 222upx;
-						height: 207upx;
-						overflow: hidden;
-						border-radius: 15upx;
-
-					}
-
-					.ct_text4 {
-						position: absolute;
-						font-size: 22upx;
-						bottom: 0;
-						padding: 11upx 15upx;
-						color: #fff;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						overflow: hidden;
-					}
-				}
-
-				// 七彩官畲
-				.ct_content5 {
-					display: flex;
-					position: relative;
-					margin-left: 10upx;
-
-					.ct_image5 {
-						width: 222upx;
-						height: 207upx;
-						overflow: hidden;
-						border-radius: 15upx;
-
-					}
-
-					.ct_text5 {
-						position: absolute;
-						font-size: 22upx;
-						bottom: 0;
-						padding: 11upx 15upx;
-						color: #fff;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						overflow: hidden;
-					}
-				}
 			}
 		}
 	}

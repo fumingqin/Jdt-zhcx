@@ -42,7 +42,7 @@
 			GetManualRefundByUserID: function() {
 				var that = this;
 				uni.showLoading({
-					title:'正在加载中...'
+					title:'正在加载中...',
 				})
 				uni.getStorage({
 					key:'userInfo',

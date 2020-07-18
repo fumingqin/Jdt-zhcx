@@ -27,7 +27,7 @@
 		methods: {
 			getNews: function(type) {
 				uni.showLoading({
-					title:'加载中...'
+					title:'加载中...',
 				})
 				var that=this;
 				uni.request({

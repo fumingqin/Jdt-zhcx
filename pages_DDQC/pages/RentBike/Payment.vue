@@ -122,8 +122,9 @@
 					},
 					success(res) {
 						uni.hideLoading();
-						if (res.data.msg == '请求成功 ') {
-							// that.consumeRecord(1)
+						console.log('钱包消费返回数据',res)
+						if (res.data.status == true) {
+							//消费成功之后不需要调消费记录接口，后台已经调了
 							uni.showToast({
 								title: '支付成功'
 							})
@@ -132,20 +133,22 @@
 									url: '../GRZY/zy_homepage'
 								})
 							}, 1500)
-						} else if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
-							.msg == '余额不足' || res.data.msg == '该订单已支付过，无需重复支付' || res.data.msg == '没有该用户的钱包信息') {
-							// that.consumeRecord(0)
-							uni.showToast({
-								title: res.data.msg,
-								icon: 'none'
-							})
-							setTimeout(function() {
-								uni.redirectTo({
-									url: '../GRZY/zy_homepage'
+						}else if(res.data.status == false){
+							if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
+								.msg == '余额不足' || res.data.msg == '该订单已支付过，无需重复支付' || res.data.msg == '没有该用户的钱包信息') {
+								// that.consumeRecord(0)
+								uni.showToast({
+									title: res.data.msg,
+									icon: 'none'
 								})
-							}, 1500)
-						}else {
-							console.log(res.data.msg)
+								setTimeout(function() {
+									uni.redirectTo({
+										url: '../GRZY/zy_homepage'
+									})
+								}, 1500)
+							}else {
+								console.log(res.data.msg)
+							}
 						}
 					},
 					fail(res) {
@@ -155,33 +158,6 @@
 							title: "网络连接失败",
 							icon: 'none'
 						})
-					}
-				})
-			},
-			//---------------------------------消费记录---------------------------------
-			//钱包消费完调用一次该接口
-			consumeRecord: function(State) {
-				uni.request({
-					url: $DDTInterface.DDTInterface.WriteTransactionLog.Url,
-					method: $DDTInterface.DDTInterface.WriteTransactionLog.method,
-					header: {
-						'content-type': 'application/json'
-					},
-					data: {
-						phoneNumber: that.userInfo.phoneNumber,
-						orderId: that.orderId,
-						amount: (that.money) * 100,
-						transTime: that.payTime, //交易时间 
-						transType: 1, //1自行车消费，2公交车消费
-						extra: '',
-						userID: that.userInfo.userID,
-						State: State,
-					},
-					success(res) {
-
-					},
-					fail(err) {
-
 					}
 				})
 			},

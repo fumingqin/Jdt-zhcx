@@ -359,7 +359,8 @@
 			//--------------------------押金充值--------------------------
 			GetRefund: function() {
 				uni.showLoading({
-					title: '正在交押金...'
+					title: '正在交押金...',
+					mask: true
 				})
 				var that = this;
 				that.$refs.popup.close()
@@ -415,9 +416,9 @@
 			//--------------------------调起押金充值支付--------------------------
 			RefundPayment: function(orderInfo) {
 				var that = this;
-				console.log(orderInfo)
+				// console.log(orderInfo)
 				// #ifdef APP-PLUS
-				console.log(that.paymentData)
+				// console.log(that.paymentData)
 				uni.requestPayment({
 					provider: 'wxpay',
 					orderInfo: orderInfo,
@@ -490,7 +491,7 @@
 						phoneNumber:that.userInfo.phoneNumber,
 					},
 					success(res) {
-						console.log('充值检测成功',res)
+						// console.log('充值检测成功',res)
 						if(res.data.status == true){
 							
 						}
@@ -519,8 +520,7 @@
 						id: that.prepayid,//预支付交易会话id
 					},
 					success(res) {
-						console.log('押金充值记录成功', res);
-						uni.showLoading()
+						// console.log('押金充值记录成功', res);
 						if(res.data.status == true){
 							that.GetUserByUserID();
 							
@@ -533,7 +533,6 @@
 					},
 					fail(res) {
 						console.log('押金充值记录失败', res)
-						uni.showLoading()
 						setTimeout(function() {
 							that.GetUserByUserID();
 						}, 3000)
@@ -545,7 +544,8 @@
 			GetRefund2: function() {
 				var that = this;
 				uni.showLoading({
-					title: '正在退押金...'
+					title: '正在退押金...',
+					mask: true
 				})
 				that.$refs.popup2.close()
 				uni.request({
@@ -558,7 +558,7 @@
 					},
 					success(res) {
 						uni.hideLoading();
-						console.log('钱包退押金', res) 
+						// console.log('钱包退押金', res)
 						if (res.data.status == true) {
 							setTimeout(function() {
 								uni.showToast({
@@ -609,7 +609,7 @@
 						UserID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('查询自行车订单', res)
+						// console.log('查询自行车订单', res)
 						that.drivingRecord = res.data.data;
 					},
 				})
@@ -630,7 +630,7 @@
 						order_no: that.order_no
 					},
 					success(res) {
-						console.log('押金退款记录成功', res);
+						// console.log('押金退款记录成功', res);
 						if (res.data.status == true) {
 							// that.deposit=0;
 							// that.depositStatus=0;
@@ -778,7 +778,7 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log('读取信息成功',res)
+						// console.log('读取信息成功',res)
 						//获取押金状态
 						that.depositStatus = res.data.data.DepositType;
 						//获取当前是普通用户还是免押金用户
