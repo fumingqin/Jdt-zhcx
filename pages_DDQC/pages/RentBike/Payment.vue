@@ -123,7 +123,6 @@
 					success(res) {
 						uni.hideLoading();
 						if (res.data.msg == '请求成功 ') {
-							// that.consumeRecord(1)
 							uni.showToast({
 								title: '支付成功'
 							})
@@ -134,7 +133,6 @@
 							}, 1500)
 						} else if (res.data.msg == '退款失败未交押金或者余额不足' || res.data.msg == '不支持该请求' || res.data.msg == '系统内部错误' || res.data
 							.msg == '钱包余额不足') {
-							// that.consumeRecord(0)
 							uni.showToast({
 								title: res.data.msg,
 								icon: 'none'
