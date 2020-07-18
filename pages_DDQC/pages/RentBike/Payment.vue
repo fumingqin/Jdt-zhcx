@@ -50,7 +50,7 @@
 				userInfo: '',
 				HireStationName: '',
 				RestoreStationName: '',
-				phoneNumber:'',//客服热线
+				phoneNumber: '', //客服热线
 			}
 		},
 		onLoad() {
@@ -58,17 +58,17 @@
 			console.log(this.userInfo);
 			this.GetOrderByUserID();
 			// this.getOrderInfo();
-			
+
 		},
 		onShow() {
 			var that = this;
 			//获取客服热线
 			uni.getStorage({
-				key:'ConsumerHotline',
+				key: 'ConsumerHotline',
 				success(res) {
 					that.phoneNumber = res.data.Phone1
 				}
-			}) 
+			})
 		},
 		onBackPress() { //禁用手机返回键
 			return true;
@@ -83,6 +83,10 @@
 				})
 			},
 			payNow: function() { //立即支付  
+				uni.showLoading({
+					title: '支付中',
+					mask: true
+				})
 				if (this.money > 0) {
 					this.walletPayment();
 				} else {
@@ -100,10 +104,6 @@
 			//每次调钱包接口都要调一次钱包消费接口
 			walletPayment: function() {
 				let that = this;
-				uni.showLoading({
-					title: '支付中',
-					mask: true
-				})
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetTransaction.Url,
 					method: $DDTInterface.DDTInterface.GetTransaction.method,
