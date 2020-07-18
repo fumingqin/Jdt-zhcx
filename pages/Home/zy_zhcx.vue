@@ -12,7 +12,8 @@
 				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr"
 				 :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
-						<image style="width: 110upx;height: 90upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
+						<image style="width: 110upx;height: 90upx;" mode="aspectFit" :src="ArrItem.ImageURL"
+						 lazy-load="true"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
 				</view>
@@ -63,14 +64,14 @@
 			<view class="pictureView">
 				<!-- 提示：想要让文字放在图片里面可以设置外层相对定位，内层文字绝对定位 -->
 				<block v-for="(item,index) in imageData" :key="index">
-					<view style="position: relative;display: flex;flex-direction: row;" @click="pictureClick(item)">
+					<view style="position: relative;display: flex;"  @click="pictureClick(item)">
 						<image :src="item.ShowImageURL" class="picClass" :class="{'firstPic':index == 0}" mode="aspectFill" lazy-load="true"></image>
 						<text class="picText">{{item.Title}}</text>
 					</view>
 				</block>
 			</view>
 		</view>
-
+		
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
@@ -92,12 +93,12 @@
 				<view style="padding: 40rpx 0;display: flex;justify-content: center;align-items: center;">
 					<view style="display: flex;flex-direction: column;">
 						<view>
-							<text style="font-size: 30rpx;">长 运 总 机:</text>
-							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text>
+							<text style="font-size: 30rpx;">长 运 总 机:</text>   
+							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text> 
 						</view>
 						<view>
-							<text style="font-size: 30rpx;">达达通客服:</text>
-							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text>
+							<text style="font-size: 30rpx;">达达通客服:</text> 
+							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text> 
 						</view>
 					</view>
 				</view>
@@ -239,7 +240,7 @@
 			that.GetRotationChart();
 			//加载资讯图片数据
 			that.loadData();
-
+			
 			//#ifdef APP-PLUS
 			// this.loadService();
 			//获取设备系统信息
@@ -286,12 +287,12 @@
 		}, //注册为子组件
 		methods: {
 			//--------------获取设备系统信息----------------------------------
-			getEquipmentInfo: function() {
+			getEquipmentInfo:function(){
 				var that = this;
 				//获取系统信息
 				uni.getSystemInfo({
 					success(res) {
-						console.log('获取系统信息', res)
+						// console.log('获取系统信息', res)
 						//获取系统平台 iOS Android
 						that.platform = res.platform;
 						// 获取本地应用资源版本号  
@@ -345,7 +346,7 @@
 										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
 										complete(res) {
 											if (res.confirm) {
-												let appleId = 1522869291 //应用的appId
+												let appleId=1522869291 //应用的appId
 												plus.runtime.launchApplication({
 													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
 												}, function(e) {
@@ -391,7 +392,7 @@
 					method: $DDTInterface.DDTInterface.ConsumerHotline.method,
 					data: {},
 					success(res) {
-						console.log(res)
+						// console.log(res)
 						if (res.data.status == true) {
 							uni.setStorageSync('ConsumerHotline', res.data.data)
 							that.PhoneArr = res.data.data;
@@ -426,30 +427,33 @@
 				})
 			},
 			//--------------------------长运风采图片数据--------------------------
-			getImageData: function() {
+			getImageData:function(){
 				var that = this;
 				uni.request({
-					url: $DDTInterface.DDTInterface.GetHomeStyle.Url,
-					method: $DDTInterface.DDTInterface.GetHomeStyle.method,
-					data: {},
+					url:$DDTInterface.DDTInterface.GetHomeStyle.Url,
+					method:$DDTInterface.DDTInterface.GetHomeStyle.method,
+					data:{},
 					success(res) {
-						console.log('获取图片数据成功', res)
-						if (res.data.status == true) {
+						// console.log('获取图片数据成功',res)
+						if(res.data.status == true){
 							that.imageData = res.data.data;
-						} else {
+						}else{
 							that.imageData = [];
-							console.log(res.data.msg)
+							console.log(res.data.msg)  
 						}
 					},
 					fail(res) {
-						console.log('获取图片数据失败', res)
+						console.log('获取图片数据失败',res)
 					}
 				})
 			},
-			pictureClick: function(item) {
-				uni.navigateTo({
-					url: '../../pages_DDQC/pages/GRZY/HomepictureDetail?id=' + item.AID + '&mold=' + item.Mold
-				})
+			pictureClick:function(item){
+				// console.log('123',item)
+				if(item.Isclick == true){
+					uni.navigateTo({
+						url: '../../pages_DDQC/pages/GRZY/HomePictureDetail?id=' + item.AID + '&mold=' + item.Mold
+					})
+				}
 			},
 			//----------------------接口数据-------------------------------
 			loadData: function() {
@@ -481,7 +485,7 @@
 						'content-type': 'application/json'
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						this.imgXXDT = res.data.data.filter(item => {
 							return item.type == 'dongtai';
 						})
@@ -988,7 +992,7 @@
 			}
 		}
 	}
-
+	
 	.itemContent {
 		width: 20%;
 		height: 178upx;
@@ -1001,35 +1005,31 @@
 		height: 80rpx;
 		margin-top: 50upx;
 	}
-
 	//---------------------------------长运风采开始---------------------------------
 	//放置图片的view
-	.pictureView {
+	.pictureView{
 		width: 100%;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		padding-bottom: 10rpx;
+		padding-bottom: 20rpx;
 	}
-
 	//照片样式
-	.picClass {
+	.picClass{
 		width: 210upx;
 		height: 207upx;
 		overflow: hidden;
-		border-radius: 15upx;
+	    border-radius: 15upx;
 		margin-top: 10upx;
 		margin-right: 20upx;
 	}
-
 	//第一张照片
-	.firstPic {
-		width: 430upx;
+	.firstPic{
+		width: 440upx;
 		height: 207upx;
 		overflow: hidden;
 		border-radius: 15upx;
 	}
-
 	.picText {
 		font-size: 22upx;
 		bottom: 0;
@@ -1038,12 +1038,11 @@
 		bottom: 10rpx;
 		left: 10rpx;
 		position: absolute;
-
-		background: rgba(0, 0, 0, 1);
-		opacity: 0.7;
-		border-radius: 4px;
+		
+		background:rgba(0,0,0,1);
+		opacity:0.7;
+		border-radius:4px;
 	}
-
 	//---------------------------------长运风采结束---------------------------------
 	.itemText {
 		margin-top: 10rpx;
@@ -1273,11 +1272,11 @@
 		background: #fff;
 		margin-top: 16upx;
 		padding: 0 31upx;
-		padding-bottom: 20rpx;
+
 		.zl_reContent {
 			position: relative;
 			padding-top: 40upx;
-
+			
 			.zl_reTitle {
 				font-size: 32upx;
 				color: #333333;

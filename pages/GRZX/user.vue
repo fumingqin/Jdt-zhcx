@@ -158,7 +158,7 @@
 					model: 12,
 				},
 				success: (res) => {
-					console.log(res)
+					// console.log(res)
 					this.imageIndex = res.data.data
 			
 				},

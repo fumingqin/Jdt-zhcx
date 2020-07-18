@@ -231,7 +231,7 @@
 					type: '服务banner'
 				},
 				success: (res) => {
-					console.log(res)
+					// console.log(res)
 					this.imageIndex = res.data.data
 
 				},

@@ -37,7 +37,7 @@ function request (model,systemName) {
     	},
     	method:'POST',
     	success(res){
-    		console.log(res,"res")
+    		// console.log(res,"res")
     		if(systemName=="南平综合出行"){ //南平综合出行
     			var image1=res.data.data.filter(item => {
     				return item.type=='南平背景图';
