@@ -342,9 +342,9 @@
 							for (var i = 0; i < res.data.data.length; i++) {
 								// let display = '';
 								if(res.data.data[i].status == 7){//正常
-									that.markerIconPath = '../../static/GRZY/power.png'
+									that.markerIconPath = '../../static/RentBike/power.png'
 								}else if(res.data.data[i].status == 9){//离线
-									that.markerIconPath = '../../static/GRZY/powerOutline.png'
+									that.markerIconPath = '../../static/RentBike/powerOutline.png'
 								}
 								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
 								//创建绘制坐标点的对象marker
@@ -488,7 +488,6 @@
 						}else {
 							console.log('返回数据false',response)
 						}
-						
 					},
 					fail(response) {
 						console.log(response)
