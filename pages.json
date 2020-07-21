@@ -1077,6 +1077,12 @@
 						"navigationBarTitleText": "内容详情"
 					}
                 }
+                ,{
+                    "path" : "pages/RentBike/BusLocationMark",
+                    "style" : {
+						"navigationBarTitleText": "公交站点"
+					}
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------

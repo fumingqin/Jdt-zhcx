@@ -1,5 +1,6 @@
 //接口域名
 const Url = 'http://36.250.234.10:60040';
+const Url39 = 'http://36.250.234.10:60039';
 
 
 
@@ -286,9 +287,34 @@ const DDTInterface = {
 		},
 	},
 	getImage:{
-		Url: 'http://36.250.234.10:60039/api/zhcx/getImage',
+		Url: Url39 + '/api/zhcx/getImage',
 		name:'获取图片',
 		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
+	//-----------------------------------------公交站点接口------------------------------------------------
+	getBusStationInfoByLonLat:{
+		Url: Url39 + '/api/Bus/getBusStationInfoByLonLat',
+		name:'根据经纬度获取周围站点',
+		method:'GET',
+		header:{'content-type': 'application/json'},
+	},
+	GetStationByKeys:{
+		Url: Url + '/api/SmartBike/GetStationByKeys',
+		name:'桩站点查询根据关键字查询',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
+	GetBHTStation:{
+		Url: Url + '/api/SmartBike/GetBHTStation',
+		name:'无桩站点查询根据关键字查询',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
+	getPlanningWalkLineByLonLat:{
+		Url: Url39 + '/api/zhcx/getPlanningWalkLineByLonLat',
+		name:'步行线路规划',
+		method:'GET',
 		header:{'content-type': 'application/json'},
 	},
 }
