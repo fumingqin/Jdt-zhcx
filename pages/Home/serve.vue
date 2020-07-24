@@ -19,7 +19,7 @@
 					<image class="sv_print" src="../../static/Home/serve/gjchaxun.png"></image>
 					<text class="sv_text">公交查询</text>
 				</view>
-				<view class="sv_view3" @click="natTo('../../pages_DDQC/pages/Bus/TicketPurchase')">
+				<view class="sv_view3" @click="busJump">
 					<image class="sv_print" src="../../static/Home/CPDG.png"></image>
 					<text class="sv_text">车票订购</text>
 				</view>
@@ -219,7 +219,8 @@
 			return {
 				imageIndex: [{
 					imageUrl: '',
-				}] //首页图片
+				}] ,//首页图片
+				userInfo:'',
 			}
 		},
 		onLoad: function() {
@@ -237,7 +238,16 @@
 				},
 			})
 		},
+		onShow() {
+			this.userInfo = uni.getStorageSync('userInfo') || '';
+		},
 		methods: {
+			busJump: function() {
+				var Url = "../../pages_DDQC/pages/Bus/TicketPurchase?id=" + this.userInfo.userId;
+				uni.navigateTo({
+					url: Url,
+				});
+			},
 			natTo: function(url) {
 				if (url == '/pages_GJCX/pages/GJCX/busH5') {
 					// #ifdef MP-WEIXIN
