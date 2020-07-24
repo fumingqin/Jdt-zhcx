@@ -35,9 +35,7 @@
 			})
 		},
 		onBackPress:function(){
-			uni.switchTab({
-				url:'zy_zhcx'
-			})
+			return true;
 		},
 		methods: {
 			//跳转路由
