@@ -97,7 +97,7 @@
 							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text> 
 						</view>
 						<view>
-							<text style="font-size: 30rpx;">达达通客服:</text> 
+							<text style="font-size: 30rpx;">公共自行车:</text>
 							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text> 
 						</view>
 					</view>
@@ -235,6 +235,21 @@
 			}
 		},
 		onLoad() {
+			// #ifdef APP-PLUS
+			const value = uni.getStorageSync('launchFlag');
+			if(value !==true){
+				uni.setStorage({
+					key:'launchFlag',
+					data:true,
+					success:function(){
+						uni.redirectTo({
+							url:'guidePage'
+						})
+					}
+				})
+				
+			}
+			// #endif
 			var that = this;
 			//获取轮播图
 			that.GetRotationChart();
@@ -449,7 +464,7 @@
 			},
 			pictureClick:function(item){
 				// console.log('123',item)
-				if(item.Isclick == true){
+				if(item.IsClick == true){
 					uni.navigateTo({
 						url: '../../pages_DDQC/pages/GRZY/HomePictureDetail?id=' + item.AID + '&mold=' + item.Mold
 					})

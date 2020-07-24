@@ -23,29 +23,14 @@
 						
 						<view class="tx_text2">{{balance}}<text class="tx_text3">元</text></view>
 					</view>
-					<!-- 卡券 -->
-					<!-- <view class="ve_Text" hover-class="ve_hover2"  @click="Jump">
-						<view class="tx_text1">卡数</view>
-						<view class="tx_text2">{{personalHomepage.coupon}}<text class="tx_text3">张</text></view>
-					</view> -->
 					<!-- 押金 -->
 					<!-- 未交押金 -->
 					<view class="ve_Text" hover-class="ve_hover3" @click="open1">
-						<image class="tx_img" src="../../static/GRZY/chongzhi.png" v-if="depositStatus==0"></image>
+						<image class="tx_img" src="../../static/GRZY/chongzhi.png" v-if="depositStatus!=2"></image>
 						<view class="tx_text1">押金</view>
-						<view class="tx_text2" v-if="depositStatus==0||depositStatus==1">{{deposit}}<text class="tx_text3">元</text></view>
+						<view class="tx_text2" v-if="depositStatus!=2">{{deposit}}<text class="tx_text3">元</text></view>
 						<view class="noRefund" v-if="depositStatus==2">免押金</view>
 					</view>
-					<!-- 已交押金 -->
-					<!-- <view class="ve_Text" v-if="depositStatus==1 && commuterCardObject=='普通用户'" @click="open2">
-						<view class="tx_text1">押金</view>
-						<view class="tx_text2">{{deposit}}<text class="tx_text3">元</text></view>
-					</view> -->
-					
-					<!-- <view class="ve_Text" v-if="depositStatus==2">
-						<view class="tx_text1">押金</view>
-						<view style="font-size: 32upx;font-weight: bold;color: #78482a;margin-top: 23upx;font-family: Source Han Sans SC;padding-top: 20upx;">免押金</view>
-					</view> -->
 				</view>
 			</view>
 			
@@ -208,6 +193,7 @@
 				balance: 0, //钱包金额
 				deposit: 0, //押金金额
 				depositStatus: '', //押金状态
+				walletDepositStatus:'',//钱包押金状态
 				id: '',
 				status: '',
 				order_no: '',
@@ -312,14 +298,12 @@
 					success(res) {
 						uni.hideLoading()
 						console.log('获取钱包数据成功', res)
-						if (res.data.status == true && res.data.msg == '请求成功') {
+						if (res.data.status == true) {
 							that.walletData = res.data.data;
 							that.balance = res.data.data.balance / 100;
 							that.commuterCardCost = res.data.data.tqkBalance / 100;
-							// if (res.data.data.depositStatus != 0) {
-							// 	that.deposit = res.data.data.deposit / 100;
-							// }
-							// that.depositStatus = res.data.data.depositStatus;
+							that.deposit = res.data.data.deposit / 100;
+							that.walletDepositStatus = res.data.data.depositStatus;
 							that.id = res.data.data.id;
 							that.order_no = res.data.data.order_no;
 							that.status = res.data.data.status;
@@ -329,7 +313,6 @@
 								icon:'none'
 							})
 						}
-						console.log('获取押金状态', that.walletData)
 					},
 					fail(res) {
 						uni.hideLoading()
@@ -346,7 +329,7 @@
 					url:$DDTInterface.DDTInterface.Deposit.Url,
 					method:$DDTInterface.DDTInterface.Deposit.method,
 					success(res) {
-						console.log('获取押金金额成功',res)
+						// console.log('获取押金金额成功',res)
 						if(res.data.status == true){
 							that.depositNumber = res.data.data.price
 						}
@@ -364,10 +347,6 @@
 				})
 				var that = this;
 				that.$refs.popup.close()
-				// const now = new Date();
-				// const next = new Date(now.getTime() + 31536000000);
-				// console.log(now.toDateString());
-				// console.log(next.toDateString());
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetRecharge.Url,
 					method: $DDTInterface.DDTInterface.GetRecharge.method,
@@ -383,8 +362,8 @@
 					},
 					success(res) {
 						uni.hideLoading();
-						console.log('押金充值返回支付参数成功结果', res)
-						if (res.data.status == true && res.data.data) {
+						// console.log('押金充值返回支付参数成功结果', res)
+						if (res.data.status == true) {
 							let obj = {
 								appid: res.data.data.appid,
 								noncestr: res.data.data.noncestr,
@@ -408,7 +387,7 @@
 							content:res,
 						})
 						uni.hideLoading();
-						console.log('押金充值返回支付参数失败', res)
+						// console.log('押金充值返回支付参数失败', res)
 					}
 				})
 			},
@@ -783,7 +762,7 @@
 						that.depositStatus = res.data.data.DepositType;
 						//获取当前是普通用户还是免押金用户
 						that.commuterCardObject = res.data.data.UserType;
-						that.deposit = res.data.data.Deposit / 100;
+						// that.deposit = res.data.data.Deposit / 100;
 						//判断是否有通勤卡
 						that.isCommuteCard = res.data.data.CommuteCard;
 						//用户类型--普通用户，公务员，集团用户

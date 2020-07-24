@@ -1,9 +1,11 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		//--------------------引导判断页--------------------
+		//------------首页----------------------
 		{
-			"path": "pages/Home/init",
-			"style": {}
+			"path": "pages/Home/zy_zhcx",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		},
 		//--------------------引导页--------------------
 		{
@@ -165,13 +167,6 @@
 				"navigationStyle": "custom",
 				// #endif
 				"navigationBarTitleText": "服务"
-			}
-		},
-		//------------首页----------------------
-		{
-			"path": "pages/Home/zy_zhcx",
-			"style": {
-				"navigationStyle": "custom"
 			}
 		}
 	],
@@ -1075,6 +1070,12 @@
                     "path" : "pages/GRZY/HomePictureDetail",
                     "style" : {
 						"navigationBarTitleText": "内容详情"
+					}
+                }
+                ,{
+                    "path" : "pages/RentBike/BusLocationMark",
+                    "style" : {
+						"navigationBarTitleText": "公交站点"
 					}
                 }
             ]
