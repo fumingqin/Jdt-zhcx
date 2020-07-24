@@ -157,6 +157,7 @@
 			// plus.push.addEventListener('click',_handlePush); //点击推送消息时 
 			// // plus.push.addEventListener('receive',_handlePush); //从推送服务器获得消息时
 			// // #endif
+			
 			var that = this;
 			let userInfo = uni.getStorageSync('userInfo') || '';
 			if (userInfo == '') {
@@ -165,6 +166,7 @@
 			// #ifdef APP-PLUS
 			that.LoginLog(userInfo.userId,userInfo.phoneNumber);
 			// #endif
+			
 		},
 		onShow: function() {
 			var that = this;

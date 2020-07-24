@@ -236,20 +236,20 @@
 		},
 		onLoad() {
 			// #ifdef APP-PLUS
-			const value = uni.getStorageSync('launchFlag');
-			if(value !==true){
+			let value = uni.getStorageSync('launchFlag');
+			if(value !== true){
 				uni.setStorage({
 					key:'launchFlag',
 					data:true,
 					success:function(){
-						uni.redirectTo({
+						uni.navigateTo({
 							url:'guidePage'
 						})
 					}
 				})
-				
 			}
 			// #endif
+
 			var that = this;
 			//获取轮播图
 			that.GetRotationChart();
