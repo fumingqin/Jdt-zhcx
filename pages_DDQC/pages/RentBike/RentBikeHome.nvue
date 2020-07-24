@@ -29,17 +29,20 @@
 		<!-- 搜索框 -->
 		<view class="topSerchView">
 			<view class="SearchBar" elevation='5px'>
-				<input class="addressInput" @input="onInput" placeholder="请输入关键字搜索" />
+				<!-- <uni-search-bar class="SearchBar" radius="5" placeholder="请输入关键字搜索" clearButton="always" cancelButton="always" @confirm="onInput" /> -->
+				<input class="addressInput" :value="inputValue" clearButton="always" @input="onInput" placeholder="请输入关键字搜索" />
+				<text style="margin-right: 20rpx;font-size: 32rpx;color: #999999;" @click="searClick">取消</text>
+			</view>
+			<!-- 搜索列表 -->
+			<view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList">
+				<block v-for="(item,index) in keywordList" :key="index">
+					<view class="listItem">
+						<jyf-parser :html="item.htmlStr" show-with-animation="true" @click="itemClick(item,index)"></jyf-parser>
+					</view>
+				</block>
 			</view>
 		</view>
-		<!-- 搜索列表 -->
-		<!-- <view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList">
-			<block v-for="(item,index) in keywordList" :key="index">
-				<view class="listItem" @tap="itemClick(index)">
-					<rich-text :nodes="item.htmlStr"></rich-text>
-				</view>
-			</block>
-		</view> -->
+		
 		
 		<!-- 回到自身定位按钮 -->
 		<image src="../../static/GRZY/Position.png" class="dingwei" @click="backToMyLocation"></image>
@@ -66,10 +69,17 @@
 </template>
 
 <script>
+	import jyfParser from "../../components/jyf-parser/jyf-parser.vue"
+	import uniSearchBar from "../../components/searchBar/uni-search-bar/uni-search-bar.vue"
 	import $DDTInterface from '@/common/DDT.js'
 	export default {
+		components: {
+		    jyfParser,
+			uniSearchBar
+		  },
 		data() {
 			return {
+				inputValue:'',//搜索框内容
 				userInfo: [], //用户信息
 				mapHeight: '', //地图高度
 				Height:'',
@@ -94,6 +104,9 @@
 				currentLongitude:'',//有桩开启定位时显示的位置--经度
 				isLocation:false,//判断当前是否开启定位--默认是不开启
 				markLonLatArray:[],//标记点坐标数组
+				scrollHeight:'500px',//搜索列表高度
+				isShowList:false,//是否显示站点列表
+				keywordList:[],//标记点列表
 			}
 		},
 		onLoad() {
@@ -172,10 +185,112 @@
 					}
 				})
 			},
-			//-------------------------监听输入-------------------------
+			//-------------------------监听输入开始-------------------------
 			onInput(event){
-				console.log(event)
+				var that = this;
+				var keyword = event.detail?event.detail.value:event;
+				that.inputValue = event.detail?event.detail.value:event;
+				if (keyword == "") {
+					that.keywordList = [];
+					that.isShowList = false;
+				}else{
+					//如果在这里直接搜索的话会有一个问题：每打一个字都会触发一次搜索接口，每删一个字也会触发
+					//如果删除太快就会出现输入框里已经没有内容，但是还是会触发搜索，因为在删到剩下一个字的时候还是会调搜索接口
+					that.GetStationByKeys(keyword);
+				}
 			},
+			//-------------------------点击搜索时重新搜索关键字-------------------------
+			searClick:function(){
+				var that = this;
+				if(that.inputValue){
+					that.isShowList = false;
+					that.keywordList = [];
+					that.inputValue = '';
+					// that.GetStationByKeys(that.inputValue);
+				}
+			},
+			//-------------------------根据关键字查询-------------------------
+			GetStationByKeys:function(keyword){
+				var that = this;
+				uni.showLoading({
+					title:'正在加载...'
+				})
+				var Url = '';
+				if(that.isClick == '有桩'){
+					Url = $DDTInterface.DDTInterface.GetStationByKeys.Url
+				}else {
+					Url = $DDTInterface.DDTInterface.GetBHTStation.Url
+				}
+				uni.request({
+					url:Url,
+					method:$DDTInterface.DDTInterface.GetStationByKeys.method,
+					data:{
+						Keys:keyword
+					},
+					success(res) {
+						uni.hideLoading()
+						console.log('获取模糊查询成功',res)
+						if(res.data.status == true){
+							if(res.data.data != ""){
+								that.keywordList = that.drawCorrelativeKeyword(res.data.data, keyword);
+								that.isShowList = true;
+							}else {
+								that.isShowList = false;
+								uni.showToast({
+									title:'查无站点',
+									icon:'none'
+								})
+							}
+						}else{
+							that.isShowList = false;
+							uni.showToast({
+								title:'查无站点',
+								icon:'none'
+							})
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log('获取模糊查询失败',res)
+					}
+				})
+			},
+			//-------------------------高亮关键字-------------------------
+			drawCorrelativeKeyword(keywords, keyword) {
+				// console.log(keywords);
+				var len = keywords.length,
+					keywordArr = [];
+				for (var i = 0; i < len; i++) {
+					var row = keywords[i].name;
+					//定义高亮#9f9f9f
+					var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
+					html = '<div>' + html + '</div>';
+					var tmpObj = {
+						keyword: row,
+						htmlStr: html,
+						data:keywords
+					};
+					keywordArr.push(tmpObj)
+				}
+				// console.log(keywordArr)
+				return keywordArr;
+			},
+			//-------------------------点击下拉站点-------------------------
+			itemClick:function(item,index){
+				var that = this;
+				console.log('123456',item)
+				that.inputValue = item.keyword;
+				//点击站点时将对应的站点坐标设置为地图中心位置，并放大地图
+				var gpsArray = item.data[index].gps.split(',')
+				console.log(gpsArray)
+				that.centerLatitude = gpsArray[0];
+				that.centerLongitude = gpsArray[1];
+				console.log(that.centerLatitude)
+				console.log(that.centerLongitude)
+				// that.scale = 15;
+				that.isShowList = false;
+			},
+			//-------------------------监听输入结束-------------------------
 			//-------------------------------获取自身位置-------------------------------
 			getMyLocation: function() {
 				var that = this;
@@ -425,6 +540,7 @@
 			//-------------------------------点击标题-------------------------------
 			titleClick: function(res) {
 				var that = this;
+				that.isShowList = false;
 				that.mapContext.getScale({
 					success(res) {
 						console.log(res)
@@ -706,7 +822,7 @@
 				})
 			}
 		},
-		//-------------------------------点击标记点-------------------------------
+		//-------------------------------点击标记点规划线路-------------------------------
 		markertap:function(e){
 			var that = this;
 			//当前位置的经纬度
@@ -793,13 +909,20 @@
 	}
 	/* 站点列表 */
 	.stationList {
-		background-color: #FFFFFF;
-		line-height: 80rpx;
-		font-size: 28rpx;
+		width: 710rpx;
 		height: 100rpx;
+		background-color: #FFFFFF;
+		line-height: 100rpx;
+		font-size: 28rpx;
+		margin-left: 20rpx;
+		margin-top: 20rpx;
+		border-radius: 10rpx;
 	}
 	.listItem{
+		margin-top: 20rpx;
 		margin-left: 20rpx;
+		border-bottom-width: 0.5rpx;
+		border-color: #eeeeee;
 	}
 	.bottomView {
 		background-color: #FFFFFF;

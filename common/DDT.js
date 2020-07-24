@@ -317,6 +317,12 @@ const DDTInterface = {
 		method:'GET',
 		header:{'content-type': 'application/json'},
 	},
+	getPlanningWalkLineByLonLat:{
+		Url: 'http://36.250.234.10:60035' + '/api/Suggestion/Add_Suggestion',
+		name:'意见反馈',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
 }
 // 接口声明区
 export default {
