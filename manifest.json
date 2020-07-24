@@ -2,8 +2,8 @@
     "name" : "漳州达达通",
     "appid" : "__UNI__7BBF03F",
     "description" : "",
-    "versionName" : "1.0.2",
-    "versionCode" : 1008,
+    "versionName" : "1.0.1",
+    "versionCode" : 1007,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -184,7 +184,8 @@
         },
         "uniStatistics" : {
             "enable" : true
-        }
+        },
+        "nvueLaunchMode" : ""
     },
     /* 快应用特有相关 */
     "quickapp" : {},
