@@ -92,14 +92,14 @@
 				</view>
 				<view style="padding: 40rpx 0;display: flex;justify-content: center;align-items: center;">
 					<view style="display: flex;flex-direction: column;">
-						<view>
-							<text style="font-size: 30rpx;">长 运 总 机:</text>   
-							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone2}}</text> 
+						<view v-for="(item,index) in PhoneArray" :key="index">
+							<text style="font-size: 30rpx;">{{item.Title + ':'}}</text>   
+							<text style="font-size: 30rpx;color: #65C36D;">{{item.Phone}}</text> 
 						</view>
-						<view>
-							<text style="font-size: 30rpx;">公共自行车:</text>
-							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArr.Phone1}}</text> 
-						</view>
+						<!-- <view>
+							<text style="font-size: 30rpx;">{{PhoneArray[1].Title+':'}}</text>
+							<text style="font-size: 30rpx;color: #65C36D;">{{PhoneArray[1].Phone}}</text> 
+						</view> -->
 					</view>
 				</view>
 			</view>
@@ -142,6 +142,7 @@
 					ImageURL: ''
 				}], //轮播图
 				type: 0,
+				PhoneArray:[],//电话数组
 				Announcement: '', //资讯动态
 				sixPalaceList: [{
 					ticketId: '',
@@ -270,6 +271,8 @@
 			that.getImageData();
 			//获取客服热线
 			that.ConsumerHotline();
+			//获取新客服热线
+			that.ConsumerHotlineNew();
 			//清除应用右上角数字，暂时放在这里清除
 			plus.runtime.setBadgeNumber(0);
 		},
@@ -410,7 +413,24 @@
 						// console.log(res)
 						if (res.data.status == true) {
 							uni.setStorageSync('ConsumerHotline', res.data.data)
-							that.PhoneArr = res.data.data;
+							// that.PhoneArr = res.data.data;
+						}
+					},
+					fail(res) {
+						console.log('返回客服热线数据失败', res)
+					}
+				})
+			},
+			ConsumerHotlineNew: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.ConsumerHotlineNew.Url,
+					method: $DDTInterface.DDTInterface.ConsumerHotlineNew.method,
+					data: {},
+					success(res) {
+						console.log(res)
+						if (res.data.status == true) {
+							that.PhoneArray = res.data.data
 						}
 					},
 					fail(res) {

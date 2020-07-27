@@ -168,6 +168,14 @@ const DDTInterface = {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	},
+	ConsumerHotlineNew: {
+		Url: Url + '/api/SmartBikePerson/ConsumerHotlineNew',
+		name: '新客服热线',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 	GetHomeStyle: {
 		Url: Url + '/api/SmartBikePerson/GetHomeStyle',
 		name: '首页长运风采图片',
