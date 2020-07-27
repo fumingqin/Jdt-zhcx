@@ -376,8 +376,8 @@
 									uni.showModal({
 										title: '温馨提示',
 										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
-										complete(res) {
-											if (res.confirm) {
+										complete(res1) {
+											if (res1.confirm) {
 												let url = res.data.data.UpdateUrl;
 												plus.runtime.openURL(url, function(res) {
 													console.log(res);
