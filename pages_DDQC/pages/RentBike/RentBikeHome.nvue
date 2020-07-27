@@ -30,17 +30,17 @@
 		<view class="topSerchView">
 			<view class="SearchBar" elevation='5px'>
 				<!-- <uni-search-bar class="SearchBar" radius="5" placeholder="请输入关键字搜索" clearButton="always" cancelButton="always" @confirm="onInput" /> -->
-				<input class="addressInput" :value="inputValue" clearButton="always" @input="onInput" placeholder="请输入关键字搜索" />
+				<input class="addressInput" :value="inputValue" clearButton="always" @input="onInput" placeholder="请输入关键字搜索" @blur="blur" />
 				<text style="margin-right: 20rpx;font-size: 32rpx;color: #999999;" @click="searClick">取消</text>
 			</view>
 			<!-- 搜索列表 -->
-			<scroll-view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList" scroll-y="true">
+			<view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList">
 				<block v-for="(item,index) in keywordList" :key="index">
 					<view class="listItem">
 						<jyf-parser :html="item.htmlStr" show-with-animation="true" @click="itemClick(item,index)"></jyf-parser>
 					</view>
 				</block>
-			</scroll-view>
+			</view>
 		</view>
 		
 		
@@ -91,7 +91,7 @@
 				polyline: [], //画线数组
 				mapContext: '',
 				isClick: '无桩', //是否点击
-				markerIconPath:'../../static/GRZY/power.png',
+				markerIconPath:'../../static/RentBike/power.png',
 				bicycleIconPath:'../../static/RentBike/bicycleGreen.png',
 				//标识宽高
 				iconWidth:40,
@@ -104,7 +104,7 @@
 				currentLongitude:'',//有桩开启定位时显示的位置--经度
 				isLocation:false,//判断当前是否开启定位--默认是不开启
 				markLonLatArray:[],//标记点坐标数组
-				scrollHeight:'300px',//搜索列表高度
+				scrollHeight:'500px',//搜索列表高度
 				isShowList:false,//是否显示站点列表
 				keywordList:[],//标记点列表
 			}
@@ -194,17 +194,28 @@
 					that.keywordList = [];
 					that.isShowList = false;
 				}else{
+					that.isShowList = true;
 					//如果在这里直接搜索的话会有一个问题：每打一个字都会触发一次搜索接口，每删一个字也会触发
 					//如果删除太快就会出现输入框里已经没有内容，但是还是会触发搜索，因为在删到剩下一个字的时候还是会调搜索接口
 					that.GetStationByKeys(keyword);
 				}
 			},
+			blur:function(){
+				// console.log('失去焦点了')
+				var that = this;
+				// if(that.isShowList == true){
+				// 	that.isShowList = false
+				// }
+			},
 			//-------------------------点击搜索时重新搜索关键字-------------------------
 			searClick:function(){
 				var that = this;
+				if(that.isShowList == true){
+					that.isShowList = false
+				}
 				if(that.inputValue){
-					that.isShowList = false;
 					that.keywordList = [];
+					
 					that.inputValue = '';
 					// that.GetStationByKeys(that.inputValue);
 				}
@@ -233,9 +244,7 @@
 						if(res.data.status == true){
 							if(res.data.data != ""){
 								that.keywordList = that.drawCorrelativeKeyword(res.data.data, keyword);
-								that.isShowList = true;
 							}else {
-								that.isShowList = false;
 								uni.showToast({
 									title:'查无站点',
 									icon:'none'
@@ -278,7 +287,7 @@
 			//-------------------------点击下拉站点-------------------------
 			itemClick:function(item,index){
 				var that = this;
-				console.log('123456',item)
+				// console.log('123456',item)
 				that.inputValue = item.keyword;
 				//点击站点时将对应的站点坐标设置为地图中心位置，并放大地图
 				var gpsArray = item.data[index].gps.split(',')
@@ -883,7 +892,7 @@
 	/* 搜索框 */
 	.topSerchView {
 		position: fixed;
-		/* height: 100rpx; */
+		height: 100rpx;
 		left: 0;
 		right: 0;
 		top: 200rpx;
@@ -910,7 +919,7 @@
 	/* 站点列表 */
 	.stationList {
 		width: 710rpx;
-		height: 100rpx;
+		/* height: 100rpx; */
 		background-color: #FFFFFF;
 		line-height: 100rpx;
 		font-size: 28rpx;
