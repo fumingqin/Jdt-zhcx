@@ -30,10 +30,10 @@
 				polyline: [], //画线数组
 				currentLatitude: '', //当前纬度
 				currentLongitude: '', //当前经度
-				busIconPath: '../../static/RentBike/bicycleGreen.png',
+				busIconPath: '../../static/RentBike/BusGreen.png',
 				//标识宽高
-				iconWidth: 40,
-				iconHeight: 40,
+				iconWidth: 60,
+				iconHeight:60,
 				markArray:[],//放置周围公交站点
 			}
 		},
@@ -45,7 +45,7 @@
 			_self.back();
 			return true;
 		},
-		onLoad() {
+		onLoad() { 
 			_self = this;
 			//获取系统信息
 			uni.getSystemInfo({
@@ -74,6 +74,8 @@
 					//是否解析地址信息，默认false
 					geocode: true,
 					success: function(res) {
+						that.centerLatitude= res.latitude; //地图中心点纬度
+						that.centerLongitude= res.longitude;  //地图中心点经度
 						_self.currentLongitude = res.longitude; //--纬度
 						_self.currentLatitude = res.latitude; //--经度
 						_self.getBusStationInfoByLonLat(res.longitude, res.latitude)

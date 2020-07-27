@@ -34,13 +34,13 @@
 				<text style="margin-right: 20rpx;font-size: 32rpx;color: #999999;" @click="searClick">取消</text>
 			</view>
 			<!-- 搜索列表 -->
-			<view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList">
+			<scroll-view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList" scroll-y="true">
 				<block v-for="(item,index) in keywordList" :key="index">
 					<view class="listItem">
 						<jyf-parser :html="item.htmlStr" show-with-animation="true" @click="itemClick(item,index)"></jyf-parser>
 					</view>
 				</block>
-			</view>
+			</scroll-view>
 		</view>
 		
 		
@@ -104,7 +104,7 @@
 				currentLongitude:'',//有桩开启定位时显示的位置--经度
 				isLocation:false,//判断当前是否开启定位--默认是不开启
 				markLonLatArray:[],//标记点坐标数组
-				scrollHeight:'500px',//搜索列表高度
+				scrollHeight:'300px',//搜索列表高度
 				isShowList:false,//是否显示站点列表
 				keywordList:[],//标记点列表
 			}
@@ -883,7 +883,7 @@
 	/* 搜索框 */
 	.topSerchView {
 		position: fixed;
-		height: 100rpx;
+		/* height: 100rpx; */
 		left: 0;
 		right: 0;
 		top: 200rpx;
@@ -910,7 +910,7 @@
 	/* 站点列表 */
 	.stationList {
 		width: 710rpx;
-		/* height: 100rpx; */
+		height: 100rpx;
 		background-color: #FFFFFF;
 		line-height: 100rpx;
 		font-size: 28rpx;

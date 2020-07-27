@@ -1063,7 +1063,7 @@
 		margin-top: 10rpx;
 		font-size: 30rpx;
 		font-family: Source Han Sans SC;
-		font-weight: 400;
+		font-weight:bold;
 		color: #333333;
 		display: block;
 	}
