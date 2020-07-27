@@ -910,7 +910,7 @@
 	/* 站点列表 */
 	.stationList {
 		width: 710rpx;
-		height: 100rpx;
+		/* height: 100rpx; */
 		background-color: #FFFFFF;
 		line-height: 100rpx;
 		font-size: 28rpx;

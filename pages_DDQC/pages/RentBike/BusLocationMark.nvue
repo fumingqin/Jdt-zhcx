@@ -185,28 +185,30 @@
 								_self.polyline = [];
 								var polylineArr = res.data.Polyline;
 								var points = [];
-								for (var i = 0; i < polylineArr.length; i++) {
-									var arr = polylineArr[i].split(';');
-									for (var j = 0; j < arr.length; j++) {
-										points.push(arr[j]);
+								if(polylineArr){
+									for (var i = 0; i < polylineArr.length; i++) {
+										var arr = polylineArr[i].split(';');
+										for (var j = 0; j < arr.length; j++) {
+											points.push(arr[j]);
+										}
 									}
-								}
-								//根据文件建设对象经纬度数组
-								for (var i = 0; i < points.length; i++) {
-									var arr = points[i].split(',');
+									//根据文件建设对象经纬度数组
+									for (var i = 0; i < points.length; i++) {
+										var arr = points[i].split(',');
+										var obj = {
+											longitude: arr[0],
+											latitude: arr[1]
+										}
+										_self.points.push(obj);
+									}
 									var obj = {
-										longitude: arr[0],
-										latitude: arr[1]
-									}
-									_self.points.push(obj);
+										points: _self.points,
+										color: "#4bdc27",
+										arrowLine: true,
+										width: 6
+									};
+									_self.polyline.push(obj);
 								}
-								var obj = {
-									points: _self.points,
-									color: "#4bdc27",
-									arrowLine: true,
-									width: 6
-								};
-								_self.polyline.push(obj);
 							},
 							fail(res) {
 								console.log('获取规划线路失败',res)
