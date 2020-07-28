@@ -325,9 +325,33 @@ const DDTInterface = {
 		method:'GET',
 		header:{'content-type': 'application/json'},
 	},
-	getPlanningWalkLineByLonLat:{
-		Url: 'http://36.250.234.10:60035' + '/api/Suggestion/Add_Suggestion',
+	Add_Suggestion:{
+		Url: Url + '/api/Suggestion/Add_Suggestion',
 		name:'意见反馈',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
+	GetMySuggestionList:{
+		Url: Url + '/api/Suggestion/GetMySuggestionList',
+		name:'意见反馈列表',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
+	Add_FailureReport:{
+		Url: Url + '/api/FailureReport/Add_FailureReport',
+		name:'添加故障上报',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
+	GetMyFailureReportList:{
+		Url: Url + '/api/FailureReport/GetMyFailureReportList',
+		name:'获取用户故障上报列表',
+		method:'POST',
+		header:{'content-type': 'application/json'},
+	},
+	GetThisFailureReport:{
+		Url: Url + '/api/FailureReport/GetThisFailureReport',
+		name:'根据故障ID获取故障上报',
 		method:'POST',
 		header:{'content-type': 'application/json'},
 	},

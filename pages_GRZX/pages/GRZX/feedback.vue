@@ -145,8 +145,8 @@
 						key:'userInfo',
 						success: (res) => {
 							uni.request({
-								url:$DDTInterface.DDTInterface.getPlanningWalkLineByLonLat.Url,
-								method:$DDTInterface.DDTInterface.getPlanningWalkLineByLonLat.method,
+								url:$DDTInterface.DDTInterface.Add_Suggestion.Url,
+								method:$DDTInterface.DDTInterface.Add_Suggestion.method,
 								data:{
 									SuggestionPicture:_self.base64Array,//照片数组base64
 									Suggestion:_self.ideaContent,//反馈内容

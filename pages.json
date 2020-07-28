@@ -1078,6 +1078,23 @@
 						"navigationBarTitleText": "公交站点"
 					}
                 }
+                ,{
+                    "path" : "pages/GRZY/feedbackList",
+                    "style" : {
+						"navigationBarTitleText": "反馈列表",
+						"app-plus": {
+							"titleNView": {
+								"buttons": [{
+									"text": "反馈",
+									"type": "transparent",
+									"float":"right",
+									"fontSize": "16px",
+									"width": "77px"
+								}]
+							}
+						}
+					}
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------

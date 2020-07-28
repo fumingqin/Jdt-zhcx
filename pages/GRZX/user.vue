@@ -393,11 +393,13 @@
 			feedbackClick() {
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
-					url: this.$GrzxInter.Route.feedback.url,
+					// url: this.$GrzxInter.Route.feedback.url,
+					url:'../../pages_DDQC/pages/GRZY/feedbackList'
 				})
 			},
 			//-----------------------------拍照返现------------------------
 			pictureClick() {
+				console.log('123')
 				uni.navigateTo({
 					// url:'/pages/GRZX/feedback'
 					url: '../../pages_GRZX/pages/GRZX/pictureList',
