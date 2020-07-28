@@ -4,7 +4,7 @@
 			<view class="list">
 				<view>
 					<view class="listItem" style="font-weight: bolder;">用户反馈：{{item.Suggestion}}</view>
-					<view class="listItem">客服回复：{{feedData(item)}}</view>
+					<view class="listItem" v-if="item.IsReply">客服回复：{{item.ReplyContent}}</view>
 					<view class="listItem">{{getTime(item.SuggestionTime)}}</view>
 				</view>
 				<!-- <view class="detail">详情</view> -->
