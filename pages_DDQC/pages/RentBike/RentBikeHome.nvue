@@ -270,6 +270,7 @@
 				var that = this;
 				var len = keywords.length,
 					keywordArr = [];
+					var arr=[];
 				for (var i = 0; i < len; i++) {
 					if (that.isClick == '有桩') {
 						var row = keywords[i].name;
@@ -283,9 +284,10 @@
 						keyword: row,
 						htmlStr: html,
 						data: keywords
-					};
-					keywordArr.push(tmpObj)
+					}; 
+					arr.push(tmpObj)
 				}
+				keywordArr=arr;
 				// console.log(keywordArr)
 				return keywordArr;
 			},

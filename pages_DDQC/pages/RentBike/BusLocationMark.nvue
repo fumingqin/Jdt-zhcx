@@ -5,6 +5,11 @@
 		 @regionchange='mapChange' @markertap='markertap'>
 			<cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
+		<view style="position: fixed;top:50rpx;left: 25rpx;right: 25rpx;background-color: #FFF;height: 80rpx;border-radius: 6rpx;justify-content: center;" @click="GoBusSearch">
+			<view>
+				<text style="margin-left: 20rpx;font-size: 30rpx;color: #999;">公交线路查询</text>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -63,6 +68,15 @@
 			back: function() {
 				uni.navigateTo({
 					url: './RentBikeHome'
+				})
+			},
+			GoBusSearch:function(){
+				console.log(11)
+				uni.navigateTo({
+					url:"../Bus/BusSeach",
+					complete(res) {
+						console.log(res)
+					}
 				})
 			},
 			//-------------------------------获取自身位置-------------------------------
