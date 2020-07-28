@@ -63,6 +63,12 @@
 			<text style="font-size: 26rpx;font-weight: bold;">计费</text>
 			<text style="font-size: 26rpx;font-weight: bold;">规则</text>
 		</view>
+		<!-- 故障上报 -->
+		<view class="rule" style="bottom: 245rpx;" @click="breakdownClick">
+			<text style="font-size: 26rpx;font-weight: bold;">故障</text>
+			<text style="font-size: 26rpx;font-weight: bold;">上报</text>
+		</view>
+		
 		<view class="busClass" @click="busClick">
 			<text style="font-size: 26rpx;font-weight: bold;">公交</text>
 		</view>
@@ -161,11 +167,19 @@
 			that.mapContext = uni.createMapContext("map", this);
 		},
 		methods: {
+			//计费规则
 			BillingRule: function() {
 				uni.navigateTo({
 					url: "./BillingRule"
 				})
 			},
+			//故障上报
+			breakdownClick:function(){
+				uni.navigateTo({
+					url: "./uploadBreakdown"
+				})
+			},
+			//点击公交
 			busClick: function() {
 				uni.redirectTo({
 					url: "./BusLocationMark"
