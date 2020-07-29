@@ -1,9 +1,9 @@
 <template>
-	<view>
+	<view class="content">
 		<block v-for="(item,index) in feedbackList" :key="index">
 			<view class="list">
 				<view>
-					<view class="listItem" style="font-weight: bolder;">用户反馈：{{item.Suggestion}}</view>
+					<view class="listItem" style="font-weight: bolder;" >用户反馈：{{item.Suggestion}}</view>
 					<view class="listItem" v-if="item.IsReply">客服回复：{{item.ReplyContent}}</view>
 					<view class="listItem">{{getTime(item.SuggestionTime)}}</view>
 				</view>
@@ -83,15 +83,22 @@
 </script>
 
 <style>
+	page,
+	.content{
+		height: 100%;
+		width: 100%;
+		background-color: #EEEEEE;
+	}
+	
 .list{
 	align-items: center;
-	margin-top: 40rpx;
+	margin-top: 20rpx;
 	display: flex;
     justify-content: space-between;
 	border-radius: 15rpx;
 	margin-left: 10rpx;
 	margin-right: 10rpx;
-	background-color: #EEEEEE;
+	background-color: #FFFFFF;
 }
 .listItem{
 	text-overflow: ellipsis;

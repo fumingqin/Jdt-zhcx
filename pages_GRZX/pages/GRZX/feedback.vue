@@ -1,31 +1,31 @@
 <template>
 	<view>
-	<form @submit="formSubmit" >
-		<view class="fb_view">
+	    <form @submit="formSubmit" >
 			<text class="fb_Text">意见反馈</text>
-			<textarea class="fb_Textarea" placeholder-style="#AAAAAA" placeholder="您的宝贵意见将会让我们提供更好的服务质量" maxlength="500" v-model="ideaContent" @input="descInput" />
-			<view class="fb_words">{{remnant}}/500字</view>
-		</view>
-		<view class="upLoadView">
-			<text class="uploadText">上传图片</text>
-			
-			<view class="imagView">
-				<view class="imgItem" v-for="(item, index) in imgList" :key="index">
-					<image class="image" @click="imgInfo(index)" :src="item.path" mode="aspectFill"></image>
-					<image class="imgDel" @click="delImg(index)" src="../../static/GRZX/delete.png"></image>
-				</view>
-				<view v-if="imgList.length < 3 " class="imgItem" @click="openCamera">
-					<image class="image" src="../../static/GRZX/add.png"></image>
-				</view>
+			<view class="fb_view">
+				<textarea class="fb_Textarea" placeholder-style="#AAAAAA" placeholder="您的宝贵意见将会让我们提供更好的服务质量" maxlength="500" v-model="ideaContent" @input="descInput" />
+				<view class="fb_words">{{remnant}}/500字</view>
 			</view>
-			
-			<!-- <view class="scClass">
-				<robby-image-upload v-model="detailInfo.imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
-			</view> -->
-		</view>
-		<view class="fb_view3">
-			<button class="fb_btn" form-type="submit">提交</button>
-		</view>
+			<view class="upLoadView">
+				<text class="uploadText">上传图片</text>
+				
+				<view class="imagView">
+					<view class="imgItem" v-for="(item, index) in imgList" :key="index">
+						<image class="image" @click="imgInfo(index)" :src="item.path" mode="aspectFill"></image>
+						<image class="imgDel" @click="delImg(index)" src="../../static/GRZX/delete.png"></image>
+					</view>
+					<view v-if="imgList.length < 3 " class="imgItem" @click="openCamera">
+						<image class="image" src="../../static/GRZX/add.png"></image>
+					</view>
+				</view>
+				
+				<!-- <view class="scClass">
+					<robby-image-upload v-model="detailInfo.imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
+				</view> -->
+			</view>
+			<view class="fb_view3">
+				<button class="fb_btn" form-type="submit">提交</button>
+			</view>
 		</form>
 	</view>
 </template>
@@ -292,14 +292,8 @@
 			height:396upx;
 			background: #FFFFFF;
 			border-bottom: 1px #F5F5F5 dotted;
-
-			.fb_Text {
-				font-weight: bold;
-				font-size: 30upx;
-				position: absolute;
-				left: 34upx;
-				top: 56upx;
-			}
+			margin-top: 30rpx;
+			
 
 			.fb_Textarea {
 				font-size: 30upx;
@@ -330,6 +324,14 @@
 				color: #FFFFFF;
 			}
 		}
+		
+	.fb_Text {
+		font-weight: bold;
+		font-size: 30upx;
+		position: absolute;
+		left: 34upx;
+		top: 56upx;
+	}
 	.upLoadView{
 		margin-top: 20rpx;
 		width: 100%;

@@ -676,9 +676,10 @@
 				var that = this;
 				//扫描二维码
 				uni.scanCode({
-					onlyFromCamera: true,
+					onlyFromCamera: false,
 					success: function(res) {
-						var index = res.result.indexOf("http://q.diiing.cn");
+						console.log(res)
+						// var index = res.result.indexOf("http://q.diiing.cn");
 						//根据二维码的内容判断是有桩还是无桩
 						// if(index!=-1){
 						// 	that.isClick == '有桩'
@@ -733,6 +734,7 @@
 					},
 					success(response) {
 						uni.hideLoading()
+						console.log(response)
 						if (response.data.status == true) {
 							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
 							if (response.data.data.BizStatus == '1004') {
