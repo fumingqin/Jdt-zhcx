@@ -60,17 +60,17 @@
 		<image src="../../static/GRZY/personal.png" class="personal" @click="personalClick"></image>
 		<!-- 计费规则 -->
 		<view class="rule" @click="BillingRule">
-			<text style="font-size: 26rpx;font-weight: bold;">计费</text>
-			<text style="font-size: 26rpx;font-weight: bold;">规则</text>
+			<text class="circleText">计费</text>
+			<text class="circleText">规则</text>
 		</view>
 		<!-- 故障上报 -->
-		<view class="rule" style="bottom: 245rpx;" @click="breakdownClick">
-			<text style="font-size: 26rpx;font-weight: bold;">故障</text>
-			<text style="font-size: 26rpx;font-weight: bold;">上报</text>
+		<view class="rule" style="bottom: 255rpx;" @click="breakdownClick">
+			<text class="circleText">故障</text>
+			<text class="circleText">上报</text>
 		</view>
 		
 		<view class="busClass" @click="busClick">
-			<text style="font-size: 26rpx;font-weight: bold;">公交</text>
+			<text class="circleText">公交</text>
 		</view>
 	</view>
 </template>
@@ -1030,7 +1030,7 @@
 		left: 375rpx;
 		transform: translate(-50%, -50%);
 	}
-
+	/* 计费规则 */
 	.rule {
 		width: 85rpx;
 		height: 85rpx;
@@ -1041,9 +1041,15 @@
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
-		left: 30rpx;
+		left: 35rpx;
 	}
-
+	/* 故障上报、计费规则、公交的字体 */
+	.circleText{
+		font-size: 26rpx;
+		font-weight: 300;
+		color: #3BB985;
+	}
+	/* 公交 */
 	.busClass {
 		width: 85rpx;
 		height: 85rpx;
@@ -1054,6 +1060,6 @@
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
-		right: 30rpx;
+		right: 40rpx;
 	}
 </style>

@@ -338,7 +338,7 @@ const DDTInterface = {
 		header:{'content-type': 'application/json'},
 	},
 	Add_FailureReport:{
-		Url: Url + '/api/FailureReport/Add_FailureReport',
+		Url: 'http://36.250.234.10:60035' + '/api/FailureReport/Add_FailureReport',
 		name:'添加故障上报',
 		method:'POST',
 		header:{'content-type': 'application/json'},

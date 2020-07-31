@@ -72,10 +72,10 @@
 					//地图高度
 					if(res.platform == 'ios'){
 						//当前是iOS系统
-						_self.system = 'iOS'
+						_self.system = 1
 					}else {
 						//当前是Android系统
-						_self.system = 'Android'
+						_self.system = 0
 					}
 				}
 			});
