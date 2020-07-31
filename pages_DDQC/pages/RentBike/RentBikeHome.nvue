@@ -176,9 +176,12 @@
 			//故障上报
 			breakdownClick:function(){
 				uni.navigateTo({
-					url: "./uploadBreakdown"
+					url: "../BreakdownUpload/uploadBreakdown",
+					animationType:'fade-in',
+					animationDuration:1000
 				})
 			},
+			
 			//点击公交
 			busClick: function() {
 				uni.redirectTo({
