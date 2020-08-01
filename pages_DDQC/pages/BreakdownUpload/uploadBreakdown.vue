@@ -127,6 +127,13 @@
 				}
 			});
 		},
+		onNavigationBarButtonTap(e) {
+			if(e.index==0){
+				uni.navigateTo({
+					url:'./breakdownList'
+				})
+			}
+		},
 		onShow() {
 			_self.getUserInfo()
 		},
@@ -296,10 +303,14 @@
 							console.log(res)
 							if(res.data.status == true){
 								uni.showToast({
-									title:res.data.msg,
+									title:res.data.msg,	
 									complete() {
 										setTimeout(function(){
-											uni.navigateBack()
+											uni.navigateBack({
+												delta:1,
+												animationType:'fade-out',
+												animationDuration:1500
+											})
 										},1500)
 									}
 								})
