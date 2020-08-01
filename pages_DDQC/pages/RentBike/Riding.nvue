@@ -1,12 +1,30 @@
 <template>
 	<view>
 		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
-		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls">
+		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls"  @regionchange='mapChange'>
+		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
+		<!-- 搜索框 -->
+		<view class="topSerchView">
+			<view class="SearchBar" elevation='5px'>
+				<!-- <uni-search-bar class="SearchBar" radius="5" placeholder="请输入关键字搜索" clearButton="always" cancelButton="always" @confirm="onInput" /> -->
+				<input class="addressInput" :value="inputValue" clearButton="always" @input="onInput" placeholder="请输入关键字搜索" @blur="blur" />
+				<text style="margin-right: 20rpx;font-size: 32rpx;color: #999999;" @click="searClick">取消</text>
+			</view>
+			<!-- 搜索列表 -->
+			<scroll-view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList" scroll-y="true">
+				<block v-for="(item,index) in keywordList" :key="index">
+					<view class="listItem">
+						<text style="margin-top: 10rpx;font-size: 24rpx;"  @click="itemClick(item,index)">{{item.keyword}}</text>
+						<!-- <jyf-parser :html="item.htmlStr" show-with-animation="true" @click="itemClick(item,index)"></jyf-parser> -->
+					</view>
+				</block>
+			</scroll-view>
+		</view>
 		<view style="position: fixed; bottom: 0;margin-left: 30rpx;margin-right: 30rpx;">
 			<view class="rule" @click="BillingRule">
-				<text style="font-size: 26rpx;font-weight: bold;">计费</text>
-				<text style="font-size: 26rpx;font-weight: bold;">规则</text>
+				<text style="font-size: 26rpx;font-weight: bold;color: #3BB985;">计费</text>
+				<text style="font-size: 26rpx;font-weight: bold;color: #3BB985;">规则</text>
 			</view>
 			<view style="flex-direction: row;justify-content: space-between;width: 690rpx;">
 				<image src="../../static/GRZY/Position.png" style="width: 120rpx;height: 120rpx;" @click="MoveToThisLocation"></image>
@@ -70,12 +88,14 @@
 </template>
 
 <script>
+	import jyfParser from "../../components/jyf-parser/jyf-parser.vue"
+	import uniSearchBar from "../../components/searchBar/uni-search-bar/uni-search-bar.vue"
 	import $DDTInterface from '@/common/DDT.js'
 	export default {
 		data() {
 			return {
 				mapHeight: '', //地图高度
-				scale: 15,
+				scale: 18,
 				polyline: [],
 				centerLatitude: "23.931668",
 				centerLongitude: "117.636783",
@@ -91,12 +111,22 @@
 				order_no: '', //获取支付参数时返回
 				operatorId: '', //操作ID，用于还车
 				interval: '', //定时器
-				rentInfo: [], //保存租车信息
+				rentInfo: {}, //保存租车信息
 				IsStake: true, //是否有桩
 				OrderNo: '', //行程ID
 				userInfo: '',
 				g_wakelock: null,
 				phoneNumber: '', //客服热线
+				markerIconPath: '../../static/RentBike/power.png',
+				bicycleIconPath: '../../static/RentBike/bicycleGreen.png',
+				iconWidth: 50,
+				iconHeight: 50,
+				Height:'',
+				markLonLatArray: [], //标记点坐标数组
+				scrollHeight: '300px', //搜索列表高度
+				isShowList: false, //是否显示站点列表
+				keywordList: [], //标记点列表
+				inputValue: '', //搜索框内容
 			}
 		},
 		mounted() {
@@ -106,12 +136,13 @@
 				success: function(res) {
 					//地图高度
 					that.mapHeight = res.windowHeight + 'px';
+					that.Height = res.windowHeight / 2 - 4 + 'px';
 				}
 			});
 		},
 		onLoad(item) {
 			var that = this;
-			// 获取自身位置
+			// 获取自身位置 
 			that.getMyLocation();
 			//将上一个页面传过来的参数转为数组
 			that.userInfo = uni.getStorageSync('userInfo') || '';
@@ -120,19 +151,22 @@
 			if (item.responseArr) {
 				that.rentInfo = JSON.parse(item.responseArr);
 				console.log('传递数据结果', that.rentInfo);
+				if(that.rentInfo.bicycleType == "自行车"){
+					that.IsStake = false;
+				}
 				if (that.rentInfo.bikeType == "有桩") {
 					setTimeout(function() {
-						that.getOrderInfo();
+						//that.getOrderInfo();
 					}, 2000)
 				} else {
 					that.IsStake = false;
 					setTimeout(function() {
-						that.getOrderInfo();
+						//that.getOrderInfo();
 					}, 2000)
 				}
 			} else {
 				setTimeout(function() {
-					that.GetOrderByUserID();
+					//that.GetOrderByUserID();
 				}, 2000)
 			}
 			//获取客服热线
@@ -144,7 +178,7 @@
 			})
 		},
 		onShow() {
-			this.checkStatus();
+			//this.checkStatus(); 
 		},
 		created() {
 			uni.setNavigationBarTitle({
@@ -566,6 +600,297 @@
 					url: "./BillingRule"
 				})
 			},
+			//---------------------------移动数据-------------------------------
+			mapChange: function(e) {
+				var that = this;
+				if (e.type == 'regionchange' || e.type == 'end') {
+					that.mapContext = uni.createMapContext('map')
+					that.mapContext.getCenterLocation({
+						success: res => {
+							that.GetBHTStationByRange(res.longitude, res.latitude)
+							// console.log(res.longitude+','+res.latitude)
+							if (that.rentInfo.bikeType == '有桩') {
+								//当地图移动的时候，改变坐标显示周围的车辆位置信息
+								that.GetStationByRange(res.longitude, res.latitude)
+							} else if (that.rentInfo.bikeType == '无桩') { 
+								//当地图移动的时候，改变坐标显示周围的车辆位置信息
+								that.GetBHTStationByRange(res.longitude, res.latitude)
+							}
+						}
+					})
+				}
+			},
+			//-------------------------------无桩数据------------------------------
+			GetBHTStationByRange: function(longitude, latitude) {
+				var that = this;
+				that.centerLongitude = longitude;
+				that.centerLatitude = latitude;
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetBHTStationByRange.Url,
+					method: $DDTInterface.DDTInterface.GetBHTStationByRange.method,
+					data: {
+						Longitude: longitude, //经度
+						Latitude: latitude, //纬度
+						Range: 1000, //范围（米） 
+					},
+					success(res) {
+						uni.hideLoading()
+						if (res.data.status == true) {
+							//将获取到的标记点坐标存起来
+							that.markLonLatArray = res.data.data;
+							//请求数据成功之后先清空之前的数据
+							that.markers = [];
+							for (var i = 0; i < res.data.data.length; i++) {
+								// let display = '';
+								if (res.data.data[i].status == 7) { //正常
+									that.markerIconPath = '../../static/RentBike/power.png'
+								} else if (res.data.data[i].status == 9) { //离线
+									that.markerIconPath = '../../static/RentBike/powerOutline.png'
+								}
+								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
+								//创建绘制坐标点的对象marker
+								var marker = new Object();
+								//坐标里面包含经纬度，需要将经纬度分离取出来
+								var gps = res.data.data[i].gps.split(',');
+								//冒泡显示文本 ---  可租数量，可还数量，可用时长
+								// var content = '可租数量：' + res.data.data[i].rentCount + ' ' + '可还数量：' + res.data.data[i].restoreCount;
+								marker = {
+									id: res.data.data[i].id,
+									latitude: gps[1],
+									longitude: gps[0],
+									iconPath: that.markerIconPath, //标识显示的图片
+									width: that.iconWidth,
+									height: that.iconHeight,
+									callout: {
+										content: res.data.data[i].name, //文本res.data.data[i].name
+										color: '#65C36D', //文字颜色
+										fontSize: 14, //文本大小
+										borderRadius: 6, //边框圆角
+										bgColor: '#FFFFFF', //背景颜色
+										display: 'BYCLICK', //'BYCLICK':点击显示; 'ALWAYS':常显
+										padding: 5,
+									}
+								}
+								var json = JSON.stringify(that.markers);
+								var arr = JSON.parse(json);
+								arr.push(marker);
+								that.markers = arr;
+								//---------------------华丽的分割线--------------------------------------
+							}
+						} else {
+							console.log(res)
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log(res)
+					}
+				})
+			},
+			//-------------------------------有桩数据-------------------------------
+			GetStationByRange: function(longitude, latitude) {
+				var that = this;
+				that.centerLongitude = longitude;
+				that.centerLatitude = latitude;
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetStationByRange.Url,
+					method: $DDTInterface.DDTInterface.GetStationByRange.method,
+					data: {
+						Longitude: longitude, //经度
+						Latitude: latitude, //纬度
+						Range: 500, //范围（米）
+					},
+					success(res) {
+						uni.hideLoading()
+						if (res.data.status == true) {
+							//将获取到的标记点坐标存起来
+							that.markLonLatArray = res.data.data;
+							//请求数据成功之后先清空之前的数据
+							that.markers = [];
+							for (var i = 0; i < res.data.data.length; i++) {
+								if (res.data.data[i].status == 7) { //正常
+									that.bicycleIconPath = '../../static/RentBike/bicycleGreen.png'
+								} else if (res.data.data[i].status == 9) { //离线
+									that.bicycleIconPath = '../../static/RentBike/bicycleOutline.png'
+								}
+								//---------------------华丽的分割线，分割线中为绘制坐标点的方法---------------------------
+								//创建绘制坐标点的对象marker
+								var marker = new Object();
+								//坐标里面包含经纬度，需要将经纬度分离取出来
+								var gps = res.data.data[i].gps.split(',');
+								//冒泡显示文本 ---  可租数量，可还数量，可用时长
+								var content = res.data.data[i].name + '\n' + '可用：' + res.data.data[i].rentCount + '  ' + '可还：' + res.data.data[
+									i].restoreCount;
+								marker = {
+									id: res.data.data[i].id,
+									latitude: gps[1],
+									longitude: gps[0],
+									iconPath: that.bicycleIconPath, //标识显示的图片
+									width: that.iconWidth,
+									height: that.iconHeight,
+									callout: {
+										content: content, //文本res.data.data[i].name
+										color: '#65C36D', //文字颜色
+										fontSize: 14, //文本大小
+										borderRadius: 6, //边框圆角
+										bgColor: '#FFFFFF', //背景颜色
+										display: 'BYCLICK', //'BYCLICK':点击显示; 'ALWAYS':常显
+										padding: 5,
+										textAlign: 'center',
+									},
+								}
+								var json = JSON.stringify(that.markers);
+								var arr = JSON.parse(json);
+								arr.push(marker);
+								//当标记点加载完之后重新设置地图比例
+								that.markers = arr;
+								//将坐标集合添加到绘制坐标数组中
+								// that.markers.push(marker);
+								//---------------------华丽的分割线--------------------------------------
+							}
+						} else {
+							console.log(res)
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log(res)
+					}
+				})
+			},
+			//-------------------------监听输入开始-------------------------
+			onInput(event) {
+				var that = this;
+				var keyword = event.detail ? event.detail.value : event;
+				that.inputValue = event.detail ? event.detail.value : event;
+				if (keyword == "") {
+					that.keywordList = [];
+					that.isShowList = false;
+				} else {
+					that.isShowList = true;
+					//如果在这里直接搜索的话会有一个问题：每打一个字都会触发一次搜索接口，每删一个字也会触发
+					//如果删除太快就会出现输入框里已经没有内容，但是还是会触发搜索，因为在删到剩下一个字的时候还是会调搜索接口
+					that.GetStationByKeys(keyword);
+				}
+			},
+			blur: function() {
+				// console.log('失去焦点了')
+				var that = this;
+				// if(that.isShowList == true){
+				// 	that.isShowList = false
+				// }
+			},
+			//-------------------------点击搜索时重新搜索关键字-------------------------
+			searClick: function() {
+				var that = this;
+				if (that.isShowList == true) {
+					that.isShowList = false
+				}
+				if (that.inputValue) {
+					that.keywordList = [];
+			
+					that.inputValue = '';
+					// that.GetStationByKeys(that.inputValue);
+				}
+			},
+			//-------------------------根据关键字查询-------------------------
+			GetStationByKeys: function(keyword) {
+				var that = this;
+				uni.showLoading({
+					title: '正在加载...'
+				})
+				var Url = '';
+				if (that.rentInfo.bikeType== '有桩') {
+					Url = $DDTInterface.DDTInterface.GetStationByKeys.Url
+				} else {
+					Url = $DDTInterface.DDTInterface.GetBHTStation.Url
+				}
+				uni.request({
+					url: Url,
+					method: $DDTInterface.DDTInterface.GetStationByKeys.method,
+					data: {
+						Keys: keyword
+					},
+					success(res) {
+						uni.hideLoading()
+						console.log('获取模糊查询成功', res)
+						if (res.data.status == true) {
+							if (res.data.data != "") {
+								that.keywordList = that.drawCorrelativeKeyword(res.data.data, keyword);
+							} else {
+								uni.showToast({
+									title: '查无站点',
+									icon: 'none'
+								})
+							}
+						} else {
+							that.isShowList = false;
+							uni.showToast({
+								title: '查无站点',
+								icon: 'none'
+							})
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log('获取模糊查询失败', res)
+					}
+				})
+			},
+			//-------------------------高亮关键字-------------------------
+			drawCorrelativeKeyword(keywords, keyword) {
+				// console.log(keywords);
+				var that = this;
+				var len = keywords.length,
+					keywordArr = [];
+					var arr=[];
+				for (var i = 0; i < len; i++) {
+					if (that.rentInfo.bikeType == '有桩') {
+						var row = keywords[i].name;
+					} else {
+						var row = keywords[i].StationName;
+					}
+					//定义高亮#9f9f9f
+					var html = row.replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
+					html = '<div>' + html + '</div>';
+					var tmpObj = {
+						keyword: row,
+						htmlStr: html,
+						data: keywords
+					}; 
+					arr.push(tmpObj)
+				}
+				keywordArr=arr;
+				console.log(keywordArr)
+				return keywordArr;
+			},
+			//-------------------------点击下拉站点-------------------------
+			itemClick: function(item, index) {
+				var that = this;
+				// console.log('123456',item)
+				that.inputValue = item.keyword;
+				//点击站点时将对应的站点坐标设置为地图中心位置，并放大地图
+				if (that.rentInfo.bikeType== '有桩') {
+					var gpsArray = item.data[index].gps.split(',')
+					console.log(gpsArray)
+					that.centerLatitude = gpsArray[0];
+					that.centerLongitude = gpsArray[1];
+				} else {
+					that.centerLatitude = item.data[index].Latitude;
+					that.centerLongitude = item.data[index].Longitude;
+				}
+				// that.scale = 15;
+				that.isShowList = false;
+			},
+			
 		}
 	}
 </script>
@@ -645,4 +970,58 @@
 		align-items: center;
 		flex-direction: column;
 	}
+	.icon-img {
+		width: 36px;
+		height: 36px;
+		position: fixed;
+		left: 375rpx;
+		transform: translate(-50%, -50%);
+	}
+	/* 搜索框 */
+	.topSerchView {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 80rpx;
+	}
+	
+	.SearchBar {
+		background-color: #FFFFFF;
+		margin-right: 20rpx;
+		margin-left: 20rpx;
+		flex-direction: row;
+		border-radius: 9px;
+		align-items: center;
+		justify-content: space-between;
+	}
+	
+	/* 地址搜索输入 */
+	.addressInput {
+		width: 335rpx;
+		margin-left: 20rpx;
+		height: 100rpx;
+		color: #999999;
+		font-size: 30rpx;
+		font-weight: 300;
+	}
+	
+	/* 站点列表 */
+	.stationList {
+		width: 710rpx;
+		/* height: 100rpx; */
+		background-color: #FFFFFF;
+		line-height: 100rpx;
+		font-size: 28rpx;
+		margin-left: 20rpx;
+		margin-top: 20rpx;
+		border-radius: 10rpx;
+	}
+	
+	.listItem {
+		margin-top: 20rpx;
+		margin-left: 20rpx;
+		border-bottom-width: 0.5rpx;
+		border-color: #eeeeee;
+	}
+	
 </style>
