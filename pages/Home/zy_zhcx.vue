@@ -601,7 +601,7 @@
 					uni.navigateTo({
 						url: e,
 						animationType:'zoom-fade-out',
-						animationDuration:1000
+						// animationDuration:1000
 					})
 				} else if (that.userInfo == '') {
 					uni.navigateTo({

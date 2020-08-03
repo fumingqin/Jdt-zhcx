@@ -681,24 +681,29 @@
 				uni.scanCode({
 					onlyFromCamera: false,
 					success: function(res) {
-						console.log(res)
-						// var index = res.result.indexOf("http://q.diiing.cn");
-						//根据二维码的内容判断是有桩还是无桩
-						// if(index!=-1){
-						// 	that.isClick == '有桩'
-						// 	that.Rent_hire(res.result);
-						// }else{
-						// 	that.isClick == '无桩'
-						// 	that.Rent(res.result);
-						// }
-						//先判断当前扫码是有桩还是无桩
-						if (that.isClick == '有桩') {
-							//有桩
-							that.Rent(res.result);
-						} else if (that.isClick == '无桩') {
-							//无桩
+						// console.log(res)
+						
+						var powerIndex = res.result.indexOf("http://q.diiing.cn");//助力车
+						var powerIndex = res.result.indexOf('http://download.dingdatech.com/router.html');//无桩自行车
+						//若powerIndex!=-1扫的就是助力车powerIndex!=-1扫的就是无桩自行车
+						if(powerIndex != -1 || bicycleIndex != -1){
+							that.isClick == '无桩'
+							//无桩请求
 							that.Rent_hire(res.result);
+						}else{
+							that.isClick == '有桩'
+							//有桩请求
+							that.Rent(res.result);
 						}
+						
+						//先判断当前扫码是有桩还是无桩
+						// if (that.isClick == '有桩') {
+						// 	//有桩
+						// 	that.Rent(res.result);
+						// } else if (that.isClick == '无桩') {
+						// 	//无桩
+						// 	that.Rent_hire(res.result);
+						// }
 					},
 					fail: function(res) {
 						console.log('扫描结果', res)
@@ -784,6 +789,13 @@
 			//-------------------------------无桩租车请求-------------------------------
 			Rent_hire: function(param) {
 				var that = this;
+				var bicycleType = '';
+				//扫码结果中包含http://download.dingdatech.com/router.html的话扫的就是无桩自行车的码
+				if(param.indexOf('http://download.dingdatech.com/router.html')!=-1){
+					bicycleType = '自行车'
+				}else {
+					bicycleType = '无桩'
+				}
 				uni.showLoading({
 					title: '正在开锁...',
 					mask: true
@@ -804,6 +816,7 @@
 							if (response.data.data.ReqStatus == '4000') {
 								var responseArr = {
 									bikeType: '无桩',
+									bicycleType:bicycleType,
 									OrderId: response.data.data.OrderId, //订单ID
 									bikeId: response.data.data.bikeId, //车辆编号
 									operationId: response.data.data.operationId, //操作编号
