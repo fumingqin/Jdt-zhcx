@@ -12,8 +12,7 @@
 				<view style="display: flex;width: 25%;justify-content: center;margin-bottom: 12upx;" v-for="(ArrItem,index1) in item.ItemArr"
 				 :key="index1">
 					<view style="display: flex;justify-content: center;flex-direction: column;align-items: center;" @click="TitleJump(ArrItem.IsUse,ArrItem.clickURL)">
-						<image style="width: 110upx;height: 90upx;" mode="aspectFit" :src="ArrItem.ImageURL"
-						 lazy-load="true"></image>
+						<image style="width: 110upx;height: 90upx;" mode="aspectFit" :src="ArrItem.ImageURL" lazy-load="true"></image>
 						<text class="itemText">{{ArrItem.ItemTitle}}</text>
 					</view>
 				</view>
@@ -64,14 +63,14 @@
 			<view class="pictureView">
 				<!-- 提示：想要让文字放在图片里面可以设置外层相对定位，内层文字绝对定位 -->
 				<block v-for="(item,index) in imageData" :key="index">
-					<view style="position: relative;display: flex;"  @click="pictureClick(item)">
+					<view style="position: relative;display: flex;" @click="pictureClick(item)">
 						<image :src="item.ShowImageURL" class="picClass" :class="{'firstPic':index == 0}" mode="aspectFill" lazy-load="true"></image>
 						<text class="picText">{{item.Title}}</text>
 					</view>
 				</block>
 			</view>
 		</view>
-		
+
 		<view class="zl_recommend">
 			<view>
 				<view class="zl_reContent">
@@ -93,8 +92,8 @@
 				<view style="padding: 40rpx 0;display: flex;justify-content: center;align-items: center;">
 					<view style="display: flex;flex-direction: column;">
 						<view v-for="(item,index) in PhoneArray" :key="index">
-							<text style="font-size: 30rpx;">{{item.Title + ':'}}</text>   
-							<text style="font-size: 30rpx;color: #65C36D;">{{item.Phone}}</text> 
+							<text style="font-size: 30rpx;">{{item.Title + ':'}}</text>
+							<text style="font-size: 30rpx;color: #65C36D;">{{item.Phone}}</text>
 						</view>
 						<!-- <view>
 							<text style="font-size: 30rpx;">{{PhoneArray[1].Title+':'}}</text>
@@ -142,7 +141,7 @@
 					ImageURL: ''
 				}], //轮播图
 				type: 0,
-				PhoneArray:[],//电话数组
+				PhoneArray: [], //电话数组
 				Announcement: '', //资讯动态
 				sixPalaceList: [{
 					ticketId: '',
@@ -236,27 +235,30 @@
 			}
 		},
 		onLoad() {
+			var that = this;
 			// #ifdef APP-PLUS
 			let value = uni.getStorageSync('launchFlag');
-			if(value !== true){
+			if (value !== true) {
 				uni.setStorage({
-					key:'launchFlag',
-					data:true,
-					success:function(){
+					key: 'launchFlag',
+					data: true,
+					success: function() {
 						uni.navigateTo({
-							url:'guidePage'
+							url: 'guidePage'
 						})
 					}
 				})
 			}
 			// #endif
-
-			var that = this;
+			uni.onTabBarMidButtonTap(function(){//监听tab中间按钮的点击
+				that.unLockClick();
+				
+			})
 			//获取轮播图
 			that.GetRotationChart();
 			//加载资讯图片数据
 			that.loadData();
-			
+
 			//#ifdef APP-PLUS
 			// this.loadService();
 			//获取设备系统信息
@@ -276,7 +278,6 @@
 			//清除应用右上角数字，暂时放在这里清除
 			plus.runtime.setBadgeNumber(0);
 		},
-
 		onShow() {
 			var that = this;
 			that.userInfo = uni.getStorageSync('userInfo') || '';
@@ -305,7 +306,7 @@
 		}, //注册为子组件
 		methods: {
 			//--------------获取设备系统信息----------------------------------
-			getEquipmentInfo:function(){
+			getEquipmentInfo: function() {
 				var that = this;
 				//获取系统信息
 				uni.getSystemInfo({
@@ -364,7 +365,7 @@
 										content: '当前版本' + that.version + '\n' + '发现新版本，是否前往更新',
 										complete(res) {
 											if (res.confirm) {
-												let appleId=1522869291 //应用的appId
+												let appleId = 1522869291 //应用的appId
 												plus.runtime.launchApplication({
 													action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
 												}, function(e) {
@@ -462,29 +463,29 @@
 				})
 			},
 			//--------------------------长运风采图片数据--------------------------
-			getImageData:function(){
+			getImageData: function() {
 				var that = this;
 				uni.request({
-					url:$DDTInterface.DDTInterface.GetHomeStyle.Url,
-					method:$DDTInterface.DDTInterface.GetHomeStyle.method,
-					data:{},
+					url: $DDTInterface.DDTInterface.GetHomeStyle.Url,
+					method: $DDTInterface.DDTInterface.GetHomeStyle.method,
+					data: {},
 					success(res) {
 						// console.log('获取图片数据成功',res)
-						if(res.data.status == true){
+						if (res.data.status == true) {
 							that.imageData = res.data.data;
-						}else{
+						} else {
 							that.imageData = [];
-							console.log(res.data.msg)  
+							console.log(res.data.msg)
 						}
 					},
 					fail(res) {
-						console.log('获取图片数据失败',res)
+						console.log('获取图片数据失败', res)
 					}
 				})
 			},
-			pictureClick:function(item){
+			pictureClick: function(item) {
 				// console.log('123',item)
-				if(item.IsClick == true){
+				if (item.IsClick == true) {
 					uni.navigateTo({
 						url: '../../pages_DDQC/pages/GRZY/HomePictureDetail?id=' + item.AID + '&mold=' + item.Mold
 					})
@@ -600,7 +601,7 @@
 				if (that.userInfo !== '') {
 					uni.navigateTo({
 						url: e,
-						animationType:'zoom-fade-out',
+						animationType: 'zoom-fade-out',
 						// animationDuration:1000
 					})
 				} else if (that.userInfo == '') {
@@ -910,6 +911,247 @@
 				}
 			},
 			//-------------登录过期结束--------------------
+
+			//------------扫码开始-------------------------
+			//-------------------------------扫码开锁-------------------------------
+			unLockClick: function() {
+				let that = this;
+				//禁用按钮点击，防止用户多次点击
+				that.disabled = false;
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				//扫码开锁之前先查一下是否可以租车
+				that.GetBizStatus();
+			},
+			//-------------------------------查询业户信息-------------------------------
+			GetBizStatus: function() {
+				var that = this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetBizStatus.Url,
+					method: $DDTInterface.DDTInterface.GetBizStatus.method,
+					data: {
+						loginname: that.userInfo.phoneNumber, //手机号
+					},
+					success(response) {
+						uni.hideLoading()
+						if (response.data.status == true) {
+							if (response.data.data.bizStatus == '新建') {
+								that.myShowModal('未交押金无法用车，是否立即支付押金？', '../GRZY/zy_homepage');
+							} else if (response.data.data.bizStatus == '业务开通支付中') {
+								that.myShowModal('业务开通支付中');
+							} else if (response.data.data.bizStatus == '已租车') {
+								that.myShowModal('当前有未完成订单，是否前往', './Riding');
+							} else if (response.data.data.bizStatus == '租车超时支付中') {
+								that.myShowModal('租车超时支付中，请完成支付', './Payment');
+							} else if (response.data.data.bizStatus == '业务已注销') {
+								that.myShowModal('业务已注销，是否立即交付押金？', '../GRZY/zy_homepage');
+							} else if (response.data.data.bizStatus == '可用') {
+								//已交押金，开始扫码租车
+								that.scanQrcode();
+							} else if (response.data.data.bizStatus == null) {
+								that.myShowModal('请先登陆', '../../../pages/GRZX/userLogin');
+							}
+						} else {
+							console.log('返回数据false', response)
+						}
+					},
+					fail(response) {
+						console.log(response)
+					}
+				})
+			},
+			//-------------------------------二维码扫描-------------------------------
+			scanQrcode: function() {
+				var that = this;
+				//扫描二维码
+				uni.scanCode({
+					onlyFromCamera: false,
+					success: function(res) {
+						// console.log(res)
+
+						var powerIndex = res.result.indexOf("http://q.diiing.cn"); //助力车
+						var bicycleIndex = res.result.indexOf('http://download.dingdatech.com/router.html'); //无桩自行车
+						//若powerIndex!=-1扫的就是助力车powerIndex!=-1扫的就是无桩自行车
+						if (powerIndex != -1 || bicycleIndex != -1) {
+							//无桩请求
+							that.Rent_hire(res.result);
+						} else {
+							//有桩请求
+							that.Rent(res.result);
+						}
+					},
+					fail: function(res) {
+						console.log('扫描结果', res)
+					}
+				});
+			},
+			//-------------------------------便捷弹框提示-------------------------------
+			myShowModal(content, Url) {
+				uni.showModal({
+					title: '温馨提示',
+					content: content,
+					success(res) {
+						if (res.confirm) {
+							uni.navigateTo({
+								url: Url
+							})
+						}
+					}
+				})
+			},
+			//-------------------------------有桩租车请求-------------------------------
+			Rent: function(param) {
+				var that = this;
+				uni.showLoading({
+					title: '正在开锁...',
+					mask: true
+				})
+				uni.request({
+					url: $DDTInterface.DDTInterface.Rent.Url,
+					method: $DDTInterface.DDTInterface.Rent.method,
+					data: {
+						phone: that.userInfo.phoneNumber, //13906963039
+						QRcode: param,
+						SystemType: that.platform,
+						userID: that.userInfo.userId,
+					},
+					success(response) {
+						uni.hideLoading()
+						console.log(response)
+						if (response.data.status == true) {
+							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
+							if (response.data.data.BizStatus == '1004') {
+								var responseArr = {
+									bikeType: '有桩',
+									OrderId: response.data.data.OrderId, //订单ID
+									bikeId: response.data.data.bikeId, //车辆编号
+									operationId: response.data.data.operationId, //操作编号
+									phoneNumber: that.userInfo.phoneNumber, //手机号
+								}
+								//当前状态可以租车
+								uni.navigateTo({
+									url: './Riding?&responseArr=' + JSON.stringify(responseArr)
+								})
+							} else if (response.data.data.BizStatus == '1003') {
+								uni.showToast({
+									title: '请扫码正确二维码',
+									icon: 'none'
+								})
+							}
+						} else if (response.data.status == false) {
+							//当前扫码的是无桩车二维码
+							if (response.data.msg.indexOf('字符串的长度不能为零') == 0) {
+								uni.showToast({
+									title: '请扫有桩的二维码',
+									icon: 'none'
+								})
+							} else if (response.data.msg == '您有未完成或者未支付的订单') {
+								that.myShowModal('有未完成订单，是否前往支付', './Payment')
+							} else {
+								uni.showToast({
+									title: response.data.msg,
+									icon: 'none'
+								})
+							}
+						}
+					},
+					fail(response) {
+						uni.hideLoading()
+						console.log(response)
+					}
+				})
+			},
+			//-------------------------------无桩租车请求-------------------------------
+			Rent_hire: function(param) {
+				var that = this;
+				var bicycleType = '';
+				//扫码结果中包含http://download.dingdatech.com/router.html的话扫的就是无桩自行车的码
+				if (param.indexOf('http://download.dingdatech.com/router.html') != -1) {
+					bicycleType = '自行车'
+				} else {
+					bicycleType = '无桩'
+				}
+				uni.showLoading({
+					title: '正在开锁...',
+					mask: true
+				})
+				uni.request({
+					url: $DDTInterface.DDTInterface.Rent_hire.Url,
+					method: $DDTInterface.DDTInterface.Rent_hire.method,
+					data: {
+						phone: that.userInfo.phoneNumber, //that.userInfo.phoneNumber
+						QRcode: param,
+						SystemType: that.platform,
+						userID: that.userInfo.userId,
+					},
+					success(response) {
+						uni.hideLoading()
+						if (response.data.status == true) {
+							//新建、业务开通支付中、可用、租车超时支付中、 业务已注销这些状态在扫码的时候就已经判断过了这里可以不做判断
+							if (response.data.data.ReqStatus == '4000') {
+								var responseArr = {
+									bikeType: '无桩',
+									bicycleType: bicycleType,
+									OrderId: response.data.data.OrderId, //订单ID
+									bikeId: response.data.data.bikeId, //车辆编号
+									operationId: response.data.data.operationId, //操作编号
+									phoneNumber: that.userInfo.phoneNumber, //手机号
+								}
+								//当前状态可以租车
+								uni.navigateTo({
+									url: './Riding?&responseArr=' + JSON.stringify(responseArr)
+								})
+								uni.showToast({
+									title: '租车成功',
+								})
+							} else if (response.data.data.ReqStatus == '6010') {
+								uni.showToast({
+									title: '电量过低，无法租车',
+									icon: 'none'
+								})
+							} else if (response.data.data.ReqStatus == '4008') {
+								uni.showToast({
+									title: '设备异常',
+									icon: 'none'
+								})
+							} else if (response.data.data.ReqStatus == '4001') {
+								uni.showToast({
+									title: '锁开，不可租',
+									icon: 'none'
+								})
+							} else {
+								uni.showToast({
+									title: '未知错误',
+									icon: 'none'
+								})
+							}
+						} else if (response.data.status == false) {
+							//当前扫码的是有桩车二维码
+							if (response.data.msg.indexOf('字符串的长度不能为零') == 0) {
+								uni.showToast({
+									title: '请扫有桩的二维码',
+									icon: 'none'
+								})
+							} else if (response.data.msg == '您有未完成或者未支付的订单') {
+								that.myShowModal('有未完成订单，是否前往支付', './Payment')
+							} else {
+								uni.showToast({
+									title: response.data.msg,
+									icon: 'none'
+								})
+							}
+						}
+					},
+					fail(response) {
+						uni.hideLoading()
+						console.log('无桩请求返回错误结果', response)
+					}
+				})
+			}
+
+			//------------扫码结束-------------------------
 		},
 	}
 </script>
@@ -1029,7 +1271,7 @@
 			}
 		}
 	}
-	
+
 	.itemContent {
 		width: 20%;
 		height: 178upx;
@@ -1042,31 +1284,35 @@
 		height: 80rpx;
 		margin-top: 50upx;
 	}
+
 	//---------------------------------长运风采开始---------------------------------
 	//放置图片的view
-	.pictureView{
+	.pictureView {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		padding-bottom: 20rpx;
 	}
+
 	//照片样式
-	.picClass{
+	.picClass {
 		width: 210upx;
 		height: 207upx;
 		overflow: hidden;
-	    border-radius: 15upx;
+		border-radius: 15upx;
 		margin-top: 10upx;
 		margin-right: 20upx;
 	}
+
 	//第一张照片
-	.firstPic{
+	.firstPic {
 		width: 440upx;
 		height: 207upx;
 		overflow: hidden;
 		border-radius: 15upx;
 	}
+
 	.picText {
 		font-size: 22upx;
 		bottom: 0;
@@ -1075,17 +1321,18 @@
 		bottom: 10rpx;
 		left: 10rpx;
 		position: absolute;
-		
-		background:rgba(0,0,0,1);
-		opacity:0.7;
-		border-radius:4px;
+
+		background: rgba(0, 0, 0, 1);
+		opacity: 0.7;
+		border-radius: 4px;
 	}
+
 	//---------------------------------长运风采结束---------------------------------
 	.itemText {
 		margin-top: 10rpx;
 		font-size: 30rpx;
 		font-family: Source Han Sans SC;
-		font-weight:bold;
+		font-weight: bold;
 		color: #333333;
 		display: block;
 	}
@@ -1313,7 +1560,7 @@
 		.zl_reContent {
 			position: relative;
 			padding-top: 40upx;
-			
+
 			.zl_reTitle {
 				font-size: 32upx;
 				color: #333333;
