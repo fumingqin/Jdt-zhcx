@@ -684,8 +684,8 @@
 						// console.log(res)
 						
 						var powerIndex = res.result.indexOf("http://q.diiing.cn");//助力车
-						var powerIndex = res.result.indexOf('http://download.dingdatech.com/router.html');//无桩自行车
-						//若powerIndex!=-1扫的就是助力车powerIndex!=-1扫的就是无桩自行车
+						var bicycleIndex = res.result.indexOf('http://download.dingdatech.com/router.html');//无桩自行车
+						//若powerIndex!=-1扫的就是助力车bicycleIndex!=-1扫的就是无桩自行车
 						if(powerIndex != -1 || bicycleIndex != -1){
 							that.isClick == '无桩'
 							//无桩请求

@@ -10,6 +10,7 @@
 					<view>
 						<view style="font-size: 30rpx;font-weight: 300;margin-top: 10rpx;">{{item.ReportContent}}</view>
 						<view>
+							<view style="font-size: 30rpx;font-weight: 300;margin-top: 10rpx;height: 100rpx;line-height: 100rpx;" v-if="!item.ReportPicture">故障图片：未上传图片</view>
 							<block v-for="(item,index) in imageToArray(item.ReportPicture)" :key="index">
 								<image style="width: 150rpx;height: 150rpx;border-radius: 10rpx;margin-right: 5rpx;" :src="item" lazy-load="true"></image>
 							</block>
