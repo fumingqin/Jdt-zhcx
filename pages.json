@@ -1167,7 +1167,7 @@
 		"color": "#333333",
 		"selectedColor": "#FC4646",
 		"backgroundColor": "#FFFFFF",
-		"borderStyle": "black",
+		"borderStyle": "white",
 		//#ifdef APP-PLUS
 		"fontSize": "16px",
 		//#endif
@@ -1184,20 +1184,26 @@
 			// 	"pagePath": "pages/GRZX/notice",
 			// 	"text": "通知"
 			// },
-			{
-				"pagePath": "pages/Home/serve",
-				"text": "服务"
-			},
+			// {
+			// 	"pagePath": "pages/Home/serve",
+			// 	"text": "服务"
+			// },
 			// {
 			// 	"pagePath": "pages/order/OrderList",
 			// 	"text": "订单"
 			// },
 
 			{
-				"pagePath": "pages/GRZX/user",
+				"pagePath": "pages/GRZX/user", 
 				"text": "我的"
 			}
-		]
+		],
+		"midButton":{
+			"width":"90px",
+			"height":"80px",
+			"iconWidth":"70px",
+			"iconPath":"static/Home/HomeSacn.png"
+		}
 	},
 
 	"condition": { //模式配置，仅开发期间生效
