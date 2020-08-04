@@ -1113,7 +1113,7 @@
 					}
                 }
                 ,{
-                    "path" : "pages/BreakdownUpload/breakdownList",
+					"path":"pages/BreakdownUpload/breakdownList",
                     "style" : {
 						"navigationBarTitleText":"故障历史"
 					}
