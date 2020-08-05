@@ -428,7 +428,7 @@
 					method: $DDTInterface.DDTInterface.ConsumerHotlineNew.method,
 					data: {},
 					success(res) {
-						console.log(res)
+						// console.log(res)
 						if (res.data.status == true) {
 							that.PhoneArray = res.data.data
 						}

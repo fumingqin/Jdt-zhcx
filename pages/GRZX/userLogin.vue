@@ -201,7 +201,7 @@
 						phone: phone,
 					},
 					success(res) {
-						console.log(res)
+						// console.log(res)
 						that.checkRealName(res.data.data.UserID);
 					},
 					fail() {
@@ -220,7 +220,7 @@
 					},
 					method: that.$GrzxInter.Interface.GetUserByUserID.method,
 					success(res) {
-						console.log(res)
+						// console.log(res)
 						uni.hideLoading();
 						if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
 							//实名认证
@@ -486,7 +486,7 @@
 					}, result => {
 						//  设置成功或者失败，都会通过这个result回调返回数据；数据格式保持极光返回的安卓/iOS数据一致
 						//  注：若没有返回任何数据，考虑是否初始化完成
-						console.log(result);
+						// console.log(result);
 						jyJPush.getRegistrationID(
 						//  返回的数据会有registrationID，errorCode
 						result => {
@@ -502,7 +502,7 @@
 					type: 'gcj02',
 					geocode: true,
 					success(res) {
-						console.log(res)
+						// console.log(res)
 						uni.getSystemInfo({
 							success(res1) {
 								var country = res.address.country ? res.address.country : '';

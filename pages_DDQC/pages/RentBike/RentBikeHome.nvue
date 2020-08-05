@@ -96,6 +96,7 @@
 				showLocation: true,
 				scale: 18, //地图缩放比例,值越小地图可视范围越大
 				polyline: [], //画线数组
+				points:[],
 				mapContext: '',
 				isClick: '无桩', //是否点击
 				markerIconPath: '../../static/RentBike/power.png',
@@ -184,7 +185,7 @@
 			
 			//点击公交
 			busClick: function() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: "./BusLocationMark"
 				})
 
@@ -196,7 +197,7 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
-						console.log('用户数据', data)
+						// console.log('用户数据', data)
 						that.userInfo = data.data;
 					},
 					fail(data) {}
@@ -786,6 +787,7 @@
 					}
 				})
 			},
+			
 			//-------------------------------无桩租车请求-------------------------------
 			Rent_hire: function(param) {
 				var that = this;
@@ -804,7 +806,7 @@
 					url: $DDTInterface.DDTInterface.Rent_hire.Url,
 					method: $DDTInterface.DDTInterface.Rent_hire.method,
 					data: {
-						phone: that.userInfo.phoneNumber, //that.userInfo.phoneNumber
+						phone: that.userInfo.phoneNumber,
 						QRcode: param,
 						SystemType: that.system,
 						userID: that.userInfo.userId,
@@ -872,34 +874,78 @@
 						console.log('无桩请求返回错误结果', response)
 					}
 				})
-			}
-		},
-		//-------------------------------点击标记点规划线路-------------------------------
-		markertap: function(e) {
-			var that = this;
-			//当前位置的经纬度
-			var currentlocation = that.currentLongitude + ',' + that.currentLatitude
-			for (let i = 0; i < that.markLonLatArray.length; i++) {
-				//检索站点ID
-				if (e.detail.markerId == that.markLonLatArray[i].stationID) {
-					var markLocation = _self.markLonLatArray[i].lon + ',' + _self.markLonLatArray[i].lat
-					uni.request({
-						url: $DDTInterface.DDTInterface.getPlanningWalkLineByLonLat.Url,
-						method: $DDTInterface.DDTInterface.getPlanningWalkLineByLonLat.method,
-						data: {
-							startLonLat: currentlocation,
-							endLonLat: markLocation
-						},
-						success(res) {
-							console.log('获取规划线路成功', res)
-						},
-						fail(res) {
-							console.log('获取规划线路失败', res)
-						}
-					})
+			},
+			//-------------------------------点击标记点规划线路-------------------------------
+			markertap: function(e) {
+				var that = this;
+				//当前位置的经纬度
+				// var currentlocation = that.numFilter(that.currentLongitude) + ',' + that.numFilter(that.currentLatitude)
+				var currentlocation = that.numFilter(that.centerLongitude) + ',' + that.numFilter(that.centerLatitude)
+				for (let i = 0; i < that.markLonLatArray.length; i++) {
+					//检索站点ID
+					if (e.detail.markerId == that.markLonLatArray[i].id) {
+						//目标点坐标
+						var gpsArray = that.markLonLatArray[i].gps.split(',')
+						var markLocation = that.numFilter(gpsArray[0]) + ',' + that.numFilter(gpsArray[1])
+						uni.request({
+							url: $DDTInterface.DDTInterface.getPlanningWalkLineByLonLat.Url,
+							method: $DDTInterface.DDTInterface.getPlanningWalkLineByLonLat.method,
+							data: {
+								startLonLat: currentlocation,
+								endLonLat: markLocation
+							},
+							success(res) {
+								that.polyline = [];
+								//规划路线之前要清空点的数组，否则之前画的线会一直存在
+								that.points = [];
+								//取出坐标系
+								var polylineArr = res.data.Polyline;
+								//创建点集合
+								var points = [];
+								if(polylineArr){
+									for (var i = 0; i < polylineArr.length; i++) {
+										var arr = polylineArr[i].split(';');
+										for (var j = 0; j < arr.length; j++) {
+											points.push(arr[j]);
+										}
+									}
+									//根据文件建设对象经纬度数组
+									for (var i = 0; i < points.length; i++) {
+										var arr = points[i].split(',');
+										var obj = {
+											longitude: arr[0],
+											latitude: arr[1]
+										}
+										that.points.push(obj);
+									}
+									var obj = {
+										points: that.points,
+										color: "#4bdc27",
+										arrowLine: true,
+										width: 6
+									};
+									that.polyline.push(obj);
+								}
+							},
+							fail(res) {
+								console.log('获取规划线路失败', res)
+							}
+						})
+					}
+				}
+			},
+			numFilter(value){
+				if(value.length < 9){
+					//如果传过来的经纬度长度小于8位就返回原来的经纬度
+					return value
+				}else {
+					//截取当前位数到小数点后六位
+					let tempVal = parseFloat(value).toFixed(6)
+					let realVal = tempVal.substring(0,tempVal.length-1)
+					return realVal
 				}
 			}
-		}
+		},//method结束
 	}
 </script>
 

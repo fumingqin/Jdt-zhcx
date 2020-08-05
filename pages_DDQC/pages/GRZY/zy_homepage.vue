@@ -285,9 +285,9 @@
 				uni.showLoading({
 					title: '加载中...',
 				})
-				console.log(that.userInfo.phoneNumber);
-				console.log(that.userInfo.userId);
-				console.log('123445436241341')
+				// console.log(that.userInfo.phoneNumber);
+				// console.log(that.userInfo.userId);
+				// console.log('123445436241341')
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
 					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
@@ -297,7 +297,7 @@
 					},
 					success(res) {
 						uni.hideLoading()
-						console.log('获取钱包数据成功', res)
+						// console.log('获取钱包数据成功', res)
 						if (res.data.status == true) {
 							that.walletData = res.data.data;
 							that.balance = res.data.data.balance / 100;
@@ -705,7 +705,7 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						console.log(res)
+						// console.log(res)
 						if (that.userInfo == '') {
 							uni.navigateTo({
 								url: '../../../pages/GRZX/userLogin'

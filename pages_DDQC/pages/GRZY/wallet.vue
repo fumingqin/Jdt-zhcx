@@ -66,7 +66,7 @@
 									userID: res.data.userId,
 								},
 								success: (res) => {
-									console.log(res)
+									// console.log(res)
 									if (res.data.msg == '请求成功') {
 										that.balance = res.data.data.balance/100;
 									}
