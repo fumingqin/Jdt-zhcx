@@ -177,9 +177,9 @@
 							},
 							{
 								IsUse: true,
-								clickURL: "../../pages_DDQC/pages/GRZY/zy_homepage",
-								ImageURL: "../../static/Home/QB.png",
-								ItemTitle: "钱包"
+								clickURL: "../../pages_DDQC/pages/Bus/TicketPurchase",
+								ImageURL: "../../static/Home/CPDG.png",
+								ItemTitle: "车票订购"
 							},
 							{
 								IsUse: true,
@@ -189,13 +189,13 @@
 							},
 						]
 					},
-					{
-						ItemArr: [{
-								IsUse: true,
-								clickURL: "../../pages_DDQC/pages/Bus/TicketPurchase",
-								ImageURL: "../../static/Home/CPDG.png",
-								ItemTitle: "车票订购"
-							},
+					// {
+					// 	ItemArr: [{
+					// 			IsUse: true,
+					// 			clickURL: "../../pages_DDQC/pages/GRZY/zy_homepage",
+					// 			ImageURL: "../../static/Home/QB.png",
+					// 			ItemTitle: "钱包"
+					// 		},
 							// {
 							// 	IsUse: false,
 							// 	clickURL: "",
@@ -214,8 +214,8 @@
 							// 	ImageURL: "../../static/Home/LYCP2.png",
 							// 	ItemTitle: "旅游产品"
 							// },
-						]
-					},
+					// 	]
+					// },
 					// {
 					// 	ItemArr: [{
 					// 			IsUse: false,
@@ -250,9 +250,9 @@
 				})
 			}
 			// #endif
-			uni.onTabBarMidButtonTap(function(){//监听tab中间按钮的点击
+			uni.onTabBarMidButtonTap(function() { //监听tab中间按钮的点击
 				that.unLockClick();
-				
+
 			})
 			//获取轮播图
 			that.GetRotationChart();
@@ -429,7 +429,6 @@
 					method: $DDTInterface.DDTInterface.ConsumerHotlineNew.method,
 					data: {},
 					success(res) {
-						console.log(res)
 						if (res.data.status == true) {
 							that.PhoneArray = res.data.data
 						}

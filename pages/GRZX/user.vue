@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="backImg">
-			<image src="../../static/GRZX/backImg.png" class="imgClass"></image>
+			<!-- <image src="../../static/GRZX/backImg.png" class="imgClass"></image> -->
 			<!-- #ifdef APP-PLUS -->
 			<image src="../../static/GRZX/set.png" class="setClass" @click="navTo('set')"></image>
 			<!-- <image src="../../static/GRZX/info.png" class="infoClass" @click="navTo('myNews')"></image> -->
@@ -29,22 +29,21 @@
 				<image src="../../static/GRZX/btnRight_Home.png" class="rightClass"></image>
 			</view>
 
-			<!-- <view class="myBox">
-				<view class="collection" @click="orderClick(3)">
-					<image src="../../static/GRZX/tubiao_pay1.png" class="imgStyle1" mode="aspectFill"></image>
-					<text class="myFont">待支付</text>
+			<view class="myBox">
+				<view class="collection" @click="orderClick('../../pages_DDQC/pages/GRZY/zy_homepage')">
+					<image src="../../static/Home/wallet.png" class="imgStyle1" mode="aspectFill"></image>
+					<text class="myFont">我的钱包</text>
 				</view>
-				<view class="order" @click="orderClick(2)">
-					<image src="../../static/GRZX/tubiao_pay2.png" class="imgStyle2" mode="aspectFill"></image>
-					<text class="myFont">进行中</text>
+				<view class="collection" @click="orderClick('../../pages_DDQC/pages/GRZY/zy_topUpRecord')"> 
+					<image src="../../static/Home/bill.png" class="imgStyle1" mode="aspectFill"></image>
+					<text class="myFont">消费明细</text>
+				</view> 
+				<view class="collection" @click="orderClick('../../pages_DDQC/pages/GRZY/zy_homepage?type=1')">
+					<image src="../../static/Home/rideOrder.png" class="imgStyle1" mode="aspectFill"></image> 
+					<text class="myFont">骑行记录</text>
 				</view>
-				<view class="history" @click="orderClick(1)">
-					<image src="../../static/GRZX/tubiao_pay3.png" class="imgStyle3" mode="aspectFill"></image>
-					<text class="myFont">已完成</text>
-				</view>
-			</view> -->
+			</view> 
 		</view>
-
 		<!-- <image :src="advert" class="advertClass" lazy-load="true"></image> -->
 		<image style="border-radius: 10rpx;" :src="imageIndex[0].imageUrl" class="advertClass" lazy-load="true"></image>
 		<view class="serviceBox">
@@ -199,7 +198,6 @@
 								},
 								method: that.$GrzxInter.Interface.login.method,
 								success(res) {
-									console.log(res,'res')
 									that.checkIDRealName(res.data.data.userId);
 									uni.setStorageSync('userInfo', res.data.data);
 									that.userInfo = res.data.data;
@@ -282,10 +280,9 @@
 				})
 			},
 			// ---------------------------跳转订单的点击-----------------------
-			orderClick(e) {
-				uni.setStorageSync('currentNum', e)
-				uni.switchTab({
-					url: '/pages/order/OrderList',
+			orderClick(url) {
+				uni.navigateTo({
+					url:url
 				})
 			},
 			// --------------------------设置，通知，扫一扫--------------------
@@ -615,9 +612,28 @@
 
 	.content {}
 
+	// .backImg {
+	// 	width: 100%;
+	// 	 height: 490upx;
+	// }
 	.backImg {
 		width: 100%;
-		// height: 490upx;
+		height: 510upx;
+		position: relative;  
+		z-index: 1;  
+		overflow: hidden;
+	}
+	
+	.backImg::after{
+		/* 以下不允许修改 */
+		width: 120%;
+		height: 490upx;
+		background: linear-gradient(0deg,rgba(47,194,92,1),rgba(27,187,76,1));
+		border-radius: 0 0 50% 50%;
+		position: absolute;
+		left:-10%;
+		z-index: -1;  
+		content: '';
 	}
 
 	.imgClass {
@@ -767,7 +783,7 @@
 		top: 341upx;
 		background-color: #FFFFFF;
 		display: flex;
-		flex-direction: row;
+		justify-content: space-between;
 		border-radius: 12upx;
 	}
 
@@ -776,14 +792,14 @@
 		width: 33.33%;
 		height: 100%;
 		display: flex;
+		align-items: center;
 		flex-direction: column;
 	}
 
 	.imgStyle1 {
-		width: 61upx;
-		height: 59upx;
+		width: 70upx;
+		height: 70upx;
 		margin-top: 31upx;
-		margin-left: 36.68%;
 	}
 
 	.order {
@@ -791,6 +807,7 @@
 		width: 33.33%;
 		height: 100%;
 		display: flex;
+		align-items: center;
 		flex-direction: column;
 	}
 
@@ -798,7 +815,6 @@
 		width: 61upx;
 		height: 59upx;
 		margin-top: 31upx;
-		margin-left: 36.68%;
 	}
 
 	.history {
@@ -806,6 +822,7 @@
 		width: 33.34%;
 		height: 100%;
 		display: flex;
+		align-items: center;
 		flex-direction: column;
 	}
 
@@ -813,7 +830,6 @@
 		width: 61upx;
 		height: 59upx;
 		margin-top: 31upx;
-		margin-left: 36.68%;
 	}
 
 	.myFont {

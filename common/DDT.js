@@ -355,6 +355,14 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type': 'application/json'},
 	},
+	UpdateOrder: {
+		Url: Url + '/api/SmartBike/UpdateOrder',
+		name: '更新订单状态',
+		method: 'POST',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 }
 // 接口声明区
 export default {
