@@ -77,7 +77,7 @@
 			//------------------------------------退押金状态------------------------------------
 			refundState:function(state){
 				if(state == 0){
-					return '提交'
+					return '已提交'
 				}else if(state == 1){
 					return '成功'
 				}else if(state == 2){

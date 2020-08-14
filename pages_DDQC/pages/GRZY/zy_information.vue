@@ -88,7 +88,8 @@
 		},
 		onLoad(res) {
 			_self = this;
-			_self.currentRefundType = "第一次人工退款"; //res.refundType;
+			_self.currentRefundType = res.refundType; //res.refundType;
+			
 			if (res.item) {
 				_self.ReManualRefundInfo = JSON.parse(res.item)
 			}
