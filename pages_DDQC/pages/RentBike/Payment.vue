@@ -55,7 +55,6 @@
 		},
 		onLoad() {
 			this.userInfo = uni.getStorageSync('userInfo') || '';
-			console.log(this.userInfo);
 			this.GetOrderByUserID();
 			// this.getOrderInfo();
 
@@ -74,7 +73,7 @@
 			return true;
 		},
 		onNavigationBarButtonTap() {
-			this.GetOrderByUserID();
+			this.updateOrder();
 		},
 		methods: {
 			makePhone: function() {
@@ -122,7 +121,7 @@
 					},
 					success(res) {
 						uni.hideLoading();
-						console.log('钱包消费返回数据',res)
+						console.log('钱包消费返回数据', res)
 						if (res.data.status == true) {
 							//消费成功之后不需要调消费记录接口，后台已经调了
 							uni.showToast({
@@ -150,8 +149,7 @@
 						} else {
 							uni.showModal({
 								title: "支付失败",
-								success(res) {
-								}
+								success(res) {}
 							})
 						}
 					},
@@ -208,31 +206,31 @@
 							UserID: that.userInfo.userId,
 						},
 						success(res) {
-							console.log(res);
 							uni.hideLoading();
 							if (res.data.status) {
-								// if (res.data.data[0].PayState == 1) {
-								// uni.showToast({
-								// 	title: '订单已支付',
-								// 	icon: 'none'
-								// })
-								// setTimeout(function() {
-								// 	uni.redirectTo({
-								// 		url: '../GRZY/zy_homepage'
-								// 	})
-								// }, 1500)
-								// } else {
-								that.beginTime = res.data.data[0].HireTime;
-								that.endTime = res.data.data[0].RestoreTime;
-								that.money = (res.data.data[0].Money) / 100;
-								that.HireStationName = res.data.data[0].HireStationName
-								that.RestoreStationName = res.data.data[0].RestoreStationName;
-								if (that.money == 0) {
-									that.buttonName = '立即完成';
+								if (res.data.data[0].PayState == 1) {
+									uni.showToast({
+										title: '订单已支付',
+										icon: 'none'
+									})
+									setTimeout(function() {
+										uni.redirectTo({
+											url: '../GRZY/zy_homepage'
+										})
+									}, 1500)
+								} else {
+									that.beginTime = res.data.data[0].HireTime;
+									that.endTime = res.data.data[0].RestoreTime;
+									that.money = (res.data.data[0].Money) / 100;
+									that.HireStationName = res.data.data[0].HireStationName
+									that.RestoreStationName = res.data.data[0].RestoreStationName;
+									if (that.money == 0) {
+										that.buttonName = '立即完成';
+									}
+									that.StrokeID = res.data.data[0].StrokeID;
+									that.orderId = res.data.data[0].OrderId;
+									that.timeConcer(that.beginTime, that.endTime);
 								}
-								that.orderId = res.data.data[0].OrderId;
-								that.timeConcer(that.beginTime, that.endTime);
-								// }
 							}
 						},
 						fail() {
@@ -338,6 +336,28 @@
 					}
 				}
 			},
+			updateOrder: function() {
+				var that = this;
+				uni.showLoading({
+					title: '加载中',
+					mask: true
+				})
+				uni.request({
+					url: $DDTInterface.DDTInterface.UpdateOrder.Url,
+					method: $DDTInterface.DDTInterface.UpdateOrder.method,
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						PhoneNo: that.userInfo.phoneNumber,
+						StrokeID: that.StrokeID,
+					},
+					success(res) {
+						console.log(res)
+						that.GetOrderByUserID();
+					}
+				})
+			}
 		}
 	}
 </script>

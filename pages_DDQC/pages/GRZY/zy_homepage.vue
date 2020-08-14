@@ -3,10 +3,10 @@
 		<!-- 顶部滑动 -->
 		<view class="screen">
 			<view class="screenView">
-				<view class="screenText" :class="{current:type===0}" @click="tabClick(0)">
+				<view class="screenText" :class="{current:type==0}" @click="tabClick(0)">
 					骑行权益
 				</view>
-				<view class="screenText" :class="{current:type===1}" @click="tabClick(1)">
+				<view class="screenText" :class="{current:type==1}" @click="tabClick(1)">
 					骑行记录
 				</view>
 			</view>
@@ -49,6 +49,11 @@
 			<!-- 充值金额 -->
 			<view class="ve_view4" @click="natTo(2)">
 				<text class="vi_text2">充值金额</text>
+				<text class="jdticon icon-you"></text>
+			</view>
+			<!-- 退押金失败记录 -->
+			<view class="ve_view3" @click="topUpRecord">
+				<text class="vi_text">充值/消费记录</text> 
 				<text class="jdticon icon-you"></text>
 			</view>
 			<!-- 退押金失败记录 -->
@@ -238,12 +243,14 @@
 					url:"../../../pages/Home/zy_zhcx"
 				})
 			}
-			console.log(e)
 		},
-		onLoad() {
+		onLoad(e) {
 			// this.lunBoInit();
-			
 			var that = this;
+			if(e.type){
+				console.log(e)
+				that.type=e.type;
+			}
 			//获取客服热线
 			uni.getStorage({
 				key:'ConsumerHotline',
@@ -256,11 +263,16 @@
 		},
 		onShow() {
 			var that = this;
-			//读取用户信息
+			//读取用户信息 
 			that.getUserInfo();
 		},
 		methods: {
-			
+			//钱包消费和充值记录
+			topUpRecord() {
+				uni.navigateTo({
+					url: './zy_topUpRecord'
+				})
+			},
 			//--------------------------读取用户信息--------------------------
 			getUserInfo() {
 				var that = this;
@@ -268,7 +280,6 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(data) {
-						console.log('用户数据', data)
 						that.userInfo = data.data;
 						//获取用户详情数据
 						that.GetUserByUserID();
@@ -285,9 +296,6 @@
 				uni.showLoading({
 					title: '加载中...',
 				})
-				// console.log(that.userInfo.phoneNumber);
-				// console.log(that.userInfo.userId);
-				// console.log('123445436241341')
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetPurseDetail.Url,
 					method: $DDTInterface.DDTInterface.GetPurseDetail.method,
@@ -297,7 +305,6 @@
 					},
 					success(res) {
 						uni.hideLoading()
-						// console.log('获取钱包数据成功', res)
 						if (res.data.status == true) {
 							that.walletData = res.data.data;
 							that.balance = res.data.data.balance / 100;
@@ -322,7 +329,6 @@
 			},
 			//--------------------------获取押金金额--------------------------
 			getDepositData:function(){
-				console.log('押金金额')
 				var that = this;
 				//获取押金金额
 				uni.request({
@@ -705,7 +711,7 @@
 						userID: that.userInfo.userId,
 					},
 					success(res) {
-						// console.log(res)
+						console.log(res)
 						if (that.userInfo == '') {
 							uni.navigateTo({
 								url: '../../../pages/GRZX/userLogin'
@@ -749,7 +755,6 @@
 			//--------------------读取信息-------------------------
 			GetUserByUserID: function() {
 				var that = this;
-				console.log(that.userInfo)
 				uni.request({
 					url: $DDTInterface.DDTInterface.GetUserByUserID.Url,
 					method: $DDTInterface.DDTInterface.GetUserByUserID.method,
