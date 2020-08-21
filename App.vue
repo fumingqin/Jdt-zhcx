@@ -75,7 +75,7 @@
 						jyJPush.getRegistrationID(
 							//  返回的数据会有registrationID，errorCode
 							result => {
-								console.log(result)
+								//console.log(result)
 							});
 					});
 				});

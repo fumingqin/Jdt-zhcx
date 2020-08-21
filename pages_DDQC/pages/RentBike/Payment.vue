@@ -206,6 +206,7 @@
 							UserID: that.userInfo.userId,
 						},
 						success(res) {
+							console.log(res)
 							uni.hideLoading();
 							if (res.data.status) {
 								if (res.data.data[0].PayState == 1) {
@@ -234,6 +235,7 @@
 							}
 						},
 						fail() {
+							console.log(res)
 							uni.hideLoading();
 						}
 					})

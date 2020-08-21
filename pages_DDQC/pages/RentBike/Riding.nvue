@@ -1,8 +1,9 @@
 <template>
 	<view>
 		<map id="map" ref='map' class="map" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
-		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls"  @regionchange='mapChange'>
-		 <cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
+		 :markers="markers" :show-location="showLocation" :scale="scale" :polyline="polyline" :controls="controls"
+		 @regionchange='mapChange'>
+			<cover-image src="../../../static/Home/icon_position.png" class="icon-img" :style="{bottom:Height}"></cover-image>
 		</map>
 		<!-- 搜索框 -->
 		<view class="topSerchView">
@@ -15,7 +16,7 @@
 			<scroll-view class="stationList" :style="{ 'height':scrollHeight }" v-if="isShowList" scroll-y="true">
 				<block v-for="(item,index) in keywordList" :key="index">
 					<view class="listItem">
-						<text style="margin-top: 10rpx;font-size: 24rpx;"  @click="itemClick(item,index)">{{item.keyword}}</text>
+						<text style="margin-top: 10rpx;font-size: 24rpx;" @click="itemClick(item,index)">{{item.keyword}}</text>
 						<!-- <jyf-parser :html="item.htmlStr" show-with-animation="true" @click="itemClick(item,index)"></jyf-parser> -->
 					</view>
 				</block>
@@ -50,10 +51,12 @@
 							<!-- <text style="color: #999;font-size: 28rpx;font-weight: 300;">电量充足，可骑行59公里</text> -->
 						</view>
 						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;" v-if="!IsStake">
-							<!-- <button class="bt_lock" @click="Lock">
+						<!-- 	<button class="bt_lock" @click="Lock">
 								<text style="color: #FFF;font-size: 40rpx;">临时锁车</text>
+							</button>
+							<button class="bt_continuebike" @click="continueRide">
+								<text style="color: #65C36D;font-size: 40rpx;">继续骑行</text>
 							</button> -->
-
 							<button class="bt_returnbike" @click="returnBike">
 								<text style="color: #FFF;font-size: 40rpx;">还车</text>
 							</button>
@@ -121,7 +124,7 @@
 				bicycleIconPath: '../../static/RentBike/bicycleGreen.png',
 				iconWidth: 50,
 				iconHeight: 50,
-				Height:'',
+				Height: '',
 				markLonLatArray: [], //标记点坐标数组
 				scrollHeight: '300px', //搜索列表高度
 				isShowList: false, //是否显示站点列表
@@ -151,22 +154,22 @@
 			if (item.responseArr) {
 				that.rentInfo = JSON.parse(item.responseArr);
 				console.log('传递数据结果', that.rentInfo);
-				if(that.rentInfo.bicycleType == "自行车"){
+				if (that.rentInfo.bicycleType == "自行车") {
 					that.IsStake = false;
 				}
 				if (that.rentInfo.bikeType == "有桩") {
 					setTimeout(function() {
-						//that.getOrderInfo();
+						that.getOrderInfo();
 					}, 2000)
 				} else {
 					that.IsStake = false;
 					setTimeout(function() {
-						//that.getOrderInfo();
+						that.getOrderInfo();
 					}, 2000)
 				}
 			} else {
 				setTimeout(function() {
-					//that.GetOrderByUserID();
+					that.GetOrderByUserID();
 				}, 2000)
 			}
 			//获取客服热线
@@ -375,7 +378,7 @@
 							})
 							uni.showLoading({
 								title: '正在还车...',
-								mask:true
+								mask: true
 							})
 							console.log('请求参数', that.rentInfo)
 							uni.request({
@@ -510,7 +513,7 @@
 			},
 			UpdateOrder: function() {
 				var that = this;
-				console.log("订单号"+that.OrderNo)
+				console.log("订单号" + that.OrderNo)
 				uni.request({
 					url: $DDTInterface.DDTInterface.UpdateOrder.Url,
 					method: $DDTInterface.DDTInterface.UpdateOrder.method,
@@ -612,7 +615,7 @@
 							if (that.rentInfo.bikeType == '有桩') {
 								//当地图移动的时候，改变坐标显示周围的车辆位置信息
 								that.GetStationByRange(res.longitude, res.latitude)
-							} else if (that.rentInfo.bikeType == '无桩') { 
+							} else if (that.rentInfo.bikeType == '无桩') {
 								//当地图移动的时候，改变坐标显示周围的车辆位置信息
 								that.GetBHTStationByRange(res.longitude, res.latitude)
 							}
@@ -796,7 +799,7 @@
 				}
 				if (that.inputValue) {
 					that.keywordList = [];
-			
+
 					that.inputValue = '';
 					// that.GetStationByKeys(that.inputValue);
 				}
@@ -808,7 +811,7 @@
 					title: '正在加载...'
 				})
 				var Url = '';
-				if (that.rentInfo.bikeType== '有桩') {
+				if (that.rentInfo.bikeType == '有桩') {
 					Url = $DDTInterface.DDTInterface.GetStationByKeys.Url
 				} else {
 					Url = $DDTInterface.DDTInterface.GetBHTStation.Url
@@ -851,7 +854,7 @@
 				var that = this;
 				var len = keywords.length,
 					keywordArr = [];
-					var arr=[];
+				var arr = [];
 				for (var i = 0; i < len; i++) {
 					if (that.rentInfo.bikeType == '有桩') {
 						var row = keywords[i].name;
@@ -865,10 +868,10 @@
 						keyword: row,
 						htmlStr: html,
 						data: keywords
-					}; 
+					};
 					arr.push(tmpObj)
 				}
-				keywordArr=arr;
+				keywordArr = arr;
 				console.log(keywordArr)
 				return keywordArr;
 			},
@@ -878,7 +881,7 @@
 				// console.log('123456',item)
 				that.inputValue = item.keyword;
 				//点击站点时将对应的站点坐标设置为地图中心位置，并放大地图
-				if (that.rentInfo.bikeType== '有桩') {
+				if (that.rentInfo.bikeType == '有桩') {
 					var gpsArray = item.data[index].gps.split(',')
 					console.log(gpsArray)
 					that.centerLatitude = gpsArray[0];
@@ -890,7 +893,7 @@
 				// that.scale = 15;
 				that.isShowList = false;
 			},
-			
+
 		}
 	}
 </script>
@@ -970,6 +973,7 @@
 		align-items: center;
 		flex-direction: column;
 	}
+
 	.icon-img {
 		width: 36px;
 		height: 36px;
@@ -977,6 +981,7 @@
 		left: 375rpx;
 		transform: translate(-50%, -50%);
 	}
+
 	/* 搜索框 */
 	.topSerchView {
 		position: fixed;
@@ -984,7 +989,7 @@
 		right: 0;
 		top: 80rpx;
 	}
-	
+
 	.SearchBar {
 		background-color: #FFFFFF;
 		margin-right: 20rpx;
@@ -994,7 +999,7 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	
+
 	/* 地址搜索输入 */
 	.addressInput {
 		width: 335rpx;
@@ -1004,7 +1009,7 @@
 		font-size: 30rpx;
 		font-weight: 300;
 	}
-	
+
 	/* 站点列表 */
 	.stationList {
 		width: 710rpx;
@@ -1016,12 +1021,11 @@
 		margin-top: 20rpx;
 		border-radius: 10rpx;
 	}
-	
+
 	.listItem {
 		margin-top: 20rpx;
 		margin-left: 20rpx;
 		border-bottom-width: 0.5rpx;
 		border-color: #eeeeee;
 	}
-	
 </style>

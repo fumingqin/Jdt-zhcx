@@ -21,7 +21,8 @@
             "OAuth" : {},
             "Share" : {},
             "Payment" : {},
-            "Speech" : {}
+            "Speech" : {},
+            "Bluetooth" : {}
         },
         /* 应用发布信息 */
         "distribute" : {

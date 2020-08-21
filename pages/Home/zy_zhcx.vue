@@ -176,11 +176,12 @@
 								ItemTitle: "公交刷码"
 							},
 							{
-								IsUse: true,
-								clickURL: "../../pages_DDQC/pages/GRZY/zy_homepage",
-								ImageURL: "../../static/Home/QB.png",
-								ItemTitle: "钱包"
-							},
+									IsUse: true,
+									clickURL: "../../pages_DDQC/pages/Bus/TicketPurchase",
+									ImageURL: "../../static/Home/CPDG.png",
+									ItemTitle: "车票订购"
+								},
+							
 							{
 								IsUse: true,
 								clickURL: "../../pages_DDQC/pages/Bus/BusSeach",
@@ -189,33 +190,33 @@
 							},
 						]
 					},
-					{
-						ItemArr: [{
-								IsUse: true,
-								clickURL: "../../pages_DDQC/pages/Bus/TicketPurchase",
-								ImageURL: "../../static/Home/CPDG.png",
-								ItemTitle: "车票订购"
-							},
-							// {
-							// 	IsUse: false,
-							// 	clickURL: "",
-							// 	ImageURL: "../../static/Home/BCFW2.png",
-							// 	ItemTitle: "包车服务"
-							// },
-							// {
-							// 	IsUse: false,
-							// 	clickURL: "",
-							// 	ImageURL: "../../static/Home/serve/jqgoupiao2.png",
-							// 	ItemTitle: "景区门票"
-							// },
-							// {
-							// 	IsUse: false,
-							// 	clickURL: "",
-							// 	ImageURL: "../../static/Home/LYCP2.png",
-							// 	ItemTitle: "旅游产品"
-							// },
-						]
-					},
+					// {
+					// 	ItemArr: [{
+					// 			IsUse: true,
+					// 			clickURL: "../../pages_DDQC/pages/GRZY/zy_homepage",
+					// 			ImageURL: "../../static/Home/QB.png",
+					// 			ItemTitle: "钱包"
+					// 		},
+					// 		// {
+					// 		// 	IsUse: false,
+					// 		// 	clickURL: "",
+					// 		// 	ImageURL: "../../static/Home/BCFW2.png",
+					// 		// 	ItemTitle: "包车服务"
+					// 		// },
+					// 		// {
+					// 		// 	IsUse: false,
+					// 		// 	clickURL: "",
+					// 		// 	ImageURL: "../../static/Home/serve/jqgoupiao2.png",
+					// 		// 	ItemTitle: "景区门票"
+					// 		// },
+					// 		// {
+					// 		// 	IsUse: false,
+					// 		// 	clickURL: "",
+					// 		// 	ImageURL: "../../static/Home/LYCP2.png",
+					// 		// 	ItemTitle: "旅游产品"
+					// 		// },
+					// 	]
+					// },
 					// {
 					// 	ItemArr: [{
 					// 			IsUse: false,

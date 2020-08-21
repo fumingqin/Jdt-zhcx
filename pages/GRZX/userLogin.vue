@@ -180,7 +180,7 @@
 							},
 							fail() {
 								uni.showToast({
-									title: "验证码已过期，请重新获取",
+									title: "登录失败，请检查网络",
 									icon: "none"
 								})
 							}
@@ -227,7 +227,7 @@
 							uni.redirectTo({
 								url: that.$GrzxInter.Route.realName.url,
 							})
-						} else if (res.data.data.RealNameStatus !== 1) {
+						} else if (res.data.data.RealNameStatus !== 1||res.data.data.RealNameStatus !=3) {
 							//上传图片
 							uni.redirectTo({
 								url: that.$GrzxInter.Route.uploadPhoto.url,

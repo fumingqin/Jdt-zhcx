@@ -299,11 +299,13 @@
 				}
 				if (e == 'scan') {
 					uni.scanCode({
+						scanType:['qrCode'],
 						onlyFromCamera: true,
 						success: function(res) {
-							void plus.runtime.openWeb(res.result, function() {
+							console.log(res);
+							//void plus.runtime.openWeb(res.result, function() {
 								//识别失败
-							});
+							//});
 						}
 					})
 				}
@@ -547,14 +549,14 @@
 							uni.navigateTo({
 								url: that.$GrzxInter.Route.realName.url,
 							})
-						} else if (res.data.data.RealNameStatus !== 1) {
+						} else if (res.data.data.RealNameStatus !== 1||res.data.data.RealNameStatus != 3) {
 							//上传图片
 							uni.navigateTo({
 								url: that.$GrzxInter.Route.uploadPhoto.url,
 							})
 						} else {
 							uni.showToast({
-								title: '您已实名',
+								title: '您已实名或实名审核中',
 								icon: 'none',
 							})
 						}
