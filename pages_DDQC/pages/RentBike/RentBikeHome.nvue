@@ -824,6 +824,7 @@
 									operationId: response.data.data.operationId, //操作编号
 									phoneNumber: that.userInfo.phoneNumber, //手机号
 								}
+								uni.setStorageSync('qrcode',param);
 								//当前状态可以租车
 								uni.navigateTo({
 									url: './Riding?&responseArr=' + JSON.stringify(responseArr)

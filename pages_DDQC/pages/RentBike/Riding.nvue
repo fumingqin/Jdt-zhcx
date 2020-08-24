@@ -51,39 +51,19 @@
 							<!-- <text style="color: #999;font-size: 28rpx;font-weight: 300;">电量充足，可骑行59公里</text> -->
 						</view>
 						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;" v-if="!IsStake">
-						<!-- 	<button class="bt_lock" @click="Lock">
-								<text style="color: #FFF;font-size: 40rpx;">临时锁车</text>
-							</button>
-							<button class="bt_continuebike" @click="continueRide">
-								<text style="color: #65C36D;font-size: 40rpx;">继续骑行</text>
-							</button> -->
 							<button class="bt_returnbike" @click="returnBike">
 								<text style="color: #FFF;font-size: 40rpx;">还车</text>
 							</button>
 						</view>
+						<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;" v-if="IsBike">
+							<button class="bt_lock" @click="Lock(55,true)" v-if="!IsLock">
+								<text style="color: #FFF;font-size: 40rpx;">临时锁车</text>
+							</button>
+							<button class="bt_continuebike" @click="Lock(56,false)" v-if="IsLock">
+								<text style="color: #65C36D;font-size: 40rpx;">继续骑行</text>
+							</button>
+						</view>
 					</view>
-				</view>
-			</view>
-			<view class="detail" v-if="Isreturn">
-				<view style="align-items: center;">
-					<image src="../../static/RentBike/arrive.png" style="width:183rpx;height: 129rpx;" mode="widthFix"></image>
-					<view style="margin-top: 50rpx;">
-						<text style="color: #65C36D;font-size: 38rpx;">已到达停车点</text>
-					</view>
-					<view style="margin-top: 30rpx;">
-						<text style="color: #999999;font-size: 32rpx;">感谢您的骑行体验～</text>
-					</view>
-				</view>
-				<view style="flex-direction: row;margin-top: 50rpx;justify-content: space-between;">
-					<!-- <button class="bt_continuebike" @click="continueRide">
-						<text style="color: #65C36D;font-size: 40rpx;">继续骑行</text>
-					</button> -->
-					<button class="bt_returnbike" @click="continueRide">
-						<text style="color: #FFF;font-size: 40rpx;">确认还车</text>
-					</button>
-				</view>
-				<view>
-
 				</view>
 			</view>
 		</view>
@@ -130,6 +110,9 @@
 				isShowList: false, //是否显示站点列表
 				keywordList: [], //标记点列表
 				inputValue: '', //搜索框内容
+				QRcode: '',
+				IsLock: false,
+				IsBike: false,
 			}
 		},
 		mounted() {
@@ -156,6 +139,7 @@
 				console.log('传递数据结果', that.rentInfo);
 				if (that.rentInfo.bicycleType == "自行车") {
 					that.IsStake = false;
+					that.IsBike = true;
 				}
 				if (that.rentInfo.bikeType == "有桩") {
 					setTimeout(function() {
@@ -169,7 +153,7 @@
 				}
 			} else {
 				setTimeout(function() {
-					that.GetOrderByUserID();
+				that.GetOrderByUserID();
 				}, 2000)
 			}
 			//获取客服热线
@@ -181,8 +165,8 @@
 			})
 		},
 		onShow() {
-			//this.checkStatus(); 
-		},
+			this.checkStatus(); 
+		}, 
 		created() {
 			uni.setNavigationBarTitle({
 				title: "骑行中"
@@ -316,7 +300,7 @@
 							userID: that.userInfo.userID,
 						},
 						success(res) {
-							console.log('还车结果', res)
+							// console.log('还车结果', res)
 							that.OrderNo = res.data.data[0].OrderNo;
 							if (res.data.data[0].HireStatus == 2) {
 								uni.showToast({
@@ -532,9 +516,35 @@
 					}
 				})
 			},
-			Lock: function() { //临时锁车
+			Lock: function(type, islock) { //临时锁车
 				var that = this;
-				that.Isreturn = true;
+				that.QRcode = uni.getStorageSync('qrcode') || '';
+				if (that.QRcode == '') {
+					uni.showToast({
+						title: "临时锁车失败",
+						icon: 'none'
+					})
+					return;
+				}
+				uni.request({
+					url: $DDTInterface.DDTInterface.TemporaryLock.Url,
+					method: $DDTInterface.DDTInterface.TemporaryLock.method,
+					data: {
+						phone: that.userInfo.phoneNumber,
+						QRcode: that.QRcode,
+						SystemType: 'Android',
+						bizType: type, //55临时锁车/56继续骑行
+						userID: that.userInfo.userID,
+					},
+					success(res) {
+						console.log(res)
+						that.IsLock = islock;
+					}
+				})
+
+
+
+				// that.Isreturn = true;
 			},
 			continueRide: function() { //继续骑行
 				var that = this;
@@ -923,7 +933,7 @@
 		/* 还车 */
 		background-color: #65C36D;
 		border-radius: 50px;
-		width: 600rpx;
+		width: 290rpx;
 		padding-top: 30rpx;
 		padding-bottom: 30rpx;
 		border-width: 0;

@@ -355,13 +355,11 @@ const DDTInterface = {
 		method:'POST',
 		header:{'content-type': 'application/json'},
 	},
-	UpdateOrder: {
-		Url: Url + '/api/SmartBike/UpdateOrder',
-		name: '更新订单状态',
-		method: 'POST',
-		header: {
-			'content-type': 'application/x-www-form-urlencoded'
-		},
+	TemporaryLock:{
+		Url: Url + '/api/SmartBike/TemporaryLock',
+		name:'临时锁车、继续骑行',
+		method:'POST',
+		header:{'content-type': 'application/json'},
 	},
 }
 // 接口声明区
