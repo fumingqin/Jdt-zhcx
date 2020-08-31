@@ -194,9 +194,10 @@
 					sizeType: ['compressed'],
 					success: e => {
 						_self.imgList = [..._self.imgList, ...e.tempFiles]
-						_self.imgCount=3-_self.imgList.length;
+						_self.imgCount = _self.imgList.length;
 						for(var i = 0;i < _self.imgList.length;i++){
-							var imagePath = _self.imgList[i].path
+							_self.imgCount--;
+							var imagePath = _self.imgList[i].path;
 							pathToBase64(imagePath)
 							  .then(base64 => {
 								_self.base64Array.push(base64)
@@ -228,8 +229,6 @@
 					content: '确定删除这张吗',
 					success: res => {
 						if (res.confirm) {
-							console.log(index)
-							console.log('删除照片前',_self.imgList)
 							_self.imgList.splice(index, 1);
 							_self.imgCount++;
 							for(var i = 0;i < _self.imgList.length;i++){
@@ -242,7 +241,6 @@
 								    console.error('错误',error)
 								  })
 							}
-							console.log('删除照片',_self.imgList)
 						} else if (res.cancel) {
 			
 						}
