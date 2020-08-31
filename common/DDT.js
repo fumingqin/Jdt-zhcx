@@ -7,6 +7,14 @@ const Url39 = 'http://36.250.234.10:60039';
 //接口对象
 const DDTInterface = {
 	//-----------------------------------------自行车接口------------------------------------------------
+	GetWebViewUrl:{
+		Url: Url + '/api/WebViewUrl/GetWebViewUrl',
+		name: '获取公交查询路径',
+		method: 'GET',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded'
+		},
+	},
 	GetStationByRange: {
 		Url: Url + '/api/SmartBike/GetStationByRange',
 		name: '有桩站点接口',
