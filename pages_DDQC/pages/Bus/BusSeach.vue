@@ -7,12 +7,16 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				URL:''
+			}
 		},
 		onShow() {
 		},
 		methods: {
-
+			GetWebViewUrl:function(){
+				
+			}
 		} 
 	}
 </script>
