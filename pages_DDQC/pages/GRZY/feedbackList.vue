@@ -27,7 +27,6 @@
 			
 		},
 		onNavigationBarButtonTap(e) {
-			console.log(e)
 			if(e.index==0){
 				uni.navigateTo({
 					url:'../../../pages_GRZX/pages/GRZX/feedback'
@@ -43,14 +42,13 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: function(userinfo) {
-						uni.request({
+						uni.request({ 
 							url:$DDTInterface.DDTInterface.GetMySuggestionList.Url,
 							method:$DDTInterface.DDTInterface.GetMySuggestionList.method,
 							data:{
 								userID:userinfo.data.userId
 							},
 							success(res) {
-								console.log(res)
 								if(res.data.status == true){
 									_self.feedbackList = res.data.data
 								}

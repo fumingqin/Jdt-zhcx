@@ -197,7 +197,7 @@
 						_self.imgCount = _self.imgList.length;
 						for(var i = 0;i < _self.imgList.length;i++){
 							_self.imgCount--;
-							var imagePath = _self.imgList[i].path
+							var imagePath = _self.imgList[i].path;
 							pathToBase64(imagePath)
 							  .then(base64 => {
 								_self.base64Array.push(base64)
