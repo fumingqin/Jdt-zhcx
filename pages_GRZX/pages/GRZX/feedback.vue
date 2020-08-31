@@ -215,15 +215,16 @@
 			//-----------上传图片----------------------------------------
 			openCamera() {
 				//选择照片
+				console.log( _self.imgCount);
 				uni.chooseImage({
 					count: _self.imgCount,
 					sizeType: ['compressed'],
 					success: e => {
 						_self.imgList = [..._self.imgList, ...e.tempFiles]
 						console.log(_self.imgList.length)
+						_self.imgCount=3-_self.imgList.length;
 						for(var i = 0;i < _self.imgList.length;i++){
-							console.log(i)
-							var imagePath = _self.imgList[i].path
+							var imagePath = _self.imgList[i].path 
 							pathToBase64(imagePath)
 							  .then(base64 => {
 								_self.base64Array.push(base64)
@@ -260,6 +261,7 @@
 						if (res.confirm) {
 							_self.imgList.splice(i, 1);
 							_self.imgCount++;
+							console.log("删除后",_self.imgCount)
 							for(var i = 0;i < _self.imgList.length;i++){
 								var imagePath = _self.imgList[i].path
 								pathToBase64(imagePath)
