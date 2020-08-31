@@ -47,7 +47,7 @@
 				urlData: '',
 				background: '',
 				logo: '',
-				
+				version:'',
 				state:true,	//是否允许点击
 			}
 		},
@@ -490,7 +490,7 @@
 						jyJPush.getRegistrationID(
 						//  返回的数据会有registrationID，errorCode
 						result => {
-							console.log(result)
+							//console.log(result)
 						});
 					});
 				});
@@ -503,8 +503,13 @@
 					geocode: true,
 					success(res) {
 						// console.log(res)
+						
+					},
+					complete(res) {
+						console.log(res)
 						uni.getSystemInfo({
 							success(res1) {
+								console.log(res1)
 								var country = res.address.country ? res.address.country : '';
 								var province = res.address.province ? res.address.province : '';
 								var city = res.address.city ? res.address.city : '';
@@ -513,6 +518,9 @@
 								var streetNum = res.address.streetNum ? res.address.streetNum : '';
 								var poiName = res.address.poiName ? res.address.poiName : '';
 								var Address = country + province + city + district + street + streetNum + poiName;
+								plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+									that.version = inf.version; //获取当前版本号
+								});
 								uni.request({
 									url: $DDTInterface.DDTInterface.BikeLog.Url,
 									method: $DDTInterface.DDTInterface.BikeLog.method,
@@ -526,6 +534,7 @@
 										PhoneModel: res1.model,
 										SystemType: res1.platform,
 										SystemVersion: res1.system,
+										Version:that.version,
 									},
 									success(res) {
 									},

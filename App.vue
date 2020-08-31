@@ -98,10 +98,14 @@
 			},
 			LoginLog: function(UserID, Phone) {
 				var that = this;
+				let version='';
 				uni.getLocation({
 					type: 'gcj02',
 					geocode: true,
 					success(res) {
+						
+					},
+					complete(res) {
 						uni.getSystemInfo({
 							success(res1) {
 								var country = res.address.country ? res.address.country : '';
@@ -112,6 +116,9 @@
 								var streetNum = res.address.streetNum ? res.address.streetNum : '';
 								var poiName = res.address.poiName ? res.address.poiName : '';
 								var Address = country + province + city + district + street + streetNum + poiName;
+								plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+									version = inf.version; //获取当前版本号
+								});
 								uni.request({
 									url: $DDTInterface.DDTInterface.BikeLog.Url,
 									method: $DDTInterface.DDTInterface.BikeLog.method,
@@ -125,6 +132,7 @@
 										PhoneModel: res1.model,
 										SystemType: res1.platform,
 										SystemVersion: res1.system,
+										Version:version,
 									},
 									success(res) {
 										// console.log(res)
