@@ -184,7 +184,8 @@
 							
 							{
 								IsUse: true,
-								clickURL: "../../pages_DDQC/pages/Bus/BusSeach",
+								// clickURL: "../../pages_DDQC/pages/Bus/BusSeach",
+								clickURL: "../../pages_DDQC/pages/Bus/BusQuery",
 								ImageURL: "../../static/Home/GJCX.png",
 								ItemTitle: "公交查询"
 							},
