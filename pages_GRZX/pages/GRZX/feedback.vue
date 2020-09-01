@@ -51,7 +51,10 @@
 			system:'',//系统类型
 			
 			imgList: [],//照片数组
+			
 			imgCount: 3, //最多支持9张上传，可以修改
+			totalImgCount: 3, //注意：imgCount改什么多少，这么就要跟着改
+			
 			base64Array:[],//图片的base64数组
 			serverUrl: 'http://localhost:2000/work/uploadWorkPicture',//模拟服务器地址
 			serverUrlDeleteImage: 'http://localhost:2000/work/deleteWorkPicture',//模拟服务器删除
@@ -222,7 +225,7 @@
 					success: e => {
 						_self.imgList = [..._self.imgList, ...e.tempFiles]
 						console.log(_self.imgList.length)
-						_self.imgCount=3-_self.imgList.length;
+						_self.imgCount = _self.totalImgCount - _self.imgList.length;
 						for(var i = 0;i < _self.imgList.length;i++){
 							var imagePath = _self.imgList[i].path 
 							pathToBase64(imagePath)
