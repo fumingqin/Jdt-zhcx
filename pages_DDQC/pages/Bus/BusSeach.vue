@@ -1,7 +1,6 @@
 <template>
 	<view>
-		<!-- <web-view :src="URL"></web-view> -->
-		<u-button>按钮</u-button>
+		<web-view :src="URL"></web-view>
 	</view>
 </template>
 
