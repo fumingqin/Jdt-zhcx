@@ -218,13 +218,11 @@
 			//-----------上传图片----------------------------------------
 			openCamera() {
 				//选择照片
-				console.log( _self.imgCount);
 				uni.chooseImage({
 					count: _self.imgCount,
 					sizeType: ['compressed'],
 					success: e => {
 						_self.imgList = [..._self.imgList, ...e.tempFiles]
-						console.log(_self.imgList.length)
 						_self.imgCount = _self.totalImgCount - _self.imgList.length;
 						for(var i = 0;i < _self.imgList.length;i++){
 							var imagePath = _self.imgList[i].path 
