@@ -194,7 +194,8 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	@import "uview-ui/index.scss";
 	/* #ifndef APP-NVUE */
 	@font-face {
 		font-family: jdticon;

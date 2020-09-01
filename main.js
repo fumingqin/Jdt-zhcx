@@ -19,6 +19,9 @@ Vue.prototype.$GrzxInter=GrzxInter;  //个人中心
 Vue.prototype.$ChangeImage=ChangeImage; //更换图片
 App.mpType = 'app'
 
+import uView from 'uview-ui'
+Vue.use(uView);
+
 const app = new Vue({
 	// store,	//登录
 	GrzxInter,//个人中心
