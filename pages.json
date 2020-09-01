@@ -1125,7 +1125,8 @@
                 ,{
                     "path" : "pages/Bus/TransitSearch",
                     "style" : {
-						"navigationBarTitleText":"公交搜索"
+						"navigationBarTitleText":"公交搜索",
+						"navigationBarBackgroundColor": "#FFFFFF"
 					}
                 }
             ]
