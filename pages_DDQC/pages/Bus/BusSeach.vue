@@ -1,10 +1,11 @@
 <template>
 	<view>
-		<web-view src="http://wxbus.0595erp.com/"></web-view>
+		<web-view :src="URL"></web-view>
 	</view>
 </template>
 
 <script>
+	import $DDTInterface from '@/common/DDT.js'
 	export default {
 		data() {
 			return {
@@ -13,9 +14,22 @@
 		},
 		onShow() {
 		},
+		onLoad() {
+			this.GetWebViewUrl();
+		},
 		methods: {
 			GetWebViewUrl:function(){
-				
+				let that=this;
+				uni.request({
+					url: $DDTInterface.DDTInterface.GetWebViewUrl.Url,
+					method: $DDTInterface.DDTInterface.GetWebViewUrl.method,
+					data: {
+						ParamKey: "bus", 
+					},
+					success(res) {
+						that.URL=res.data.data.ParamValue;
+					}
+				})
 			}
 		} 
 	}

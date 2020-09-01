@@ -16,7 +16,7 @@ const DDTInterface = {
 		},
 	},
 	GetStationByRange: {
-		Url: Url + '/api/SmartBike/GetStationByRange',
+		Url: Url + '/api/SmartBike/GetStationByRange', 
 		name: '有桩站点接口',
 		method: 'POST',
 		header: {
