@@ -1122,6 +1122,12 @@
 						"navigationBarTitleText":"故障历史"
 					}
                 }
+                ,{
+                    "path" : "pages/Bus/TransitSearch",
+                    "style" : {
+						"navigationBarTitleText":"公交搜索"
+					}
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
