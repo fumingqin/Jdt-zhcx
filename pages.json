@@ -1128,6 +1128,35 @@
 						"navigationBarTitleText":"公交搜索"
 					}
                 }
+                ,{
+                    "path" : "pages/Bus/BusQuery",
+                    "style" : {
+						"navigationBarBackgroundColor":"#7D56FF",
+						"titleNView":{
+							"searchInput": {
+								"align":"left",
+								"disabled":"true",
+								"borderRadius":"10px",
+								"backgroundColor":"#ffffff",
+								"placeholder":"搜索线路/站点/地点",
+								"placeholderColor":"#AAAAAA"
+							}
+						}
+					}
+                },
+				
+                {
+                    "path" : "pages/Bus/RoutePlan",
+                    "style" : {
+						"navigationBarTitleText":"线路方案"
+					}
+                }
+                ,{
+                    "path" : "pages/Bus/BusLocation",
+                    "style" : {
+						"navigationBarTitleText":"公交位置"
+					}
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
