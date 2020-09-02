@@ -85,9 +85,9 @@
 							encryption: "XMJDTzzbusxmjdt"
 						},
 						success(res) {
-							if (res.data != "未将对象引用设置到对象的实例。") {
-								console.log(res)
-								that.searchArr = res.data;
+							if (res.data.status) {
+								console.log(res) 
+								that.searchArr = res.data.data;
 							}
 						},
 						complete(res) {
@@ -99,11 +99,12 @@
 									encryption: "XMJDTzzbusxmjdt"
 								},
 								success(res) {
-									if (res.data.length > 0) {
+									console.log(res);
+									if (res.data.data.length > 0) {
 										if (that.searchArr = []) {
-											that.searchArr = res.data;
+											that.searchArr = res.data.data;
 										} else {
-											that.searchArr.push(res.data);
+											that.searchArr.push(res.data.data);
 										}
 										console.log(that.searchArr);
 									}
