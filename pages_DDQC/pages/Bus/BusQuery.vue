@@ -18,18 +18,58 @@
 				</u-cell-item>
 			</u-cell-group>
 			
-			<view class="queryButton">查询</view>
+			<view class="queryButton" @click="queryClick">查询</view>
 		</view>
 		
+		<view class="around">附近</view>
+		
+		<view class="aroundView">
+			<block v-for="(stationItem,stationIndex) in stationList" :key='stationIndex'>
+				<view class="aroundViewTop" @click="stationClick(stationList[stationIndex])">
+					<image src="../../static/Bus/aroundStation.png" class="aroundImage"></image>
+					<view class="aroundStation">{{stationItem.stationName}}</view>
+					<view class="distance">距离{{numFilter(stationItem.distance * 100)}}米 > </view>
+				</view>
+				<view v-if="stationID == stationItem.stationID">
+					<block v-for="(item,index) in showLineList" :key='index'>
+						<view style="border-bottom: 1rpx solid #eeeeee;padding-bottom: 20rpx;margin-left: 77rpx;margin-right: 30rpx;">
+							<view class="lineView">
+								<view style="font-weight: 900;font-size: 30rpx;color: #343434;">{{item.lineName}}</view>
+								<!-- <view style="font-weight: 900;font-size: 30rpx;color: #4282FF;">{{item.arriveTime}}</view> -->
+							</view>
+							<view class="lineView">
+								<view style="font-weight: 300;font-size: 26rpx;color: #343434;">{{item.endName}}</view>
+								<!-- <view style="font-weight: 300;font-size: 26rpx;color: #343434;">{{item.distance}}</view> -->
+							</view>
+						</view>
+					</block>
+					<view class="bottomView">
+						<view style="color: #888888;font-size: 28rpx;font-weight: 300;" @click="moreClick"  v-if="isMoreClick == false">展开</view>
+						<view style="color: #888888;font-size: 28rpx;font-weight: 300;" @click="packUp"  v-if="isMoreClick == true">收起</view>
+					</view>
+				</view>
+				
+			</block>
+			
+		</view>
 	</view>
 </template>
 
 <script>
+	var _self;
+	import $BusInterface from '@/common/Bus.js'
 	//导航栏的背景色是在pages设置
 	export default {
 		data() {
 			return {
-				
+				stationList:[],//存放所有站点列表的数组
+				stationID:'',//站点ID
+				isMoreClick:false,
+				allLineList:[],//用来存放所有线路的数组，点击展开时显示需要显示所有线路
+				shortLineList:[],//用来存放部分线路的数组，因为有展开功能，所以只展示三条线路，点击展开时显示所有线路
+				showLineList:[],//遍历时用到的数组，这个数组不要去动
+				currentLongitude:'',//纬度
+				currentLatitude:'',//经度
 			}
 		},
 		//--------------------------------------监听索框点击事件--------------------------------------
@@ -41,10 +81,146 @@
 			})
 		},
 		onLoad() {
+			_self = this;
+			_self.getMyLocation();
 			
 		},
 		methods: {
 			
+			//--------------------------------------获取当前位置的经纬度--------------------------------------
+			getMyLocation: function() {
+				var that = this;
+				uni.getLocation({
+					//type默认为wgs84返回gps坐标,gcj02返回国测局坐标,可用于uni.openLocation的坐标
+					type: "gcj02",
+					//是否解析地址信息，默认false
+					geocode: true,
+					success: function(res) {
+						_self.currentLongitude = res.longitude; //--纬度
+						_self.currentLatitude = res.latitude; //--经度
+						//请求附近站点信息放在得到坐标之后，避免在发请求之前无坐标信息
+						_self.getAroundStationData();
+					},
+					fail(res) {
+						that.isLocation = false;
+						uni.showModal({
+							title: '温馨提示',
+							content: '获取位置失败，请打开定位',
+							showCancel: false
+						})
+					}
+				});
+			},
+			
+			//——————————————————————————————————————网络请求开始——————————————————————————————————————
+			getAroundStationData:function(){
+				// console.log(_self.currentLongitude,_self.currentLatitude)
+				uni.request({
+					url:$BusInterface.BusInterface.getBusStationInfoByLonLat.Url,
+					method:$BusInterface.BusInterface.getBusStationInfoByLonLat.method,
+					data:{
+						// lon:_self.currentLongitude,//纬度
+						// lat:_self.currentLatitude,//纬度
+						lon:117.765241,
+						lat:24.457463,
+						encryption:'XMJDTzzbusxmjdt'//编码
+					},
+					success(res) {
+						console.log('请求成功',res)
+						_self.stationList = res.data
+					},
+					fail(res) {
+						console.log('请求失败',res)
+					}
+				})
+			},
+			//--------------------------------------根据站点请求线路数据--------------------------------------
+			getLineData:function(stationName){
+				uni.showLoading()
+				uni.request({
+					url:$BusInterface.BusInterface.getBusLineInfoByStationName.Url,
+					method:$BusInterface.BusInterface.getBusLineInfoByStationName.method,
+					data:{
+						stationName:stationName,
+						encryption:'XMJDTzzbusxmjdt'//编码
+					},
+					success(res) {
+						uni.hideLoading()
+						// console.log('请求成功',res)
+						//先清空存放部分线路的数组，避免数据叠加
+						_self.shortLineList = [];
+						//将所有的线路数据存放在allLineList里面，点击展开的时候用到
+						_self.allLineList = res.data;
+						//只取三条线路数据展示
+						for(var i = 0; i < 3; i++){
+							_self.shortLineList.push(res.data[i])
+						}
+						_self.showLineList = _self.shortLineList
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log('请求失败',res)
+					}
+				})
+			},
+			
+			
+			//——————————————————————————————————————网络请求结束——————————————————————————————————————
+			
+			
+			
+			//**************************************事件写在这里（开始）**************************************
+			
+			
+			//--------------------------------------查询点击事件--------------------------------------
+			queryClick:function(){
+				//跳转到线路规划页面
+				uni.navigateTo({
+					url:'./RoutePlan'
+				})
+			},
+			//--------------------------------------站点点击事件--------------------------------------
+			stationClick:function(item){
+				//取出站点ID用来判断当前点击的是哪个站点，判断是否可以展开
+				_self.stationID = item.stationID;
+				//请求线路数据，将站点名称跟下标传过去
+				_self.getLineData(item.stationName)
+			},
+			//--------------------------------------展开点击事件--------------------------------------
+			//这里的展开收起功能的原理是一开始只取三组数据赋值给showLineList，点击展开的时候将所有的数据全部赋值给showLineList
+			moreClick:function(){
+				_self.isMoreClick = !_self.isMoreClick;
+				if(_self.isMoreClick == true){
+					//显示所有线路
+					_self.showLineList = _self.allLineList
+				}else {
+					//显示部分线路
+					_self.showLineList = _self.shortLineList
+				}
+			},
+			//--------------------------------------收起点击事件--------------------------------------
+			packUp:function(){
+				_self.isMoreClick = !_self.isMoreClick;
+				//显示部分线路
+				_self.showLineList = _self.shortLineList
+			},
+			
+			
+			//**************************************事件写在这里（结束）**************************************
+			
+			
+			//---------------------------------------其他方法---------------------------------------
+			numFilter(value){
+				if(value.length < 5){
+					//如果传过来的经纬度长度小于8位就返回原来的
+					return value
+				}else {
+					//截取当前位数到小数点后2位
+					let tempVal = parseFloat(value).toFixed(2)
+					let realVal = tempVal.substring(0,tempVal.length-1)
+					return realVal
+				}
+			}
 		},
 		
 	}
@@ -54,7 +230,6 @@
 <style>
 	page,
 	.myView {
-		position: fixed;
 		flex-direction: column;
 		width: 100%;
 		height: 100%;
@@ -64,7 +239,7 @@
 	.topImage{
 		margin-top: -1rpx;
 	}
-	/* 起终点 */
+	/* 起终点的view */
 	.station {
 		position: relative;
 		background-color: #FFFFFF;
@@ -87,5 +262,59 @@
 		border-radius: 12rpx;
 		height: 90rpx;
 		font-size: 38rpx;
+	}
+	/* 标题：附近 */
+	.around{
+		font-size: 32rpx;
+		color: #343434;
+		margin-left: 40rpx;
+		margin-top: 20rpx;
+		font-weight: 900;
+	}
+	/* 显示附近的站点的view */
+	.aroundView{
+		margin-top: 20rpx;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		border-radius: 12rpx;
+		background-color: #FFFFFF;
+		padding-bottom: 20rpx;
+	}
+	.aroundViewTop{
+		height: 100rpx;
+		width: 100%;
+		display: flex;
+		flex-direction: row; 
+		align-items: center;
+	}
+	.aroundImage{
+		width: 27rpx;
+		height: 32rpx;
+		margin-left: 36rpx;
+	}
+	.aroundStation{
+		margin-left: 20rpx;
+		font-size: 32rpx;
+		font-weight: 900;
+	}
+	.distance{
+		margin-left: 20rpx;
+		font-size: 24rpx;
+		font-weight: 300;
+		color: #343434;
+	}
+	.lineView{
+		margin-top: 20rpx;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.bottomView{
+		height: 60rpx;
+		width: 100%;
+		margin-top: 20rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 </style>
