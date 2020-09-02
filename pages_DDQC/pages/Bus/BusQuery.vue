@@ -127,7 +127,9 @@
 					},
 					success(res) {
 						console.log('请求成功',res)
-						_self.stationList = res.data
+						if(res.data.status == true){
+							_self.stationList = res.data.data
+						}
 					},
 					fail(res) {
 						console.log('请求失败',res)
@@ -147,15 +149,17 @@
 					success(res) {
 						uni.hideLoading()
 						// console.log('请求成功',res)
-						//先清空存放部分线路的数组，避免数据叠加
-						_self.shortLineList = [];
-						//将所有的线路数据存放在allLineList里面，点击展开的时候用到
-						_self.allLineList = res.data;
-						//只取三条线路数据展示
-						for(var i = 0; i < 3; i++){
-							_self.shortLineList.push(res.data[i])
+						if(res.data.status == true){
+							//先清空存放部分线路的数组，避免数据叠加
+							_self.shortLineList = [];
+							//将所有的线路数据存放在allLineList里面，点击展开的时候用到
+							_self.allLineList = res.data.data;
+							//只取三条线路数据展示
+							for(var i = 0; i < 3; i++){
+								_self.shortLineList.push(res.data.data[i])
+							}
+							_self.showLineList = _self.shortLineList
 						}
-						_self.showLineList = _self.shortLineList
 					},
 					fail(res) {
 						uni.hideLoading()
