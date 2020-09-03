@@ -157,6 +157,7 @@
 							_self.shortLineList = [];
 							//将所有的线路数据存放在allLineList里面，点击展开的时候用到
 							_self.allLineList = res.data.data;
+							//判断数组长度，如果长度小于3就显示所有数据，如果长度大于3就显示3条数据
 							var num = res.data.data.length;
 							if(num < 3){
 								num = res.data.data.length
