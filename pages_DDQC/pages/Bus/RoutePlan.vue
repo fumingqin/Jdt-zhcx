@@ -96,8 +96,6 @@
 			return {
 				startStation:'',
 				endStation:'',
-				encryption:'XMJDTzzbusxmjdt',
-				
 				planArr:[],
 			}
 		},
@@ -105,9 +103,6 @@
 			let that = this;
 			that.startStation = option.startStation;
 			that.endStation = option.endStation;
-			that.startStation = '火车站';
-			that.endStation = '碧湖万达';
-			
 			that.getBusChange();
 		},
 		methods: {
