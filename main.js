@@ -10,6 +10,7 @@ import BcfwZyx from 'common/BCFW/BcfwZyx.js' //包车服务-郑育兴
 import zyx from 'common/ZYX.js'
 import Sceniclist from 'common/scenicSpotDistribution.js' //旅游服务-景区目录
 import ChangeImage from 'common/changeImage.js' //更换图片
+import Bus from 'common/Bus.js'   //公交
 
 Vue.config.productionTip = false
 
@@ -17,6 +18,7 @@ Vue.config.productionTip = false
 Vue.prototype.$Czc=Czc;  //登录
 Vue.prototype.$GrzxInter=GrzxInter;  //个人中心
 Vue.prototype.$ChangeImage=ChangeImage; //更换图片
+Vue.prototype.$Bus=Bus;
 App.mpType = 'app'
 
 import uView from 'uview-ui'

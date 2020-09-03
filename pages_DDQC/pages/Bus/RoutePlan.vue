@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view style="padding: 30rpx 30rpx 0 30rpx;">
+		<!-- <view style="padding: 30rpx 30rpx 0 30rpx;">
 			<view class="title-block">
 				<view  style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;width: 100%;">
 					<view>
@@ -17,7 +17,7 @@
 					 style="float: right;width: 100rpx;height: 100rpx;" mode="aspectFill"></image>
 				</view>
 			</view>
-		</view>
+		</view> -->
 
 
 		<!-- <u-card class="title-block" :show-head='false' :show-foot='false' :foot-border-top='false' :border='false' :head-border-bottom='false'>
@@ -38,13 +38,16 @@
 				</view>
 			</u-card> -->
 
-		<u-card v-for="(item,index) in array" :key='index' :border='false'>
+		<u-card v-for="(item,index) in planArr" :key='index' :border='false'>
 			<view slot='head'>
 				<view style="display: inline-block;">
-					<text class="item-title-font">{{item.time}}</text>
-					<text class="item-title-font title-margin-left">{{item.title}}</text>
+					<text class="item-title-font">{{getLine(item.LineRoute1)}}</text>
+					<u-icon v-if="item.ChangeType == 1 || item.ChangeType == 2" name="arrow-rightward" class="icon-block" color="#343434" size="28"></u-icon>
+					<text v-if="item.ChangeType == 1 || item.ChangeType == 2" class="item-title-font">{{getLine(item.LineRoute2)}}</text>
+					<u-icon v-if="item.ChangeType == 2" name="arrow-rightward" class="icon-block" color="#343434" size="28"></u-icon>
+					<text v-if="item.ChangeType == 2" class="item-title-font">{{getLine(item.LineRoute3)}}</text>
 				</view>
-				<view v-show="item.nonstop" style="float: right;">
+				<view v-show="item.ChangeType == 0" style="float: right;">
 					<view style="border: #4282FF solid 1px;border-radius: 10rpx;padding: 0 10rpx;">
 						<text class="item-subtitle-font">直达</text>
 					</view>
@@ -52,14 +55,35 @@
 			</view>
 
 			<view slot='body'>
+				<!--起点-->
 				<view>
-					<text class="plan-explain-font">{{item.explain}}</text>
+					<text class="plan-detail-font">{{item.StartName}}</text>
 				</view>
-				<view v-for="(detail,detailIndex) in item.detail" :key='detailIndex'>
-					<view class="detail-margin-top">
-						<text class="plan-detail-font">{{detail.stationNum}}</text>
-						<text class="plan-detail-font title-margin-left">{{detail.stationName}}</text>
-					</view>
+				<view class="detail-margin-top detail-margin-left">
+					<text class="plan-detail-font">乘坐</text>
+					<text @click="toLineDetail(item.LineRoute1)" class="plan-detail-font title-margin-left attention">{{item.LineRoute1}}</text>
+				</view>
+				<!--第一次换乘信息-->
+				<view v-show="item.ChangeType == 1 || item.ChangeType == 2" class="detail-margin-top detail-margin-left">
+					<text class="plan-detail-font attention">{{item.ChangStation1}}</text>
+					<text class="plan-detail-font title-margin-left ">换乘</text>
+				</view>
+				<view v-show="item.ChangeType == 1 || item.ChangeType == 2" class="detail-margin-top detail-margin-left">
+					<text class="plan-detail-font">乘坐</text>
+					<text class="plan-detail-font title-margin-left attention">{{item.LineRoute2}}</text>
+				</view>
+				<!--第二次换乘信息-->
+				<view v-show="item.ChangeType == 2" class="detail-margin-top detail-margin-left">
+					<text class="plan-detail-font attention">{{item.ChangStation2}}</text>
+					<text class="plan-detail-font title-margin-left">换乘</text>
+				</view>
+				<view v-show="item.ChangeType == 2" class="detail-margin-top detail-margin-left">
+					<text class="plan-detail-font">乘坐</text>
+					<text class="plan-detail-font title-margin-left attention">{{item.LineRoute3}}</text>
+				</view>
+				<!--终点-->
+				<view class="detail-margin-top">
+					<text class="plan-detail-font">{{item.EndName}}</text>
 				</view>
 			</view>
 		</u-card>
@@ -70,43 +94,67 @@
 	export default {
 		data() {
 			return {
-				array: [{
-					time: '1小时',
-					title: ' 步行1.1公里',
-					nonstop: true,
-					explain: '40路',
-					detail: [{
-							stationNum: '29站',
-							stationName: '机场路口站上车'
-						},
-						{
-							stationNum: '40路',
-							stationName: '约8分钟/趟'
-						}
-					]
-				},
-				{
-					time: '1小时10分钟',
-					title: ' 步行900米',
-					nonstop: false,
-					explain: '31路 -> 602路',
-					detail: [{
-							stationNum: '29站',
-							stationName: '湖心街东段'
-						},
-						{
-							stationNum: '40路',
-							stationName: '约20分钟/趟'
-						}
-					]
-				}],
+				startStation:'',
+				endStation:'',
+				encryption:'XMJDTzzbusxmjdt',
+				
+				planArr:[],
 			}
 		},
 		onLoad(option) {
+			let that = this;
+			that.startStation = option.startStation;
+			that.endStation = option.endStation;
+			that.startStation = '火车站';
+			that.endStation = '碧湖万达';
 			
+			that.getBusChange();
 		},
 		methods: {
-
+			getBusChange:function(){
+				let that = this;
+				uni.showLoading({
+					mask:true,
+					title:'加载中'
+				});
+				uni.request({
+					url:that.$Bus.BusInterface.getBusChange.Url,
+					data:{
+						Encryption:that.$Bus.BusInterface.publicCode.encryption,
+						StartStation:that.startStation,
+						EndStation:that.endStation
+					},
+					method:'GET',
+					success:function(res){
+						uni.hideLoading(); 
+						if(res.data.status){
+							that.planArr = res.data.data;
+						}
+						else{
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
+						}
+					},
+					fail:function(res){
+						uni.showToast({
+							title:'网络连接失败',
+							icon:'none'
+						});
+					}
+				});
+			},
+		
+			getLine:function(lineRoute){
+				return lineRoute.substring(0,lineRoute.indexOf('('));
+			},
+			
+			toLineDetail:function(lineRoute){
+				uni.navigateTo({
+					url:'./BusLocation?lineRoute=' + lineRoute
+				});
+			},
 		}
 	}
 </script>
@@ -174,5 +222,14 @@
 
 	.detail-margin-top {
 		margin-top: 20rpx;
+	}
+	
+	.detail-margin-left {
+		margin-left: 40rpx;
+	}
+	
+	.attention{
+		color: #4282FF;
+		font-weight: bold;
 	}
 </style>
