@@ -35,17 +35,17 @@
 						<view style="border-bottom: 1rpx solid #eeeeee;padding-bottom: 20rpx;margin-left: 77rpx;margin-right: 30rpx;">
 							<view class="lineView">
 								<view style="font-weight: 900;font-size: 30rpx;color: #343434;">{{item.lineName}}</view>
-								<!-- <view style="font-weight: 900;font-size: 30rpx;color: #4282FF;">{{item.arriveTime}}</view> -->
+								<!-- <view class="lineText" style="font-weight: 900;font-size: 30rpx;color: #4282FF;">{{item.arriveTime}}</view> -->
 							</view>
 							<view class="lineView">
-								<view style="font-weight: 300;font-size: 26rpx;color: #343434;">{{item.endName}}</view>
-								<!-- <view style="font-weight: 300;font-size: 26rpx;color: #343434;">{{item.distance}}</view> -->
+								<view class="lineText">{{item.endName}}</view>
+								<!-- <view class="lineText">{{item.distance}}</view> -->
 							</view>
 						</view>
 					</block>
 					<view class="bottomView">
-						<view style="color: #888888;font-size: 28rpx;font-weight: 300;" @click="moreClick"  v-if="isMoreClick == false">展开</view>
-						<view style="color: #888888;font-size: 28rpx;font-weight: 300;" @click="packUp"  v-if="isMoreClick == true">收起</view>
+						<view class="more" @click="moreClick"  v-if="isMoreClick == false">展开</view>
+						<view class="more" @click="packUp"  v-if="isMoreClick == true">收起</view>
 					</view>
 				</view>
 				
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-	var _self;
+	var _self,encryption;
 	import $BusInterface from '@/common/Bus.js'
 	//导航栏的背景色是在pages设置
 	export default {
@@ -70,6 +70,7 @@
 				showLineList:[],//遍历时用到的数组，这个数组不要去动
 				currentLongitude:'',//纬度
 				currentLatitude:'',//经度
+				lineDetail:[],
 			}
 		},
 		//--------------------------------------监听索框点击事件--------------------------------------
@@ -82,6 +83,7 @@
 		},
 		onLoad() {
 			_self = this;
+			encryption = $BusInterface.BusInterface.publicCode.encryption;
 			_self.getMyLocation();
 			
 		},
@@ -113,8 +115,9 @@
 			},
 			
 			//——————————————————————————————————————网络请求开始——————————————————————————————————————
+			//--------------------------------------根据坐标获取站点数据--------------------------------------
 			getAroundStationData:function(){
-				// console.log(_self.currentLongitude,_self.currentLatitude)
+				
 				uni.request({
 					url:$BusInterface.BusInterface.getBusStationInfoByLonLat.Url,
 					method:$BusInterface.BusInterface.getBusStationInfoByLonLat.method,
@@ -123,7 +126,7 @@
 						// lat:_self.currentLatitude,//纬度
 						lon:117.765241,
 						lat:24.457463,
-						encryption:'XMJDTzzbusxmjdt'//编码
+						encryption: encryption,//编码
 					},
 					success(res) {
 						console.log('请求成功',res)
@@ -144,21 +147,31 @@
 					method:$BusInterface.BusInterface.getBusLineInfoByStationName.method,
 					data:{
 						stationName:stationName,
-						encryption:'XMJDTzzbusxmjdt'//编码
+						encryption:encryption,//编码
 					},
 					success(res) {
 						uni.hideLoading()
-						// console.log('请求成功',res)
+						console.log('请求成功',res)
 						if(res.data.status == true){
 							//先清空存放部分线路的数组，避免数据叠加
 							_self.shortLineList = [];
 							//将所有的线路数据存放在allLineList里面，点击展开的时候用到
 							_self.allLineList = res.data.data;
-							//只取三条线路数据展示
-							for(var i = 0; i < 3; i++){
+							var num = res.data.data.length;
+							if(num < 3){
+								num = res.data.data.length
+							}else {
+								num = 3;
+							}
+							//取不多于三条线路数据展示
+							for(var i = 0; i < num; i++){
 								_self.shortLineList.push(res.data.data[i])
 							}
 							_self.showLineList = _self.shortLineList
+							// for(var i = 0; i < res.data.data.length; i++){
+							// 	// console.log(i)
+							// 	_self.getLineDetailInfo(res.data.data[i].lineID,res.data.data[i].lineDirection,stationName,res.data.data)
+							// }
 						}
 					},
 					fail(res) {
@@ -167,8 +180,31 @@
 					}
 				})
 			},
-			
-			
+			//--------------------------------------根据站点名称获取某条线路距离某个站点即将到站车辆信息--------------------------------------
+			getLineDetailInfo:function(lineId,direction,stationName,lineData){
+				uni.request({
+					url:$BusInterface.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirectionStationName.Url,
+					method:$BusInterface.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirectionStationName.method,
+					data:{
+						lineId:lineId,
+						direction:direction,
+						stationName:stationName,
+						encryption:encryption,
+					},
+					success(res) {
+						console.log('请求成功',res)
+						if(res.data.status == true){
+							_self.lineDetail.push(res.data.data[0])
+							console.log('线路详情',_self.lineDetail)
+						}
+						
+						
+					},
+					fail(res) {
+						console.log('请求失败',res)
+					}
+				})
+			},
 			//——————————————————————————————————————网络请求结束——————————————————————————————————————
 			
 			
@@ -188,7 +224,7 @@
 				//取出站点ID用来判断当前点击的是哪个站点，判断是否可以展开
 				_self.stationID = item.stationID;
 				//请求线路数据，将站点名称跟下标传过去
-				_self.getLineData(item.stationName)
+				_self.getLineData(item.stationName);
 			},
 			//--------------------------------------展开点击事件--------------------------------------
 			//这里的展开收起功能的原理是一开始只取三组数据赋值给showLineList，点击展开的时候将所有的数据全部赋值给showLineList
@@ -313,6 +349,11 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	.lineText{
+		font-weight: 300;
+		font-size: 26rpx;
+		color: #343434;
+	}
 	.bottomView{
 		height: 60rpx;
 		width: 100%;
@@ -320,5 +361,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+	.more{
+		color: #888888;
+		font-size: 28rpx;
+		font-weight: 300;
 	}
 </style>

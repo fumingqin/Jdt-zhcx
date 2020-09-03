@@ -1,9 +1,16 @@
 //接口域名
 const Url = 'http://36.250.234.10:60040';
+
 const method = 'GET';
+
 
 //接口对象
 const BusInterface = {
+	//编码
+	publicCode:{
+		encryption : 'XMJDTzzbusxmjdt'
+	},
+	
 	getBusStationInfoByLonLat:{
 		Url: Url + '/api/Bus/getBusStationInfoByLonLat',
 		name: '获取站点信息根据经纬度',
