@@ -153,9 +153,9 @@
 						uni.hideLoading()
 						console.log('请求成功',res)
 						if(res.data.status == true){
-							//先清空存放部分线路的数组，避免数据叠加
+							//先清空存放部分线路的数组，避免数据叠加---存放显示部分线路的数组（当前是显示三条数据）
 							_self.shortLineList = [];
-							//将所有的线路数据存放在allLineList里面，点击展开的时候用到
+							//将所有的线路数据存放在allLineList里面，点击展开的时候用到----这个数组不要去动
 							_self.allLineList = res.data.data;
 							//判断数组长度，如果长度小于3就显示所有数据，如果长度大于3就显示3条数据
 							var num = res.data.data.length;
