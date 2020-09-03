@@ -66,11 +66,11 @@ const BusInterface = {
 		name: '获取服务器时间',
 		method: method,
 	},
-	getBusChange:{
+	getBusChange: {
 		Url: Url + '/api/Bus/getBusChange',
-		name: '公交换乘',
+		name: '换乘',
 		method: method,
-	}
+	},
 }
 
 // 接口声明区

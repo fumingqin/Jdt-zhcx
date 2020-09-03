@@ -1,8 +1,8 @@
 {
-	 "easycom": {
-		 // uview的easycom方式
-	        "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
-	    },
+	"easycom": {
+		// uview的easycom方式
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		//------------首页----------------------
 		{
@@ -908,7 +908,7 @@
 				{
 					"path": "pages/GRZY/zy_homepage",
 					"style": {
-						"navigationStyle": "custom",  
+						"navigationStyle": "custom",
 						"app-plus": {
 							"titleNView": {
 								"autoBackButton": "false",
@@ -916,12 +916,12 @@
 									"text": "骑行页",
 									"type": "transparent",
 									"fontSize": "16px",
-									"float":"left",
+									"float": "left",
 									"width": "77px"
 								}, {
 									"text": "首页",
 									"type": "transparent",
-									"float":"right",
+									"float": "right",
 									"fontSize": "16px",
 									"width": "77px"
 								}]
@@ -1061,109 +1061,110 @@
 						"navigationBarTextStyle": "White",
 						"navigationBarBackgroundColor": "#65C36D"
 					}
-				}
-			    ,{ 
-                    "path" : "pages/GRZY/agreement",
-                    "style": {
-                    	"navigationBarTitleText": "内容详情",
-                    	"navigationBarTextStyle": "White",
-                    	"navigationBarBackgroundColor": "#65C36D"
-                    }
-                }
-                ,{
-                    "path" : "pages/GRZY/HomePictureDetail",
-                    "style" : {
+				}, {
+					"path": "pages/GRZY/agreement",
+					"style": {
+						"navigationBarTitleText": "内容详情",
+						"navigationBarTextStyle": "White",
+						"navigationBarBackgroundColor": "#65C36D"
+					}
+				}, {
+					"path": "pages/GRZY/HomePictureDetail",
+					"style": {
 						"navigationBarTitleText": "内容详情"
 					}
-                }
-                ,{
-                    "path" : "pages/RentBike/BusLocationMark",
-                    "style" : {
+				}, {
+					"path": "pages/RentBike/BusLocationMark",
+					"style": {
 						"navigationBarTitleText": "公交站点"
 					}
-                }
-                ,{
-                    "path" : "pages/GRZY/feedbackList",
-                    "style" : {
+				}, {
+					"path": "pages/GRZY/feedbackList",
+					"style": {
 						"navigationBarTitleText": "反馈列表",
 						"app-plus": {
 							"titleNView": {
 								"buttons": [{
 									"text": "反馈",
 									"type": "transparent",
-									"float":"right",
+									"float": "right",
 									"fontSize": "16px",
 									"width": "77px"
 								}]
 							}
 						}
 					}
-                }
-                ,{
-                    "path" : "pages/BreakdownUpload/uploadBreakdown",
-                    "style" : {
-						"navigationBarTitleText":"故障上报",
+				}, {
+					"path": "pages/BreakdownUpload/uploadBreakdown",
+					"style": {
+						"navigationBarTitleText": "故障上报",
 						"app-plus": {
 							"titleNView": {
 								"buttons": [{
 									"text": "历史",
 									"type": "transparent",
-									"float":"right",
+									"float": "right",
 									"fontSize": "16px",
 									"width": "77px"
 								}]
 							}
 						}
 					}
-                }
-                ,{
-					"path":"pages/BreakdownUpload/breakdownList",
-                    "style" : {
-						"navigationBarTitleText":"故障历史"
+				}, {
+					"path": "pages/BreakdownUpload/breakdownList",
+					"style": {
+						"navigationBarTitleText": "故障历史"
 					}
-                }
-                ,{
-                    "path" : "pages/Bus/TransitSearch",
-                    "style" : {
-						"navigationBarTitleText":"公交搜索",
+				}, {
+					"path": "pages/Bus/TransitSearch",
+					"style": {
+						"navigationBarTitleText": "公交搜索",
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
-                }
-                ,{
-                    "path" : "pages/Bus/BusQuery",
-                    "style" : {
-						"navigationBarBackgroundColor":"#7D56FF",
-						"titleNView":{
+				}, {
+					"path": "pages/Bus/BusQuery",
+					"style": {
+						"navigationBarBackgroundColor": "#7D56FF",
+						"titleNView": {
 							"searchInput": {
-								"align":"left",
-								"disabled":"true",
-								"borderRadius":"10px",
-								"backgroundColor":"#ffffff",
-								"placeholder":"搜索线路/站点/地点",
-								"placeholderColor":"#AAAAAA"
+								"align": "left",
+								"disabled": "true",
+								"borderRadius": "10px",
+								"backgroundColor": "#ffffff",
+								"placeholder": "搜索线路/站点/地点",
+								"placeholderColor": "#AAAAAA"
 							}
 						}
 					}
-                },
-				
-                {
-                    "path" : "pages/Bus/RoutePlan",
-                    "style" : {
-						"navigationBarTitleText":"线路方案"
+				},
+
+				{
+					"path": "pages/Bus/RoutePlan",
+					"style": {
+						"navigationBarTitleText": "线路方案"
 					}
-                }
-                ,{
-                    "path" : "pages/Bus/BusLocation",
-                    "style" : {
-						"navigationBarTitleText":"公交位置"
+				}, {
+					"path": "pages/Bus/BusLocation",
+					"style": {
+						"navigationBarTitleText": "公交位置"
 					}
-                }
-            ]
+				}, {
+					"path": "pages/Bus/RouteDetail",
+					"style": {
+						"navigationBarTitleText": "线路详情"
+					}
+				}, {
+					"path": "pages/Bus/SearchDetail",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
+				}
+			]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{
 			"root": "pages_JCYY/",
-			"pages": [
+			"pages": [ 
 				//----------------------------------检测预约--------------------------------------------
 				{
 					"path": "pages/JCYY/theDay",
@@ -1234,15 +1235,15 @@
 			// },
 
 			{
-				"pagePath": "pages/GRZX/user", 
+				"pagePath": "pages/GRZX/user",
 				"text": "我的"
 			}
 		],
-		"midButton":{
-			"width":"90px",
-			"height":"80px",
-			"iconWidth":"70px",
-			"iconPath":"static/Home/HomeSacn.png"
+		"midButton": {
+			"width": "90px",
+			"height": "80px",
+			"iconWidth": "70px",
+			"iconPath": "static/Home/HomeSacn.png"
 		}
 	},
 
