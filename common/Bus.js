@@ -65,7 +65,12 @@ const BusInterface = {
 		Url: Url + '/api/Bus/getServerTime',
 		name: '获取服务器时间',
 		method: method,
-	}
+	},
+	getBusChange: {
+		Url: Url + '/api/Bus/getBusChange',
+		name: '换乘',
+		method: method,
+	},
 }
 
 // 接口声明区
