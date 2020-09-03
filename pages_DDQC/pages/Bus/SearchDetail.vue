@@ -42,11 +42,11 @@
 			getLineByStationName: function(stationName) {
 				let that=this;
 				uni.request({
-					url: "http://36.250.234.10:60040/api/Bus/getBusLineInfoByStationName",
+					url: that.$Bus.BusInterface.getBusLineInfoByStationName.Url,
 					method: 'GET',
 					data: {
 						stationName: stationName,
-						encryption: "XMJDTzzbusxmjdt"
+						encryption: that.$Bus.BusInterface.publicCode.encryption,
 					},
 					success(res) {
 						if (res.data.status) {

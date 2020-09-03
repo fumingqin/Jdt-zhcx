@@ -83,11 +83,11 @@
 				that.searchArr = [];
 				if (that.keyword != "") {
 					uni.request({
-						url: "http://36.250.234.10:60040/api/Bus/getBusLineInfoByLineName",
+						url: that.$Bus.BusInterface.getBusLineInfoByLineName.Url,
 						method: 'GET',
 						data: {
 							lineName: that.keyword,
-							encryption: "XMJDTzzbusxmjdt"
+							encryption: that.$Bus.BusInterface.publicCode.encryption,
 						},
 						success(res) {
 							if (res.data.status) {
@@ -97,11 +97,11 @@
 						},
 						complete(res) {
 							uni.request({
-								url: "http://36.250.234.10:60040/api/Bus/getBusStationInfoByStationName",
+								url: that.$Bus.BusInterface.getBusStationInfoByStationName.Url,
 								method: 'GET',
 								data: {
 									stationName: that.keyword,
-									encryption: "XMJDTzzbusxmjdt"
+									encryption: that.$Bus.BusInterface.publicCode.encryption,
 								},
 								success(res) {
 									console.log(res);
