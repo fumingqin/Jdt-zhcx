@@ -1153,7 +1153,7 @@
 					"style": {
 						"navigationBarTitleText": "线路详情"
 					}
-				}, , {
+				}, {
 					"path": "pages/Bus/SearchDetail",
 					"style": {
 						"navigationBarBackgroundColor": "#FFFFFF"
@@ -1164,7 +1164,7 @@
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{
 			"root": "pages_JCYY/",
-			"pages": [
+			"pages": [ 
 				//----------------------------------检测预约--------------------------------------------
 				{
 					"path": "pages/JCYY/theDay",
