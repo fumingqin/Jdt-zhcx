@@ -131,6 +131,15 @@
 			itemClick: function(item) {
 				let that = this;
 				that.IsSearch = false;
+				if(item.stationName){
+					uni.navigateTo({
+						url:"./SearchDetail?stationName="+item.stationName,
+					})
+				}else{
+					uni.navigateTo({
+						url:"./BusLocation"
+					})
+				}
 				for (var i = 0; i < that.historyArr.length; i++) {
 					if (item.lineName&&item.lineName == that.historyArr[i].lineName && item.endName == that.historyArr[i].endName) {
 						that.historyArr.splice(i,1);
@@ -141,15 +150,6 @@
 				}
 				that.historyArr.unshift(item);
 				uni.setStorageSync("history", that.historyArr);
-				if(item.stationName){
-					uni.navigateTo({
-						url:"./SearchDetail?stationName="+item.stationName,
-					})
-				}else{
-					uni.navigateTo({
-						url:"./BusQuery"
-					})
-				}
 			},
 			//搜索框清空时触发
 			clear: function() {
