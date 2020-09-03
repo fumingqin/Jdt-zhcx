@@ -15,7 +15,8 @@
 			</view>
 			<view class="history-content" v-if="historyArr.length>0">
 				<view class="history-content-view">
-					<view v-for="(item,index) in historyArr" :key="index">
+					<view v-for="(item,index) in historyArr" :key="index" hover-class="view_hover"  @click="itemClick(item)">
+						<!--begin 搜索线路显示结果 -->
 						<view class="history-content-detial" v-if="item.endName"> 
 							<view class="history-content-name">
 								<image src="../../static/Bus/bus.png" class="history-content-img"></image>
@@ -24,18 +25,22 @@
 							<view class="history-content-name" v-if="item.endName">方向</view>
 							<view v-if="item.endName">{{item.endName}}</view>
 						</view>
-						<view class="history-content-detial" v-if="!item.endName">
+						<!--end 搜索线路显示结果 -->
+						
+						<!--begin 搜索站点显示结果 -->
+						<view class="history-content-detial" v-if="!item.endName"> 
 							<view class="history-content-name">
 								<image src="../../static/Bus/site.png" class="history-content-img"></image>
 							</view>
 							<view class="history-content-name">{{item.stationName}} </view>
 						</view>
+						<!--end 搜索站点显示结果  -->
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="search-content" v-if="IsSearch">
-			<view v-for="(item,index) in searchArr" :key="index">
+			<view v-for="(item,index) in searchArr" :key="index" hover-class="view_hover">
 				<view class="search-content-font" @click="itemClick(item)">
 					{{item.lineName?item.lineName:item.stationName}}{{item.endName?" 方向 "+item.endName :""}}
 				</view>
@@ -134,8 +139,17 @@
 						that.historyArr.splice(i,1);
 					}
 				}
-				that.historyArr.unshift(item)
-				uni.setStorageSync("history", that.historyArr)
+				that.historyArr.unshift(item);
+				uni.setStorageSync("history", that.historyArr);
+				if(item.stationName){
+					uni.navigateTo({
+						url:"./SearchDetail?stationName="+item.stationName,
+					})
+				}else{
+					uni.navigateTo({
+						url:"./BusQuery"
+					})
+				}
 			},
 			//搜索框清空时触发
 			clear: function() {
@@ -214,5 +228,10 @@
 		padding: 20rpx 0 30rpx 0;
 		border-bottom: solid 1rpx #F5F5F5;
 		font-size: 30rpx;
+	}
+	.view_hover{
+		transition: all .3s;//过度
+		opacity: 0.9;
+		background: #bdbdbd;
 	}
 </style>

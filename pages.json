@@ -1158,6 +1158,12 @@
 						"navigationBarTitleText":"公交位置"
 					}
                 }
+                ,{
+                    "path" : "pages/Bus/SearchDetail",
+                    "style" : {
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
+                }
             ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
