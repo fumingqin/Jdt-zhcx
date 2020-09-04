@@ -7,13 +7,13 @@
 		<!-- 起终点 -->
 		<view class="station">
 			<u-cell-group title="起点" :border="false">
-				<u-cell-item  title="我的位置"  :arrow="false" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
+				<u-cell-item  :title="startStation"  :arrow="false" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
 					<u-icon slot="right-icon" size="40" name="map"></u-icon>
 				</u-cell-item>
 			</u-cell-group>
 			
 			<u-cell-group title="终点" :border="false">
-				<u-cell-item title="南平高铁动车站" :arrow="false" right-icon="map" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
+				<u-cell-item :title="endStation" :arrow="false" right-icon="map" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
 					<u-icon slot="right-icon" size="40" name="reload"></u-icon>
 				</u-cell-item>
 			</u-cell-group>
@@ -62,6 +62,8 @@
 	export default {
 		data() {
 			return {
+				startStation:'客运西站',//起点
+				endStation:'龙海公交总站',//终点
 				stationList:[],//存放所有站点列表的数组
 				stationID:'',//站点ID
 				isMoreClick:false,
@@ -129,7 +131,7 @@
 						encryption: encryption,//编码
 					},
 					success(res) {
-						console.log('请求成功',res)
+						// console.log('请求成功',res)
 						if(res.data.status == true){
 							_self.stationList = res.data.data
 						}
@@ -217,7 +219,8 @@
 			queryClick:function(){
 				//跳转到线路规划页面
 				uni.navigateTo({
-					url:'./RoutePlan'
+					url:'./BusLocation'
+					// url:'./RoutePlan?startStation=' + _self.startStation + '&endStation=' + _self.endStation
 				})
 			},
 			//--------------------------------------站点点击事件--------------------------------------
