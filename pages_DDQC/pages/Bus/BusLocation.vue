@@ -5,13 +5,13 @@
 			<view class="topHead">
 				<view>
 					<view class="topStation">
-						<view class="marginR">{{startStation}}</view>
-						<view class="marginR">--></view>
-						<view>{{endStation}}</view>
+						<view class="marginR">{{stationInfoArray.StartName}}</view>
+						<view class="marginR">→</view>
+						<view>{{stationInfoArray.EndName}}</view>
 					</view>
 					<view class="topStation topTime">
-						<view class="marginR">首 {{startTime}}</view>
-						<view class="marginR">末 {{endTime}}</view>
+						<view class="marginR">首 {{firstLastTimeArray[0]}}</view>
+						<view class="marginR">末 {{firstLastTimeArray[1]}}</view>
 						<view class="marginR">票价：{{price}}</view>
 					</view>
 				</view>
@@ -33,7 +33,7 @@
 		<!-- 时间轴 -->
 		<scroll-view scroll-x="true" class="busTimeStep">
 			<!-- <u-steps :list="stationList" :current="2" active-color="#4281FF" mode="number" direction="row"></u-steps> -->
-			<BusTimeSteps :list="stationList" :current="3" :direction="direction"></BusTimeSteps>
+			<BusTimeSteps :list="stationList" :current="stationInfoArray.StartName" :direction="direction" :carLocationArray="carLocationArray"></BusTimeSteps>
 		</scroll-view>
 		
 		<view class="bottomView">
@@ -53,57 +53,36 @@
 		},
 		data() {
 			return {
-				startStation:'客运西站',
-				endStation:'龙海公交总站',
-				startTime:'06:30',
-				endTime:'22:00',
+				startStation:'',
+				endStation:'',
 				price:'1元',
-				direction:'row',
+				direction:'row',//默认横向排列
 				isClickTurnButton:false,
-				stationList:[
-					{
-						name:'龙海站',
-					},
-					{
-						name:'公交站(1)',
-					},
-					{
-						name:'公交站(2)'
-					},
-					{
-						name:'公交站3'
-					},
-					{
-						name:'公交站4'
-					},
-					{
-						name:'公交站5'
-					},
-					{
-						name:'公交站5'
-					},
-					{
-						name:'公交站5'
-					},
-					{
-						name:'公交站5'
-					},
-					{
-						name:'公交总站'
-					},
-					
-				]
+				stationInfoArray:[],//接收上一个页面传过来的数据
+				firstLastTimeArray:[],//时间
+				lineDirection:'',//公交上下行方向0:上行 1:下行
+				lineID:'',//线路ID
+				stationList:[],//站点数组
+				carLocationArray:[],//车辆位置数组
 			}
 		},
 		onLoad(option) {
 			_self = this;
-			console.log('接收到的数据',option.lineRoute)
+			_self.stationInfoArray = JSON.parse(option.lineRoute)
+			//从上个页面获取该条线路是上行还是下行
+			if(_self.stationInfoArray.LineRoute1Direction == '上行'){
+				_self.lineDirection = 0;
+			}else {
+				_self.lineDirection = 1;
+			}
+			//根据站点查询线路信息（时间、线路ID）
+			_self.getBusLineInfoByStationName();
 		},
 		methods: {
 			
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
 			getBusLocationOntime:function(){
-				_self.getBusLocation();
+				_self.getBusLocationByStation();
 			},
 			//-------------------------------------------调换线路显示的方向-------------------------------------------
 			turnDirection:function(){
@@ -114,45 +93,90 @@
 					_self.direction = 'row'
 				}
 			},
+			getLine:function(lineRoute){
+				return lineRoute.substring(0,lineRoute.indexOf('('));
+			},
 			//-------------------------------------------请求方法模块开始-------------------------------------------
-			
-			//----------------------------------根据线路查询站点信息----------------------------------
-			getStationByLine:function(){
+			//----------------------------------根据站点查询线路信息（时间、线路ID）----------------------------------
+			getBusLineInfoByStationName:function(){
 				uni.request({
-					url:_self.$Bus.BusInterface.getBusLineStationInfoByLineIdDirection.Url,
-					method:_self.$Bus.BusInterface.getBusLineStationInfoByLineIdDirection.method,
+					url:_self.$Bus.BusInterface.getBusLineInfoByStationName.Url,
+					method:_self.$Bus.BusInterface.getBusLineInfoByStationName.method,
 					data:{
-						lineId:'',
-						direction:'',
-						Encryption:_self.$Bus.BusInterface.publicCode.encryption
+						stationName :  _self.stationInfoArray.StartName,
+						Encryption  :  _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						console.log('请求成功',res)
+						// console.log('请求成功',res)
+						if(res.data.status){
+							//截取出线路方案的站点名称
+							var stationName = _self.getLine(_self.stationInfoArray.LineRoute1)
+							//遍历数组，取出与当前站点相对应的时间
+							for(var i = 0; i < res.data.data.length; i++) {
+								if(stationName == res.data.data[i].lineName && _self.lineDirection == res.data.data[i].lineDirection){
+									//取到时间，转成数组
+									_self.firstLastTimeArray = res.data.data[i].firstLastTime.split('-')
+									//取出线路ID
+									_self.lineID = res.data.data[i].lineID
+									//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
+									_self.getStationByLine();
+									//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
+									_self.getBusLocationByStation();
+								}
+							}
+						}
 					},
 					fail(res) {
 						console.log('请求失败',res)
 					}
 				})
 			},
-			//----------------------------------根据当前站点获取某条线路即将到站的车辆信息----------------------------------
+			//----------------------------------根据线路查询改线路的所有站点信息----------------------------------
+			getStationByLine:function(){
+				uni.showLoading({
+					title:'加载中...'
+				})
+				uni.request({
+					url: _self.$Bus.BusInterface.getBusLineStationInfoByLineIdDirection.Url,
+					method: _self.$Bus.BusInterface.getBusLineStationInfoByLineIdDirection.method,
+					data:{
+						lineId     : _self.lineID,
+						direction  : _self.lineDirection,
+						Encryption : _self.$Bus.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						uni.hideLoading()
+						if(res.data.status){
+							_self.stationList = res.data.data
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log('请求失败',res)
+					}
+				})
+			},
+			//----------------------------------根据线路编号和运行方向获取某条线路即将到站的车辆信息----------------------------------
 			getBusLocationByStation:function(){
 				uni.request({
-					url:_self.$Bus.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirectionStationName.Url,
-					method:_self.$Bus.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirectionStationName.method,
+					url: _self.$Bus.BusInterface.getBusArriveLeaveStationInfoByLineIdDirection.Url,
+					method: _self.$Bus.BusInterface.getBusArriveLeaveStationInfoByLineIdDirection.method,
 					data:{
-						lineId:'',
-						direction:'',
-						stationName:'',
-						Encryption:_self.$Bus.BusInterface.publicCode.encryption
+						lineId      : _self.lineID,
+						direction   : _self.lineDirection,
+						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						console.log('请求成功',res)
+						if(res.data.status){
+							_self.carLocationArray = res.data.data
+						}
 					},
 					fail(res) {
-						console.log('请求失败',res)
+						console.log('请求实时到站信息失败',res)
 					}
 				})
-			},
+			}
+			
 			//-------------------------------------------请求方法模块结束-------------------------------------------
 		}
 	}

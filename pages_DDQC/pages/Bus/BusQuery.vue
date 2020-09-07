@@ -62,8 +62,8 @@
 	export default {
 		data() {
 			return {
-				startStation:'客运西站',//起点
-				endStation:'龙海公交总站',//终点
+				startStation:'汽车站',//起点
+				endStation:'大坪商贸城',//终点
 				stationList:[],//存放所有站点列表的数组
 				stationID:'',//站点ID
 				isMoreClick:false,

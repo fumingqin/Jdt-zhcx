@@ -61,7 +61,7 @@
 				</view>
 				<view class="detail-margin-top detail-margin-left">
 					<text class="plan-detail-font">乘坐</text>
-					<text @click="toLineDetail(item.LineRoute1)" class="plan-detail-font title-margin-left attention">{{item.LineRoute1}}</text>
+					<text @click="toLineDetail(item)" class="plan-detail-font title-margin-left attention">{{item.LineRoute1}}</text>
 				</view>
 				<!--第一次换乘信息-->
 				<view v-show="item.ChangeType == 1 || item.ChangeType == 2" class="detail-margin-top detail-margin-left">
@@ -119,7 +119,7 @@
 						StartStation:that.startStation,
 						EndStation:that.endStation
 					},
-					method:'GET',
+					method:that.$Bus.BusInterface.getBusChange.method,
 					success:function(res){
 						uni.hideLoading(); 
 						if(res.data.status){
@@ -147,7 +147,7 @@
 			
 			toLineDetail:function(lineRoute){
 				uni.navigateTo({
-					url:'./BusLocation?lineRoute=' + lineRoute
+					url:'./BusLocation?lineRoute=' + JSON.stringify(lineRoute)
 				});
 			},
 		}

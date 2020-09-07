@@ -47,7 +47,7 @@ const BusInterface = {
 		method: method,
 	},
     getBusArriveLeaveStationInfoByLineIdDirection:{
-		Url: Url + '/api/Bus/getBusLineStationInfoByLineIdDirection',
+		Url: Url + '/api/Bus/getBusArriveLeaveStationInfoByLineIdDirection',
 		name: '获取线路实时到站信息 根据线路编号和运行方向',
 		method: method,
 	},

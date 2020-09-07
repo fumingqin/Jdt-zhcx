@@ -5,21 +5,20 @@
 			<!-- 第二步：创建子部件 -->
 			<view class="bus-steps_item" :class="['bus-steps_item--' + direction]" v-for="(item, index) in list" :key="index">
 				<!-- 公交车图片 -->
-				
-				<view class="circle--car" :style="{
-					backgroundColor: current == index ? activeColor : carColor,
-					borderColor: current == index ? activeColor : carColor
-				}"></view>
+				<view class="carImage" :class="['carImage--' + direction]" v-for="(carItem,carIndex) in carLocationArray" :key="carIndex" 
+				v-if="index == carItem.stationIndex">
+				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
+				</view>
 				<!-- 圆点 -->
-				<view class="circle" :style="{
+				<view class="circle" :class="['circle--' + direction]" :style="{
 					backgroundColor: current == index ? activeColor : unActiveColor,
 					borderColor: current == index ? activeColor : unActiveColor
 				}"></view>
 				<!-- 站点名称 -->
 				<text class="stationName" :class="['bus-steps_item__stationName--' + direction]"  :style="{
-					color: current == index ? activeColor : unActiveColor,
-				}">{{index + 1}}{{item.name}}</text>
-				
+					color: current == item.stationName ? activeColor : unActiveColor,
+				}">{{index + 1}}{{item.stationName}}</text>
+				<!-- 连接线 -->
 				<view class="u-steps__item__line" :class="['u-steps__item__line--' + mode]" v-if="index < list.length - 1">
 					<u-line :direction="direction" length="100%" :hair-line="false" :color="unActiveColor"></u-line>
 				</view>
@@ -73,6 +72,13 @@
 				type: String,
 				default: '#FFFFFF'
 			},
+			// 未激活的颜色
+			carLocationArray: {
+				type: Array,
+				default(){
+					return [];
+				}
+			},
 		},
 		data() {
 			return {
@@ -97,12 +103,11 @@ $u-steps-item-width: 24rpx;
 		font-size: 26rpx;
 		color: #4281FF;
 		display: flex;
-		// justify-content: center;
 		flex-direction: column;
 		align-items: center;
 		//横向----在这里改圆点跟站点名称的相对位置
 		&--row {
-			margin-top: 30rpx;
+			margin-top: 50rpx;//改动这个可以改变圆点与顶部的距离
 			display: flex;
 			flex-direction: column;
 			//横向站点连接线样式
@@ -120,7 +125,6 @@ $u-steps-item-width: 24rpx;
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-start;
-			// min-height: 120rpx;
 			//竖向站点连接线样式
 			.u-steps__item__line {
 				position: absolute;
@@ -144,6 +148,11 @@ $u-steps-item-width: 24rpx;
 		}
 	}
 }
+//公交位置图片
+.carLocation{
+	width: 56rpx;
+	height: 34rpx;
+}
 //圆圈的样式
 .circle{
 	display: flex;
@@ -154,17 +163,33 @@ $u-steps-item-width: 24rpx;
 	border: 2rpx solid #4281FF;
 	border-radius: 50%;
 	overflow: hidden;
-	// margin-top: 20rpx;
 	z-index: 999;
-	margin-bottom: 90rpx;
+	&--row{
+	}
+	&--column{
+		margin-bottom: 90rpx;//竖向时圆点与站点的距离
+	}
 	&--car{
-		
+		margin-top: -44rpx;
+	}
+}
+//公交车图片的样式
+.carImage{
+	position: fixed;
+	//竖向样式
+	&--column{
+		margin-top: -44rpx;
+		right: 60rpx;
+	}
+	//横向样式
+	&--row{
+		margin-top: -44rpx;
 	}
 }
 //站点样式
 .stationName{
-	width: 20rpx;
-	margin-bottom: 90rpx;
+	width: 20rpx;//横向样式站点的宽度
+	margin-bottom: 90rpx;//站点与底部的距离
 }
 
 </style>
