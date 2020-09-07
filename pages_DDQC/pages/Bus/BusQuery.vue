@@ -219,8 +219,8 @@
 			queryClick:function(){
 				//跳转到线路规划页面
 				uni.navigateTo({
-					url:'./BusLocation'
-					// url:'./RoutePlan?startStation=' + _self.startStation + '&endStation=' + _self.endStation
+					// url:'./BusLocation'
+					url:'./RoutePlan?startStation=' + _self.startStation + '&endStation=' + _self.endStation
 				})
 			},
 			//--------------------------------------站点点击事件--------------------------------------

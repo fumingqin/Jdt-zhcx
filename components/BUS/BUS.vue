@@ -6,7 +6,10 @@
 			<view class="bus-steps_item" :class="['bus-steps_item--' + direction]" v-for="(item, index) in list" :key="index">
 				<!-- 公交车图片 -->
 				
-				<!-- <view class="circle" v-show="current == index"></view> -->
+				<view class="circle--car" :style="{
+					backgroundColor: current == index ? activeColor : carColor,
+					borderColor: current == index ? activeColor : carColor
+				}"></view>
 				<!-- 圆点 -->
 				<view class="circle" :style="{
 					backgroundColor: current == index ? activeColor : unActiveColor,
@@ -64,6 +67,11 @@
 			unActiveColor: {
 				type: String,
 				default: '#909399'
+			},
+			// 未激活的颜色
+			carColor: {
+				type: String,
+				default: '#FFFFFF'
 			},
 		},
 		data() {
@@ -149,6 +157,9 @@ $u-steps-item-width: 24rpx;
 	// margin-top: 20rpx;
 	z-index: 999;
 	margin-bottom: 90rpx;
+	&--car{
+		
+	}
 }
 //站点样式
 .stationName{

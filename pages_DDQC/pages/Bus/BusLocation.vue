@@ -37,7 +37,7 @@
 		</scroll-view>
 		
 		<view class="bottomView">
-			<view>公交实时位置</view>
+			<view @click="getBusLocationOntime">公交实时位置</view>
 			<view @click="turnDirection">转换方向</view>
 		</view>
 		
@@ -97,8 +97,15 @@
 		},
 		onLoad(option) {
 			_self = this;
+			console.log('接收到的数据',option.lineRoute)
 		},
 		methods: {
+			
+			//-------------------------------------------获取车辆实时位置-------------------------------------------
+			getBusLocationOntime:function(){
+				_self.getBusLocation();
+			},
+			//-------------------------------------------调换线路显示的方向-------------------------------------------
 			turnDirection:function(){
 				_self.isClickTurnButton = !_self.isClickTurnButton;
 				if(_self.isClickTurnButton) {
@@ -106,8 +113,47 @@
 				}else {
 					_self.direction = 'row'
 				}
-				
-			}
+			},
+			//-------------------------------------------请求方法模块开始-------------------------------------------
+			
+			//----------------------------------根据线路查询站点信息----------------------------------
+			getStationByLine:function(){
+				uni.request({
+					url:_self.$Bus.BusInterface.getBusLineStationInfoByLineIdDirection.Url,
+					method:_self.$Bus.BusInterface.getBusLineStationInfoByLineIdDirection.method,
+					data:{
+						lineId:'',
+						direction:'',
+						Encryption:_self.$Bus.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						console.log('请求成功',res)
+					},
+					fail(res) {
+						console.log('请求失败',res)
+					}
+				})
+			},
+			//----------------------------------根据当前站点获取某条线路即将到站的车辆信息----------------------------------
+			getBusLocationByStation:function(){
+				uni.request({
+					url:_self.$Bus.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirectionStationName.Url,
+					method:_self.$Bus.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirectionStationName.method,
+					data:{
+						lineId:'',
+						direction:'',
+						stationName:'',
+						Encryption:_self.$Bus.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						console.log('请求成功',res)
+					},
+					fail(res) {
+						console.log('请求失败',res)
+					}
+				})
+			},
+			//-------------------------------------------请求方法模块结束-------------------------------------------
 		}
 	}
 </script>
