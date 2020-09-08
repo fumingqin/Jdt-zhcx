@@ -147,7 +147,8 @@
 			
 			toLineDetail:function(lineRoute){
 				uni.navigateTo({
-					url:'./BusLocation?lineRoute=' + JSON.stringify(lineRoute)
+					//encodeURIComponent较长的字符串传输方式
+					url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(lineRoute)),
 				});
 			},
 		}

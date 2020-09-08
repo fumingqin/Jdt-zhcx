@@ -7,13 +7,13 @@
 		<!-- 起终点 -->
 		<view class="station">
 			<u-cell-group title="起点" :border="false">
-				<u-cell-item  :title="startStation"  :arrow="false" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
+				<u-cell-item @click="pickStation('起点')" :title="startStation" :arrow="false" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
 					<u-icon slot="right-icon" size="40" name="map"></u-icon>
 				</u-cell-item>
 			</u-cell-group>
 			
 			<u-cell-group title="终点" :border="false">
-				<u-cell-item :title="endStation" :arrow="false" right-icon="map" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
+				<u-cell-item @click="pickStation('终点')" :title="endStation" :arrow="false" right-icon="map" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
 					<u-icon slot="right-icon" size="40" name="reload"></u-icon>
 				</u-cell-item>
 			</u-cell-group>
@@ -248,7 +248,31 @@
 				//显示部分线路
 				_self.showLineList = _self.shortLineList
 			},
-			
+			pickStation:function(option){
+				console.log(option)
+				if(option == '起点'){
+					//监听事件,监听下个页面返回的值
+					uni.$on('busStartStaionChange', function(data) {
+					    // data即为传过来的值，给上车点赋值
+						_self.startStation = data.data;
+					    //清除监听，不清除会消耗资源
+					    uni.$off('busStartStaionChange');
+					});
+				}else if(option == '终点'){
+					//监听事件,监听下个页面返回的值
+					uni.$on('busEndStaionChange', function(data) {
+					    // data即为传过来的值，给上车点赋值
+						_self.endStation = data.data;
+					    //清除监听，不清除会消耗资源
+					    uni.$off('busEndStaionChange');
+					});
+				}
+				
+				uni.navigateTo({
+					url:'./TransitSearch?type=' + option + '&current=' + 'BusQuery',
+					
+				})
+			},
 			
 			//**************************************事件写在这里（结束）**************************************
 			

@@ -46,7 +46,7 @@
 
 <script>
 	var _self;
-	import BusTimeSteps from '../../../components/BUS/BUS.vue'
+	import BusTimeSteps from '../../../components/BUS/BUS.vue';
 	export default {
 		components:{
 			BusTimeSteps
@@ -64,21 +64,27 @@
 				lineID:'',//线路ID
 				stationList:[],//站点数组
 				carLocationArray:[],//车辆位置数组
+				serverTime:'',//服务器时间
 			}
 		},
 		onLoad(option) {
 			_self = this;
-			_self.stationInfoArray = JSON.parse(option.lineRoute)
+			_self.stationInfoArray = JSON.parse(decodeURIComponent(option.lineRoute))
 			//从上个页面获取该条线路是上行还是下行
 			if(_self.stationInfoArray.LineRoute1Direction == '上行'){
 				_self.lineDirection = 0;
 			}else {
 				_self.lineDirection = 1;
 			}
+			//获取服务器时间
+			_self.getServerTime();
 			//根据站点查询线路信息（时间、线路ID）
 			_self.getBusLineInfoByStationName();
 		},
 		methods: {
+//-------------------------------------------功能方法模块开始-------------------------------------------
+			
+			
 			
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
 			getBusLocationOntime:function(){
@@ -96,7 +102,16 @@
 			getLine:function(lineRoute){
 				return lineRoute.substring(0,lineRoute.indexOf('('));
 			},
-			//-------------------------------------------请求方法模块开始-------------------------------------------
+			
+			
+//-------------------------------------------功能方法模块结束-------------------------------------------
+			
+			
+			
+			
+//-------------------------------------------请求方法模块开始-------------------------------------------
+			
+			
 			//----------------------------------根据站点查询线路信息（时间、线路ID）----------------------------------
 			getBusLineInfoByStationName:function(){
 				uni.request({
@@ -167,7 +182,19 @@
 						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
+						console.log('请求实时到站信息成功',res)
 						if(res.data.status){
+							for(var i = 0; i < res.data.data.length; i++){
+								//车辆时时到站时间戳
+								var arriveTime = new Date(res.data.data[i].generationTime).getTime()
+								//用服务器时间戳减去车辆到站的时间戳
+								var date = _self.serverTime - arriveTime
+								//得到的时间差是分钟（车辆到站与服务器的时间差），如果时间超过30分钟就不显示
+								var miun = date / (60*60)
+								if(miun >= 30){
+									res.data.data.splice(i,1)
+								}
+							}
 							_self.carLocationArray = res.data.data
 						}
 					},
@@ -175,9 +202,28 @@
 						console.log('请求实时到站信息失败',res)
 					}
 				})
-			}
+			},
+			//----------------------------------获取服务器时间----------------------------------
+			getServerTime:function(){
+				uni.request({
+					url: _self.$Bus.BusInterface.getServerTime.Url,
+					method: _self.$Bus.BusInterface.getServerTime.method,
+					data:{
+						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						if(res.data.status){
+							_self.serverTime = new Date(res.data.data).getTime()
+						}
+					},
+					fail(res) {
+						console.log('请求实时到站信息失败',res)
+					}
+				})
+			},
 			
-			//-------------------------------------------请求方法模块结束-------------------------------------------
+			
+//-------------------------------------------请求方法模块结束-------------------------------------------
 		}
 	}
 </script>

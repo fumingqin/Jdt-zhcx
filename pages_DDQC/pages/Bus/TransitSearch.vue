@@ -57,10 +57,14 @@
 				IsSearch: false, //是否点击搜索
 				historyArr: [],
 				searchArr: [],
+				currnet:'',//当前是从哪个页面进来
+				type:'',//起点/终点
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			this.historyArr = uni.getStorageSync("history") || [];
+			this.currnet = option.current
+			this.type = option.type
 		},
 		methods: {
 			//清除历史记录
@@ -133,25 +137,42 @@
 			itemClick: function(item) {
 				let that = this;
 				that.IsSearch = false;
-				if(item.stationName){
-					uni.navigateTo({
-						url:"./SearchDetail?stationName="+item.stationName,
-					})
-				}else{
-					uni.navigateTo({
-						url:"./BusLocation"
-					})
-				}
-				for (var i = 0; i < that.historyArr.length; i++) {
-					if (item.lineName&&item.lineName == that.historyArr[i].lineName && item.endName == that.historyArr[i].endName) {
-						that.historyArr.splice(i,1);
+				//如果是从公交首页进来的话
+				if(that.currnet == 'BusQuery'){
+					if(that.type == '起点'){
+						//当前是起点
+						uni.$emit('busStartStaionChange', {
+						    data: item.stationName
+						});
+						uni.navigateBack();
+					}else if(that.type == '终点'){
+						//当前是终点
+						uni.$emit('busEndStaionChange', {
+						    data: item.stationName
+						});
+						uni.navigateBack();
 					}
-					if(item.stationName&&item.stationName== that.historyArr[i].stationName){
-						that.historyArr.splice(i,1);
+				}else {
+					if(item.stationName){
+						uni.navigateTo({
+							url:"./SearchDetail?stationName="+item.stationName,
+						})
+					}else{
+						uni.navigateTo({
+							url:"./BusLocation"
+						})
 					}
+					for (var i = 0; i < that.historyArr.length; i++) {
+						if (item.lineName&&item.lineName == that.historyArr[i].lineName && item.endName == that.historyArr[i].endName) {
+							that.historyArr.splice(i,1);
+						}
+						if(item.stationName&&item.stationName== that.historyArr[i].stationName){
+							that.historyArr.splice(i,1);
+						}
+					}
+					that.historyArr.unshift(item);
+					uni.setStorageSync("history", that.historyArr);
 				}
-				that.historyArr.unshift(item);
-				uni.setStorageSync("history", that.historyArr);
 			},
 			//搜索框清空时触发
 			clear: function() {
