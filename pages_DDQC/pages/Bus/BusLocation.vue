@@ -32,7 +32,6 @@
 		
 		<!-- 时间轴 -->
 		<scroll-view scroll-x="true" class="busTimeStep">
-			<!-- <u-steps :list="stationList" :current="2" active-color="#4281FF" mode="number" direction="row"></u-steps> -->
 			<BusTimeSteps :list="stationList" :current="stationInfoArray.StartName" :direction="direction" :carLocationArray="carLocationArray"></BusTimeSteps>
 		</scroll-view>
 		
@@ -78,8 +77,23 @@
 			}
 			//获取服务器时间
 			_self.getServerTime();
-			//根据站点查询线路信息（时间、线路ID）
-			_self.getBusLineInfoByStationName();
+			//如果上一个页面是从SearchDetail或者BusQuery跳转过来的，因为里面有时间跟线路ID所以不用请求getBusLineInfoByStationName接口，直接赋值
+			if(option.lastPage == 'SearchDetail' || option.lastPage == 'BusQuery'){
+				//取到时间，转成数组
+				_self.firstLastTimeArray = _self.stationInfoArray.firstLastTime.split('-')
+				//取出线路ID
+				_self.lineID = _self.stationInfoArray.lineID
+				
+				//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
+				_self.getStationByLine();
+				//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
+				_self.getBusLocationByStation();
+				
+			}else {
+				//如果上一个页面是从RoutePlan页面进来的需要先去获取时间跟线路ID
+				//根据站点查询线路信息（时间、线路ID）
+				_self.getBusLineInfoByStationName();
+			}
 		},
 		methods: {
 //-------------------------------------------功能方法模块开始-------------------------------------------

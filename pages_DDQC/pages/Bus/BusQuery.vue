@@ -32,7 +32,7 @@
 				</view>
 				<view v-if="stationID == stationItem.stationID">
 					<block v-for="(item,index) in showLineList" :key='index'>
-						<view style="border-bottom: 1rpx solid #eeeeee;padding-bottom: 20rpx;margin-left: 77rpx;margin-right: 30rpx;">
+						<view @click="routeClick(item)" style="border-bottom: 1rpx solid #eeeeee;padding-bottom: 20rpx;margin-left: 77rpx;margin-right: 30rpx;">
 							<view class="lineView">
 								<view style="font-weight: 900;font-size: 30rpx;color: #343434;">{{item.lineName}}</view>
 								<!-- <view class="lineText" style="font-weight: 900;font-size: 30rpx;color: #4282FF;">{{item.arriveTime}}</view> -->
@@ -116,7 +116,9 @@
 				});
 			},
 			
-			//——————————————————————————————————————网络请求开始——————————————————————————————————————
+//——————————————————————————————————————网络请求开始——————————————————————————————————————
+
+
 			//--------------------------------------根据坐标获取站点数据--------------------------------------
 			getAroundStationData:function(){
 				
@@ -208,11 +210,11 @@
 					}
 				})
 			},
-			//——————————————————————————————————————网络请求结束——————————————————————————————————————
+//——————————————————————————————————————网络请求结束——————————————————————————————————————
 			
 			
 			
-			//**************************************事件写在这里（开始）**************************************
+//**************************************事件写在这里（开始）**************************************
 			
 			
 			//--------------------------------------查询点击事件--------------------------------------
@@ -242,12 +244,36 @@
 					_self.showLineList = _self.shortLineList
 				}
 			},
+			
 			//--------------------------------------收起点击事件--------------------------------------
 			packUp:function(){
 				_self.isMoreClick = !_self.isMoreClick;
 				//显示部分线路
 				_self.showLineList = _self.shortLineList
 			},
+			//--------------------------------------点击线路跳转到公交位置时间轴页面--------------------------------------
+			routeClick:function(option){
+				var LineRoute1Direction = '';
+				//busLocation使用的LineRoute1Direction是用中文'上行/下行'表示，所以在这里做一层转化
+				if(option.lineDirection == 0){
+					LineRoute1Direction == '上行'
+				}else{
+					LineRoute1Direction == '下行'
+				}
+				//数组字段统一
+				var item = {
+					StartName           : option.startName,
+					EndName             : option.endName,
+					lineID              : option.lineID,
+					firstLastTime       : option.firstLastTime,
+					LineRoute1Direction : LineRoute1Direction
+				}
+				//encodeURIComponent较长的字符串传输方式，lastPage这个字段用来给下一个页面判断是从哪个进去的
+				uni.navigateTo({
+					url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(item)) + '&lastPage=' + 'BusQuery'
+				})
+			},
+			//--------------------------------------点击起点/终点--------------------------------------
 			pickStation:function(option){
 				console.log(option)
 				if(option == '起点'){
@@ -274,7 +300,7 @@
 				})
 			},
 			
-			//**************************************事件写在这里（结束）**************************************
+//**************************************事件写在这里（结束）**************************************
 			
 			
 			//---------------------------------------其他方法---------------------------------------

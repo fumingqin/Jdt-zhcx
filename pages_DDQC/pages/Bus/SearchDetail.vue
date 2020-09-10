@@ -7,7 +7,7 @@
 					<view style="color: #4282FF;font-size: 36rpx;">{{item.lineName}}</view>
 					<view style="padding-top:20rpx ;">方向&nbsp;&nbsp;{{item.endName}}</view>
 				</view>
-				<view style="color: #4282FF;font-size: 30`rpx;">
+				<view style="color: #4282FF;font-size: 30`rpx;" @click="checkWiring(item)">
 					查看线路
 				</view>
 			</view>
@@ -43,7 +43,7 @@
 				let that=this;
 				uni.request({
 					url: that.$Bus.BusInterface.getBusLineInfoByStationName.Url,
-					method: 'GET',
+					method: that.$Bus.BusInterface.getBusLineInfoByStationName.method,
 					data: {
 						stationName: stationName,
 						encryption: that.$Bus.BusInterface.publicCode.encryption,
@@ -55,6 +55,28 @@
 					}
 				})
 			},
+			checkWiring:function(option){
+				console.log(option)
+				var LineRoute1Direction = '';
+				//busLocation使用的LineRoute1Direction是用中文'上行/下行'表示，所以在这里做一层转化
+				if(option.lineDirection == 0){
+					LineRoute1Direction == '上行'
+				}else{
+					LineRoute1Direction == '下行'
+				}
+				//数组字段统一
+				var item = {
+					StartName           : option.startName,
+					EndName             : option.endName,
+					lineID              : option.lineID,
+					firstLastTime       : option.firstLastTime,
+					LineRoute1Direction : LineRoute1Direction
+				}
+				//encodeURIComponent较长的字符串传输方式，lastPage这个字段用来给下一个页面判断是从哪个进去的
+				uni.navigateTo({
+					url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(item)) + '&lastPage=' + 'SearchDetail'
+				})
+			}
 		}
 	}
 </script>

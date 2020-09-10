@@ -146,6 +146,7 @@
 			},
 			
 			toLineDetail:function(lineRoute){
+				console.log(lineRoute)
 				uni.navigateTo({
 					//encodeURIComponent较长的字符串传输方式
 					url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(lineRoute)),
