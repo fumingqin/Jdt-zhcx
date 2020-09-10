@@ -61,7 +61,7 @@
 				</view>
 				<view class="detail-margin-top detail-margin-left">
 					<text class="plan-detail-font">乘坐</text>
-					<text @click="toLineDetail(item)" class="plan-detail-font title-margin-left attention">{{item.LineRoute1}}</text>
+					<text @click="toLineDetail(item,0)" class="plan-detail-font title-margin-left attention">{{item.LineRoute1}}</text>
 				</view>
 				<!--第一次换乘信息-->
 				<view v-show="item.ChangeType == 1 || item.ChangeType == 2" class="detail-margin-top detail-margin-left">
@@ -70,7 +70,7 @@
 				</view>
 				<view v-show="item.ChangeType == 1 || item.ChangeType == 2" class="detail-margin-top detail-margin-left">
 					<text class="plan-detail-font">乘坐</text>
-					<text class="plan-detail-font title-margin-left attention">{{item.LineRoute2}}</text>
+					<text @click="toLineDetail(item,1)" class="plan-detail-font title-margin-left attention">{{item.LineRoute2}}</text>
 				</view>
 				<!--第二次换乘信息-->
 				<view v-show="item.ChangeType == 2" class="detail-margin-top detail-margin-left">
@@ -79,7 +79,7 @@
 				</view>
 				<view v-show="item.ChangeType == 2" class="detail-margin-top detail-margin-left">
 					<text class="plan-detail-font">乘坐</text>
-					<text class="plan-detail-font title-margin-left attention">{{item.LineRoute3}}</text>
+					<text @click="toLineDetail(item,2)" class="plan-detail-font title-margin-left attention">{{item.LineRoute3}}</text>
 				</view>
 				<!--终点-->
 				<view class="detail-margin-top">
@@ -121,6 +121,7 @@
 					},
 					method:that.$Bus.BusInterface.getBusChange.method,
 					success:function(res){
+						// console.log(res)
 						uni.hideLoading(); 
 						if(res.data.status){
 							that.planArr = res.data.data;
@@ -145,11 +146,36 @@
 				return lineRoute.substring(0,lineRoute.indexOf('('));
 			},
 			
-			toLineDetail:function(lineRoute){
-				console.log(lineRoute)
+			toLineDetail:function(lineRoute,num){
+				// console.log(lineRoute)
+				var LineRoute = '';
+				var LineRouteDirection = '';
+				switch (num) {
+					case 0 :
+					    LineRoute = lineRoute.LineRoute1;
+						LineRouteDirection = lineRoute.LineRoute1Direction;
+					    break;
+					case 1 :
+						LineRoute = lineRoute.LineRoute2;
+						LineRouteDirection = lineRoute.LineRoute2Direction;
+						break;
+					case 2 :
+						LineRoute = lineRoute.LineRoute3;
+						LineRouteDirection = lineRoute.LineRoute3Direction;
+						break;
+				}
+				var item = {
+					ChangeType : lineRoute.ChangeType,
+					StartName : lineRoute.StartName,
+					EndName : lineRoute.EndName,
+					LineRoute : LineRoute,
+					LineRouteDirection : LineRouteDirection,
+					ChangStation : lineRoute.ChangStation,
+				}
+				// console.log(item)
 				uni.navigateTo({
 					//encodeURIComponent较长的字符串传输方式
-					url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(lineRoute)),
+					url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(item)),
 				});
 			},
 		}

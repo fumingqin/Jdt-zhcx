@@ -51,26 +51,25 @@
 					success(res) {
 						if (res.data.status) {
 							that.lineArr=res.data.data;
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
 						}
 					}
 				})
 			},
 			checkWiring:function(option){
-				console.log(option)
-				var LineRoute1Direction = '';
-				//busLocation使用的LineRoute1Direction是用中文'上行/下行'表示，所以在这里做一层转化
-				if(option.lineDirection == 0){
-					LineRoute1Direction == '上行'
-				}else{
-					LineRoute1Direction == '下行'
-				}
+				// console.log(option)
 				//数组字段统一
 				var item = {
 					StartName           : option.startName,
 					EndName             : option.endName,
 					lineID              : option.lineID,
 					firstLastTime       : option.firstLastTime,
-					LineRoute1Direction : LineRoute1Direction
+					LineRouteDirection  : option.lineDirection,
+					lineName            : option.lineName,
 				}
 				//encodeURIComponent较长的字符串传输方式，lastPage这个字段用来给下一个页面判断是从哪个进去的
 				uni.navigateTo({

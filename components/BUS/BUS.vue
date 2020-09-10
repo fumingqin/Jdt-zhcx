@@ -153,6 +153,7 @@ $u-steps-item-width: 24rpx;
 			width: 50%;
 			text-align: left;
 			margin-left: 20rpx;
+			margin-top: -1rpx;
 		}
 	}
 }
@@ -187,12 +188,13 @@ $u-steps-item-width: 24rpx;
 	position: relative;
 	//竖向样式
 	&--column{
-		position: absolute;
-		margin-top: -44rpx;
+		position: absolute;//这里不设置绝对定位的话，公交图片会跑到左边并且圆点和站点名会收到影响向右移
+		margin-top: -40rpx;
 		right: 60rpx;
 	}
 	//横向样式
 	&--row{
+		position: absolute;//这里不设置绝对定位的话，圆点会往上移动
 		margin-top: -54rpx;
 	}
 }
@@ -220,9 +222,11 @@ $u-steps-item-width: 24rpx;
 	color: #FFFFFF;
 	font-size: 26rpx;
 	&--row{
-		margin-top: -30rpx;
+		position: absolute;
+		margin-top: -13rpx;
 	}
 	&--column{
+		
 		margin-left: -35rpx;
 		margin-top: -80rpx;
 	}

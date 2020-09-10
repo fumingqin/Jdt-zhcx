@@ -5,9 +5,9 @@
 			<view class="topHead">
 				<view>
 					<view class="topStation">
-						<view class="marginR">{{stationInfoArray.StartName}}</view>
-						<view class="marginR">→</view>
-						<view>{{stationInfoArray.EndName}}</view>
+						<view class="marginR">{{startStation}}</view>
+						<!-- <view class="marginR">→</view>
+						<view>{{endStation}}</view> -->
 					</view>
 					<view class="topStation topTime">
 						<view class="marginR">首 {{firstLastTimeArray[0]}}</view>
@@ -69,8 +69,9 @@
 		onLoad(option) {
 			_self = this;
 			_self.stationInfoArray = JSON.parse(decodeURIComponent(option.lineRoute))
+			// console.log(_self.stationInfoArray)
 			//从上个页面获取该条线路是上行还是下行
-			if(_self.stationInfoArray.LineRoute1Direction == '上行'){
+			if(_self.stationInfoArray.LineRouteDirection == '上行' || _self.stationInfoArray.LineRouteDirection == 0){
 				_self.lineDirection = 0;
 			}else {
 				_self.lineDirection = 1;
@@ -79,17 +80,26 @@
 			_self.getServerTime();
 			//如果上一个页面是从SearchDetail或者BusQuery跳转过来的，因为里面有时间跟线路ID所以不用请求getBusLineInfoByStationName接口，直接赋值
 			if(option.lastPage == 'SearchDetail' || option.lastPage == 'BusQuery'){
+				uni.setNavigationBarTitle({
+					title:_self.stationInfoArray.lineName
+				})
 				//取到时间，转成数组
 				_self.firstLastTimeArray = _self.stationInfoArray.firstLastTime.split('-')
 				//取出线路ID
 				_self.lineID = _self.stationInfoArray.lineID
-				
+				//获取显示的站点名称
+				_self.startStation = _self.stationInfoArray.StartName + '→' + _self.stationInfoArray.EndName
 				//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
 				_self.getStationByLine();
 				//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
 				_self.getBusLocationByStation();
 				
 			}else {
+				uni.setNavigationBarTitle({
+					title: _self.getLine(_self.stationInfoArray.LineRoute)
+				})
+				var station = _self.getStartEndStation(_self.stationInfoArray.LineRoute)
+				_self.startStation = station[0].substring(1,station[0].length)
 				//如果上一个页面是从RoutePlan页面进来的需要先去获取时间跟线路ID
 				//根据站点查询线路信息（时间、线路ID）
 				_self.getBusLineInfoByStationName();
@@ -113,11 +123,20 @@
 					_self.direction = 'row'
 				}
 			},
+			//-------------------------------------------截取线路名称-------------------------------------------
 			getLine:function(lineRoute){
 				return lineRoute.substring(0,lineRoute.indexOf('('));
 			},
-			
-			
+			//-------------------------------------------截取站点名称-------------------------------------------
+			getStartStation:function(lineRoute){
+				var subStr = lineRoute.match(/(\(\S*)(?=→)/)
+				return subStr[1].substring(1,subStr[1].length)
+			},
+			//-------------------------------------------截取首站和末站名称-------------------------------------------
+			getStartEndStation:function(lineRoute){
+				var subStr = lineRoute.match(/(\(\S*)(?=\))/)
+				return subStr
+			},
 //-------------------------------------------功能方法模块结束-------------------------------------------
 			
 			
@@ -132,14 +151,14 @@
 					url:_self.$Bus.BusInterface.getBusLineInfoByStationName.Url,
 					method:_self.$Bus.BusInterface.getBusLineInfoByStationName.method,
 					data:{
-						stationName :  _self.stationInfoArray.StartName,
+						stationName :  _self.getStartStation(_self.stationInfoArray.LineRoute),
 						Encryption  :  _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
 						// console.log('请求成功',res)
 						if(res.data.status){
 							//截取出线路方案的站点名称
-							var stationName = _self.getLine(_self.stationInfoArray.LineRoute1)
+							var stationName = _self.getLine(_self.stationInfoArray.LineRoute)
 							//遍历数组，取出与当前站点相对应的时间
 							for(var i = 0; i < res.data.data.length; i++) {
 								if(stationName == res.data.data[i].lineName && _self.lineDirection == res.data.data[i].lineDirection){
@@ -153,6 +172,11 @@
 									_self.getBusLocationByStation();
 								}
 							}
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
 						}
 					},
 					fail(res) {
@@ -177,6 +201,11 @@
 						uni.hideLoading()
 						if(res.data.status){
 							_self.stationList = res.data.data
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
 						}
 					},
 					fail(res) {
@@ -196,7 +225,7 @@
 						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						console.log('请求实时到站信息成功',res)
+						// console.log('请求实时到站信息成功',res)
 						if(res.data.status){
 							for(var i = 0; i < res.data.data.length; i++){
 								//车辆时时到站时间戳
@@ -210,6 +239,13 @@
 								}
 							}
 							_self.carLocationArray = res.data.data
+						}else {
+							if(res.data.msg != "无数据！"){
+								uni.showToast({
+									title:res.data.msg,
+									icon:'none'
+								});
+							}
 						}
 					},
 					fail(res) {
@@ -228,6 +264,11 @@
 					success(res) {
 						if(res.data.status){
 							_self.serverTime = new Date(res.data.data).getTime()
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
 						}
 					},
 					fail(res) {

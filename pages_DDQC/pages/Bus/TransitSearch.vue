@@ -158,21 +158,30 @@
 							url:"./SearchDetail?stationName="+item.stationName,
 						})
 					}else{
+						//数组字段统一
+						var itemArray = {
+							StartName           : item.startName,
+							EndName             : item.endName,
+							lineID              : item.lineID,
+							firstLastTime       : item.firstLastTime,
+							LineRouteDirection  : item.lineDirection,
+							lineName            : item.lineName,
+						}
 						uni.navigateTo({
-							url:"./BusLocation"
+							url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(itemArray)) + '&lastPage=' + 'SearchDetail'
 						})
 					}
-					for (var i = 0; i < that.historyArr.length; i++) {
-						if (item.lineName&&item.lineName == that.historyArr[i].lineName && item.endName == that.historyArr[i].endName) {
-							that.historyArr.splice(i,1);
-						}
-						if(item.stationName&&item.stationName== that.historyArr[i].stationName){
-							that.historyArr.splice(i,1);
-						}
-					}
-					that.historyArr.unshift(item);
-					uni.setStorageSync("history", that.historyArr);
 				}
+				for (var i = 0; i < that.historyArr.length; i++) {
+					if (item.lineName&&item.lineName == that.historyArr[i].lineName && item.endName == that.historyArr[i].endName) {
+						that.historyArr.splice(i,1);
+					}
+					if(item.stationName&&item.stationName== that.historyArr[i].stationName){
+						that.historyArr.splice(i,1);
+					}
+				}
+				that.historyArr.unshift(item);
+				uni.setStorageSync("history", that.historyArr);
 			},
 			//搜索框清空时触发
 			clear: function() {

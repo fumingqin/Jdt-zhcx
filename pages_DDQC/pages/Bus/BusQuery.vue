@@ -21,9 +21,9 @@
 			<view class="queryButton" @click="queryClick">查询</view>
 		</view>
 		
-		<view class="around">附近</view>
+		<view class="around" v-if="stationList.length > 0">附近</view>
 		
-		<view class="aroundView">
+		<view class="aroundView" v-if="stationList.length > 0">
 			<block v-for="(stationItem,stationIndex) in stationList" :key='stationIndex'>
 				<view class="aroundViewTop" @click="stationClick(stationList[stationIndex])">
 					<image src="../../static/Bus/aroundStation.png" class="aroundImage"></image>
@@ -62,8 +62,8 @@
 	export default {
 		data() {
 			return {
-				startStation:'汽车站',//起点
-				endStation:'大坪商贸城',//终点
+				startStation:'请选择',//起点
+				endStation:'请选择',//终点
 				stationList:[],//存放所有站点列表的数组
 				stationID:'',//站点ID
 				isMoreClick:false,
@@ -87,7 +87,15 @@
 			_self = this;
 			encryption = $BusInterface.BusInterface.publicCode.encryption;
 			_self.getMyLocation();
-			
+			uni.getStorage({
+				key:'queryBusStation',
+				success(data) {
+					if(data){
+						_self.startStation = data.data.startStation,
+						_self.endStation = data.data.endStation
+					}
+				}
+			})
 		},
 		methods: {
 			
@@ -126,10 +134,10 @@
 					url:$BusInterface.BusInterface.getBusStationInfoByLonLat.Url,
 					method:$BusInterface.BusInterface.getBusStationInfoByLonLat.method,
 					data:{
-						// lon:_self.currentLongitude,//纬度
-						// lat:_self.currentLatitude,//纬度
-						lon:117.765241,
-						lat:24.457463,
+						lon:_self.currentLongitude,//纬度
+						lat:_self.currentLatitude,//纬度
+						// lon:117.765241,
+						// lat:24.457463,
 						encryption: encryption,//编码
 					},
 					success(res) {
@@ -177,6 +185,11 @@
 							// 	// console.log(i)
 							// 	_self.getLineDetailInfo(res.data.data[i].lineID,res.data.data[i].lineDirection,stationName,res.data.data)
 							// }
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
 						}
 					},
 					fail(res) {
@@ -201,9 +214,12 @@
 						if(res.data.status == true){
 							_self.lineDetail.push(res.data.data[0])
 							console.log('线路详情',_self.lineDetail)
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
 						}
-						
-						
 					},
 					fail(res) {
 						console.log('请求失败',res)
@@ -219,11 +235,27 @@
 			
 			//--------------------------------------查询点击事件--------------------------------------
 			queryClick:function(){
-				//跳转到线路规划页面
-				uni.navigateTo({
-					// url:'./BusLocation'
-					url:'./RoutePlan?startStation=' + _self.startStation + '&endStation=' + _self.endStation
-				})
+				if(_self.startStation == '请选择' || _self.endStation == '请选择'){
+					uni.showToast({
+						title:'起点或终点不能为空',
+						icon:'none'
+					})
+				}else {
+					uni.setStorage({
+						key:'queryBusStation',
+						data:{
+							startStation : _self.startStation,
+							endStation : _self.endStation
+						},
+						complete() {
+							//跳转到线路规划页面
+							uni.navigateTo({
+								// url:'./BusLocation'
+								url:'./RoutePlan?startStation=' + _self.startStation + '&endStation=' + _self.endStation
+							})
+						}
+					})
+				}
 			},
 			//--------------------------------------站点点击事件--------------------------------------
 			stationClick:function(item){
@@ -253,20 +285,14 @@
 			},
 			//--------------------------------------点击线路跳转到公交位置时间轴页面--------------------------------------
 			routeClick:function(option){
-				var LineRoute1Direction = '';
-				//busLocation使用的LineRoute1Direction是用中文'上行/下行'表示，所以在这里做一层转化
-				if(option.lineDirection == 0){
-					LineRoute1Direction == '上行'
-				}else{
-					LineRoute1Direction == '下行'
-				}
 				//数组字段统一
 				var item = {
 					StartName           : option.startName,
 					EndName             : option.endName,
 					lineID              : option.lineID,
 					firstLastTime       : option.firstLastTime,
-					LineRoute1Direction : LineRoute1Direction
+					LineRouteDirection  : option.lineDirection,
+					lineName            : option.lineName,
 				}
 				//encodeURIComponent较长的字符串传输方式，lastPage这个字段用来给下一个页面判断是从哪个进去的
 				uni.navigateTo({
