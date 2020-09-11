@@ -953,7 +953,7 @@
 								//已交押金，开始扫码租车
 								that.scanQrcode();
 							} else if (response.data.data.bizStatus == null) {
-								that.myShowModal('请先登陆', '../../../pages/GRZX/userLogin');
+								that.myShowModal('请先登陆', '../../pages/GRZX/userLogin');
 							}
 						} else {
 							console.log('返回数据false', response)
