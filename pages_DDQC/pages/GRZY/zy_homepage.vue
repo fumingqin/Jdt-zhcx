@@ -47,7 +47,7 @@
 			
 			
 			<!-- 充值金额 -->
-			<view class="ve_view4" @click="natTo(2)">
+			<view class="ve_view3" @click="natTo(2)">
 				<text class="vi_text2">充值金额</text>
 				<text class="jdticon icon-you"></text>
 			</view>
@@ -1051,7 +1051,7 @@
 	.ve_view3 {
 		display: flex;
 		position: relative;
-		width: 629upx;
+		// width: 629upx;
 		height: 100%;
 		border-radius: 10px;
 		margin-left: 29upx;
