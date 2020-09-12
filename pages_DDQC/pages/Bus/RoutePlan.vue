@@ -150,18 +150,23 @@
 				// console.log(lineRoute)
 				var LineRoute = '';
 				var LineRouteDirection = '';
+				var ChangStation = '';
+				//选择不同的乘车方案时传不同的数据
 				switch (num) {
 					case 0 :
 					    LineRoute = lineRoute.LineRoute1;
 						LineRouteDirection = lineRoute.LineRoute1Direction;
+						ChangStation = lineRoute.StartName;
 					    break;
 					case 1 :
 						LineRoute = lineRoute.LineRoute2;
 						LineRouteDirection = lineRoute.LineRoute2Direction;
+						ChangStation = lineRoute.ChangStation1;
 						break;
 					case 2 :
 						LineRoute = lineRoute.LineRoute3;
 						LineRouteDirection = lineRoute.LineRoute3Direction;
+						ChangStation = lineRoute.ChangStation2;
 						break;
 				}
 				var item = {
@@ -170,7 +175,7 @@
 					EndName : lineRoute.EndName,
 					LineRoute : LineRoute,
 					LineRouteDirection : LineRouteDirection,
-					ChangStation : lineRoute.ChangStation,
+					ChangStation : ChangStation,
 				}
 				// console.log(item)
 				uni.navigateTo({

@@ -41,6 +41,9 @@
 			//根据站点查询线路
 			getLineByStationName: function(stationName) {
 				let that=this;
+				uni.showLoading({
+					title:'正在加载...'
+				})
 				uni.request({
 					url: that.$Bus.BusInterface.getBusLineInfoByStationName.Url,
 					method: that.$Bus.BusInterface.getBusLineInfoByStationName.method,
@@ -49,6 +52,7 @@
 						encryption: that.$Bus.BusInterface.publicCode.encryption,
 					},
 					success(res) {
+						uni.hideLoading()
 						if (res.data.status) {
 							that.lineArr=res.data.data;
 						}else {
@@ -57,6 +61,9 @@
 								icon:'none'
 							});
 						}
+					},
+					fail() {
+						uni.hideLoading()
 					}
 				})
 			},

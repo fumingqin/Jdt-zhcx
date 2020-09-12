@@ -1299,17 +1299,18 @@
 
 	//照片样式
 	.picClass {
-		width: 210upx;
+		width: 220upx;
 		height: 207upx;
 		overflow: hidden;
 		border-radius: 15upx;
 		margin-top: 10upx;
-		margin-right: 20upx;
+		// margin-right: 20upx;
+		margin-left: 10rpx;
 	}
 
 	//第一张照片
 	.firstPic {
-		width: 440upx;
+		width: 450upx;
 		height: 207upx;
 		overflow: hidden;
 		border-radius: 15upx;

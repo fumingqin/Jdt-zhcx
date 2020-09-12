@@ -17,6 +17,17 @@
 				</view>
 				<image class="turnImage" src="../../static/Bus/bus.png"></image>
 			</view>
+			<!-- 时刻表弹框 -->
+			<view class="timeClass">
+				<u-popup v-model="isShow" mode="center" border-radius="14" width="600rpx">
+					<view class="timeClass_text timeClass_title">最近发班时刻</view>
+					<block v-for="(item,index) in timeArray" :key="index">
+						<view class="timeClass_text timeClass_time">{{item.foreStartTime}}</view>
+					</block>
+				</u-popup>
+			</view>
+			<view class="timeButton" @click="timeButtonClick">发班时刻</view>
+			
 			<!-- 暂时没有数据，先隐藏 -->
 			<view class="topBottom" v-if="false">
 				<view class="topBottomLeft">
@@ -32,7 +43,7 @@
 		
 		<!-- 时间轴 -->
 		<scroll-view scroll-x="true" class="busTimeStep">
-			<BusTimeSteps :list="stationList" :current="stationInfoArray.StartName" :direction="direction" :carLocationArray="carLocationArray"></BusTimeSteps>
+			<BusTimeSteps :list="stationList" :current="stationInfoArray.ChangStation" :direction="direction" :carLocationArray="carLocationArray"></BusTimeSteps>
 		</scroll-view>
 		
 		<view class="bottomView">
@@ -64,6 +75,9 @@
 				stationList:[],//站点数组
 				carLocationArray:[],//车辆位置数组
 				serverTime:'',//服务器时间
+				markStationIndex:'',//选择的站点的下标
+				isShow:false,//是否显示弹框
+				timeArray:[],//发班时间表数组
 			}
 		},
 		onLoad(option) {
@@ -87,7 +101,7 @@
 				_self.firstLastTimeArray = _self.stationInfoArray.firstLastTime.split('-')
 				//取出线路ID
 				_self.lineID = _self.stationInfoArray.lineID
-				//获取显示的站点名称
+				//获取显示的站点名称（起点-终点）
 				_self.startStation = _self.stationInfoArray.StartName + '→' + _self.stationInfoArray.EndName
 				//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
 				_self.getStationByLine();
@@ -95,6 +109,7 @@
 				_self.getBusLocationByStation();
 				
 			}else {
+				//设置导航栏标题为线路名称
 				uni.setNavigationBarTitle({
 					title: _self.getLine(_self.stationInfoArray.LineRoute)
 				})
@@ -107,7 +122,6 @@
 		},
 		methods: {
 //-------------------------------------------功能方法模块开始-------------------------------------------
-			
 			
 			
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
@@ -137,6 +151,15 @@
 				var subStr = lineRoute.match(/(\(\S*)(?=\))/)
 				return subStr
 			},
+			//-------------------------------------------截取时间-------------------------------------------
+			getScheduleTime:function(date){
+				return date.split(' ')
+			},
+			//-------------------------------------------点击时刻表-------------------------------------------
+			timeButtonClick:function(){
+				_self.isShow = !_self.isShow;
+				_self.getTimeScheduleInfo();
+			},
 //-------------------------------------------功能方法模块结束-------------------------------------------
 			
 			
@@ -161,6 +184,7 @@
 							var stationName = _self.getLine(_self.stationInfoArray.LineRoute)
 							//遍历数组，取出与当前站点相对应的时间
 							for(var i = 0; i < res.data.data.length; i++) {
+								//取出线路名称相同且线路方向一致的数据
 								if(stationName == res.data.data[i].lineName && _self.lineDirection == res.data.data[i].lineDirection){
 									//取到时间，转成数组
 									_self.firstLastTimeArray = res.data.data[i].firstLastTime.split('-')
@@ -184,7 +208,7 @@
 					}
 				})
 			},
-			//----------------------------------根据线路查询改线路的所有站点信息----------------------------------
+			//----------------------------------根据线路查询该线路的所有站点信息----------------------------------
 			getStationByLine:function(){
 				uni.showLoading({
 					title:'加载中...'
@@ -201,6 +225,12 @@
 						uni.hideLoading()
 						if(res.data.status){
 							_self.stationList = res.data.data
+							//筛选出目标站点的下标，要让目标站点滚动到屏幕中心
+							for(var i = 0; i < res.data.data.length; i++){
+								if(_self.stationInfoArray.ChangStation == res.data.data[i].stationName){
+									_self.markStationIndex = i;
+								}
+							}
 						}else {
 							uni.showToast({
 								title:res.data.msg,
@@ -253,6 +283,42 @@
 					}
 				})
 			},
+			//----------------------------------获取最近发班时刻表----------------------------------
+			getTimeScheduleInfo:function(){
+				uni.showLoading({
+					title:'加载中...'
+				})
+				uni.request({
+					url:_self.$Bus.BusInterface.getBusLineScheduleInfoByLineIdDirection.Url,
+					method:_self.$Bus.BusInterface.getBusLineScheduleInfoByLineIdDirection.method,
+					data:{
+						lineId    : _self.lineID,
+						direction : _self.direction,
+						Encryption: _self.$Bus.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						uni.hideLoading()
+						_self.timeArray = [];
+						if(res.data.status){
+							for(var i = 0; i < res.data.data.length; i++){
+								var timeArray = {
+									foreStartTime : _self.getScheduleTime(res.data.data[i].foreStartTime)[1]
+								} 
+								_self.timeArray.push(timeArray)
+							}
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							})
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log(res)
+					}
+				})
+			},
 			//----------------------------------获取服务器时间----------------------------------
 			getServerTime:function(){
 				uni.request({
@@ -283,7 +349,9 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	$u-itemtMarginLeft:20rpx;
+	$u-contentMarginLeft:30rpx;
 	page,
 	.myView {
 		flex-direction: column;
@@ -291,18 +359,19 @@
 		height: 100%;
 		background: #F1F1F1;
 	}
+	
 	.topContentInfo{
 		padding-top: 30rpx;
 		padding-bottom: 30rpx;
 		margin-top: 20rpx;
-		margin-left: 20rpx;
-		margin-right: 20rpx;
+		margin-left: $u-itemtMarginLeft;
+		margin-right: $u-itemtMarginLeft;
 		border-radius: 12rpx;
 		background-color: #4281FF;
 	}
 	.topHead {
-		margin-left: 30rpx;
-		margin-right: 30rpx;
+		margin-left: $u-contentMarginLeft;
+		margin-right: $u-contentMarginLeft;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -327,9 +396,37 @@
 		width: 52rpx;
 		margin-right: 40rpx;
 	}
+	.timeClass{
+		text-align: center;;
+		.timeClass_text{
+			justify-content: center;
+			display: flex;
+			align-items: center;
+		}
+		.timeClass_title{
+			height: 80rpx;
+			font-size: 36rpx;
+			font-weight: 900;
+		}
+		.timeClass_time{
+			height: 60rpx;
+			font-size: 30rpx;
+			font-weight: 300;
+		}
+	}
+	.timeButton{
+		margin-left: $u-contentMarginLeft;
+		margin-top: $u-contentMarginLeft;
+		font-size: 26rpx;
+		width: 130rpx;
+		border-radius: 8rpx;
+		padding: 5rpx 10rpx;
+		color: #FFFFFF;
+		border: 1rpx solid #FFFFFF;
+	}
 	.topBottom{
-		margin-left: 30rpx;
-		margin-right: 30rpx;
+		margin-left: $u-contentMarginLeft;
+		margin-right: $u-contentMarginLeft;
 		margin-top: 30rpx;
 		display: flex;
 		align-items: center;
@@ -347,8 +444,8 @@
 	}
 	.busTimeStep{
 		margin-top: 20rpx;
-		margin-left: 20rpx;
-		margin-right: 20rpx;
+		margin-left: $u-itemtMarginLeft;
+		margin-right: $u-itemtMarginLeft;
 		width: 710rpx;
 		border-radius: 12rpx;
 		background-color: #FFFFFF;

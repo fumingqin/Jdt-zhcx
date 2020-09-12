@@ -173,7 +173,7 @@ $u-steps-item-width: 24rpx;
 	border: 2rpx solid #4281FF;
 	border-radius: 50%;
 	overflow: hidden;
-	// z-index: 999;
+	z-index: 998;
 	&--row{
 	}
 	&--column{
