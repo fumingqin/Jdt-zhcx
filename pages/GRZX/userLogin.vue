@@ -220,14 +220,14 @@
 					},
 					method: that.$GrzxInter.Interface.GetUserByUserID.method,
 					success(res) {
-						// console.log(res)
+						 console.log(res)
 						uni.hideLoading();
 						if (res.data.data == "" || res.data.data.UserName == "" || res.data.data.UserIDNumber == "") {
 							//实名认证
 							uni.redirectTo({
 								url: that.$GrzxInter.Route.realName.url,
 							})
-						} else if (res.data.data.RealNameStatus !== 1||res.data.data.RealNameStatus !=3) {
+						} else if (res.data.data.RealNameStatus != 1&&res.data.data.RealNameStatus !=3) {
 							//上传图片
 							uni.redirectTo({
 								url: that.$GrzxInter.Route.uploadPhoto.url,
