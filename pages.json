@@ -1124,7 +1124,7 @@
 				}, {
 					"path": "pages/Bus/BusQuery",
 					"style": {
-						"navigationBarBackgroundColor": "#7D56FF",
+						"navigationBarBackgroundColor": "#6BD78C",
 						"titleNView": {
 							"searchInput": {
 								"align": "left",
