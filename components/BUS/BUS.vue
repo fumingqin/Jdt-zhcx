@@ -130,16 +130,17 @@ $u-steps-item-width: 24rpx;
 		//竖向----在这里改圆点跟站点名称的相对位置
 		&--column {
 			margin-left: 40rpx;//竖向时整体与左边的距离
-			margin-top: 10rpx;//竖向时整体与顶部的距离
+			margin-top: 20rpx;//竖向时整体与顶部的距离
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-start;
+			height: 100rpx;//修改这里可以设置竖向时两个圆点间的距离
 			//竖向站点连接线样式
 			.u-steps__item__line {
 				position: absolute;
 				z-index: 0;
 				height: 100%;
-				top: 20%;
+				top: 15%;//修改这里可以设置竖向线条与圆点的距离，数值越大线条越向下移动
 				// margin-top: 70rpx;
 				// height: 150rpx;
 				left: calc(#{$u-steps-item-width} / 2 );
@@ -178,7 +179,7 @@ $u-steps-item-width: 24rpx;
 	&--row{
 	}
 	&--column{
-		margin-bottom: 90rpx;//竖向时圆点与圆点的距
+		margin-bottom: 90rpx;//竖向时圆点与圆点的距;
 	}
 	&--car{
 		margin-top: -44rpx;

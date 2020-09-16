@@ -144,6 +144,7 @@
 			},
 			//-------------------------------------------调换公交行驶方向-------------------------------------------
 			turnImageClick:function(){
+				//更换线路方向
 				if(_self.lineDirection == 0){
 					_self.lineDirection = 1;
 					_self.getBusLineInfoByStationName();
@@ -151,6 +152,9 @@
 					_self.lineDirection = 0;
 					_self.getBusLineInfoByStationName();
 				}
+				//更换显示的站点名称,调换起点跟终点的位置
+				var stationArray = _self.startStation.split('→')
+				_self.startStation = stationArray[1] + '→' + stationArray[0]
 			},
 			//-------------------------------------------调换线路显示的方向-------------------------------------------
 			turnDirection:function(){
@@ -247,7 +251,7 @@
 					},
 					success(res) {
 						uni.hideLoading()
-						console.log('站点信息',res)
+						// console.log('站点信息',res)
 						if(res.data.status){
 							_self.stationList = res.data.data
 							//筛选出目标站点的下标，要让目标站点滚动到屏幕中心
@@ -316,6 +320,7 @@
 							// }
 							
 							_self.carLocationArray = res.data.data
+							// console.log('请求实时到站信息成功',_self.carLocationArray)
 						}else {
 							if(res.data.msg != "无数据！"){
 								uni.showToast({
