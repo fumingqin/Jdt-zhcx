@@ -14,6 +14,7 @@
 				<view class="carImage" :class="['carImage--' + direction]" v-for="(carItem,carIndex) in carLocationArray" :key="carIndex" 
 				v-if="index == carItem.stationIndex - 1">
 				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
+					<view style="font-size: 20rpx;width: 140rpx;">{{carItem.registcode}}</view>
 				</view>
 				<!-- 圆点 -->
 				<view class="circle" :class="['circle--' + direction]" :style="{
@@ -115,7 +116,7 @@ $u-steps-item-width: 24rpx;
 		align-items: center;
 		//横向----在这里改圆点跟站点名称的相对位置
 		&--row {
-			margin-top: 50rpx;//改动这个可以改变圆点与顶部的距离
+			margin-top: 100rpx;//改动这个可以改变圆点与顶部的距离
 			display: flex;
 			flex-direction: column;
 			//横向站点连接线样式
@@ -197,7 +198,7 @@ $u-steps-item-width: 24rpx;
 	//横向样式
 	&--row{
 		position: absolute;//这里不设置绝对定位的话，圆点会往上移动
-		margin-top: -54rpx;
+		margin-top: -90rpx;//数值越大越往下移
 	}
 }
 
