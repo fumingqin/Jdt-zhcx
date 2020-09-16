@@ -112,10 +112,12 @@
 								},
 								success(res) {
 									if (res.data.data.length > 0) {
-										if (that.searchArr = []) {
+										if (that.searchArr == []) {
 											that.searchArr = res.data.data;
 										} else {
-											that.searchArr.push(res.data.data);
+											for(var i=0;i<res.data.data.length;i++){
+												that.searchArr.push(res.data.data[i]);
+											}
 										}
 									}
 								},

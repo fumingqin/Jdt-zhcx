@@ -73,7 +73,7 @@
 			GoBusSearch:function(){
 				console.log(11)
 				uni.navigateTo({
-					url:"../Bus/BusSeach",
+					url:"../Bus/BusQuery",
 					complete(res) {
 						console.log(res)
 					}
