@@ -112,12 +112,10 @@
 								},
 								success(res) {
 									if (res.data.data.length > 0) {
-										if (that.searchArr == []) {
+										if (that.searchArr = []) {
 											that.searchArr = res.data.data;
 										} else {
-											for(var i=0;i<res.data.data.length;i++){
-												that.searchArr.push(res.data.data[i]);
-											}
+											that.searchArr.push(res.data.data);
 										}
 									}
 								},
@@ -168,6 +166,7 @@
 							firstLastTime       : item.firstLastTime,
 							LineRouteDirection  : item.lineDirection,
 							lineName            : item.lineName,
+							ChangStation        : item.startName,
 						}
 						uni.navigateTo({
 							url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(itemArray)) + '&lastPage=' + 'SearchDetail'

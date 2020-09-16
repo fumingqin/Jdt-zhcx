@@ -77,6 +77,7 @@
 					firstLastTime       : option.firstLastTime,
 					LineRouteDirection  : option.lineDirection,
 					lineName            : option.lineName,
+					ChangStation        : option.startName,
 				}
 				//encodeURIComponent较长的字符串传输方式，lastPage这个字段用来给下一个页面判断是从哪个进去的
 				uni.navigateTo({
