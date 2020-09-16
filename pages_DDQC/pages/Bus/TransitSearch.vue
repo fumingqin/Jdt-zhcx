@@ -17,7 +17,7 @@
 				<view class="history-content-view">
 					<view v-for="(item,index) in historyArr" :key="index" hover-class="view_hover"  @click="itemClick(item)">
 						<!--begin 搜索线路显示结果 -->
-						<view class="history-content-detial" v-if="item.endName"> 
+						<view class="history-content-detial" v-if="item.endName&&IsHome"> 
 							<view class="history-content-name">
 								<image src="../../static/Bus/bus.png" class="history-content-img"></image>
 							</view>
@@ -41,8 +41,11 @@
 		</view>
 		<view class="search-content" v-if="IsSearch">
 			<view v-for="(item,index) in searchArr" :key="index" hover-class="view_hover">
-				<view class="search-content-font" @click="itemClick(item)">
-					{{item.lineName?item.lineName:item.stationName}}{{item.endName?" 方向 "+item.endName :""}}
+				<view class="search-content-font" @click="itemClick(item)" v-if="!item.endName">
+					{{item.stationName}}
+				</view>
+				<view class="search-content-font" @click="itemClick(item)" v-if="item.endName&&IsHome">
+					{{item.lineName +" 方向 "+item.endName}}
 				</view>
 			</view>
 		</view>
@@ -59,12 +62,16 @@
 				searchArr: [],
 				currnet:'',//当前是从哪个页面进来
 				type:'',//起点/终点
+				IsHome:true,
 			}
 		},
 		onLoad(option) {
 			this.historyArr = uni.getStorageSync("history") || [];
 			this.currnet = option.current
-			this.type = option.type
+			if(option.type){
+				this.type = option.type;
+				this.IsHome=false;
+			}
 		},
 		methods: {
 			//清除历史记录
