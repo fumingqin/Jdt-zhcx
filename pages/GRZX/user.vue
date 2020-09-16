@@ -141,7 +141,7 @@
 				userFeedbackHidden: true,
 				focusType: false,
 				//加载信息
-				userInfo: [],
+				userInfo: "",
 				contantPhone: '',
 				userId: '',
 				phoneNumber: '', //客服电话
@@ -281,9 +281,15 @@
 			},
 			// ---------------------------跳转订单的点击-----------------------
 			orderClick(url) {
-				uni.navigateTo({
-					url:url
-				})
+				if (this.userInfo.length!='') {
+					uni.navigateTo({
+						url:url
+					})
+				} else{
+					uni.navigateTo({
+						url: '../GRZX/userLogin',
+					})
+				}
 			},
 			// --------------------------设置，通知，扫一扫--------------------
 			navTo(e) {

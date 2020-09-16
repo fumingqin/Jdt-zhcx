@@ -13,6 +13,20 @@
 			<view style="padding-top: 20rpx;">
 				<text style="font-size: 32rpx;">骑行时间：{{Time}}</text>
 			</view>
+			<!-- <view style="padding-top: 20rpx;">
+				<text style="font-size: 36rpx;font-weight: bold;">支付方式</text>
+			</view>
+			<view style="padding-top: 20rpx;">
+				<u-radio-group v-model="payType" style="display: block;" size="40" active-color="#19BE6B">
+					<view v-for="(item, index) in PayArr" :key="index" style="padding: 20rpx 0;display: flex;align-items: center;margin-top: 20rpx;justify-content: space-between;border-bottom:1rpx solid #eee;">
+						<view style="display: flex;align-items: center;">
+							<image :src="item.ImageUrl" style="width: 60rpx;height: 60rpx;"></image>
+							<view style="font-size: 36rpx;margin-left: 10rpx;">{{item.name}}</view>
+						</view>
+						<u-radio :name="item.name" :disabled="item.disabled" icon-size="40"></u-radio>
+					</view>
+				</u-radio-group>
+			</view> -->
 			<view style="padding-top: 40rpx;display: flex;justify-content: space-between;">
 				<button style="background:linear-gradient(270deg,rgba(83,175,59,1),rgba(40,204,40,1));width: 320rpx;border-radius: 60px; "
 				 @click="payNow">
@@ -51,6 +65,18 @@
 				HireStationName: '',
 				RestoreStationName: '',
 				phoneNumber: '', //客服热线
+				PayArr: [{
+						name: '钱包',
+						disabled: false,
+						ImageUrl: '../../static/GRZY/touxiang.png'
+					},
+					{
+						name: '微信',
+						disabled: false,
+						ImageUrl: '../../static/GRZY/wechat.png'
+					}
+				],
+				payType: '钱包',
 			}
 		},
 		onLoad() {
@@ -82,12 +108,16 @@
 				})
 			},
 			payNow: function() { //立即支付  
-				uni.showLoading({
-					title: '支付中',
-					mask: true
-				})
+				// uni.showLoading({
+				// 	title: '支付中',
+				// 	mask: true
+				// })
 				if (this.money > 0) {
-					this.walletPayment();
+					if (this.payType == "钱包") {
+						this.walletPayment();
+					} else if (this.payType == "微信") {
+						this.getPaymentInformation();
+					}
 				} else {
 					uni.redirectTo({
 						url: "../GRZY/zy_homepage"
@@ -216,7 +246,7 @@
 									})
 									setTimeout(function() {
 										uni.redirectTo({
-											url: '../GRZY/zy_homepage'
+											// url: '../GRZY/zy_homepage'
 										})
 									}, 1500)
 								} else {
@@ -359,7 +389,76 @@
 						that.GetOrderByUserID();
 					}
 				})
-			}
+			},
+
+
+			getPaymentInformation: function() { //获取支付信息
+				let that = this;
+				var payPlatform = 3;
+				uni.request({
+					url: 'https://zntc.145u.net:9099/api/Pay/getCommonPayparameter',
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					data: {
+						payType: 3,
+						price: that.money,
+						orderNumber: that.orderId,
+						goodsName: that.phoneNumber,
+						billDescript: "自行车费用", 
+					},
+					success(res) {
+						console.log(res)
+						that.payment(res.data.data)
+					},
+					fail(err) {
+						console.log(err)
+					}
+					
+				})
+			},
+			showToast: function(msg) {
+				uni.showToast({
+					title: msg,
+					icon: "none",
+					mask: true
+				})
+			},
+			payment: function(orderInfo) { //支付
+				let that = this;
+				uni.requestPayment({
+					//#ifdef MP-WEIXIN
+					timeStamp: orderInfo.timeStamp,
+					nonceStr: orderInfo.nonceStr,
+					package: orderInfo.package,
+					signType: orderInfo.signType,
+					paySign: orderInfo.paySign,
+					// #endif
+					// #ifdef APP-VUE
+					provider: "wxpay",
+					orderInfo: orderInfo,
+					// #endif
+					success(res) {
+
+					},
+					fail(res) {
+						var msg = "requestPayment:fail canceled";
+						// #ifdef MP-WEIXIN
+						msg = "requestPayment:fail cancel";
+						// #endif
+						if (res.errMsg == msg) {
+							setTimeout(function() {
+								that.showToast("支付失败，请重新支付")
+							}, 1000)
+						} else {
+							that.showToast("网络连接失败")
+						}
+					}
+				})
+			},
+
+
 		}
 	}
 </script>
