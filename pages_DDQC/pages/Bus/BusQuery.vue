@@ -2,7 +2,7 @@
 	<view class="myView">
 		<!-- 顶部背景图 -->
 		<view class="topImage">
-			<image style="width: 100%;" lazy-load="true" src="../../static/busBac.png"></image>
+			<image style="width: 750rpx;" lazy-load="true" src="../../static/Bus/busBack.png"></image>
 		</view>
 		<!-- 起终点 -->
 		<view class="station">
@@ -377,7 +377,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: #4282FF;
+		background-color: #35C762;
 		color: #FFFFFF;
 		border-radius: 12rpx;
 		height: 90rpx;

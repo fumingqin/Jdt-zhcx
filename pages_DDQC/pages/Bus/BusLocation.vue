@@ -15,7 +15,7 @@
 						<view class="marginR">票价：{{price}}</view>
 					</view>
 				</view>
-				<image class="turnImage" src="../../static/Bus/bus.png"></image>
+				<image class="turnImage" src="../../static/Bus/turnBusdirection.png" @click="turnImageClick"></image>
 			</view>
 			<!-- 时刻表弹框 -->
 			<view class="timeClass">
@@ -78,6 +78,7 @@
 				markStationIndex:'',//选择的站点的下标
 				isShow:false,//是否显示弹框
 				timeArray:[],//发班时间表数组
+				timer:null,
 			}
 		},
 		onLoad(option) {
@@ -119,14 +120,37 @@
 				//根据站点查询线路信息（时间、线路ID）
 				_self.getBusLineInfoByStationName();
 			}
+			//设置定时器，每十秒刷新一次公交位置信息
+			_self.setBusTimeInterval();
+		},
+		onUnload:function(){
+			//清楚定时器
+			clearInterval(_self.timer);
+			_self.timer = null;
 		},
 		methods: {
 //-------------------------------------------功能方法模块开始-------------------------------------------
 			
 			
+			//-------------------------------------------设置定时器，10秒获取一次公交位置信息-------------------------------------------
+			setBusTimeInterval:function(){
+				_self.timer = setInterval(()=>{
+					_self.getBusLocationByStation();
+				},10000)
+			},
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
 			getBusLocationOntime:function(){
 				_self.getBusLocationByStation();
+			},
+			//-------------------------------------------调换公交行驶方向-------------------------------------------
+			turnImageClick:function(){
+				if(_self.lineDirection == 0){
+					_self.lineDirection = 1;
+					_self.getBusLineInfoByStationName();
+				}else if (_self.lineDirection == 1){
+					_self.lineDirection = 0;
+					_self.getBusLineInfoByStationName();
+				}
 			},
 			//-------------------------------------------调换线路显示的方向-------------------------------------------
 			turnDirection:function(){
@@ -223,6 +247,7 @@
 					},
 					success(res) {
 						uni.hideLoading()
+						console.log('站点信息',res)
 						if(res.data.status){
 							_self.stationList = res.data.data
 							//筛选出目标站点的下标，要让目标站点滚动到屏幕中心
@@ -268,6 +293,28 @@
 									res.data.data.splice(i,1)
 								}
 							}
+							//这里的方法不需要，不要管
+							// var array = [];
+							// for(var i = 0; i < res.data.data.length; i++){
+							// 	for(var j = 0; j < _self.stationList.length; j++){
+							// 		if(res.data.data[i].stationIndex == j){
+							// 			var item = {
+							// 				"lineID": _self.stationList[j-1].lineID,
+							// 				"stationID": _self.stationList[j-1].stationID,
+							// 				"stationName": _self.stationList[j-1].stationName,
+							// 				"direction": _self.stationList[j-1].direction,
+							// 				"stationIndex": _self.stationList[j-1].stationIndex,
+							// 				"lon": _self.stationList[j-1].lon,
+							// 				"lat": _self.stationList[j-1].lat,
+							// 				"carIndex" : res.data.data[i].stationIndex
+							// 			}
+							// 			_self.stationList.splice(j-1,1)
+										
+							// 			_self.stationList.splice(j-1,1,item)
+							// 		}
+							// 	}
+							// }
+							
 							_self.carLocationArray = res.data.data
 						}else {
 							if(res.data.msg != "无数据！"){
@@ -367,7 +414,7 @@
 		margin-left: $u-itemtMarginLeft;
 		margin-right: $u-itemtMarginLeft;
 		border-radius: 12rpx;
-		background-color: #4281FF;
+		background-color: #35C762;
 	}
 	.topHead {
 		margin-left: $u-contentMarginLeft;

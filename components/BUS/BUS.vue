@@ -18,8 +18,9 @@
 				<!-- 圆点 -->
 				<view class="circle" :class="['circle--' + direction]" :style="{
 					backgroundColor: current == item.stationName ? activeColor : unActiveColor,
-					borderColor: current == item.stationName ? activeColor : unActiveColor
-				}"></view>
+					borderColor: current == item.stationName ? activeColor : unActiveColor,
+				}" ></view>
+				
 				<!-- 起点/终点样式 -->
 				<view class="startEnd" :class="['startEnd--' + direction]" v-if="index == 0">起</view>
 				<view class="startEnd" :class="['startEnd--' + direction]" style="background-color: #FF3904;" v-if="index == list.length - 1">终</view>
@@ -177,7 +178,7 @@ $u-steps-item-width: 24rpx;
 	&--row{
 	}
 	&--column{
-		margin-bottom: 90rpx;//竖向时圆点与圆点的距离
+		margin-bottom: 90rpx;//竖向时圆点与圆点的距
 	}
 	&--car{
 		margin-top: -44rpx;
