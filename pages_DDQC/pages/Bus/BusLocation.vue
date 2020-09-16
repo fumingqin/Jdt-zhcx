@@ -47,8 +47,8 @@
 		</scroll-view>
 		
 		<view class="bottomView">
-			<view @click="getBusLocationOntime">公交实时位置</view>
-			<view @click="turnDirection">转换方向</view>
+			<!-- <view @click="getBusLocationOntime">公交实时位置</view> -->
+			<view style="width: 100%;" @click="turnDirection">横竖转换</view>
 		</view>
 		
 	</view>
@@ -79,37 +79,42 @@
 				isShow:false,//是否显示弹框
 				timeArray:[],//发班时间表数组
 				timer:null,
+				lastPage:'',//记录上一个页面是从哪里进来的
 			}
 		},
 		onLoad(option) {
 			_self = this;
-			_self.stationInfoArray = JSON.parse(decodeURIComponent(option.lineRoute))
+			_self.lastPage = '';
+			_self.stationInfoArray = JSON.parse(decodeURIComponent(option.lineRoute));
 			// console.log(_self.stationInfoArray)
 			//从上个页面获取该条线路是上行还是下行
 			if(_self.stationInfoArray.LineRouteDirection == '上行' || _self.stationInfoArray.LineRouteDirection == 0){
 				_self.lineDirection = 0;
 			}else {
 				_self.lineDirection = 1;
-			}
+			};
 			//获取服务器时间
 			_self.getServerTime();
 			//如果上一个页面是从SearchDetail或者BusQuery跳转过来的，因为里面有时间跟线路ID所以不用请求getBusLineInfoByStationName接口，直接赋值
+			//如果是从搜索页、搜索详情页、首页进来的话有传线路ID，就不需要再去请求getBusLineInfoByStationName接口
 			if(option.lastPage == 'SearchDetail' || option.lastPage == 'BusQuery'){
 				uni.setNavigationBarTitle({
 					title:_self.stationInfoArray.lineName
 				})
+				_self.lastPage = 'BusQuery';
 				//取到时间，转成数组
-				_self.firstLastTimeArray = _self.stationInfoArray.firstLastTime.split('-')
+				_self.firstLastTimeArray = _self.stationInfoArray.firstLastTime.split('-');
 				//取出线路ID
-				_self.lineID = _self.stationInfoArray.lineID
+				_self.lineID = _self.stationInfoArray.lineID;
 				//获取显示的站点名称（起点-终点）
-				_self.startStation = _self.stationInfoArray.StartName + '→' + _self.stationInfoArray.EndName
+				_self.startStation = _self.stationInfoArray.StartName + '→' + _self.stationInfoArray.EndName;
 				//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
 				_self.getStationByLine();
 				//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
 				_self.getBusLocationByStation();
 				
 			}else {
+				_self.lastPage = 'RoutePlan';
 				//设置导航栏标题为线路名称
 				uni.setNavigationBarTitle({
 					title: _self.getLine(_self.stationInfoArray.LineRoute)
@@ -144,17 +149,31 @@
 			},
 			//-------------------------------------------调换公交行驶方向-------------------------------------------
 			turnImageClick:function(){
-				//更换线路方向
-				if(_self.lineDirection == 0){
-					_self.lineDirection = 1;
-					_self.getBusLineInfoByStationName();
-				}else if (_self.lineDirection == 1){
-					_self.lineDirection = 0;
-					_self.getBusLineInfoByStationName();
-				}
 				//更换显示的站点名称,调换起点跟终点的位置
 				var stationArray = _self.startStation.split('→')
 				_self.startStation = stationArray[1] + '→' + stationArray[0]
+				
+				if(_self.lastPage == 'RoutePlan'){
+					//更换线路方向
+					if(_self.lineDirection == 0){
+						_self.lineDirection = 1;
+						_self.getBusLineInfoByStationName();
+					}else if (_self.lineDirection == 1){
+						_self.lineDirection = 0;
+						_self.getBusLineInfoByStationName();
+					}
+				}else {
+					//更换线路方向
+					if(_self.lineDirection == 0){
+						_self.lineDirection = 1;
+						_self.getStationByLine();
+						_self.getBusLocationByStation();
+					}else if (_self.lineDirection == 1){
+						_self.lineDirection = 0;
+						_self.getStationByLine();
+						_self.getBusLocationByStation();
+					}
+				}
 			},
 			//-------------------------------------------调换线路显示的方向-------------------------------------------
 			turnDirection:function(){
@@ -320,7 +339,7 @@
 							// }
 							
 							_self.carLocationArray = res.data.data
-							// console.log('请求实时到站信息成功',_self.carLocationArray)
+							console.log('请求实时到站信息成功',_self.carLocationArray)
 						}else {
 							if(res.data.msg != "无数据！"){
 								uni.showToast({
@@ -501,7 +520,7 @@
 		width: 710rpx;
 		border-radius: 12rpx;
 		background-color: #FFFFFF;
-		padding-top: 50rpx;
+		// padding-top: 50rpx;
 	}
 	.bottomView{
 		position: fixed;
