@@ -70,7 +70,7 @@
 			// 激活步骤的颜色
 			activeColor: {
 				type: String,
-				default: '#4281FF'
+				default: '#35C762'
 			},
 			// 未激活的颜色
 			unActiveColor: {
@@ -110,7 +110,7 @@ $u-steps-item-width: 24rpx;
 		position: relative;
 		min-width: 100rpx;
 		font-size: 26rpx;
-		color: #4281FF;
+		color: #35C762;
 		flex-direction: column;
 		align-items: center;
 		//横向----在这里改圆点跟站点名称的相对位置
@@ -172,7 +172,7 @@ $u-steps-item-width: 24rpx;
 	justify-content: center;
 	width: $u-steps-item-width;
 	height: $u-steps-item-width;
-	border: 2rpx solid #4281FF;
+	border: 2rpx solid #35C762;
 	border-radius: 50%;
 	overflow: hidden;
 	z-index: 998;
