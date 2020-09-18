@@ -13,8 +13,9 @@
 				<!-- 公交车图片 -->
 				<view class="carImage" :class="['carImage--' + direction]" v-for="(carItem,carIndex) in carLocationArray" :key="carIndex" 
 				v-if="index == carItem.stationIndex - 1">
+				    <view style="font-size: 20rpx;width: 140rpx;">{{carItem.registcode}}</view>
 				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
-					<view style="font-size: 20rpx;width: 140rpx;">{{carItem.registcode}}</view>
+					
 				</view>
 				<!-- 圆点 -->
 				<view class="circle" :class="['circle--' + direction]" :style="{
@@ -110,8 +111,9 @@ $u-steps-item-width: 24rpx;
 		text-align: center;//文字对齐方式
 		position: relative;
 		min-width: 100rpx;
-		font-size: 26rpx;
-		color: #35C762;
+		font-size: 36rpx;//原来设置的是26，对方要求大字体
+		font-weight: 700;//原来没有设置这个，对方要求字体加粗
+		// color: #35C762;
 		flex-direction: column;
 		align-items: center;
 		//横向----在这里改圆点跟站点名称的相对位置

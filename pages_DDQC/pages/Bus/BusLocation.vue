@@ -5,18 +5,20 @@
 			<view class="topHead">
 				<view>
 					<view class="topStation">
-						<view class="marginR">{{startStation}}</view>
+						<view class="marginR" style="font-size: 36rpx;">{{startStation}}</view>
 						<!-- <view class="marginR">→</view>
 						<view>{{endStation}}</view> -->
 					</view>
 					<view class="topStation topTime">
 						<view class="marginR">首 {{firstLastTimeArray[0]}}</view>
 						<view class="marginR">末 {{firstLastTimeArray[1]}}</view>
-						<view class="marginR">票价：{{price}}</view>
+						<!-- <view style="margin-left: 30rpx; color: #FFFFFF; marborder-bottom: 1rpx solid #EEEEEE;white-space: nowrap;width: 300rpx; overflow: hidden;text-overflow: ellipsis;">票价：{{price}}</view> -->
 					</view>
 				</view>
 				<image class="turnImage" src="../../static/Bus/turnBusdirection.png" @click="turnImageClick"></image>
 			</view>
+			
+			<view style="margin-top: 20rpx; margin-left: 30rpx; color: #FFFFFF; marborder-bottom: 1rpx solid #EEEEEE;">票价：{{price}}</view>
 			<!-- 时刻表弹框 -->
 			<view class="timeClass">
 				<u-popup v-model="isShow" mode="center" border-radius="14" width="600rpx">
@@ -26,7 +28,7 @@
 					</block>
 				</u-popup>
 			</view>
-			<view class="timeButton" @click="timeButtonClick">发班时刻</view>
+			<view class="timeButton" @click="timeButtonClick">最近发班时刻</view>
 			
 			<!-- 暂时没有数据，先隐藏 -->
 			<view class="topBottom" v-if="false">
@@ -225,7 +227,7 @@
 						Encryption  :  _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						// console.log('请求成功',res)
+						console.log('请求线路信息成功',res)
 						if(res.data.status){
 							//截取出线路方案的站点名称
 							var stationName = _self.getLine(_self.stationInfoArray.LineRoute)
@@ -233,6 +235,8 @@
 							for(var i = 0; i < res.data.data.length; i++) {
 								//取出线路名称相同且线路方向一致的数据
 								if(stationName == res.data.data[i].lineName && _self.lineDirection == res.data.data[i].lineDirection){
+									//取出区间价格
+									_self.price = res.data.data[i].PriceDescribe
 									//取到时间，转成数组
 									_self.firstLastTimeArray = res.data.data[i].firstLastTime.split('-')
 									//取出线路ID
@@ -488,8 +492,9 @@
 	.timeButton{
 		margin-left: $u-contentMarginLeft;
 		margin-top: $u-contentMarginLeft;
-		font-size: 26rpx;
-		width: 130rpx;
+		font-size: 30rpx;
+		font-weight: 600;
+		width: 210rpx;
 		border-radius: 8rpx;
 		padding: 5rpx 10rpx;
 		color: #FFFFFF;

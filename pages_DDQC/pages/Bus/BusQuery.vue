@@ -35,10 +35,13 @@
 						<view @click="routeClick(item)" style="border-bottom: 1rpx solid #eeeeee;padding-bottom: 20rpx;margin-left: 77rpx;margin-right: 30rpx;">
 							<view class="lineView">
 								<view style="font-weight: 900;font-size: 30rpx;color: #343434;">{{item.lineName}}</view>
+								<view class="lineText">
+									<text style="color: #fd6666;font-size: 28rpx;">{{item.endName}}</text>方向
+								</view>
 								<!-- <view class="lineText" style="font-weight: 900;font-size: 30rpx;color: #4282FF;">{{item.arriveTime}}</view> -->
 							</view>
 							<view class="lineView">
-								<view class="lineText">{{item.endName}}</view>
+								<!-- <view class="lineText">{{item.endName}}</view> -->
 								<!-- <view class="lineText">{{item.distance}}</view> -->
 							</view>
 						</view>
@@ -199,6 +202,7 @@
 				})
 			},
 			//--------------------------------------根据站点名称获取某条线路距离某个站点即将到站车辆信息--------------------------------------
+			//这个接口暂时没有用到
 			getLineDetailInfo:function(lineId,direction,stationName,lineData){
 				uni.request({
 					url:$BusInterface.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirectionStationName.Url,
@@ -431,7 +435,7 @@
 	}
 	.lineText{
 		font-weight: 300;
-		font-size: 26rpx;
+		font-size: 25rpx;
 		color: #343434;
 	}
 	.bottomView{

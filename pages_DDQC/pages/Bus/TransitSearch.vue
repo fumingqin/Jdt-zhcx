@@ -2,7 +2,7 @@
 <template>
 	<view>
 		<view class="header-view">
-			<u-search placeholder="搜索线路/站点" v-model="keyword" height="80" @search="busSearch" @custom="busSearch" @change="clear"></u-search>
+			<u-search placeholder="搜索线路/站点" v-model="keyword" height="80" @search="busSearch" @custom="busSearch" @change="keyWordChange"></u-search>
 		</view>
 		<view class="history-main" v-if="!IsSearch">
 			<view class="history-main-view">
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+	var that;
 	export default {
 		data() {
 			return {
@@ -66,6 +67,7 @@
 			}
 		},
 		onLoad(option) {
+			that = this;
 			this.historyArr = uni.getStorageSync("history") || [];
 			this.currnet = option.current
 			if(option.type){
@@ -74,7 +76,8 @@
 			}
 		},
 		methods: {
-			//清除历史记录
+//——————————————————————————————————————方法区——————————————————————————————————————
+			//--------------------------------------清除历史记录--------------------------------------
 			deleteHistory: function() {
 				let that = this;
 				uni.showModal({
@@ -88,7 +91,25 @@
 					}
 				})
 			},
-			//公交查询
+			//--------------------------------------搜索框值变化时触发--------------------------------------
+			keyWordChange: function(value) {
+				if (this.keyword == "") {
+					//当输入框里面的值为空时清空数组
+					this.searchArr = [];
+					this.IsSearch = false;
+				}else {
+					//当输入框里面的值发生变化的时候时时搜索
+					that.keyword = value;
+					that.busSearch();
+				}
+			},
+//——————————————————————————————————————方法区结束——————————————————————————————————————
+			
+			
+			
+//——————————————————————————————————————网络请求开始——————————————————————————————————————
+
+			//--------------------------------------公交查询--------------------------------------
 			busSearch: function() {
 				let that = this;
 				that.searchArr = [];
@@ -99,7 +120,7 @@
 				if (that.keyword != "") {
 					uni.request({
 						url: that.$Bus.BusInterface.getBusLineInfoByLineName.Url,
-						method: 'GET',
+						method: that.$Bus.BusInterface.getBusLineInfoByLineName.method,
 						data: {
 							lineName: that.keyword,
 							encryption: that.$Bus.BusInterface.publicCode.encryption,
@@ -112,7 +133,7 @@
 						complete(res) {
 							uni.request({
 								url: that.$Bus.BusInterface.getBusStationInfoByStationName.Url,
-								method: 'GET',
+								method: that.$Bus.BusInterface.getBusStationInfoByStationName.method,
 								data: {
 									stationName: that.keyword,
 									encryption: that.$Bus.BusInterface.publicCode.encryption,
@@ -140,7 +161,7 @@
 					})
 				}
 			},
-			//点击查询的结果
+			//--------------------------------------点击查询的结果--------------------------------------
 			itemClick: function(item) {
 				let that = this;
 				that.IsSearch = false;
@@ -191,13 +212,7 @@
 				that.historyArr.unshift(item);
 				uni.setStorageSync("history", that.historyArr);
 			},
-			//搜索框清空时触发
-			clear: function() {
-				if (this.keyword == "") {
-					this.searchArr = [];
-					this.IsSearch = false;
-				}
-			}
+//——————————————————————————————————————网络请求结束——————————————————————————————————————
 		}
 	}
 </script>
