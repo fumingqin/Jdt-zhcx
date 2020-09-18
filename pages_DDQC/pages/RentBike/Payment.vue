@@ -246,7 +246,7 @@
 									})
 									setTimeout(function() {
 										uni.redirectTo({
-											// url: '../GRZY/zy_homepage'
+											 url: '../GRZY/zy_homepage'
 										})
 									}, 1500)
 								} else {
