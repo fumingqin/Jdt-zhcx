@@ -201,7 +201,7 @@
 		flex-direction: row;
 		border-radius: 16rpx;
 	}
-`
+
 	.site-name-font {
 		font-size: 30rpx;
 		font-family: Source Han Sans SC;

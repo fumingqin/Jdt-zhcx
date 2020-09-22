@@ -377,7 +377,8 @@
 						if(res.data.status){
 							for(var i = 0; i < res.data.data.length; i++){
 								var timeArray = {
-									foreStartTime : _self.getScheduleTime(res.data.data[i].foreStartTime)[1]
+									//去掉日期，截取时间，去掉秒
+									foreStartTime : _self.getScheduleTime(res.data.data[i].foreStartTime)[1].substring(0,5)
 								} 
 								_self.timeArray.push(timeArray)
 							}
@@ -431,7 +432,8 @@
 	.myView {
 		flex-direction: column;
 		width: 100%;
-		height: 100%;
+		// height: 100%;
+		padding-bottom: 80rpx;
 		background: #F1F1F1;
 	}
 	
