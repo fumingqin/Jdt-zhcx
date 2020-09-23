@@ -126,6 +126,7 @@
 							encryption: that.$Bus.BusInterface.publicCode.encryption,
 						},
 						success(res) {
+						console.log(res)
 							if (res.data.status) {
 								that.searchArr = res.data.data;
 							}
@@ -140,7 +141,7 @@
 								},
 								success(res) {
 									if (res.data.data.length > 0) {
-										if (that.searchArr = []) {
+										if (that.searchArr == []) {
 											that.searchArr = res.data.data;
 										} else {
 											that.searchArr.push(res.data.data);
