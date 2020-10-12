@@ -143,7 +143,7 @@
 			setBusTimeInterval:function(){
 				_self.timer = setInterval(()=>{
 					_self.getBusLocationByStation();
-				},10000)
+				},1000000)
 			},
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
 			getBusLocationOntime:function(){
@@ -243,8 +243,8 @@
 									_self.lineID = res.data.data[i].lineID
 									//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
 									_self.getStationByLine();
-									//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
-									_self.getBusLocationByStation();
+									//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向(移到获取站点的方法里)
+									//_self.getBusLocationByStation();
 								}
 							}
 						}else {
@@ -283,6 +283,8 @@
 									_self.markStationIndex = i;
 								}
 							}
+							//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
+							_self.getBusLocationByStation();
 						}else {
 							uni.showToast({
 								title:res.data.msg,
@@ -307,7 +309,8 @@
 						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						// console.log('请求实时到站信息成功',res)
+						 console.log('请求实时到站信息成功',res)
+						 console.log(_self.stationList.length)
 						if(res.data.status){
 							for(var i = 0; i < res.data.data.length; i++){
 								//车辆时时到站时间戳
@@ -318,6 +321,9 @@
 								var miun = date / (60*60)
 								if(miun >= 30){
 									res.data.data.splice(i,1)
+								}
+								if(res.data.data[i].stationIndex>_self.stationList.length&&_self.stationList.length>0){
+									res.data.data[i].stationIndex=res.data.data[i].stationIndex-_self.stationList.length;
 								}
 							}
 							//这里的方法不需要，不要管
@@ -342,7 +348,7 @@
 							// 	}
 							// }
 							
-							_self.carLocationArray = res.data.data
+							_self.carLocationArray = res.data.data;
 							console.log('请求实时到站信息成功',_self.carLocationArray)
 						}else {
 							if(res.data.msg != "无数据！"){
