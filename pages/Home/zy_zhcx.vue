@@ -600,7 +600,7 @@
 
 			natTo2: function(e) {
 				var that = this;
-				if (that.userInfo !== '') {
+				if (that.userInfo !== ''||e=="../../pages_DDQC/pages/Bus/BusQuery") {
 					uni.navigateTo({
 						url: e,
 						animationType: 'zoom-fade-out',
