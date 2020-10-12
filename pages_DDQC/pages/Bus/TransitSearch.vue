@@ -15,9 +15,9 @@
 			</view>
 			<view class="history-content" v-if="historyArr.length>0">
 				<view class="history-content-view">
-					<view v-for="(item,index) in historyArr" :key="index" hover-class="view_hover"  @click="itemClick(item)">
+					<view v-for="(item,index) in historyArr" :key="index" hover-class="view_hover" @click="itemClick(item)">
 						<!--begin 搜索线路显示结果 -->
-						<view class="history-content-detial" v-if="item.endName&&IsHome"> 
+						<view class="history-content-detial" v-if="item.endName&&IsHome">
 							<view class="history-content-name">
 								<image src="../../static/Bus/bus.png" class="history-content-img"></image>
 							</view>
@@ -26,9 +26,9 @@
 							<view v-if="item.endName">{{item.endName}}</view>
 						</view>
 						<!--end 搜索线路显示结果 -->
-						
+
 						<!--begin 搜索站点显示结果 -->
-						<view class="history-content-detial" v-if="!item.endName"> 
+						<view class="history-content-detial" v-if="!item.endName">
 							<view class="history-content-name">
 								<image src="../../static/Bus/site.png" class="history-content-img"></image>
 							</view>
@@ -61,22 +61,22 @@
 				IsSearch: false, //是否点击搜索
 				historyArr: [],
 				searchArr: [],
-				currnet:'',//当前是从哪个页面进来
-				type:'',//起点/终点
-				IsHome:true,
+				currnet: '', //当前是从哪个页面进来
+				type: '', //起点/终点
+				IsHome: true,
 			}
 		},
 		onLoad(option) {
 			that = this;
 			this.historyArr = uni.getStorageSync("history") || [];
 			this.currnet = option.current
-			if(option.type){
+			if (option.type) {
 				this.type = option.type;
-				this.IsHome=false;
+				this.IsHome = false;
 			}
 		},
 		methods: {
-//——————————————————————————————————————方法区——————————————————————————————————————
+			//——————————————————————————————————————方法区——————————————————————————————————————
 			//--------------------------------------清除历史记录--------------------------------------
 			deleteHistory: function() {
 				let that = this;
@@ -97,25 +97,25 @@
 					//当输入框里面的值为空时清空数组
 					this.searchArr = [];
 					this.IsSearch = false;
-				}else {
+				} else {
 					//当输入框里面的值发生变化的时候时时搜索
 					that.keyword = value;
 					that.busSearch();
 				}
 			},
-//——————————————————————————————————————方法区结束——————————————————————————————————————
-			
-			
-			
-//——————————————————————————————————————网络请求开始——————————————————————————————————————
+			//——————————————————————————————————————方法区结束——————————————————————————————————————
+
+
+
+			//——————————————————————————————————————网络请求开始——————————————————————————————————————
 
 			//--------------------------------------公交查询--------------------------------------
 			busSearch: function() {
 				let that = this;
 				that.searchArr = [];
 				uni.showLoading({
-					title:"搜索中...",
-					mask:true
+					title: "搜索中...",
+					mask: true
 				})
 				if (that.keyword != "") {
 					uni.request({
@@ -126,7 +126,6 @@
 							encryption: that.$Bus.BusInterface.publicCode.encryption,
 						},
 						success(res) {
-						console.log(res)
 							if (res.data.status) {
 								that.searchArr = res.data.data;
 							}
@@ -140,11 +139,14 @@
 									encryption: that.$Bus.BusInterface.publicCode.encryption,
 								},
 								success(res) {
+									console.log(res.data.data)
 									if (res.data.data.length > 0) {
 										if (that.searchArr == []) {
 											that.searchArr = res.data.data;
 										} else {
-											that.searchArr.push(res.data.data);
+											for (var i = 0; i < res.data.data.length; i++) {
+												that.searchArr.push(res.data.data[i]);
+											}
 										}
 									}
 								},
@@ -167,53 +169,54 @@
 				let that = this;
 				that.IsSearch = false;
 				//如果是从公交首页进来的话
-				if(that.currnet == 'BusQuery'){
-					if(that.type == '起点'){
+				if (that.currnet == 'BusQuery') {
+					if (that.type == '起点') {
 						//当前是起点
 						uni.$emit('busStartStaionChange', {
-						    data: item.stationName
+							data: item.stationName
 						});
 						uni.navigateBack();
-					}else if(that.type == '终点'){
+					} else if (that.type == '终点') {
 						//当前是终点
 						uni.$emit('busEndStaionChange', {
-						    data: item.stationName
+							data: item.stationName
 						});
 						uni.navigateBack();
 					}
-				}else {
-					if(item.stationName){
+				} else {
+					if (item.stationName) {
 						uni.navigateTo({
-							url:"./SearchDetail?stationName="+item.stationName,
+							url: "./SearchDetail?stationName=" + item.stationName,
 						})
-					}else{
+					} else {
 						//数组字段统一
 						var itemArray = {
-							StartName           : item.startName,
-							EndName             : item.endName,
-							lineID              : item.lineID,
-							firstLastTime       : item.firstLastTime,
-							LineRouteDirection  : item.lineDirection,
-							lineName            : item.lineName,
-							ChangStation        : item.startName,
+							StartName: item.startName,
+							EndName: item.endName,
+							lineID: item.lineID,
+							firstLastTime: item.firstLastTime,
+							LineRouteDirection: item.lineDirection,
+							lineName: item.lineName,
+							ChangStation: item.startName,
 						}
 						uni.navigateTo({
-							url:'./BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(itemArray)) + '&lastPage=' + 'SearchDetail'
+							url: './BusLocation?lineRoute=' + encodeURIComponent(JSON.stringify(itemArray)) + '&lastPage=' +
+								'SearchDetail'
 						})
 					}
 				}
 				for (var i = 0; i < that.historyArr.length; i++) {
-					if (item.lineName&&item.lineName == that.historyArr[i].lineName && item.endName == that.historyArr[i].endName) {
-						that.historyArr.splice(i,1);
+					if (item.lineName && item.lineName == that.historyArr[i].lineName && item.endName == that.historyArr[i].endName) {
+						that.historyArr.splice(i, 1);
 					}
-					if(item.stationName&&item.stationName== that.historyArr[i].stationName){
-						that.historyArr.splice(i,1);
+					if (item.stationName && item.stationName == that.historyArr[i].stationName) {
+						that.historyArr.splice(i, 1);
 					}
 				}
 				that.historyArr.unshift(item);
 				uni.setStorageSync("history", that.historyArr);
 			},
-//——————————————————————————————————————网络请求结束——————————————————————————————————————
+			//——————————————————————————————————————网络请求结束——————————————————————————————————————
 		}
 	}
 </script>
@@ -265,11 +268,11 @@
 		align-items: center;
 		padding: 15rpx 0;
 	}
- 
+
 	.history-content-name {
 		padding-right: 15rpx;
 	}
- 
+
 	.history-content-img {
 		width: 32rpx;
 		height: 32rpx;
@@ -285,8 +288,9 @@
 		border-bottom: solid 1rpx #F5F5F5;
 		font-size: 30rpx;
 	}
-	.view_hover{
-		transition: all .3s;//过度
+
+	.view_hover {
+		transition: all .3s; //过度
 		opacity: 0.9;
 		background: #bdbdbd;
 	}
