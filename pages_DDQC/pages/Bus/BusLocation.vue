@@ -143,7 +143,7 @@
 			setBusTimeInterval:function(){
 				_self.timer = setInterval(()=>{
 					_self.getBusLocationByStation();
-				},1000000)
+				},100000)
 			},
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
 			getBusLocationOntime:function(){
