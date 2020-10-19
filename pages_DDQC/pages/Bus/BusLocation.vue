@@ -4,21 +4,21 @@
 		<view class="topContentInfo">
 			<view class="topHead">
 				<view>
-					<view class="topStation">
+					<view class="topStation" style="font-weight: bolder;">
 						<view class="marginR" style="font-size: 36rpx;">{{startStation}}</view>
 						<!-- <view class="marginR">→</view>
 						<view>{{endStation}}</view> -->
 					</view>
-					<view class="topStation topTime">
+					<view class="topStation topTime" style="color: #7B7A7D;">
 						<view class="marginR">首 {{firstLastTimeArray[0]}}</view>
 						<view class="marginR">末 {{firstLastTimeArray[1]}}</view>
 						<!-- <view style="margin-left: 30rpx; color: #FFFFFF; marborder-bottom: 1rpx solid #EEEEEE;white-space: nowrap;width: 300rpx; overflow: hidden;text-overflow: ellipsis;">票价：{{price}}</view> -->
 					</view>
 				</view>
-				<image class="turnImage" src="../../static/Bus/turnBusdirection.png" @click="turnImageClick"></image>
+				<image class="turnImage" src="../../static/Bus/turnDirectionGreen.png" @click="turnImageClick"></image>
 			</view>
 			
-			<view style="margin-top: 20rpx; margin-left: 30rpx; color: #FFFFFF; marborder-bottom: 1rpx solid #EEEEEE;">票价：{{price}}</view>
+			<view style="margin-top: 20rpx; margin-left: 30rpx; color: #7B7A7D; marborder-bottom: 1rpx solid #EEEEEE;">票价：{{price}}</view>
 			<!-- 时刻表弹框 -->
 			<view class="timeClass">
 				<u-popup v-model="isShow" mode="center" border-radius="14" width="600rpx">
@@ -27,6 +27,10 @@
 						<view class="timeClass_text timeClass_time">{{item.foreStartTime}}</view>
 					</block>
 				</u-popup>
+			</view>
+			<view class="busRemarks">
+				备注：<image class="busImg" src="../../static/Bus/busLocation.png"></image> <text>到站</text>
+				<image class="busImg" src="../../static/Bus/nextBus.png"></image> <text>开往下一站</text>
 			</view>
 			<view class="timeButton" @click="timeButtonClick">最近发班时刻</view>
 			
@@ -111,10 +115,11 @@
 				//获取显示的站点名称（起点-终点）
 				_self.startStation = _self.stationInfoArray.StartName + '→' + _self.stationInfoArray.EndName;
 				//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
-				_self.getStationByLine();
+				// _self.getStationByLine();
 				//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
-				_self.getBusLocationByStation();
-				
+				// _self.getBusLocationByStation();
+				//获取站点信息跟到站车辆信息的整合数据
+				_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 			}else {
 				_self.lastPage = 'RoutePlan';
 				//设置导航栏标题为线路名称
@@ -126,6 +131,7 @@
 				//如果上一个页面是从RoutePlan页面进来的需要先去获取时间跟线路ID
 				//根据站点查询线路信息（时间、线路ID）
 				_self.getBusLineInfoByStationName();
+				
 			}
 			//设置定时器，每十秒刷新一次公交位置信息
 			_self.setBusTimeInterval();
@@ -142,12 +148,14 @@
 			//-------------------------------------------设置定时器，10秒获取一次公交位置信息-------------------------------------------
 			setBusTimeInterval:function(){
 				_self.timer = setInterval(()=>{
-					_self.getBusLocationByStation();
-				},100000)
+					// _self.getBusLocationByStation();
+					_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+				},10000)
 			},
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
 			getBusLocationOntime:function(){
-				_self.getBusLocationByStation();
+				// _self.getBusLocationByStation();
+				_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 			},
 			//-------------------------------------------调换公交行驶方向-------------------------------------------
 			turnImageClick:function(){
@@ -159,21 +167,25 @@
 					//更换线路方向
 					if(_self.lineDirection == 0){
 						_self.lineDirection = 1;
-						_self.getBusLineInfoByStationName();
+						// _self.getBusLineInfoByStationName();
+						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 					}else if (_self.lineDirection == 1){
 						_self.lineDirection = 0;
-						_self.getBusLineInfoByStationName();
+						// _self.getBusLineInfoByStationName();
+						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 					}
 				}else {
 					//更换线路方向
 					if(_self.lineDirection == 0){
 						_self.lineDirection = 1;
-						_self.getStationByLine();
-						_self.getBusLocationByStation();
+						// _self.getStationByLine();
+						// _self.getBusLocationByStation();
+						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 					}else if (_self.lineDirection == 1){
 						_self.lineDirection = 0;
-						_self.getStationByLine();
-						_self.getBusLocationByStation();
+						// _self.getStationByLine();
+						// _self.getBusLocationByStation();
+						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 					}
 				}
 			},
@@ -242,9 +254,11 @@
 									//取出线路ID
 									_self.lineID = res.data.data[i].lineID
 									//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
-									_self.getStationByLine();
+									// _self.getStationByLine();
 									//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向(移到获取站点的方法里)
 									//_self.getBusLocationByStation();
+									//获取站点信息跟到站车辆信息的整合数据--这个接口需要用到线路ID，线路方向
+									_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 								}
 							}
 						}else {
@@ -276,7 +290,7 @@
 						uni.hideLoading()
 						// console.log('站点信息',res)
 						if(res.data.status){
-							_self.stationList = res.data.data
+							// _self.stationList = res.data.data
 							//筛选出目标站点的下标，要让目标站点滚动到屏幕中心
 							for(var i = 0; i < res.data.data.length; i++){
 								if(_self.stationInfoArray.ChangStation == res.data.data[i].stationName){
@@ -310,7 +324,6 @@
 					},
 					success(res) {
 						 console.log('请求实时到站信息成功',res)
-						 console.log(_self.stationList.length)
 						if(res.data.status){
 							for(var i = 0; i < res.data.data.length; i++){
 								//车辆时时到站时间戳
@@ -361,6 +374,35 @@
 					},
 					fail(res) {
 						console.log('请求实时到站信息失败',res)
+					}
+				})
+			},
+			//----------------------------------根据线路编号和运行方向获取某条线路站点信息和即将到站的车辆信息（站点信息和到站车辆信息整合）----------------------------------
+			getBusLineArriveLeaveStationInfoByLineIdDirection:function(){
+				uni.request({
+					url: _self.$Bus.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirection.Url,
+					method: _self.$Bus.BusInterface.getBusLineArriveLeaveStationInfoByLineIdDirection.method,
+					data:{
+						lineId     : _self.lineID,
+						direction  : _self.lineDirection,
+						Encryption : _self.$Bus.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						uni.hideLoading()
+						
+						if(res.data.status){
+							console.log('站点信息跟到站车辆信息',res);
+							_self.stationList = res.data.data;
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
+						}
+					},
+					fail(res) {
+						uni.hideLoading()
+						console.log('请求失败',res)
 					}
 				})
 			},
@@ -450,7 +492,7 @@
 		margin-left: $u-itemtMarginLeft;
 		margin-right: $u-itemtMarginLeft;
 		border-radius: 12rpx;
-		background-color: #35C762;
+		// background-color: #35C762;
 	}
 	.topHead {
 		margin-left: $u-contentMarginLeft;
@@ -458,12 +500,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-bottom: 1rpx solid #EEEEEE;
+		border-bottom: 1rpx solid #7B7A7D;
 	}
 	.topStation{
 		display: flex;
 		align-items: center;
-		color: #FFFFFF;
+		color: #3C8CD8;
 		font-size: 30rpx;
 	}
 	.topTime{
@@ -497,6 +539,20 @@
 			font-weight: 300;
 		}
 	}
+	.busRemarks{
+		// justify-content: center;
+		display: flex;
+		align-items: center;
+		margin-left: $u-contentMarginLeft;
+		margin-top: $u-contentMarginLeft;
+		.busImg{
+			width: 30rpx;
+			height: 30rpx;
+			margin-right: 15rpx;
+			margin-left: 10rpx;
+		}
+	}
+	
 	.timeButton{
 		margin-left: $u-contentMarginLeft;
 		margin-top: $u-contentMarginLeft;
@@ -505,8 +561,8 @@
 		width: 210rpx;
 		border-radius: 8rpx;
 		padding: 5rpx 10rpx;
-		color: #FFFFFF;
-		border: 1rpx solid #FFFFFF;
+		color: #35C762;
+		border: 1rpx solid #35C762;
 	}
 	.topBottom{
 		margin-left: $u-contentMarginLeft;

@@ -11,16 +11,27 @@
 			<!-- 第二步：创建子部件 -->
 			<view class="bus-steps_item" :class="['bus-steps_item--' + direction]" v-for="(item, index) in list" :key="index">
 				<!-- 公交车图片 -->
-				<view class="carImage" :class="['carImage--' + direction]" v-for="(carItem,carIndex) in carLocationArray" :key="carIndex" 
+				<!-- <view class="carImage" :class="['carImage--' + direction]" v-for="(carItem,carIndex) in carLocationArray" :key="carIndex" 
 				v-if="index == carItem.stationIndex - 1">
 				    <view style="font-size: 20rpx;width: 140rpx;">{{carItem.registcode}}</view>
 				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
-					
+				</view> -->
+				<!-- 车辆进站图标 -->
+				<view class="carImage" :class="['carImage--' + direction]" v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 0">
+				    <!-- 会存在多辆车同时到站的情况，显示第一辆车的车牌 -->
+				    <view style="font-size: 20rpx;width: 140rpx;">{{item.mVehicleArriveLeaveInfo[0].registcode}}</view>
+				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
+				</view>
+				<!-- 车辆出站图标 -->
+				<view class="carOutImage" :class="['carOutImage--' + direction]" v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 1">
+				    <!-- 会存在多辆车同时到站的情况，显示第一辆车的车牌 -->
+				    <view style="font-size: 20rpx;width: 140rpx;">{{item.mVehicleArriveLeaveInfo[0].registcode}}</view>
+				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/nextBus.png"></image>
 				</view>
 				<!-- 圆点 -->
 				<view class="circle" :class="['circle--' + direction]" :style="{
-					backgroundColor: current == item.stationName ? activeColor : unActiveColor,
-					borderColor: current == item.stationName ? activeColor : unActiveColor,
+					backgroundColor: current == item.stationName ? activeColor : (item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 0 ? activeColor : unActiveColor),
+					borderColor: current == item.stationName ? activeColor : (item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 0 ? activeColor : unActiveColor),
 				}" ></view>
 				
 				<!-- 起点/终点样式 -->
@@ -28,7 +39,7 @@
 				<view class="startEnd" :class="['startEnd--' + direction]" style="background-color: #FF3904;" v-if="index == list.length - 1">终</view>
 				<!-- 站点名称 -->
 				<text class="stationName" :class="['bus-steps_item__stationName--' + direction]"  :style="{
-					color: current == item.stationName ? activeColor : unActiveColor,
+					color: current == item.stationName ? activeColor : (item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 0 ? activeColor : unActiveColor),
 				}">{{index + 1}}{{item.stationName}}</text>
 				<!-- 连接线 -->
 				<view class="u-steps__item__line" :class="['u-steps__item__line--' + mode]" v-if="index < list.length - 1">
@@ -203,7 +214,22 @@ $u-steps-item-width: 24rpx;
 		margin-top: -90rpx;//数值越大越往下移
 	}
 }
-
+//公交车出站图片的样式
+.carOutImage{
+	position: relative;
+	//竖向样式
+	&--column{
+		position: absolute;//这里不设置绝对定位的话，公交图片会跑到左边并且圆点和站点名会收到影响向右移
+		margin-top: 20rpx;
+		right: 60rpx;
+	}
+	//横向样式
+	&--row{
+		position: absolute;//这里不设置绝对定位的话，圆点会往上移动
+		margin-top: -90rpx;//数值越大越往下移
+		margin-left: 50rpx;
+	}
+}
 
 .imageClass{
 	display: flex;
@@ -214,6 +240,7 @@ $u-steps-item-width: 24rpx;
 	width: 20rpx;//横向样式站点的宽度
 	margin-top: 30rpx;//横向时站点名称与圆点的距离
 	margin-bottom: 90rpx;//站点与底部的距离
+	
 }
 .startEnd{
 	width: 50rpx;

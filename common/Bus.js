@@ -71,6 +71,11 @@ const BusInterface = {
 		name: '换乘',
 		method: method,
 	},
+	getBusLineArriveLeaveStationInfoByLineIdDirection:{
+		Url: Url + '/api/Bus/getBusLineArriveLeaveStationInfoByLineIdDirection',
+		name: '获取站点信息跟到站车辆信息',
+		method: method,
+	}
 }
 
 // 接口声明区
