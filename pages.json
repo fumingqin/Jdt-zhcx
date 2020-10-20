@@ -1171,7 +1171,7 @@
 					}
 				}
 			    ,{
-                    "path" : "pages_DDQC/BusMapLocation",
+                    "path" : "pages/Bus/BusMapLocation",
                     "style" :                                                                                    
                 {
                     "navigationBarTitleText": "公交位置",
