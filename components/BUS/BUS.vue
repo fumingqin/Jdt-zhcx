@@ -20,13 +20,21 @@
 				<view class="carImage" :class="['carImage--' + direction]" v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 0">
 				    <!-- 会存在多辆车同时到站的情况，显示第一辆车的车牌 -->
 				    <view style="font-size: 20rpx;width: 140rpx;">{{item.mVehicleArriveLeaveInfo[0].registcode}}</view>
-				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
+					<view style="display: flex;align-items: center;justify-content: center;">
+						<image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
+						<text class="busNum" :class="['busNum--' + 'in']" v-if="item.mVehicleArriveLeaveInfo.length >= 2">x{{item.mVehicleArriveLeaveInfo.length}}</text>
+					</view>
+				    
 				</view>
 				<!-- 车辆出站图标 -->
 				<view class="carOutImage" :class="['carOutImage--' + direction]" v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 1">
 				    <!-- 会存在多辆车同时到站的情况，显示第一辆车的车牌 -->
 				    <view style="font-size: 20rpx;width: 140rpx;">{{item.mVehicleArriveLeaveInfo[0].registcode}}</view>
-				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/nextBus.png"></image>
+					<view style="display: flex;align-items: center;justify-content: center;">
+						<image  class="carLocation" src="../../pages_DDQC/static/Bus/nextBus.png"></image>
+						<text class="busNum" :class="['busNum--' + 'out']" v-if="item.mVehicleArriveLeaveInfo.length >= 2">x{{item.mVehicleArriveLeaveInfo.length}}</text>
+					</view>
+				    
 				</view>
 				<!-- 圆点 -->
 				<view class="circle" :class="['circle--' + direction]" :style="{
@@ -178,6 +186,17 @@ $u-steps-item-width: 24rpx;
 	// min-width: 60rpx;
 	width: 56rpx;
 	height: 34rpx;
+}
+.busNum{
+	font-size: 35rpx;
+	
+	margin-left: 10rpx;
+	&--in {
+		color: #007AFF;
+	}
+	&--out {
+		color: #35C762;
+	}
 }
 //圆圈的样式
 .circle{
