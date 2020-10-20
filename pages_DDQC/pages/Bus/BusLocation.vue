@@ -141,6 +141,14 @@
 			clearInterval(_self.timer);
 			_self.timer = null;
 		},
+		onNavigationBarButtonTap(option) {
+			if(option.index == 0){
+				//跳转到公交车实时位置页面
+				uni.navigateTo({
+					url:'./BusMapLocation'
+				})
+			}
+		},
 		methods: {
 //-------------------------------------------功能方法模块开始-------------------------------------------
 			

@@ -1146,7 +1146,18 @@
 				}, {
 					"path": "pages/Bus/BusLocation",
 					"style": {
-						"navigationBarTitleText": "公交位置"
+						"navigationBarTitleText": "公交位置",
+						"app-plus": {
+							"titleNView": {
+								"buttons": [{
+									"text": "位置",
+									"type": "transparent",
+									"float": "right",
+									"fontSize": "16px",
+									"width": "77px"
+								}]
+							}
+						}
 					}
 				}, {
 					"path": "pages/Bus/RouteDetail",
@@ -1159,7 +1170,16 @@
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
 				}
-			]
+			    ,{
+                    "path" : "pages_DDQC/BusMapLocation",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "公交位置",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 		},
 		//---------------------------------------------第八个包：检测预约------------------------------------------
 		{
