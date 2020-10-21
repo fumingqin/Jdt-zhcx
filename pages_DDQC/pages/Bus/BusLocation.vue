@@ -10,8 +10,8 @@
 						<view>{{endStation}}</view> -->
 					</view>
 					<view class="topStation topTime" style="color: #7B7A7D;">
-						<view class="marginR">首 {{firstLastTimeArray[0]}}</view>
-						<view class="marginR">末 {{firstLastTimeArray[1]}}</view>
+						<view class="marginR">{{FirstLastShift}}</view>
+						<!-- <view class="marginR">末 {{firstLastTimeArray[1]}}</view> -->
 						<!-- <view style="margin-left: 30rpx; color: #FFFFFF; marborder-bottom: 1rpx solid #EEEEEE;white-space: nowrap;width: 300rpx; overflow: hidden;text-overflow: ellipsis;">票价：{{price}}</view> -->
 					</view>
 				</view>
@@ -31,6 +31,9 @@
 			<view class="busRemarks">
 				备注：<image class="busImg" src="../../static/Bus/busLocation.png"></image> <text>到站</text>
 				<image class="busImg" src="../../static/Bus/nextBus.png"></image> <text>开往下一站</text>
+			</view>
+			<view style="margin-left: 30rpx;margin-top: 20rpx;">
+				获得<text style="color: #E3424B;margin-left: 10rpx;margin-right: 10rpx;font-size: 40rpx;">{{onlineBusNum}}</text>辆公交车的实时位置
 			</view>
 			<view class="timeButton" @click="timeButtonClick">最近发班时刻</view>
 			
@@ -86,6 +89,8 @@
 				timeArray:[],//发班时间表数组
 				timer:null,
 				lastPage:'',//记录上一个页面是从哪里进来的
+				onlineBusNum:0,//当前在线上的车辆数量
+				FirstLastShift:'',//首末站发车时间
 			}
 		},
 		onLoad(option) {
@@ -104,9 +109,12 @@
 			//如果上一个页面是从SearchDetail或者BusQuery跳转过来的，因为里面有时间跟线路ID所以不用请求getBusLineInfoByStationName接口，直接赋值
 			//如果是从搜索页、搜索详情页、首页进来的话有传线路ID，就不需要再去请求getBusLineInfoByStationName接口
 			if(option.lastPage == 'SearchDetail' || option.lastPage == 'BusQuery'){
-				uni.setNavigationBarTitle({
-					title:_self.stationInfoArray.lineName
-				})
+				setTimeout(function(){
+					uni.setNavigationBarTitle({
+						title:_self.stationInfoArray.lineName
+					})
+				},50)
+				
 				_self.lastPage = 'BusQuery';
 				//取到时间，转成数组
 				_self.firstLastTimeArray = _self.stationInfoArray.firstLastTime.split('-');
@@ -114,10 +122,11 @@
 				_self.lineID = _self.stationInfoArray.lineID;
 				//获取显示的站点名称（起点-终点）
 				_self.startStation = _self.stationInfoArray.StartName + '→' + _self.stationInfoArray.EndName;
+				_self.getBusLineInfoByStationName(_self.stationInfoArray.StartName,_self.stationInfoArray.lineName);
 				//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
 				// _self.getStationByLine();
 				//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向
-				// _self.getBusLocationByStation();
+				_self.getBusLocationByStation();
 				//获取站点信息跟到站车辆信息的整合数据
 				_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
 			}else {
@@ -130,22 +139,37 @@
 				_self.startStation = station[0].substring(1,station[0].length)
 				//如果上一个页面是从RoutePlan页面进来的需要先去获取时间跟线路ID
 				//根据站点查询线路信息（时间、线路ID）
-				_self.getBusLineInfoByStationName();
+				_self.getBusLineInfoByStationName(_self.getStartStation(_self.stationInfoArray.LineRoute),_self.getLine(_self.stationInfoArray.LineRoute));
 				
 			}
 			//设置定时器，每十秒刷新一次公交位置信息
+			// _self.setBusTimeInterval();
+		},
+		onShow:function(){
+			//unload跟onshow只能设置一次定时器，如果两个方法里面都设置了定时器那么就无法清除定时器
+			//注意：在当前页面清除定时器的话，navigateTo跳转到下一个页面的时候会保存当前页面，无法在onunload里面清除定时器；redirectTo跳转到下一个页面的时候会卸载当前页面
+			//navigateTo跳转到下一个页面返回的话可以重新激活定时器；navigateTo无法在返回当前页面时激活定时器
 			_self.setBusTimeInterval();
 		},
+		onHide:function(){
+			if(_self.timer){
+				//清除定时器
+				clearInterval(_self.timer);
+				_self.timer = null;
+			}
+		},
 		onUnload:function(){
-			//清楚定时器
-			clearInterval(_self.timer);
-			_self.timer = null;
+			if(_self.timer){
+				//清除定时器
+				clearInterval(_self.timer);
+				_self.timer = null;
+			}
 		},
 		onNavigationBarButtonTap(option) {
 			if(option.index == 0){
 				//跳转到公交车实时位置页面
 				uni.navigateTo({
-					url:'./BusMapLocation'
+					url:'./BusMapLocation?lineDirection=' + _self.lineDirection + '&lineID=' + _self.lineID
 				})
 			}
 		},
@@ -156,8 +180,9 @@
 			//-------------------------------------------设置定时器，10秒获取一次公交位置信息-------------------------------------------
 			setBusTimeInterval:function(){
 				_self.timer = setInterval(()=>{
-					// _self.getBusLocationByStation();
+					_self.getBusLocationByStation();
 					_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+					_self.getFirstLastShift();
 				},10000)
 			},
 			//-------------------------------------------获取车辆实时位置-------------------------------------------
@@ -176,11 +201,13 @@
 					if(_self.lineDirection == 0){
 						_self.lineDirection = 1;
 						// _self.getBusLineInfoByStationName();
-						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+						
+						_self.sameMethod();
 					}else if (_self.lineDirection == 1){
 						_self.lineDirection = 0;
 						// _self.getBusLineInfoByStationName();
-						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+						
+						_self.sameMethod();
 					}
 				}else {
 					//更换线路方向
@@ -188,12 +215,12 @@
 						_self.lineDirection = 1;
 						// _self.getStationByLine();
 						// _self.getBusLocationByStation();
-						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+						_self.sameMethod();
 					}else if (_self.lineDirection == 1){
 						_self.lineDirection = 0;
 						// _self.getStationByLine();
 						// _self.getBusLocationByStation();
-						_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+						_self.sameMethod();
 					}
 				}
 			},
@@ -236,21 +263,31 @@
 			
 //-------------------------------------------请求方法模块开始-------------------------------------------
 			
+			//----------------------------------方法抽取----------------------------------
+			sameMethod:function(){
+				//获取整合后的站点信息跟到站车辆信息
+				_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+				//获取公交实时位置
+				_self.getBusLocationByStation();
+				//获取首末站发车时间
+				_self.getFirstLastShift();
+			},
 			
 			//----------------------------------根据站点查询线路信息（时间、线路ID）----------------------------------
-			getBusLineInfoByStationName:function(){
+			getBusLineInfoByStationName:function(startStation,StationName){
 				uni.request({
 					url:_self.$Bus.BusInterface.getBusLineInfoByStationName.Url,
 					method:_self.$Bus.BusInterface.getBusLineInfoByStationName.method,
 					data:{
-						stationName :  _self.getStartStation(_self.stationInfoArray.LineRoute),
+						stationName :  startStation,//_self.getStartStation(_self.stationInfoArray.LineRoute)
 						Encryption  :  _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
 						console.log('请求线路信息成功',res)
 						if(res.data.status){
 							//截取出线路方案的站点名称
-							var stationName = _self.getLine(_self.stationInfoArray.LineRoute)
+							// var stationName = _self.getLine(_self.stationInfoArray.LineRoute);
+							var stationName = StationName;
 							//遍历数组，取出与当前站点相对应的时间
 							for(var i = 0; i < res.data.data.length; i++) {
 								//取出线路名称相同且线路方向一致的数据
@@ -264,9 +301,11 @@
 									//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
 									// _self.getStationByLine();
 									//请求：根据线路查询车辆实时位置信息，这个接口需要用到线路ID，线路方向(移到获取站点的方法里)
-									//_self.getBusLocationByStation();
+									_self.getBusLocationByStation();
 									//获取站点信息跟到站车辆信息的整合数据--这个接口需要用到线路ID，线路方向
 									_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+									//获取首末站发车时间
+									_self.getFirstLastShift();
 								}
 							}
 						}else {
@@ -331,7 +370,7 @@
 						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						 console.log('请求实时到站信息成功',res)
+						 // console.log('请求实时到站信息成功',res)
 						if(res.data.status){
 							for(var i = 0; i < res.data.data.length; i++){
 								//车辆时时到站时间戳
@@ -340,12 +379,12 @@
 								var date = _self.serverTime - arriveTime
 								//得到的时间差是分钟（车辆到站与服务器的时间差），如果时间超过30分钟就不显示
 								var miun = date / (60*60)
-								if(miun >= 30){
+								if(miun >= 40){
 									res.data.data.splice(i,1)
 								}
-								if(res.data.data[i].stationIndex>_self.stationList.length&&_self.stationList.length>0){
-									res.data.data[i].stationIndex=res.data.data[i].stationIndex-_self.stationList.length;
-								}
+								// if(res.data.data[i].stationIndex>_self.stationList.length&&_self.stationList.length>0){
+								// 	res.data.data[i].stationIndex=res.data.data[i].stationIndex-_self.stationList.length;
+								// }
 							}
 							//这里的方法不需要，不要管
 							// var array = [];
@@ -369,8 +408,8 @@
 							// 	}
 							// }
 							
-							_self.carLocationArray = res.data.data;
-							console.log('请求实时到站信息成功',_self.carLocationArray)
+							// _self.carLocationArray = res.data.data;
+							// console.log('请求实时到站信息成功',_self.carLocationArray)
 						}else {
 							if(res.data.msg != "无数据！"){
 								uni.showToast({
@@ -399,7 +438,29 @@
 						uni.hideLoading()
 						
 						if(res.data.status){
-							console.log('站点信息跟到站车辆信息',res);
+							// console.log('站点信息跟到站车辆信息',res);
+							//记录当前时段有几辆车在线
+							_self.onlineBusNum = 0;
+							for(var i = 0; i < res.data.data.length; i++){
+								if (res.data.data[i].mVehicleArriveLeaveInfo.length > 0){
+									for(var j = 0; j < res.data.data[i].mVehicleArriveLeaveInfo.length; j++){
+										//记录当前时段有几辆车在线
+										_self.onlineBusNum ++;
+										var dataArray = res.data.data[i].mVehicleArriveLeaveInfo;
+										//车辆时时到站时间戳
+										var arriveTime = new Date(dataArray[j].generationTime).getTime();
+										//用服务器时间戳减去车辆到站的时间戳
+										var date = _self.serverTime - arriveTime;
+										//得到的时间差是分钟（车辆到站与服务器的时间差），如果时间超过30分钟就不显示
+										var miun = date / (60*60)
+										if(miun >= 40){
+											dataArray.splice(j,1)
+											//如果是进站不再出站车辆执行--操作
+											_self.onlineBusNum --;
+										}
+									}
+								}
+							}
 							_self.stationList = res.data.data;
 						}else {
 							uni.showToast({
@@ -424,7 +485,7 @@
 					method:_self.$Bus.BusInterface.getBusLineScheduleInfoByLineIdDirection.method,
 					data:{
 						lineId    : _self.lineID,
-						direction : _self.direction,
+						direction : _self.lineDirection,
 						Encryption: _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
@@ -461,6 +522,7 @@
 					},
 					success(res) {
 						if(res.data.status){
+							
 							_self.serverTime = new Date(res.data.data).getTime()
 						}else {
 							uni.showToast({
@@ -474,7 +536,33 @@
 					}
 				})
 			},
-			
+			//----------------------------------获取首末站发车时间----------------------------------
+			getFirstLastShift:function(){
+				console.log(_self.lineID,_self.lineDirection)
+				uni.request({
+					url: _self.$Bus.BusInterface.getFirstLastShift.Url,
+					method: _self.$Bus.BusInterface.getFirstLastShift.method,
+					data:{
+						lineId    : _self.lineID,
+						direction : _self.lineDirection,
+						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						console.log('请求首末站发班时间信息成功',res)
+						if(res.data.status){
+							_self.FirstLastShift = res.data.data;
+						}else {
+							uni.showToast({
+								title:res.data.msg,
+								icon:'none'
+							});
+						}
+					},
+					fail(res) {
+						console.log('请求首末站发班时间信息失败',res)
+					}
+				})
+			},
 			
 //-------------------------------------------请求方法模块结束-------------------------------------------
 		}
@@ -551,10 +639,11 @@
 		// justify-content: center;
 		display: flex;
 		align-items: center;
+		
 		margin-left: $u-contentMarginLeft;
 		margin-top: $u-contentMarginLeft;
 		.busImg{
-			width: 30rpx;
+			width: 40rpx;
 			height: 30rpx;
 			margin-right: 15rpx;
 			margin-left: 10rpx;
