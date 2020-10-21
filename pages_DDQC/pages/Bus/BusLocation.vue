@@ -109,9 +109,12 @@
 			//如果上一个页面是从SearchDetail或者BusQuery跳转过来的，因为里面有时间跟线路ID所以不用请求getBusLineInfoByStationName接口，直接赋值
 			//如果是从搜索页、搜索详情页、首页进来的话有传线路ID，就不需要再去请求getBusLineInfoByStationName接口
 			if(option.lastPage == 'SearchDetail' || option.lastPage == 'BusQuery'){
-				uni.setNavigationBarTitle({
-					title:_self.stationInfoArray.lineName
-				})
+				setTimeout(function(){
+					uni.setNavigationBarTitle({
+						title:_self.stationInfoArray.lineName
+					})
+				},50)
+				
 				_self.lastPage = 'BusQuery';
 				//取到时间，转成数组
 				_self.firstLastTimeArray = _self.stationInfoArray.firstLastTime.split('-');
@@ -140,18 +143,33 @@
 				
 			}
 			//设置定时器，每十秒刷新一次公交位置信息
+			// _self.setBusTimeInterval();
+		},
+		onShow:function(){
+			//unload跟onshow只能设置一次定时器，如果两个方法里面都设置了定时器那么就无法清除定时器
+			//注意：在当前页面清除定时器的话，navigateTo跳转到下一个页面的时候会保存当前页面，无法在onunload里面清除定时器；redirectTo跳转到下一个页面的时候会卸载当前页面
+			//navigateTo跳转到下一个页面返回的话可以重新激活定时器；navigateTo无法在返回当前页面时激活定时器
 			_self.setBusTimeInterval();
 		},
 		onHide:function(){
-			//清除定时器
-			clearInterval(_self.timer);
-			_self.timer = null;
+			if(_self.timer){
+				//清除定时器
+				clearInterval(_self.timer);
+				_self.timer = null;
+			}
+		},
+		onUnload:function(){
+			if(_self.timer){
+				//清除定时器
+				clearInterval(_self.timer);
+				_self.timer = null;
+			}
 		},
 		onNavigationBarButtonTap(option) {
 			if(option.index == 0){
 				//跳转到公交车实时位置页面
 				uni.navigateTo({
-					url:'./BusMapLocation'
+					url:'./BusMapLocation?direction=' + _self.direction + '&lineID=' + _self.lineID
 				})
 			}
 		},
