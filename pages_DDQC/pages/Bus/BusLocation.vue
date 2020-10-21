@@ -169,7 +169,7 @@
 			if(option.index == 0){
 				//跳转到公交车实时位置页面
 				uni.navigateTo({
-					url:'./BusMapLocation?direction=' + _self.direction + '&lineID=' + _self.lineID
+					url:'./BusMapLocation?lineDirection=' + _self.lineDirection + '&lineID=' + _self.lineID
 				})
 			}
 		},
