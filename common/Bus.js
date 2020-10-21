@@ -80,6 +80,11 @@ const BusInterface = {
 		Url: Url + '/api/Bus/getBusPosition',
 		name: '查询公交轨迹',
 		method: method,
+	},
+	getFirstLastShift:{
+		Url: Url + '/api/Bus/getFirstLastShift',
+		name: '查询首末班',
+		method: method,
 	}
 }
 
