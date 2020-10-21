@@ -1,22 +1,169 @@
 <template>
 	<view>
-		
+		<map class="map" id="map1" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude" :polyline="polyline" :markers="markArr"></map>
 	</view>
 </template>
 
 <script>
+	import $BusInterface from '@/common/Bus.js'
 	export default {
 		data() {
 			return {
-				
+				polyline: [],
+				points: [],
+				centerLatitude: "24.501341666666665", //地图中心点纬度
+				centerLongitude: "117.76371833333333", //地图中心点经度
+				markArr: [],
+				markers: [],
+				busIn: ",",
+				mapHeight: "",
+			}
+		},
+		onLoad(e) {
+			var that=this;
+			uni.getSystemInfo({
+				success: function(res) {
+					that.mapHeight = res.windowHeight + 'px';
+				}
+			});
+			if(e.lineDirection&&e.lineID){
+				that.getLocation(e.lineDirection,e.lineID);
+				that.getStationLocation(e.lineDirection,e.lineID);
 			}
 		},
 		methods: {
-			
+			getLocation: function(lineDirection,lineID) {
+				let that = this;
+				uni.request({
+					url: $BusInterface.BusInterface.getBusPosition.Url,
+					method: $BusInterface.BusInterface.getBusPosition.method,
+					data: {
+						LineID: lineDirection,
+						Direction: lineID,
+						Encryption: $BusInterface.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						if (res.data.status) {
+							that.polyline = [];
+							that.points = [];
+							that.centerLatitude = res.data.data[0].Latitude;
+							that.centerLongitude = res.data.data[0].Longitude;
+							for (var i = 0; i < res.data.data.length; i++) {
+								var position = {
+									latitude: res.data.data[i].Latitude,
+									longitude: res.data.data[i].Longitude
+								}
+								that.points.push(position);
+							}
+							var obj = {
+								points: that.points,
+								color: "#aa0000",
+								arrowline: true,
+								width: 7
+							};
+							that.polyline.push(obj);
+							console.log(that.polyline)
+						}
+					},
+					complete(res) {
+						//console.log(res)
+					}
+				})
+			},
+			getStationLocation: function(lineDirection,lineID) {
+				let that = this;
+				uni.request({
+					url: $BusInterface.BusInterface.getBusLineStationInfoByLineIdDirection.Url,
+					method: $BusInterface.BusInterface.getBusLineStationInfoByLineIdDirection.method,
+					data: {
+						LineID: lineID,
+						Direction: lineDirection,
+						Encryption: $BusInterface.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						if (res.data.status) {
+							that.markArr = [];
+							// clearInterval(that.busIn);
+							// that.busIn = setInterval(function() {
+							// 	that.getBusLocation();
+							// }, 10000)
+							for (var i = 0; i < res.data.data.length; i++) {
+								var path = "../../static/Bus/site1.png";
+								var width = 15;
+								var height = 15;
+								if (i == 0) {
+									path = "../../static/Bus/beginsite.png";
+									width = 25;
+									height = 25;
+								}
+								if (i == res.data.data.length - 1) {
+									path = "../../static/Bus/endsite.png";
+									width = 25;
+									height = 25;
+								}
+								var obj = {
+									id: i,
+									longitude: res.data.data[i].lon,
+									latitude: res.data.data[i].lat,
+									width: width,
+									height: height,
+									iconPath: path,
+									label: {
+										content: res.data.data[i].stationName,
+										borderWidth: 1,
+										borderColor: "#55aaff",
+										padding: 5,
+									}
+								}
+								that.markArr.push(obj);
+							}
+						}
+						console.log(res);
+					}
+				})
+			},
+			getBusLocation: function(lineDirection,lineID) {
+				let that = this;
+				uni.request({
+					url: $BusInterface.BusInterface.getBusArriveLeaveStationInfoByLineIdDirection.Url,
+					method: $BusInterface.BusInterface.getBusArriveLeaveStationInfoByLineIdDirection.method,
+					data: {
+						LineID: lineID,
+						Direction: lineDirection,
+						Encryption: $BusInterface.BusInterface.publicCode.encryption
+					},
+					success(res) {
+						if (res.data.status) {
+							that.markArr = that.markArr.filter(res => res.id != 'bus');
+							for (var i = 0; i < res.data.data.length; i++) {
+								var path = "../../static/Bus/busarrived.png";
+								if (res.data.data[i].stationType == 1) { //0是到站
+									path = "../../static/Bus/busarrive.png";
+								}
+								var obj = {
+									id: "bus",
+									longitude: res.data.data[i].lon,
+									latitude: res.data.data[i].lat,
+									width: 50,
+									height: 50,
+									iconPath: path,
+								}
+								that.markArr.push(obj);
+								if (i == res.data.data.length - 1) {
+									that.markers = that.markArr;
+								}
+							}
+						}
+					}
+				})
+			},
 		}
 	}
 </script>
 
 <style>
-
+	.map {
+		width: 750rpx;
+		height: 1000rpx;
+	}
 </style>
