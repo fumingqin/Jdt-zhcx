@@ -134,11 +134,11 @@
 						Encryption: $BusInterface.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						console.log(res);
+						// console.log(res);
 						if (res.data.status) {
 							var obj = new Object();
 							that.markArr = that.markArr.filter(function(res) {
-								return res.id != "Bus";
+								return res.id != "bus";
 							});
 							for (var i = 0; i < res.data.data.length; i++) {
 								var path = "../../static/Bus/busarrived.png";
@@ -155,7 +155,7 @@
 								}
 								var json = JSON.stringify(that.markArr);
 								that.markArr = JSON.parse(json);
-								// that.markArr.push(obj);
+								that.markArr.push(obj);
 								if (i == res.data.data.length - 1) {
 									that.markers = that.markArr;
 								}
