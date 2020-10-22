@@ -1,6 +1,7 @@
 <template>
 	<view>
-		<map class="map" id="map1" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude" :polyline="polyline" :markers="markArr"></map>
+		<map class="map" id="map1" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
+		 :polyline="polyline" :markers="markers"></map>
 	</view>
 </template>
 
@@ -13,26 +14,61 @@
 				points: [],
 				centerLatitude: "24.501341666666665", //地图中心点纬度
 				centerLongitude: "117.76371833333333", //地图中心点经度
-				markArr: [],
-				markers: [],
+				markArr: [{
+					id: "",
+					longitude: "",
+					latitude: "",
+					width: "",
+					height: "",
+					iconPath: "",
+					label: {
+						content: "",
+						borderWidth: 1,
+						borderColor: "#55aaff",
+						padding: 5,
+					}
+				}],
+				markers: [{
+						id: "",
+						longitude: "",
+						latitude: "",
+						width: "",
+						height: "",
+						iconPath: "",
+						label: {
+							content: "",
+							borderWidth: 1,
+							borderColor: "#55aaff",
+							padding: 5,
+						}
+					},
+					{
+						id: "",
+						longitude: "",
+						latitude: "",
+						width: "",
+						height: "",
+						iconPath: "",
+					}
+				],
 				busIn: ",",
 				mapHeight: "",
 			}
 		},
 		onLoad(e) {
-			var that=this;
+			var that = this;
 			uni.getSystemInfo({
 				success: function(res) {
 					that.mapHeight = res.windowHeight + 'px';
 				}
 			});
-			if(e.lineDirection&&e.lineID){
-				that.getLocation(e.lineDirection,e.lineID);
-				that.getStationLocation(e.lineDirection,e.lineID);
+			if (e.lineDirection && e.lineID) {
+				that.getLocation(e.lineDirection, e.lineID);
+				that.getStationLocation(e.lineDirection, e.lineID);
 			}
 		},
 		methods: {
-			getLocation: function(lineDirection,lineID) {
+			getLocation: function(lineDirection, lineID) {
 				let that = this;
 				uni.request({
 					url: $BusInterface.BusInterface.getBusPosition.Url,
@@ -62,15 +98,12 @@
 								width: 7
 							};
 							that.polyline.push(obj);
-							console.log(that.polyline)
 						}
 					},
-					complete(res) {
-						console.log(res)
-					}
+					complete(res) {}
 				})
 			},
-			getStationLocation: function(lineDirection,lineID) {
+			getStationLocation: function(lineDirection, lineID) {
 				let that = this;
 				uni.request({
 					url: $BusInterface.BusInterface.getBusLineStationInfoByLineIdDirection.Url,
@@ -83,10 +116,10 @@
 					success(res) {
 						if (res.data.status) {
 							that.markArr = [];
-							// clearInterval(that.busIn);
-							// that.busIn = setInterval(function() {
-							// 	that.getBusLocation();
-							// }, 10000)
+							//clearInterval(that.busIn);
+							//that.busIn = setInterval(function() {
+							that.getBusLocation(lineDirection, lineID);
+							//}, 10000)
 							for (var i = 0; i < res.data.data.length; i++) {
 								var path = "../../static/Bus/site1.png";
 								var width = 15;
@@ -118,11 +151,10 @@
 								that.markArr.push(obj);
 							}
 						}
-						console.log(res);
 					}
 				})
 			},
-			getBusLocation: function(lineDirection,lineID) {
+			getBusLocation: function(lineDirection, lineID) {
 				let that = this;
 				uni.request({
 					url: $BusInterface.BusInterface.getBusArriveLeaveStationInfoByLineIdDirection.Url,
@@ -133,8 +165,9 @@
 						Encryption: $BusInterface.BusInterface.publicCode.encryption
 					},
 					success(res) {
+						console.log(res);
 						if (res.data.status) {
-							that.markArr = that.markArr.filter(res => res.id != 'bus');
+							//that.markArr = that.markArr.filter(res => res.id != 'bus');
 							for (var i = 0; i < res.data.data.length; i++) {
 								var path = "../../static/Bus/busarrived.png";
 								if (res.data.data[i].stationType == 1) { //0是到站
@@ -151,6 +184,7 @@
 								that.markArr.push(obj);
 								if (i == res.data.data.length - 1) {
 									that.markers = that.markArr;
+									console.log(that.markers )
 								}
 							}
 						}
@@ -164,6 +198,5 @@
 <style>
 	.map {
 		width: 750rpx;
-		height: 1000rpx;
 	}
 </style>
