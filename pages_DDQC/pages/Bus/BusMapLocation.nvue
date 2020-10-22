@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<map class="map" id="map1" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
-		 :polyline="polyline" :markers="markers"></map>
+		 :polyline="polyline" :markers="markArr"></map>
 	</view>
 </template>
 
@@ -81,10 +81,10 @@
 					success(res) {
 						if (res.data.status) {
 							that.markArr = [];
-							clearInterval(that.busIn);
-							that.busIn = setInterval(function() {
-								that.getBusLocation(lineDirection, lineID);
-							}, 10000)
+							// clearInterval(that.busIn);
+							// that.busIn = setInterval(function() {
+								//that.getBusLocation(lineDirection, lineID);
+							// }, 10000)
 							var obj = new Object();
 							for (var i = 0; i < res.data.data.length; i++) {
 								var path = "../../static/Bus/site1.png";
