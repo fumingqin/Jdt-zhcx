@@ -438,7 +438,7 @@
 						uni.hideLoading()
 						
 						if(res.data.status){
-							// console.log('站点信息跟到站车辆信息',res);
+							console.log('站点信息跟到站车辆信息',res);
 							//记录当前时段有几辆车在线
 							_self.onlineBusNum = 0;
 							for(var i = 0; i < res.data.data.length; i++){
@@ -462,6 +462,7 @@
 								}
 							}
 							_self.stationList = res.data.data;
+							console.log('站点信息跟到站车辆信息',_self.stationList);
 						}else {
 							uni.showToast({
 								title:res.data.msg,
@@ -538,7 +539,6 @@
 			},
 			//----------------------------------获取首末站发车时间----------------------------------
 			getFirstLastShift:function(){
-				console.log(_self.lineID,_self.lineDirection)
 				uni.request({
 					url: _self.$Bus.BusInterface.getFirstLastShift.Url,
 					method: _self.$Bus.BusInterface.getFirstLastShift.method,
@@ -548,7 +548,7 @@
 						Encryption  : _self.$Bus.BusInterface.publicCode.encryption
 					},
 					success(res) {
-						console.log('请求首末站发班时间信息成功',res)
+						// console.log('请求首末站发班时间信息成功',res)
 						if(res.data.status){
 							_self.FirstLastShift = res.data.data;
 						}else {
