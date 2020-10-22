@@ -176,7 +176,7 @@ $BusInOutOffset: 30rpx;//公交进站出站图标与右边的距离
 		}
 		//横向站点名称样式
 		&__stationName--row{
-			width: 20rpx;
+			width: 60rpx;
 		}
 		//竖向站点名称样式
 		&__stationName--column{
