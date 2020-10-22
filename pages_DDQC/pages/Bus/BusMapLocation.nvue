@@ -14,43 +14,8 @@
 				points: [],
 				centerLatitude: "24.501341666666665", //地图中心点纬度
 				centerLongitude: "117.76371833333333", //地图中心点经度
-				markArr: [{
-					id: "",
-					longitude: "",
-					latitude: "",
-					width: "",
-					height: "",
-					iconPath: "",
-					label: {
-						content: "",
-						borderWidth: 1,
-						borderColor: "#55aaff",
-						padding: 5,
-					}
-				}],
-				markers: [{
-						id: "",
-						longitude: "",
-						latitude: "",
-						width: "",
-						height: "",
-						iconPath: "",
-						label: {
-							content: "",
-							borderWidth: 1,
-							borderColor: "#55aaff",
-							padding: 5,
-						}
-					},
-					{
-						id: "",
-						longitude: "",
-						latitude: "",
-						width: "",
-						height: "",
-						iconPath: "",
-					}
-				],
+				markArr: [],
+				markers: [],
 				busIn: ",",
 				mapHeight: "",
 			}
@@ -116,10 +81,11 @@
 					success(res) {
 						if (res.data.status) {
 							that.markArr = [];
-							//clearInterval(that.busIn);
-							//that.busIn = setInterval(function() {
-							that.getBusLocation(lineDirection, lineID);
-							//}, 10000)
+							clearInterval(that.busIn);
+							that.busIn = setInterval(function() {
+								that.getBusLocation(lineDirection, lineID);
+							}, 10000)
+							var obj = new Object();
 							for (var i = 0; i < res.data.data.length; i++) {
 								var path = "../../static/Bus/site1.png";
 								var width = 15;
@@ -134,7 +100,7 @@
 									width = 25;
 									height = 25;
 								}
-								var obj = {
+								obj = {
 									id: i,
 									longitude: res.data.data[i].lon,
 									latitude: res.data.data[i].lat,
@@ -143,11 +109,14 @@
 									iconPath: path,
 									label: {
 										content: res.data.data[i].stationName,
+										bgColor:"#FFFFFF",
 										borderWidth: 1,
 										borderColor: "#55aaff",
 										padding: 5,
 									}
 								}
+								var json = JSON.stringify(that.markArr);
+								that.markArr = JSON.parse(json);
 								that.markArr.push(obj);
 							}
 						}
@@ -167,13 +136,16 @@
 					success(res) {
 						console.log(res);
 						if (res.data.status) {
-							//that.markArr = that.markArr.filter(res => res.id != 'bus');
+							var obj = new Object();
+							that.markArr = that.markArr.filter(function(res) {
+								return res.id != "Bus";
+							});
 							for (var i = 0; i < res.data.data.length; i++) {
 								var path = "../../static/Bus/busarrived.png";
 								if (res.data.data[i].stationType == 1) { //0是到站
 									path = "../../static/Bus/busarrive.png";
 								}
-								var obj = {
+								obj = {
 									id: "bus",
 									longitude: res.data.data[i].lon,
 									latitude: res.data.data[i].lat,
@@ -181,10 +153,11 @@
 									height: 50,
 									iconPath: path,
 								}
+								var json = JSON.stringify(that.markArr);
+								that.markArr = JSON.parse(json);
 								that.markArr.push(obj);
 								if (i == res.data.data.length - 1) {
 									that.markers = that.markArr;
-									console.log(that.markers )
 								}
 							}
 						}
