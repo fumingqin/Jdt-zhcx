@@ -141,6 +141,7 @@
 								return res.id != "bus";
 							});
 							for (var i = 0; i < res.data.data.length; i++) {
+								
 								var path = "../../static/Bus/busarrived.png";
 								if (res.data.data[i].stationType == 1) { //0是到站
 									path = "../../static/Bus/busarrive.png";
