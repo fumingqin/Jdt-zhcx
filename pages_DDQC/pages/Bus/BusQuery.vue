@@ -7,7 +7,8 @@
 		<!-- 起终点 -->
 		<view class="station">
 			<u-cell-group title="起点" :border="false" style="width: 85%;" :title-style="{'color':'#000000'}">
-				<u-cell-item @click="pickStation('起点')" :title="startStation" :arrow="false" :title-style="{'fontSize': '34rpx','color':'#b3b3b3'}">
+				<u-cell-item @click="pickStation('起点')" :title="startStation" :arrow="false" 
+				:title-style="isStartStationClick ? {'fontSize': '34rpx','color':'#000000'} : {'fontSize': '34rpx','color':'#b3b3b3'}">
 					<!-- <u-icon slot="right-icon" size="40" name="map"></u-icon> -->
 				</u-cell-item>
 			</u-cell-group>
@@ -15,7 +16,8 @@
 				<image style="width: 60rpx;height: 60rpx;" src="../../static/Bus/turnStationG.png"></image>
 			</view>
 			<u-cell-group title="终点" :border="false" :title-style="{'color':'#000000'}">
-				<u-cell-item @click="pickStation('终点')" :title="endStation" :arrow="false" right-icon="map" :title-style="{'fontSize': '34rpx','color':'#b3b3b3'}">
+				<u-cell-item @click="pickStation('终点')" :title="endStation" :arrow="false" right-icon="map" 
+				:title-style="isEndStationClick ? {'fontSize': '34rpx','color':'#000000'} : {'fontSize': '34rpx','color':'#b3b3b3'}">
 					<!-- <u-icon slot="right-icon" size="40" name="reload"></u-icon> -->
 				</u-cell-item>
 			</u-cell-group>
@@ -78,6 +80,8 @@
 				currentLongitude:'',//纬度
 				currentLatitude:'',//经度
 				lineDetail:[],
+				isStartStationClick:false,
+				isEndStationClick:false,
 			}
 		},
 		//--------------------------------------监听索框点击事件--------------------------------------
@@ -98,9 +102,26 @@
 					if(data){
 						_self.startStation = data.data.startStation,
 						_self.endStation = data.data.endStation
+						_self.isStartStationClick = true;
+						_self.isEndStationClick = true;
 					}
 				}
 			})
+		},
+		onShow:function(){
+			if(_self.startStation == "请选择" && _self.endStation == "请选择"){
+				_self.isStartStationClick = false;
+				_self.isEndStationClick = false;
+			}else if(_self.startStation == "请选择" && _self.endStation != "请选择"){
+				_self.isStartStationClick = false;
+				_self.isEndStationClick = true;
+			}else if(_self.startStation != "请选择" && _self.endStation == "请选择"){
+				_self.isStartStationClick = true;
+				_self.isEndStationClick = false;
+			}else {
+				_self.isStartStationClick = true;
+				_self.isEndStationClick = true;
+			}
 		},
 		methods: {
 			
@@ -307,7 +328,6 @@
 			},
 			//--------------------------------------点击起点/终点--------------------------------------
 			pickStation:function(option){
-				console.log(option)
 				if(option == '起点'){
 					//监听事件,监听下个页面返回的值
 					uni.$on('busStartStaionChange', function(data) {
@@ -333,7 +353,6 @@
 			},
 			//--------------------------------------点击更换起点终点--------------------------------------
 			turnStation:function(){
-				console.log('点击了更换起终点',_self.startStation,_self.endStation)
 				if(_self.startStation == "请选择" || _self.endStation =="请选择"){
 					uni.showToast({
 						title:"请线选择起点/终点",

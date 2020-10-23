@@ -30,20 +30,31 @@
 			console.log(this.type)
 		},
 		onBackPress(e) {
+			var that = this;
 			// #ifdef APP-PLUS
-			if(this.type!=""){
-				uni.showToast({
-					title:'退出后需要重新登录',
-					icon:'none',
-				})
-				uni.removeStorageSync('userInfo');
-				uni.removeStorageSync('RealNameInfo');
-				uni.navigateBack();
-				return true;
+			if (e.from === 'navigateBack') {  
+			    return false;  
 			}
+			uni.showModal({
+				title:"提示",
+				content:"未验证将无法继续使用",
+				success:function(res){
+					if(res.confirm){
+						uni.removeStorageSync('userInfo');
+						uni.removeStorageSync('RealNameInfo');
+						that.back();
+					}
+				}
+			})
+			return true;
 			//#endif
 		},
 		methods:{
+			back(){
+				uni.navigateBack({
+					delta:2
+				});
+			},
 			//--------------------加载用户信息-------------------
 			loadUserInfo:function(){
 				var that=this;

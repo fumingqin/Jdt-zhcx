@@ -838,7 +838,7 @@
 				uni.getStorage({
 					key: 'userInfo',
 					success: (res) => {
-						if (res.data.phoneNumber != "") {
+						if (res.data) {
 							that.GetUserLastLoginTime(res.data.phoneNumber);
 						}
 					}
@@ -855,15 +855,25 @@
 					success(res) {
 						var time = that.getSpecifiedTime(90, res.data.data.lastLogintime);
 						if (that.checkDate(time) == "已过期") {
-							uni.navigateTo({
-								url: that.$GrzxInter.Route.verificateName.url + '?type=login',
+							uni.showModal({
+								title:"提示",
+								content:"您已超过90天未登陆，\n进行验证后继续使用",
+								success(res) {
+									if(res.confirm){
+										uni.navigateTo({
+											url: that.$GrzxInter.Route.verificateName.url + '?type=login',
+										})
+									}
+								}
 							})
+							
 						}
 					}
 				})
 			},
 			//--------------获取指定的时间-------------
 			getSpecifiedTime: function(e, date) {
+				// console.log(e,date)
 				var num = parseInt(e, 10); //90天过期
 				if (date == 0) {
 					var date = new Date();

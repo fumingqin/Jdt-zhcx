@@ -10,29 +10,29 @@
 		<view class="bus-steps" :style="{flexDirection : direction}">
 			<!-- 第二步：创建子部件 -->
 			<view class="bus-steps_item" :class="['bus-steps_item--' + direction]" v-for="(item, index) in list" :key="index">
-				<!-- 公交车图片 -->
-				<!-- <view class="carImage" :class="['carImage--' + direction]" v-for="(carItem,carIndex) in carLocationArray" :key="carIndex" 
-				v-if="index == carItem.stationIndex - 1">
-				    <view style="font-size: 20rpx;width: 140rpx;">{{carItem.registcode}}</view>
-				    <image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
-				</view> -->
 				<!-- 车辆进站图标 -->
-				<view class="carImage" :class="['carImage--' + direction]" v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 0">
+				<view class="carImage" :class="['carImage--' + direction]" 
+				v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 0" @tap="busClick(item.mVehicleArriveLeaveInfo)">
 				    <!-- 会存在多辆车同时到站的情况，显示第一辆车的车牌 -->
 				    <view style="font-size: 20rpx;width: 140rpx;">{{item.mVehicleArriveLeaveInfo[0].registcode}}</view>
 					<view style="display: flex;align-items: center;justify-content: center;">
 						<image  class="carLocation" src="../../pages_DDQC/static/Bus/busLocation.png"></image>
-						<text class="busNum" :class="['busNum--' + 'in']" v-if="item.mVehicleArriveLeaveInfo.length >= 2">x{{item.mVehicleArriveLeaveInfo.length}}</text>
+						<text class="busNum" :class="['busNum--' + 'in']" v-if="item.mVehicleArriveLeaveInfo.length >= 2">
+						x{{item.mVehicleArriveLeaveInfo.length}}
+						</text>
 					</view>
 				    
 				</view>
 				<!-- 车辆出站图标 -->
-				<view class="carOutImage" :class="['carOutImage--' + direction]" v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 1">
+				<view class="carOutImage" :class="['carOutImage--' + direction]" 
+				v-if="item.mVehicleArriveLeaveInfo.length > 0 && item.mVehicleArriveLeaveInfo[0].stationType == 1"  @tap="busClick(item.mVehicleArriveLeaveInfo)">
 				    <!-- 会存在多辆车同时到站的情况，显示第一辆车的车牌 -->
 				    <view style="font-size: 20rpx;width: 140rpx;">{{item.mVehicleArriveLeaveInfo[0].registcode}}</view>
 					<view style="display: flex;align-items: center;justify-content: center;">
 						<image  class="carLocation" src="../../pages_DDQC/static/Bus/nextBus.png"></image>
-						<text class="busNum" :class="['busNum--' + 'out']" v-if="item.mVehicleArriveLeaveInfo.length >= 2">x{{item.mVehicleArriveLeaveInfo.length}}</text>
+						<text class="busNum" :class="['busNum--' + 'out']" v-if="item.mVehicleArriveLeaveInfo.length >= 2">
+						x{{item.mVehicleArriveLeaveInfo.length}}
+						</text>
 					</view>
 				    
 				</view>
@@ -119,6 +119,22 @@
 			return {
 				
 			};
+		},
+		methods:{
+			busClick(option){
+				var registcode = '';
+				if(option.length > 1){
+					for (var i = 0; i < option.length; i++){
+						registcode = option[i].registcode + ',' + registcode;
+					}
+					registcode = registcode.substring(0,registcode.length - 1);
+					uni.showModal({
+						content:registcode,
+						showCancel:false
+					})
+				}
+				
+			}
 		}
 	}
 </script>
