@@ -47,7 +47,7 @@
 				that.lineDirection=e.lineDirection;
 				that.lineID=e.lineID;
 			}
-		},
+		}, 
 		methods: {
 			//获取地图缩放等级
 			GetMapScale: function(e) {
