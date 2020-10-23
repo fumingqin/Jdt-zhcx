@@ -6,15 +6,17 @@
 		</view>
 		<!-- 起终点 -->
 		<view class="station">
-			<u-cell-group title="起点" :border="false">
-				<u-cell-item @click="pickStation('起点')" :title="startStation" :arrow="false" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
-					<u-icon slot="right-icon" size="40" name="map"></u-icon>
+			<u-cell-group title="起点" :border="false" style="width: 85%;" :title-style="{'color':'#000000'}">
+				<u-cell-item @click="pickStation('起点')" :title="startStation" :arrow="false" :title-style="{'fontSize': '34rpx','color':'#b3b3b3'}">
+					<!-- <u-icon slot="right-icon" size="40" name="map"></u-icon> -->
 				</u-cell-item>
 			</u-cell-group>
-			
-			<u-cell-group title="终点" :border="false">
-				<u-cell-item @click="pickStation('终点')" :title="endStation" :arrow="false" right-icon="map" :title-style="{'fontSize': '34rpx','color':'#2D2E2E'}">
-					<u-icon slot="right-icon" size="40" name="reload"></u-icon>
+			<view style="margin-top: -30rpx;right: 30rpx;position: absolute;" @click="turnStation">
+				<image style="width: 60rpx;height: 60rpx;" src="../../static/Bus/turnStationG.png"></image>
+			</view>
+			<u-cell-group title="终点" :border="false" :title-style="{'color':'#000000'}">
+				<u-cell-item @click="pickStation('终点')" :title="endStation" :arrow="false" right-icon="map" :title-style="{'fontSize': '34rpx','color':'#b3b3b3'}">
+					<!-- <u-icon slot="right-icon" size="40" name="reload"></u-icon> -->
 				</u-cell-item>
 			</u-cell-group>
 			
@@ -328,6 +330,20 @@
 					url:'./TransitSearch?type=' + option + '&current=' + 'BusQuery',
 					
 				})
+			},
+			//--------------------------------------点击更换起点终点--------------------------------------
+			turnStation:function(){
+				console.log('点击了更换起终点',_self.startStation,_self.endStation)
+				if(_self.startStation == "请选择" || _self.endStation =="请选择"){
+					uni.showToast({
+						title:"请线选择起点/终点",
+						icon:'none'
+					})
+				}else {
+					var temp = _self.endStation;
+					_self.endStation = _self.startStation;
+					_self.startStation = temp;
+				}
 			},
 			
 //**************************************事件写在这里（结束）**************************************
