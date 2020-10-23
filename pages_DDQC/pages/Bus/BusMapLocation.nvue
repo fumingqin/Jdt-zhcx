@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<map class="map" id="map1" :style="{height:mapHeight}" :latitude="centerLatitude" :longitude="centerLongitude"
-		 :polyline="polyline" :markers="markers"></map>
+		 :polyline="polyline" :markers="markArr"  scale="13" show-location="true" @regionchange="GetMapScale"></map>
+		 
 	</view>
 </template>
-
 <script>
 	import $BusInterface from '@/common/Bus.js'
 	export default {
@@ -15,24 +15,72 @@
 				centerLatitude: "24.501341666666665", //地图中心点纬度
 				centerLongitude: "117.76371833333333", //地图中心点经度
 				markArr: [],
+				enlargeMarkes: [],//放大后的markers，显示站点名称
+				shrinkMark: [],//缩小后的markers，不显示站点名称
 				markers: [],
 				busIn: ",",
 				mapHeight: "",
+				mapObject: "",//地图操作对象，api
+				enlargeNum: 0,//放大执行次数
+				shrinkNum: 0,//缩小执行次数
+				seconds:true,//是否开启定时器。安卓不打开
+				lineDirection:"",
+				lineID:"",
 			}
+		},
+		onReady() {
+			this.mapObject = uni.createMapContext("map1", this);
 		},
 		onLoad(e) {
 			var that = this;
 			uni.getSystemInfo({
 				success: function(res) {
 					that.mapHeight = res.windowHeight + 'px';
+					if(res.platform=="android"){
+						that.seconds=false;
+					}
 				}
 			});
 			if (e.lineDirection && e.lineID) {
 				that.getLocation(e.lineDirection, e.lineID);
 				that.getStationLocation(e.lineDirection, e.lineID);
+				that.lineDirection=e.lineDirection;
+				that.lineID=e.lineID;
 			}
 		},
 		methods: {
+			//获取地图缩放等级
+			GetMapScale: function(e) {
+				let that = this;
+				that.mapObject.getScale({
+					success(res) {
+						if (res.scale < 14.5) {
+							if (that.shrinkNum <= 0) {
+								that.enlargeNum = 0;
+								that.markers = [];
+								that.markArr = [];
+								setTimeout(function() {
+									that.markers = that.shrinkMark;
+									that.markArr = that.shrinkMark;
+								}, 300)
+							}
+							that.shrinkNum++;
+						} else {
+							if (that.enlargeNum <= 0) {
+								that.shrinkNum = 0;
+								that.markers = [];
+								that.markArr = [];
+								setTimeout(function() {
+									that.markers = that.enlargeMarkes;
+									that.markArr = that.enlargeMarkes;
+								}, 300)
+							}
+							that.enlargeNum++;
+						}
+					}
+				})
+			},
+			//获取线路经纬度
 			getLocation: function(lineDirection, lineID) {
 				let that = this;
 				uni.request({
@@ -63,11 +111,17 @@
 								width: 7
 							};
 							that.polyline.push(obj);
+							setTimeout(function(){
+								that.mapObject.includePoints({
+									points:that.points,
+								})
+							},300)
 						}
 					},
 					complete(res) {}
 				})
 			},
+			//获取站点位置
 			getStationLocation: function(lineDirection, lineID) {
 				let that = this;
 				uni.request({
@@ -81,10 +135,14 @@
 					success(res) {
 						if (res.data.status) {
 							that.markArr = [];
-							clearInterval(that.busIn);
-							that.busIn = setInterval(function() {
+							if(that.seconds){
+								clearInterval(that.busIn);
+								that.busIn = setInterval(function() {
+									that.getBusLocation(lineDirection, lineID);
+								}, 10000)
+							}else{
 								that.getBusLocation(lineDirection, lineID);
-							}, 10000)
+							}
 							var obj = new Object();
 							for (var i = 0; i < res.data.data.length; i++) {
 								var path = "../../static/Bus/site1.png";
@@ -100,7 +158,7 @@
 									width = 25;
 									height = 25;
 								}
-								obj = {
+								obj = {//显示站点名称
 									id: i,
 									longitude: res.data.data[i].lon,
 									latitude: res.data.data[i].lat,
@@ -109,20 +167,29 @@
 									iconPath: path,
 									label: {
 										content: res.data.data[i].stationName,
-										bgColor:"#FFFFFF",
+										bgColor: "#FFFFFF",
 										borderWidth: 1,
 										borderColor: "#55aaff",
 										padding: 5,
 									}
 								}
-								var json = JSON.stringify(that.markArr);
-								that.markArr = JSON.parse(json);
-								that.markArr.push(obj);
+								var obj1 = {//不显示站点名称
+									id: i,
+									longitude: res.data.data[i].lon,
+									latitude: res.data.data[i].lat,
+									width: width,
+									height: height,
+									iconPath: path,
+								}
+								that.enlargeMarkes.push(obj);
+								that.shrinkMark.push(obj1);
+								that.markArr = that.enlargeMarkes;
 							}
 						}
 					}
 				})
 			},
+			//获取公交位置
 			getBusLocation: function(lineDirection, lineID) {
 				let that = this;
 				uni.request({
@@ -137,11 +204,10 @@
 						// console.log(res);
 						if (res.data.status) {
 							var obj = new Object();
-							that.markArr = that.markArr.filter(function(res) {
+							that.markArr= that.markArr.filter(function(res) {
 								return res.id != "bus";
 							});
 							for (var i = 0; i < res.data.data.length; i++) {
-								
 								var path = "../../static/Bus/busarrived.png";
 								if (res.data.data[i].stationType == 1) { //0是到站
 									path = "../../static/Bus/busarrive.png";
@@ -154,12 +220,7 @@
 									height: 50,
 									iconPath: path,
 								}
-								var json = JSON.stringify(that.markArr);
-								that.markArr = JSON.parse(json);
 								that.markArr.push(obj);
-								if (i == res.data.data.length - 1) {
-									that.markers = that.markArr;
-								}
 							}
 						}
 					}
