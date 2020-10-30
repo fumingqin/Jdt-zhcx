@@ -100,6 +100,7 @@ export default{
 				url:$GrzxInter.Interface.GetOpenId_xcx.value,
 				method: $GrzxInter.Interface.GetOpenId_xcx.method,
 				data:{
+					systemname:"漳州达达通小程序",
 					code:code,
 				},
 				success(logRes){
@@ -115,7 +116,7 @@ export default{
 						},
 						method:$GrzxInter.Interface.GetUserInfoByOpenId_xcx.method,
 						success(res){
-							// console.log(res,'res')
+							console.log(res,'res')
 							setTimeout(function(){
 								uni.hideLoading();
 							},1000);
@@ -152,7 +153,7 @@ export default{
 		},
 		getPhoneNumber(e) {  
 			var WXBizDataCrypt = require('@/common/WXBizDataCrypt')
-			var appId = 'wxf64bf945b37a9939';
+			var appId = 'wxba28c1653b77e510';
 			var encryptedData =e.detail.encryptedData;
 			var iv = e.detail.iv;
 			var pc = new WXBizDataCrypt(appId, this.sessionKey)
