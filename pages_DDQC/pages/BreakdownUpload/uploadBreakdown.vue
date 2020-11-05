@@ -43,7 +43,7 @@
 		</view>
 		
 		<!-- 提交 -->
-		<view class="contentBox" style="margin-top: 20rpx;">
+		<view style="margin: 20rpx 30rpx;background: #18B566;border-radius: 12rpx;">
 			<view class="submit" @click="submit">提交</view>
 		</view>
 	</view>
@@ -470,6 +470,6 @@
 		height: 100rpx;
 		line-height: 100rpx;
 		font-size: 38rpx;
-		color: #999999;
+		color: #FFF;
 	}
 </style>
