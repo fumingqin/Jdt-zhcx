@@ -1,9 +1,10 @@
 <template>
 	<view>
-	    <form @submit="formSubmit" >
+		<form @submit="formSubmit">
 			<text class="fb_Text">意见反馈</text>
 			<view class="fb_view">
-				<textarea class="fb_Textarea" placeholder-style="#AAAAAA" placeholder="您的宝贵意见将会让我们提供更好的服务质量" maxlength="500" v-model="ideaContent" @input="descInput" />
+				<textarea class="fb_Textarea" placeholder-style="#AAAAAA" placeholder="您的宝贵意见将会让我们提供更好的服务质量" maxlength="500"
+				 v-model="ideaContent" @input="descInput" />
 				<view class="fb_words">{{remnant}}/500字</view>
 			</view>
 			<view class="upLoadView">
@@ -18,10 +19,13 @@
 						<image class="image" src="../../static/GRZX/add.png"></image>
 					</view>
 				</view>
-				
-				<!-- <view class="scClass">
-					<robby-image-upload v-model="detailInfo.imageData" :server-url-delete-image="serverUrlDeleteImage" :showUploadProgress="show" :form-data="formData" @delete="deleteImage" @add="addImage" :enable-del="enableDel" :enable-add="enableAdd"></robby-image-upload>
-				</view> -->
+			</view>
+			<view style="margin: 20rpx 20rpx;font-size: 32rpx;">
+				<view style="margin: 20rpx 0;">感谢您在此对APP功能使用上意见、建议进行反馈。</view>
+				<view style="font-weight: bold">若您有公交服务意见、建议请拨打：</view>
+				<text style="color: red;" selectable="true">0596-2629567、2629200、2522719</text>
+				<view  style="margin-top: 20rpx;font-weight: bold">若自行车租用服务的意见、建议拨打：</view>
+				<text style="color: red;"  selectable="true">0596-2871515</text>
 			</view>
 			<view class="fb_view3">
 				<button class="fb_btn" form-type="submit">提交</button>
@@ -41,30 +45,28 @@
 		},
 		data() {
 			return {
-			remnant:0,
-			nickid:'',
-			ideaContent:'',
-			enableDel : true,//是否启动del
-			enableAdd : true,//是否启动删除
-			enableDrag : false,//是否启动拖动
-			show: true,//是否显示
-			system:'',//系统类型
-			
-			imgList: [],//照片数组
-			
-			imgCount: 3, //最多支持9张上传，可以修改
-			totalImgCount: 3, //注意：imgCount改什么多少，这么就要跟着改
-			
-			base64Array:[],//图片的base64数组
-			serverUrl: 'http://localhost:2000/work/uploadWorkPicture',//模拟服务器地址
-			serverUrlDeleteImage: 'http://localhost:2000/work/deleteWorkPicture',//模拟服务器删除
-			formData: {//表格数据
-					userId: 2
+				remnant:0,
+				nickid:'',
+				ideaContent:'',
+				enableDel : true,//是否启动del
+				enableAdd : true,//是否启动删除
+				enableDrag : false,//是否启动拖动
+				show: true,//是否显示
+				system:'',//系统类型
+				
+				imgList: [],//照片数组
+				
+				imgCount: 3, //最多支持9张上传，可以修改
+				totalImgCount: 3, //注意：imgCount改什么多少，这么就要跟着改
+				
+				base64Array:[],//图片的base64数组
+				formData: {//表格数据
+						userId: 2
+					},
+				imagelist:[],//图像列表框
+				detailInfo : {//详细信息
+					imageData : [],//图像日期	
 				},
-			imagelist:[],//图像列表框
-			detailInfo : {//详细信息
-				imageData : [],//图像日期	
-			}
 			}
 		},
 		onLoad() {
@@ -129,9 +131,9 @@
 			},
 			//------------------------------------------提交------------------------------------------
 			formSubmit: function(e) {
-				var AppType = '';
-				// #ifdef APP-PLUS
-				AppType = 'APP';
+				var AppType = 'APP';
+				// #ifdef MP-WEIXIN
+				AppType ='微信小程序';
 				// #endif
 				uni.showLoading({
 					title:'提交意见反馈中...'
@@ -349,6 +351,7 @@
 		display: flex;
 		width: 750rpx;
 		padding-left: 10rpx;
+		padding-bottom: 10rpx;
 		flex-direction: row;
 		flex-wrap: wrap;
 	}
