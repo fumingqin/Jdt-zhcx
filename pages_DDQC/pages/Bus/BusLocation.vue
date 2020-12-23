@@ -91,6 +91,7 @@
 				lastPage:'',//记录上一个页面是从哪里进来的
 				onlineBusNum:0,//当前在线上的车辆数量
 				FirstLastShift:'',//首末站发车时间
+				userInfo:'',//用户信息
 			}
 		},
 		onLoad(option) {
@@ -106,7 +107,7 @@
 			};
 			//获取服务器时间
 			_self.getServerTime();
-			//如果上一个页面是从SearchDetail或者BusQuery跳转过来的，因为里面有时间跟线路ID所以不用请求getBusLineInfoByStationName接口，直接赋值
+			//如果上一个页面是从SearchDetail或者BusQuery/TransitSearch跳转过来的，因为里面有时间跟线路ID所以不用请求getBusLineInfoByStationName接口，直接赋值
 			//如果是从搜索页、搜索详情页、首页进来的话有传线路ID，就不需要再去请求getBusLineInfoByStationName接口
 			if(option.lastPage == 'SearchDetail' || option.lastPage == 'BusQuery'){
 				setTimeout(function(){
@@ -122,6 +123,7 @@
 				_self.lineID = _self.stationInfoArray.lineID;
 				//获取显示的站点名称（起点-终点）
 				_self.startStation = _self.stationInfoArray.StartName + '→' + _self.stationInfoArray.EndName;
+				//根据站点查询线路信息（时间、线路ID）
 				_self.getBusLineInfoByStationName(_self.stationInfoArray.StartName,_self.stationInfoArray.lineName);
 				//请求：根据线路查询改线路的所有站点信息，这个接口需要用到线路ID，线路方向
 				// _self.getStationByLine();
@@ -129,6 +131,8 @@
 				_self.getBusLocationByStation();
 				//获取站点信息跟到站车辆信息的整合数据
 				_self.getBusLineArriveLeaveStationInfoByLineIdDirection();
+				//获取用户信息
+				_self.getUserInfo();
 			}else {
 				_self.lastPage = 'RoutePlan';
 				//设置导航栏标题为线路名称
@@ -140,10 +144,12 @@
 				//如果上一个页面是从RoutePlan页面进来的需要先去获取时间跟线路ID
 				//根据站点查询线路信息（时间、线路ID）
 				_self.getBusLineInfoByStationName(_self.getStartStation(_self.stationInfoArray.LineRoute),_self.getLine(_self.stationInfoArray.LineRoute));
-				
+				//获取用户信息
+				_self.getUserInfo();
 			}
 			//设置定时器，每十秒刷新一次公交位置信息
 			// _self.setBusTimeInterval();
+			
 		},
 		onShow:function(){
 			//unload跟onshow只能设置一次定时器，如果两个方法里面都设置了定时器那么就无法清除定时器
@@ -254,6 +260,21 @@
 			timeButtonClick:function(){
 				_self.isShow = !_self.isShow;
 				_self.getTimeScheduleInfo();
+			},
+			//-------------------------------------------获取用户信息-------------------------------------------
+			getUserInfo:function(){
+				uni.getStorage({
+					key:'userInfo',
+					success:function(res){
+						console.log('获取用户信息成功',res)
+						_self.userInfo = res.data;
+						_self.Add_BusLog();
+					},
+					fail:function(res){
+						console.log('获取用户信息失败',res)
+						_self.Add_BusLog();
+					}
+				})
 			},
 //-------------------------------------------功能方法模块结束-------------------------------------------
 			
@@ -461,7 +482,7 @@
 								}
 							}
 							_self.stationList = res.data.data;
-							console.log('站点信息跟到站车辆信息',_self.stationList);
+							// console.log('站点信息跟到站车辆信息',_self.stationList);
 						}else {
 							uni.showToast({
 								title:res.data.msg,
@@ -559,6 +580,36 @@
 					},
 					fail(res) {
 						console.log('请求首末站发班时间信息失败',res)
+					}
+				})
+			},
+			//----------------------------------记录用户查询线路记录----------------------------------
+			Add_BusLog:function(){
+				var ProgramType = 'app';
+				// #ifdef APP-PLUS
+				ProgramType = 'app';
+				// #endif
+				// #ifdef MP-WEIXIN
+				ProgramType = 'xcx';
+				// #endif
+				uni.request({
+					url:_self.$Bus.BusInterface.Add_BusLog.Url,
+					method:_self.$Bus.BusInterface.Add_BusLog.method,
+					data:{
+						  ProgramType: ProgramType,
+						  LineID: _self.lineID,
+						  LineName: _self.stationInfoArray.lineName,
+						  UserID: _self.userInfo.userId,
+						  Phone: _self.userInfo.phoneNumber,
+					},
+					success:function(res){
+						console.log('记录用户搜索',res)
+					},
+					fail:function(res){
+						uni.showModal({
+							content:res.data.data
+						})
+						console.log('记录用户搜索失败',res)
 					}
 				})
 			},
